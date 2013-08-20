@@ -1,0 +1,24 @@
+You need to link :
+
+Ogre >= 1.9
+Bullet >= 2.7
+OpenAL
+libsndfile
+
+for windows :
+OVR 0.2.2 or higher (0.2.3 and 0.2.4 not tested yet)
++ join libsndfile, openAl and Ogre dlls
+
+for GNU/Linux : 
+0.2.3 or higher (not tested)
+
+
+
+Included libraries : (compiled with the source code)
+BtOgre
+OgreOculus
+
+more information : http://annwvyn.ybalrid.info/
+dowumentation wiki : http://annwvyn.ybalrid.info/wiki/
+
+official Git repo : https://github.com/Ybalrid/Annwvyn.git
