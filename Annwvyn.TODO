@@ -1,0 +1,16 @@
+Annwvyn TODO : 
+
+
+- easy raycasting to figure where the player is looking
+
+
+TODO in future release 
+- allow playing multiple animations
+- HUD
+- add debug drawing for trigger position when debug drawing is active for bullet
+
+DONE : 
+- general collision detection callback
+- triggers
+- play objects animations
+- Skydome
