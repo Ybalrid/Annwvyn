@@ -1,9 +1,5 @@
 Annwvyn TODO : 
 
-
-- easy raycasting to figure where the player is looking
-
-
 TODO in future release 
 - allow playing multiple animations
 - HUD
@@ -14,3 +10,4 @@ DONE :
 - triggers
 - play objects animations
 - Skydome
+- easy raycasting to figure where the player is looking
