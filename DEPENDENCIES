@@ -6,17 +6,18 @@ OpenAL
 libsndfile
 
 for windows :
-OVR 0.2.2 or higher (0.2.3 and 0.2.4 not tested yet)
+OVR 0.2.4 or higher (0.2.3 and 0.2.4 not tested yet)
 + join libsndfile, openAl and Ogre dlls
 
 for GNU/Linux : 
-0.2.3 or higher (not tested)
+0.2.4 or higer
++ join Ogre *.so plugins files along your executable
 
 
 
 Included libraries : (compiled with the source code)
 BtOgre
-OgreOculus
+OgreOculus modified
 
 more information : http://annwvyn.ybalrid.info/
 dowumentation wiki : http://annwvyn.ybalrid.info/wiki/
