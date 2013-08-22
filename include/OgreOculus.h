@@ -13,12 +13,12 @@
 
 /// Modified 05 Auggust 2013 by Ybalrid
 
+#ifndef OGRE_OCULUS
+#define OGRE_OCULUS
 
-#pragma once
-
-#include "OgreQuaternion.h"
-#include "OgreVector3.h"
-#include "OVR.h"
+#include <OgreQuaternion.h>
+#include <OgreVector3.h>
+#include <OVR.h>
 
 namespace OVR
 {
@@ -110,3 +110,6 @@ protected:
 	Ogre::Viewport *m_viewports[2];
 	Ogre::CompositorInstance *m_compositors[2];
 };
+
+
+#endif
