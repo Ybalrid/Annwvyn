@@ -105,11 +105,6 @@ void AnnAudioEngine::playBGM(const std::string path, const float volume)
 
 void AnnAudioEngine::updateListenerPos(Ogre::Vector3 pos)
 {
-	std::cerr << "listener pos" << std::endl;
-	std::cerr << pos.x << " "
-			<< pos.y << " "
-			<< pos.z << std::endl;
-
 	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
 }
 

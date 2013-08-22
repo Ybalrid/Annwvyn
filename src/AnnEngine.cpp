@@ -321,9 +321,11 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[])
 void AnnEngine::renderOneFrame()
 {
 	m_Root->renderOneFrame();
-#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN3 	
+#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     Sleep(1); //pause 1ms
-#endif 
+#else
+    usleep(1000);//pause 1ms
+#endif
 }
 
 void AnnEngine::setDebugPhysicState(bool state)
@@ -386,6 +388,7 @@ void AnnEngine::refresh()
 	}
 #else
 	//not windows specific equivalent
+    Ogre::WindowEventUtilities::messagePump();
 #endif //don't know why but without this shit the program freeze when running outside of Microsfot Visual Studio debuger
 
 	updateCamera();
@@ -668,8 +671,6 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
 
 AnnGameObject* AnnEngine::playerLooking()
 {
-	for(size_t i = 0; i < objects.size(); i++)
-		objects[i]->node()->showBoundingBox(false);
 	//Origin vector
 	Ogre::Vector3 Orig(oculus.getCameraNode()->getPosition());
 	//Direction Vector
@@ -692,23 +693,20 @@ AnnGameObject* AnnEngine::playerLooking()
 	
 	for(it = result.begin(); it != result.end(); it++)
 	{
-		std::cout << "reading list" << std::endl;
 		if(it->movable && it->movable->getMovableType() == "Entity")
 			{
-				std::cout << "entity on list" << std::endl;
 				node = it->movable->getParentSceneNode();
-				node->showBoundingBox(true);
 				found = true;
 				break;
 			}	
 	}
 	if(found)
 	{
-		std::cout << "found" << std::endl;
 	}
 	if(found)
 		for(size_t i = 0; i < objects.size(); i++)
 			if((void*)objects[i]->node() == (void*)node)
 				return objects[i];
+
 	return NULL;
 }
