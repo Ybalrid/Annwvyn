@@ -6,7 +6,7 @@
 * \author Arthur Brainville
 * \version 0.1
 */
-#include <ogre.h>
+#include <Ogre.h>
 #include <OIS.h>
 #include "OgreOculus.h"
 
