@@ -321,7 +321,9 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[])
 void AnnEngine::renderOneFrame()
 {
 	m_Root->renderOneFrame();
-	Sleep(1); //pause 1ms
+#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN3 	
+    Sleep(1); //pause 1ms
+#endif 
 }
 
 void AnnEngine::setDebugPhysicState(bool state)

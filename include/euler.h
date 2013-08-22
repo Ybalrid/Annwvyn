@@ -456,7 +456,7 @@ public:
 	inline Ogre::Vector3 operator*(const Ogre::Vector3 &rhs) { return toQuaternion() * rhs; }
  
 	/// Copy assignment operator (Euler)
-	inline Euler& operator=(Euler& src)
+	inline Euler operator=(Euler src)
 	{
 		setRotation(src.getYaw(), src.getPitch(), src.getRoll());
 		return *this;
@@ -470,7 +470,7 @@ public:
 	//}
  
 	/// Copy assignment operator (Vector3)
-	inline Euler& operator=(Ogre::Vector3 pyr)
+	inline Euler operator=(Ogre::Vector3 pyr)
 	{
 		setRotation(Ogre::Radian(pyr.y), Ogre::Radian(pyr.x), Ogre::Radian(pyr.z));
 		return *this;

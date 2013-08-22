@@ -14,13 +14,13 @@
 /// Modified 05 Auggust 2013 by Ybalrid
 
 #include "OgreOculus.h"
-#include "OVR.h"
-#include "OgreSceneManager.h"
-#include "OgreRenderWindow.h"
-#include "OgreCompositorManager.h"
-#include "OgreCompositorInstance.h"
-#include "OgreCompositionTargetPass.h"
-#include "OgreCompositionPass.h"
+#include <OVR.h>
+#include <OgreSceneManager.h>
+#include <OgreRenderWindow.h>
+#include <OgreCompositorManager.h>
+#include <OgreCompositorInstance.h>
+#include <OgreCompositionTargetPass.h>
+#include <OgreCompositionPass.h>
 
 using namespace OVR;
 
@@ -317,7 +317,8 @@ void Oculus::setupDriftCorrection(float minMagDist, float minQuatDist)
 
 void Oculus::setReferencePoint()
 {
-	m_sensorFusion->SetMagReference();
+    //new oculus SDK dont need that
+//	m_sensorFusion->SetMagReference();
 }
 
 void Oculus::tryCalibration()
@@ -338,7 +339,7 @@ void Oculus::tryCalibration()
 		}
 
 	if(!m_sensorFusion->IsYawCorrectionEnabled())
-	if (m_sensorFusion->IsMagReady())
+//	if (m_sensorFusion->IsMagReady()) // don't exist anymore
 		m_sensorFusion->SetYawCorrectionEnabled(true);
 
 }
