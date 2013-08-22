@@ -24,6 +24,10 @@
 #include "AnnTools.h"
 #include "AnnAudioEngine.hpp"
 
+#ifdef __gnu_linux__
+#include <unistd.h>
+#endif
+
 
 namespace Annwvyn
 {

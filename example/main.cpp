@@ -96,7 +96,8 @@ int main(int argc, char **argv)
 
 
 	//setUp Oculus system
-	GameEngine.oculusInit();
+        std::cout << "-----------------------------------------------------------------------------------------" << std::endl;
+    GameEngine.oculusInit();
 
 	GameEngine.setSkyDomeMaterial(true,"Sky/dome1");
 
@@ -109,7 +110,7 @@ int main(int argc, char **argv)
 	//Render loop
 	while(!GameEngine.requestStop())
 	{
-		if(Sinbad2->collideWith(Sinbad))
+		/*if(Sinbad2->collideWith(Sinbad))
 		{
 			std::cout << "sinbad 2 collide with sinbad" << std::endl;
 		}
@@ -119,7 +120,8 @@ int main(int argc, char **argv)
 			std::cout << "Why are you watching a dancing ogre ?" << std::endl;
 		}
 		//game logic here!
-		GameEngine.refresh();
+		*/
+        GameEngine.refresh();
 	}
 	return 0;
 }
