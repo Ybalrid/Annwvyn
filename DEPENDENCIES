@@ -1,12 +1,12 @@
 You need to link :
 
-Ogre >= 1.9
-Bullet >= 2.7
+Ogre >= 1.9.0 && < 2
+Bullet >= 2.8
 OpenAL
 libsndfile
 
 for windows :
-OVR 0.2.4 or higher (0.2.3 and 0.2.4 not tested yet)
+OVR 0.2.4 or higher
 + join libsndfile, openAl and Ogre dlls
 
 for GNU/Linux : 
