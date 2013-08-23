@@ -1,25 +1,26 @@
 You need to link :
 
-Ogre >= 1.9.0 && < 2
+Ogre >= 1.9.0 && < 2 (for now, 2.0 branch is under development, I tried it for fun, not a good idea...)
 Bullet >= 2.8
 OpenAL
 libsndfile
 
 for windows :
 OVR 0.2.4 or higher
-+ join libsndfile, openAl and Ogre dlls
++ join libsndfile, openAl and all needed Ogre dlls (lib + plugins)
 
-for GNU/Linux : 
-0.2.4 or higer
-+ join Ogre *.so plugins files along your executable
+for GNU/Linux :
+0.2.4 or higher
++ join Ogre *.so plugins files along your executable (or just specify the place they have to be on your system in plugin.cfg)
+Make sure the Ogre shared objects directory is on your ld.so.conf, in some distrib, ld does not search on the /usr/local/lib directory.
 
 
 
 Included libraries : (compiled with the source code)
 BtOgre
-OgreOculus modified
+OgreOculus modified, (I will update my personal fork of Kojack's work later...)
 
 more information : http://annwvyn.ybalrid.info/
-dowumentation wiki : http://annwvyn.ybalrid.info/wiki/
+documentation wiki : http://annwvyn.ybalrid.info/wiki/
 
 official Git repo : https://github.com/Ybalrid/Annwvyn.git
