@@ -156,11 +156,11 @@ bool Oculus::setupOculus()
 	m_centreOffset = m_stereoConfig->GetProjectionCenterOffset();
 	Ogre::LogManager::getSingleton().logMessage("Oculus: Created StereoConfig");
 	m_hmd = m_deviceManager->EnumerateDevices<HMDDevice>().CreateDevice();
-	/*if(!m_hmd)
+	if(!m_hmd)
 	{
 		Ogre::LogManager::getSingleton().logMessage("Oculus: Failed to create HMD");
 		return false;
-	}*/
+	}
 	Ogre::LogManager::getSingleton().logMessage("Oculus: Created HMD");
 	HMDInfo devinfo;
 	m_hmd->GetDeviceInfo(&devinfo);
