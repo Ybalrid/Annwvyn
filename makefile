@@ -8,7 +8,7 @@ all: lib/libAnnwvyn.so
 
 .PHONY: clean
 clean:
-	rm -r obj/*.o lib/*.so example/test example/libAnnwvyn.so 2> /dev/null
+	rm -r obj/*.o lib/*.so
 
 test: lib/libAnnwvyn.so
 	$(CC) example/main.cpp -o example/testDyna  -L./lib -lAnnwvyn $(CFLAGS) $(LDFLAGS) $(IFLAGS) 
