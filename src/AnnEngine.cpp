@@ -404,9 +404,9 @@ void AnnEngine::refresh()
 
 	//	OIS Events 
 	captureEvents();
-	if(activateWASD)//classic fps control
+	if(activateWASD && m_bodyParams->Body != NULL)//classic fps control
 	{
-		m_bodyParams->Body->activate(); //don't sleep !
+    	m_bodyParams->Body->activate(); //don't sleep !
 		btVector3 curVel = m_bodyParams->Body->getLinearVelocity();
 		if(processWASD(&translate))
 		{
@@ -419,20 +419,26 @@ void AnnEngine::refresh()
 			m_bodyParams->Body->setLinearVelocity((curVel * btVector3(0,1,0)));//we keep the original vertical velocity
 		}
 	}
-	
-	btTransform Transform = m_bodyParams->Body->getCenterOfMassTransform();
-	Transform.setRotation(fixedBodyOrient);
-	m_bodyParams->Body->setCenterOfMassTransform(Transform);
-	
+
+    if(m_bodyParams->Body != NULL)
+    {
+	    btTransform Transform = m_bodyParams->Body->getCenterOfMassTransform();
+	    Transform.setRotation(fixedBodyOrient);
+	    m_bodyParams->Body->setCenterOfMassTransform(Transform);
+    }
+
 	m_bodyParams->Orientation.yaw
 		(Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
 
+    if(m_bodyParams->Body != NULL)
+    {
 	m_bodyParams->Position =
 		Ogre::Vector3( 
 		m_bodyParams->Body->getCenterOfMassPosition().x(),
 		m_bodyParams->Body->getCenterOfMassPosition().y() + m_bodyParams->eyeHeight/2,
 		m_bodyParams->Body->getCenterOfMassPosition().z());
-	
+    }
+
 	if(m_Ground != NULL)
 		if(activateJump)
 		{
