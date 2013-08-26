@@ -90,13 +90,12 @@ int main(int argc, char **argv)
 	Light->setPosition(0,3,10);
 
 
-		GameEngine.initPlayerPhysics();
-	//	GameEngine.setDebugPhysicState(true);
+	GameEngine.initPlayerPhysics();
+	//GameEngine.setDebugPhysicState(true);
 
 
 	//setUp Oculus system
-        std::cout << "-----------------------------------------------------------------------------------------" << std::endl;
-    GameEngine.oculusInit();
+    	GameEngine.oculusInit();
 
 	GameEngine.setSkyDomeMaterial(true,"Sky/dome1");
 
