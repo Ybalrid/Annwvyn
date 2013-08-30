@@ -640,6 +640,8 @@ AnnTriggerObject* AnnEngine::createTriggerObject()
 	AnnTriggerObject* object = new AnnTriggerObject;
 
 	triggers.push_back(object);
+
+	return object;
 }
 
 void AnnEngine::processTriggersContacts()

@@ -1,6 +1,19 @@
 #ifndef ANNGAMEOBJECT
 #define ANNGAMEOBJECT
 
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
+
 //Ogre3D
 #include <Ogre.h>
 //Bullet
@@ -17,7 +30,7 @@
 
 namespace Annwvyn
 {
-	class AnnGameObject; 
+	class DLL AnnGameObject; 
 
 	struct collisionTest
 	{
@@ -26,7 +39,7 @@ namespace Annwvyn
 		bool collisionState;
 	};
 
-	class AnnGameObject
+	class DLL AnnGameObject
 	{
 	public:
 		AnnGameObject();

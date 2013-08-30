@@ -17,6 +17,18 @@
 #ifndef _BtOgrePG_H_
 #define _BtOgrePG_H_
 
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
 #include "btBulletDynamicsCommon.h"
 #include "BtOgreExtras.h"
 #include "Ogre.h"
@@ -26,7 +38,7 @@ namespace BtOgre {
 typedef std::map<unsigned char, Vector3Array*> BoneIndex;
 typedef std::pair<unsigned short, Vector3Array*> BoneKeyIndex;
 
-class VertexIndexToShape
+class DLL VertexIndexToShape
 {
 public:
 	VertexIndexToShape(const Ogre::Matrix4 &transform = Ogre::Matrix4::IDENTITY);
@@ -76,7 +88,7 @@ protected:
 };
 
 //For static (non-animated) meshes.
-class StaticMeshToShapeConverter : public VertexIndexToShape
+class DLL StaticMeshToShapeConverter : public VertexIndexToShape
 {
 public:
 
@@ -98,7 +110,7 @@ protected:
 };
 
 //For animated meshes.
-class AnimatedMeshToShapeConverter : public VertexIndexToShape
+class DLL AnimatedMeshToShapeConverter : public VertexIndexToShape
 {
 public:
 
