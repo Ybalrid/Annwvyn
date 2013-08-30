@@ -9,6 +9,15 @@ for windows :
 OVR 0.2.4 or higher
 + join libsndfile, openAl and all needed Ogre dlls (lib + plugins)
 
++ set some environement variable to build directly the dynamic lib :
+OGRE_ROOT : where you have installed your Ogre SDK
+OVR_ROOT : where you have installed your OVR SDK
+BULLET_ROOT : where you have Compilled bullet 
+AL_ROOT : where you have installed your OpenAL SDK
+SNDFILE_ROOT : where you have installed your libsndfile
+
+All these variables will be used as referencies on the provided VisualStudio projects and solutions.
+
 for GNU/Linux :
 0.2.4 or higher
 + join Ogre *.so plugins files along your executable (or just specify the place they have to be on your system in plugin.cfg)

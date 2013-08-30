@@ -1,6 +1,18 @@
 #ifndef ANN_AUDIO
 #define ANN_AUDIO
 
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
 #include <Ogre.h>
 
 #include <iostream>
@@ -15,7 +27,7 @@
 
 namespace Annwvyn
 {
-	class AnnAudioEngine
+	class DLL AnnAudioEngine
 	{
 	public:
 		//class constuctor

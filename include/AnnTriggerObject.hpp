@@ -1,11 +1,23 @@
 #ifndef ANNTRIGGEROBJECT
 #define ANNTRIGGEROBJECT
 
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
 #include <Ogre.h>
 
 namespace Annwvyn
 {
-	class AnnTriggerObject
+	class DLL AnnTriggerObject
 	{
 	public:
 		AnnTriggerObject();

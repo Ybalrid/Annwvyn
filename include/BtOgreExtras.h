@@ -16,6 +16,18 @@
 #ifndef _BtOgreShapes_H_
 #define _BtOgreShapes_H_
 
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
 #include "btBulletDynamicsCommon.h"
 #include "OgreSceneNode.h"
 #include "OgreSimpleRenderable.h"
@@ -33,7 +45,7 @@ namespace BtOgre
 typedef std::vector<Ogre::Vector3> Vector3Array;
 
 //Converts from and to Bullet and Ogre stuff. Pretty self-explanatory.
-class Convert
+class DLL Convert
 {
 public:
 	Convert() {};
@@ -60,7 +72,7 @@ public:
 
 //From here on its debug-drawing stuff. ------------------------------------------------------------------
 
-class DynamicRenderable : public Ogre::SimpleRenderable
+class DLL DynamicRenderable : public Ogre::SimpleRenderable
 {
 public:
   /// Constructor
@@ -122,7 +134,7 @@ protected:
   virtual void fillHardwareBuffers() = 0;
 };
 
-class DynamicLines : public DynamicRenderable
+class DLL DynamicLines : public DynamicRenderable
 {
   typedef Ogre::Vector3 Vector3;
   typedef Ogre::Quaternion Quaternion;
@@ -179,7 +191,7 @@ private:
   bool mDirty;
 };
 
-class DebugDrawer : public btIDebugDraw
+class DLL DebugDrawer : public btIDebugDraw
 {
 protected:
 	Ogre::SceneNode *mNode;

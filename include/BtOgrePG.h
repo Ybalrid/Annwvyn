@@ -17,6 +17,18 @@
 #ifndef _BtOgreGP_H_
 #define _BtOgreGP_H_
 
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
 #include "btBulletDynamicsCommon.h"
 #include "OgreSceneNode.h"
 #include "BtOgreExtras.h"
@@ -25,7 +37,7 @@ namespace BtOgre {
 
 //A MotionState is Bullet's way of informing you about updates to an object.
 //Pass this MotionState to a btRigidBody to have your SceneNode updated automaticaly.
-class RigidBodyState : public btMotionState
+class DLL RigidBodyState : public btMotionState
 {
     protected:
         btTransform mTransform;
