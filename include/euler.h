@@ -8,7 +8,19 @@
 */
 #ifndef OGREEULER_H
 #define OGREEULER_H
- 
+
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
 #include <Ogre.h>
  
 namespace Ogre
@@ -21,7 +33,7 @@ namespace Ogre
 <table><tr><td>Yaw is a rotation around the Y axis.</td><td>Pitch is a rotation around the X axis.</td><td>Roll is a rotation around the Z axis.</td></tr>
 <tr><td><img src="http://www.ogre3d.org/tikiwiki/tiki-download_file.php?fileId=2112" /></td><td><img src="http://www.ogre3d.org/tikiwiki/tiki-download_file.php?fileId=2113" /></td><td><img src="http://www.ogre3d.org/tikiwiki/tiki-download_file.php?fileId=2114" /></td></tr></table>
 */
-class Euler
+class DLL Euler
 {
 public:
 	/// Default constructor.
