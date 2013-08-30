@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{97023299-5F70-417C-A8C2-A3521719B5A8}</ProjectGuid>
+    <ProjectGuid>{FF00A220-BA2F-45E4-8335-A7ACCACD0F1B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Annwvyn</RootNamespace>
+    <RootNamespace>test</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -39,12 +39,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\example\</OutDir>
+    <IntDir>.\test_obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
-    <OutDir>..\..\lib\</OutDir>
-    <IntDir>..\..\obj\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -52,11 +51,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\include;$(SNDFILE_ROOT)\include;$(AL_ROOT)\include;$(OVR_ROOT)\Include;$(OGRE_ROOT)\include;$(OGRE_ROOT)\boost;$(OGRE_ROOT)\include\OGRE;$(OGRE_ROOT)\include\OIS;$(BULLET_ROOT)\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Annwvyn.dll;OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;%(AdditionalDependencies);OpenAL32.lib;libsndfile-1.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib;$(AL_ROOT)\libs\Win32;$(OVR_ROOT)\Lib\Win32;$(OGRE_ROOT)\boost\lib;$(OGRE_ROOT)\lib\Release\;$(SNDFILE_ROOT)\lib;$(BULLET_ROOT)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,40 +69,23 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>DLLDIR_EX;WIN32;NDEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SNDFILE_ROOT)\include;$(AL_ROOT)\include;$(OVR_ROOT)\Include;$(OGRE_ROOT)\include;$(OGRE_ROOT)\boost;$(OGRE_ROOT)\include\OGRE;$(OGRE_ROOT)\include\OIS;$(BULLET_ROOT)\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\include;$(SNDFILE_ROOT)\include;$(AL_ROOT)\include;$(OVR_ROOT)\Include;$(OGRE_ROOT)\include;$(OGRE_ROOT)\boost;$(OGRE_ROOT)\include\OGRE;$(OGRE_ROOT)\include\OIS;$(BULLET_ROOT)\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(AL_ROOT)\libs\Win32;$(OVR_ROOT)\Lib\Win32;$(OGRE_ROOT)\boost\lib;$(OGRE_ROOT)\lib\Release\;$(SNDFILE_ROOT)\lib;$(BULLET_ROOT)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;%(AdditionalDependencies);OpenAL32.lib;libsndfile-1.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib;$(AL_ROOT)\libs\Win32;$(OVR_ROOT)\Lib\Win32;$(OGRE_ROOT)\boost\lib;$(OGRE_ROOT)\lib\Release\;$(SNDFILE_ROOT)\lib;$(BULLET_ROOT)\lib\;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
+      <PreventDllBinding>false</PreventDllBinding>
+      <AdditionalDependencies>Annwvyn.lib;OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;%(AdditionalDependencies);OpenAL32.lib;libsndfile-1.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
-    <ClInclude Include="..\..\include\AnnEngine.hpp" />
-    <ClInclude Include="..\..\include\AnnGameObject.hpp" />
-    <ClInclude Include="..\..\include\AnnTools.h" />
-    <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
-    <ClInclude Include="..\..\include\AnnTypes.h" />
-    <ClInclude Include="..\..\include\Annwvyn.h" />
-    <ClInclude Include="..\..\include\BtOgreExtras.h" />
-    <ClInclude Include="..\..\include\BtOgreGP.h" />
-    <ClInclude Include="..\..\include\BtOgrePG.h" />
-    <ClInclude Include="..\..\include\euler.h" />
-    <ClInclude Include="..\..\include\OgreOculus.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
-    <ClCompile Include="..\..\src\AnnEngine.cpp" />
-    <ClCompile Include="..\..\src\AnnGameObject.cpp" />
-    <ClCompile Include="..\..\src\AnnTools.cpp" />
-    <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
-    <ClCompile Include="..\..\src\BtOgre.cpp" />
-    <ClCompile Include="..\..\src\OgreOculus.cpp" />
+    <ClCompile Include="..\..\example\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
