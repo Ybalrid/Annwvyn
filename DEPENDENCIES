@@ -4,17 +4,19 @@ Ogre >= 1.9.0 && < 2 (for now, 2.0 branch is under development, I tried it for f
 Bullet >= 2.8
 OpenAL
 libsndfile
+libOVR
 
 for windows :
+Microsoft Visual C++ 2010 
 OVR 0.2.4 or higher
 + join libsndfile, openAl and all needed Ogre dlls (lib + plugins)
 
 + set some environement variable to build directly the dynamic lib :
 OGRE_ROOT : where you have installed your Ogre SDK
-OVR_ROOT : where you have installed your OVR SDK
-BULLET_ROOT : where you have Compilled bullet 
+OVR_ROOT : where you have installed your OVR SDK (LibOVR subdirectory)
+BULLET_ROOT : where you have Compilled bullet (with msvc 2010 !!)
 AL_ROOT : where you have installed your OpenAL SDK
-SNDFILE_ROOT : where you have installed your libsndfile
+SNDFILE_ROOT : where you have installed your libsndfile (from mega-nerd website)
 
 All these variables will be used as referencies on the provided VisualStudio projects and solutions.
 
