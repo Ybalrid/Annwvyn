@@ -1,6 +1,18 @@
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
 
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
 //C++ STD & STL
 #include <vector>
 #include <sstream>
@@ -11,7 +23,7 @@
 #include <btBulletCollisionCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
-//OgreOculus kojack
+//OgreOculus by kojack
 #include "OgreOculus.h"
 //btOgre
 #include "BtOgrePG.h"
@@ -29,9 +41,10 @@
 #endif
 
 
+
 namespace Annwvyn
 {
-	class AnnEngine
+	class DLL AnnEngine
 	{
 	public:
 		//Class constructor. take the name of the window

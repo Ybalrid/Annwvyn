@@ -16,6 +16,19 @@
 #ifndef OGRE_OCULUS
 #define OGRE_OCULUS
 
+//windows DLL
+#ifdef DLLDIR_EX
+   #define DLL  __declspec(dllexport)   // export DLL information
+#else
+   #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+
+//bypass on linux
+#ifdef __gnu_linux__
+#define DLL
+#endif
+
+
 #include <OgreQuaternion.h>
 #include <OgreVector3.h>
 #include <OVR.h>
@@ -46,7 +59,7 @@ namespace Ogre
 	class CompositorInstance;
 }
 
-class Oculus
+class DLL Oculus
 {
 public:
 	Oculus(void);
