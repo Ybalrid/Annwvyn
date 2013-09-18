@@ -18,7 +18,9 @@
 #include "euler.h"
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
+
 #include "AnnGameObject.hpp"
+
 namespace Annwvyn
 {
 	typedef struct bodyParams bodyParams;
@@ -37,12 +39,23 @@ namespace Annwvyn
 	};
 
 	typedef int phyShapeType;
-	enum {staticShape, 
+	enum {
+		staticShape, 
 		convexShape, 
 		boxShape, 
 		cylinderShape, 
-		capsuleShape};
+		capsuleShape
+	};
 
-	typedef Ogre::Light AnnLightObject;	
+	typedef Ogre::Light AnnLightObject;
+
+	//controls
+	namespace Keys
+	{
+		enum 
+		{
+			FW, BK, LT, RT, JUMP
+		};
+	}
 }
 #endif

@@ -15,6 +15,7 @@
 #include "AnnGameObject.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnAudioEngine.hpp"
+#include "AnnLeap.hpp"
 //Other Annwvyn
 #include "AnnTypes.h"
 #include "AnnTools.h"

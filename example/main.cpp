@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 
 
 	GameEngine.initPlayerPhysics();
-	//GameEngine.setDebugPhysicState(true);
+	GameEngine.setDebugPhysicState(false);
 
 
 	//setUp Oculus system
@@ -108,17 +108,7 @@ int main(int argc, char **argv)
 	//Render loop
 	while(!GameEngine.requestStop())
 	{
-		/*if(Sinbad2->collideWith(Sinbad))
-		{
-			std::cout << "sinbad 2 collide with sinbad" << std::endl;
-		}
 
-		if(GameEngine.playerLooking() == Sinbad)
-		{
-			std::cout << "Why are you watching a dancing ogre ?" << std::endl;
-		}
-		//game logic here!
-		*/
         GameEngine.refresh();
 	}
 	return 0;
