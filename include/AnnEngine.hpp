@@ -35,6 +35,7 @@
 #include "AnnTypes.h"
 #include "AnnTools.h"
 #include "AnnAudioEngine.hpp"
+#include "AnnLeap.hpp"
 
 #ifdef __gnu_linux__
 #include <unistd.h>
@@ -169,7 +170,9 @@ namespace Annwvyn
 
 		void setSkyDomeMaterial(bool activate, const char materialName[], float curvature = 2.0f, float tiling = 1.0f);
 
-		Annwvyn::AnnGameObject* playerLooking();
+		Annwvyn::AnnGameObject* playerLookingAt();
+
+		void initLeapMotion();
 
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
@@ -223,6 +226,7 @@ namespace Annwvyn
 
 		//Audio
 		AnnAudioEngine* AudioEngine;
+		AnnLeap* LeapMotion;
 	};
 }
 #endif //ANN_ENGINE

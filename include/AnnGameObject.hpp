@@ -116,6 +116,7 @@ namespace Annwvyn
 		Ogre::SceneNode* m_node;
 		Ogre::Entity* m_entity;
 		Ogre::AnimationState* m_anim;
+		//std::vector<Ogre::AnimationState*> anims;
 		bool animIsSetted;
 		bool animIsPlaying;
 		bool animIsLooping;

@@ -50,9 +50,6 @@ namespace Annwvyn
 		//play background music. you can specify the volume of the music (0.0f to 1.0f)
 		void playBGM(const std::string path, const float volume = 0.5f);
 
-		//play a sound effect //still not working 
-		void playASound(const std::string path, const float volume = 1.0f);
-
 	private:
 		std::string lastError;
 		ALCdevice* Device;

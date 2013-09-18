@@ -105,15 +105,19 @@ public:
 	void tryCalibration();
 
 protected:
+	//Device
 	OVR::DeviceManager *m_deviceManager;
 	OVR::HMDDevice *m_hmd;
 	OVR::Util::Render::StereoConfig *m_stereoConfig;
+	//Sensor
 	OVR::SensorDevice *m_sensor;
 	OVR::SensorFusion *m_sensorFusion;
 	OVR::Util::MagCalibration m_MagCal; ///Magnetometer calibration object
+	//Tests
 	bool m_oculusReady;		/// Has the oculus rift been fully initialised?
 	bool m_ogreReady;		/// Has ogre been fully initialised?
 	bool m_driftCorrection; ///Do you want to do not derivate?
+	//Render
 	Ogre::SceneManager *m_sceneManager;
 	Ogre::RenderWindow *m_window;
 	Ogre::SceneNode *m_cameraNode;
