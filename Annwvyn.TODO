@@ -1,3 +1,8 @@
+TODO : 
+- Leap Rotation in plane
+  x' = cos(theta)*(x-xc) - sin(theta)*(y-yc) + xc
+  y' = sin(theta)*(x-xc) + cos(theta)*(y-yc) + yc
+
 TODO in future release 
 - allow playing multiple animations
 - HUD
