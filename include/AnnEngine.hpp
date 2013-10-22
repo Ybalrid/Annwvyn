@@ -174,6 +174,10 @@ namespace Annwvyn
 
 		void initLeapMotion();
 
+		Annwvyn::bodyParams* getBodyParams();
+
+		Ogre::SceneNode* getCamera();
+
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		

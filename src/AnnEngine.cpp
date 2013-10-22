@@ -438,7 +438,7 @@ void AnnEngine::refresh()
 
 	m_bodyParams->Orientation.yaw
 		(Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
-
+		
     if(m_bodyParams->Body != NULL)
     {
 	m_bodyParams->Position =
@@ -734,4 +734,14 @@ void AnnEngine::initLeapMotion()
 		return;
 
 	LeapMotion = new AnnLeap;
+}
+
+Annwvyn::bodyParams* AnnEngine::getBodyParams()
+{
+	return m_bodyParams;
+}
+
+Ogre::SceneNode* AnnEngine::getCamera()
+{
+	return oculus.getCameraNode();
 }
