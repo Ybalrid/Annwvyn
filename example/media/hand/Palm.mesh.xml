@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mesh>
+    <sharedgeometry vertexcount="56">
+        <vertexbuffer normals="true" colours_diffuse="False" positions="true" texture_coords="0">
+            <vertex>
+                <position z="0.020389" x="0.047059" y="-0.012624"/>
+                <normal z="0.137936" x="0.000040" y="-0.990441"/>
+            </vertex>
+            <vertex>
+                <position z="0.042943" x="0.036979" y="-0.009478"/>
+                <normal z="0.137936" x="0.000040" y="-0.990441"/>
+            </vertex>
+            <vertex>
+                <position z="0.043016" x="-0.030729" y="-0.009476"/>
+                <normal z="0.137936" x="0.000040" y="-0.990441"/>
+            </vertex>
+            <vertex>
+                <position z="0.020085" x="-0.042598" y="-0.012665"/>
+                <normal z="0.137936" x="0.000040" y="-0.990441"/>
+            </vertex>
+            <vertex>
+                <position z="0.020368" x="0.046734" y="0.012846"/>
+                <normal z="0.148063" x="-0.000475" y="0.988978"/>
+            </vertex>
+            <vertex>
+                <position z="0.020052" x="-0.042324" y="0.012806"/>
+                <normal z="0.148063" x="-0.000475" y="0.988978"/>
+            </vertex>
+            <vertex>
+                <position z="0.042992" x="-0.030526" y="0.009422"/>
+                <normal z="0.148063" x="-0.000475" y="0.988978"/>
+            </vertex>
+            <vertex>
+                <position z="0.042927" x="0.036737" y="0.009419"/>
+                <normal z="0.148063" x="-0.000475" y="0.988978"/>
+            </vertex>
+            <vertex>
+                <position z="0.020389" x="0.047059" y="-0.012624"/>
+                <normal z="0.406616" x="0.913520" y="0.012003"/>
+            </vertex>
+            <vertex>
+                <position z="0.020368" x="0.046734" y="0.012846"/>
+                <normal z="0.406616" x="0.913520" y="0.012003"/>
+            </vertex>
+            <vertex>
+                <position z="0.042927" x="0.036737" y="0.009419"/>
+                <normal z="0.406616" x="0.913520" y="0.012003"/>
+            </vertex>
+            <vertex>
+                <position z="0.042943" x="0.036979" y="-0.009478"/>
+                <normal z="0.406616" x="0.913520" y="0.012003"/>
+            </vertex>
+            <vertex>
+                <position z="0.042992" x="-0.030526" y="0.009422"/>
+                <normal z="0.171117" x="-0.985191" y="0.010819"/>
+            </vertex>
+            <vertex>
+                <position z="0.043016" x="-0.030729" y="-0.009476"/>
+                <normal z="0.171117" x="-0.985191" y="0.010819"/>
+            </vertex>
+            <vertex>
+                <position z="0.072136" x="-0.025672" y="-0.009492"/>
+                <normal z="0.171117" x="-0.985191" y="0.010819"/>
+            </vertex>
+            <vertex>
+                <position z="0.072111" x="-0.025469" y="0.009406"/>
+                <normal z="0.171117" x="-0.985191" y="0.010819"/>
+            </vertex>
+            <vertex>
+                <position z="0.043016" x="-0.030729" y="-0.009476"/>
+                <normal z="0.458497" x="-0.888638" y="0.010156"/>
+            </vertex>
+            <vertex>
+                <position z="0.042992" x="-0.030526" y="0.009422"/>
+                <normal z="0.458497" x="-0.888638" y="0.010156"/>
+            </vertex>
+            <vertex>
+                <position z="0.020052" x="-0.042324" y="0.012806"/>
+                <normal z="0.458497" x="-0.888638" y="0.010156"/>
+            </vertex>
+            <vertex>
+                <position z="0.020085" x="-0.042598" y="-0.012665"/>
+                <normal z="0.458497" x="-0.888638" y="0.010156"/>
+            </vertex>
+            <vertex>
+                <position z="0.020389" x="0.047059" y="-0.012624"/>
+                <normal z="-0.015804" x="0.000260" y="-0.999875"/>
+            </vertex>
+            <vertex>
+                <position z="0.020085" x="-0.042598" y="-0.012665"/>
+                <normal z="-0.015804" x="0.000260" y="-0.999875"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="-0.041363" y="-0.011493"/>
+                <normal z="-0.015804" x="0.000260" y="-0.999875"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="0.045109" y="-0.011493"/>
+                <normal z="-0.015804" x="0.000260" y="-0.999875"/>
+            </vertex>
+            <vertex>
+                <position z="0.071891" x="0.031017" y="-0.009530"/>
+                <normal z="0.999990" x="0.004264" y="0.001081"/>
+            </vertex>
+            <vertex>
+                <position z="0.071875" x="0.030776" y="0.009367"/>
+                <normal z="0.999990" x="0.004264" y="0.001081"/>
+            </vertex>
+            <vertex>
+                <position z="0.072111" x="-0.025469" y="0.009406"/>
+                <normal z="0.999990" x="0.004264" y="0.001081"/>
+            </vertex>
+            <vertex>
+                <position z="0.072136" x="-0.025672" y="-0.009492"/>
+                <normal z="0.999990" x="0.004264" y="0.001081"/>
+            </vertex>
+            <vertex>
+                <position z="0.042927" x="0.036737" y="0.009419"/>
+                <normal z="0.001172" x="0.000337" y="0.999999"/>
+            </vertex>
+            <vertex>
+                <position z="0.042992" x="-0.030526" y="0.009422"/>
+                <normal z="0.001172" x="0.000337" y="0.999999"/>
+            </vertex>
+            <vertex>
+                <position z="0.072111" x="-0.025469" y="0.009406"/>
+                <normal z="0.001172" x="0.000337" y="0.999999"/>
+            </vertex>
+            <vertex>
+                <position z="0.071875" x="0.030776" y="0.009367"/>
+                <normal z="0.001172" x="0.000337" y="0.999999"/>
+            </vertex>
+            <vertex>
+                <position z="0.043016" x="-0.030729" y="-0.009476"/>
+                <normal z="-0.001172" x="-0.000327" y="-0.999999"/>
+            </vertex>
+            <vertex>
+                <position z="0.042943" x="0.036979" y="-0.009478"/>
+                <normal z="-0.001172" x="-0.000327" y="-0.999999"/>
+            </vertex>
+            <vertex>
+                <position z="0.071891" x="0.031017" y="-0.009530"/>
+                <normal z="-0.001172" x="-0.000327" y="-0.999999"/>
+            </vertex>
+            <vertex>
+                <position z="0.072136" x="-0.025672" y="-0.009492"/>
+                <normal z="-0.001172" x="-0.000327" y="-0.999999"/>
+            </vertex>
+            <vertex>
+                <position z="0.042943" x="0.036979" y="-0.009478"/>
+                <normal z="0.201706" x="0.979364" y="0.012674"/>
+            </vertex>
+            <vertex>
+                <position z="0.042927" x="0.036737" y="0.009419"/>
+                <normal z="0.201706" x="0.979364" y="0.012674"/>
+            </vertex>
+            <vertex>
+                <position z="0.071875" x="0.030776" y="0.009367"/>
+                <normal z="0.201706" x="0.979364" y="0.012674"/>
+            </vertex>
+            <vertex>
+                <position z="0.071891" x="0.031017" y="-0.009530"/>
+                <normal z="0.201706" x="0.979364" y="0.012674"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="0.045109" y="0.011493"/>
+                <normal z="-1.000000" x="0.000002" y="0.000006"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="0.045109" y="-0.011493"/>
+                <normal z="-1.000000" x="0.000002" y="0.000006"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="-0.041363" y="-0.011493"/>
+                <normal z="-1.000000" x="0.000002" y="0.000006"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="-0.041363" y="0.011493"/>
+                <normal z="-1.000000" x="0.000002" y="0.000006"/>
+            </vertex>
+            <vertex>
+                <position z="0.020052" x="-0.042324" y="0.012806"/>
+                <normal z="-0.018293" x="-0.000198" y="0.999833"/>
+            </vertex>
+            <vertex>
+                <position z="0.020368" x="0.046734" y="0.012846"/>
+                <normal z="-0.018293" x="-0.000198" y="0.999833"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="0.045109" y="0.011493"/>
+                <normal z="-0.018293" x="-0.000198" y="0.999833"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="-0.041363" y="0.011493"/>
+                <normal z="-0.018293" x="-0.000198" y="0.999833"/>
+            </vertex>
+            <vertex>
+                <position z="0.020368" x="0.046734" y="0.012846"/>
+                <normal z="-0.024473" x="0.999678" y="0.006694"/>
+            </vertex>
+            <vertex>
+                <position z="0.020389" x="0.047059" y="-0.012624"/>
+                <normal z="-0.024473" x="0.999678" y="0.006694"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="0.045109" y="-0.011493"/>
+                <normal z="-0.024473" x="0.999678" y="0.006694"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="0.045109" y="0.011493"/>
+                <normal z="-0.024473" x="0.999678" y="0.006694"/>
+            </vertex>
+            <vertex>
+                <position z="0.020085" x="-0.042598" y="-0.012665"/>
+                <normal z="-0.015097" x="-0.999870" y="0.005642"/>
+            </vertex>
+            <vertex>
+                <position z="0.020052" x="-0.042324" y="0.012806"/>
+                <normal z="-0.015097" x="-0.999870" y="0.005642"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="-0.041363" y="0.011493"/>
+                <normal z="-0.015097" x="-0.999870" y="0.005642"/>
+            </vertex>
+            <vertex>
+                <position z="-0.052647" x="-0.041363" y="-0.011493"/>
+                <normal z="-0.015097" x="-0.999870" y="0.005642"/>
+            </vertex>
+        </vertexbuffer>
+    </sharedgeometry>
+    <submeshes>
+        <submesh usesharedvertices="true" operationtype="triangle_list" material="Material" use32bitindexes="False">
+            <faces count="28">
+                <face v1="0" v3="2" v2="1"/>
+                <face v1="0" v3="3" v2="2"/>
+                <face v1="4" v3="6" v2="5"/>
+                <face v1="4" v3="7" v2="6"/>
+                <face v1="8" v3="10" v2="9"/>
+                <face v1="8" v3="11" v2="10"/>
+                <face v1="12" v3="14" v2="13"/>
+                <face v1="12" v3="15" v2="14"/>
+                <face v1="16" v3="18" v2="17"/>
+                <face v1="16" v3="19" v2="18"/>
+                <face v1="20" v3="22" v2="21"/>
+                <face v1="20" v3="23" v2="22"/>
+                <face v1="24" v3="26" v2="25"/>
+                <face v1="24" v3="27" v2="26"/>
+                <face v1="28" v3="30" v2="29"/>
+                <face v1="28" v3="31" v2="30"/>
+                <face v1="32" v3="34" v2="33"/>
+                <face v1="32" v3="35" v2="34"/>
+                <face v1="36" v3="38" v2="37"/>
+                <face v1="36" v3="39" v2="38"/>
+                <face v1="40" v3="42" v2="41"/>
+                <face v1="40" v3="43" v2="42"/>
+                <face v1="44" v3="46" v2="45"/>
+                <face v1="44" v3="47" v2="46"/>
+                <face v1="48" v3="50" v2="49"/>
+                <face v1="48" v3="51" v2="50"/>
+                <face v1="52" v3="54" v2="53"/>
+                <face v1="52" v3="55" v2="54"/>
+            </faces>
+        </submesh>
+    </submeshes>
+    <submeshnames>
+        <submesh name="Material" index="0">
+        </submesh>
+    </submeshnames>
+</mesh>
