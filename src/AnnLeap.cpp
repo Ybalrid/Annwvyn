@@ -56,7 +56,7 @@ AnnLeap::AnnLeap()
 
 AnnLeap::~AnnLeap()
 {
-	delete listener;
+	//delete listener;
 }
 
 void AnnLeap::receiveData(int nbHands, Leap::Hand lHand, Leap::Hand rHand)

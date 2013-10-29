@@ -21,3 +21,14 @@
 
 #MSSQL files
 *.sdf
+*.suo
+
+#Random MSVC files
+*.tlog
+*.cache
+*.manifest
+*.pdb
+*.lastbuildstate
+
+#Windows text file
+*.txt
