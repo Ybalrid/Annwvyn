@@ -116,8 +116,6 @@ AnnEngine::AnnEngine(const char title[])
 	//OpenAl is handeled thanks to this class
 	AudioEngine = new AnnAudioEngine;
 
-	//Init AnnLeap pointer
-	LeapMotion = NULL;
 }
 
 
@@ -141,9 +139,6 @@ AnnEngine::~AnnEngine()
 	delete m_Mouse;
 
 	delete AudioEngine;
-
-	if(LeapMotion != NULL)
-		delete LeapMotion;
 }
 
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
@@ -398,7 +393,7 @@ void AnnEngine::refresh()
 #else
 	//not windows specific equivalent
     Ogre::WindowEventUtilities::messagePump();
-#endif //don't know why but without this shit the program freeze when running outside of Microsfot Visual Studio debuger
+#endif
 
 	updateCamera();
 	//bullet part
@@ -726,15 +721,6 @@ AnnGameObject* AnnEngine::playerLookingAt()
 }
 
 
-//Leap integration
-
-void AnnEngine::initLeapMotion()
-{
-	if (LeapMotion != NULL)
-		return;
-
-	LeapMotion = new AnnLeap;
-}
 
 Annwvyn::bodyParams* AnnEngine::getBodyParams()
 {

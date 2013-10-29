@@ -35,7 +35,6 @@
 #include "AnnTypes.h"
 #include "AnnTools.h"
 #include "AnnAudioEngine.hpp"
-#include "AnnLeap.hpp"
 
 #ifdef __gnu_linux__
 #include <unistd.h>
@@ -172,7 +171,6 @@ namespace Annwvyn
 
 		Annwvyn::AnnGameObject* playerLookingAt();
 
-		void initLeapMotion();
 
 		Annwvyn::bodyParams* getBodyParams();
 
@@ -230,7 +228,6 @@ namespace Annwvyn
 
 		//Audio
 		AnnAudioEngine* AudioEngine;
-		AnnLeap* LeapMotion;
 	};
 }
 #endif //ANN_ENGINE
