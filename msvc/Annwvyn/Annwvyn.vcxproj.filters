@@ -51,9 +51,6 @@
     <ClInclude Include="..\..\include\OgreOculus.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnLeap.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -75,9 +72,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OgreOculus.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnLeap.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
