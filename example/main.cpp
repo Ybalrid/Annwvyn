@@ -13,11 +13,14 @@
 #include <iostream>
 #include <streambuf>
 #include <fstream>
-
+#include <cmath>
 //Annwvyn
 #include <Annwvyn.h>
 
-//stream problem on windows :#define OUTSTREAM_TO_FILE
+
+
+//stream problem on windows :
+#define OUTSTREAM_TO_FILE
 
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -45,18 +48,19 @@ int main(int argc, char **argv)
 
 
 	//create Annwvyn engine
-	Annwvyn::AnnEngine GameEngine;	
+	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine;	
 
 	//load ressources
-	GameEngine.loadDir("media");
-	GameEngine.loadDir("media/dome");
-	GameEngine.loadZip("media/Sinbad.zip");
-	GameEngine.loadDir("media/plane");
+	GameEngine->loadDir("media");
+	GameEngine->loadDir("media/dome");
+	GameEngine->loadZip("media/Sinbad.zip");
+	GameEngine->loadDir("media/plane");
 
-	GameEngine.initRessources();
+	GameEngine->initRessources();
+
 
 	//Create Objects
-	Annwvyn::AnnGameObject* Sinbad = GameEngine.createGameObject("Sinbad.mesh");
+	Annwvyn::AnnGameObject* Sinbad = GameEngine->createGameObject("Sinbad.mesh");
 	Sinbad->node()->scale(.40,.40,.40);
 	Sinbad->setPos(0,2,3);
 
@@ -66,7 +70,7 @@ int main(int argc, char **argv)
 
 	Sinbad->setUpBullet(140, Annwvyn::boxShape);
 
-	Annwvyn::AnnGameObject* Sinbad2 = GameEngine.createGameObject("Sinbad.mesh");
+	Annwvyn::AnnGameObject* Sinbad2 = GameEngine->createGameObject("Sinbad.mesh");
 	Sinbad2->node()->scale(.35,.35,.35);
 	Sinbad2->setPos(1,2,4);
 	
@@ -79,47 +83,38 @@ int main(int argc, char **argv)
 	Sinbad2->testCollisionWith(Sinbad);
 
 
-	Annwvyn::AnnGameObject* Grid = GameEngine.createGameObject("Plane.mesh");
+	Annwvyn::AnnGameObject* Grid = GameEngine->createGameObject("Plane.mesh");
 	Grid->setPos(0,0,0);
 	Grid->setUpBullet();
-	GameEngine.setGround(Grid); 
+	GameEngine->setGround(Grid); 
 
 	//Add light
-	Annwvyn::AnnLightObject* Light = GameEngine.addLight();	
-	GameEngine.setAmbiantLight(Ogre::ColourValue(.1f,.1f,.1f));
+	Annwvyn::AnnLightObject* Light = GameEngine->addLight();	
+	GameEngine->setAmbiantLight(Ogre::ColourValue(.1f,.1f,.1f));
 	Light->setPosition(0,3,10);
 
 
-	GameEngine.initPlayerPhysics();
-	//GameEngine.setDebugPhysicState(true);
+	GameEngine->initPlayerPhysics();
+//	GameEngine->setDebugPhysicState(true);
 
 
 	//setUp Oculus system
-    	GameEngine.oculusInit();
+    GameEngine->oculusInit();
 
-	GameEngine.setSkyDomeMaterial(true,"Sky/dome1");
+	GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
 
 	//play background music
-	GameEngine.getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
+	GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
 	
 	//sinbad make sound
 	Sinbad->playSound("media/monster.wav",true); //true = in loop, false by default
 
-	//Render loop
-	while(!GameEngine.requestStop())
-	{
-		/*if(Sinbad2->collideWith(Sinbad))
-		{
-			std::cout << "sinbad 2 collide with sinbad" << std::endl;
-		}
 
-		if(GameEngine.playerLooking() == Sinbad)
-		{
-			std::cout << "Why are you watching a dancing ogre ?" << std::endl;
-		}
-		//game logic here!
-		*/
-        GameEngine.refresh();
+	//Render loop
+
+	while(!GameEngine->requestStop())
+	{
+		GameEngine->refresh();
 	}
 	return 0;
 }

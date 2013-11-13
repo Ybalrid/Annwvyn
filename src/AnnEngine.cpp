@@ -115,6 +115,7 @@ AnnEngine::AnnEngine(const char title[])
 
 	//OpenAl is handeled thanks to this class
 	AudioEngine = new AnnAudioEngine;
+
 }
 
 
@@ -181,7 +182,7 @@ void AnnEngine::createVirtualBodyShape()
 {
 	float height = m_bodyParams->eyeHeight + 0.2f;
 	//m_bodyParams->Shape = new btBoxShape(btVector3(1,height,1));
-	m_bodyParams->Shape = new btCapsuleShape(0.5,height);
+	m_bodyParams->Shape = new btCapsuleShape(0.5,height); //We block rotation
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
@@ -289,7 +290,9 @@ void AnnEngine::oculusInit()
 	oculus.setupOgre(m_SceneManager,m_Window);
 	log("Creating camera");
 	m_Camera = oculus.getCameraNode();
-	m_Camera->setPosition(m_bodyParams->Position + Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
+	
+	m_Camera->setPosition(m_bodyParams->Position + 
+		Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
 
 	oculus.setupDriftCorrection();
 }
@@ -314,7 +317,8 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[])
 
 	obj->setBulletDynamicsWorld(m_DynamicsWorld);
 
-	objects.push_back(obj);
+	objects.push_back(obj); //keep address in list
+
 	return obj;
 }
 
@@ -323,7 +327,7 @@ void AnnEngine::renderOneFrame()
 	m_Root->renderOneFrame();
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     Sleep(1); //pause 1ms
-#else
+#else if __gnu_linux__
     usleep(1000);//pause 1ms
 #endif
 }
@@ -389,7 +393,7 @@ void AnnEngine::refresh()
 #else
 	//not windows specific equivalent
     Ogre::WindowEventUtilities::messagePump();
-#endif //don't know why but without this shit the program freeze when running outside of Microsfot Visual Studio debuger
+#endif
 
 	updateCamera();
 	//bullet part
@@ -429,7 +433,7 @@ void AnnEngine::refresh()
 
 	m_bodyParams->Orientation.yaw
 		(Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
-
+		
     if(m_bodyParams->Body != NULL)
     {
 	m_bodyParams->Position =
@@ -668,7 +672,6 @@ void AnnEngine::playObjectsAnnimation()
 
 Ogre::SceneManager* AnnEngine::getSceneManager()
 {
-	if(m_SceneManager != NULL)
 		return m_SceneManager;
 }
 
@@ -677,7 +680,7 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
 	m_SceneManager->setSkyDome(activate,materialName,curvature,tiling);
 }
 
-AnnGameObject* AnnEngine::playerLooking()
+AnnGameObject* AnnEngine::playerLookingAt()
 {
 	//Origin vector
 	Ogre::Vector3 Orig(oculus.getCameraNode()->getPosition());
@@ -708,13 +711,23 @@ AnnGameObject* AnnEngine::playerLooking()
 				break;
 			}	
 	}
-	if(found)
-	{
-	}
+
 	if(found)
 		for(size_t i = 0; i < objects.size(); i++)
 			if((void*)objects[i]->node() == (void*)node)
 				return objects[i];
 
 	return NULL;
+}
+
+
+
+Annwvyn::bodyParams* AnnEngine::getBodyParams()
+{
+	return m_bodyParams;
+}
+
+Ogre::SceneNode* AnnEngine::getCamera()
+{
+	return oculus.getCameraNode();
 }

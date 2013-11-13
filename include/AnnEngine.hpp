@@ -169,7 +169,12 @@ namespace Annwvyn
 
 		void setSkyDomeMaterial(bool activate, const char materialName[], float curvature = 2.0f, float tiling = 1.0f);
 
-		Annwvyn::AnnGameObject* playerLooking();
+		Annwvyn::AnnGameObject* playerLookingAt();
+
+
+		Annwvyn::bodyParams* getBodyParams();
+
+		Ogre::SceneNode* getCamera();
 
 	private:
 		Annwvyn::bodyParams* m_bodyParams;

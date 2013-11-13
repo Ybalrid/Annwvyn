@@ -1,6 +1,6 @@
-Annwvyn TODO : 
-- Linux suport
-- Easy Windows config
+TODO : 
+- Factorise leap-hand code
+- Make AnnLeap an optional plugin at building time
 
 TODO in future release 
 - allow playing multiple animations

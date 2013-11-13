@@ -297,6 +297,7 @@ void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 	
 	tester->collisionState = false;
 	tester->Object = Object;
+
 	tester->Receiver = this;
 
 	collisionMask.push_back(tester);
