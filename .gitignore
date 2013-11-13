@@ -32,3 +32,6 @@
 
 #Windows text file
 *.txt
+
+#Windows executable
+*.exe
