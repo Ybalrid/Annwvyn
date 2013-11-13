@@ -10,7 +10,6 @@
  */
 
 //C++ includes
-#include "leapHandDrawer.hpp"
 #include <iostream>
 #include <streambuf>
 #include <fstream>
@@ -56,7 +55,6 @@ int main(int argc, char **argv)
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
 	GameEngine->loadDir("media/plane");
-	GameEngine->loadDir("media/hand");
 
 	GameEngine->initRessources();
 
@@ -114,13 +112,8 @@ int main(int argc, char **argv)
 
 	//Render loop
 
-	LeapDraw leapDrawer(GameEngine);
-	leapDrawer.setDecalVector(Ogre::Vector3(0.0f, -0.4f, -0.2f));
-	leapDrawer.charge3dMeshs("Palm.mesh","Finger.mesh");
-
 	while(!GameEngine->requestStop())
 	{
-		leapDrawer.updateHands();
 		GameEngine->refresh();
 	}
 	return 0;
