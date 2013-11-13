@@ -118,15 +118,3 @@ void AnnAudioEngine::updateListenerOrient(Ogre::Quaternion orient)
 
 	alListenerfv(AL_ORIENTATION, Orientation);
 }
-
-void AnnAudioEngine::playASound(const std::string path, const float volume)
-{
-	/*ALuint buffer = loadSndFile(path);
-	ALuint soundSource;
-	alGenSources(1,&soundSource);
-
-	alSourcei(soundSource, AL_BUFFER, buffer);
-	alSourcef(soundSource, AL_GAIN, volume);
-
-	alSourcePlay(soundSource);*/
-}
