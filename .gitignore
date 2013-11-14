@@ -35,3 +35,8 @@
 
 #Windows executable
 *.exe
+
+#editor temporary files
+*.swp
+.*.swp
+
