@@ -52,6 +52,8 @@ namespace Annwvyn
 
 		//Class destructor. Do clean up stuff.
 		~AnnEngine();
+        
+        AnnEngine* getAddress() {return this;}
 
 		//display config window and return an ogre root (create a new one by default)
 		Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
@@ -137,7 +139,8 @@ namespace Annwvyn
 		//update program time. retur the delay between the last call of this method
 		float updateTime(); //return deltaT
 		float getTime();
-
+        
+        //Step Objects animation
 		void playObjectsAnnimation();
 
 
@@ -157,23 +160,31 @@ namespace Annwvyn
 		//return true if you touch the ground
 		bool collisionWithGround();
 		
+        //process collision test form bullet manifold and objects collision mask
 		void processCollisionTesting();
-
+        
+        //get the dynamicsWorld
 		btDiscreteDynamicsWorld* getDynamicsWorld();
-
+        
+        //create a trigger object
 		AnnTriggerObject* createTriggerObject();
 
+        //process contact test with triggers
 		void processTriggersContacts();
-
+        
+        //get ogre scene manager
 		Ogre::SceneManager* getSceneManager();
-
+        
+        //set the ogre material for the skydime with params
 		void setSkyDomeMaterial(bool activate, const char materialName[], float curvature = 2.0f, float tiling = 1.0f);
-
+        
+        //get the AnnObject the player is looking at
 		Annwvyn::AnnGameObject* playerLookingAt();
 
-
+        //get bodyParams
 		Annwvyn::bodyParams* getBodyParams();
-
+        
+        //get ogre camera scene node
 		Ogre::SceneNode* getCamera();
 
 	private:
