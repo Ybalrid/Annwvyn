@@ -64,9 +64,13 @@ AnnEngine::AnnEngine(const char title[])
 		std::string("WINDOW"), windowHndStr.str()));
 	
 	m_InputManager = OIS::InputManager::createInputSystem(pl);
-	m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject(OIS::OISKeyboard,true));
+    
+
+    m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject(OIS::OISKeyboard,true));
 	m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject(OIS::OISMouse,true));
-	m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick,true));
+	
+    if(m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
+        m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick,true));
 	
     //THESE are the basic gameplay that you can use out of the box. set these variables to false to use costum one.
 	activateWASD = true; 
@@ -510,7 +514,8 @@ void AnnEngine::captureEvents()
 {
 	m_Keyboard->capture();
 	m_Mouse->capture();
-    m_Joystick->capture();
+    if(m_Joystick)
+        m_Joystick->capture();
 }
 
 float AnnEngine::updateTime()
