@@ -153,6 +153,7 @@ namespace Annwvyn
 		//get lowlevel OIS access
 		OIS::Mouse* getOISMouse();
 		OIS::Keyboard* getOISKeyboard();
+        OIS::JoyStick* getOISJoyStick();
 
 		//is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
 		bool isKeyDown(OIS::KeyCode key); //this is simplier to use if you are on the OIS namespace ;-)
@@ -209,6 +210,7 @@ namespace Annwvyn
 		OIS::InputManager *m_InputManager ;
 		OIS::Keyboard *m_Keyboard;
 		OIS::Mouse *m_Mouse;
+        OIS::JoyStick *m_Joystick;
 		OIS::ParamList pl;
 
 		size_t windowHnd;

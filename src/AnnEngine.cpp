@@ -54,7 +54,7 @@ AnnEngine::AnnEngine(const char title[])
 	m_InputManager = NULL;
 	m_Keyboard = NULL;
 	m_Mouse = NULL;
-
+    m_Joystick = NULL;
 	windowHnd = 0; 
 
 	m_Window->getCustomAttribute("WINDOW",&windowHnd);
@@ -66,8 +66,9 @@ AnnEngine::AnnEngine(const char title[])
 	m_InputManager = OIS::InputManager::createInputSystem(pl);
 	m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject(OIS::OISKeyboard,true));
 	m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject(OIS::OISMouse,true));
-
-	//THESE are the basic gameplay that you can use out of the box. set these variables to false to use costum one.
+	m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick,true));
+	
+    //THESE are the basic gameplay that you can use out of the box. set these variables to false to use costum one.
 	activateWASD = true; 
 	// * move around with WASD keys (or local equivalent. I've an AZERTY keyboard and it handle ZQSD keys without doing anything special)
 	// * run with SHIFT pressed
@@ -509,6 +510,7 @@ void AnnEngine::captureEvents()
 {
 	m_Keyboard->capture();
 	m_Mouse->capture();
+    m_Joystick->capture();
 }
 
 float AnnEngine::updateTime()
@@ -541,6 +543,11 @@ OIS::Mouse* AnnEngine::getOISMouse()
 OIS::Keyboard* AnnEngine::getOISKeyboard()
 {
 	return m_Keyboard;
+}
+
+OIS::JoyStick* AnnEngine::getOISJoyStick()
+{
+    return m_Joystick;
 }
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
