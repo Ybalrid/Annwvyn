@@ -120,7 +120,9 @@ AnnEngine::AnnEngine(const char title[])
 
 	//OpenAl is handeled thanks to this class
 	AudioEngine = new AnnAudioEngine;
-
+    
+    m_CEGUI_Renderer = NULL;
+    initCEGUI();
 }
 
 
@@ -144,6 +146,11 @@ AnnEngine::~AnnEngine()
 	delete m_Mouse;
 
 	delete AudioEngine;
+}
+
+void AnnEngine::initCEGUI()
+{
+    m_CEGUI_Renderer = &CEGUI::OgreRenderer::bootstrapSystem();
 }
 
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)

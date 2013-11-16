@@ -23,6 +23,9 @@
 #include <btBulletCollisionCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
+//CEGUI
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
 //OgreOculus by kojack
 #include "OgreOculus.h"
 //btOgre
@@ -54,7 +57,7 @@ namespace Annwvyn
 		~AnnEngine();
         
         AnnEngine* getAddress() {return this;}
-
+        void initCEGUI();
 		//display config window and return an ogre root (create a new one by default)
 		Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
 
@@ -241,6 +244,9 @@ namespace Annwvyn
 
 		//Audio
 		AnnAudioEngine* AudioEngine;
+
+        //gui
+        CEGUI::OgreRenderer* m_CEGUI_Renderer;
 	};
 }
 #endif //ANN_ENGINE
