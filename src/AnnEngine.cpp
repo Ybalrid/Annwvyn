@@ -750,3 +750,8 @@ Ogre::SceneNode* AnnEngine::getCamera()
 {
 	return oculus.getCameraNode();
 }
+
+float AnnEngine::getCentreOffset()
+{
+    return oculus.getCentreOffset();
+}
