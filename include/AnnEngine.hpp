@@ -191,6 +191,8 @@ namespace Annwvyn
         //get ogre camera scene node
 		Ogre::SceneNode* getCamera();
 
+        float getCentreOffset();
+
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
