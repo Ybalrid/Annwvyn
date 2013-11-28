@@ -306,7 +306,7 @@ void AnnEngine::oculusInit()
 	m_Camera->setPosition(m_bodyParams->Position + 
 		Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
 
-	oculus.setupDriftCorrection();
+	//oculus.setupDriftCorrection();
 }
 
 

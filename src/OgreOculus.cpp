@@ -183,7 +183,7 @@ bool Oculus::setupOculus()
 	m_oculusReady = true;
 	Ogre::LogManager::getSingleton().logMessage("Oculus: Oculus setup completed successfully");
 
-	setReferencePoint(); //for drift correction
+//	setReferencePoint(); //for drift correction
 	return true;
 }
 
@@ -279,7 +279,7 @@ Ogre::Quaternion Oculus::getOrientation() //const <- I have to call tryCalibrati
 {
 	if(m_oculusReady)
 	{
-		this->tryCalibration();
+		//this->tryCalibration();
 		Quatf q = m_sensorFusion->GetOrientation();
 		return Ogre::Quaternion(q.w,q.x,q.y,q.z);
 	}
@@ -305,7 +305,7 @@ void Oculus::resetOrientation()
 		m_sensorFusion->Reset();
 }
 
-void Oculus::setupDriftCorrection(float minMagDist, float minQuatDist)
+/*void Oculus::setupDriftCorrection(float minMagDist, float minQuatDist)
 {
 	if(!m_oculusReady) return; //don't do anything if the oculus is not ready. Will cause the program to stuck here
 
@@ -313,15 +313,15 @@ void Oculus::setupDriftCorrection(float minMagDist, float minQuatDist)
 	m_MagCal.SetMinQuatDistance(minQuatDist);
 	m_MagCal.BeginAutoCalibration(*m_sensorFusion);
 	m_driftCorrection = true;
-}
+}*/
 
-void Oculus::setReferencePoint()
+/*void Oculus::setReferencePoint()
 {
     //new oculus SDK dont need that
 //	m_sensorFusion->SetMagReference();
-}
+}*/
 
-void Oculus::tryCalibration()
+/*void Oculus::tryCalibration()
 {
 	if(!m_driftCorrection)
 		return;
@@ -342,4 +342,4 @@ void Oculus::tryCalibration()
 //	if (m_sensorFusion->IsMagReady()) // don't exist anymore
 		m_sensorFusion->SetYawCorrectionEnabled(true);
 
-}
+}*/

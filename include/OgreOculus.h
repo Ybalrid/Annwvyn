@@ -96,13 +96,13 @@ public:
 	float getCentreOffset() const;
 	
 	/// Perform Automatic calibration and activate drift correction.
-	void setupDriftCorrection(float minMagDist = 0.1f, float minQuatDist = 0.3f);
+	//void setupDriftCorrection(float minMagDist = 0.1f, float minQuatDist = 0.3f);
 	
 	/// Set the reference point for drift correction
-	void setReferencePoint();
+	//void setReferencePoint();
 	
 	/// Update the Automatic calibration process if we are autocalibrating 
-	void tryCalibration();
+	//void tryCalibration();
 
 protected:
 	//Device
@@ -112,7 +112,7 @@ protected:
 	//Sensor
 	OVR::SensorDevice *m_sensor;
 	OVR::SensorFusion *m_sensorFusion;
-	OVR::Util::MagCalibration m_MagCal; ///Magnetometer calibration object
+	//OVR::Util::MagCalibration m_MagCal; ///Magnetometer calibration object
 	//Tests
 	bool m_oculusReady;		/// Has the oculus rift been fully initialised?
 	bool m_ogreReady;		/// Has ogre been fully initialised?
