@@ -15,7 +15,7 @@
 
 #ifndef _BtOgreShapes_H_
 #define _BtOgreShapes_H_
-
+#undef DLL
 //windows DLL
 #ifdef DLLDIR_EX
    #define DLL  __declspec(dllexport)   // export DLL information
@@ -25,6 +25,7 @@
 
 //bypass on linux
 #ifdef __gnu_linux__
+#undef DLL
 #define DLL
 #endif
 

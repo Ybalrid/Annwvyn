@@ -339,7 +339,7 @@ void AnnEngine::renderOneFrame()
 	m_Root->renderOneFrame();
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     Sleep(1); //pause 1ms
-#else if __gnu_linux__
+#elif __gnu_linux__
     usleep(1000);//pause 1ms
 #endif
 }
