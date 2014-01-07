@@ -287,6 +287,29 @@ void AnnEngine::loadDir(const char path[])
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path,"FileSystem");
 }
 
+void AnnEngine::loadResFile(const char path[])
+{
+    Ogre::String res= path;
+    Ogre::ConfigFile cf;
+    cf.load(res);
+    Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
+
+    Ogre::String secName, typeName, archName;
+    while (seci.hasMoreElements())
+    {
+        secName = seci.peekNextKey();
+        Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
+        Ogre::ConfigFile::SettingsMultiMap::iterator i;
+        for (i = settings->begin(); i != settings->end(); ++i)
+        {
+            typeName = i->first;
+            archName = i->second;
+            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+                    archName, typeName, secName);
+        }
+    }
+}
+
 void AnnEngine::initRessources()
 {
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();

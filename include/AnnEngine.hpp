@@ -65,7 +65,7 @@ namespace Annwvyn
 		//load data to the ressource group manager
 		void loadZip(const char path[]);
 		void loadDir(const char path[]);
-
+        void loadResFile(const char path[]);
 		//init ressources groups
 		void initRessources();
 
