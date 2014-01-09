@@ -1,5 +1,6 @@
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
+//This class add the possibility to easily handle a CEGUI Window on both side-creen of the rift
 namespace CEGUI
 {
     class StereoscopicWindow
