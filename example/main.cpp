@@ -19,8 +19,8 @@
 
 
 
-//stream problem on windows :
-#define OUTSTREAM_TO_FILE
+//If you want to redirect cout & cerr to cout.txt and cerr.txt, uncomment the folowing line : 
+//#define OUTSTREAM_TO_FILE
 
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
