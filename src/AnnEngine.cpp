@@ -74,7 +74,7 @@ AnnEngine::AnnEngine(const char title[])
 	
     //THESE are the basic gameplay that you can use out of the box. set these variables to false to use costum one.
 	activateWASD = true; 
-	// * move around with WASD keys (or local equivalent. I've an AZERTY keyboard and it handle ZQSD keys without doing anything special)
+	// * move around with WASD keys (or, if you are running windows, local equivalent. I've an AZERTY keyboard and it handle ZQSD keys without doing anything special)
 	// * run with SHIFT pressed
 	activateJump = true; 
 	// * jump with space if your feet touch the ground (m_groudn object)
@@ -123,6 +123,13 @@ AnnEngine::AnnEngine(const char title[])
     
     m_CEGUI_Renderer = NULL;
     initCEGUI();
+
+    QuatReference = Ogre::Quaternion::IDENTITY;
+}
+
+void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
+{
+    QuatReference = q;
 }
 
 
@@ -410,7 +417,8 @@ void AnnEngine::log(std::string message,bool flag)
 void AnnEngine::updateCamera()
 {
 	oculus.getCameraNode()->setPosition(m_bodyParams->Position);
-	oculus.getCameraNode()->setOrientation(m_bodyParams->Orientation.toQuaternion() * oculus.getOrientation());
+    Ogre::Quaternion temp = QuatReference * m_bodyParams->Orientation.toQuaternion();
+	oculus.getCameraNode()->setOrientation(temp * oculus.getOrientation());
 }
 
 void AnnEngine::refresh()

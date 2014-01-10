@@ -194,6 +194,8 @@ namespace Annwvyn
 
         float getCentreOffset();
 
+        void setReferenceQuaternion(Ogre::Quaternion q);
+
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
@@ -242,6 +244,8 @@ namespace Annwvyn
 		BtOgre::DebugDrawer* m_debugDrawer;
 
 		btQuaternion fixedBodyOrient;
+        
+        Ogre::Quaternion QuatReference;
 
 		AnnGameObject* m_Ground;
 
