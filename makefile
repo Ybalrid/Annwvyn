@@ -30,7 +30,7 @@ install: all
 	@echo DONE ! you can see library install log on ld.log 
 
 test: lib/libAnnwvyn.so
-	$(CC) example/main.cpp -o example/testDyna  -L./lib -lAnnwvyn $(CFLAGS) $(LDFLAGS) $(IFLAGS) 
+	$(CC) example/main.cpp -o example/testDyna  -L./lib -lAnnwvyn $(CFLAGS) $(LDFLAGS) $(IFLAGS) -lpthread
 	@echo 'Copying Shared object to program floder'
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
