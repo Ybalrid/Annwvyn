@@ -195,7 +195,7 @@ namespace Annwvyn
         float getCentreOffset();
 
         void setReferenceQuaternion(Ogre::Quaternion q);
-
+        Ogre::Quaternion getReferenceQuaternion();
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
