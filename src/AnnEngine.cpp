@@ -132,6 +132,11 @@ void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
     QuatReference = q;
 }
 
+Ogre::Quaternion AnnEngine::getReferenceQuaternion()
+{
+    return QuatReference;
+}
+
 
 AnnEngine::~AnnEngine()
 {
@@ -786,3 +791,4 @@ float AnnEngine::getCentreOffset()
 {
     return oculus.getCentreOffset();
 }
+
