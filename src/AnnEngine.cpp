@@ -618,8 +618,8 @@ bool AnnEngine::collisionWithGround()
 		btPersistentManifold* contactManifold =
 		m_DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 
-		const btCollisionObject* obA = contactManifold->getBody0();
-		const btCollisionObject* obB = contactManifold->getBody1();
+		const btCollisionObject* obA = (btCollisionObject*) contactManifold->getBody0();
+		const btCollisionObject* obB = (btCollisionObject*) contactManifold->getBody1();
 
 		void* pair1 = (void*) obA;
 		void* pair2 = (void*) obB;
@@ -658,8 +658,8 @@ void AnnEngine::processCollisionTesting()
 		btPersistentManifold* contactManifold =
 		m_DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(m);
 
-		const btCollisionObject* obA = contactManifold->getBody0();
-		const btCollisionObject* obB = contactManifold->getBody1();
+		const btCollisionObject* obA = (btCollisionObject*) contactManifold->getBody0();
+		const btCollisionObject* obB = (btCollisionObject*) contactManifold->getBody1();
 
 		void* pair1 = (void*) obA;
 		void* pair2 = (void*) obB;
