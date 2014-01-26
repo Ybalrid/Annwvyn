@@ -1,6 +1,7 @@
 #ifndef ANN_AUDIO
 #define ANN_AUDIO
 
+#undef DLL
 //windows DLL
 #ifdef DLLDIR_EX
    #define DLL  __declspec(dllexport)   // export DLL information
@@ -10,8 +11,10 @@
 
 //bypass on linux
 #ifdef __gnu_linux__
+#undef DLL
 #define DLL
 #endif
+
 
 #include <Ogre.h>
 

@@ -5,6 +5,7 @@ Bullet >= 2.8
 OpenAL
 libsndfile
 libOVR
+CEGUI >=0.8.2 (Build with your own Ogre build, we need the OgreRenderer to use the correct version of Ogre)
 
 for windows :
 Microsoft Visual C++ 2010 
