@@ -7,8 +7,8 @@ endif
 
 
 CFLAGS =
-LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/local/lib/OGRE/ -lovr -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system 
-IFLAGS = -I/usr/local/include/OGRE  -I../OculusSDK/LibOVR/Include  -I/usr/include/AL -I/usr/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ 
+LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH)-L/usr/local/lib -L/usr/local/lib/OGRE/  -lovr -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system -lCEGUIBase-0 -lCEGUIOgreRenderer-0
+IFLAGS = -I/usr/local/include/OGRE  -I../OculusSDK/LibOVR/Include  -I/usr/include/AL -I/usr/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I/usr/local/include/cegui-0 -I./include/
 
 INSTALL_PREFIX = /usr/local
 
@@ -37,33 +37,36 @@ install: all
 	@echo DONE ! you can see library install log on ld.log 
 
 test: lib/libAnnwvyn.so
-	$(CC) example/main.cpp -o example/testDyna  -L./lib -lAnnwvyn $(CFLAGS) $(LDFLAGS) $(IFLAGS) 
+	$(CC) example/main.cpp -o example/testDyna  -L./lib -lAnnwvyn $(CFLAGS) $(LDFLAGS) $(IFLAGS) -lpthread
 	@echo 'Copying Shared object to program floder'
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
 
-lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o obj/OgreOculus.o
+lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o obj/OgreOculus.o obj/StereoscopicWindow.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
-obj/AnnEngine.o:
+obj/AnnEngine.o: src/AnnEngine.cpp include/AnnEngine.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnEngine.cpp -o obj/AnnEngine.o
 
-obj/AnnAudioEngine.o:
+obj/AnnAudioEngine.o: src/AnnAudioEngine.cpp include/AnnAudioEngine.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnAudioEngine.cpp -o obj/AnnAudioEngine.o
 
-obj/AnnGameObject.o:
+obj/AnnGameObject.o: src/AnnGameObject.cpp include/AnnAudioEngine.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnGameObject.cpp -o obj/AnnGameObject.o
 
-obj/AnnTools.o:
+obj/AnnTools.o: src/AnnTools.cpp include/AnnTools.h
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnTools.cpp -o obj/AnnTools.o
 
-obj/AnnTriggerObject.o:
+obj/AnnTriggerObject.o: src/AnnTriggerObject.cpp include/AnnTriggerObject.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnTriggerObject.cpp -o obj/AnnTriggerObject.o
 
-obj/BtOgre.o:
+obj/BtOgre.o: src/BtOgre.cpp include/BtOgreExtras.h  include/BtOgreGP.h  include/BtOgrePG.h 
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/BtOgre.cpp -o obj/BtOgre.o
 
-obj/OgreOculus.o:
+obj/OgreOculus.o: src/OgreOculus.cpp include/OgreOculus.h include/euler.h
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OgreOculus.cpp -o obj/OgreOculus.o
+
+obj/StereoscopicWindow.o: src/StereoscopicWindow.cpp include/StereoscopicWindow.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/StereoscopicWindow.cpp -o obj/StereoscopicWindow.o
 
 endif

@@ -74,7 +74,7 @@ AnnEngine::AnnEngine(const char title[])
 	
     //THESE are the basic gameplay that you can use out of the box. set these variables to false to use costum one.
 	activateWASD = true; 
-	// * move around with WASD keys (or local equivalent. I've an AZERTY keyboard and it handle ZQSD keys without doing anything special)
+	// * move around with WASD keys (or, if you are running windows, local equivalent. I've an AZERTY keyboard and it handle ZQSD keys without doing anything special)
 	// * run with SHIFT pressed
 	activateJump = true; 
 	// * jump with space if your feet touch the ground (m_groudn object)
@@ -120,7 +120,21 @@ AnnEngine::AnnEngine(const char title[])
 
 	//OpenAl is handeled thanks to this class
 	AudioEngine = new AnnAudioEngine;
+    
+    m_CEGUI_Renderer = NULL;
+    initCEGUI();
 
+    QuatReference = Ogre::Quaternion::IDENTITY;
+}
+
+void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
+{
+    QuatReference = q;
+}
+
+Ogre::Quaternion AnnEngine::getReferenceQuaternion()
+{
+    return QuatReference;
 }
 
 
@@ -144,6 +158,11 @@ AnnEngine::~AnnEngine()
 	delete m_Mouse;
 
 	delete AudioEngine;
+}
+
+void AnnEngine::initCEGUI()
+{
+    m_CEGUI_Renderer = &CEGUI::OgreRenderer::bootstrapSystem();
 }
 
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
@@ -280,6 +299,29 @@ void AnnEngine::loadDir(const char path[])
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path,"FileSystem");
 }
 
+void AnnEngine::loadResFile(const char path[])
+{
+    Ogre::String res= path;
+    Ogre::ConfigFile cf;
+    cf.load(res);
+    Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
+
+    Ogre::String secName, typeName, archName;
+    while (seci.hasMoreElements())
+    {
+        secName = seci.peekNextKey();
+        Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
+        Ogre::ConfigFile::SettingsMultiMap::iterator i;
+        for (i = settings->begin(); i != settings->end(); ++i)
+        {
+            typeName = i->first;
+            archName = i->second;
+            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+                    archName, typeName, secName);
+        }
+    }
+}
+
 void AnnEngine::initRessources()
 {
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
@@ -332,7 +374,7 @@ void AnnEngine::renderOneFrame()
 	m_Root->renderOneFrame();
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     Sleep(1); //pause 1ms
-#else if __gnu_linux__
+#elif __gnu_linux__
     usleep(1000);//pause 1ms
 #endif
 }
@@ -380,7 +422,8 @@ void AnnEngine::log(std::string message,bool flag)
 void AnnEngine::updateCamera()
 {
 	oculus.getCameraNode()->setPosition(m_bodyParams->Position);
-	oculus.getCameraNode()->setOrientation(m_bodyParams->Orientation.toQuaternion() * oculus.getOrientation());
+    Ogre::Quaternion temp = QuatReference * m_bodyParams->Orientation.toQuaternion();
+	oculus.getCameraNode()->setOrientation(temp * oculus.getOrientation());
 }
 
 void AnnEngine::refresh()
@@ -743,3 +786,9 @@ Ogre::SceneNode* AnnEngine::getCamera()
 {
 	return oculus.getCameraNode();
 }
+
+float AnnEngine::getCentreOffset()
+{
+    return oculus.getCentreOffset();
+}
+

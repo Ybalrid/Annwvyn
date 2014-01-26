@@ -4,7 +4,7 @@
 * \file Annwvyn.h
 * \brief main Annwvyn include
 * \author Arthur Brainville
-* \version 0.1
+* \version 0.3
 */
 #include <Ogre.h>
 #include <OIS.h>
@@ -19,5 +19,7 @@
 //Other Annwvyn
 #include "AnnTypes.h"
 #include "AnnTools.h"
+//CEGUI addons
+#include "StereoscopicWindow.hpp"
 
 #endif //ANNWVYN	

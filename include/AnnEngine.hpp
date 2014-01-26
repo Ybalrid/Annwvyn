@@ -1,6 +1,6 @@
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
-
+#undef DLL
 //windows DLL
 #ifdef DLLDIR_EX
    #define DLL  __declspec(dllexport)   // export DLL information
@@ -10,6 +10,7 @@
 
 //bypass on linux
 #ifdef __gnu_linux__
+#undef DLL
 #define DLL
 #endif
 
@@ -23,6 +24,9 @@
 #include <btBulletCollisionCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
+//CEGUI
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
 //OgreOculus by kojack
 #include "OgreOculus.h"
 //btOgre
@@ -54,14 +58,14 @@ namespace Annwvyn
 		~AnnEngine();
         
         AnnEngine* getAddress() {return this;}
-
+        void initCEGUI();
 		//display config window and return an ogre root (create a new one by default)
 		Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
 
 		//load data to the ressource group manager
 		void loadZip(const char path[]);
 		void loadDir(const char path[]);
-
+        void loadResFile(const char path[]);
 		//init ressources groups
 		void initRessources();
 
@@ -188,6 +192,10 @@ namespace Annwvyn
         //get ogre camera scene node
 		Ogre::SceneNode* getCamera();
 
+        float getCentreOffset();
+
+        void setReferenceQuaternion(Ogre::Quaternion q);
+        Ogre::Quaternion getReferenceQuaternion();
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
@@ -236,11 +244,16 @@ namespace Annwvyn
 		BtOgre::DebugDrawer* m_debugDrawer;
 
 		btQuaternion fixedBodyOrient;
+        
+        Ogre::Quaternion QuatReference;
 
 		AnnGameObject* m_Ground;
 
 		//Audio
 		AnnAudioEngine* AudioEngine;
+
+        //gui
+        CEGUI::OgreRenderer* m_CEGUI_Renderer;
 	};
 }
 #endif //ANN_ENGINE
