@@ -14,6 +14,8 @@
 #define DLL
 #endif
 
+#include <vector>
+
 #include <Ogre.h>
 #include <OIS.h>
 #include "euler.h"
@@ -24,6 +26,7 @@
 
 namespace Annwvyn
 {
+    class AnnGameObject;
 	typedef struct bodyParams bodyParams;
 	struct bodyParams
 	{
@@ -49,6 +52,8 @@ namespace Annwvyn
 	};
 
 	typedef Ogre::Light AnnLightObject;
+
+    typedef std::vector<Annwvyn::AnnGameObject * > AnnGameObjectVect;
 
 	//controls
 	namespace Keys
