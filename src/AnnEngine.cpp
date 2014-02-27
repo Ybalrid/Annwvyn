@@ -443,7 +443,6 @@ void AnnEngine::refresh()
     Ogre::WindowEventUtilities::messagePump();
 #endif
 
-	updateCamera();
 	//bullet part
 	m_DynamicsWorld->stepSimulation(1.f/60,1);
 
@@ -519,6 +518,7 @@ void AnnEngine::refresh()
 	for(unsigned int i = 0; i < objects.size(); i++)
 		objects[i]->updateOpenAlPos();
 
+	updateCamera();
 	renderOneFrame();
 }
 
