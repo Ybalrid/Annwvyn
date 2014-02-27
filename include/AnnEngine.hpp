@@ -211,7 +211,7 @@ namespace Annwvyn
 		Oculus oculus;
 
 		//dynamic container for games objects
-		std::vector <AnnGameObject*> objects;
+		AnnGameObjectVect objects;
 		std::vector <AnnTriggerObject*> triggers;
 
 		//Events processing : 
