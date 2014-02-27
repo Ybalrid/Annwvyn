@@ -78,7 +78,7 @@ AnnEngine::AnnEngine(const char title[])
 	// * run with SHIFT pressed
 	activateJump = true; 
 	// * jump with space if your feet touch the ground (m_groudn object)
-	jumpForce = 250.0f;
+	jumpForce = 25.0f;
 	
 	//animation are time-based
 	
@@ -205,7 +205,6 @@ void AnnEngine::initPlayerPhysics()
 void AnnEngine::createVirtualBodyShape()
 {
 	float height = m_bodyParams->eyeHeight + 0.2f;
-	//m_bodyParams->Shape = new btBoxShape(btVector3(1,height,1));
 	m_bodyParams->Shape = new btCapsuleShape(0.5,height); //We block rotation
 }
 
@@ -444,7 +443,6 @@ void AnnEngine::refresh()
 #endif
 
 	//bullet part
-	m_DynamicsWorld->stepSimulation(1.f/60,1);
 
 	//ogre part
 	Ogre::Vector3 translate(0,0,0);
@@ -452,6 +450,7 @@ void AnnEngine::refresh()
 	//animations playing :
 	deltaT = updateTime();
 	playObjectsAnnimation();
+	m_DynamicsWorld->stepSimulation(deltaT,2);
 
 	//	OIS Events 
 	captureEvents();

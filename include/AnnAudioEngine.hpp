@@ -57,7 +57,8 @@ namespace Annwvyn
 		std::string lastError;
 		ALCdevice* Device;
 		ALCcontext* Context;
-		
+	    
+        ALuint buffer;
 		ALuint bgm;//background music source
 		//ALuint soundSource;
 	};
