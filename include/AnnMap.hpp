@@ -21,6 +21,7 @@
 #include "AnnEngine.hpp"
 #include "AnnGameObject.hpp"
 #include "AnnTypes.h"
+
 namespace Annwvyn
 {
     class DLL AnnMap
@@ -35,12 +36,12 @@ namespace Annwvyn
             void init(Annwvyn::AnnEngine* engine);
             void process(std::string descLine);
 
-        private:
             AnnEngine* m_engine;
             AnnGameObjectVect content;
             bool fileLoaded;
+            
+            AnnGameObject* tmpObject;
 
-            Annwvyn::AnnGameObect* tmpObject;
     };
 }
 #endif //ANN_MAP 
