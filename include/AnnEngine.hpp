@@ -75,7 +75,7 @@ namespace Annwvyn
 		//init the BodyParams variable
 		static void initBodyParams(Annwvyn::bodyParams* bodyP,
 			float eyeHeight = 1.70f,
-			float walkSpeed = 1.2f,
+			float walkSpeed = 3.0f,
 			float turnSpeed = 0.003f,
 			float mass = 80.0f,
 			Ogre::Vector3 Position = Ogre::Vector3(0,0,10),
