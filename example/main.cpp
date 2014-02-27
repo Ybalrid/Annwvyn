@@ -116,5 +116,7 @@ int main(int argc, char **argv)
 	{
 		GameEngine->refresh();
 	}
+
+    delete GameEngine;
 	return 0;
 }
