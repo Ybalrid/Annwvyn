@@ -1,0 +1,25 @@
+MAP FILE DESCRIPTOR
+===================
+
+* Extension : map
+* Format : plainText
+
+* Syntax : 
+
+Object <ogre_entity_name> : Create an object
+EndObject : close the Object field (! mandatory before opening a new object)
+
+Pos <float_x> <float_y> <float_z> : position of the object on the map. relative to scene root
+Orient <float_w> <float_x> <float_y> <float_z> : Orientation quaternion. Relative to world
+
+
+EXAMPLE
+=======
+
+Object ground.mesh
+EndObject
+
+Object Sinbad.mesh
+Pos 4.55 1.001 2.214
+Orient 1 0 0 0
+EndObject
