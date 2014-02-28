@@ -43,9 +43,13 @@ bool AnnAudioEngine::initOpenAL()
 
 void AnnAudioEngine::shutdownOpenAL()
 {
-	alcMakeContextCurrent(NULL);
+	alSourceStop(bgm);
+    alDeleteSources(1,&bgm);
+    alDeleteBuffers(1,&buffer);
+    alcMakeContextCurrent(NULL);
 	alcDestroyContext(Context);
 	alcCloseDevice(Device);
+    alGetError();
 }
 
 ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
@@ -79,22 +83,23 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 
 	
     // create OpenAL buffer
-    ALuint Buffer;
-    alGenBuffers(1, &Buffer);
+//    ALuint Buffer;
+    alGenBuffers(1, &buffer);
 	
 	// load buffer
-    alBufferData(Buffer, Format, &Samples[0], NbSamples * sizeof(ALushort), SampleRate);
+    alBufferData(buffer, Format, &Samples[0], NbSamples * sizeof(ALushort), SampleRate);
  
     // check errors
     if (alGetError() != AL_NO_ERROR)
         return 0;
  
-    return Buffer;
+    return buffer;
 }
 
 void AnnAudioEngine::playBGM(const std::string path, const float volume)
 {
-	ALuint buffer = loadSndFile(path);
+    loadSndFile(path);
+//	ALuint buffer = loadSndFile(path);
 
 	alGenSources(1, &bgm);
 	alSourcei(bgm, AL_BUFFER, buffer);

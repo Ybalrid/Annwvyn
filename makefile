@@ -42,7 +42,7 @@ test: lib/libAnnwvyn.so
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
 
-lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o obj/OgreOculus.o obj/StereoscopicWindow.o
+lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o obj/OgreOculus.o obj/StereoscopicWindow.o obj/AnnMap.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 obj/AnnEngine.o: src/AnnEngine.cpp include/AnnEngine.hpp
@@ -68,5 +68,8 @@ obj/OgreOculus.o: src/OgreOculus.cpp include/OgreOculus.h include/euler.h
 
 obj/StereoscopicWindow.o: src/StereoscopicWindow.cpp include/StereoscopicWindow.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/StereoscopicWindow.cpp -o obj/StereoscopicWindow.o
+
+obj/AnnMap.o: src/AnnMap.cpp include/AnnMap.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnMap.cpp -o obj/AnnMap.o
 
 endif

@@ -44,7 +44,7 @@ namespace Annwvyn
 	{
 	public:
 		AnnGameObject();
-
+        ~AnnGameObject();
 		//Setters pos
 		void setPos(float x, float y, float z);
 		void setPos(Ogre::Vector3 pos);

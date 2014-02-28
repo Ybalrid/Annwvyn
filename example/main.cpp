@@ -108,13 +108,16 @@ int main(int argc, char **argv)
 	
 	//sinbad make sound
 	Sinbad->playSound("media/monster.wav",true); //true = in loop, false by default
-
-
+    
+    Annwvyn::AnnMap(GameEngine, "test.map");
+    
 	//Render loop
 
 	while(!GameEngine->requestStop())
 	{
 		GameEngine->refresh();
 	}
+
+    delete GameEngine;
 	return 0;
 }
