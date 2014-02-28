@@ -26,7 +26,8 @@ AnnMap::~AnnMap()
     //
     //Since the engine is pretty limited and dont permit to remove object from a scene, we cannot use solution n°2.
     //
-    //Therfore we temporary use solution n°1 
+    //Therfore we temporary use solution n°1 ... 
+    //So in fact we do nothing here
 
 }
 
@@ -66,7 +67,7 @@ void AnnMap::process(std::string descLine)
     stringstream desc(descLine);
     string word;
 
-    float x,y,z,w;
+    float x,y,z,w,mass;
     while(desc >> word)
     {
         //put to zero all buffer variables
@@ -74,6 +75,7 @@ void AnnMap::process(std::string descLine)
         y = 0;
         z = 0;
         w = 1;
+        mass = 0;
 
         if(word == "Object") //Supose we give an entity name here.
         {
@@ -127,14 +129,51 @@ void AnnMap::process(std::string descLine)
 
             if(tmpObject)
                 tmpObject->setOrientation(w,x,y,z);
-            else continue; //syntax error here 
+            else 
+            {
+            continue; //syntax error here 
+            }
         }
 
+        else if (word == "Scale")
+        {
+            desc >> x;
+            desc >> y;
+            desc >> z;
+            if(tmpObject)
+                tmpObject->node()->scale(x,y,z);
+        }
+
+        else if (word == "PhysicShape")
+        {
+            desc >> word;
+
+            phyShapeType shape;
+            if(word == "STATIC") 
+                shape = staticShape;
+            else if (word == "CONVEX")
+                shape = convexShape;
+            else if (word == "BOX")
+                shape = boxShape;
+            else if (word == "CYLINDER")
+                shape = cylinderShape;
+            else if (word == "CAPSULE")
+                shape = capsuleShape;
+            else continue; //abort physics if syntax error;
+
+            std::cerr << shape;
+            desc >> mass;
+            
+            if(tmpObject)
+                tmpObject->setUpBullet(mass,shape);
+        }
+        
         else if(word == "EndObject") //End of description of an object
         {
             content.push_back(tmpObject); //Add that object form the scene description 
             tmpObject = NULL; //make that pointer available 
         }
+
         else continue;
     }
 }
