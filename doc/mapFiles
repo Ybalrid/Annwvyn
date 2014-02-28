@@ -10,7 +10,7 @@ Object <ogre_entity_name> : Create an object
 EndObject : close the Object field (! mandatory before opening a new object)
 
 Pos <float_x> <float_y> <float_z>               : position of the object on the map. relative to scene root
-Orient <float_w> <float_x> <float_y> <float_z>  : Orientation quaternion. Relative to world
+Orient <float_x> <float_y> <float_z> <float_w>  : Orientation quaternion. Relative to world
 Scale <float_x> <float_y> <float_z>             : Scale vector
 PhysicShape <shape> <float_mass>                : Physics simulation information
 
