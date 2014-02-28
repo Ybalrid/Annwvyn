@@ -2,8 +2,8 @@ You need to link :
 
 Ogre >= 1.9.0 && < 2 (for now, 2.0 branch is under development, I tried it for fun, not a good idea...)
 Bullet >= 2.8
-OpenAL
-libsndfile
+OpenAL lattest available
+libsndfile lattest available 
 libOVR
 CEGUI >=0.8.2 (Build with your own Ogre build, we need the OgreRenderer to use the correct version of Ogre)
 
@@ -32,7 +32,7 @@ Included libraries : (compiled with the source code)
 BtOgre
 OgreOculus modified, (I will update my personal fork of Kojack's work later...)
 
-more information : http://annwvyn.ybalrid.info/
-documentation wiki : http://annwvyn.ybalrid.info/wiki/
+more information : http://annwvyn.org
+documentation wiki : http://annwvyn.org/wiki/
 
 official Git repo : https://github.com/Ybalrid/Annwvyn.git

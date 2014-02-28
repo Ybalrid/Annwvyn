@@ -20,6 +20,14 @@ AnnGameObject::AnnGameObject()
 	animIsSetted = false;
 }
 
+AnnGameObject::~AnnGameObject()
+{
+    alSourceStop(m_Source);
+    alDeleteSources(1,&m_Source);
+    alDeleteBuffers(1,&m_Buffer);
+}
+
+
 void AnnGameObject::setAudioEngine(AnnAudioEngine* AudioEngine)
 {
 	m_AudioEngine = AudioEngine;
