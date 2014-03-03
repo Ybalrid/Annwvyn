@@ -203,6 +203,7 @@ namespace Annwvyn
 		Ogre::RenderWindow* m_Window;
 		Ogre::SceneManager* m_SceneManager;
 		Ogre::SceneNode* m_Camera;
+        Ogre::SceneNode* VisualBodyAnchor;
 		
 		bool readyForLoadingRessources;
 
