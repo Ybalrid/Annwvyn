@@ -199,7 +199,7 @@ namespace Annwvyn
 
         void attachVisualBody(const std::string entityName);
 
-
+        void resetOculusOrientation();
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
