@@ -196,6 +196,10 @@ namespace Annwvyn
 
         void setReferenceQuaternion(Ogre::Quaternion q);
         Ogre::Quaternion getReferenceQuaternion();
+
+        void attachVisualBody(const std::string entityName);
+
+
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
