@@ -196,6 +196,8 @@ namespace Annwvyn
 
         void setReferenceQuaternion(Ogre::Quaternion q);
         Ogre::Quaternion getReferenceQuaternion();
+
+        void resetOculusOrientation();
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
