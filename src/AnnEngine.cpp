@@ -206,8 +206,8 @@ void AnnEngine::initPlayerPhysics()
 
 void AnnEngine::createVirtualBodyShape()
 {
-    float height = m_bodyParams->eyeHeight + 0.2f;
-    m_bodyParams->Shape = new btCapsuleShape(0.5,height); //We block rotation
+	float height = m_bodyParams->eyeHeight;
+	m_bodyParams->Shape = new btCapsuleShape(0.5,height/2); //We block rotation
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
@@ -232,17 +232,16 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
     if(m_bodyParams->Body == NULL)
         return;
+	
+    float height(m_bodyParams->eyeHeight);
 
-
-    float height(m_bodyParams->eyeHeight +10);
-
-    m_DynamicsWorld->addRigidBody(m_bodyParams->Body);
-
-    btVector3 pos = btVector3(m_bodyParams->Position.x,
-            m_bodyParams->Position.y,
-            m_bodyParams->Position.z);
-
-    pos += btVector3(0,height/2,0);
+	m_DynamicsWorld->addRigidBody(m_bodyParams->Body);
+	
+	btVector3 pos = btVector3(m_bodyParams->Position.x,
+		m_bodyParams->Position.y,
+		m_bodyParams->Position.z);
+	
+	pos += btVector3(0,(height),0);
 
     m_bodyParams->Body->translate(pos);
 }
@@ -800,4 +799,8 @@ float AnnEngine::getCentreOffset()
 void AnnEngine::attachVisualBody(const std::string entityName)
 {
 
+}
+void AnnEngine::resetOculusOrientation()
+{
+    oculus.resetOrientation();
 }
