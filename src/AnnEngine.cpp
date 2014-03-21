@@ -797,3 +797,7 @@ float AnnEngine::getCentreOffset()
     return oculus.getCentreOffset();
 }
 
+void AnnEngine::attachVisualBody(const std::string entityName)
+{
+
+}
