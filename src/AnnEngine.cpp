@@ -127,6 +127,8 @@ AnnEngine::AnnEngine(const char title[])
     QuatReference = Ogre::Quaternion::IDENTITY;
 
     VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
+
+    m_Window->reposition(0,0);
 }
 
 void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
@@ -169,6 +171,7 @@ void AnnEngine::initCEGUI()
 
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
 {
+    if(!root->restoreConfig())
     if(!root->showConfigDialog()) 
         exit(-1); //If you hit cancel or close the window
     return root;
@@ -207,7 +210,7 @@ void AnnEngine::initPlayerPhysics()
 void AnnEngine::createVirtualBodyShape()
 {
 	float height = m_bodyParams->eyeHeight;
-	m_bodyParams->Shape = new btCapsuleShape(0.5,height/2); //We block rotation
+	m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
@@ -804,3 +807,13 @@ void AnnEngine::resetOculusOrientation()
 {
     oculus.resetOrientation();
 }
+
+
+Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
+{
+    for(size_t i(0); i < objects.size(); i++)
+        if((void*)objects[i]->node() == (void*)node)
+            return objects[i];
+    return NULL;
+}
+
