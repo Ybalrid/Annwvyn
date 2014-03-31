@@ -74,7 +74,7 @@ namespace Annwvyn
 
 		//init the BodyParams variable
 		static void initBodyParams(Annwvyn::bodyParams* bodyP,
-			float eyeHeight = 1.70f,
+			float eyeHeight = 1.65f,
 			float walkSpeed = 3.0f,
 			float turnSpeed = 0.003f,
 			float mass = 80.0f,
@@ -185,6 +185,7 @@ namespace Annwvyn
         
         //get the AnnObject the player is looking at
 		Annwvyn::AnnGameObject* playerLookingAt();
+        Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node);
 
         //get bodyParams
 		Annwvyn::bodyParams* getBodyParams();
@@ -200,6 +201,7 @@ namespace Annwvyn
         void attachVisualBody(const std::string entityName);
 
         void resetOculusOrientation();
+
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
