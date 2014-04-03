@@ -95,6 +95,10 @@ public:
 
 	/// Retrieve the projection centre offset.
 	float getCentreOffset() const;
+
+
+    /// Set the near clipping distance for cameras
+    void setNearClippingDistance(float distance = 0.10);
 	
 	/// Perform Automatic calibration and activate drift correction.
 	//void setupDriftCorrection(float minMagDist = 0.1f, float minQuatDist = 0.3f);
