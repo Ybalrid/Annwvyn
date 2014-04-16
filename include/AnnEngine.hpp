@@ -198,7 +198,7 @@ namespace Annwvyn
         void setReferenceQuaternion(Ogre::Quaternion q);
         Ogre::Quaternion getReferenceQuaternion();
 
-        void attachVisualBody(const std::string entityName);
+        void attachVisualBody(const std::string entityName, bool flip=false, Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
 
         void resetOculusOrientation();
 
