@@ -26,7 +26,7 @@ AnnEngine::AnnEngine(const char title[])
 
     //this method open the Ogre config pop-up, it's good for now but in the future the program will be able to directly load parameters
     m_Root = askSetUpOgre();					//root
-    //	GOOD TO KNOW : 'askSetUpOgre()' will close the program if the player hit the "Cancel" button
+    //	GOOD TO KNOW : 'askSetUpOgre()' will close the program if the player hit the "Cancel" button and no .cfg file is valid
 
     log("Create window");
     m_Window = m_Root->initialise(true,title);
@@ -37,6 +37,7 @@ AnnEngine::AnnEngine(const char title[])
 
     if(m_Window != NULL)
     {
+        m_Window->reposition(0,0);
         //this boolean forbid segfault when you try to load ressources
         readyForLoadingRessources = true;
     }
@@ -128,7 +129,6 @@ AnnEngine::AnnEngine(const char title[])
 
     VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 
-    m_Window->reposition(0,0);
 }
 
 void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
@@ -172,8 +172,8 @@ void AnnEngine::initCEGUI()
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
 {
     if(!root->restoreConfig())
-    if(!root->showConfigDialog()) 
-        exit(-1); //If you hit cancel or close the window
+        if(!root->showConfigDialog()) 
+            exit(-1); //If you hit cancel or close the window
     return root;
 }
 
@@ -206,13 +206,14 @@ void AnnEngine::initPlayerPhysics()
     addPlayerPhysicalBodyToDynamicsWorld();
 }
 
-
+//will be private 
 void AnnEngine::createVirtualBodyShape()
 {
 	float height = m_bodyParams->eyeHeight;
 	m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
 }
 
+//will be private
 void AnnEngine::createPlayerPhysicalVirtualBody()
 {
     //the VirtualBody is a bullet shape used to detect collison and to apply gravity on the player
@@ -230,7 +231,7 @@ void AnnEngine::createPlayerPhysicalVirtualBody()
             inertia);	
 }
 
-
+//will be private
 void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
     if(m_bodyParams->Body == NULL)
@@ -249,6 +250,7 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
     m_bodyParams->Body->translate(pos);
 }
 
+//will be private
 void AnnEngine::updatePlayerFromPhysics()
 {
     if (m_bodyParams->Body == NULL)
@@ -372,6 +374,8 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[])
     return obj;
 }
 
+
+//will be private
 void AnnEngine::renderOneFrame()
 {
     m_Root->renderOneFrame();
@@ -446,9 +450,8 @@ void AnnEngine::refresh()
     Ogre::WindowEventUtilities::messagePump();
 #endif
 
-    //bullet part
+    //bullet updating is now handeled by btOgre
 
-    //ogre part
     Ogre::Vector3 translate(0,0,0);
 
     //animations playing :
@@ -458,11 +461,13 @@ void AnnEngine::refresh()
 
     //	OIS Events 
     captureEvents();
+    
     if(activateWASD && m_bodyParams->Body != NULL)//classic fps control
     {
+        //TODO extract this piece of code and make it accesible with a method !!
         m_bodyParams->Body->activate(); //don't sleep !
-        btVector3 curVel = m_bodyParams->Body->getLinearVelocity();
-        if(processWASD(&translate))
+        btVector3 curVel = m_bodyParams->Body->getLinearVelocity(); //get current velocity
+        if(processWASD(&translate))//If player want to move w/ WASD
         {
             Ogre::Vector3 velocity = m_bodyParams->Orientation*(translate);
             m_bodyParams->Body->setLinearVelocity(
@@ -470,17 +475,19 @@ void AnnEngine::refresh()
         }
         else
         {	
-            m_bodyParams->Body->setLinearVelocity((curVel * btVector3(0,1,0)));//we keep the original vertical velocity
+            //Just apply effect of gravity.
+            m_bodyParams->Body->setLinearVelocity((curVel * btVector3(0,1,0))); //we keep the original vertical velocity only
         }
-    }
+    }//body & WASD
 
-    if(m_bodyParams->Body != NULL)
+    if(m_bodyParams->Body != NULL) //if physic
     {
         btTransform Transform = m_bodyParams->Body->getCenterOfMassTransform();
         Transform.setRotation(fixedBodyOrient);
         m_bodyParams->Body->setCenterOfMassTransform(Transform);
     }
-
+    
+    //turn body with mouse TODO enclose this with a methode. That's ugly
     m_bodyParams->Orientation.yaw
         (Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
 
@@ -493,40 +500,39 @@ void AnnEngine::refresh()
                     m_bodyParams->Body->getCenterOfMassPosition().z());
     }
 
+    //wow. So many 'if's. such test.
     if(m_Ground != NULL)
         if(activateJump)
-        {
-
-            bool colide(collisionWithGround());
-
-            if(colide)
+            if(collisionWithGround())
                 if(m_Keyboard->isKeyDown(OIS::KC_SPACE))
-                {
                     m_bodyParams->Body->applyCentralImpulse(btVector3(0,jumpForce,0));
-                }
-        }
-
+    //can jump and ground is known
+    
     processCollisionTesting();
     processTriggersContacts();
 
     if(debugPhysics)
     {
         m_debugDrawer->step();
-        //display triggers position, influence zone and state
+        //TODO display triggers position, influence zone and state... 
     }
 
+    ///////////////////////////////////////////////////////////////////////////////// AUDIO
     AudioEngine->updateListenerPos(oculus.getCameraNode()->getPosition());
     AudioEngine->updateListenerOrient(oculus.getCameraNode()->getOrientation());
-
     for(unsigned int i = 0; i < objects.size(); i++)
         objects[i]->updateOpenAlPos();
+    /////////////////////////////////////////////////////////////////////////////////////////
+
 
     //synchronise VisualBody
     VisualBodyAnchor->setPosition(m_bodyParams->Position);
     VisualBodyAnchor->setOrientation(m_bodyParams->Orientation.toQuaternion());
-
-    updateCamera();
+    
+    //////////////////////////////////////////////////////////////////////////////// VISUAL
+    updateCamera(); //make the pulling of oculus sensor just before rendering the frame
     renderOneFrame();
+    //////////////////////////////////////////////////////////////////////////////////////
 }
 
 bool AnnEngine::processWASD(Ogre::Vector3* translate)
@@ -799,10 +805,15 @@ float AnnEngine::getCentreOffset()
     return oculus.getCentreOffset();
 }
 
-void AnnEngine::attachVisualBody(const std::string entityName)
+void AnnEngine::attachVisualBody(const std::string entityName, bool flip, Ogre::Vector3 scale)
 {
-
+    log("Visual Body");
+    log(entityName);
+    std::cout << "Flip : " << flip << std::endl
+        << "Scale : " << scale << std::endl;
 }
+
+
 void AnnEngine::resetOculusOrientation()
 {
     oculus.resetOrientation();
