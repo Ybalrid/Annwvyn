@@ -145,11 +145,15 @@ Ogre::Quaternion AnnEngine::getReferenceQuaternion()
 AnnEngine::~AnnEngine()
 {
     //delete all stuf created on the engine 
+    
+    //All AnnGameObject
     for(unsigned int i(0); i < objects.size(); i++)
     {
         delete objects[i];
         objects.erase(objects.begin()+i);
     }
+
+    //Bullet
     delete m_DynamicsWorld;
     delete m_Broadphase;
     delete m_bodyParams;
@@ -157,10 +161,12 @@ AnnEngine::~AnnEngine()
     delete m_Dispatcher;
     delete m_Solver;
 
+    //OIS
     delete m_debugDrawer;
     delete m_Keyboard;
     delete m_Mouse;
 
+    //Audio
     delete AudioEngine;
 }
 
@@ -171,8 +177,10 @@ void AnnEngine::initCEGUI()
 
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
 {
-    if(!root->restoreConfig())
-        if(!root->showConfigDialog()) 
+    //Restore configuration file
+    if(!root->restoreConfig()) //if you can't restore :
+        //Show configuration window
+        if(!root->showConfigDialog())  
             exit(-1); //If you hit cancel or close the window
     return root;
 }
@@ -372,6 +380,24 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[])
     objects.push_back(obj); //keep address in list
 
     return obj;
+}
+
+bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
+{
+    bool returnCode(false);
+    for(size_t i; i < objects.size(); i++)
+    {
+        objects[i]->stopGettingCollisionWith(object);
+
+        if(objects[i] == object)
+        {
+            objects.erase(objects.begin()+i);
+
+            delete object;
+            returnCode = true; // found
+        }
+    }
+    return returnCode;
 }
 
 
@@ -586,6 +612,11 @@ float AnnEngine::getTime()
     return deltaT;
 }
 
+float AnnEngine::getTimeFromStartUp()
+{
+    return static_cast<float>(m_Root->getTimer()->getMilliseconds());
+}
+
 void AnnEngine::setGround(AnnGameObject* Ground)
 {
     m_Ground = Ground;
@@ -787,8 +818,6 @@ AnnGameObject* AnnEngine::playerLookingAt()
 
     return NULL;
 }
-
-
 
 Annwvyn::bodyParams* AnnEngine::getBodyParams()
 {

@@ -106,6 +106,8 @@ namespace Annwvyn
 
 		//create a game object form the name of an entity loaded on the ressource group manager.
 		AnnGameObject* createGameObject(const char entityName[]);
+        
+        bool destroyGameObject(AnnGameObject* object);
 
 		//set the ambiant light
 		void setAmbiantLight(Ogre::ColourValue v);
@@ -143,6 +145,7 @@ namespace Annwvyn
 		//update program time. retur the delay between the last call of this method
 		float updateTime(); //return deltaT
 		float getTime();
+        float getTimeFromStartUp();
         
         //Step Objects animation
 		void playObjectsAnnimation();
