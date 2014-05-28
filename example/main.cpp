@@ -54,7 +54,6 @@ int main(int argc, char **argv)
 	GameEngine->loadDir("media");
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
-	GameEngine->loadZip("media/dragon.zip");
     GameEngine->loadDir("media/plane");
 
 	GameEngine->initRessources();
