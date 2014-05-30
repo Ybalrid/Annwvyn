@@ -126,6 +126,17 @@ void AnnGameObject::setOrientation(Ogre::Quaternion orient)
 	setOrientation(orient.w,orient.x,orient.y,orient.z);
 }
 
+void AnnGameObject::setScale(Ogre::Vector3 scale)
+{
+	setScale(scale.x,scale.y,scale.z);
+}
+
+
+void AnnGameObject::setScale(float x, float y, float z)
+{
+	m_node->setScale(Ogre::Vector3(x,y,z);
+}
+
 Ogre::Vector3 AnnGameObject::pos()
 {
 	if(m_node != NULL)
@@ -211,6 +222,9 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 
 	if(m_Shape == NULL)
 		return;
+
+    Ogre::Vector3 scale =  node()->getScale();
+    m_Shape->setLocalScaling(btVector3(scale.x,scale.y,scale.z));
 	
 	btVector3 inertia;
 	if(mass != 0)
