@@ -134,7 +134,7 @@ void AnnGameObject::setScale(Ogre::Vector3 scale)
 
 void AnnGameObject::setScale(float x, float y, float z)
 {
-	m_node->setScale(Ogre::Vector3(x,y,z);
+	m_node->setScale(Ogre::Vector3(x,y,z));
 }
 
 Ogre::Vector3 AnnGameObject::pos()
