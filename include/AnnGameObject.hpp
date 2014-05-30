@@ -55,7 +55,7 @@ namespace Annwvyn
 		void setOrientation(Ogre::Quaternion orient);
         
         void setScale(float x, float y, float z);
-        void setScale(Ogre::vector3 scale);
+        void setScale(Ogre::Vector3 scale);
 
 		//Getters pos
 
