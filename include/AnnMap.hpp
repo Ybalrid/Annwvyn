@@ -38,9 +38,11 @@ namespace Annwvyn
 
             AnnEngine* m_engine;
             AnnGameObjectVect content;
+
             bool fileLoaded;
             
             AnnGameObject* tmpObject;
+            AnnLightObject* tmpLight;
 
     };
 }
