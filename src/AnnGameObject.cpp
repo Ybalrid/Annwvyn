@@ -185,7 +185,7 @@ void AnnGameObject::setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorl
 
 void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 {
-	
+    //check if everything is OK
 	if(m_DynamicsWorld == NULL)
 		return;
 	if(m_node == NULL)
@@ -193,8 +193,10 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 	if(m_entity == NULL)
 		return;
 	
+    //init shap converter
 	BtOgre::StaticMeshToShapeConverter converter(m_entity);
 
+    //create the correct shape
 	switch(type)
 	{
 	case boxShape:
@@ -239,9 +241,9 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 
 	if(m_Body != NULL)
 	{
-		m_Body->translate(btVector3(this->node()->getPosition().x,
+/*		m_Body->translate(btVector3(this->node()->getPosition().x,
 			this->node()->getPosition().y,
-			this->node()->getPosition().z));
+			this->node()->getPosition().z));*/
 
 		m_DynamicsWorld->addRigidBody(m_Body);
 	}	
