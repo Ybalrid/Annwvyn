@@ -200,7 +200,7 @@ void AnnMap::process(std::string descLine)
                 shape = capsuleShape;
             else continue; //abort physics if syntax error;
 
-            std::cerr << shape;
+//            std::cerr << shape;
             desc >> mass;
 
             if(light) continue;
