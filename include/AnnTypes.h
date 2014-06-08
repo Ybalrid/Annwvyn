@@ -54,7 +54,7 @@ namespace Annwvyn
 	typedef Ogre::Light AnnLightObject;
 
     typedef std::vector<Annwvyn::AnnGameObject * > AnnGameObjectVect;
-
+    typedef std::vector<AnnLightObject * > AnnLightVect; 
 	//controls
 	namespace Keys
 	{
