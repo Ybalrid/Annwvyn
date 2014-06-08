@@ -1,32 +1,32 @@
 #ifndef ANNGAMEOBJECT
 #define ANNGAMEOBJECT
 #undef DLL
-//windows DLL
+///windows DLL
 #ifdef DLLDIR_EX
-   #define DLL  __declspec(dllexport)   // export DLL information
+   #define DLL  __declspec(dllexport)   /// export DLL information
 #else
-   #define DLL  __declspec(dllimport)   // import DLL information
+   #define DLL  __declspec(dllimport)   /// import DLL information
 #endif
 
-//bypass on linux
+///bypass on linux
 #ifdef __gnu_linux__
 #undef DLL
 #define DLL
 #endif
 
 
-//Ogre3D
+///Ogre3D
 #include <Ogre.h>
-//Bullet
+///Bullet
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-//btOgre
+///btOgre
 #include "BtOgrePG.h"
 #include "BtOgreGP.h"
 #include "BtOgreExtras.h"
-//Annwvyn
+///Annwvyn
 #include "AnnTypes.h"
-//#include "AnnEngine.hpp"
+///#include "AnnEngine.hpp"
 #include "AnnAudioEngine.hpp"
 
 namespace Annwvyn
@@ -45,7 +45,7 @@ namespace Annwvyn
 	public:
 		AnnGameObject();
         ~AnnGameObject();
-		//Setters pos
+		///Setters pos
 		void setPos(float x, float y, float z);
 		void setPos(Ogre::Vector3 pos);
 
@@ -57,12 +57,12 @@ namespace Annwvyn
         void setScale(float x, float y, float z);
         void setScale(Ogre::Vector3 scale);
 
-		//Getters pos
+		///Getters pos
 
 		Ogre::Vector3 pos();
 		Ogre::Quaternion Orientation();
 
-		//Setters engine
+		///Setters engine
 		
 		void setNode(Ogre::SceneNode* node);
 
@@ -76,12 +76,12 @@ namespace Annwvyn
 
 		float getDistance(AnnGameObject* otherObject);
 
-		//lowlevel getters engine
+		///lowlevel getters engine
 		Ogre::SceneNode* node();
 		Ogre::Entity* Entity();
 		btRigidBody* RigidBody();
 
-		//utility 
+		///utility 
 		void stepBulletSimulation();
 
 		void playSound(std::string path, bool loop = false, float volume = 1.0f);
@@ -90,26 +90,26 @@ namespace Annwvyn
 		btRigidBody* getBody();
 		btCollisionShape* getShape();
 
-		//collision handeling
+		///collision handeling
 		std::vector<struct collisionTest*> getCollisionMask();
 		
-		//set all collisionState to false
+		///set all collisionState to false
 		void resetCollisionMask();
 		
-		//empty the vector
+		///empty the vector
 		void cleanCollisionMask();
 
-		//remove this object of the collisionMask
+		///remove this object of the collisionMask
 		void stopGettingCollisionWith(AnnGameObject* Object);
 
-		//add this object to the collisionState
+		///add this object to the collisionState
 		void testCollisionWith(AnnGameObject* Object);
 
-		//change the collisionState
+		///change the collisionState
 		void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
 
-		//return the collisionState with the object from the collisionMask. if the object is not on the collisionMask, return false
-		bool collideWith(AnnGameObject* Object);//
+		///return the collisionState with the object from the collisionMask. if the object is not on the collisionMask, return false
+		bool collideWith(AnnGameObject* Object);///
 		
 		void setAnimation(const char name[]);
 		void playAnimation(bool play = true);
@@ -120,7 +120,7 @@ namespace Annwvyn
 		Ogre::SceneNode* m_node;
 		Ogre::Entity* m_entity;
 		Ogre::AnimationState* m_anim;
-		//std::vector<Ogre::AnimationState*> anims;
+		///std::vector<Ogre::AnimationState*> anims;
 		bool animIsSetted;
 		bool animIsPlaying;
 		bool animIsLooping;
@@ -135,8 +135,8 @@ namespace Annwvyn
 		std::vector<struct collisionTest*> collisionMask;
 
 		AnnAudioEngine* m_AudioEngine;
-		ALuint m_Source; //OpenAL audio source
-		ALuint m_Buffer; //OpenAL buffer
+		ALuint m_Source; ///OpenAL audio source
+		ALuint m_Buffer; ///OpenAL buffer
 	};
 
 	

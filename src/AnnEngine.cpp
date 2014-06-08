@@ -4,14 +4,13 @@ using namespace Annwvyn;
 
 AnnEngine::AnnEngine(const char title[])
 {
-    //-----------------TODO : factorise this method into multiples ones-----------------------\\
 
     m_Camera = NULL;
 
     log("Annwvyn Game Engine - Step into the Other World",false);
     log("Desinged for Virtual Reality",false);
 
-    //at this point, loading ressources will cause a segfault
+    //block ressources loading for now
     readyForLoadingRessources = false;
 
     //This structure handle player's body parameters
@@ -21,24 +20,64 @@ AnnEngine::AnnEngine(const char title[])
     //here we set all the defaults parameters for the body.
     initBodyParams(m_bodyParams);
 
+    setUpOgre(title);
+    setUpOIS();
+    setUpTime();
+    setUpBullet();
+    setUpAudio();
+    setUpGUI();
 
+    QuatReference = Ogre::Quaternion::IDENTITY;
+
+    VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
+
+    log("Engine ready");
+}
+
+
+AnnEngine::~AnnEngine()
+{
+    //All AnnGameObject
+    for(unsigned int i(0); i < objects.size(); i++)
+    {
+        delete objects[i];
+        objects.erase(objects.begin()+i);
+    }
+
+    //Bullet
+    delete m_DynamicsWorld;
+    delete m_Broadphase;
+    delete m_bodyParams;
+    delete m_CollisionConfiguration;
+    delete m_Dispatcher;
+    delete m_Solver;
+
+    //OIS
+    delete m_debugDrawer;
+    delete m_Keyboard;
+    delete m_Mouse;
+
+    //Audio
+    delete AudioEngine;
+}
+
+
+void AnnEngine::setUpOgre(const char title[])
+{
     log("Setting up Ogre");
 
-    //this method open the Ogre config pop-up, it's good for now but in the future the program will be able to directly load parameters
-    m_Root = askSetUpOgre();					//root
-    //	GOOD TO KNOW : 'askSetUpOgre()' will close the program if the player hit the "Cancel" button and no .cfg file is valid
+    m_Root = askSetUpOgre();
 
     log("Create window");
     m_Window = m_Root->initialise(true,title);
 
     log("Create Ogre OctreeSceneManager");
-    m_SceneManager = m_Root->createSceneManager("OctreeSceneManager"); //smgr
+    m_SceneManager = m_Root->createSceneManager("OctreeSceneManager");
 
 
     if(m_Window != NULL)
     {
         m_Window->reposition(0,0);
-        //this boolean forbid segfault when you try to load ressources
         readyForLoadingRessources = true;
     }
     else
@@ -47,6 +86,40 @@ AnnEngine::AnnEngine(const char title[])
         exit(-1); //goodbye cruel world...
     }
 
+}
+
+void AnnEngine::setUpBullet()
+{
+
+    log("Init Bullet physics");
+
+    m_Broadphase = new btDbvtBroadphase();
+    m_CollisionConfiguration = new btDefaultCollisionConfiguration();
+    m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
+    m_Solver = new btSequentialImpulseConstraintSolver();
+    m_ghostPairCallback = new btGhostPairCallback();
+
+    m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
+
+    log("Gravity vector = (0,-10,0)");
+    m_DynamicsWorld->setGravity(btVector3(0,-10,0));
+    m_DynamicsWorld->getPairCache()->setInternalGhostPairCallback(m_ghostPairCallback);
+
+    debugPhysics = false;//by default
+    m_debugDrawer = new BtOgre::DebugDrawer(m_SceneManager->getRootSceneNode(), m_DynamicsWorld);
+    m_DynamicsWorld->setDebugDrawer(m_debugDrawer);
+
+    //This quaternion lock the body orientation to be stricly vertical
+    Ogre::Quaternion Orient(Ogre::Radian(0),Ogre::Vector3(0,0,1));
+    fixedBodyOrient = btQuaternion(Orient.x, Orient.y,Orient.z,Orient.w);
+
+    //colision with this object will allow the player to jump
+    m_Ground = NULL;
+}
+
+
+void AnnEngine::setUpOIS()
+{
     //We use OIS to catch all user inputs
     //Only keyboard/mouse is suported for now but in the future we will try joystick and this kind of controller.
 
@@ -73,62 +146,34 @@ AnnEngine::AnnEngine(const char title[])
     if(m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
         m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick,true));
 
-    //THESE are the basic gameplay that you can use out of the box. set these variables to false to use costum one.
+    //basic gameplay that you can use out of the box
     activateWASD = true; 
-    // * move around with WASD keys (or, if you are running windows, local equivalent. I've an AZERTY keyboard and it handle ZQSD keys without doing anything special)
-    // * run with SHIFT pressed
+    //move around with WASD keys
+    //run with SHIFT pressed
     activateJump = true; 
-    // * jump with space if your feet touch the ground (m_groudn object)
+    //jump with space if your feet touch the ground (m_Groudn object)
     jumpForce = 25.0f;
+}
 
-    //animation are time-based
 
-    //time initializer
+void AnnEngine::setUpTime()
+{
     log("Setup time");
     last = m_Root->getTimer()->getMilliseconds();
     now = last;
+}
 
-    //Bullet is a great physic motor, we init a dynamicsworld 
 
-    //Create the physics world
-    log("Init Bullet physics");
-    m_Broadphase = new btDbvtBroadphase();
-    m_CollisionConfiguration = new btDefaultCollisionConfiguration();
-    m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
-    m_Solver = new btSequentialImpulseConstraintSolver();
-    m_ghostPairCallback = new btGhostPairCallback();
-
-    m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
-
-    log("Gravity vector = (0,-10,0)");
-    m_DynamicsWorld->setGravity(btVector3(0,-10,0));
-
-    m_DynamicsWorld->getPairCache()->setInternalGhostPairCallback(m_ghostPairCallback);
-
-    log("Engine ready");
-
-    //we can draw physic debuging while rendering
-    debugPhysics = false;//by default
-    m_debugDrawer = new BtOgre::DebugDrawer(m_SceneManager->getRootSceneNode(), m_DynamicsWorld);
-    m_DynamicsWorld->setDebugDrawer(m_debugDrawer);
-
-    //This quaternion lock the body orientation to be stricly vertical
-    Ogre::Quaternion Orient(Ogre::Radian(0),Ogre::Vector3(0,0,1));
-    fixedBodyOrient = btQuaternion(Orient.x, Orient.y,Orient.z,Orient.w);
-
-    //colision with this object will allow the player to jump
-    m_Ground = NULL;
-
-    //OpenAl is handeled thanks to this class
+void AnnEngine::setUpAudio()
+{
     AudioEngine = new AnnAudioEngine;
+}
+
+void AnnEngine::setUpGUI()
+{
 
     m_CEGUI_Renderer = NULL;
     initCEGUI();
-
-    QuatReference = Ogre::Quaternion::IDENTITY;
-
-    VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
-
 }
 
 void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
@@ -141,34 +186,6 @@ Ogre::Quaternion AnnEngine::getReferenceQuaternion()
     return QuatReference;
 }
 
-
-AnnEngine::~AnnEngine()
-{
-    //delete all stuf created on the engine 
-    
-    //All AnnGameObject
-    for(unsigned int i(0); i < objects.size(); i++)
-    {
-        delete objects[i];
-        objects.erase(objects.begin()+i);
-    }
-
-    //Bullet
-    delete m_DynamicsWorld;
-    delete m_Broadphase;
-    delete m_bodyParams;
-    delete m_CollisionConfiguration;
-    delete m_Dispatcher;
-    delete m_Solver;
-
-    //OIS
-    delete m_debugDrawer;
-    delete m_Keyboard;
-    delete m_Mouse;
-
-    //Audio
-    delete AudioEngine;
-}
 
 void AnnEngine::initCEGUI()
 {
@@ -185,6 +202,7 @@ Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
     return root;
 }
 
+//TODO : create a class to handle VirtualBody ?
 //see the .hpp file for the defaults values
 void AnnEngine::initBodyParams(Annwvyn::bodyParams* bodyP,
         float eyesHeight,
@@ -217,18 +235,19 @@ void AnnEngine::initPlayerPhysics()
 //will be private 
 void AnnEngine::createVirtualBodyShape()
 {
-	float height = m_bodyParams->eyeHeight;
-	m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
+    float height = m_bodyParams->eyeHeight;
+    m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
 }
 
 //will be private
 void AnnEngine::createPlayerPhysicalVirtualBody()
 {
-    //the VirtualBody is a bullet shape used to detect collison and to apply gravity on the player
     if(m_bodyParams->Shape == NULL)
         return;
 
-    BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(oculus.getCameraNode());
+    BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState
+        (oculus.getCameraNode());
+
     btVector3 inertia;
 
     m_bodyParams->Shape->calculateLocalInertia(m_bodyParams->mass,inertia);
@@ -244,16 +263,16 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
     if(m_bodyParams->Body == NULL)
         return;
-	
+
     float height(m_bodyParams->eyeHeight);
 
-	m_DynamicsWorld->addRigidBody(m_bodyParams->Body);
-	
-	btVector3 pos = btVector3(m_bodyParams->Position.x,
-		m_bodyParams->Position.y,
-		m_bodyParams->Position.z);
-	
-	pos += btVector3(0,(height),0);
+    m_DynamicsWorld->addRigidBody(m_bodyParams->Body);
+
+    btVector3 pos = btVector3(m_bodyParams->Position.x,
+            m_bodyParams->Position.y,
+            m_bodyParams->Position.z);
+
+    pos += btVector3(0,(height),0);
 
     m_bodyParams->Body->translate(pos);
 }
@@ -353,7 +372,7 @@ void AnnEngine::oculusInit()
 
     m_Camera->setPosition(m_bodyParams->Position + 
             Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
-    
+
     oculus.setNearClippingDistance(); //Set near clipping distance. Camera is intended to be inside the head of an humanoid 3D Model.
 }
 
@@ -487,7 +506,7 @@ void AnnEngine::refresh()
 
     //	OIS Events 
     captureEvents();
-    
+
     if(activateWASD && m_bodyParams->Body != NULL)//classic fps control
     {
         //TODO extract this piece of code and make it accesible with a method !!
@@ -512,7 +531,7 @@ void AnnEngine::refresh()
         Transform.setRotation(fixedBodyOrient);
         m_bodyParams->Body->setCenterOfMassTransform(Transform);
     }
-    
+
     //turn body with mouse TODO enclose this with a methode. That's ugly
     m_bodyParams->Orientation.yaw
         (Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
@@ -533,7 +552,7 @@ void AnnEngine::refresh()
                 if(m_Keyboard->isKeyDown(OIS::KC_SPACE))
                     m_bodyParams->Body->applyCentralImpulse(btVector3(0,jumpForce,0));
     //can jump and ground is known
-    
+
     processCollisionTesting();
     processTriggersContacts();
 
@@ -554,7 +573,7 @@ void AnnEngine::refresh()
     //synchronise VisualBody
     VisualBodyAnchor->setPosition(m_bodyParams->Position);
     VisualBodyAnchor->setOrientation(m_bodyParams->Orientation.toQuaternion());
-    
+
     //////////////////////////////////////////////////////////////////////////////// VISUAL
     updateCamera(); //make the pulling of oculus sensor just before rendering the frame
     renderOneFrame();

@@ -18,9 +18,9 @@
 #undef DLL
 //windows DLL
 #ifdef DLLDIR_EX
-   #define DLL  __declspec(dllexport)   // export DLL information
+#define DLL  __declspec(dllexport)   // export DLL information
 #else
-   #define DLL  __declspec(dllimport)   // import DLL information
+#define DLL  __declspec(dllimport)   // import DLL information
 #endif
 
 //bypass on linux
@@ -36,91 +36,91 @@
 
 namespace OVR
 {
-	class HMDDevice;
-	class SensorFusion;
-	class DeviceManager;
-	class SensorDevice;
+    class HMDDevice;
+    class SensorFusion;
+    class DeviceManager;
+    class SensorDevice;
 
-	namespace Util
-	{
-		namespace Render
-		{
-			class StereoConfig;
-		}
-	}
+    namespace Util
+    {
+        namespace Render
+        {
+            class StereoConfig;
+        }
+    }
 }
 
 namespace Ogre
 {
-	class SceneManager;
-	class RenderWindow;
-	class Camera;
-	class SceneNode;
-	class Viewport;
-	class CompositorInstance;
+    class SceneManager;
+    class RenderWindow;
+    class Camera;
+    class SceneNode;
+    class Viewport;
+    class CompositorInstance;
 }
 
 class DLL Oculus
 {
-public:
-	Oculus(void);
-	~Oculus(void);
-	bool setupOculus();
-	bool setupOgre(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::SceneNode *parent = 0);
-	void shutDownOculus();
-	void shutDownOgre();
-	bool isOgreReady() const;
-	bool isOculusReady() const;
+    public:
+        Oculus(void);
+        ~Oculus(void);
+        bool setupOculus();
+        bool setupOgre(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::SceneNode *parent = 0);
+        void shutDownOculus();
+        void shutDownOgre();
+        bool isOgreReady() const;
+        bool isOculusReady() const;
 
-	/// Update camera node using current Oculus orientation.
-	void update();
+        /// Update camera node using current Oculus orientation.
+        void update();
 
-	/// Reset orientation of the sensor.
-	void resetOrientation();
+        /// Reset orientation of the sensor.
+        void resetOrientation();
 
-	/// Retrieve the SceneNode that contains the two cameras used for stereo rendering.
-	Ogre::SceneNode *getCameraNode();
+        /// Retrieve the SceneNode that contains the two cameras used for stereo rendering.
+        Ogre::SceneNode *getCameraNode();
 
-	/// Retrieve the current orientation of the Oculus HMD.
-	Ogre::Quaternion getOrientation(); //const;
+        /// Retrieve the current orientation of the Oculus HMD.
+        Ogre::Quaternion getOrientation(); //const;
 
-	/// Retrieve either of the two distortion compositors.
-	Ogre::CompositorInstance *getCompositor(unsigned int i);
+        /// Retrieve either of the two distortion compositors.
+        Ogre::CompositorInstance *getCompositor(unsigned int i);
 
-	/// Retrieve either of the two cameras.
-	Ogre::Camera *getCamera(unsigned int i);
+        /// Retrieve either of the two cameras.
+        Ogre::Camera *getCamera(unsigned int i);
 
-	/// Retrieve either of the two viewports.
-	Ogre::Viewport *getViewport(unsigned int i);
+        /// Retrieve either of the two viewports.
+        Ogre::Viewport *getViewport(unsigned int i);
 
-	/// Retrieve the projection centre offset.
-	float getCentreOffset() const;
-    
-    void setNearClippingDistance(float distance = 0.10);
-    
-    OVR::Profile* getProfile();
-    
-protected:
-	//Device
-	OVR::DeviceManager *m_deviceManager;
-	OVR::HMDDevice *m_hmd;
-	OVR::Util::Render::StereoConfig *m_stereoConfig;
-	//Sensor
-	OVR::SensorDevice *m_sensor;
-	OVR::SensorFusion *m_sensorFusion;
-    //Tests
-	bool m_oculusReady;		/// Has the oculus rift been fully initialised?
-	bool m_ogreReady;		/// Has ogre been fully initialised?
-	bool m_driftCorrection; ///Do you want to do not derivate?
-	//Render
-	Ogre::SceneManager *m_sceneManager;
-	Ogre::RenderWindow *m_window;
-	Ogre::SceneNode *m_cameraNode;
-	Ogre::Quaternion m_orientation;
-	float m_centreOffset;	/// Projection centre offset.
-	Ogre::Camera *m_cameras[2];
-	Ogre::Viewport *m_viewports[2];
-	Ogre::CompositorInstance *m_compositors[2];
+        /// Retrieve the projection centre offset.
+        float getCentreOffset() const;
+
+        void setNearClippingDistance(float distance = 0.10);
+
+        OVR::Profile* getProfile();
+
+    protected:
+        //Device
+        OVR::DeviceManager *m_deviceManager;
+        OVR::HMDDevice *m_hmd;
+        OVR::Util::Render::StereoConfig *m_stereoConfig;
+        //Sensor
+        OVR::SensorDevice *m_sensor;
+        OVR::SensorFusion *m_sensorFusion;
+        //Tests
+        bool m_oculusReady;		/// Has the oculus rift been fully initialised?
+        bool m_ogreReady;		/// Has ogre been fully initialised?
+        bool m_driftCorrection; ///Do you want to do not derivate?
+        //Render
+        Ogre::SceneManager *m_sceneManager;
+        Ogre::RenderWindow *m_window;
+        Ogre::SceneNode *m_cameraNode;
+        Ogre::Quaternion m_orientation;
+        float m_centreOffset;	/// Projection centre offset.
+        Ogre::Camera *m_cameras[2];
+        Ogre::Viewport *m_viewports[2];
+        Ogre::CompositorInstance *m_compositors[2];
 
 };
 
