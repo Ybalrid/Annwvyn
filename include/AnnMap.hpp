@@ -41,6 +41,8 @@ namespace Annwvyn
             AnnEngine* m_engine;
             AnnGameObjectVect content;
 
+            std::vector<AnnLightObject*> Lights;
+            
             bool fileLoaded;
             
             AnnGameObject* tmpObject;

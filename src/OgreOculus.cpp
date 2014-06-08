@@ -183,7 +183,6 @@ bool Oculus::setupOculus()
 	m_oculusReady = true;
 	Ogre::LogManager::getSingleton().logMessage("Oculus: Oculus setup completed successfully");
 
-//	setReferencePoint(); //for drift correction
 	return true;
 }
 
@@ -236,6 +235,7 @@ bool Oculus::setupOgre(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::Sc
 			m_cameras[i]->setNearClipDistance(m_stereoConfig->GetEyeToScreenDistance());
 			m_cameras[i]->setFarClipDistance(g_defaultFarClip);
 			m_cameras[i]->setPosition((i * 2 - 1) * m_stereoConfig->GetIPD() * 0.5f, 0, 0);
+            std::cerr << "--------------- IPD -------------- " << m_stereoConfig->GetIPD();
 			m_cameras[i]->setAspectRatio(m_stereoConfig->GetAspect());
 			m_cameras[i]->setFOVy(Ogre::Radian(m_stereoConfig->GetYFOVRadians()));
 			
@@ -275,11 +275,10 @@ Ogre::SceneNode *Oculus::getCameraNode()
 	return m_cameraNode;
 }
 
-Ogre::Quaternion Oculus::getOrientation() //const <- I have to call tryCalibration each frame
+Ogre::Quaternion Oculus::getOrientation() //const 
 {
 	if(m_oculusReady)
-	{
-		//this->tryCalibration();
+    {
 		Quatf q = m_sensorFusion->GetOrientation();
 		return Ogre::Quaternion(q.w,q.x,q.y,q.z);
 	}
@@ -305,45 +304,11 @@ void Oculus::resetOrientation()
 		m_sensorFusion->Reset();
 }
 
-/*void Oculus::setupDriftCorrection(float minMagDist, float minQuatDist)
+OVR::Profile* Oculus::getProfile()
 {
-	if(!m_oculusReady) return; //don't do anything if the oculus is not ready. Will cause the program to stuck here
 
-	m_MagCal.SetMinMagDistance(minMagDist);
-	m_MagCal.SetMinQuatDistance(minQuatDist);
-	m_MagCal.BeginAutoCalibration(*m_sensorFusion);
-	m_driftCorrection = true;
-}*/
-
-/*void Oculus::setReferencePoint()
-{
-    //new oculus SDK dont need that
-//	m_sensorFusion->SetMagReference();
-}*/
-
-/*void Oculus::tryCalibration()
-{
-	if(!m_driftCorrection)
-		return;
-
-	//from SDK documentation
-	if (m_MagCal.IsAutoCalibrating())
-		{
-			m_MagCal.UpdateAutoCalibration(*m_sensorFusion);
-			if (m_MagCal.IsCalibrated())
-			{
-				Vector3f mc = m_MagCal.GetMagCenter();
-				printf("Magnetometer Calibration Complete\nCenter: %f %f %f\n",mc.x,mc.y,mc.z);
-				printf("Mag has been successfully calibrated");
-			}
-		}
-
-	if(!m_sensorFusion->IsYawCorrectionEnabled())
-//	if (m_sensorFusion->IsMagReady()) // don't exist anymore
-		m_sensorFusion->SetYawCorrectionEnabled(true);
-
-}*/
-
+    return NULL;
+}
 
 void Oculus::setNearClippingDistance(float dist)
 {
