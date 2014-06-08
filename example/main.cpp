@@ -1,5 +1,5 @@
 /**
- * \file main.cpp
+ * * \file main.cpp
  * \brief test/demo program
  * \author Arthur Brainville 
  * \version 0.1
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	GameEngine->initRessources();
 
 
-	//Create Objects
+/*	//Create Objects
 	Annwvyn::AnnGameObject* Sinbad = GameEngine->createGameObject("Sinbad.mesh");
 	Sinbad->node()->scale(.40,.40,.40);
 	Sinbad->setPos(0,2,3);
@@ -82,9 +82,9 @@ int main(int argc, char **argv)
 
 	Sinbad2->testCollisionWith(Sinbad);
 
-
+*/
 	Annwvyn::AnnGameObject* Grid = GameEngine->createGameObject("Plane.mesh");
-	Grid->setPos(0,0,0);
+	Grid->setPos(0,-3,0);
 	Grid->setUpBullet();
 	GameEngine->setGround(Grid); 
 
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 	GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
 	
 	//sinbad make sound
-	Sinbad->playSound("media/monster.wav",true); //true = in loop, false by default
+//	Sinbad->playSound("media/monster.wav",true); //true = in loop, false by default
     
     Annwvyn::AnnMap* map = new Annwvyn::AnnMap(GameEngine, "test.map");
     

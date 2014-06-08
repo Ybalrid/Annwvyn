@@ -59,7 +59,7 @@ void AnnMap::init(AnnEngine* engine)
     m_engine = engine;
 
     tmpObject = NULL;
-
+    tmpLight = NULL;
 }
 
 void AnnMap::process(std::string descLine)
@@ -125,6 +125,7 @@ void AnnMap::process(std::string descLine)
             tmpLight->setDiffuseColour(powerScale,powerScale,powerScale);
         }
 
+
         else if(word == "Pos") //loading coorinates as 3 float 
         {
             desc >> x; 
@@ -146,6 +147,7 @@ void AnnMap::process(std::string descLine)
             }
         }
 
+
         else if(word == "Orient")
         {
             desc >> x;
@@ -164,10 +166,10 @@ void AnnMap::process(std::string descLine)
             }
             else
             {
-               /* if(tmpLight)
-                    tmpLight->setOrientation(w,x,y,z);
-                else*/
-                    continue;
+                /* if(tmpLight)
+                   tmpLight->setOrientation(w,x,y,z);
+                   else*/
+                continue;
             }
         }
 
@@ -200,7 +202,7 @@ void AnnMap::process(std::string descLine)
                 shape = capsuleShape;
             else continue; //abort physics if syntax error;
 
-//            std::cerr << shape;
+            //            std::cerr << shape;
             desc >> mass;
 
             if(light) continue;
@@ -214,6 +216,16 @@ void AnnMap::process(std::string descLine)
             content.push_back(tmpObject); //Add that object form the scene description 
             tmpObject = NULL; //make that pointer available 
             tmpLight = NULL;
+        }
+
+        else if (word == "Light")
+        {
+            if(tmpLight)
+            {
+                //same thing, se =="Object" above...
+
+            }
+
         }
 
         else continue;

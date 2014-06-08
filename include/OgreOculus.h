@@ -95,20 +95,11 @@ public:
 
 	/// Retrieve the projection centre offset.
 	float getCentreOffset() const;
-
-
-    /// Set the near clipping distance for cameras
+    
     void setNearClippingDistance(float distance = 0.10);
-	
-	/// Perform Automatic calibration and activate drift correction.
-	//void setupDriftCorrection(float minMagDist = 0.1f, float minQuatDist = 0.3f);
-	
-	/// Set the reference point for drift correction
-	//void setReferencePoint();
-	
-	/// Update the Automatic calibration process if we are autocalibrating 
-	//void tryCalibration();
-
+    
+    OVR::Profile* getProfile();
+    
 protected:
 	//Device
 	OVR::DeviceManager *m_deviceManager;
@@ -117,8 +108,7 @@ protected:
 	//Sensor
 	OVR::SensorDevice *m_sensor;
 	OVR::SensorFusion *m_sensorFusion;
-	//OVR::Util::MagCalibration m_MagCal; ///Magnetometer calibration object
-	//Tests
+    //Tests
 	bool m_oculusReady;		/// Has the oculus rift been fully initialised?
 	bool m_ogreReady;		/// Has ogre been fully initialised?
 	bool m_driftCorrection; ///Do you want to do not derivate?
@@ -131,6 +121,7 @@ protected:
 	Ogre::Camera *m_cameras[2];
 	Ogre::Viewport *m_viewports[2];
 	Ogre::CompositorInstance *m_compositors[2];
+
 };
 
 
