@@ -74,7 +74,7 @@ namespace Annwvyn
 
 		//init the BodyParams variable
 		static void initBodyParams(Annwvyn::bodyParams* bodyP,
-			float eyeHeight = 1.70f,
+			float eyeHeight = 1.65f,
 			float walkSpeed = 3.0f,
 			float turnSpeed = 0.003f,
 			float mass = 80.0f,
@@ -106,6 +106,8 @@ namespace Annwvyn
 
 		//create a game object form the name of an entity loaded on the ressource group manager.
 		AnnGameObject* createGameObject(const char entityName[]);
+        
+        bool destroyGameObject(AnnGameObject* object);
 
 		//set the ambiant light
 		void setAmbiantLight(Ogre::ColourValue v);
@@ -143,6 +145,7 @@ namespace Annwvyn
 		//update program time. retur the delay between the last call of this method
 		float updateTime(); //return deltaT
 		float getTime();
+        float getTimeFromStartUp();
         
         //Step Objects animation
 		void playObjectsAnnimation();
@@ -185,6 +188,7 @@ namespace Annwvyn
         
         //get the AnnObject the player is looking at
 		Annwvyn::AnnGameObject* playerLookingAt();
+        Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node);
 
         //get bodyParams
 		Annwvyn::bodyParams* getBodyParams();
@@ -197,7 +201,10 @@ namespace Annwvyn
         void setReferenceQuaternion(Ogre::Quaternion q);
         Ogre::Quaternion getReferenceQuaternion();
 
+        void attachVisualBody(const std::string entityName, bool flip=false, Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
+
         void resetOculusOrientation();
+
 	private:
 		Annwvyn::bodyParams* m_bodyParams;
 		
@@ -205,6 +212,7 @@ namespace Annwvyn
 		Ogre::RenderWindow* m_Window;
 		Ogre::SceneManager* m_SceneManager;
 		Ogre::SceneNode* m_Camera;
+        Ogre::SceneNode* VisualBodyAnchor;
 		
 		bool readyForLoadingRessources;
 

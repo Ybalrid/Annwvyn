@@ -1,6 +1,16 @@
+TO IMPLEMENT :
+- Visual Body management
+- Billboard rendering for CEGUI
+
 TODO : 
+- Factorise AnnEngine constructor
+- Reorganise AnnGameObject Method List
+- Add Physics interface (forces, impulses, linear speed)
+- Add friction setting for bullet
+- Add name identification for objects to be found in Map Files
+- Add light vector to AnnMap Class
+- Add External C++ interface for code-running
 - allow playing multiple animations
 - HUD
 - Oculus Latency Tester integration
 - add debug drawing for trigger position when debug drawing is active for bullet
-- Factorise AnnEngine constructor

@@ -32,3 +32,16 @@ Object Sinbad.mesh
 Pos 4.55 1.001 2.214
 Orient 1 0 0 0
 EndObject
+
+
+LIGHT REPRESENTATION
+====================
+
+Map file can indcate position of light sources.
+
+* Syntax : 
+Light <PowerScale>
+Pos <float_x> <float_y> <float_z>
+EndObject
+
+

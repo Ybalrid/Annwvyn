@@ -39,7 +39,7 @@ void AnnMap::loadFile(const char mapFile[])
         cerr << "Cannot open path " << mapFile << endl;
         exit(-1);
     }
-    
+
     string lineBuffer;
 
     while(getline(file,lineBuffer))
@@ -67,6 +67,8 @@ void AnnMap::process(std::string descLine)
     stringstream desc(descLine);
     string word;
 
+    bool light(false);
+
     float x,y,z,w,mass;
     while(desc >> word)
     {
@@ -79,6 +81,7 @@ void AnnMap::process(std::string descLine)
 
         if(word == "Object") //Supose we give an entity name here.
         {
+            light = false;
             desc >> word;
             if(tmpObject)
             {
@@ -86,16 +89,16 @@ void AnnMap::process(std::string descLine)
                 //We ask to create a new object but we are already creating one. Further description 
                 //act for the new object. We have to abort the current object construction because it's an
                 //unfinished one.
-                
+
 
                 //There is a problem here : We haven't finish to add an object to the map. But the file description
                 //ask to create a new object. At this stade, the object is allready on the scene. If we drop that object
                 //and free the memory, the AnnEngine class know a pointer to that memory adress, and will try to access it.
                 //We need to destroy that object via the AnnEngine class. But that fonctionality doesn't exist (yet)
                 //We will just asume for the moment that we push_back the object to the Map Vector.
-                //This behaviour is not documented and not normal. But that the only temporary thing we can 
-                //avoid the rist to cause a future segfault
-                
+                //This behaviour is not documented and not normal. But that the only temporary thing we do to
+                //avoid the risk to cause a future segfault
+
                 content.push_back(tmpObject);
                 tmpObject = NULL;
 
@@ -106,18 +109,41 @@ void AnnMap::process(std::string descLine)
                 //
                 //!!will be patched later !!
             }
-                tmpObject = m_engine->createGameObject(word.c_str()); //try to create an AnnGameObject from that entity
+            tmpObject = m_engine->createGameObject(word.c_str()); //try to create an AnnGameObject from that entity
         }
-        
+
+        if(word == "Light")
+        {
+            if(tmpLight)
+                tmpLight = NULL;
+            tmpLight = m_engine->addLight();
+            light = true;
+
+            float powerScale;
+            desc >> powerScale;
+            tmpLight->setPowerScale(powerScale);
+            tmpLight->setDiffuseColour(powerScale,powerScale,powerScale);
+        }
+
         else if(word == "Pos") //loading coorinates as 3 float 
         {
             desc >> x; 
             desc >> y;
             desc >> z;
 
-            if(tmpObject)
-                tmpObject->setPos(x,y,z);
-            else continue; //syntax error here
+            if(!light)
+            {
+                if(tmpObject)
+                    tmpObject->setPos(x,y,z);
+                else continue; //syntax error here
+            }
+            else
+            {
+                if(tmpLight)
+                    tmpLight->setPosition(x,y,z);
+                else
+                    continue;
+            }
         }
 
         else if(word == "Orient")
@@ -127,11 +153,21 @@ void AnnMap::process(std::string descLine)
             desc >> z;
             desc >> w;
 
-            if(tmpObject)
-                tmpObject->setOrientation(w,x,y,z);
-            else 
+            if(!light)
             {
-            continue; //syntax error here 
+                if(tmpObject)
+                    tmpObject->setOrientation(w,x,y,z);
+                else 
+                {
+                    continue; //syntax error here 
+                }
+            }
+            else
+            {
+               /* if(tmpLight)
+                    tmpLight->setOrientation(w,x,y,z);
+                else*/
+                    continue;
             }
         }
 
@@ -140,6 +176,9 @@ void AnnMap::process(std::string descLine)
             desc >> x;
             desc >> y;
             desc >> z;
+
+            if(light) continue;
+
             if(tmpObject)
                 tmpObject->node()->scale(x,y,z);
         }
@@ -161,17 +200,20 @@ void AnnMap::process(std::string descLine)
                 shape = capsuleShape;
             else continue; //abort physics if syntax error;
 
-            std::cerr << shape;
+//            std::cerr << shape;
             desc >> mass;
-            
+
+            if(light) continue;
+
             if(tmpObject)
                 tmpObject->setUpBullet(mass,shape);
         }
-        
+
         else if(word == "EndObject") //End of description of an object
         {
             content.push_back(tmpObject); //Add that object form the scene description 
             tmpObject = NULL; //make that pointer available 
+            tmpLight = NULL;
         }
 
         else continue;

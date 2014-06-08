@@ -31,16 +31,20 @@ namespace Annwvyn
             AnnMap(Annwvyn::AnnEngine* engine, const char mapFile[]);
             ~AnnMap();
             void loadFile(const char mapFile[]);
-       
+            
+            AnnGameObjectVect getContent(){return content;}
+
         private:
             void init(Annwvyn::AnnEngine* engine);
             void process(std::string descLine);
 
             AnnEngine* m_engine;
             AnnGameObjectVect content;
+
             bool fileLoaded;
             
             AnnGameObject* tmpObject;
+            AnnLightObject* tmpLight;
 
     };
 }
