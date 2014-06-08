@@ -94,8 +94,8 @@ namespace Annwvyn
             ///set player linear speed from a 3D vector
             void setPhysicBodyLinearSpeed(Ogre::Vector3 V);
 
-            ///create a game object form the name of an entity loaded on the ressource group manager.
-            AnnGameObject* createGameObject(const char entityName[]);
+            ///create a game object form the name of an entity.
+            AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject);
 
             bool destroyGameObject(AnnGameObject* object);
 

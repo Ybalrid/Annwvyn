@@ -19,6 +19,23 @@
 
 using namespace std;
 
+
+class Sinbad : public Annwvyn::AnnGameObject
+{
+    public:
+    void postInit()
+    {
+        setPos(0,2,3);
+        setAnimation("Dance");
+        playAnimation(true);
+        loopAnimation(true);
+
+        setUpBullet(40, Annwvyn::boxShape);
+    }
+
+};
+
+
 //If you want to redirect cout & cerr to cout.txt and cerr.txt, uncomment the folowing line : 
 //#define OUTSTREAM_TO_FILE
 
@@ -60,30 +77,11 @@ int main(int argc, char **argv)
 
 
 	//Create Objects
-	Annwvyn::AnnGameObject* Sinbad = GameEngine->createGameObject("Sinbad.mesh");
-	Sinbad->node()->scale(.40,.40,.40);
-	Sinbad->setPos(0,2,3);
 
-	Sinbad->setAnimation("Dance");
-	Sinbad->playAnimation(true);
-	Sinbad->loopAnimation(true);
 
-	Sinbad->setUpBullet(140, Annwvyn::boxShape);
-/*
-	Annwvyn::AnnGameObject* Sinbad2 = GameEngine->createGameObject("Sinbad.mesh");
-	Sinbad2->node()->scale(.35,.35,.35);
-	Sinbad2->setPos(1,2,4);
-	
-	Sinbad2->setAnimation("IdleTop");
-	Sinbad2->playAnimation(true);
-	Sinbad2->loopAnimation(true);
-	
-	Sinbad2->setUpBullet(140, Annwvyn::boxShape);
-
-	Sinbad2->testCollisionWith(Sinbad);
-
-*/
-	Annwvyn::AnnGameObject* Grid = GameEngine->createGameObject("Plane.mesh");
+    Sinbad* S = (Sinbad*) GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
+    
+    Annwvyn::AnnGameObject* Grid = GameEngine->createGameObject("Plane.mesh");
 	Grid->setPos(0,-3,0);
 	Grid->setUpBullet();
 	GameEngine->setGround(Grid); 
@@ -103,20 +101,14 @@ int main(int argc, char **argv)
 
 	GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
 
+
 	//play background music
 	GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
 	
     
     
-    int count = 0;
 	while(!GameEngine->requestStop())
 	{
-        std::cout << count << std::endl;
-        if(count > 1000)
-            if(Sinbad)
-                if(GameEngine->destroyGameObject(Sinbad))
-                    std::cout << "DONE" << std::endl;
-        count++;
 		GameEngine->refresh();
 	}
 

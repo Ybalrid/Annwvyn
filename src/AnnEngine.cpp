@@ -377,12 +377,14 @@ void AnnEngine::oculusInit()
 }
 
 
-AnnGameObject* AnnEngine::createGameObject(const char entityName[])
+AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
 {
     if(std::string(entityName).empty())
+    {
+        delete obj;
         return NULL;
+    }
 
-    Annwvyn::AnnGameObject* obj = new AnnGameObject;
     Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
 
     Ogre::SceneNode* node = 
@@ -396,6 +398,10 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[])
 
     obj->setBulletDynamicsWorld(m_DynamicsWorld);
 
+
+    obj->postInit(); //Run post init directives
+
+    //pushBack
     objects.push_back(obj); //keep address in list
 
     return obj;
@@ -416,7 +422,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
             std::cout << "Object found" << std::endl;
             objects.erase(objects.begin()+i);
             Ogre::SceneNode* node = object->node();
-            
+
             node->getParent()->removeChild(node);
 
             btRigidBody* body = object->getBody();
@@ -424,7 +430,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
             m_SceneManager->destroySceneNode(node);
             delete object;
-            
+
             returnCode = true; // found
         }
     }
@@ -581,6 +587,8 @@ void AnnEngine::refresh()
         objects[i]->updateOpenAlPos();
     /////////////////////////////////////////////////////////////////////////////////////////
 
+    for(size_t i(0); i < objects.size(); i++)
+        objects[i]->atRefresh();
 
     //synchronise VisualBody
     VisualBodyAnchor->setPosition(m_bodyParams->Position);
