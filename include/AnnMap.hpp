@@ -40,7 +40,7 @@ namespace Annwvyn
 
             AnnEngine* m_engine;
             AnnGameObjectVect content;
-            AnnLightVect Lights;
+            AnnLightVect contentLights;
             
             bool fileLoaded;
             
