@@ -3,9 +3,9 @@
 #undef DLL
 ///windows DLL
 #ifdef DLLDIR_EX
-   #define DLL  __declspec(dllexport)   /// export DLL information
+#define DLL  __declspec(dllexport)   /// export DLL information
 #else
-   #define DLL  __declspec(dllimport)   /// import DLL information
+#define DLL  __declspec(dllimport)   /// import DLL information
 #endif
 
 ///bypass on linux
@@ -31,115 +31,123 @@
 
 namespace Annwvyn
 {
-	class DLL AnnGameObject; 
+    class DLL AnnGameObject; 
 
-	struct collisionTest
-	{
-		AnnGameObject* Object;
-		AnnGameObject* Receiver;
-		bool collisionState;
-	};
+    struct collisionTest
+    {
+        AnnGameObject* Object;
+        AnnGameObject* Receiver;
+        bool collisionState;
+    };
 
-	class DLL AnnGameObject
-	{
-	public:
-		AnnGameObject();
-        ~AnnGameObject();
-		///Setters pos
-		void setPos(float x, float y, float z);
-		void setPos(Ogre::Vector3 pos);
+    class DLL AnnGameObject
+    {
+        public:
+            AnnGameObject();
+            virtual ~AnnGameObject();
+            ///Setters pos
+            void setPos(float x, float y, float z);
+            void setPos(Ogre::Vector3 pos);
 
-		void translate(float x, float y, float z);
+            void translate(float x, float y, float z);
 
-		void setOrientation(float w, float x, float y, float z);
-		void setOrientation(Ogre::Quaternion orient);
-        
-        void setScale(float x, float y, float z);
-        void setScale(Ogre::Vector3 scale);
+            void setOrientation(float w, float x, float y, float z);
+            void setOrientation(Ogre::Quaternion orient);
 
-		///Getters pos
+            void setScale(float x, float y, float z);
+            void setScale(Ogre::Vector3 scale);
 
-		Ogre::Vector3 pos();
-		Ogre::Quaternion Orientation();
+            ///Getters pos
 
-		///Setters engine
-		
-		void setNode(Ogre::SceneNode* node);
+            Ogre::Vector3 pos();
+            Ogre::Quaternion Orientation();
 
-		void setEntity(Ogre::Entity* entity);
+            ///Setters engine
 
-		void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
+            void setNode(Ogre::SceneNode* node);
 
-		void setUpBullet(float mass = 0, phyShapeType type = staticShape);
+            void setEntity(Ogre::Entity* entity);
 
-		void setAudioEngine(AnnAudioEngine* AudioEngine);
+            void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
 
-		float getDistance(AnnGameObject* otherObject);
+            void setUpBullet(float mass = 0, phyShapeType type = staticShape);
 
-		///lowlevel getters engine
-		Ogre::SceneNode* node();
-		Ogre::Entity* Entity();
-		btRigidBody* RigidBody();
+            void setAudioEngine(AnnAudioEngine* AudioEngine);
 
-		///utility 
-		void stepBulletSimulation();
+            float getDistance(AnnGameObject* otherObject);
 
-		void playSound(std::string path, bool loop = false, float volume = 1.0f);
-		void updateOpenAlPos();
+            ///lowlevel getters engine
+            Ogre::SceneNode* node();
+            Ogre::Entity* Entity();
+            btRigidBody* RigidBody();
 
-		btRigidBody* getBody();
-		btCollisionShape* getShape();
+            ///utility 
+            void stepBulletSimulation();
 
-		///collision handeling
-		std::vector<struct collisionTest*> getCollisionMask();
-		
-		///set all collisionState to false
-		void resetCollisionMask();
-		
-		///empty the vector
-		void cleanCollisionMask();
+            void playSound(std::string path, bool loop = false, float volume = 1.0f);
+            void updateOpenAlPos();
 
-		///remove this object of the collisionMask
-		void stopGettingCollisionWith(AnnGameObject* Object);
+            btRigidBody* getBody();
+            btCollisionShape* getShape();
 
-		///add this object to the collisionState
-		void testCollisionWith(AnnGameObject* Object);
+            ///collision handeling
+            std::vector<struct collisionTest*> getCollisionMask();
 
-		///change the collisionState
-		void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
+            ///set all collisionState to false
+            void resetCollisionMask();
 
-		///return the collisionState with the object from the collisionMask. if the object is not on the collisionMask, return false
-		bool collideWith(AnnGameObject* Object);///
-		
-		void setAnimation(const char name[]);
-		void playAnimation(bool play = true);
-		void loopAnimation(bool loop = true);
-		void addTime(float offsetTime);
+            ///empty the vector
+            void cleanCollisionMask();
 
-	protected:
-		Ogre::SceneNode* m_node;
-		Ogre::Entity* m_entity;
-		Ogre::AnimationState* m_anim;
-		///std::vector<Ogre::AnimationState*> anims;
-		bool animIsSetted;
-		bool animIsPlaying;
-		bool animIsLooping;
+            ///remove this object of the collisionMask
+            void stopGettingCollisionWith(AnnGameObject* Object);
 
-	
+            ///add this object to the collisionState
+            void testCollisionWith(AnnGameObject* Object);
 
-		btDiscreteDynamicsWorld* m_DynamicsWorld;
-		btCollisionShape* m_Shape;
-		btRigidBody* m_Body;
-		bool bulletReady;
+            ///change the collisionState
+            void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
 
-		std::vector<struct collisionTest*> collisionMask;
+            ///return the collisionState with the object from the collisionMask. if the object is not on the collisionMask, return false
+            bool collideWith(AnnGameObject* Object);///
 
-		AnnAudioEngine* m_AudioEngine;
-		ALuint m_Source; ///OpenAL audio source
-		ALuint m_Buffer; ///OpenAL buffer
-	};
+            void setAnimation(const char name[]);
+            void playAnimation(bool play = true);
+            void loopAnimation(bool loop = true);
+            void addTime(float offsetTime);
 
-	
+        protected:
+            Ogre::SceneNode* m_node;
+            Ogre::Entity* m_entity;
+            Ogre::AnimationState* m_anim;
+            ///std::vector<Ogre::AnimationState*> anims;
+            bool animIsSetted;
+            bool animIsPlaying;
+            bool animIsLooping;
+
+
+
+            btDiscreteDynamicsWorld* m_DynamicsWorld;
+            btCollisionShape* m_Shape;
+            btRigidBody* m_Body;
+            bool bulletReady;
+
+            std::vector<struct collisionTest*> collisionMask;
+
+            AnnAudioEngine* m_AudioEngine;
+            ALuint m_Source; ///OpenAL audio source
+            ALuint m_Buffer; ///OpenAL buffer
+
+        public:
+            ///Executed after object initialization
+            virtual void postInit(){return;}
+
+            ///Executed at refresh time (each frames)
+            virtual void atRefresh(){return;}
+
+    };
+
+
 }
 
 #endif
