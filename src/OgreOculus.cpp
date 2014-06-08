@@ -343,3 +343,10 @@ void Oculus::resetOrientation()
 		m_sensorFusion->SetYawCorrectionEnabled(true);
 
 }*/
+
+
+void Oculus::setNearClippingDistance(float dist)
+{
+    for(size_t i = 0; i < 2; i++)
+        m_cameras[i]->setNearClipDistance(static_cast<Ogre::Real>(dist));
+}

@@ -17,7 +17,7 @@
 //Annwvyn
 #include <Annwvyn.h>
 
-
+using namespace std;
 
 //If you want to redirect cout & cerr to cout.txt and cerr.txt, uncomment the folowing line : 
 //#define OUTSTREAM_TO_FILE
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 	GameEngine->loadDir("media");
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
-	GameEngine->loadDir("media/plane");
+    GameEngine->loadDir("media/plane");
 
 	GameEngine->initRessources();
 
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 
 
 	GameEngine->initPlayerPhysics();
-//	GameEngine->setDebugPhysicState(true);
+	GameEngine->setDebugPhysicState(true);
 
 
 	//setUp Oculus system
@@ -109,15 +109,16 @@ int main(int argc, char **argv)
 	//sinbad make sound
 	Sinbad->playSound("media/monster.wav",true); //true = in loop, false by default
     
-    Annwvyn::AnnMap(GameEngine, "test.map");
+    Annwvyn::AnnMap* map = new Annwvyn::AnnMap(GameEngine, "test.map");
     
 	//Render loop
-
+    int count = 0;
 	while(!GameEngine->requestStop())
 	{
 		GameEngine->refresh();
 	}
 
     delete GameEngine;
+    delete map;
 	return 0;
 }

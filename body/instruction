@@ -1,0 +1,9 @@
+Directory intended to put some 3D body.
+
+Center (AKA Origin, Pivot point...) of the player's body mesh have to be in the center of the head (aligned with eye position). Optimally, the head have to be inside a sphere of 0.1 unit in radius. If bigger, you'll need to manualy set the near clipping distance of the cameras.
+
+The player body has to look in the same direction as the negative Z axis.
+
+Animation :  easy animation handleling will be provided in the future.
+
+No physics is applied to the player's body mesh. the Virtual body provide a btCapsuleShape for the player. It has the player height and a radius of 0.5 metters.

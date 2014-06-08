@@ -126,6 +126,17 @@ void AnnGameObject::setOrientation(Ogre::Quaternion orient)
 	setOrientation(orient.w,orient.x,orient.y,orient.z);
 }
 
+void AnnGameObject::setScale(Ogre::Vector3 scale)
+{
+	setScale(scale.x,scale.y,scale.z);
+}
+
+
+void AnnGameObject::setScale(float x, float y, float z)
+{
+	m_node->setScale(Ogre::Vector3(x,y,z));
+}
+
 Ogre::Vector3 AnnGameObject::pos()
 {
 	if(m_node != NULL)
@@ -174,7 +185,7 @@ void AnnGameObject::setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorl
 
 void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 {
-	
+    //check if everything is OK
 	if(m_DynamicsWorld == NULL)
 		return;
 	if(m_node == NULL)
@@ -182,8 +193,10 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 	if(m_entity == NULL)
 		return;
 	
+    //init shap converter
 	BtOgre::StaticMeshToShapeConverter converter(m_entity);
 
+    //create the correct shape
 	switch(type)
 	{
 	case boxShape:
@@ -211,6 +224,9 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 
 	if(m_Shape == NULL)
 		return;
+
+    Ogre::Vector3 scale =  node()->getScale();
+    m_Shape->setLocalScaling(btVector3(scale.x,scale.y,scale.z));
 	
 	btVector3 inertia;
 	if(mass != 0)
@@ -225,9 +241,9 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 
 	if(m_Body != NULL)
 	{
-		m_Body->translate(btVector3(this->node()->getPosition().x,
+/*		m_Body->translate(btVector3(this->node()->getPosition().x,
 			this->node()->getPosition().y,
-			this->node()->getPosition().z));
+			this->node()->getPosition().z));*/
 
 		m_DynamicsWorld->addRigidBody(m_Body);
 	}	
