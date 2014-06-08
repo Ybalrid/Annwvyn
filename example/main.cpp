@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	GameEngine->initRessources();
 
 
-/*	//Create Objects
+	//Create Objects
 	Annwvyn::AnnGameObject* Sinbad = GameEngine->createGameObject("Sinbad.mesh");
 	Sinbad->node()->scale(.40,.40,.40);
 	Sinbad->setPos(0,2,3);
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 	Sinbad->loopAnimation(true);
 
 	Sinbad->setUpBullet(140, Annwvyn::boxShape);
-
+/*
 	Annwvyn::AnnGameObject* Sinbad2 = GameEngine->createGameObject("Sinbad.mesh");
 	Sinbad2->node()->scale(.35,.35,.35);
 	Sinbad2->setPos(1,2,4);
@@ -106,19 +106,20 @@ int main(int argc, char **argv)
 	//play background music
 	GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
 	
-	//sinbad make sound
-//	Sinbad->playSound("media/monster.wav",true); //true = in loop, false by default
     
-    Annwvyn::AnnMap* map = new Annwvyn::AnnMap(GameEngine, "test.map");
     
-	//Render loop
     int count = 0;
 	while(!GameEngine->requestStop())
 	{
+        std::cout << count << std::endl;
+        if(count > 1000)
+            if(Sinbad)
+                if(GameEngine->destroyGameObject(Sinbad))
+                    std::cout << "DONE" << std::endl;
+        count++;
 		GameEngine->refresh();
 	}
 
     delete GameEngine;
-    delete map;
 	return 0;
 }

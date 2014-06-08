@@ -403,16 +403,28 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[])
 
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
+    std::cerr << "destroy " << static_cast<void*>(object) << std::endl;
     bool returnCode(false);
-    for(size_t i; i < objects.size(); i++)
+    for(size_t i(0); i < objects.size(); i++)
     {
+        std::cerr << "Object " << static_cast<void*>(objects[i]) << " stop collision test" << std::endl;
+
         objects[i]->stopGettingCollisionWith(object);
 
         if(objects[i] == object)
         {
+            std::cout << "Object found" << std::endl;
             objects.erase(objects.begin()+i);
+            Ogre::SceneNode* node = object->node();
+            
+            node->getParent()->removeChild(node);
 
+            btRigidBody* body = object->getBody();
+            m_DynamicsWorld->removeRigidBody(body);
+
+            m_SceneManager->destroySceneNode(node);
             delete object;
+            
             returnCode = true; // found
         }
     }
