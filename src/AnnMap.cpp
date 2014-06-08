@@ -213,7 +213,11 @@ void AnnMap::process(std::string descLine)
 
         else if(word == "EndObject") //End of description of an object
         {
-            content.push_back(tmpObject); //Add that object form the scene description 
+            if(tmpObject)
+                content.push_back(tmpObject); //Add that object form the scene description 
+            if(tmpLight)
+                contentLights.push_back(tmpLight);
+
             tmpObject = NULL; //make that pointer available 
             tmpLight = NULL;
         }
