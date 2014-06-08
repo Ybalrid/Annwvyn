@@ -59,7 +59,7 @@ void AnnMap::init(AnnEngine* engine)
     m_engine = engine;
 
     tmpObject = NULL;
-
+    tmpLight = NULL;
 }
 
 void AnnMap::process(std::string descLine)
@@ -114,8 +114,12 @@ void AnnMap::process(std::string descLine)
             desc >> x; 
             desc >> y;
             desc >> z;
-
-            if(tmpObject)
+            
+            if(tmpLight)
+            {
+            }
+            
+            else if(tmpObject)
                 tmpObject->setPos(x,y,z);
             else continue; //syntax error here
         }
@@ -172,6 +176,16 @@ void AnnMap::process(std::string descLine)
         {
             content.push_back(tmpObject); //Add that object form the scene description 
             tmpObject = NULL; //make that pointer available 
+        }
+
+        else if (word == "Light")
+        {
+           if(tmpLight)
+            {
+                //same thing, se =="Object" above...
+                
+            }
+           
         }
 
         else continue;
