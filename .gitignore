@@ -40,3 +40,10 @@
 *.swp
 .*.swp
 
+#ctags
+tags
+
+#compilled example
+example/test*
+
+doxygen/Gen/
