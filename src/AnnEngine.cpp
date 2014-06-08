@@ -26,7 +26,7 @@ AnnEngine::AnnEngine(const char title[])
     setUpBullet();
     setUpAudio();
     setUpGUI();
-    
+
     QuatReference = Ogre::Quaternion::IDENTITY;
 
     VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
@@ -70,7 +70,7 @@ void AnnEngine::setUpOgre(const char title[])
 
     log("Create window");
     m_Window = m_Root->initialise(true,title);
-    
+
     log("Create Ogre OctreeSceneManager");
     m_SceneManager = m_Root->createSceneManager("OctreeSceneManager");
 
@@ -92,7 +92,7 @@ void AnnEngine::setUpBullet()
 {
 
     log("Init Bullet physics");
-    
+
     m_Broadphase = new btDbvtBroadphase();
     m_CollisionConfiguration = new btDefaultCollisionConfiguration();
     m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
@@ -235,8 +235,8 @@ void AnnEngine::initPlayerPhysics()
 //will be private 
 void AnnEngine::createVirtualBodyShape()
 {
-	float height = m_bodyParams->eyeHeight;
-	m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
+    float height = m_bodyParams->eyeHeight;
+    m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
 }
 
 //will be private
@@ -263,16 +263,16 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
     if(m_bodyParams->Body == NULL)
         return;
-	
+
     float height(m_bodyParams->eyeHeight);
 
-	m_DynamicsWorld->addRigidBody(m_bodyParams->Body);
-	
-	btVector3 pos = btVector3(m_bodyParams->Position.x,
-		m_bodyParams->Position.y,
-		m_bodyParams->Position.z);
-	
-	pos += btVector3(0,(height),0);
+    m_DynamicsWorld->addRigidBody(m_bodyParams->Body);
+
+    btVector3 pos = btVector3(m_bodyParams->Position.x,
+            m_bodyParams->Position.y,
+            m_bodyParams->Position.z);
+
+    pos += btVector3(0,(height),0);
 
     m_bodyParams->Body->translate(pos);
 }
@@ -372,7 +372,7 @@ void AnnEngine::oculusInit()
 
     m_Camera->setPosition(m_bodyParams->Position + 
             Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
-    
+
     oculus.setNearClippingDistance(); //Set near clipping distance. Camera is intended to be inside the head of an humanoid 3D Model.
 }
 
@@ -506,7 +506,7 @@ void AnnEngine::refresh()
 
     //	OIS Events 
     captureEvents();
-    
+
     if(activateWASD && m_bodyParams->Body != NULL)//classic fps control
     {
         //TODO extract this piece of code and make it accesible with a method !!
@@ -531,7 +531,7 @@ void AnnEngine::refresh()
         Transform.setRotation(fixedBodyOrient);
         m_bodyParams->Body->setCenterOfMassTransform(Transform);
     }
-    
+
     //turn body with mouse TODO enclose this with a methode. That's ugly
     m_bodyParams->Orientation.yaw
         (Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
@@ -552,7 +552,7 @@ void AnnEngine::refresh()
                 if(m_Keyboard->isKeyDown(OIS::KC_SPACE))
                     m_bodyParams->Body->applyCentralImpulse(btVector3(0,jumpForce,0));
     //can jump and ground is known
-    
+
     processCollisionTesting();
     processTriggersContacts();
 
@@ -573,7 +573,7 @@ void AnnEngine::refresh()
     //synchronise VisualBody
     VisualBodyAnchor->setPosition(m_bodyParams->Position);
     VisualBodyAnchor->setOrientation(m_bodyParams->Orientation.toQuaternion());
-    
+
     //////////////////////////////////////////////////////////////////////////////// VISUAL
     updateCamera(); //make the pulling of oculus sensor just before rendering the frame
     renderOneFrame();

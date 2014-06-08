@@ -40,3 +40,8 @@
 *.swp
 .*.swp
 
+#ctags
+tags
+
+#compilled example
+example/test*
