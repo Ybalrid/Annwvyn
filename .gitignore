@@ -45,3 +45,5 @@ tags
 
 #compilled example
 example/test*
+
+doxygen/Gen/
