@@ -151,20 +151,6 @@ Ogre::Quaternion AnnGameObject::Orientation()
     return Ogre::Quaternion(1,0,0,0);
 }
 
-void AnnGameObject::stepBulletSimulation()
-{
-    //NO NEED SINCE BTOGRE
-
-    /*std::cout << "STEP" << std::endl;
-      if(!bulletReady)
-      return;
-      btVector3 pos = m_Body->getCenterOfMassPosition();
-      btQuaternion orient = m_Body->getOrientation();
-    //Update Ogre node
-    m_node->setPosition(pos.x(), pos.y(), pos.z());
-    m_node->setOrientation(orient.w(),orient.x(),orient.y(),orient.z());
-    //Update OpenAL*/
-}
 
 void AnnGameObject::setNode(Ogre::SceneNode* node)
 {
@@ -377,5 +363,15 @@ void AnnGameObject::addTime(float offset)
     if(!animIsSetted || !animIsPlaying)
         return;
     m_anim->addTime(offset);
+}
+
+void AnnGameObject::applyImpulse(Ogre::Vector3 force)
+{
+    m_Body->applyCentralImpulse(btVector3(force.x,force.y,force.z));
+}
+
+void AnnGameObject::applyForce(Ogre::Vector3 force)
+{
+   m_Body->applyCentralForce(btVector3(force.x,force.y,force.z));
 }
 

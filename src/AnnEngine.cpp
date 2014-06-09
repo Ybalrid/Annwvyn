@@ -4,7 +4,6 @@ using namespace Annwvyn;
 
 AnnEngine::AnnEngine(const char title[])
 {
-
     m_Camera = NULL;
 
     log("Annwvyn Game Engine - Step into the Other World",false);
@@ -59,6 +58,11 @@ AnnEngine::~AnnEngine()
 
     //Audio
     delete AudioEngine;
+    
+    
+
+    oculus.~Oculus();
+
 }
 
 
