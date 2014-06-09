@@ -81,8 +81,6 @@ namespace Annwvyn
             Ogre::Entity* Entity();
             btRigidBody* RigidBody();
 
-            ///utility 
-            void stepBulletSimulation();
 
             void playSound(std::string path, bool loop = false, float volume = 1.0f);
             void updateOpenAlPos();
@@ -115,6 +113,10 @@ namespace Annwvyn
             void playAnimation(bool play = true);
             void loopAnimation(bool loop = true);
             void addTime(float offsetTime);
+            
+            void applyForce(Ogre::Vector3 force);
+            void applyImpulse(Ogre::Vector3 impulse);
+
 
         protected:
             Ogre::SceneNode* m_node;
