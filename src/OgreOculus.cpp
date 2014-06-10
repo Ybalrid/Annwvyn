@@ -235,7 +235,7 @@ bool Oculus::setupOgre(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::Sc
 			m_cameras[i]->setNearClipDistance(m_stereoConfig->GetEyeToScreenDistance());
 			m_cameras[i]->setFarClipDistance(g_defaultFarClip);
 			m_cameras[i]->setPosition((i * 2 - 1) * m_stereoConfig->GetIPD() * 0.5f, 0, 0);
-            std::cerr << "--------------- IPD -------------- " << m_stereoConfig->GetIPD();
+            std::cerr << "--------------- IPD -------------- " << m_stereoConfig->GetIPD() << std::endl;
 			m_cameras[i]->setAspectRatio(m_stereoConfig->GetAspect());
 			m_cameras[i]->setFOVy(Ogre::Radian(m_stereoConfig->GetYFOVRadians()));
 			

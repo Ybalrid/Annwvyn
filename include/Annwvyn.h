@@ -5,7 +5,7 @@
 * \file Annwvyn.h
 * \brief main Annwvyn include
 * \author Arthur Brainville
-* \version 0.5
+* \version 0.0.1
 */
 
 #include <Ogre.h>

@@ -3,9 +3,9 @@
 #undef DLL
 //windows DLL
 #ifdef DLLDIR_EX
-   #define DLL  __declspec(dllexport)   // export DLL information
+#define DLL  __declspec(dllexport)   // export DLL information
 #else
-   #define DLL  __declspec(dllimport)   // import DLL information
+#define DLL  __declspec(dllimport)   // import DLL information
 #endif
 
 //bypass on linux
@@ -16,28 +16,51 @@
 
 #include <Ogre.h>
 
+
 namespace Annwvyn
 {
-	class DLL AnnTriggerObject
-	{
-	public:
-		AnnTriggerObject();
+    ///Anticipated declaration of AnnEngine class 
+    //
+    //permit to acces the symbol without including the header.
+    class AnnEngine;
+    
+    class DLL AnnTriggerObject
+    {
+        public:
+            ///Class constructor
+            AnnTriggerObject();
 
-		void setPosition(Ogre::Vector3 pos);
-		void setPosition(float x, float y, float z);
+            ///Set position form Vector 3D
+            void setPosition(Ogre::Vector3 pos);
 
-		Ogre::Vector3 getPosition();
+            ///Set position form Variables
+            void setPosition(float x, float y, float z);
+            
+            ///Set contact information
+            void setThreshold(float threshold);
 
-		bool getContactInformation();
-		void setContactInformation(bool contact);
-		float getThreshold();
+            ///Get position
+            Ogre::Vector3 getPosition();
 
-	private:
-		Ogre::Vector3 m_position;
-		float m_threshold;
-		bool m_contactWithPlayer;
-	
-	};
+            ///Get contact information
+            bool getContactInformation();
+
+            ///GetThreshold distance
+            float getThreshold();
+
+        private:	
+            ///For engine : Set contact state 
+            void setContactInformation(bool contact);
+            
+            ///Make AnnEngine class frinnd to permit acces to setContactInformation(bool)
+            friend class Annwvyn::AnnEngine;
+
+        private:
+            Ogre::Vector3 m_position;
+            float m_threshold;
+            bool m_contactWithPlayer;
+
+    };
 }
 
 #endif

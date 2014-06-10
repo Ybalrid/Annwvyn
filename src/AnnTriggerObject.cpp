@@ -40,3 +40,7 @@ float AnnTriggerObject::getThreshold()
 	return m_threshold;
 }
 
+void AnnTriggerObject::setThreshold(float threshold)
+{
+    m_threshold = threshold;
+}
