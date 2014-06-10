@@ -301,7 +301,7 @@ void AnnGameObject::resetCollisionMask()
 
 void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 {
-    if(Object == this) return; //Explain me how I can colide with myself.
+    if(Object == this) return; //Explain me how I can colide with myself o.O
 
     struct collisionTest* tester = new collisionTest;
 
