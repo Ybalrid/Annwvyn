@@ -472,12 +472,6 @@ Annwvyn::AnnLightObject* AnnEngine::addLight()
     return Light;
 }
 
-void AnnEngine::runPhysics()
-{
-    for(unsigned int i(0); i < objects.size(); i++)
-        objects[i]->stepBulletSimulation();
-}
-
 bool AnnEngine::requestStop()
 {
     //pres ESC to quite. Stupid but efficient. I like that.

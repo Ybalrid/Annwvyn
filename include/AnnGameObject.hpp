@@ -33,65 +33,81 @@ namespace Annwvyn
 {
     class DLL AnnGameObject; 
 
+
     struct collisionTest
     {
+        ///The object tested
         AnnGameObject* Object;
+
+        ///The base object
         AnnGameObject* Receiver;
+
+        ///Contact or not ? 
         bool collisionState;
     };
 
     class DLL AnnGameObject
     {
         public:
+
+            ///Class constructor 
             AnnGameObject();
+
+            ///Class Destructor. Virutal.
             virtual ~AnnGameObject();
-            ///Setters pos
+
+            ///Set position from spatial varaibles
             void setPos(float x, float y, float z);
+
+            ///Set position from Vector 3D
             void setPos(Ogre::Vector3 pos);
 
+            ///Translate 
             void translate(float x, float y, float z);
 
+            ///Set orientation from Quaternion components
             void setOrientation(float w, float x, float y, float z);
+
+            ///Set Orientation from Quaternion
             void setOrientation(Ogre::Quaternion orient);
 
+            ///Set scale
             void setScale(float x, float y, float z);
+
+            ///Set scale from Vector 3D
             void setScale(Ogre::Vector3 scale);
 
-            ///Getters pos
-
+            ///Get Position
             Ogre::Vector3 pos();
+
+            ///Get Orientation
             Ogre::Quaternion Orientation();
 
-            ///Setters engine
-
-            void setNode(Ogre::SceneNode* node);
-
-            void setEntity(Ogre::Entity* entity);
-
-            void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
-
-            void setUpBullet(float mass = 0, phyShapeType type = staticShape);
-
-            void setAudioEngine(AnnAudioEngine* AudioEngine);
-
-            float getDistance(AnnGameObject* otherObject);
-
-            ///lowlevel getters engine
+            ///Get Ogre Node
             Ogre::SceneNode* node();
+
+            ///Get Ogre Entity
             Ogre::Entity* Entity();
+
+            ///Get Physic Body
             btRigidBody* RigidBody();
 
-
-            void playSound(std::string path, bool loop = false, float volume = 1.0f);
-            void updateOpenAlPos();
-
+            ///Get Rigid Body
             btRigidBody* getBody();
+
+            ///Get shape
             btCollisionShape* getShape();
+
+            ///Get distance from another object 
+            float getDistance(AnnGameObject* otherObject);
+
+            ///Play a sond file
+            void playSound(std::string path, bool loop = false, float volume = 1.0f);
 
             ///collision handeling
             std::vector<struct collisionTest*> getCollisionMask();
 
-            ///set all collisionState to false
+            ///Set all collisionState to false
             void resetCollisionMask();
 
             ///empty the vector
@@ -106,23 +122,60 @@ namespace Annwvyn
             ///change the collisionState
             void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
 
-            ///return the collisionState with the object from the collisionMask. if the object is not on the collisionMask, return false
-            bool collideWith(AnnGameObject* Object);///
+            ///return the collisionState with the object from the collisionMask. 
+            //if the object is not on the collisionMask, return false
+            bool collideWith(AnnGameObject* Object);
 
+            ///Set curently playing animation
             void setAnimation(const char name[]);
+
+            ///Play the animation ?
             void playAnimation(bool play = true);
+
+            ///Loop the animation ?
             void loopAnimation(bool loop = true);
-            void addTime(float offsetTime);
-            
+
+            ///Apply a physical force            
             void applyForce(Ogre::Vector3 force);
+
+            ///Apply a physical impultion
             void applyImpulse(Ogre::Vector3 impulse);
 
+            ///Set up Bullet 
+            void setUpBullet(float mass = 0, phyShapeType type = staticShape);
 
+            ///SetUpPhysics (just a call to setUpBullet...)
+            void setUpPhysics(float mass = 0, phyShapeType type = staticShape){setUpBullet(mass,type);}
+
+        private:
+            ///Make Annwvyn::AnnEngine acces these methods : 
+            friend class AnnEngine;
+
+
+            ///For engine : set node
+            void setNode(Ogre::SceneNode* node);
+
+            ///For engine : set Entity
+            void setEntity(Ogre::Entity* entity);
+
+            ///For engine : set bullet world
+            void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
+
+            ///For engine : get elapsed time
+            void addTime(float offsetTime);
+
+            ///For engine : update OpenAL source position
+            void updateOpenAlPos();
+
+            ///For engine set Audio engine 
+            void setAudioEngine(AnnAudioEngine* AudioEngine);
+        
         protected:
             Ogre::SceneNode* m_node;
             Ogre::Entity* m_entity;
             Ogre::AnimationState* m_anim;
-            ///std::vector<Ogre::AnimationState*> anims;
+
+
             bool animIsSetted;
             bool animIsPlaying;
             bool animIsLooping;
