@@ -165,19 +165,21 @@ void AnnEngine::setUpTime()
     log("Setup time");
     last = m_Root->getTimer()->getMilliseconds();
     now = last;
+    log("Timer is setup");
 }
 
 
 void AnnEngine::setUpAudio()
 {
     AudioEngine = new AnnAudioEngine;
+    log("Audio Engine started");
 }
 
 void AnnEngine::setUpGUI()
 {
-
     m_CEGUI_Renderer = NULL;
     initCEGUI();
+    log("CEGUI initialized");
 }
 
 void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
@@ -243,7 +245,6 @@ void AnnEngine::createVirtualBodyShape()
     m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
 }
 
-//will be private
 void AnnEngine::createPlayerPhysicalVirtualBody()
 {
     if(m_bodyParams->Shape == NULL)
@@ -262,7 +263,6 @@ void AnnEngine::createPlayerPhysicalVirtualBody()
             inertia);	
 }
 
-//will be private
 void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
     if(m_bodyParams->Body == NULL)
@@ -276,12 +276,11 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
             m_bodyParams->Position.y,
             m_bodyParams->Position.z);
 
-    pos += btVector3(0,(height),0);
+    pos += btVector3(0,height,0);
 
     m_bodyParams->Body->translate(pos);
 }
 
-//will be private
 void AnnEngine::updatePlayerFromPhysics()
 {
     if (m_bodyParams->Body == NULL)
@@ -413,7 +412,6 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
-    std::cerr << "destroy " << static_cast<void*>(object) << std::endl;
     bool returnCode(false);
     for(size_t i(0); i < objects.size(); i++)
     {
@@ -513,7 +511,6 @@ void AnnEngine::refresh()
 
     //bullet updating is now handeled by btOgre
 
-    Ogre::Vector3 translate(0,0,0);
 
     //animations playing :
     deltaT = updateTime();
@@ -527,7 +524,10 @@ void AnnEngine::refresh()
     {
         //TODO extract this piece of code and make it accesible with a method !!
         m_bodyParams->Body->activate(); //don't sleep !
+        
         btVector3 curVel = m_bodyParams->Body->getLinearVelocity(); //get current velocity
+        
+        Ogre::Vector3 translate(Ogre::Vector3::ZERO);
         if(processWASD(&translate))//If player want to move w/ WASD
         {
             Ogre::Vector3 velocity = m_bodyParams->Orientation*(translate);
@@ -549,17 +549,18 @@ void AnnEngine::refresh()
     }
 
     //turn body with mouse TODO enclose this with a methode. That's ugly
-    m_bodyParams->Orientation.yaw
-        (Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
+    m_bodyParams->Orientation.yaw(
+            Ogre::Radian(
+                -m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed
+                )
+         );
 
     if(m_bodyParams->Body != NULL)
-    {
         m_bodyParams->Position =
             Ogre::Vector3( 
                     m_bodyParams->Body->getCenterOfMassPosition().x(),
                     m_bodyParams->Body->getCenterOfMassPosition().y() + m_bodyParams->eyeHeight/2,
                     m_bodyParams->Body->getCenterOfMassPosition().z());
-    }
 
     //wow. So many 'if's. such test.
     if(m_Ground != NULL)
@@ -567,7 +568,6 @@ void AnnEngine::refresh()
             if(collisionWithGround())
                 if(m_Keyboard->isKeyDown(OIS::KC_SPACE))
                     m_bodyParams->Body->applyCentralImpulse(btVector3(0,jumpForce,0));
-    //can jump and ground is known
 
     processCollisionTesting();
     processTriggersContacts();
