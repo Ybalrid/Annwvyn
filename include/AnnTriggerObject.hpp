@@ -48,6 +48,7 @@ namespace Annwvyn
             ///GetThreshold distance
             float getThreshold();
 
+
         private:	
             ///For engine : Set contact state 
             void setContactInformation(bool contact);
@@ -60,7 +61,13 @@ namespace Annwvyn
             float m_threshold;
             bool m_contactWithPlayer;
 
+        public:
+            ///When contact happend
+            virtual void atContact() {return;}
+            virtual void postInit() {return;}
     };
 }
 
 #endif
+
+

@@ -775,12 +775,10 @@ btDiscreteDynamicsWorld* AnnEngine::getDynamicsWorld()
     return m_DynamicsWorld;
 }
 
-AnnTriggerObject* AnnEngine::createTriggerObject()
+AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 {
-    AnnTriggerObject* object = new AnnTriggerObject;
-
     triggers.push_back(object);
-
+    object->postInit();
     return object;
 }
 
@@ -792,6 +790,7 @@ void AnnEngine::processTriggersContacts()
                     triggers[i]->getPosition()) <= triggers[i]->getThreshold())
         {
             triggers[i]->setContactInformation(true);
+            triggers[i]->atContact();
         }
         else
         {
