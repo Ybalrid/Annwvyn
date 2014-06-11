@@ -6,7 +6,7 @@ using namespace Ogre;
 
 float Annwvyn::Tools::Geometry::distance(Annwvyn::AnnGameObject* a, Annwvyn::AnnGameObject* b)
 {
-	Vector3 vector(Vector3(0,0,0));
+/*	Vector3 vector(Vector3(0,0,0));
 
 	vector += (b->pos().x - a->pos().x);
 	vector += (b->pos().y - a->pos().y);
@@ -18,7 +18,9 @@ float Annwvyn::Tools::Geometry::distance(Annwvyn::AnnGameObject* a, Annwvyn::Ann
 	dist += vector.y * vector.y;
 	dist += vector.z * vector.z;
 
-	return sqrt(dist);
+	return sqrt(dist)*/
+
+    return Annwvyn::Tools::Geometry::distance(a->pos(),b->pos());
 }
 
 float Annwvyn::Tools::Geometry::distance(Ogre::Vector3 a, Ogre::Vector3 b)
@@ -30,5 +32,10 @@ float Annwvyn::Tools::Geometry::distance(Ogre::Vector3 a, Ogre::Vector3 b)
 	dist += vector.y * vector.y;
 	dist += vector.z * vector.z;
 
-	return sqrt(dist);
+
+/*    std::cerr << "Distance between " 
+        << a << " and " << b <<  "is" << sqrt(dist) 
+        << std::endl;*/
+	
+    return sqrt(dist);
 }

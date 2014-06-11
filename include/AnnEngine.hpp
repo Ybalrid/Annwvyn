@@ -168,7 +168,7 @@ namespace Annwvyn
             btDiscreteDynamicsWorld* getDynamicsWorld();
 
             ///create a trigger object
-            AnnTriggerObject* createTriggerObject();
+            AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject);
 
             ///process contact test with triggers
             void processTriggersContacts();
