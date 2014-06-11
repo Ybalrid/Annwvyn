@@ -2,10 +2,10 @@
  * * \file main.cpp
  * \brief test/demo program
  * \author Arthur Brainville 
- * \version 0.1
- * \date 08/03/13
+ * \version 0.5
+ * \date 06/11/14
  *
- * Annwvyn test program http://annwvyn.ybalrid.info/
+ * Annwvyn test program http://annwvyn.org/
  *
  */
 
@@ -31,6 +31,22 @@ class Sinbad : public Annwvyn::AnnGameObject
         loopAnimation(true);
 
         setUpBullet(40, Annwvyn::boxShape);
+    }
+
+};
+
+class MyTrigger : public Annwvyn::AnnTriggerObject
+{
+    void postInit()
+    {
+        //Radius in metter
+        setThreshold(2);
+    }
+
+    void atContact()
+    {
+        //Print "Contact" to standard error stream
+        std::cerr << "Contact" << std::endl;
     }
 
 };
@@ -80,7 +96,10 @@ int main(int argc, char **argv)
 
 
     Sinbad* S = (Sinbad*) GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
-    
+
+    MyTrigger* T = (MyTrigger*) GameEngine->createTriggerObject(new MyTrigger);
+    T->setPosition(0,-1,3);
+
     Annwvyn::AnnGameObject* Grid = GameEngine->createGameObject("Plane.mesh");
 	Grid->setPos(0,-3,0);
 	Grid->setUpBullet();
@@ -90,7 +109,7 @@ int main(int argc, char **argv)
 	Annwvyn::AnnLightObject* Light = GameEngine->addLight();	
 	GameEngine->setAmbiantLight(Ogre::ColourValue(.1f,.1f,.1f));
 	Light->setPosition(0,3,10);
-
+    
 
 	GameEngine->initPlayerPhysics();
 	GameEngine->setDebugPhysicState(true);

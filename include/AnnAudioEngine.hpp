@@ -30,6 +30,7 @@
 
 namespace Annwvyn
 {
+    class AnnEngine;
 	class DLL AnnAudioEngine
 	{
 	public:
@@ -46,14 +47,19 @@ namespace Annwvyn
 		///load a sound file. return a sond buffer
 		ALuint loadSndFile(const std::string& Filename);
 		
-		///uptade listenter pos and orientation with Ogre coordinates
-		void updateListenerPos(Ogre::Vector3 pos);
-		void updateListenerOrient(Ogre::Quaternion orient);
 		
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
 		void playBGM(const std::string path, const float volume = 0.5f);
 
 	private:
+		///For engine : uptade listenter pos and orientation with Ogre coordinates
+		void updateListenerPos(Ogre::Vector3 pos);
+		
+        ///For engine : update listener Oirentation
+        
+        friend class Annwvyn::AnnEngine;
+    private:
+        void updateListenerOrient(Ogre::Quaternion orient);
 		std::string lastError;
 		ALCdevice* Device;
 		ALCcontext* Context;
