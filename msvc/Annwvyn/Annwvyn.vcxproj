@@ -71,7 +71,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NOMINMAX;BOOST_ALL_NO_LIB;DLLDIR_EX;WIN32;NDEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Oculus\SDK\OgreSDK_old\boost;C:\Oculus\SDK\AL\openal-soft-1.15.1\include\AL;C:\Oculus\SDK\libsndfile\include;C:\Oculus\SDK\AL\openal-soft-1.15.1\OpenAL32\Include;C:\Oculus\SDK\OculusSDK\LibOVR\Include;C:\Oculus\SDK\bullet3\src;C:\Oculus\SDK\OgreSDK_old\include\OGRE;C:\Oculus\SDK\OIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OgreSDK\boost;..\..\..\AL\openal-soft-1.15.1\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft-1.15.1\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -79,7 +79,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Oculus\SDK\AL\openal-soft-1.15.1\build\Release;C:\Oculus\SDK\bullet3\lib;C:\Oculus\SDK\libsndfile\lib;C:\Oculus\SDK\OIS\lib;C:\Oculus\SDK\OgreSDK_old\boost\lib;C:\Oculus\SDK\OgreSDK_old\lib\Release\opt;C:\Oculus\SDK\OgreSDK_old\lib\Release;C:\Oculus\SDK\OculusSDK\LibOVR\Lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\AL\openal-soft-1.15.1\build\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\lib;..\..\..\OgreSDK\boost\lib;..\..\..\OgreSDK\lib\Release\opt;..\..\..\OgreSDK\lib\Release;..\..\..\OculusSDK\LibOVR\Lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;OpenAL32.lib;libsndfile-1.lib;libboost_chrono-vc110-mt-1_55.lib;libboost_system-vc110-mt-1_55.lib;libboost_date_time-vc110-mt-1_55.lib;libboost_thread-vc110-mt-1_55.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

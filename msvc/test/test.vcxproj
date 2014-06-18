@@ -74,14 +74,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Oculus\SDK\Annwvyn\include;C:\Oculus\SDK\AL\openal-soft-1.15.1\include\AL;C:\Oculus\SDK\libsndfile\include;C:\Oculus\SDK\AL\openal-soft-1.15.1\OpenAL32\Include;C:\Oculus\SDK\OculusSDK\LibOVR\Include;C:\Oculus\SDK\bullet3\src;C:\Oculus\SDK\OgreSDK_old\boost;C:\Oculus\SDK\OgreSDK_old\include\OGRE;C:\Oculus\SDK\OIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Annwvyn\include;..\..\..\AL\openal-soft-1.15.1\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft-1.15.1\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\boost;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Oculus\SDK\Annwvyn\lib;C:\Oculus\SDK\AL\openal-soft-1.15.1\build\Release;C:\Oculus\SDK\bullet3\lib;C:\Oculus\SDK\libsndfile\lib;C:\Oculus\SDK\OIS\lib;C:\Oculus\SDK\OculusSDK\LibOVR\Lib\Win32;C:\Oculus\SDK\OgreSDK_old\lib\Release\opt;C:\Oculus\SDK\OgreSDK_old\lib\Release;C:\Oculus\SDK\OgreSDK_old\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Annwvyn\lib;..\..\..\AL\openal-soft-1.15.1\build\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\lib;..\..\..\OculusSDK\LibOVR\Lib\Win32;..\..\..\OgreSDK\lib\Release\opt;..\..\..\OgreSDK\lib\Release;..\..\..\OgreSDK\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <PreventDllBinding>false</PreventDllBinding>
