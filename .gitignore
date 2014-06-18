@@ -50,3 +50,8 @@ doxygen/Gen/
 
 ogre.cfg
 vgcore.*
+
+
+*.exp
+*.psess
+*.vspx
