@@ -15,12 +15,14 @@
 
 #include "OgreOculus.h"
 #include <OVR.h>
+#include <Ogre.h>
 #include <OgreSceneManager.h>
 #include <OgreRenderWindow.h>
 #include <OgreCompositorManager.h>
 #include <OgreCompositorInstance.h>
 #include <OgreCompositionTargetPass.h>
 #include <OgreCompositionPass.h>
+
 
 using namespace OVR;
 
