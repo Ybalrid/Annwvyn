@@ -58,11 +58,6 @@ AnnEngine::~AnnEngine()
 
     //Audio
     delete AudioEngine;
-    
-    
-
-    oculus.~Oculus();
-
 }
 
 
