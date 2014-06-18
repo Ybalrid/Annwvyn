@@ -1,4 +1,4 @@
-#include "StereoscopicWindow.hpp"
+/*#include "StereoscopicWindow.hpp"
 
 using namespace CEGUI;
 
@@ -70,4 +70,4 @@ void StereoscopicWindow::setCenterOffset(float offset)
 {
     centerOffset = offset;
     knownOffset = true;
-}
+}*/

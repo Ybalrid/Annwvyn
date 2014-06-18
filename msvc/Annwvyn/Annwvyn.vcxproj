@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,12 +20,14 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -52,7 +54,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;WIN32;_DEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -67,22 +70,24 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>DLLDIR_EX;WIN32;NDEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SNDFILE_ROOT)\include;$(AL_ROOT)\include;$(OVR_ROOT)\Include;$(OGRE_ROOT)\include;$(OGRE_ROOT)\boost;$(OGRE_ROOT)\include\OGRE;$(OGRE_ROOT)\include\OIS;$(BULLET_ROOT)\src;$(LEAP_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;BOOST_ALL_NO_LIB;DLLDIR_EX;WIN32;NDEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Oculus\SDK\OgreSDK_old\boost;C:\Oculus\SDK\AL\openal-soft-1.15.1\include\AL;C:\Oculus\SDK\libsndfile\include;C:\Oculus\SDK\AL\openal-soft-1.15.1\OpenAL32\Include;C:\Oculus\SDK\OculusSDK\LibOVR\Include;C:\Oculus\SDK\bullet3\src;C:\Oculus\SDK\OgreSDK_old\include\OGRE;C:\Oculus\SDK\OIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(AL_ROOT)\libs\Win32;$(OVR_ROOT)\Lib\Win32;$(OGRE_ROOT)\boost\lib;$(OGRE_ROOT)\lib\Release\;$(SNDFILE_ROOT)\lib;$(BULLET_ROOT)\lib\;$(LEAP_ROOT)\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;%(AdditionalDependencies);OpenAL32.lib;libsndfile-1.lib;Leap.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Oculus\SDK\AL\openal-soft-1.15.1\build\Release;C:\Oculus\SDK\bullet3\lib;C:\Oculus\SDK\libsndfile\lib;C:\Oculus\SDK\OIS\lib;C:\Oculus\SDK\OgreSDK_old\boost\lib;C:\Oculus\SDK\OgreSDK_old\lib\Release\opt;C:\Oculus\SDK\OgreSDK_old\lib\Release;C:\Oculus\SDK\OculusSDK\LibOVR\Lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;OpenAL32.lib;libsndfile-1.lib;libboost_chrono-vc110-mt-1_55.lib;libboost_system-vc110-mt-1_55.lib;libboost_date_time-vc110-mt-1_55.lib;libboost_thread-vc110-mt-1_55.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
     <ClInclude Include="..\..\include\AnnEngine.hpp" />
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
+    <ClInclude Include="..\..\include\AnnMap.hpp" />
     <ClInclude Include="..\..\include\AnnTools.h" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
     <ClInclude Include="..\..\include\AnnTypes.h" />
@@ -92,15 +97,18 @@
     <ClInclude Include="..\..\include\BtOgrePG.h" />
     <ClInclude Include="..\..\include\euler.h" />
     <ClInclude Include="..\..\include\OgreOculus.h" />
+    <ClInclude Include="..\..\include\StereoscopicWindow.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
     <ClCompile Include="..\..\src\AnnEngine.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
+    <ClCompile Include="..\..\src\AnnMap.cpp" />
     <ClCompile Include="..\..\src\AnnTools.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />
     <ClCompile Include="..\..\src\OgreOculus.cpp" />
+    <ClCompile Include="..\..\src\StereoscopicWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Annwvyn.TODO" />
