@@ -39,7 +39,7 @@ AnnEngine::~AnnEngine()
     //All AnnGameObject
     for(unsigned int i(0); i < objects.size(); i++)
     {
-        delete objects[i];
+        destroyGameObject(objects[i]);
         objects.erase(objects.begin()+i);
     }
 
@@ -59,8 +59,6 @@ AnnEngine::~AnnEngine()
     //Audio
     delete AudioEngine;
     
-    
-
     oculus.~Oculus();
 
 }
