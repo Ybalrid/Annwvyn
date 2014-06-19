@@ -29,7 +29,7 @@
 #define DLL
 #endif
 
-
+#include <iostream>
 #include <OgreQuaternion.h>
 #include <OgreVector3.h>
 #include <OVR.h>

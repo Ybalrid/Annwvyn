@@ -25,8 +25,8 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
 //CEGUI
-#include <CEGUI/CEGUI.h>
-#include <CEGUI/RendererModules/Ogre/Renderer.h>
+/*#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>*/
 //OgreOculus by kojack
 #include "OgreOculus.h"
 //btOgre
@@ -271,7 +271,7 @@ namespace Annwvyn
             AnnAudioEngine* AudioEngine;
 
             ///gui
-            CEGUI::OgreRenderer* m_CEGUI_Renderer;
+            //CEGUI::OgreRenderer* m_CEGUI_Renderer;
     };
 }
 #endif ///ANN_ENGINE
