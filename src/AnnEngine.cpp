@@ -58,9 +58,6 @@ AnnEngine::~AnnEngine()
 
     //Audio
     delete AudioEngine;
-    
-    oculus.~Oculus();
-
 }
 
 
@@ -112,8 +109,11 @@ void AnnEngine::setUpBullet()
     m_DynamicsWorld->setDebugDrawer(m_debugDrawer);
 
     //This quaternion lock the body orientation to be stricly vertical
-    Ogre::Quaternion Orient(Ogre::Radian(0),Ogre::Vector3(0,0,1));
-    fixedBodyOrient = btQuaternion(Orient.x, Orient.y,Orient.z,Orient.w);
+    //Ogre::Quaternion Orient(Ogre::Radian(0),Ogre::Vector3(0,0,1));
+    
+	//Ogre::Quaternion Orient(Ogre::Quaternion::IDENTITY);
+	
+	//fixedBodyOrient = btQuaternion(Orient.x, Orient.y,Orient.z,Orient.w);
 
     //colision with this object will allow the player to jump
     m_Ground = NULL;
@@ -175,9 +175,9 @@ void AnnEngine::setUpAudio()
 
 void AnnEngine::setUpGUI()
 {
-    m_CEGUI_Renderer = NULL;
+   /* m_CEGUI_Renderer = NULL;
     initCEGUI();
-    log("CEGUI initialized");
+    log("CEGUI initialized");*/
 }
 
 void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
@@ -193,7 +193,7 @@ Ogre::Quaternion AnnEngine::getReferenceQuaternion()
 
 void AnnEngine::initCEGUI()
 {
-    m_CEGUI_Renderer = &CEGUI::OgreRenderer::bootstrapSystem();
+//    m_CEGUI_Renderer = &CEGUI::OgreRenderer::bootstrapSystem();
 }
 
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
@@ -542,7 +542,7 @@ void AnnEngine::refresh()
     if(m_bodyParams->Body != NULL) //if physic
     {
         btTransform Transform = m_bodyParams->Body->getCenterOfMassTransform();
-        Transform.setRotation(fixedBodyOrient);
+        Transform.setRotation(btQuaternion(0,0,0,1));
         m_bodyParams->Body->setCenterOfMassTransform(Transform);
     }
 

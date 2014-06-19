@@ -64,7 +64,7 @@ void AnnMap::init(AnnEngine* engine)
 
 void AnnMap::process(std::string descLine)
 {
-    stringstream desc(descLine);
+    std::stringstream desc(descLine);
     string word;
 
     bool light(false);
