@@ -13,7 +13,6 @@
 #include <iostream>
 #include <streambuf>
 #include <fstream>
-#include <cmath>
 //Annwvyn
 #include <Annwvyn.h>
 

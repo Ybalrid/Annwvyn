@@ -1,0 +1,6 @@
+Please put here all OgrePlugins needed by your program.
+
+A minima : 
+Octree Scene Manager
+Cg program manager
+GL Rander System
