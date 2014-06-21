@@ -30,6 +30,9 @@
 *.manifest
 *.pdb
 *.lastbuildstate
+*.exp
+*.psess
+*.vspx
 
 #Windows text file
 *.txt
@@ -47,12 +50,11 @@ tags
 #compilled example
 example/test*
 
+#documentation render
 doxygen/Gen/
 
+#ogre configuration
 ogre.cfg
+
+#valgrind cache
 vgcore.*
-
-
-*.exp
-*.psess
-*.vspx
