@@ -18,6 +18,8 @@ AnnGameObject::AnnGameObject()
     animIsLooping = false;
     animIsPlaying = false;
     animIsSetted = false;
+	visualLinearSpeed = Ogre::Vector3::ZERO;
+	time = NULL;
 }
 
 AnnGameObject::~AnnGameObject()
@@ -373,5 +375,18 @@ void AnnGameObject::applyImpulse(Ogre::Vector3 force)
 void AnnGameObject::applyForce(Ogre::Vector3 force)
 {
    m_Body->applyCentralForce(btVector3(force.x,force.y,force.z));
+}
+
+void AnnGameObject::setLinearSpeed(Ogre::Vector3 v)
+{
+	if(bulletReady)
+		m_Body->setLinearVelocity(btVector3(v.x,v.y,v.z));
+	else
+		visualLinearSpeed = v;
+}
+
+void AnnGameObject::setTimePtr(float* ptr)
+{
+	time = ptr;
 }
 

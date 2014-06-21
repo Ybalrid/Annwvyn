@@ -141,19 +141,25 @@ namespace Annwvyn
             ///Apply a physical impultion
             void applyImpulse(Ogre::Vector3 impulse);
 
+			void setLinearSpeed(Ogre::Vector3 v);
+
             ///Set up Bullet 
             void setUpBullet(float mass = 0, phyShapeType type = staticShape);
 
-            ///SetUpPhysics (just a call to setUpBullet...)
+            ///SetUpPhysics
             void setUpPhysics(float mass = 0, phyShapeType type = staticShape){setUpBullet(mass,type);}
 
         private:
             ///Make Annwvyn::AnnEngine acces these methods : 
             friend class AnnEngine;
 
+			void setTimePtr(float* timePtr);
+
 
             ///For engine : set node
             void setNode(Ogre::SceneNode* node);
+
+			void setEngine(AnnEngine* e);
 
             ///For engine : set Entity
             void setEntity(Ogre::Entity* entity);
@@ -167,42 +173,47 @@ namespace Annwvyn
             ///For engine : update OpenAL source position
             void updateOpenAlPos();
 
-            ///For engine set Audio engine 
-            void setAudioEngine(AnnAudioEngine* AudioEngine);
-        
-        protected:
+            ///For engine set Audio engine    
+			void setAudioEngine(AnnAudioEngine* AudioEngine);
+
+        private:
+			/**
+			* You will certainly find strange to see that the Object does not cary a "position" vector.
+			* We use the position of the Ogre Node ro the Bullet body to align the object.
+			*
+			* The reference is the position of the node. You can access it throug the getters/setters setPos() and getPos()
+			*/
             Ogre::SceneNode* m_node;
             Ogre::Entity* m_entity;
             Ogre::AnimationState* m_anim;
 
-
             bool animIsSetted;
             bool animIsPlaying;
             bool animIsLooping;
-
-
 
             btDiscreteDynamicsWorld* m_DynamicsWorld;
             btCollisionShape* m_Shape;
             btRigidBody* m_Body;
             bool bulletReady;
 
-            std::vector<struct collisionTest*> collisionMask;
+            std::vector<collisionTest * > collisionMask;
 
+			///Audio Engine 
             AnnAudioEngine* m_AudioEngine;
-            ALuint m_Source; ///OpenAL audio source
-            ALuint m_Buffer; ///OpenAL buffer
+			///OpenAL audio source
+            ALuint m_Source; 
+			///OpenAL buffer
+            ALuint m_Buffer; 
 
+			float* time;
+
+			Ogre::Vector3 visualLinearSpeed;
         public:
             ///Executed after object initialization
             virtual void postInit(){return;}
 
             ///Executed at refresh time (each frames)
             virtual void atRefresh(){return;}
-
     };
-
-
 }
-
 #endif

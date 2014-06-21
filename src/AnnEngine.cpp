@@ -29,7 +29,7 @@ AnnEngine::AnnEngine(const char title[])
     QuatReference = Ogre::Quaternion::IDENTITY;
 
     VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
-
+	refVisualBody = Ogre::Quaternion::IDENTITY;
     log("Engine ready");
 }
 
@@ -108,13 +108,6 @@ void AnnEngine::setUpBullet()
     m_debugDrawer = new BtOgre::DebugDrawer(m_SceneManager->getRootSceneNode(), m_DynamicsWorld);
     m_DynamicsWorld->setDebugDrawer(m_debugDrawer);
 
-    //This quaternion lock the body orientation to be stricly vertical
-    //Ogre::Quaternion Orient(Ogre::Radian(0),Ogre::Vector3(0,0,1));
-    
-	//Ogre::Quaternion Orient(Ogre::Quaternion::IDENTITY);
-	
-	//fixedBodyOrient = btQuaternion(Orient.x, Orient.y,Orient.z,Orient.w);
-
     //colision with this object will allow the player to jump
     m_Ground = NULL;
 }
@@ -175,9 +168,7 @@ void AnnEngine::setUpAudio()
 
 void AnnEngine::setUpGUI()
 {
-   /* m_CEGUI_Renderer = NULL;
-    initCEGUI();
-    log("CEGUI initialized");*/
+
 }
 
 void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
@@ -190,11 +181,6 @@ Ogre::Quaternion AnnEngine::getReferenceQuaternion()
     return QuatReference;
 }
 
-
-void AnnEngine::initCEGUI()
-{
-//    m_CEGUI_Renderer = &CEGUI::OgreRenderer::bootstrapSystem();
-}
 
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
 {
@@ -365,16 +351,21 @@ void AnnEngine::initRessources()
 void AnnEngine::oculusInit()
 {
     log("Initialize Oculus system");
+
     oculus.setupOculus();
+
     log("Configuring Ogre Rendering from Oculus system");
+
     oculus.setupOgre(m_SceneManager,m_Window);
     log("Creating camera");
+	
+	oculus.setNearClippingDistance(5); //Set near clipping distance. Camera is intended to be inside the head of an humanoid 3D Model.
+
     m_Camera = oculus.getCameraNode();
 
     m_Camera->setPosition(m_bodyParams->Position + 
             Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
 
-    oculus.setNearClippingDistance(); //Set near clipping distance. Camera is intended to be inside the head of an humanoid 3D Model.
 }
 
 
@@ -396,6 +387,7 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
     obj->setNode(node);
     obj->setEntity(ent);
     obj->setAudioEngine(AudioEngine);
+	obj->setTimePtr(&deltaT);
 
     obj->setBulletDynamicsWorld(m_DynamicsWorld);
 
@@ -587,8 +579,9 @@ void AnnEngine::refresh()
         objects[i]->atRefresh();
 
     //synchronise VisualBody
-    VisualBodyAnchor->setPosition(m_bodyParams->Position);
-    VisualBodyAnchor->setOrientation(m_bodyParams->Orientation.toQuaternion());
+    VisualBodyAnchor->setOrientation(refVisualBody * m_bodyParams->Orientation.toQuaternion());
+	VisualBodyAnchor->setPosition(m_bodyParams->Position - m_bodyParams->Orientation.toQuaternion()*Ogre::Vector3(0,m_bodyParams->eyeHeight,visualBody_Zoffset));
+
 
     //////////////////////////////////////////////////////////////////////////////// VISUAL
     updateCamera(); //make the pulling of oculus sensor just before rendering the frame
@@ -788,7 +781,8 @@ void AnnEngine::processTriggersContacts()
                     triggers[i]->getPosition()) <= triggers[i]->getThreshold())
         {
             triggers[i]->setContactInformation(true);
-            triggers[i]->atContact();
+			//Call overloaded 
+			triggers[i]->atContact();
         }
         else
         {
@@ -817,7 +811,8 @@ AnnGameObject* AnnEngine::playerLookingAt()
 {
     //Origin vector
     Ogre::Vector3 Orig(oculus.getCameraNode()->getPosition());
-    //Direction Vector
+    
+	//Direction Vector
     Ogre::Quaternion Orient = oculus.getCameraNode()->getOrientation();
     Ogre::Vector3 LookAt = Orient * Ogre::Vector3::NEGATIVE_UNIT_Z;
 
@@ -868,12 +863,18 @@ float AnnEngine::getCentreOffset()
     return oculus.getCentreOffset();
 }
 
-void AnnEngine::attachVisualBody(const std::string entityName, bool flip, Ogre::Vector3 scale)
+void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, Ogre::Vector3 scale)
 {
     log("Visual Body");
     log(entityName);
     std::cout << "Flip : " << flip << std::endl
         << "Scale : " << scale << std::endl;
+	 Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
+	 VisualBodyAnchor->attachObject(ent);
+	 if(flip)
+		 refVisualBody = Ogre::Quaternion(Ogre::Degree(180),Ogre::Vector3::UNIT_Y);
+
+	visualBody_Zoffset = z_offset;
 }
 
 
@@ -885,9 +886,9 @@ void AnnEngine::resetOculusOrientation()
 
 Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 {
+	//This methods only test memory address
     for(size_t i(0); i < objects.size(); i++)
         if((void*)objects[i]->node() == (void*)node)
             return objects[i];
     return NULL;
 }
-

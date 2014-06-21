@@ -234,7 +234,8 @@ bool Oculus::setupOgre(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::Sc
 		if(m_stereoConfig)
 		{
 			// Setup cameras.
-			m_cameras[i]->setNearClipDistance(m_stereoConfig->GetEyeToScreenDistance());
+			//m_cameras[i]->setNearClipDistance(m_stereoConfig->GetEyeToScreenDistance());
+			m_cameras[i]->setNearClipDistance(0.1);
 			m_cameras[i]->setFarClipDistance(g_defaultFarClip);
 			m_cameras[i]->setPosition((i * 2 - 1) * m_stereoConfig->GetIPD() * 0.5f, 0, 0);
             std::cerr << "--------------- IPD -------------- " << m_stereoConfig->GetIPD() << std::endl;
@@ -249,7 +250,8 @@ bool Oculus::setupOgre(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::Sc
 		}
 		else
 		{
-			m_cameras[i]->setNearClipDistance(g_defaultNearClip);
+			//m_cameras[i]->setNearClipDistance(g_defaultNearClip);
+			m_cameras[i]->setNearClipDistance(0.1);
 			m_cameras[i]->setFarClipDistance(g_defaultFarClip);
 			m_cameras[i]->setPosition((i*2-1) * g_defaultIPD * 0.5f, 0, 0);
 		}
@@ -315,5 +317,7 @@ OVR::Profile* Oculus::getProfile()
 void Oculus::setNearClippingDistance(float dist)
 {
     for(size_t i = 0; i < 2; i++)
-        m_cameras[i]->setNearClipDistance(static_cast<Ogre::Real>(dist));
+	{
+        m_cameras[i]->setNearClipDistance(dist);
+	}
 }

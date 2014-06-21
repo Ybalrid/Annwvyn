@@ -96,7 +96,7 @@ class DLL Oculus
         /// Retrieve the projection centre offset.
         float getCentreOffset() const;
 
-        void setNearClippingDistance(float distance = 0.10);
+        void setNearClippingDistance(float distance = 0.50);
 
         OVR::Profile* getProfile();
 

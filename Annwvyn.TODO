@@ -1,6 +1,5 @@
 TO IMPLEMENT :
 - Visual Body management
-- Billboard rendering for CEGUI
 
 TODO : 
 - Factorise AnnEngine constructor
@@ -11,6 +10,6 @@ TODO :
 - Add light vector to AnnMap Class
 - Add External C++ interface for code-running
 - allow playing multiple animations
-- HUD
+- Object parenting
 - Oculus Latency Tester integration
 - add debug drawing for trigger position when debug drawing is active for bullet

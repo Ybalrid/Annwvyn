@@ -20,8 +20,6 @@
 namespace Annwvyn
 {
     ///Anticipated declaration of AnnEngine class 
-    //
-    //permit to acces the symbol without including the header.
     class AnnEngine;
     
     class DLL AnnTriggerObject
@@ -29,6 +27,9 @@ namespace Annwvyn
         public:
             ///Class constructor
             AnnTriggerObject();
+
+			///Class destructor
+			virtual ~AnnTriggerObject(){}
 
             ///Set position form Vector 3D
             void setPosition(Ogre::Vector3 pos);
@@ -53,7 +54,7 @@ namespace Annwvyn
             ///For engine : Set contact state 
             void setContactInformation(bool contact);
             
-            ///Make AnnEngine class frinnd to permit acces to setContactInformation(bool)
+            ///Make AnnEngine class friend to permit acces to setContactInformation(bool)
             friend class Annwvyn::AnnEngine;
 
         private:
