@@ -25,6 +25,7 @@ class Sinbad : public Annwvyn::AnnGameObject
     void postInit()
     {
         setPos(0,2,3);
+		setScale(0.2,0.2,0.2);
         setAnimation("Dance");
         playAnimation(true);
         loopAnimation(true);
@@ -87,6 +88,7 @@ int main(int argc, char **argv)
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
     GameEngine->loadDir("media/plane");
+	GameEngine->loadDir("media/body");
 
 	GameEngine->initRessources();
 
@@ -111,7 +113,7 @@ int main(int argc, char **argv)
     
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(true);
+	GameEngine->setDebugPhysicState(false);
 
 
 	//setUp Oculus system
@@ -123,8 +125,8 @@ int main(int argc, char **argv)
 	//play background music
 	GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
 	
-    
-    
+	GameEngine->attachVisualBody("male_Body.mesh",-0.1 ,true);
+
 	while(!GameEngine->requestStop())
 	{
 		GameEngine->refresh();

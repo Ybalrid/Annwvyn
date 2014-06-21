@@ -21,6 +21,7 @@
 
 #MSSQL files
 *.sdf
+*.opensdf
 *.suo
 
 #Random MSVC files

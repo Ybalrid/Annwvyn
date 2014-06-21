@@ -1,5 +1,15 @@
 #ifndef ANNTYPES
 #define ANNTYPES
+
+/*!
+* \file AnnTypes.h
+* \brief Data types definition for Annwvyn
+* \author Arthur Brainville
+* \version 0.0.2
+*/
+
+
+///// DLL management : 
 #undef DLL
 //windows DLL
 #ifdef DLLDIR_EX
@@ -13,6 +23,7 @@
 #undef DLL
 #define DLL
 #endif
+////////////// End of DLL management 
 
 #include <vector>
 
@@ -23,11 +34,23 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "AnnGameObject.hpp"
+#include "AnnTriggerObject.hpp"
 
 namespace Annwvyn
 {
+	//Predefinition of Annwvyn classes : 
     class AnnGameObject;
-	typedef struct bodyParams bodyParams;
+	class AnnTriggerObject;
+
+	///Harmonise names : 
+	typedef Ogre::Light AnnLightObject; //Yeah, it's a cheater thing here...
+
+	///Remove some ugliness : 
+	typedef std::vector<AnnTriggerObject * > AnnTriggerObjectVect;
+    typedef std::vector<Annwvyn::AnnGameObject * > AnnGameObjectVect;
+    typedef std::vector<AnnLightObject * > AnnLightVect; 
+
+	///Parameters of the VirtualBody	
 	struct bodyParams
 	{
 		float eyeHeight;
@@ -42,8 +65,7 @@ namespace Annwvyn
 		btRigidBody* Body;
 	};
 
-	typedef int phyShapeType;
-	enum {
+	enum phyShapeType {
 		staticShape, 
 		convexShape, 
 		boxShape, 
@@ -51,16 +73,27 @@ namespace Annwvyn
 		capsuleShape
 	};
 
-	typedef Ogre::Light AnnLightObject;
-
-    typedef std::vector<Annwvyn::AnnGameObject * > AnnGameObjectVect;
-    typedef std::vector<AnnLightObject * > AnnLightVect; 
+	
 	//controls
 	namespace Keys
 	{
-		enum 
+		enum FPS_controllSheme
 		{
-			FW, BK, LT, RT, JUMP
+			FW,		//Foward
+			BK,		//Backward
+			SL,		//Straff Left
+			SR,		//Straff Right
+			JUMP,	//Jump
+			RUN		//Run
+		};
+
+		enum VR_options
+		{
+			IPD_More,	//Incrase IPD
+			IPD_Less,	//Decrase IPD
+			IPD_Reset,	//Reset IPD
+			HUD_FW,		//Move HUD Forward 
+			HUD_BW		//Move HUD Backward
 		};
 	}
 }

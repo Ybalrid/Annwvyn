@@ -24,9 +24,6 @@
 #include <btBulletCollisionCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
-//CEGUI
-/*#include <CEGUI/CEGUI.h>
-#include <CEGUI/RendererModules/Ogre/Renderer.h>*/
 //OgreOculus by kojack
 #include "OgreOculus.h"
 //btOgre
@@ -74,7 +71,7 @@ namespace Annwvyn
 
             ///init the BodyParams variable
             static void initBodyParams(Annwvyn::bodyParams* bodyP,
-                    float eyeHeight = 1.65f,
+                    float eyeHeight = 1.59f,
                     float walkSpeed = 3.0f,
                     float turnSpeed = 0.003f,
                     float mass = 80.0f,
@@ -196,7 +193,7 @@ namespace Annwvyn
             void setReferenceQuaternion(Ogre::Quaternion q);
             Ogre::Quaternion getReferenceQuaternion();
 
-            void attachVisualBody(const std::string entityName, bool flip=false, Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
+            void attachVisualBody(const std::string entityName, float z_offset = -0.0644f, bool flip=false, Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
 
             void resetOculusOrientation();
 
@@ -221,7 +218,8 @@ namespace Annwvyn
             Ogre::SceneManager* m_SceneManager;
             Ogre::SceneNode* m_Camera;
             Ogre::SceneNode* VisualBodyAnchor;
-
+			Ogre::Quaternion refVisualBody;
+			float visualBody_Zoffset;
             bool readyForLoadingRessources;
 
             Ogre::Entity* m_ent; ///only used for creating nodes into the smgr
