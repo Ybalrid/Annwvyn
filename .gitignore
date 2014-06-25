@@ -58,3 +58,8 @@ ogre.cfg
 
 #valgrind cache
 vgcore.*
+
+#compilled template
+template/Game
+template/Game.exe
+

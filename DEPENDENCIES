@@ -1,38 +1,26 @@
 You need to link :
 
-Ogre >= 1.9.0 && < 2 (for now, 2.0 branch is under development, I tried it for fun, not a good idea...)
+Ogre 1.9.x
 Bullet >= 2.8
 OpenAL lattest available
 libsndfile lattest available 
-libOVR
-CEGUI >=0.8.2 (Build with your own Ogre build, we need the OgreRenderer to use the correct version of Ogre)
+libOVR 0.2.5
+CEGUI >0.8.2 (Build with your own Ogre build, we need the OgreRenderer to use the correct version of Ogre)
 
 for windows :
-Microsoft Visual C++ 2010 
-OVR 0.2.4 or higher
-+ join libsndfile, openAl and all needed Ogre dlls (lib + plugins)
-
-+ set some environement variable to build directly the dynamic lib :
-OGRE_ROOT : where you have installed your Ogre SDK
-OVR_ROOT : where you have installed your OVR SDK (LibOVR subdirectory)
-BULLET_ROOT : where you have Compilled bullet (with msvc 2010 !!)
-AL_ROOT : where you have installed your OpenAL SDK
-SNDFILE_ROOT : where you have installed your libsndfile (from mega-nerd website)
-
-All these variables will be used as referencies on the provided VisualStudio projects and solutions.
+Please use the SDK from http://annwvyn.org/
 
 for GNU/Linux :
 0.2.4 or higher
 + join Ogre *.so plugins files along your executable (or just specify the place they have to be on your system in plugin.cfg)
-Make sure the Ogre shared objects directory is on your ld.so.conf, in some distrib, ld does not search on the /usr/local/lib directory.
-
+Make sure the Ogre shared objects directory is on your ld.so.conf, in some distrib, ld does not search on the /usr/local/lib for exemple directory.
 
 
 Included libraries : (compiled with the source code)
 BtOgre
 OgreOculus modified, (I will update my personal fork of Kojack's work later...)
 
-more information : http://annwvyn.org
-documentation wiki : http://annwvyn.org/wiki/
+More information : http://annwvyn.org
+Documentation wiki : http://annwvyn.org/wiki/
 
-official Git repo : https://github.com/Ybalrid/Annwvyn.git
+Official Git repo : https://github.com/Ybalrid/Annwvyn.git

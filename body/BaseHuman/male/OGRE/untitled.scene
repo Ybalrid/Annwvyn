@@ -1,0 +1,81 @@
+<scene previous_export_time="1403555039.31941" export_time="1403557437.4935553" formatVersion="1.0.1" exported_by="ybalrid" >
+  <nodes >
+    <node name="male" >
+      <position y="0.000000" z="-0.000000" x="0.000000" />
+      <rotation qz="-0.000000" qw="1.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" z="1.000000" x="1.000000" />
+      <user_data value="16" type="int" name="MhxVersion" />
+      <user_data value="0.1" type="float" name="MhxScale" />
+      <user_data value="1.0.1" type="str" name="MhVersion" />
+      <user_data value="hm08" type="str" name="MhBaseMesh" />
+      <user_data value="Game" type="str" name="MhxRig" />
+      <user_data value="1" type="int" name="MhxShapekeyDrivers" />
+      <user_data value="1" type="int" name="MhAlpha8" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <node name="male:Body" >
+        <position y="0.000000" z="-0.000000" x="0.000000" />
+        <rotation qz="-0.000000" qw="1.000000" qy="0.000000" qx="0.000000" />
+        <scale y="1.000000" z="1.000000" x="1.000000" />
+        <user_data value="-0.0" type="float" name="MhxOffsetX" />
+        <user_data value="-0.8166" type="float" name="MhxOffsetY" />
+        <user_data value="-0.0" type="float" name="MhxOffsetZ" />
+        <user_data value="1" type="int" name="MhxMesh" />
+        <user_data value="1" type="int" name="MhHuman" />
+        <user_data value="0.1" type="float" name="MhxScale" />
+        <user_data value="caucasian:1.0000_asian:0.0000_african:0.0000_gender:1.0000_age:0.5000_weight:0.5000_muscle:0.6450_height:0.4580_bodyProportions:0.4390_" type="str" name="MhxModel" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity mass_radius="1.0" lock_rot_y="False" lock_trans_y="False" inertia_tensor="0.4000000059604645" physics_type="STATIC" meshFile="male:Body.mesh" ghost="False" anisotropic_friction="False" lock_rot_x="False" name="male:Body" friction_y="1.0" mass="1.0" actor="False" damping_rot="0.10000000149011612" lock_trans_x="False" lock_rot_z="False" friction_z="1.0" lock_trans_z="False" velocity_max="0.0" damping_trans="0.03999999910593033" friction_x="1.0" velocity_min="0.0" />
+      </node>
+      <node name="male:HighPolyEyes" >
+        <position y="0.000000" z="-0.000000" x="0.000000" />
+        <rotation qz="-0.000000" qw="1.000000" qy="0.000000" qx="0.000000" />
+        <scale y="1.000000" z="1.000000" x="1.000000" />
+        <user_data value="1" type="int" name="MhxProxy" />
+        <user_data value="0.1" type="float" name="MhxScale" />
+        <user_data value="HighPolyEyes" type="str" name="MhxProxyName" />
+        <user_data value="2c12f43b-1303-432c-b7ce-d78346baf2e6" type="str" name="MhxProxyUuid" />
+        <user_data value="data/eyes/high-poly/high-poly.mhclo" type="str" name="MhxProxyFile" />
+        <user_data value="Eyes" type="str" name="MhxProxyType" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity mass_radius="1.0" lock_rot_y="False" lock_trans_y="False" inertia_tensor="0.4000000059604645" physics_type="STATIC" meshFile="male:HighPolyEyes.mesh" ghost="False" anisotropic_friction="False" lock_rot_x="False" name="male:HighPolyEyes" friction_y="1.0" mass="1.0" actor="False" damping_rot="0.10000000149011612" lock_trans_x="False" lock_rot_z="False" friction_z="1.0" lock_trans_z="False" velocity_max="0.0" damping_trans="0.03999999910593033" friction_x="1.0" velocity_min="0.0" />
+      </node>
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="/home/ybalrid/Annwvyn/body/BaseHuman/male/OGRE/male_HighPolyEyes_Eye_brown.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/ybalrid/Annwvyn/body/BaseHuman/male/OGRE/male_Skin.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/ybalrid/Annwvyn/body/BaseHuman/male/OGRE/male_Invisio.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/ybalrid/Annwvyn/body/BaseHuman/male/OGRE/male_Red.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/ybalrid/Annwvyn/body/BaseHuman/male/OGRE/male_Green.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/ybalrid/Annwvyn/body/BaseHuman/male/OGRE/male_Blue.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/ybalrid/Annwvyn/body/BaseHuman/male/OGRE/male_Yellow.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourDiffuse b="0.05087608844041824" g="0.05087608844041824" r="0.05087608844041824" />
+    <colourBackground b="0.05087608844041824" g="0.05087608844041824" r="0.05087608844041824" />
+    <colourAmbient b="0.0" g="0.0" r="0.0" />
+  </environment>
+</scene>

@@ -193,7 +193,11 @@ namespace Annwvyn
             void setReferenceQuaternion(Ogre::Quaternion q);
             Ogre::Quaternion getReferenceQuaternion();
 
-            void attachVisualBody(const std::string entityName, float z_offset = -0.0644f, bool flip=false, Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
+            void attachVisualBody(const std::string entityName, 
+                    float z_offset = -0.0644f, 
+                    bool flip = false, 
+                    bool animated = false, 
+                    Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
 
             void resetOculusOrientation();
 
@@ -219,6 +223,8 @@ namespace Annwvyn
             Ogre::SceneNode* m_Camera;
             Ogre::SceneNode* VisualBodyAnchor;
 			Ogre::Quaternion refVisualBody;
+            Ogre::Entity* VisualBody;
+            Ogre::AnimationState* VisualBodyAnimation;
 			float visualBody_Zoffset;
             bool readyForLoadingRessources;
 

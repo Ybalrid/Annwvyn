@@ -234,8 +234,21 @@ bool Oculus::setupOgre(Ogre::SceneManager *sm, Ogre::RenderWindow *win, Ogre::Sc
 		if(m_stereoConfig)
 		{
 			// Setup cameras.
+            //
+            // clip distandce is set for the camera to be in the head of a 3D model with a 20cm diameter. The method that change this particular parameter does not sims to wrk...
 			//m_cameras[i]->setNearClipDistance(m_stereoConfig->GetEyeToScreenDistance());
-			m_cameras[i]->setNearClipDistance(0.1);
+			
+            
+            /*OVR::ProfileManager* pm (OVR::ProfileManager::Create());
+            std::cerr << "profile manager : profile count for DK1 : " << pm->GetProfileCount(Profile_RiftDK1) << std::endl;
+
+            if(pm->GetProfileCount(Profile_RiftDK1) > 0)
+            {
+                Profile* p = pm->LoadProfile(Profile_RiftDK1,static_cast<unsigned int>(0));
+                std::cerr << "firts user IPD = " << p->GetIPD();
+            }*/
+        
+            m_cameras[i]->setNearClipDistance(0.1);
 			m_cameras[i]->setFarClipDistance(g_defaultFarClip);
 			m_cameras[i]->setPosition((i * 2 - 1) * m_stereoConfig->GetIPD() * 0.5f, 0, 0);
             std::cerr << "--------------- IPD -------------- " << m_stereoConfig->GetIPD() << std::endl;

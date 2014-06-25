@@ -27,7 +27,9 @@ AnnEngine::AnnEngine(const char title[])
     setUpGUI();
 
     QuatReference = Ogre::Quaternion::IDENTITY;
-
+    
+    VisualBody = NULL;
+    VisualBodyAnimation = NULL;
     VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 	refVisualBody = Ogre::Quaternion::IDENTITY;
     log("Engine ready");
@@ -582,7 +584,8 @@ void AnnEngine::refresh()
     VisualBodyAnchor->setOrientation(refVisualBody * m_bodyParams->Orientation.toQuaternion());
 	VisualBodyAnchor->setPosition(m_bodyParams->Position - m_bodyParams->Orientation.toQuaternion()*Ogre::Vector3(0,m_bodyParams->eyeHeight,visualBody_Zoffset));
 
-
+    if(VisualBodyAnimation)
+        VisualBodyAnimation->addTime(getTime());
     //////////////////////////////////////////////////////////////////////////////// VISUAL
     updateCamera(); //make the pulling of oculus sensor just before rendering the frame
     renderOneFrame();
@@ -863,18 +866,30 @@ float AnnEngine::getCentreOffset()
     return oculus.getCentreOffset();
 }
 
-void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, Ogre::Vector3 scale)
+void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)
 {
     log("Visual Body");
     log(entityName);
-    std::cout << "Flip : " << flip << std::endl
-        << "Scale : " << scale << std::endl;
-	 Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
-	 VisualBodyAnchor->attachObject(ent);
-	 if(flip)
+    
+    Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
+	VisualBodyAnchor->attachObject(ent);
+	
+    if(flip)
 		 refVisualBody = Ogre::Quaternion(Ogre::Degree(180),Ogre::Vector3::UNIT_Y);
+    else
+        refVisualBody = Ogre::Quaternion::IDENTITY;
 
 	visualBody_Zoffset = z_offset;
+    VisualBody = ent;
+    
+    if(animated)
+    {
+        Ogre::AnimationState* as = ent->getAnimationState("IDLE");
+        as->setLoop(true);
+        as->setEnabled(true);
+
+        VisualBodyAnimation = as;
+    }
 }
 
 
