@@ -1,6 +1,6 @@
 Directory intended to put some 3D body.
 
-Center (AKA Origin, Pivot point...) of the player's body mesh have to be at the floor between the legs. You have to know (or make it 0 if you want/can) the relative 7 position of the eyeballs center and that pivot point.
+Center (AKA Origin, Pivot point...) of the player's body mesh have to be at the floor between the legs. You have to know the relative Z position of the eyeballs center and that pivot point.
 
 You have to set the "eyes height" parameter of the VirtualBody to match the one of your 3D model
 
