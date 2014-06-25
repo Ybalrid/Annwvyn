@@ -15,11 +15,17 @@ INSTALL_PREFIX = /usr/local
 ifeq ($(shell uname), Linux)
 all: lib/libAnnwvyn.so
 
+.PHONY: doc
+doc:
+	(cd doxygen;doxygen Doxyfile)
+	(cd doxygen/Gen/latex;make)
 
 
 .PHONY: clean
 clean:
-	rm -r obj/*.o lib/*.so
+	rm -r obj/*.o lib/*.so 
+	rm -r doxygen/Gen 
+
 
 .PHONY: instal
 install: all
