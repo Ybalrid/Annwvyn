@@ -87,6 +87,7 @@
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
     <ClInclude Include="..\..\include\AnnEngine.hpp" />
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
+    <ClInclude Include="..\..\include\AnnJoystickController.hpp" />
     <ClInclude Include="..\..\include\AnnMap.hpp" />
     <ClInclude Include="..\..\include\AnnTools.h" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
@@ -97,18 +98,17 @@
     <ClInclude Include="..\..\include\BtOgrePG.h" />
     <ClInclude Include="..\..\include\euler.h" />
     <ClInclude Include="..\..\include\OgreOculus.h" />
-    <ClInclude Include="..\..\include\StereoscopicWindow.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
     <ClCompile Include="..\..\src\AnnEngine.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
+    <ClCompile Include="..\..\src\AnnJoystickController.cpp" />
     <ClCompile Include="..\..\src\AnnMap.cpp" />
     <ClCompile Include="..\..\src\AnnTools.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />
     <ClCompile Include="..\..\src\OgreOculus.cpp" />
-    <ClCompile Include="..\..\src\StereoscopicWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Annwvyn.TODO" />
