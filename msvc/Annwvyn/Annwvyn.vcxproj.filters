@@ -51,10 +51,10 @@
     <ClInclude Include="..\..\include\OgreOculus.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\StereoscopicWindow.hpp">
+    <ClInclude Include="..\..\include\AnnMap.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnMap.hpp">
+    <ClInclude Include="..\..\include\AnnJoystickController.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,7 +83,7 @@
     <ClCompile Include="..\..\src\AnnMap.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\StereoscopicWindow.cpp">
+    <ClCompile Include="..\..\src\AnnJoystickController.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

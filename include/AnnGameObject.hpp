@@ -1,5 +1,6 @@
 #ifndef ANNGAMEOBJECT
 #define ANNGAMEOBJECT
+
 #undef DLL
 ///windows DLL
 #ifdef DLLDIR_EX
