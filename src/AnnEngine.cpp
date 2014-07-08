@@ -18,7 +18,8 @@ AnnEngine::AnnEngine(const char title[])
 
     //here we set all the defaults parameters for the body.
     initBodyParams(m_bodyParams);
-
+    
+    //Launching initialisation routines : 
     setUpOgre(title);
     setUpOIS();
     setUpTime();
@@ -26,12 +27,15 @@ AnnEngine::AnnEngine(const char title[])
     setUpAudio();
     setUpGUI();
 
+    //Setting up reference quaternion for the camera coordinate system.
     QuatReference = Ogre::Quaternion::IDENTITY;
     
+    //Setting up the Visual Body management 
     VisualBody = NULL;
     VisualBodyAnimation = NULL;
     VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 	refVisualBody = Ogre::Quaternion::IDENTITY;
+    
     log("Engine ready");
 }
 
@@ -62,33 +66,50 @@ AnnEngine::~AnnEngine()
     delete AudioEngine;
 }
 
+////////////////////////////////////////////////////////// UTILITY
 
+void AnnEngine::log(std::string message, bool flag)
+{
+    if(flag)
+        std::cerr << "Annwvyn - ";
+    std::cerr << message << std::endl;
+}
+
+void AnnEngine::emergency(void)
+{
+    log("FATAL : It is imposible to keep the engine running. Plese check engine and object initialization");
+    abort();
+}
+
+////////////////////////////////////// INITALIZATION
+///////////// Graphics
 void AnnEngine::setUpOgre(const char title[])
 {
     log("Setting up Ogre");
 
-    m_Root = askSetUpOgre();
+    //Get the scene root : 
+    try
+    {
+        m_Root = askSetUpOgre();
 
-    log("Create window");
-    m_Window = m_Root->initialise(true,title);
+        log("Create window");
+        if((m_Window = m_Root->initialise(true,title)) == NULL)
+            throw std::string("Cannot create window");
+    }
+    catch (std::string const& e)
+    {
+        std::cerr << "Exeption : " << e << std::endl;
+        emergency();
+    }
 
     log("Create Ogre OctreeSceneManager");
+    //Get the scene manager from the root
     m_SceneManager = m_Root->createSceneManager("OctreeSceneManager");
-
-
-    if(m_Window != NULL)
-    {
-        m_Window->reposition(0,0);
-        readyForLoadingRessources = true;
-    }
-    else
-    {
-        log("Error creating window");
-        exit(-1); //goodbye cruel world...
-    }
-
+    m_Window->reposition(0,0);
+    readyForLoadingRessources = true;
 }
 
+///////////// Physics
 void AnnEngine::setUpBullet()
 {
 
@@ -114,7 +135,7 @@ void AnnEngine::setUpBullet()
     m_Ground = NULL;
 }
 
-
+///////////// Inputs
 void AnnEngine::setUpOIS()
 {
     //We use OIS to catch all user inputs
@@ -152,7 +173,7 @@ void AnnEngine::setUpOIS()
     jumpForce = 25.0f;
 }
 
-
+///////////// Time system
 void AnnEngine::setUpTime()
 {
     log("Setup time");
@@ -161,36 +182,26 @@ void AnnEngine::setUpTime()
     log("Timer is setup");
 }
 
-
+///////////// Audio Steampunk
 void AnnEngine::setUpAudio()
 {
     AudioEngine = new AnnAudioEngine;
     log("Audio Engine started");
 }
 
+///////////// Interface 
 void AnnEngine::setUpGUI()
 {
-
+    return;
 }
-
-void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
-{
-    QuatReference = q;
-}
-
-Ogre::Quaternion AnnEngine::getReferenceQuaternion()
-{
-    return QuatReference;
-}
-
 
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
 {
     //Restore configuration file
     if(!root->restoreConfig()) //if you can't restore :
         //Show configuration window
-        if(!root->showConfigDialog())  
-            exit(-1); //If you hit cancel or close the window
+        if(!root->showConfigDialog())
+            throw std::string("Cannot get graphical configuration");
     return root;
 }
 
@@ -227,14 +238,15 @@ void AnnEngine::initPlayerPhysics()
 //will be private 
 void AnnEngine::createVirtualBodyShape()
 {
+    assert(m_bodyParams != NULL);
+
     float height = m_bodyParams->eyeHeight;
     m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
 {
-    if(m_bodyParams->Shape == NULL)
-        return;
+    assert(m_bodyParams->Shape);
 
     BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState
         (oculus.getCameraNode());
@@ -251,8 +263,7 @@ void AnnEngine::createPlayerPhysicalVirtualBody()
 
 void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
-    if(m_bodyParams->Body == NULL)
-        return;
+    assert(m_bodyParams->Body);
 
     float height(m_bodyParams->eyeHeight);
 
@@ -269,7 +280,7 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 
 void AnnEngine::updatePlayerFromPhysics()
 {
-    if (m_bodyParams->Body == NULL)
+    if(m_bodyParams->Body == NULL)
         return;
 
     //Get pos from bullet
@@ -322,6 +333,7 @@ void AnnEngine::loadDir(const char path[])
 
 void AnnEngine::loadResFile(const char path[])
 {
+    //Code extracted form the Ogre Wiki
     Ogre::String res= path;
     Ogre::ConfigFile cf;
     cf.load(res);
@@ -353,7 +365,6 @@ void AnnEngine::initRessources()
 void AnnEngine::oculusInit()
 {
     log("Initialize Oculus system");
-
     oculus.setupOculus();
 
     log("Configuring Ogre Rendering from Oculus system");
@@ -373,32 +384,36 @@ void AnnEngine::oculusInit()
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
 {
-    if(std::string(entityName).empty())
+    try
+    {
+        if(std::string(entityName).empty())
+            throw std::string("Hey! what are you trying to do here? Please specify a non empty string for entityName !");
+
+        Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
+
+        Ogre::SceneNode* node = 
+            m_SceneManager->getRootSceneNode()->createChildSceneNode();
+
+        node->attachObject(ent);
+
+        obj->setNode(node);
+        obj->setEntity(ent);
+        obj->setAudioEngine(AudioEngine);
+        obj->setTimePtr(&deltaT);//Ok, ok, that's bad...
+
+        obj->setBulletDynamicsWorld(m_DynamicsWorld);
+
+
+        obj->postInit(); //Run post init directives
+
+        //pushBack
+        objects.push_back(obj); //keep address in list
+    }
+    catch (std::string const& e)
     {
         delete obj;
         return NULL;
     }
-
-    Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
-
-    Ogre::SceneNode* node = 
-        m_SceneManager->getRootSceneNode()->createChildSceneNode();
-
-    node->attachObject(ent);
-
-    obj->setNode(node);
-    obj->setEntity(ent);
-    obj->setAudioEngine(AudioEngine);
-	obj->setTimePtr(&deltaT);
-
-    obj->setBulletDynamicsWorld(m_DynamicsWorld);
-
-
-    obj->postInit(); //Run post init directives
-
-    //pushBack
-    objects.push_back(obj); //keep address in list
-
     return obj;
 }
 
@@ -443,16 +458,6 @@ void AnnEngine::renderOneFrame()
 #endif
 }
 
-void AnnEngine::setDebugPhysicState(bool state)
-{
-    debugPhysics = state;
-}
-
-void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
-{
-    m_SceneManager->setAmbientLight(v);
-}
-
 Annwvyn::AnnLightObject* AnnEngine::addLight()
 {
     //Actualy here i'm cheating, the AnnLightObjet is a simple typdef to Ogre LightSceneNode
@@ -470,12 +475,6 @@ bool AnnEngine::requestStop()
     return false;
 }
 
-void AnnEngine::log(std::string message,bool flag)
-{
-    if(flag)
-        std::cerr << "Annwvyn - ";
-    std::cerr << message << std::endl;
-}
 
 void AnnEngine::updateCamera()
 {
@@ -486,7 +485,6 @@ void AnnEngine::updateCamera()
 
 void AnnEngine::refresh()
 {
-
     //windows specific
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     MSG msg;
@@ -500,10 +498,7 @@ void AnnEngine::refresh()
     //not windows specific equivalent
     Ogre::WindowEventUtilities::messagePump();
 #endif
-
-    //bullet updating is now handeled by btOgre
-
-
+    
     //animations playing :
     deltaT = updateTime();
     playObjectsAnnimation();
@@ -516,9 +511,9 @@ void AnnEngine::refresh()
     {
         //TODO extract this piece of code and make it accesible with a method !!
         m_bodyParams->Body->activate(); //don't sleep !
-        
+
         btVector3 curVel = m_bodyParams->Body->getLinearVelocity(); //get current velocity
-        
+
         Ogre::Vector3 translate(Ogre::Vector3::ZERO);
         if(processWASD(&translate))//If player want to move w/ WASD
         {
@@ -545,7 +540,7 @@ void AnnEngine::refresh()
             Ogre::Radian(
                 -m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed
                 )
-         );
+            );
 
     if(m_bodyParams->Body != NULL)
         m_bodyParams->Position =
@@ -582,10 +577,11 @@ void AnnEngine::refresh()
 
     //synchronise VisualBody
     VisualBodyAnchor->setOrientation(refVisualBody * m_bodyParams->Orientation.toQuaternion());
-	VisualBodyAnchor->setPosition(m_bodyParams->Position - m_bodyParams->Orientation.toQuaternion()*Ogre::Vector3(0,m_bodyParams->eyeHeight,visualBody_Zoffset));
+    VisualBodyAnchor->setPosition(m_bodyParams->Position - m_bodyParams->Orientation.toQuaternion()*Ogre::Vector3(0,m_bodyParams->eyeHeight,visualBody_Zoffset));
 
     if(VisualBodyAnimation)
         VisualBodyAnimation->addTime(getTime());
+
     //////////////////////////////////////////////////////////////////////////////// VISUAL
     updateCamera(); //make the pulling of oculus sensor just before rendering the frame
     renderOneFrame();
@@ -638,50 +634,20 @@ float AnnEngine::updateTime()
     return (now-last)/1000.0f;
 }
 
-float AnnEngine::getTime()
-{
-    return deltaT;
-}
-
-float AnnEngine::getTimeFromStartUp()
-{
-    return static_cast<float>(m_Root->getTimer()->getMilliseconds());
-}
-
-void AnnEngine::setGround(AnnGameObject* Ground)
-{
-    m_Ground = Ground;
-}
-
-AnnAudioEngine* AnnEngine::getAudioEngine()
-{
-    return AudioEngine;
-}
-
-OIS::Mouse* AnnEngine::getOISMouse()
-{
-    return m_Mouse;
-}
-
-OIS::Keyboard* AnnEngine::getOISKeyboard()
-{
-    return m_Keyboard;
-}
-
-OIS::JoyStick* AnnEngine::getOISJoyStick()
-{
-    return m_Joystick;
-}
-
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
+    assert(m_Keyboard != NULL);
     return m_Keyboard->isKeyDown(key);
 }
 
+
 bool AnnEngine::collisionWithGround()
 {
+    //If collision isn't computable : 
     if(m_Ground == NULL || m_bodyParams == NULL || m_bodyParams->Body == NULL)
         return false;
+    
+    //Getting rid of differences of types. There is polymorphism we don't care off, we are comparing memory address here !
 
     void* player = (void*) m_bodyParams->Body;
     void* ground = (void*) m_Ground->getBody();
@@ -713,6 +679,7 @@ bool AnnEngine::collisionWithGround()
 
 void AnnEngine::processCollisionTesting()
 {
+    //TODO make a typedeff for getting off the uglyness here 
     std::vector<struct collisionTest*> pairs;
 
     //get all collision mask
@@ -728,6 +695,7 @@ void AnnEngine::processCollisionTesting()
     //process for each maniflod
 
     int numManifolds = m_Dispatcher->getNumManifolds();
+    //m is manifold identifier
     for (int m = 0;m <numManifolds;m++)
     {
         btPersistentManifold* contactManifold =
@@ -735,6 +703,12 @@ void AnnEngine::processCollisionTesting()
 
         const btCollisionObject* obA = (btCollisionObject*) contactManifold->getBody0();
         const btCollisionObject* obB = (btCollisionObject*) contactManifold->getBody1();
+        
+        //CAUTION HERE !
+        //
+        //we deliberatly lost track of objects types to ensure the test is ON THE ADDRESS of the pointer
+        //Comparaison between pointer of differents types aren't permited in C++.
+
 
         void* pair1 = (void*) obA;
         void* pair2 = (void*) obB;
@@ -764,13 +738,9 @@ void AnnEngine::processCollisionTesting()
 
 }
 
-btDiscreteDynamicsWorld* AnnEngine::getDynamicsWorld()
-{
-    return m_DynamicsWorld;
-}
-
 AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 {
+    assert(object != NULL);
     triggers.push_back(object);
     object->postInit();
     return object;
@@ -784,8 +754,8 @@ void AnnEngine::processTriggersContacts()
                     triggers[i]->getPosition()) <= triggers[i]->getThreshold())
         {
             triggers[i]->setContactInformation(true);
-			//Call overloaded 
-			triggers[i]->atContact();
+            //Call overloaded 
+            triggers[i]->atContact();
         }
         else
         {
@@ -800,22 +770,12 @@ void AnnEngine::playObjectsAnnimation()
         objects[i]->addTime(getTime());
 }
 
-Ogre::SceneManager* AnnEngine::getSceneManager()
-{
-    return m_SceneManager;
-}
-
-void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)
-{
-    m_SceneManager->setSkyDome(activate,materialName,curvature,tiling);
-}
-
 AnnGameObject* AnnEngine::playerLookingAt()
 {
     //Origin vector
     Ogre::Vector3 Orig(oculus.getCameraNode()->getPosition());
-    
-	//Direction Vector
+
+    //Direction Vector
     Ogre::Quaternion Orient = oculus.getCameraNode()->getOrientation();
     Ogre::Vector3 LookAt = Orient * Ogre::Vector3::NEGATIVE_UNIT_Z;
 
@@ -848,40 +808,25 @@ AnnGameObject* AnnEngine::playerLookingAt()
             if((void*)objects[i]->node() == (void*)node)
                 return objects[i];
 
-    return NULL;
-}
-
-Annwvyn::bodyParams* AnnEngine::getBodyParams()
-{
-    return m_bodyParams;
-}
-
-Ogre::SceneNode* AnnEngine::getCamera()
-{
-    return oculus.getCameraNode();
-}
-
-float AnnEngine::getCentreOffset()
-{
-    return oculus.getCentreOffset();
+    return NULL; //means that we don't know what the player is looking at.
 }
 
 void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)
 {
     log("Visual Body");
     log(entityName);
-    
+
     Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
-	VisualBodyAnchor->attachObject(ent);
-	
+    VisualBodyAnchor->attachObject(ent);
+
     if(flip)
-		 refVisualBody = Ogre::Quaternion(Ogre::Degree(180),Ogre::Vector3::UNIT_Y);
+        refVisualBody = Ogre::Quaternion(Ogre::Degree(180),Ogre::Vector3::UNIT_Y);
     else
         refVisualBody = Ogre::Quaternion::IDENTITY;
 
-	visualBody_Zoffset = z_offset;
+    visualBody_Zoffset = z_offset;
     VisualBody = ent;
-    
+
     if(animated)
     {
         Ogre::AnimationState* as = ent->getAnimationState("IDLE");
@@ -901,9 +846,110 @@ void AnnEngine::resetOculusOrientation()
 
 Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 {
-	//This methods only test memory address
+    try 
+    { 
+        if(!node) 
+            throw 0; 
+    } 
+    catch (int e) 
+    { 
+        log("Plese don't try to identify a NULL node.");
+        return NULL;
+    }
+    
+    //This methods only test memory address
     for(size_t i(0); i < objects.size(); i++)
         if((void*)objects[i]->node() == (void*)node)
             return objects[i];
     return NULL;
 }
+
+////////////////////////////////////////////////////////// GETTERS
+
+Annwvyn::bodyParams* AnnEngine::getBodyParams()
+{
+    return m_bodyParams;
+}
+
+Ogre::SceneNode* AnnEngine::getCamera()
+{
+    return oculus.getCameraNode();
+}
+
+float AnnEngine::getCentreOffset()
+{
+    return oculus.getCentreOffset();
+}
+
+Ogre::Quaternion AnnEngine::getReferenceQuaternion()
+{
+    return QuatReference;
+}
+
+float AnnEngine::getTime()
+{
+    return deltaT;
+}
+
+AnnAudioEngine* AnnEngine::getAudioEngine()
+{
+    return AudioEngine;
+}
+
+OIS::Mouse* AnnEngine::getOISMouse()
+{
+    return m_Mouse;
+}
+
+OIS::Keyboard* AnnEngine::getOISKeyboard()
+{
+    return m_Keyboard;
+}
+
+OIS::JoyStick* AnnEngine::getOISJoyStick()
+{
+    return m_Joystick;
+}
+
+btDiscreteDynamicsWorld* AnnEngine::getDynamicsWorld()
+{
+    return m_DynamicsWorld;
+}
+
+Ogre::SceneManager* AnnEngine::getSceneManager()
+{
+    return m_SceneManager;
+}
+
+float AnnEngine::getTimeFromStartUp()
+{
+    return static_cast<float>(m_Root->getTimer()->getMilliseconds());//Why ?? O.O 
+}
+
+////////////////////////////////////////////////////////// SETTERS
+
+void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
+{
+    QuatReference = q;
+}
+
+void AnnEngine::setDebugPhysicState(bool state)
+{
+    debugPhysics = state;
+}
+
+void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
+{
+    m_SceneManager->setAmbientLight(v);
+}
+
+void AnnEngine::setGround(AnnGameObject* Ground)
+{
+    m_Ground = Ground;
+}
+
+void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)
+{
+    m_SceneManager->setSkyDome(activate,materialName,curvature,tiling);
+}
+
