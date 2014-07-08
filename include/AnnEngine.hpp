@@ -17,6 +17,7 @@
 //C++ STD & STL
 #include <vector>
 #include <sstream>
+#include <cassert>
 //Ogre 3D
 #include <Ogre.h>
 #include <OIS.h>
@@ -56,20 +57,20 @@ namespace Annwvyn
 
             AnnEngine* getAddress() {return this;}
             void initCEGUI();
-            ///display config window and return an ogre root (create a new one by default)
+            ///Display config window and return an ogre root (create a new one by default)
             Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
 
-            ///load data to the ressource group manager
+            ///Load data to the ressource group manager
             void loadZip(const char path[]);
             void loadDir(const char path[]);
             void loadResFile(const char path[]);
-            ///init ressources groups
+            ///Init ressources groups
             void initRessources();
 
-            ///init OgreOculus stuff
+            ///Init OgreOculus stuff
             void oculusInit();
 
-            ///init the BodyParams variable
+            ///Init the BodyParams variable
             static void initBodyParams(Annwvyn::bodyParams* bodyP,
                     float eyeHeight = 1.59f,
                     float walkSpeed = 3.0f,
@@ -82,65 +83,66 @@ namespace Annwvyn
 
 
             void initPlayerPhysics();
-            ///update player location/orientation from the bullet body
+            ///Update player location/orientation from the bullet body
             void updatePlayerFromPhysics();
 
-            ///translate the player (DONT DETECT COLLISIONS HERE !!!)
+            ///Translate the player (DONT DETECT COLLISIONS HERE !!!)
             void translatePhysicBody(Ogre::Vector3 translation);
 
-            ///set player linear speed from a 3D vector
+            ///Set player linear speed from a 3D vector
             void setPhysicBodyLinearSpeed(Ogre::Vector3 V);
 
-            ///create a game object form the name of an entity.
+            ///Create a game object form the name of an entity.
             AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject);
 
             bool destroyGameObject(AnnGameObject* object);
 
-            ///set the ambiant light
+            ///Set the ambiant light
             void setAmbiantLight(Ogre::ColourValue v);
 
-            ///add a light to the scene. return a pointer to the new light
+            ///Add a light to the scene. return a pointer to the new light
             AnnLightObject* addLight();
 
-            ///calculate one frame of the game
+            ///Calculate one frame of the game
             void renderOneFrame();
 
-            ///display bullet debuging drawing
+            ///Display bullet debuging drawing
             void setDebugPhysicState(bool state);///if state == true, display physics debug
 
-
+            ///Run objects physics
             void runPhysics(); 
 
-            ///return true if the game want to terminate the program
+            ///Return true if the game want to terminate the program
             bool requestStop();
 
-            ///log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
+            ///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
             static void log(std::string message, bool flag = true);
 
-            ///update camera position/orientation from rift and virtual body
+            ///Update camera position/orientation from rift and virtual body
             void updateCamera();
 
-            ///refresh all for you
+            ///Refresh all for you
             void refresh();
 
-            ///return a vector depending on WASD keys pressed
+            ///Return a vector depending on WASD keys pressed
             bool processWASD(Ogre::Vector3* translate);///return the translation vector to aply on the body
 
-            ///caputre event form keyboard and mouse
+            ///Caputre event form keyboard and mouse
             void captureEvents();///keyboard and mouse
 
-            ///update program time. retur the delay between the last call of this method
+            ///Update program time. retur the delay between the last call of this method
             float getTime();
+
+            ///Get elapsed time from engine startup
             float getTimeFromStartUp();
 
             ///Step Objects animation
             void playObjectsAnnimation();
 
-
-            ///set the ground object
+            ///Set the ground object
             void setGround(AnnGameObject* Ground);
 
-            ///return the Annwvyn OpenAL simplified audio engine
+            ///Return the Annwvyn OpenAL simplified audio engine
             AnnAudioEngine* getAudioEngine();
 
             ///LowLevel OIS Mouse
@@ -152,42 +154,43 @@ namespace Annwvyn
             ///LowLevel OIS Joystick
             OIS::JoyStick* getOISJoyStick();
 
-            ///is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
+            ///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
             bool isKeyDown(OIS::KeyCode key); ///this is simplier to use if you are on the OIS namespace ;-)
 
-            ///return true if you touch the ground
+            ///Return true if you touch the ground
             bool collisionWithGround();
 
-            ///process collision test form bullet manifold and objects collision mask
+            ///Process collision test form bullet manifold and objects collision mask
             void processCollisionTesting();
 
-            ///get the dynamicsWorld
+            ///Get the dynamicsWorld
             btDiscreteDynamicsWorld* getDynamicsWorld();
 
-            ///create a trigger object
+            ///Create a trigger object
             AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject);
 
-            ///process contact test with triggers
+            ///Process contact test with triggers
             void processTriggersContacts();
 
-            ///get ogre scene manager
+            ///Get ogre scene manager
             Ogre::SceneManager* getSceneManager();
 
-            ///set the ogre material for the skydime with params
+            ///Set the ogre material for the skydime with params
             void setSkyDomeMaterial(bool activate, const char materialName[], float curvature = 2.0f, float tiling = 1.0f);
 
-            ///get the AnnObject the player is looking at
+            ///Get the AnnObject the player is looking at
             Annwvyn::AnnGameObject* playerLookingAt();
 
-            ///get the AnnGameObject form the given Ogre node
+            ///Get the AnnGameObject form the given Ogre node
             Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node);
 
-            ///get bodyParams
+            ///Get bodyParams
             Annwvyn::bodyParams* getBodyParams();
 
-            ///get ogre camera scene node
+            ///Get ogre camera scene node
             Ogre::SceneNode* getCamera();
-
+            
+            ///Get offset between viewport and distortion centre
             float getCentreOffset();
 
             void setReferenceQuaternion(Ogre::Quaternion q);
@@ -214,6 +217,9 @@ namespace Annwvyn
             void addPlayerPhysicalBodyToDynamicsWorld();
 
             float updateTime(); ///return deltaT
+            
+            ///Unable to continue, we have to cleanly cut the program before creating an error
+            void emergency(void);            
         private:
             Annwvyn::bodyParams* m_bodyParams;
 
@@ -228,13 +234,13 @@ namespace Annwvyn
 			float visualBody_Zoffset;
             bool readyForLoadingRessources;
 
-            Ogre::Entity* m_ent; ///only used for creating nodes into the smgr
+            Ogre::Entity* m_ent; //only used for creating nodes into the smgr
 
             Oculus oculus;
 
-            ///dynamic container for games objects
+            ///Dynamic container for games objects
             AnnGameObjectVect objects;
-            std::vector <AnnTriggerObject*> triggers;
+            AnnTriggerObjectVect triggers;
 
             ///Events processing : 
             OIS::InputManager *m_InputManager ;
@@ -250,18 +256,22 @@ namespace Annwvyn
             bool activateJump;
             float jumpForce;
 
-            ///time
-            unsigned long last,now; ///Milisec
-            float deltaT; ///Sec
+            ///Time
+            unsigned long last,now; //Milisec
+            
+            ///Elapsed time
+            float deltaT; //Sec
 
-            ///bullet
+            //bullet
             btBroadphaseInterface* m_Broadphase;
             btDefaultCollisionConfiguration* m_CollisionConfiguration;
             btCollisionDispatcher* m_Dispatcher;
             btSequentialImpulseConstraintSolver* m_Solver;
             btGhostPairCallback* m_ghostPairCallback;
+            
+            ///Bullet Dynamics World
             btDiscreteDynamicsWorld* m_DynamicsWorld;
-
+            
             bool debugPhysics;
             BtOgre::DebugDrawer* m_debugDrawer;
 
@@ -271,11 +281,8 @@ namespace Annwvyn
 
             AnnGameObject* m_Ground;
 
-            ///Audio
+            ///Audio engine
             AnnAudioEngine* AudioEngine;
-
-            ///gui
-            //CEGUI::OgreRenderer* m_CEGUI_Renderer;
     };
 }
 #endif ///ANN_ENGINE
