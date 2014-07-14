@@ -14,6 +14,7 @@
 #define DLL
 #endif
 
+#include "OgreOculusRender.hpp"
 //C++ STD & STL
 #include <vector>
 #include <sstream>
@@ -26,7 +27,9 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
 //OgreOculus by kojack
-#include "OgreOculus.h"
+//#include "OgreOculus.h"
+
+
 //btOgre
 #include "BtOgrePG.h"
 #include "BtOgreGP.h"
@@ -58,7 +61,7 @@ namespace Annwvyn
             AnnEngine* getAddress() {return this;}
             void initCEGUI();
             ///Display config window and return an ogre root (create a new one by default)
-            Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
+            //Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
 
             ///Load data to the ressource group manager
             void loadZip(const char path[]);
@@ -223,7 +226,7 @@ namespace Annwvyn
         private:
             Annwvyn::bodyParams* m_bodyParams;
 
-            Ogre::Root* m_Root;
+            //Ogre::Root* m_Root;
             Ogre::RenderWindow* m_Window;
             Ogre::SceneManager* m_SceneManager;
             Ogre::SceneNode* m_Camera;
@@ -236,7 +239,8 @@ namespace Annwvyn
 
             Ogre::Entity* m_ent; //only used for creating nodes into the smgr
 
-            Oculus oculus;
+            //Oculus oculus;
+            OgreOculusRender* oor;
 
             ///Dynamic container for games objects
             AnnGameObjectVect objects;

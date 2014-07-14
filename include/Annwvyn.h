@@ -27,9 +27,7 @@
  *
  */
 
-#include <Ogre.h>
-#include <OIS.h>
-#include "OgreOculus.h"
+//#include "OgreOculus.h"
 
 //Annwvyn classes
 #include "AnnEngine.hpp"
@@ -42,4 +40,5 @@
 #include "AnnTypes.h"
 #include "AnnTools.h"
 
+#include <OIS.h>
 #endif //ANNWVYN	
