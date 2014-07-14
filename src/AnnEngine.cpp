@@ -86,7 +86,7 @@ void AnnEngine::emergency(void)
 void AnnEngine::setUpOgre(const char title[])
 {
     log("Setting up Ogre");
-
+/*
     //Get the scene root : 
     try
     {
@@ -106,6 +106,18 @@ void AnnEngine::setUpOgre(const char title[])
     //Get the scene manager from the root
     m_SceneManager = m_Root->createSceneManager("OctreeSceneManager");
     m_Window->reposition(0,0);
+    */
+    
+    oor = new OgreOculusRender(title);
+    oor->initLibraries();
+    oor->getOgreConfig();
+    oor->createWindow();
+    oor->initScene();
+    oor->initCameras();
+    oor->initRttRendering();
+    m_SceneManager = oor->getSceneManager();
+    m_Window = oor->getWindow();
+
     readyForLoadingRessources = true;
 }
 
@@ -177,7 +189,7 @@ void AnnEngine::setUpOIS()
 void AnnEngine::setUpTime()
 {
     log("Setup time");
-    last = m_Root->getTimer()->getMilliseconds();
+    last = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
     now = last;
     log("Timer is setup");
 }
@@ -195,15 +207,17 @@ void AnnEngine::setUpGUI()
     return;
 }
 
+/*
 Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
 {
+    
     //Restore configuration file
     if(!root->restoreConfig()) //if you can't restore :
         //Show configuration window
         if(!root->showConfigDialog())
             throw std::string("Cannot get graphical configuration");
     return root;
-}
+}*/
 
 //TODO : create a class to handle VirtualBody ?
 //see the .hpp file for the defaults values
@@ -249,7 +263,7 @@ void AnnEngine::createPlayerPhysicalVirtualBody()
     assert(m_bodyParams->Shape);
 
     BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState
-        (oculus.getCameraNode());
+        (m_Camera);
 
     btVector3 inertia;
 
@@ -332,7 +346,7 @@ void AnnEngine::loadDir(const char path[])
 }
 
 void AnnEngine::loadResFile(const char path[])
-{
+{/*
     //Code extracted form the Ogre Wiki
     Ogre::String res= path;
     Ogre::ConfigFile cf;
@@ -352,19 +366,23 @@ void AnnEngine::loadResFile(const char path[])
             Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
                     archName, typeName, secName);
         }
-    }
+    }*/
+
+    oor->loadReseourceFile(path);
 }
 
 void AnnEngine::initRessources()
 {
-    Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
+    //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    oor->initAllResources();
     log("Resources initialized");
 }
 
 //initalize oculus rendering
 void AnnEngine::oculusInit()
 {
-    log("Initialize Oculus system");
+    /*log("Initialize Oculus system");
     oculus.setupOculus();
 
     log("Configuring Ogre Rendering from Oculus system");
@@ -374,7 +392,11 @@ void AnnEngine::oculusInit()
 	
 	oculus.setNearClippingDistance(5); //Set near clipping distance. Camera is intended to be inside the head of an humanoid 3D Model.
 
-    m_Camera = oculus.getCameraNode();
+    m_Camera = oculus.getCameraNode();*/
+    
+    oor->initOculus();
+
+    m_Camera = oor->getCameraInformationNode();
 
     m_Camera->setPosition(m_bodyParams->Position + 
             Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
@@ -450,12 +472,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 //will be private
 void AnnEngine::renderOneFrame()
 {
-    m_Root->renderOneFrame();
-#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-    Sleep(1); //pause 1ms
-#elif __gnu_linux__
-    usleep(1000);//pause 1ms
-#endif
+    oor->RenderOneFrame();
 }
 
 Annwvyn::AnnLightObject* AnnEngine::addLight()
@@ -478,27 +495,13 @@ bool AnnEngine::requestStop()
 
 void AnnEngine::updateCamera()
 {
-    oculus.getCameraNode()->setPosition(m_bodyParams->Position);
+    m_Camera->setPosition(m_bodyParams->Position);
     Ogre::Quaternion temp = QuatReference * m_bodyParams->Orientation.toQuaternion();
-    oculus.getCameraNode()->setOrientation(temp * oculus.getOrientation());
+    m_Camera->setOrientation(temp * m_Camera->getOrientation());
 }
 
 void AnnEngine::refresh()
 {
-    //windows specific
-#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-    MSG msg;
-    // Check for windows messages
-    while( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
-    {
-        TranslateMessage( &msg );
-        DispatchMessage( &msg );
-    }
-#else
-    //not windows specific equivalent
-    Ogre::WindowEventUtilities::messagePump();
-#endif
-    
     //animations playing :
     deltaT = updateTime();
     playObjectsAnnimation();
@@ -566,8 +569,8 @@ void AnnEngine::refresh()
     }
 
     ///////////////////////////////////////////////////////////////////////////////// AUDIO
-    AudioEngine->updateListenerPos(oculus.getCameraNode()->getPosition());
-    AudioEngine->updateListenerOrient(oculus.getCameraNode()->getOrientation());
+    AudioEngine->updateListenerPos(oor->lastOculusPosition);
+    AudioEngine->updateListenerOrient(oor->lastOculusOrientation);
     for(unsigned int i = 0; i < objects.size(); i++)
         objects[i]->updateOpenAlPos();
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -583,7 +586,7 @@ void AnnEngine::refresh()
         VisualBodyAnimation->addTime(getTime());
 
     //////////////////////////////////////////////////////////////////////////////// VISUAL
-    updateCamera(); //make the pulling of oculus sensor just before rendering the frame
+    updateCamera(); //update camera opsition from GameLogicn 
     renderOneFrame();
     //////////////////////////////////////////////////////////////////////////////////////
 }
@@ -630,7 +633,7 @@ void AnnEngine::captureEvents()
 float AnnEngine::updateTime()
 {
     last = now;
-    now = m_Root->getTimer()->getMilliseconds();
+    now = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
     return (now-last)/1000.0f;
 }
 
@@ -773,10 +776,10 @@ void AnnEngine::playObjectsAnnimation()
 AnnGameObject* AnnEngine::playerLookingAt()
 {
     //Origin vector
-    Ogre::Vector3 Orig(oculus.getCameraNode()->getPosition());
+    Ogre::Vector3 Orig(oor->lastOculusPosition);
 
     //Direction Vector
-    Ogre::Quaternion Orient = oculus.getCameraNode()->getOrientation();
+    Ogre::Quaternion Orient = oor->lastOculusOrientation;
     Ogre::Vector3 LookAt = Orient * Ogre::Vector3::NEGATIVE_UNIT_Z;
 
     //create ray
@@ -840,7 +843,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
 void AnnEngine::resetOculusOrientation()
 {
-    oculus.resetOrientation();
+    //oculus.resetOrientation();
 }
 
 
@@ -873,12 +876,13 @@ Annwvyn::bodyParams* AnnEngine::getBodyParams()
 
 Ogre::SceneNode* AnnEngine::getCamera()
 {
-    return oculus.getCameraNode();
+    return m_Camera;
 }
 
 float AnnEngine::getCentreOffset()
 {
-    return oculus.getCentreOffset();
+    //return oculus.getCentreOffset();
+    return 0.0f;
 }
 
 Ogre::Quaternion AnnEngine::getReferenceQuaternion()
@@ -923,7 +927,7 @@ Ogre::SceneManager* AnnEngine::getSceneManager()
 
 float AnnEngine::getTimeFromStartUp()
 {
-    return static_cast<float>(m_Root->getTimer()->getMilliseconds());//Why ?? O.O 
+    return static_cast<float>(Ogre::Root::getSingleton().getTimer()->getMilliseconds());//Why ?? O.O 
 }
 
 ////////////////////////////////////////////////////////// SETTERS
