@@ -48,7 +48,7 @@ test: lib/libAnnwvyn.so
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
 
-lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o obj/OgreOculus.o obj/AnnMap.o obj/AnnJoystickController.o
+lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o obj/OgreOculus.o obj/AnnMap.o obj/AnnJoystickController.o obj/Gorilla.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 obj/AnnEngine.o: src/AnnEngine.cpp include/AnnEngine.hpp
@@ -78,4 +78,6 @@ obj/AnnMap.o: src/AnnMap.cpp include/AnnMap.hpp
 obj/AnnJoystickController.o: src/AnnJoystickController.cpp include/AnnJoystickController.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnJoystickController.cpp -o obj/AnnJoystickController.o
 
+obj/Gorilla.o: src/Gorilla.cpp include/Gorilla.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/Gorilla.cpp -o obj/Gorilla.o
 endif
