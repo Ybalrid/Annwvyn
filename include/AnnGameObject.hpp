@@ -150,7 +150,7 @@ namespace Annwvyn
             ///SetUpPhysics
             void setUpPhysics(float mass = 0, phyShapeType type = staticShape){setUpBullet(mass,type);}
 
-        private:
+        //.private:
             ///Make Annwvyn::AnnEngine acces these methods : 
             friend class AnnEngine;
 

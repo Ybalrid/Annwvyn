@@ -74,6 +74,20 @@ class OgreOculusRender
             return CameraNode;
         }
 
+        Ogre::Timer* getTimer()
+        {
+            if(root)
+                return root->getTimer();
+            return NULL;
+        }
+
+        float getUpdateTime()
+        {
+            return updateTime;
+        }
+
+        void setCamerasNearClippingDistance(float distance);
+
     private:
         enum 
         {
@@ -91,7 +105,8 @@ class OgreOculusRender
         Ogre::SceneNode* CameraNode;
         Ogre::RenderTexture* rtts[2];
         Ogre::Viewport* vpts[2];
-
+        Ogre::Real nearClippingDistance;
+        float updateTime; //seconds
         //Oculus
         OculusInterface* oc;
         ovrFovPort EyeFov[2];

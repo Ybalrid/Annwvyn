@@ -33,7 +33,8 @@ AnnEngine::AnnEngine(const char title[])
     //Setting up the Visual Body management 
     VisualBody = NULL;
     VisualBodyAnimation = NULL;
-    VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
+    VisualBodyAnchor = NULL;
+    //VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 	refVisualBody = Ogre::Quaternion::IDENTITY;
     
     log("Engine ready");
@@ -113,6 +114,7 @@ void AnnEngine::setUpOgre(const char title[])
     oor->getOgreConfig();
     oor->createWindow();
     oor->initScene();
+    oor->setCamerasNearClippingDistance(1);
     oor->initCameras();
     oor->initRttRendering();
     m_SceneManager = oor->getSceneManager();
@@ -189,7 +191,7 @@ void AnnEngine::setUpOIS()
 void AnnEngine::setUpTime()
 {
     log("Setup time");
-    last = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
+    last = oor->getTimer()->getMilliseconds();
     now = last;
     log("Timer is setup");
 }
@@ -497,7 +499,7 @@ void AnnEngine::updateCamera()
 {
     m_Camera->setPosition(m_bodyParams->Position);
     Ogre::Quaternion temp = QuatReference * m_bodyParams->Orientation.toQuaternion();
-    m_Camera->setOrientation(temp * m_Camera->getOrientation());
+    m_Camera->setOrientation(temp /* * m_Camera->getOrientation()*/);
 }
 
 void AnnEngine::refresh()
@@ -575,18 +577,19 @@ void AnnEngine::refresh()
         objects[i]->updateOpenAlPos();
     /////////////////////////////////////////////////////////////////////////////////////////
 
+    //Call of refresh method
     for(size_t i(0); i < objects.size(); i++)
         objects[i]->atRefresh();
 
     //synchronise VisualBody
-    VisualBodyAnchor->setOrientation(refVisualBody * m_bodyParams->Orientation.toQuaternion());
-    VisualBodyAnchor->setPosition(m_bodyParams->Position - m_bodyParams->Orientation.toQuaternion()*Ogre::Vector3(0,m_bodyParams->eyeHeight,visualBody_Zoffset));
+    //VisualBodyAnchor->setOrientation(refVisualBody * m_bodyParams->Orientation.toQuaternion());
+    //VisualBodyAnchor->setPosition(m_bodyParams->Position - (m_bodyParams->Orientation.toQuaternion() * Ogre::Vector3(0,m_bodyParams->eyeHeight,visualBody_Zoffset)));
 
     if(VisualBodyAnimation)
         VisualBodyAnimation->addTime(getTime());
 
     //////////////////////////////////////////////////////////////////////////////// VISUAL
-    updateCamera(); //update camera opsition from GameLogicn 
+    updateCamera(); //update camera opsition from GameLogic
     renderOneFrame();
     //////////////////////////////////////////////////////////////////////////////////////
 }
@@ -633,7 +636,8 @@ void AnnEngine::captureEvents()
 float AnnEngine::updateTime()
 {
     last = now;
-    now = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
+    now = oor->getTimer()->getMilliseconds();
+    std::cerr << "Time : " << oor->getTimer()->getMilliseconds();
     return (now-last)/1000.0f;
 }
 
@@ -770,7 +774,7 @@ void AnnEngine::processTriggersContacts()
 void AnnEngine::playObjectsAnnimation()
 {
     for(size_t i = 0; i < objects.size(); i++)
-        objects[i]->addTime(getTime());
+        objects[i]->addTime(oor->getUpdateTime());
 }
 
 AnnGameObject* AnnEngine::playerLookingAt()
@@ -820,6 +824,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
     log(entityName);
 
     Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
+    VisualBodyAnchor = m_Camera->createChildSceneNode();
     VisualBodyAnchor->attachObject(ent);
 
     if(flip)
@@ -829,6 +834,9 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
     visualBody_Zoffset = z_offset;
     VisualBody = ent;
+
+    VisualBodyAnchor->setPosition(0,-m_bodyParams->eyeHeight,-visualBody_Zoffset);
+    VisualBodyAnchor->setOrientation(refVisualBody);
 
     if(animated)
     {
@@ -927,7 +935,7 @@ Ogre::SceneManager* AnnEngine::getSceneManager()
 
 float AnnEngine::getTimeFromStartUp()
 {
-    return static_cast<float>(Ogre::Root::getSingleton().getTimer()->getMilliseconds());//Why ?? O.O 
+    return static_cast<float>(oor->getTimer()->getMilliseconds());//Why ?? O.O 
 }
 
 ////////////////////////////////////////////////////////// SETTERS

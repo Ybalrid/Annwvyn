@@ -17,10 +17,10 @@ OgreOculusRender::OgreOculusRender(std::string winName)
     CameraNode = NULL;
     cameraPosition = Ogre::Vector3(0,0,10);
     cameraOrientation = Ogre::Quaternion::IDENTITY;
-
+    this->nearClippingDistance = 0.05;
     this->lastOculusPosition = cameraPosition;
     this->lastOculusOrientation = cameraOrientation;
-
+    this->updateTime = 0;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -114,28 +114,24 @@ void OgreOculusRender::createWindow()
 
 void OgreOculusRender::initCameras()
 {
+    assert(smgr != NULL);
     cams[left] = smgr->createCamera("lcam");
     cams[right] = smgr->createCamera("rcam");
-
-    //default IPD for now : 0.0064 
-    cams[left]->setPosition(cams[left]->getPosition() + Ogre::Vector3(-0.064/2,0,0));
-    cams[right]->setPosition(cams[right]->getPosition() + Ogre::Vector3(+0.064/2,0,0));
-
-
-    Ogre::Vector3 lookAt(0,0,0);
-
-    cams[left]->lookAt(lookAt);
-    cams[right]->lookAt(lookAt);
-
     for(int i = 0; i < 2; i++)
     {
         cams[i]->setPosition(cameraPosition);
         cams[i]->setAutoAspectRatio(true);
-        cams[i]->setNearClipDistance(0.01);
+        cams[i]->setNearClipDistance(1);
         cams[i]->setFarClipDistance(1000);
     }
-
+    //do NOT attach camera to this node... 
     CameraNode =  smgr->getRootSceneNode()->createChildSceneNode();
+
+}
+
+void OgreOculusRender::setCamerasNearClippingDistance(float distance)
+{
+    nearClippingDistance = distance;
 }
 
 void OgreOculusRender::initScene()
@@ -234,17 +230,29 @@ void OgreOculusRender::RenderOneFrame()
     cameraOrientation = this->CameraNode->getOrientation();
     //Begin frame
     ovrFrameTiming hmdFrameTiming = ovrHmd_BeginFrame(oc->getHmd(), 0);
-    //Message pump events 
-    Ogre::WindowEventUtilities::messagePump();
+    //Tell ogre that Frame started
+    root->_fireFrameStarted();
+    
 
+    for (Ogre::SceneManagerEnumerator::SceneManagerIterator it = root->getSceneManagerIterator(); it.hasMoreElements(); it.moveNext())
+        it.peekNextValue()->_handleLodEvents();
+
+
+    //essage pump events 
+    Ogre::WindowEventUtilities::messagePump();
     for(int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
     {
+        cout << "eye index = " << eyeIndex << endl;
+
         //Get the correct eye to render
         ovrEyeType eye = oc->getHmdDesc().EyeRenderOrder[eyeIndex];
-        
+
+        cout << "eye = " << eye << endl;
+
         //Set the Ogre render target to the texture
         root->getRenderSystem()->_setRenderTarget(rtts[eye]);
         
+
         //Get the eye pose 
         ovrPosef eyePose = ovrHmd_BeginEyeRender(oc->getHmd(), eye);
         
@@ -252,36 +260,56 @@ void OgreOculusRender::RenderOneFrame()
         OVR::Quatf camOrient = eyePose.Orientation;
         
         //Get the projection matrix
-        OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov, 0.01f, 10000.0f, true);
+        OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov,static_cast<float>(nearClippingDistance), 10000.0f, true);
 
         //Convert it to Ogre matrix
         Ogre::Matrix4 OgreProj;
         for(int x(0); x < 4; x++)
             for(int y(0); y < 4; y++)
                 OgreProj[x][y] = proj.M[x][y];
-
+        
+        
         //Set the matrix
         cams[eye]->setCustomProjectionMatrix(true, OgreProj);
+        cams[eye]->setNearClipDistance(this->nearClippingDistance);
         //Set the orientation
         cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(camOrient.w,camOrient.x,camOrient.y,camOrient.z));
-        
 
-    
         //Set Position
         cams[eye]->setPosition( cameraPosition + 
-                Ogre::Vector3(EyeRenderDesc[eye].ViewAdjust.x,
+                (cams[eye]->getOrientation() *
+                -Ogre::Vector3(
+                    EyeRenderDesc[eye].ViewAdjust.x,
                     EyeRenderDesc[eye].ViewAdjust.y,
-                    EyeRenderDesc[eye].ViewAdjust.z));
+                    EyeRenderDesc[eye].ViewAdjust.z))
+                );
+
+        cout << "VIEW ADJUST VECTOR" << endl
+            << "left : (x, y, z) : ("
+            << EyeRenderDesc[0].ViewAdjust.x << ", "
+            << EyeRenderDesc[0].ViewAdjust.y << ", "
+            << EyeRenderDesc[0].ViewAdjust.z << ")" << endl
+            << "right : (x, y, z) : ("
+            << EyeRenderDesc[1].ViewAdjust.x << ", "
+            << EyeRenderDesc[1].ViewAdjust.y << ", "
+            << EyeRenderDesc[1].ViewAdjust.z << ")" << endl;
+
         if(eye == left) //get an eye pos/orient for game logic
         {
             this->lastOculusPosition = cams[eye]->getPosition();
             this->lastOculusOrientation = cams[eye]->getOrientation();
         }
+
+        root->_fireFrameRenderingQueued();
         rtts[eye]->update();
         ovrHmd_EndEyeRender(oc->getHmd(), eye, eyePose, &EyeTexture[eye].Texture);
     }
     Ogre::Root::getSingleton().getRenderSystem()->_setRenderTarget(window); 
+    this->updateTime = hmdFrameTiming.DeltaSeconds;
+
+    //Tell Ogre that frame ended
     ovrHmd_EndFrame(oc->getHmd());
+    root->_fireFrameEnded();
 
     debugPrint();
 }
