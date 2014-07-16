@@ -97,6 +97,10 @@ int main(int argc, char **argv)
 
 
     Sinbad* S = (Sinbad*) GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
+    Sinbad* S2 = (Sinbad*) GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
+    S2->translate(5,0,0);
+    
+    S->playAnimation(true);
 
     MyTrigger* T = (MyTrigger*) GameEngine->createTriggerObject(new MyTrigger);
     T->setPosition(0,-1,3);
@@ -123,7 +127,7 @@ int main(int argc, char **argv)
 
 
 	//play background music
-	GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
+	//GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
 	
     //Parameters : name of resource loaded "mesh" file, Z axis offset between center and eyball center, and a boolean for aplying a 180° flip or not
     //You have to flip the character if you modeled it whith the head facing you on your 3D software (witch is the good way to do it anyway...)
