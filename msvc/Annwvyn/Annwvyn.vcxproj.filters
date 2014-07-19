@@ -57,6 +57,9 @@
     <ClInclude Include="..\..\include\AnnJoystickController.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\systemMacro.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">

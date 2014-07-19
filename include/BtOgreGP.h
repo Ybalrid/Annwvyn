@@ -14,21 +14,11 @@
  * =====================================================================================
  */
 
-#ifndef _BtOgrePG_H_
-#define _BtOgrePG_H_
-#undef DLL
-//windows DLL
-#ifdef DLLDIR_EX
-   #define DLL  __declspec(dllexport)   // export DLL information
-#else
-   #define DLL  __declspec(dllimport)   // import DLL information
-#endif
+#ifndef BTOGRE_GP_H__
+#define BTOGRE_GP_H__
 
-//bypass on linux
-#ifdef __gnu_linux__
-#undef DLL
-#define DLL
-#endif
+#include "systemMacro.h"
+
 
 #include "btBulletDynamicsCommon.h"
 #include "BtOgreExtras.h"

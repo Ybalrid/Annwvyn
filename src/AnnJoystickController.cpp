@@ -134,7 +134,7 @@ void AnnJoystickController::debug()
 //set stick deadzone (between 0 & 1)
 void AnnJoystickController::setDeadzone(float threshold)
 {
-    if(threshold>= 0 && threshold <= 1);
+    if(threshold>= 0 && threshold <= 1)
     deadzone = threshold;
 }
 

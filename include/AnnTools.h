@@ -1,18 +1,8 @@
 #ifndef ANN_TOOLS
 #define ANN_TOOLS
-#undef DLL
-//windows DLL
-#ifdef DLLDIR_EX
-   #define DLL  __declspec(dllexport)   // export DLL information
-#else
-   #define DLL  __declspec(dllimport)   // import DLL information
-#endif
 
-//bypass on linux
-#ifdef __gnu_linux__
-#undef DLL
-#define DLL
-#endif
+#include "systemMacro.h"
+
 
 #include <Ogre.h>
 #include <btBulletCollisionCommon.h>
