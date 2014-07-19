@@ -1,6 +1,6 @@
 #ifndef ANN_AUDIO
 #define ANN_AUDIO
-
+/*
 #undef DLL
 ///windows DLL
 #ifdef DLLDIR_EX
@@ -14,7 +14,9 @@
 #undef DLL
 #define DLL
 #endif
+*/
 
+#include "systemMacro.h"
 
 #include <Ogre.h>
 
