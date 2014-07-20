@@ -98,6 +98,7 @@
     <ClInclude Include="..\..\include\BtOgreGP.h" />
     <ClInclude Include="..\..\include\BtOgrePG.h" />
     <ClInclude Include="..\..\include\euler.h" />
+    <ClInclude Include="..\..\include\Gorilla.h" />
     <ClInclude Include="..\..\include\OgreOculus.h" />
     <ClInclude Include="..\..\include\systemMacro.h" />
   </ItemGroup>
@@ -110,6 +111,7 @@
     <ClCompile Include="..\..\src\AnnTools.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />
+    <ClCompile Include="..\..\src\Gorilla.cpp" />
     <ClCompile Include="..\..\src\OgreOculus.cpp" />
   </ItemGroup>
   <ItemGroup>

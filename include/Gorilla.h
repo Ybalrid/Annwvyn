@@ -32,7 +32,7 @@
 #ifndef GORILLA_H
 #define GORILLA_H
 
-#include "OGRE/Ogre.h"
+#include <Ogre.h>
 
 #ifndef GORILLA_USES_EXCEPTIONS
 #  define GORILLA_USES_EXCEPTIONS 0
@@ -43,6 +43,9 @@
 #elif OGRE_COMP != OGRE_COMPILER_BORL
 #   define __FUNC__ "No function name info"
 #endif
+
+
+#include "systemMacro.h"
 
 namespace Gorilla
 {
@@ -130,13 +133,13 @@ namespace Gorilla
      desc.
          Convert three/four RGBA values into an Ogre::ColourValue
  */
- Ogre::ColourValue rgb(Ogre::uchar r, Ogre::uchar g, Ogre::uchar b, Ogre::uchar a = 255);
+ Ogre::ColourValue DLL rgb(Ogre::uchar r, Ogre::uchar g, Ogre::uchar b, Ogre::uchar a = 255);
  
  /*! function. webcolour
      desc.
          Turn a webcolour from the Gorilla::Colours::Colour enum into an Ogre::ColourValue
  */
- Ogre::ColourValue webcolour(Colours::Colour, Ogre::Real alpha = 1.0);
+ Ogre::ColourValue DLL webcolour(Colours::Colour, Ogre::Real alpha = 1.0);
  
  /*! enum. Gradient
      desc.
@@ -215,7 +218,7 @@ namespace Gorilla
      desc.
          Internal container class that is similar to std::vector
  */
- template<typename T> class buffer
+ template<typename T> class DLL buffer
  {
    
   public:
@@ -344,7 +347,7 @@ namespace Gorilla
      desc.
          Texture and size information about a single character loaded from a TextureAtlas.
  */
- class Glyph : public Ogre::GeneralAllocatedObject
+ class DLL Glyph : public Ogre::GeneralAllocatedObject
  {
    
   public:
@@ -378,7 +381,7 @@ namespace Gorilla
      desc.
          Portions of a texture from a TextureAtlas.
  */
- class Sprite : public Ogre::GeneralAllocatedObject
+ class DLL Sprite : public Ogre::GeneralAllocatedObject
  {
    
   public:
@@ -396,7 +399,7 @@ namespace Gorilla
     desc.
         Main singleton class for Gorilla
  */
- class Silverback : public Ogre::Singleton<Silverback>, public Ogre::GeneralAllocatedObject, public Ogre::FrameListener
+ class DLL Silverback : public Ogre::Singleton<Silverback>, public Ogre::GeneralAllocatedObject, public Ogre::FrameListener
  {
    
   public:
@@ -471,7 +474,7 @@ namespace Gorilla
      desc.
          Collection of glyphs of the same size.
  */
- class GlyphData : public Ogre::GeneralAllocatedObject
+ class DLL GlyphData : public Ogre::GeneralAllocatedObject
  {
    
   friend class TextureAtlas;
@@ -514,7 +517,7 @@ namespace Gorilla
           describes the portions of a single texture. Such as Glyph and Sprite information, text kerning,
           line heights and so on. It isn't typically used by the end-user.
  */
- class TextureAtlas : public Ogre::GeneralAllocatedObject
+ class DLL TextureAtlas : public Ogre::GeneralAllocatedObject
  {
    
    friend class Silverback;
@@ -722,7 +725,7 @@ namespace Gorilla
     
   };
   
-  class LayerContainer
+  class DLL LayerContainer
   {
     
    public:
@@ -864,7 +867,7 @@ namespace Gorilla
   };
   
   
-  class Screen : public LayerContainer, public Ogre::RenderQueueListener, public Ogre::GeneralAllocatedObject
+  class DLL Screen : public LayerContainer, public Ogre::RenderQueueListener, public Ogre::GeneralAllocatedObject
   {
    public:
     
@@ -970,7 +973,7 @@ namespace Gorilla
     
   };
   
-  class ScreenRenderable : public LayerContainer, public Ogre::SimpleRenderable
+  class DLL ScreenRenderable : public LayerContainer, public Ogre::SimpleRenderable
   {
    
    public:
@@ -1009,7 +1012,7 @@ namespace Gorilla
       desc.
           Text
   */
-  class Layer : public Ogre::GeneralAllocatedObject
+  class DLL Layer : public Ogre::GeneralAllocatedObject
   {
    
    friend class LayerContainer;
@@ -1386,7 +1389,7 @@ namespace Gorilla
       desc.
           Single rectangle with an optional border.
   */
-  class Rectangle : public Ogre::GeneralAllocatedObject
+  class DLL Rectangle : public Ogre::GeneralAllocatedObject
   {
    
    friend class Layer;
@@ -1942,7 +1945,7 @@ namespace Gorilla
       desc.
           A regular n-sided polygon.
   */
-  class Polygon : public Ogre::GeneralAllocatedObject
+  class DLL  Polygon : public Ogre::GeneralAllocatedObject
   {
    
    friend class Layer;
@@ -2257,7 +2260,7 @@ namespace Gorilla
     
   };
   
-  class LineList : public Ogre::GeneralAllocatedObject
+  class DLL LineList : public Ogre::GeneralAllocatedObject
   {
    
    friend class Layer;
@@ -2328,7 +2331,7 @@ namespace Gorilla
       desc.
           "ManualObject" like class to quickly draw rectangles, gradients, sprites and borders.
   */
-  class QuadList : public Ogre::GeneralAllocatedObject
+  class DLL QuadList : public Ogre::GeneralAllocatedObject
   {
    
    friend class Layer;
@@ -2461,7 +2464,7 @@ namespace Gorilla
      desc.
          A single line piece of text
   */
-  class Caption : public Ogre::GeneralAllocatedObject
+  class DLL Caption : public Ogre::GeneralAllocatedObject
   {
     
    friend class Layer;
@@ -2814,7 +2817,7 @@ namespace Gorilla
          A multi-line collection of text formatted by a light markup language, that can
          switch colours, change to monospace and insert sprites directly into the text.
   */
-  class MarkupText : public Ogre::GeneralAllocatedObject
+  class DLL MarkupText : public Ogre::GeneralAllocatedObject
   {
     
    friend class Layer;
