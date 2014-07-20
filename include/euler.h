@@ -8,19 +8,9 @@
 */
 #ifndef OGREEULER_H
 #define OGREEULER_H
-#undef DLL
-//windows DLL
-#ifdef DLLDIR_EX
-   #define DLL  __declspec(dllexport)   // export DLL information
-#else
-   #define DLL  __declspec(dllimport)   // import DLL information
-#endif
 
-//bypass on linux
-#ifdef __gnu_linux__
-#undef DLL
-#define DLL
-#endif
+#include "systemMacro.h"
+
 
 #include <Ogre.h>
  
