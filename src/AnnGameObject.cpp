@@ -120,7 +120,6 @@ void AnnGameObject::setOrientation(float w, float x, float y, float z)
         t.setRotation(btQuaternion(x,y,z,w));
         m_Body->setCenterOfMassTransform(t);
     }
-    //OpenAL
 }
 
 void AnnGameObject::setOrientation(Ogre::Quaternion orient)
@@ -378,8 +377,8 @@ void AnnGameObject::setLinearSpeed(Ogre::Vector3 v)
 {
 	if(bulletReady)
 		m_Body->setLinearVelocity(btVector3(v.x,v.y,v.z));
-	else
-		visualLinearSpeed = v;
+	/*else
+		visualLinearSpeed = v;*/
 }
 
 void AnnGameObject::setTimePtr(float* ptr)
