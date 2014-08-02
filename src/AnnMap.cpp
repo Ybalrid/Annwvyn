@@ -89,7 +89,7 @@ void AnnMap::process(std::string descLine)
                 //We ask to create a new object but we are already creating one. Further description 
                 //act for the new object. We have to abort the current object construction because it's an
                 //unfinished one.
-
+				
 
                 //There is a problem here : We haven't finish to add an object to the map. But the file description
                 //ask to create a new object. At this stade, the object is allready on the scene. If we drop that object
@@ -200,6 +200,8 @@ void AnnMap::process(std::string descLine)
                 shape = cylinderShape;
             else if (word == "CAPSULE")
                 shape = capsuleShape;
+			else if (word == "SPHERE")
+				shape = sphereShape;
             else continue; //abort physics if syntax error;
 
             //            std::cerr << shape;

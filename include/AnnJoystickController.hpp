@@ -4,6 +4,9 @@
 
 #include "systemMacro.h"
 
+#include <iostream>
+#include <fstream>
+
 #include "AnnEngine.hpp"
 #include "AnnTypes.h"
 #include "euler.h"
@@ -44,6 +47,9 @@ namespace Annwvyn
 
 			///Update mouvement from joystick state
             void update();
+
+			void loadConfigFile(const char path[]);
+			void saveConfigFile(const char path[]);
         private:
             //private methods :
             void updateJoystickValues();

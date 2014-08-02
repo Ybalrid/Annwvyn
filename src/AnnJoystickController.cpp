@@ -151,3 +151,75 @@ float AnnJoystickController::abs(float value)
     if(value < 0) return -value;
     return value;
 }
+
+void AnnJoystickController::loadConfigFile(const char path[])
+{
+	ifstream file(path);
+	if(!file.is_open())
+		return;
+	string buffer;
+	while(getline(file,buffer))
+	{
+		std::stringstream line(buffer);
+		string word;
+		string garbage;
+
+		while(line >> word)
+		{
+			line >> garbage;
+			int mapping;
+			line >> mapping;
+			if(word == "straffAxis")
+			{
+				setStraffAxis(mapping);
+			}
+			else if(word == "walkAxis")
+			{
+				setWalkAxis(mapping);
+			}
+			else if(word == "rotateAxis")
+			{
+				setRotateAxis(mapping);
+			}
+			else if(word == "straffReverse")
+			{
+				if(mapping)
+					setReverseStraff(true);
+				else
+					setReverseStraff(false);
+			}
+			else if(word == "walkReverse")
+			{
+				if(mapping)
+					setReverseWalk(true);
+				else
+					setReverseWalk(false);
+			}
+			else if(word == "rotateReverse")
+			{
+				if(mapping)
+					setReverseRotate(true);
+				else
+					setReverseRotate(false);
+			}
+		}
+	}
+
+	file.close();
+}
+
+void AnnJoystickController::saveConfigFile(const char path[])
+{
+	ofstream file(path);
+	if(!file.is_open())
+		return;
+
+	file << "straffAxis = " << axesID[STRAFF] << endl;
+	file << "walkAxis = " << axesID[WALK] << endl;
+	file << "rotateAxis = " << axesID[ROTATE] << endl;
+	file << "straffReverse = " << reverse[STRAFF] << endl;
+	file << "walkReverse = " << reverse[WALK] << endl;
+	file << "rotateReverse = " << reverse[ROTATE] << endl;
+
+	file.close();
+}
