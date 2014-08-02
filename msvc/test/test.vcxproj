@@ -75,6 +75,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\Annwvyn\include;..\..\..\AL\openal-soft-1.15.1\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft-1.15.1\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\boost;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
