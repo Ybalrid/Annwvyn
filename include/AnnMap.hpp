@@ -21,7 +21,8 @@ namespace Annwvyn
             ~AnnMap();
             void loadFile(const char mapFile[]);
             
-            AnnGameObjectVect getContent(){return content;}
+            AnnGameObjectVect getObjects(){return content;}
+			AnnLightVect getLights(){return contentLights;}
 
         private:
             void init(Annwvyn::AnnEngine* engine);
@@ -35,8 +36,6 @@ namespace Annwvyn
             
             AnnGameObject* tmpObject;
             AnnLightObject* tmpLight;
-
     };
 }
 #endif //ANN_MAP 
-

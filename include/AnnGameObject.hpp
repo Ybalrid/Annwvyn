@@ -172,6 +172,8 @@ namespace Annwvyn
 			* We use the position of the Ogre Node ro the Bullet body to align the object.
 			*
 			* The reference is the position of the node. You can access it throug the getters/setters setPos() and getPos()
+			*  
+			* Same is true with the Orientation. We use Ogre node
 			*/
             Ogre::SceneNode* m_node;
             Ogre::Entity* m_entity;

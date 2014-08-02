@@ -57,7 +57,8 @@ namespace Annwvyn
 		convexShape, 
 		boxShape, 
 		cylinderShape, 
-		capsuleShape
+		capsuleShape,
+		sphereShape
 	};
 
 	
