@@ -145,7 +145,7 @@ AnnMain()
     testText->height(5);
     testText->_redraw();
 
-
+	AnnJoystickController* ajc = new AnnJoystickController(GameEngine);
     while(!GameEngine->requestStop())
 	{   
 		GameEngine->refresh();
