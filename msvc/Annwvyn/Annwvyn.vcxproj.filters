@@ -60,6 +60,9 @@
     <ClInclude Include="..\..\include\systemMacro.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Gorilla.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -87,6 +90,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnJoystickController.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Gorilla.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
