@@ -183,30 +183,45 @@ namespace Annwvyn
             ///Get offset between viewport and distortion centre
             float getCentreOffset();
 
+			///Reference orientation. Usefull if you are inside a vehicule for example
             void setReferenceQuaternion(Ogre::Quaternion q);
+
+			///Retrive the said reference quaternion
             Ogre::Quaternion getReferenceQuaternion();
 
+			///Attach a 3D mesh to the camera to act as player's body.
             void attachVisualBody(const std::string entityName, 
                     float z_offset = -0.0644f, 
                     bool flip = false, 
                     bool animated = false, 
                     Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
 
+			///Reset the Rift Orientation
             void resetOculusOrientation();
 
         private:
+			///Set up graphics
             void setUpOgre(const char title[]);
+			///Set up physics
             void setUpBullet();
+			///Set up inputs
             void setUpOIS();
+			///Set up timing
             void setUpTime();
+			///Set up 3D audio system
             void setUpAudio();
+			///Set up GUI/HUD rendering
             void setUpGUI();
 
+			///Create the bullet shape of the player's body
             void createVirtualBodyShape();
+			///Create a physical object from the calculated shape
             void createPlayerPhysicalVirtualBody();
+			///Add the players body to the Physics simulation
             void addPlayerPhysicalBodyToDynamicsWorld();
-
-            float updateTime(); ///return deltaT
+			
+			///Returns internal timing
+            float updateTime();
             
             ///Unable to continue, we have to cleanly cut the program before creating an error
             void emergency(void);            

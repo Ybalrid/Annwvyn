@@ -206,6 +206,9 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
         case staticShape:
             m_Shape = converter.createTrimesh();
             break;
+		case sphereShape:
+			m_Shape = converter.createSphere();
+			break;
         default:
             return;
     }
@@ -228,13 +231,7 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
     m_Body = new btRigidBody(mass,state,m_Shape,inertia);
 
     if(m_Body != NULL)
-    {
-        /*		m_Body->translate(btVector3(this->node()->getPosition().x,
-                this->node()->getPosition().y,
-                this->node()->getPosition().z));*/
-
         m_DynamicsWorld->addRigidBody(m_Body);
-    }	
     else
         return;
 

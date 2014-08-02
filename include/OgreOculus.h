@@ -13,6 +13,8 @@
 
 /// Modified 05 Auggust 2013 by Ybalrid
 
+////////////!!This class permit to get data an setup the rendering system for the Oculus Rift DK1 using OVR 0.2.5 Only!!
+
 #ifndef OGRE_OCULUS
 #define OGRE_OCULUS
 

@@ -25,16 +25,24 @@ namespace Annwvyn
         public:
             AnnJoystickController(AnnEngine* engine);
 
+			///Set the waking axis. Walk is foward-backward
             void setWalkAxis(int axisID = 1);
+			///Set straff axis. Straff is left-right
             void setStraffAxis(int axisID = 0);
+			///Set rotate axis. Rotatie is clockwise-anticlockwise
             void setRotateAxis(int axisID = 2);
-
+			
+			///Reversing the axis ?
             void setReverseWalk(bool state = true);
+			///Reversing the axis ?
             void setReverseStraff(bool state = false);
+			///Reversing the axis ?
             void setReverseRotate(bool state = true);
 
+			///Set the deadzone %
             void setDeadzone(float threshold = 0.15);
 
+			///Update mouvement from joystick state
             void update();
         private:
             //private methods :
