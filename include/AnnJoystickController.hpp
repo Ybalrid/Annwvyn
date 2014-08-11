@@ -1,19 +1,11 @@
 #ifndef ANN_JOYSTICK_CONTROLLER
 #define ANN_JOYSTICK_CONTROLLER
 
-#undef DLL
-///windows DLL
-#ifdef DLLDIR_EX
-#define DLL  __declspec(dllexport)   /// export DLL information
-#else
-#define DLL  __declspec(dllimport)   /// import DLL information
-#endif
 
-///bypass on linux
-#ifdef __gnu_linux__
-#undef DLL
-#define DLL
-#endif
+#include "systemMacro.h"
+
+#include <iostream>
+#include <fstream>
 
 #include "AnnEngine.hpp"
 #include "AnnTypes.h"
@@ -36,17 +28,28 @@ namespace Annwvyn
         public:
             AnnJoystickController(AnnEngine* engine);
 
+			///Set the waking axis. Walk is foward-backward
             void setWalkAxis(int axisID = 1);
+			///Set straff axis. Straff is left-right
             void setStraffAxis(int axisID = 0);
+			///Set rotate axis. Rotatie is clockwise-anticlockwise
             void setRotateAxis(int axisID = 2);
-
+			
+			///Reversing the axis ?
             void setReverseWalk(bool state = true);
+			///Reversing the axis ?
             void setReverseStraff(bool state = false);
+			///Reversing the axis ?
             void setReverseRotate(bool state = true);
 
+			///Set the deadzone %
             void setDeadzone(float threshold = 0.15);
 
+			///Update mouvement from joystick state
             void update();
+
+			void loadConfigFile(const char path[]);
+			void saveConfigFile(const char path[]);
         private:
             //private methods :
             void updateJoystickValues();

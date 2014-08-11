@@ -1,18 +1,8 @@
 #ifndef ANN_TOOLS
 #define ANN_TOOLS
-#undef DLL
-//windows DLL
-#ifdef DLLDIR_EX
-   #define DLL  __declspec(dllexport)   // export DLL information
-#else
-   #define DLL  __declspec(dllimport)   // import DLL information
-#endif
 
-//bypass on linux
-#ifdef __gnu_linux__
-#undef DLL
-#define DLL
-#endif
+#include "systemMacro.h"
+
 
 #include <Ogre.h>
 #include <btBulletCollisionCommon.h>
@@ -30,8 +20,9 @@ namespace Annwvyn
 
 		namespace Geometry //for testing in gemometry
 		{
-			//Return the distance between the 2 objects centers 
+			///Return the distance between the 2 objects centers 
 			float DLL distance(Annwvyn::AnnGameObject* a, Annwvyn::AnnGameObject* b);
+			///Return the distance between 2 points in space
 			float DLL distance(Ogre::Vector3 a, Ogre::Vector3 b);
 		}
 

@@ -16,6 +16,8 @@
 //Annwvyn
 #include <Annwvyn.h>
 
+#include <Gorilla.h>
+
 using namespace std;
 
 
@@ -55,13 +57,7 @@ class MyTrigger : public Annwvyn::AnnTriggerObject
 //If you want to redirect cout & cerr to cout.txt and cerr.txt, uncomment the folowing line : 
 //#define OUTSTREAM_TO_FILE
 
-#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-#define WIN32_LEAN_AND_MEAN
-#include "windows.h"
-INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
-#else
-int main(int argc, char **argv)
-#endif
+AnnMain()
 {
 	#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 	#ifdef OUTSTREAM_TO_FILE
@@ -89,7 +85,7 @@ int main(int argc, char **argv)
 	GameEngine->loadZip("media/Sinbad.zip");
     GameEngine->loadDir("media/plane");
 	GameEngine->loadDir("media/body");
-
+    GameEngine->loadDir("media/GUI");
 	GameEngine->initRessources();
 
 
@@ -103,7 +99,7 @@ int main(int argc, char **argv)
     S->playAnimation(true);
 
     MyTrigger* T = (MyTrigger*) GameEngine->createTriggerObject(new MyTrigger);
-    T->setPosition(0,-1,3);
+    T->setPosition(-0.5,-1,3);
 
     Annwvyn::AnnGameObject* Grid = GameEngine->createGameObject("Plane.mesh");
 	Grid->setPos(0,-3,0);
@@ -133,9 +129,29 @@ int main(int argc, char **argv)
     //You have to flip the character if you modeled it whith the head facing you on your 3D software (witch is the good way to do it anyway...)
 
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1 ,true);
+   
+    //////////////////////////// INIT GUI TEST 
+    Ogre::SceneNode* camera = GameEngine->getCamera();
+    Ogre::SceneNode* GUI_root = camera->createChildSceneNode();
+    GUI_root->translate(-0.6,0,-2);
+    Gorilla::Silverback* svbk = new Gorilla::Silverback();
+    svbk->loadAtlas("dejavu");
 
-	while(!GameEngine->requestStop())
-	{
+    Gorilla::ScreenRenderable* screen = svbk->createScreenRenderable(Ogre::Vector2(2.0f,1.0f),"dejavu");
+    GUI_root->attachObject(screen);
+
+    Gorilla::Layer* baseLayer = screen->createLayer(0);
+    Gorilla::Rectangle* background = baseLayer->createRectangle(0,0,300,200);
+    background->background_colour(Gorilla::rgb(255,0,0,50));
+    
+    Gorilla::Caption* testText = baseLayer->createCaption(9,20,20,"Test");
+    testText->colour(Ogre::ColourValue::Black);
+    testText->height(5);
+    testText->_redraw();
+
+	AnnJoystickController* ajc = new AnnJoystickController(GameEngine);
+    while(!GameEngine->requestStop())
+	{   
 		GameEngine->refresh();
 	}
 
