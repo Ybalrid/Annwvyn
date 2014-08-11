@@ -315,20 +315,20 @@ void AnnEngine::setPhysicBodyLinearSpeed(Ogre::Vector3 V)
 }
 
 //loading ressources
-void AnnEngine::loadZip(const char path[])
+void AnnEngine::loadZip(const char path[], const char resourceGroupName[])
 {
     log("Loading resources from Zip archive :");
     log(path, false);
     if(readyForLoadingRessources)
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path,"Zip");
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path,"Zip", resourceGroupName);
 }
 
-void AnnEngine::loadDir(const char path[])
+void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
 {
     log("Loading resources from Filesystem directory :");
     log(path, false);
     if(readyForLoadingRessources)
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path,"FileSystem");
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path,"FileSystem", resourceGroupName);
 }
 
 void AnnEngine::loadResFile(const char path[])
@@ -355,7 +355,7 @@ void AnnEngine::loadResFile(const char path[])
     }
 }
 
-void AnnEngine::initRessources()
+void AnnEngine::initResources()
 {
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
     log("Resources initialized");
