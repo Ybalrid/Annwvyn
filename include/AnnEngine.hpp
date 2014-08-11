@@ -51,11 +51,17 @@ namespace Annwvyn
             Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
 
             ///Load data to the ressource group manager
-            void loadZip(const char path[]);
-            void loadDir(const char path[]);
+            void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT");
+            void loadDir(const char path[], const char resourceGroupNmame[] = "ANNWVYN_DEFAULT");
             void loadResFile(const char path[]);
-            ///Init ressources groups
-            void initRessources();
+            ///Init All ressources groups
+            void initResources();
+
+			///Deprecated: spelling problem here. I'm French
+			void initRessources(){initResources();}
+
+			///Init a resource group
+			void initAResourceGroup(std::string resourceGroup);
 
             ///Init OgreOculus stuff
             void oculusInit();
@@ -70,7 +76,6 @@ namespace Annwvyn
                     Ogre::Quaternion HeadOrientation = Ogre::Quaternion(1,0,0,0),
                     btCollisionShape* Shape = NULL,
                     btRigidBody* Body = NULL);
-
 
             void initPlayerPhysics();
             ///Update player location/orientation from the bullet body
