@@ -360,6 +360,8 @@ void AnnGameObject::addTime(float offset)
 {
     if(!animIsSetted || !animIsPlaying)
         return;
+
+    std::cout << "Time offset added : " << offset << std::endl;
     m_anim->addTime(offset);
 }
 

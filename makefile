@@ -6,9 +6,9 @@ SYSARCH       = x86_64
 endif
 
 
-CFLAGS = -g -Wall
-LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/  -lovr -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system 
-IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/
+CFLAGS =
+LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/  -lovr -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system  -lXrandr -lXxf86vm -lGL 
+IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include -I../OculusSDK/LibOVR/Src  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ -I/usr/include/GL
 
 INSTALL_PREFIX = /usr/local
 
@@ -48,7 +48,7 @@ test: lib/libAnnwvyn.so
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
 
-lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o obj/OgreOculus.o obj/AnnMap.o obj/AnnJoystickController.o obj/Gorilla.o
+lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o obj/AnnJoystickController.o obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 obj/AnnEngine.o: src/AnnEngine.cpp include/AnnEngine.hpp
@@ -69,9 +69,6 @@ obj/AnnTriggerObject.o: src/AnnTriggerObject.cpp include/AnnTriggerObject.hpp
 obj/BtOgre.o: src/BtOgre.cpp include/BtOgreExtras.h  include/BtOgreGP.h  include/BtOgrePG.h 
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/BtOgre.cpp -o obj/BtOgre.o
 
-obj/OgreOculus.o: src/OgreOculus.cpp include/OgreOculus.h include/euler.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OgreOculus.cpp -o obj/OgreOculus.o
-
 obj/AnnMap.o: src/AnnMap.cpp include/AnnMap.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnMap.cpp -o obj/AnnMap.o
 
@@ -80,4 +77,11 @@ obj/AnnJoystickController.o: src/AnnJoystickController.cpp include/AnnJoystickCo
 
 obj/Gorilla.o: src/Gorilla.cpp include/Gorilla.h
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/Gorilla.cpp -o obj/Gorilla.o
+
+obj/OculusInterface.o: src/OculusInterface.cpp include/OculusInterface.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OculusInterface.cpp -o obj/OculusInterface.o 
+
+obj/OgreOculusRender.o: src/OgreOculusRender.cpp include/OgreOculusRender.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OgreOculusRender.cpp -o obj/OgreOculusRender.o
+
 endif
