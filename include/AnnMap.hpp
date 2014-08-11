@@ -1,19 +1,8 @@
 #ifndef ANN_MAP
 #define ANN_MAP
 
-#undef DLL
-//windows DLL
-#ifdef DLLDIR_EX
-#define DLL  __declspec(dllexport)   // export DLL information
-#else
-#define DLL  __declspec(dllimport)   // import DLL information
-#endif
 
-//bypass on linux
-#ifdef __gnu_linux__
-#undef DLL
-#define DLL
-#endif
+#include "systemMacro.h"
 
 #include <iostream>
 #include <fstream>
@@ -32,7 +21,8 @@ namespace Annwvyn
             ~AnnMap();
             void loadFile(const char mapFile[]);
             
-            AnnGameObjectVect getContent(){return content;}
+            AnnGameObjectVect getObjects(){return content;}
+			AnnLightVect getLights(){return contentLights;}
 
         private:
             void init(Annwvyn::AnnEngine* engine);
@@ -46,8 +36,6 @@ namespace Annwvyn
             
             AnnGameObject* tmpObject;
             AnnLightObject* tmpLight;
-
     };
 }
 #endif //ANN_MAP 
-

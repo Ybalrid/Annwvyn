@@ -1,18 +1,8 @@
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
-#undef DLL
-//windows DLL
-#ifdef DLLDIR_EX
-#define DLL  __declspec(dllexport)   /// export DLL information
-#else
-#define DLL  __declspec(dllimport)   /// import DLL information
-#endif
 
-//bypass on linux
-#ifdef __gnu_linux__
-#undef DLL
-#define DLL
-#endif
+
+#include "systemMacro.h"
 
 #include "OgreOculusRender.hpp"
 //C++ STD & STL
@@ -64,11 +54,17 @@ namespace Annwvyn
             //Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
 
             ///Load data to the ressource group manager
-            void loadZip(const char path[]);
-            void loadDir(const char path[]);
+            void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT");
+            void loadDir(const char path[], const char resourceGroupNmame[] = "ANNWVYN_DEFAULT");
             void loadResFile(const char path[]);
-            ///Init ressources groups
-            void initRessources();
+            ///Init All ressources groups
+            void initResources();
+
+			///Deprecated: spelling problem here. I'm French
+			void initRessources(){initResources();}
+
+			///Init a resource group
+			void initAResourceGroup(std::string resourceGroup);
 
             ///Init OgreOculus stuff
             void oculusInit();
@@ -83,7 +79,6 @@ namespace Annwvyn
                     Ogre::Quaternion HeadOrientation = Ogre::Quaternion(1,0,0,0),
                     btCollisionShape* Shape = NULL,
                     btRigidBody* Body = NULL);
-
 
             void initPlayerPhysics();
             ///Update player location/orientation from the bullet body
@@ -196,30 +191,45 @@ namespace Annwvyn
             ///Get offset between viewport and distortion centre
             float getCentreOffset();
 
+			///Reference orientation. Usefull if you are inside a vehicule for example
             void setReferenceQuaternion(Ogre::Quaternion q);
+
+			///Retrive the said reference quaternion
             Ogre::Quaternion getReferenceQuaternion();
 
+			///Attach a 3D mesh to the camera to act as player's body.
             void attachVisualBody(const std::string entityName, 
                     float z_offset = -0.0644f, 
                     bool flip = false, 
                     bool animated = false, 
                     Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
 
+			///Reset the Rift Orientation
             void resetOculusOrientation();
 
         private:
+			///Set up graphics
             void setUpOgre(const char title[]);
+			///Set up physics
             void setUpBullet();
+			///Set up inputs
             void setUpOIS();
+			///Set up timing
             void setUpTime();
+			///Set up 3D audio system
             void setUpAudio();
+			///Set up GUI/HUD rendering
             void setUpGUI();
 
+			///Create the bullet shape of the player's body
             void createVirtualBodyShape();
+			///Create a physical object from the calculated shape
             void createPlayerPhysicalVirtualBody();
+			///Add the players body to the Physics simulation
             void addPlayerPhysicalBodyToDynamicsWorld();
-
-            float updateTime(); ///return deltaT
+			
+			///Returns internal timing
+            float updateTime();
             
             ///Unable to continue, we have to cleanly cut the program before creating an error
             void emergency(void);            
