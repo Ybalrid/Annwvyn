@@ -1,13 +1,18 @@
 #include <glew.h>
+#ifndef _WIN32
 #include <glxew.h>
+#else
+#include <wglew.h>
+#endif
 #include <iostream>
 #include <OVR.h>
 #include <OVR_CAPI.h>
 #include <OVR_CAPI_GL.h>
 #include <CAPI/GL/CAPI_GL_Util.h>
 
+#ifndef _WIN32
 #include <unistd.h>
-
+#endif
 #include <Ogre.h>
 #include <OgreTexture.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
@@ -17,11 +22,13 @@
 
 #include "OculusInterface.hpp"
 
+#include "systemMacro.h"
+
 using namespace std;
 using namespace OVR;
 
 
-class OgreOculusRender
+class DLL OgreOculusRender
 {
     public:
         OgreOculusRender(std::string windowName = "OgreOculusRender");
@@ -87,6 +94,11 @@ class OgreOculusRender
         }
 
         void setCamerasNearClippingDistance(float distance);
+
+		void recenter()
+		{
+			ovrHmd_RecenterPose(oc->getHmd());
+		}
 
     private:
         enum 
