@@ -851,7 +851,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
 void AnnEngine::resetOculusOrientation()
 {
-    //oculus.resetOrientation();
+	oor->recenter();
 }
 
 

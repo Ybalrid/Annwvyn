@@ -5,10 +5,12 @@
 #include <OVR.h>
 #include <OVR_CAPI.h>
 
+#include "systemMacro.h"
+
 using namespace std;
 using namespace OVR;
 
-class OculusInterface
+class DLL OculusInterface
 {
     public:
     OculusInterface();
@@ -41,7 +43,7 @@ class OculusInterface
 
     ovrHmd hmd;
     ovrHmdDesc hmdDesc; 
-    ovrSensorState ss;
+	ovrTrackingState ss;
 };
 
 #endif

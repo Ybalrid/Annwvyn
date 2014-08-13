@@ -55,7 +55,7 @@ class MyTrigger : public Annwvyn::AnnTriggerObject
 
 
 //If you want to redirect cout & cerr to cout.txt and cerr.txt, uncomment the folowing line : 
-//#define OUTSTREAM_TO_FILE
+#define OUTSTREAM_TO_FILE
 
 AnnMain()
 {
@@ -77,7 +77,7 @@ AnnMain()
 
 
 	//create Annwvyn engine
-	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine;	
+	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
 
 	//load ressources
 	GameEngine->loadDir("media");
@@ -123,13 +123,13 @@ AnnMain()
 
 
 	//play background music
-	//GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
+	GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
 	
     //Parameters : name of resource loaded "mesh" file, Z axis offset between center and eyball center, and a boolean for aplying a 180° flip or not
     //You have to flip the character if you modeled it whith the head facing you on your 3D software (witch is the good way to do it anyway...)
 
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1 ,true);
-   
+   /*
     //////////////////////////// INIT GUI TEST 
     Ogre::SceneNode* camera = GameEngine->getCamera();
     Ogre::SceneNode* GUI_root = camera->createChildSceneNode();
@@ -148,10 +148,13 @@ AnnMain()
     testText->colour(Ogre::ColourValue::Black);
     testText->height(5);
     testText->_redraw();
-
+	*/
 	AnnJoystickController* ajc = new AnnJoystickController(GameEngine);
+	GameEngine->resetOculusOrientation();
     while(!GameEngine->requestStop())
 	{   
+		if(GameEngine->isKeyDown(OIS::KC_F12))
+			GameEngine->resetOculusOrientation();
 		GameEngine->refresh();
 	}
 

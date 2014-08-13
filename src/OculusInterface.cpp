@@ -1,4 +1,5 @@
 #include "OculusInterface.hpp"
+/*Some of the commented code is commented because I'm to lazy to reimplement it, and it's not used inside of Annwvyn so... #useless*/
 
 OculusInterface::OculusInterface()
 {
@@ -19,9 +20,8 @@ void OculusInterface::init()
         ovr_Initialize();
         hmd = ovrHmd_Create(0);
 
-        if(hmd)
-            ovrHmd_GetDesc(hmd, &hmdDesc);
-        else
+        if(!hmd)
+            //ovrHmd_GetDesc(hmd, &hmdDesc);
             throw 0;
     }
     catch(int e)
@@ -34,19 +34,21 @@ void OculusInterface::init()
         //TODO replace content of this exeption catch by creating a virtual debug HMD to run correctly
 
         hmd = ovrHmd_CreateDebug(ovrHmd_DK2);
-        ovrHmd_GetDesc(hmd, &hmdDesc);
+        //ovrHmd_GetDesc(hmd, &hmdDesc);
     }
 
-    customReport();
+    //customReport();
     
     try
     {
-        if(!ovrHmd_StartSensor(hmd,ovrSensorCap_Orientation |ovrSensorCap_YawCorrection |ovrSensorCap_Position,ovrSensorCap_Orientation)) //minial required 
+        if(!ovrHmd_ConfigureTracking(hmd, //Oculus HMD
+			ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
+			ovrTrackingCap_Orientation)) //minial required 
             throw string("Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that...");
     }
     catch (string const& e)
     {
-        cerr << e << endl;
+        /*cerr << e << endl;*/
         ovrHmd_Destroy(hmd);
         ovr_Shutdown();
         abort();
@@ -64,34 +66,38 @@ void OculusInterface::shutdown()
 
 void OculusInterface::customReport()
 {
-    cout << endl << "Manual Information access :" << endl;
+   /* cout << endl << "Manual Information access :" << endl;
     cout << "Product name : " << hmdDesc.ProductName << endl
         << "Manufacturer : " << hmdDesc.Manufacturer << endl
         << "Sensor Capability bits : " << (hmdDesc.SensorCaps) << endl
         << "Distortion Capability bits" << (hmdDesc.DistortionCaps) << endl   
         << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h << endl 
         << "Type of HMD identifier : " << hmdDesc.Type << endl
-        << "HMD 2D virtual position : " << hmdDesc.WindowsPos.x << "x" << hmdDesc.WindowsPos.y << endl;
+        << "HMD 2D virtual position : " << hmdDesc.WindowsPos.x << "x" << hmdDesc.WindowsPos.y << endl;*/
 }
 
 void OculusInterface::update(double time)
 {
     if(!initialized) return;
     firstUpdated = true;
-    ss = ovrHmd_GetSensorState(hmd, time);
+    ss = ovrHmd_GetTrackingState(hmd, time);
 }
 
 OVR::Vector3f OculusInterface::getPosition()
 {
+	/*
     if(initialized && firstUpdated)
-        return OVR::Vector3f(ss.Predicted.Pose.Position);
+        return OVR::Vector3f(ss.HeadPose.ThePose.Orientation);*/
+	//TODO : get real data
     return OVR::Vector3f(0,0,0);
 }
 
 OVR::Quatf OculusInterface::getOrientation()
 {
+	/*
     if(initialized && firstUpdated)
-        return OVR::Quatf(ss.Predicted.Pose.Orientation);
+        return OVR::Quatf(ss.Predicted.Pose.Orientation);*/
+	//TODO : get real data
     return OVR::Quatf(1,0,0,0);
 }
 
