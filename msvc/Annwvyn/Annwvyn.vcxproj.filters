@@ -48,9 +48,6 @@
     <ClInclude Include="..\..\include\euler.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\OgreOculus.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnMap.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -61,6 +58,12 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Gorilla.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\OculusInterface.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\OgreOculusRender.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,9 +86,6 @@
     <ClCompile Include="..\..\src\BtOgre.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\OgreOculus.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnMap.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -93,6 +93,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Gorilla.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OculusInterface.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreOculusRender.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

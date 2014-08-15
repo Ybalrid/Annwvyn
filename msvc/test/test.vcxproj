@@ -74,7 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Annwvyn\include;..\..\..\AL\openal-soft-1.15.1\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft-1.15.1\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\boost;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Annwvyn\include;..\..\..\AL\openal-soft-1.15.1\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft-1.15.1\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\boost;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -82,11 +82,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\Annwvyn\lib;..\..\..\AL\openal-soft-1.15.1\build\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\lib;..\..\..\OculusSDK\LibOVR\Lib\Win32;..\..\..\OgreSDK\lib\Release\opt;..\..\..\OgreSDK\lib\Release;..\..\..\OgreSDK\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Annwvyn\lib;..\..\..\AL\openal-soft-1.15.1\build\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\lib;..\..\..\OculusSDK\LibOVR\Lib\Win32\VS2012;..\..\..\OgreSDK\lib\Release\opt;..\..\..\OgreSDK\lib\Release;..\..\..\OgreSDK\boost\lib;..\..\..\glew\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <PreventDllBinding>false</PreventDllBinding>
-      <AdditionalDependencies>Annwvyn.lib;OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;OpenAL32.lib;libsndfile-1.lib;libboost_chrono-vc110-mt-1_55.lib;libboost_system-vc110-mt-1_55.lib;libboost_date_time-vc110-mt-1_55.lib;libboost_thread-vc110-mt-1_55.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Annwvyn.lib;ws2_32.lib;OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;OpenAL32.lib;libsndfile-1.lib;libboost_chrono-vc110-mt-1_55.lib;libboost_system-vc110-mt-1_55.lib;libboost_date_time-vc110-mt-1_55.lib;libboost_thread-vc110-mt-1_55.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
