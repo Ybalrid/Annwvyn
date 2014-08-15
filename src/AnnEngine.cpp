@@ -6,15 +6,14 @@ AnnEngine::AnnEngine(const char title[])
 {
     m_Camera = NULL;
 
-    log("Annwvyn Game Engine - Step into the Other World",false);
-    log("Desinged for Virtual Reality",false);
+   
 
     //block ressources loading for now
     readyForLoadingRessources = false;
 
     //This structure handle player's body parameters
     m_bodyParams = new bodyParams;
-    log("Virtual body declared");
+    
 
     //here we set all the defaults parameters for the body.
     initBodyParams(m_bodyParams);
@@ -36,8 +35,9 @@ AnnEngine::AnnEngine(const char title[])
     VisualBodyAnchor = NULL;
     //VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 	refVisualBody = Ogre::Quaternion::IDENTITY;
-    
-    log("Engine ready");
+    log("Annwvyn Game Engine - Step into the Other World",false);
+    log("Desinged for Virtual Reality",false);
+
 }
 
 
@@ -71,9 +71,12 @@ AnnEngine::~AnnEngine()
 
 void AnnEngine::log(std::string message, bool flag)
 {
-    if(flag)
-        std::cerr << "Annwvyn - ";
-    std::cerr << message << std::endl;
+
+  Ogre::String messageForLog;
+  if(flag)
+	  messageForLog += "Annwvyn - ";
+  messageForLog += message;
+  Ogre::LogManager::getSingleton().logMessage(messageForLog);
 }
 
 void AnnEngine::emergency(void)
@@ -86,29 +89,6 @@ void AnnEngine::emergency(void)
 ///////////// Graphics
 void AnnEngine::setUpOgre(const char title[])
 {
-    log("Setting up Ogre");
-/*
-    //Get the scene root : 
-    try
-    {
-        m_Root = askSetUpOgre();
-
-        log("Create window");
-        if((m_Window = m_Root->initialise(true,title)) == NULL)
-            throw std::string("Cannot create window");
-    }
-    catch (std::string const& e)
-    {
-        std::cerr << "Exeption : " << e << std::endl;
-        emergency();
-    }
-
-    log("Create Ogre OctreeSceneManager");
-    //Get the scene manager from the root
-    m_SceneManager = m_Root->createSceneManager("OctreeSceneManager");
-    m_Window->reposition(0,0);
-    */
-    
     oor = new OgreOculusRender(title);
     oor->initLibraries();
     oor->getOgreConfig();
@@ -208,18 +188,6 @@ void AnnEngine::setUpGUI()
 {
     return;
 }
-
-/*
-Ogre::Root* AnnEngine::askSetUpOgre(Ogre::Root* root)
-{
-    
-    //Restore configuration file
-    if(!root->restoreConfig()) //if you can't restore :
-        //Show configuration window
-        if(!root->showConfigDialog())
-            throw std::string("Cannot get graphical configuration");
-    return root;
-}*/
 
 //TODO : create a class to handle VirtualBody ?
 //see the .hpp file for the defaults values
@@ -348,61 +316,25 @@ void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
 }
 
 void AnnEngine::loadResFile(const char path[])
-{/*
-    //Code extracted form the Ogre Wiki
-    Ogre::String res= path;
-    Ogre::ConfigFile cf;
-    cf.load(res);
-    Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
-
-    Ogre::String secName, typeName, archName;
-    while (seci.hasMoreElements())
-    {
-        secName = seci.peekNextKey();
-        Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
-        Ogre::ConfigFile::SettingsMultiMap::iterator i;
-        for (i = settings->begin(); i != settings->end(); ++i)
-        {
-            typeName = i->first;
-            archName = i->second;
-            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-                    archName, typeName, secName);
-        }
-    }*/
-
+{
     oor->loadReseourceFile(path);
 }
 
 void AnnEngine::initResources()
 {
-
-    //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
     oor->initAllResources();
     log("Resources initialized");
 }
 
 //initalize oculus rendering
 void AnnEngine::oculusInit()
-{
-    /*log("Initialize Oculus system");
-    oculus.setupOculus();
-
-    log("Configuring Ogre Rendering from Oculus system");
-
-    oculus.setupOgre(m_SceneManager,m_Window);
-    log("Creating camera");
-	
-	oculus.setNearClippingDistance(5); //Set near clipping distance. Camera is intended to be inside the head of an humanoid 3D Model.
-
-    m_Camera = oculus.getCameraNode();*/
-    
+{   
     oor->initOculus();
 
     m_Camera = oor->getCameraInformationNode();
 
     m_Camera->setPosition(m_bodyParams->Position + 
             Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
-
 }
 
 
@@ -435,6 +367,7 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
     }
     catch (std::string const& e)
     {
+		log(e,false);
         delete obj;
         return NULL;
     }
@@ -654,7 +587,7 @@ bool AnnEngine::collisionWithGround()
     if(m_Ground == NULL || m_bodyParams == NULL || m_bodyParams->Body == NULL)
         return false;
     
-    //Getting rid of differences of types. There is polymorphism we don't care off, we are comparing memory address here !
+    //Getting rid of differences of types. There is polymorphism we don't care of, we are comparing memory addresses here!
 
     void* player = (void*) m_bodyParams->Body;
     void* ground = (void*) m_Ground->getBody();
@@ -864,7 +797,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
     } 
     catch (int e) 
     { 
-        log("Plese don't try to identify a NULL node.");
+        log("Plese do not try to identify a NULL node.");
         return NULL;
     }
     
