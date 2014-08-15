@@ -1,7 +1,7 @@
 Annwvyn
 =======
 
-ONLY WORKS ON LINUX! PLEASE USE THE PATCHED OculusSDK YOU CAN FOUND HERE http://github.com/Ybalrid/OculusSDK 
+**ONLY WORKS ON WINDOWS (gui branch may still works on linux with SDK 0.2.5c)**
 
 Annwvyn Engine is a simple game engine built upon free and open source technologies to easily create applications and games using the Oculus Rift Headset.
 
