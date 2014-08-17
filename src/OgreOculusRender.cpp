@@ -22,6 +22,7 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	this->lastOculusPosition = cameraPosition;
 	this->lastOculusOrientation = cameraOrientation;
 	this->updateTime = 0;
+	fullscreen = true;
 }
 OgreOculusRender::~OgreOculusRender()
 {
