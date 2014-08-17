@@ -19,7 +19,6 @@
 //OgreOculus by kojack
 //#include "OgreOculus.h"
 
-
 //btOgre
 #include "BtOgrePG.h"
 #include "BtOgreGP.h"
@@ -34,8 +33,6 @@
 #ifdef __gnu_linux__
 #include <unistd.h>
 #endif
-
-
 
 namespace Annwvyn
 {
@@ -67,7 +64,7 @@ namespace Annwvyn
 			void initAResourceGroup(std::string resourceGroup);
 
             ///Init OgreOculus stuff
-            void oculusInit();
+            void oculusInit(bool fullscreen = true);
 
             ///Init the BodyParams variable
             static void initBodyParams(Annwvyn::bodyParams* bodyP,

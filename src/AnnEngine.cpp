@@ -327,9 +327,9 @@ void AnnEngine::initResources()
 }
 
 //initalize oculus rendering
-void AnnEngine::oculusInit()
+void AnnEngine::oculusInit(bool fullscreen)
 {   
-    oor->initOculus();
+    oor->initOculus(fullscreen);
 
     m_Camera = oor->getCameraInformationNode();
 

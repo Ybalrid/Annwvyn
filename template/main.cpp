@@ -10,10 +10,9 @@ AnnMain()
 {
 	AnnEngine* GameEngine = new AnnEngine("My Game");
 
-	GameEngine->loadZip("media/OgreOculus.zip");
 	GameEngine->initRessources();
 
-	GameEngine->oculusInit();
+	GameEngine->oculusInit(true);
 
 	while(!GameEngine->requestStop())
 	{
