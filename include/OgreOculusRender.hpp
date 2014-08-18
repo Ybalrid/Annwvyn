@@ -1,6 +1,6 @@
 #include <glew.h>
 #ifndef _WIN32 //NOT ON WINDOWS (Assuming Linux. Usinig X Window System as display server
-#include <glxew.h> //Need GLX glew
+#include <glxew.h> //Need GLX glew on X window system
 #else
 #include <wglew.h> //Need wgelw
 #endif
