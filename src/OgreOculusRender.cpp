@@ -100,7 +100,7 @@ void OgreOculusRender::createWindow()
 	//Initialize a window ans specify that creation is manual
 	window = root->initialise(false, name);
 	//Create a non-fullscreen window using custom parameters
-	if(FULLSCREEN)
+	if(fullscreen)
 	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, true,&misc);
 	else
 	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, false, &misc);
@@ -174,7 +174,7 @@ void OgreOculusRender::initOculus()
 
 	//Get window
 	HWND hwnd;
-	window->getCustomAttribute("HWND",&hwnd); //potential pointer problem here
+	window->getCustomAttribute("WINDOW",&hwnd); //potential pointer problem here
 	cfg.OGL.Window = hwnd;
 
 	//Get GL Context
@@ -205,7 +205,9 @@ void OgreOculusRender::initOculus()
 	// Direct rendering from a window handle to the Hmd.
 	// Not required if ovrHmdCap_ExtendDesktop flag is set.
 #ifdef _WIN32
-	ovrHmd_AttachToWindow(oc->getHmd(), hwnd, NULL, NULL);
+	HWND directHWND;
+	window->getCustomAttribute("WINDOW", &directHWND);
+	ovrHmd_AttachToWindow(oc->getHmd(), directHWND, NULL, NULL);
 #endif
 	EyeTexture[left].OGL.Header.API = ovrRenderAPI_OpenGL;
 	EyeTexture[left].OGL.Header.TextureSize = texSizeL;
