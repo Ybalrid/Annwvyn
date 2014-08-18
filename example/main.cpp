@@ -113,7 +113,7 @@ AnnMain()
     
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(false);
+	GameEngine->setDebugPhysicState(true);
 
 
 	//setUp Oculus system
