@@ -4,6 +4,7 @@
 
 #include "systemMacro.h"
 
+#include <string>
 
 ///Ogre3D
 #include <Ogre.h>
@@ -200,6 +201,9 @@ namespace Annwvyn
 			float* time;
 
 			Ogre::Vector3 visualLinearSpeed;
+
+			std::string name;
+
         public:
             ///Executed after object initialization
             virtual void postInit(){return;}

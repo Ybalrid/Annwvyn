@@ -204,6 +204,15 @@ namespace Annwvyn
 			///Reset the Rift Orientation
             void resetOculusOrientation();
 
+			
+			OgrePose getPoseFromOOR()
+			{
+				if(oor)
+					return oor->returnPose;
+				OgrePose p; return p;
+			}
+
+
         private:
 			///Set up graphics
             void setUpOgre(const char title[]);
@@ -229,7 +238,8 @@ namespace Annwvyn
             float updateTime();
             
             ///Unable to continue, we have to cleanly cut the program before creating an error
-            void emergency(void);            
+            void emergency(void);
+
         private:
             Annwvyn::bodyParams* m_bodyParams;
 

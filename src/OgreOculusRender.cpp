@@ -1,7 +1,5 @@
 #include "OgreOculusRender.hpp"
 
-#define FULLSCREEN 0
-
 OgreOculusRender::OgreOculusRender(std::string winName)
 {
 	name = winName;
@@ -14,6 +12,7 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 		rtts[i] = NULL;
 		vpts[i] = NULL;
 	}
+	
 	oc = NULL;
 	CameraNode = NULL;
 	cameraPosition = Ogre::Vector3(0,0,10);
@@ -24,10 +23,12 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	this->updateTime = 0;
 	fullscreen = true;
 }
+
 OgreOculusRender::~OgreOculusRender()
 {
 	delete oc;
 }
+
 void OgreOculusRender::loadReseourceFile(const char path[])
 {
 	/*from ogre wiki : load the given resource file*/
@@ -49,14 +50,17 @@ void OgreOculusRender::loadReseourceFile(const char path[])
 		}
 	}
 }
+
 void OgreOculusRender::initAllResources()
 {
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
+
 void OgreOculusRender::initLibraries()
 {
 	//Create the ogre root
 	root = new Ogre::Root("plugins.cfg","ogre.cfg","Ogre.log");
+	
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	oc = new OculusInterface();
 }
@@ -64,20 +68,29 @@ void OgreOculusRender::initialize()
 {
 	//init libraries;
 	initLibraries();
+	
+	//Mandatory. If thous pointers are unitilalized, program have to stop here.
 	assert(root != NULL && oc != NULL);
+	
 	//Get configuration via ogre.cfg OR via the config dialog.
 	getOgreConfig();
+	
 	//Create the render window with the given sice from the Oculus
 	createWindow();
+	
 	//Load resources from the resources.cfg file
 	loadReseourceFile("resources.cfg");
 	initAllResources();
+	
 	//Create scene manager
 	initScene();
+	
 	//Create cameras and handeling nodes
 	initCameras();
+	
 	//Create rtts and viewports on them
 	initRttRendering();
+	
 	//Init the oculus rendering
 	initOculus();
 }
@@ -133,27 +146,32 @@ void OgreOculusRender::initScene()
 }
 void OgreOculusRender::initRttRendering()
 {
-	//get texture sice from ovr with default fov
+	//get texture sice from ovr with default FOV
 	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->DefaultEyeFov[0], 1.0f);
 	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->DefaultEyeFov[1], 1.0f);
+
 	//Create texture
 	Ogre::TexturePtr rtt_textureL = Ogre::TextureManager::getSingleton().createManual("RttTexL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeL.w, texSizeL.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
 	Ogre::TexturePtr rtt_textureR = Ogre::TextureManager::getSingleton().createManual("RttTexR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeR.w, texSizeR.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
+
 	//Create Render Texture
 	Ogre::RenderTexture* rttEyeLeft = rtt_textureL->getBuffer(0,0)->getRenderTarget();
 	Ogre::RenderTexture* rttEyeRight = rtt_textureR->getBuffer(0,0)->getRenderTarget();
+
 	//Create and bind a viewport to the texture
 	Ogre::Viewport* vptl = rttEyeLeft->addViewport(cams[left]);
 	vptl->setBackgroundColour(Ogre::ColourValue(0.3f,0.3f,0.9f));
 	Ogre::Viewport* vptr = rttEyeRight->addViewport(cams[right]);
 	vptr->setBackgroundColour(Ogre::ColourValue(0.3f,0.3f,0.9f));
+
 	//Store viewport pointer
 	vpts[left] = vptl;
 	vpts[right] = vptr;
+
 	//Pupulate textures with an initial render
 	rttEyeLeft->update();
 	rttEyeRight->update();
-	//rttEyeLeft->writeContentsToFile("debug_init_cam_left.png");
+
 	//Store rtt textures pointer
 	rtts[left] = rttEyeLeft;
 	rtts[right] = rttEyeRight;
@@ -169,8 +187,8 @@ void OgreOculusRender::initOculus()
 	cfg.OGL.Header.Multisample = 1;
 	cfg.OGL.Header.RTSize = oc->getHmd()->Resolution;
 
-
-#ifdef _WIN32
+	//OpenGL initialization differ between Windows and Linux
+#ifdef _WIN32 //If windows
 
 	//Get window
 	HWND hwnd;
@@ -202,13 +220,19 @@ void OgreOculusRender::initOculus()
 		EyeFov,
 		EyeRenderDesc))
 		abort();
+
 	// Direct rendering from a window handle to the Hmd.
 	// Not required if ovrHmdCap_ExtendDesktop flag is set.
 #ifdef _WIN32
 	HWND directHWND;
 	window->getCustomAttribute("WINDOW", &directHWND);
 	ovrHmd_AttachToWindow(oc->getHmd(), directHWND, NULL, NULL);
+#else
+	//Not currently available
 #endif
+
+	//Send texture data to OVR for rendering
+	//->left eye texture :
 	EyeTexture[left].OGL.Header.API = ovrRenderAPI_OpenGL;
 	EyeTexture[left].OGL.Header.TextureSize = texSizeL;
 	EyeTexture[left].OGL.Header.RenderViewport.Pos.x = 0;
@@ -216,7 +240,9 @@ void OgreOculusRender::initOculus()
 	EyeTexture[left].OGL.Header.RenderViewport.Size = texSizeL;
 	Ogre::GLTexture* gl_rtt_l = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTexL").get());
 	EyeTexture[left].OGL.TexId = gl_rtt_l->getGLID();
-	EyeTexture[right] = EyeTexture[0];
+
+	//right eye texture :
+	EyeTexture[right] = EyeTexture[left]; //Basic configuration is shared.
 	EyeTexture[right].OGL.Header.TextureSize = texSizeR;
 	EyeTexture[right].OGL.Header.RenderViewport.Size = texSizeR;
 	Ogre::GLTexture* gl_rtt_r = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTexR").get());
@@ -299,4 +325,10 @@ void OgreOculusRender::RenderOneFrame()
 	//Tell Ogre that frame ended
 
 	root->_fireFrameEnded();
+
+	returnPose.position = cameraPosition + Ogre::Vector3(headPose[0].Position.x,headPose[0].Position.y,headPose[0].Position.z);
+	returnPose.orientation = cameraOrientation * Ogre::Quaternion(headPose[0].Orientation.w,
+		headPose[0].Orientation.x,
+		headPose[0].Orientation.y,
+		headPose[0].Orientation.z);
 }

@@ -65,14 +65,15 @@ void AnnJoystickController::update()
     //check if joystick exist
     if(!m_engine->getOISJoyStick()) return; //if no joystick, cut here
     
-    //update values from stick
+    //update values from sticks
     updateJoystickValues();
-    //update body speeds from values
+
+    //update body speeds from internal values
     updateVirtualBodyValues();
 }
 
 
-//Get the axis value. float between 0 and 1 (aproximatly) 
+//Get the axis value. float between -1 and 1 (aproximatly) 
 float AnnJoystickController::getAxisValue(int axisID)
 {
     return trimToFitDeadzone(static_cast<float>(m_engine->
@@ -115,11 +116,10 @@ void AnnJoystickController::updateVirtualBodyValues()
     float roll(virtualBody->Orientation.getRoll().valueRadians());
 
     //apply orientation
-    virtualBody->Orientation = Ogre::Euler(yaw,pitch,roll);
+    virtualBody->Orientation = Ogre::Euler(yaw, pitch, roll);
+
     //calculate and apply the speed vector "V"
-    m_engine->setPhysicBodyLinearSpeed(virtualBody->Orientation.toQuaternion()*Ogre::Vector3(side,Yvel,-forward));
-
-
+    m_engine->setPhysicBodyLinearSpeed(virtualBody->Orientation.toQuaternion()*Ogre::Vector3(side, Yvel, -forward));
 }
 
 //print stick value
@@ -210,6 +210,8 @@ void AnnJoystickController::loadConfigFile(const char path[])
 
 void AnnJoystickController::saveConfigFile(const char path[])
 {
+	//That's why I Love C++ streams : simplicity and clarity 
+
 	ofstream file(path);
 	if(!file.is_open())
 		return;

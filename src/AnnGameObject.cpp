@@ -24,6 +24,7 @@ AnnGameObject::AnnGameObject()
 
 AnnGameObject::~AnnGameObject()
 {
+	//Clean OpenAL desaloc
     alSourceStop(m_Source);
     alDeleteSources(1,&m_Source);
     alDeleteBuffers(1,&m_Buffer);
@@ -32,19 +33,22 @@ AnnGameObject::~AnnGameObject()
 
 void AnnGameObject::setAudioEngine(AnnAudioEngine* AudioEngine)
 {
+	///Get a pointer to the audio engine.
     m_AudioEngine = AudioEngine;
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
 {
+	//Load a sound file to the buffer (uncompress the file to the RAM)
     m_Buffer = m_AudioEngine->loadSndFile(path);
 
-
+	//create a source to the buffer
     alSourcei(m_Source, AL_BUFFER, m_Buffer);
 
     if(loop)
         alSourcei(m_Source, AL_LOOPING, AL_TRUE);
-    alSourcef(m_Source, AL_GAIN, volume);
+    
+	alSourcef(m_Source, AL_GAIN, volume);
 
     alSource3f(m_Source, AL_POSITION,
             m_node->getPosition().x,
@@ -110,6 +114,7 @@ void AnnGameObject::setPos(Ogre::Vector3 pos)
 
 void AnnGameObject::setOrientation(float w, float x, float y, float z)
 {
+	//beware : Ogre Quaternion convetion is WXYZ. Bullet use XYZW
     //Ogre3D
     if(m_node != NULL)
         m_node->setOrientation(w,x,y,z);
@@ -180,7 +185,7 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
     if(m_entity == NULL)
         return;
 
-    //init shap converter
+    //init shape converter
     BtOgre::StaticMeshToShapeConverter converter(m_entity);
 
     //create the correct shape
@@ -209,6 +214,7 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
 			m_Shape = converter.createSphere();
 			break;
         default:
+			//non valid;
             return;
     }
 
@@ -219,20 +225,22 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
     m_Shape->setLocalScaling(btVector3(scale.x,scale.y,scale.z));
 
     btVector3 inertia;
+
     if(mass != 0)
         m_Shape->calculateLocalInertia(mass, inertia);
     else
-        inertia = btVector3(0,0,0);
+        inertia = btVector3(0,0,0); //No influence. But mass zero objects are static
 
+	
     BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(m_node);
 
     //create rigidBody from shape
-    m_Body = new btRigidBody(mass,state,m_Shape,inertia);
+    m_Body = new btRigidBody(mass, state, m_Shape, inertia);
 
     if(m_Body != NULL)
         m_DynamicsWorld->addRigidBody(m_Body);
     else
-        return;
+        return; //Unable to create the physical representation
 
     bulletReady = true;
 }
@@ -254,7 +262,7 @@ btRigidBody* AnnGameObject::RigidBody()
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject)
 {
-    return Tools::Geometry::distance(this,otherObject);
+    return Tools::Geometry::distance(this, otherObject);
 }
 
 btRigidBody* AnnGameObject::getBody()
@@ -367,24 +375,21 @@ void AnnGameObject::addTime(float offset)
 
 void AnnGameObject::applyImpulse(Ogre::Vector3 force)
 {
-    m_Body->applyCentralImpulse(btVector3(force.x,force.y,force.z));
+    m_Body->applyCentralImpulse(btVector3(force.x, force.y, force.z));
 }
 
 void AnnGameObject::applyForce(Ogre::Vector3 force)
 {
-   m_Body->applyCentralForce(btVector3(force.x,force.y,force.z));
+   m_Body->applyCentralForce(btVector3(force.x, force.y, force.z));
 }
 
 void AnnGameObject::setLinearSpeed(Ogre::Vector3 v)
 {
 	if(bulletReady)
-		m_Body->setLinearVelocity(btVector3(v.x,v.y,v.z));
-	/*else
-		visualLinearSpeed = v;*/
+		m_Body->setLinearVelocity(btVector3(v.x, v.y, v.z));
 }
 
 void AnnGameObject::setTimePtr(float* ptr)
 {
 	time = ptr;
 }
-
