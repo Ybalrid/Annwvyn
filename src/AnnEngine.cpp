@@ -94,7 +94,7 @@ void AnnEngine::setUpOgre(const char title[])
     oor->getOgreConfig();
     oor->createWindow();
     oor->initScene();
-    oor->setCamerasNearClippingDistance(1);
+    oor->setCamerasNearClippingDistance(0.1);
     oor->initCameras();
     oor->initRttRendering();
     m_SceneManager = oor->getSceneManager();
@@ -797,6 +797,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
     } 
     catch (int e) 
     { 
+		if(e==0)
         log("Plese do not try to identify a NULL node.");
         return NULL;
     }

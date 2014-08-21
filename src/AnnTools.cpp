@@ -25,17 +25,16 @@ float Annwvyn::Tools::Geometry::distance(Annwvyn::AnnGameObject* a, Annwvyn::Ann
 
 float Annwvyn::Tools::Geometry::distance(Ogre::Vector3 a, Ogre::Vector3 b)
 {
-	Vector3 vector = b-a;
+	//get a vector representing translation between the two objects
+	Vector3 vector = b-a; 
+	
+	//store math result :
 	float dist;
-
+	
+	//do dist = x² + y² + z²
 	dist = vector.x * vector.x;
 	dist += vector.y * vector.y;
 	dist += vector.z * vector.z;
-
-
-/*    std::cerr << "Distance between " 
-        << a << " and " << b <<  "is" << sqrt(dist) 
-        << std::endl;*/
 	
-    return sqrt(dist);
+    return sqrt(dist); 
 }

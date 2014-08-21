@@ -16,14 +16,19 @@
    #define DLL  __declspec(dllimport)   // import DLL information
 #endif
 //Bypass on GNU/Linux : 
-#ifdef __gnu_linux__ //All that stuff is handeled by the makefile and the way g++ is called. DLL have to be empty but declared.
+#ifdef __gnu_linux__ //All that stuff is handeled by the makefile and the way g++ is called. DLL macros have to be empty but declared.
 	#undef DLL	
 	#define DLL
 #endif
 //--------------------------------------------------------------------//
 
 //--------------------Application Entrypoint definition--------------//
-//Main definition : 
+//Main definition :
+/*
+ *	For more simplicity, Program start by a "AnnMain" function at the library user
+ *	side. This allow to select proper entry proint for the aplication, and maybe 
+ *	add pre-starting treatements here.
+ */
 #undef AnnMain
 
 #ifdef _WIN32
