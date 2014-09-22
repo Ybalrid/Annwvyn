@@ -445,6 +445,13 @@ void AnnEngine::refresh()
     //	OIS Events 
     captureEvents();
 
+	//Dissmiss health and safety warning
+	if(!oor->IsHsDissmissed())
+		for(int kc = 0x00; kc <= 0xED; kc++)
+			if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc)))
+				oor->dissmissHS();
+
+
     if(activateWASD && m_bodyParams->Body != NULL)//classic fps control
     {
         //TODO extract this piece of code and make it accesible with a method !!

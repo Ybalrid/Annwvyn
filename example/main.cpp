@@ -109,11 +109,11 @@ AnnMain()
 	//Add light
 	Annwvyn::AnnLightObject* Light = GameEngine->addLight();	
 	GameEngine->setAmbiantLight(Ogre::ColourValue(.1f,.1f,.1f));
-	Light->setPosition(0,3,10);
-    
+    Light->setPosition(0,3,10);
+
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(true);
+	//GameEngine->setDebugPhysicState(true);
 
 
 	//setUp Oculus system
