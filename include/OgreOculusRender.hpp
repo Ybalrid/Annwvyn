@@ -102,13 +102,8 @@ class DLL OgreOculusRender
         void initRttRendering();
         
 		///Init the Rift rendering. Configure Oculus SDK to use the two RTT textures created.
-        void initOculus();
 		///Overload of initOculus(); Permit to specify the Full Screen mode (or not)
-		void initOculus(bool fullscreenState)
-		{
-			setFullScreen(fullscreenState);
-			initOculus();
-		}
+		void initOculus(bool fullscreenState = true);
 
 		///Set fullscreen. Value only used at window creation
 		void setFullScreen(bool fs = true)
@@ -176,6 +171,13 @@ class DLL OgreOculusRender
 			ovrHmd_RecenterPose(oc->getHmd());
 		}
 
+		bool IsHsDissmissed()
+		{
+			return hsDissmissed;
+		}
+
+		void dissmissHS();
+
     private:
         enum 
         {
@@ -236,6 +238,8 @@ class DLL OgreOculusRender
         Ogre::Vector3 cameraPosition;
 		///Orientation of the camera.
         Ogre::Quaternion cameraOrientation;
+
+		bool hsDissmissed;
 	
 
     public:

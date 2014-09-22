@@ -6,6 +6,7 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	root = NULL;
 	window = NULL;
 	smgr = NULL;
+	
 	for(size_t i(0); i < 2; i++)
 	{
 		cams[i] = NULL;
@@ -22,6 +23,7 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	this->lastOculusOrientation = cameraOrientation;
 	this->updateTime = 0;
 	fullscreen = true;
+	hsDissmissed = false;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -64,6 +66,7 @@ void OgreOculusRender::initLibraries()
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	oc = new OculusInterface();
 }
+
 void OgreOculusRender::initialize()
 {
 	//init libraries;
@@ -94,6 +97,7 @@ void OgreOculusRender::initialize()
 	//Init the oculus rendering
 	initOculus();
 }
+
 void OgreOculusRender::getOgreConfig()
 {
 	assert(root != NULL);
@@ -101,6 +105,7 @@ void OgreOculusRender::getOgreConfig()
 		if(!root->showConfigDialog())
 			abort();
 }
+
 void OgreOculusRender::createWindow()
 {
 	assert(root != NULL && oc != NULL);
@@ -114,12 +119,13 @@ void OgreOculusRender::createWindow()
 	window = root->initialise(false, name);
 	//Create a non-fullscreen window using custom parameters
 	if(fullscreen)
-	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, true,&misc);
+		window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, true,&misc);
 	else
-	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, false, &misc);
+		window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, false, &misc);
 	//Put the window at the place given by the SDK
 	window->reposition(oc->getHmd()->WindowsPos.x,oc->getHmd()->WindowsPos.y);
 }
+
 void OgreOculusRender::initCameras()
 {
 	assert(smgr != NULL);
@@ -135,15 +141,18 @@ void OgreOculusRender::initCameras()
 	//do NOT attach camera to this node...
 	CameraNode = smgr->getRootSceneNode()->createChildSceneNode();
 }
+
 void OgreOculusRender::setCamerasNearClippingDistance(float distance)
 {
 	nearClippingDistance = distance;
 }
+
 void OgreOculusRender::initScene()
 {
 	assert(root != NULL);
 	smgr = root->createSceneManager("OctreeSceneManager","OSM_SMGR");
 }
+
 void OgreOculusRender::initRttRendering()
 {
 	//get texture sice from ovr with default FOV
@@ -176,8 +185,11 @@ void OgreOculusRender::initRttRendering()
 	rtts[left] = rttEyeLeft;
 	rtts[right] = rttEyeRight;
 }
-void OgreOculusRender::initOculus()
+
+void OgreOculusRender::initOculus(bool fullscreenState)
 {
+	setFullScreen(fullscreenState);
+
 	//Get FOV
 	EyeFov[left] = oc->getHmd()->DefaultEyeFov[left];
 	EyeFov[right] = oc->getHmd()->DefaultEyeFov[right];
@@ -248,6 +260,7 @@ void OgreOculusRender::initOculus()
 	Ogre::GLTexture* gl_rtt_r = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTexR").get());
 	EyeTexture[right].OGL.TexId = gl_rtt_r->getGLID();
 }
+
 void OgreOculusRender::RenderOneFrame()
 {
 	//get some info
@@ -308,7 +321,8 @@ void OgreOculusRender::RenderOneFrame()
 			EyeRenderDesc[eye].ViewAdjust.x,
 			EyeRenderDesc[eye].ViewAdjust.y,
 			EyeRenderDesc[eye].ViewAdjust.z)
-			+ Ogre::Vector3(headPose[eye].Position.x,headPose[eye].Position.y,headPose[eye].Position.z))
+			)
+			+ Ogre::Vector3(headPose[eye].Position.x,headPose[eye].Position.y,headPose[eye].Position.z)
 			)
 			);
 
@@ -316,6 +330,7 @@ void OgreOculusRender::RenderOneFrame()
 		rtts[eye]->update();
 
 	}
+	
 	//Ogre::Root::getSingleton().getRenderSystem()->_setRenderTarget(window);
 
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
@@ -331,4 +346,10 @@ void OgreOculusRender::RenderOneFrame()
 		headPose[0].Orientation.x,
 		headPose[0].Orientation.y,
 		headPose[0].Orientation.z);
+}
+
+void OgreOculusRender::dissmissHS()
+{
+	ovrHmd_DismissHSWDisplay(oc->getHmd());
+	hsDissmissed = true;
 }

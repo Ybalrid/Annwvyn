@@ -304,6 +304,8 @@ namespace Annwvyn
 
             ///Audio engine
             AnnAudioEngine* AudioEngine;
+
+			
     };
 }
 #endif ///ANN_ENGINE
