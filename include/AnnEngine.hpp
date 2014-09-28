@@ -211,7 +211,8 @@ namespace Annwvyn
 					return oor->returnPose;
 				OgrePose p; return p;
 			}
-
+		
+			void setNearClippingDistance(Ogre::Real setNearClippingDistance);
 
         private:
 			///Set up graphics

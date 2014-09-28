@@ -149,6 +149,9 @@ AnnMain()
     testText->height(5);
     testText->_redraw();
 	*/
+
+	GameEngine->setNearClippingDistance(0.20f);
+
 	AnnJoystickController* ajc = new AnnJoystickController(GameEngine);
 	GameEngine->resetOculusOrientation();
     while(!GameEngine->requestStop())
