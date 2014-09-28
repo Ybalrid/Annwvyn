@@ -94,7 +94,7 @@ void AnnEngine::setUpOgre(const char title[])
     oor->getOgreConfig();
     oor->createWindow();
     oor->initScene();
-    oor->setCamerasNearClippingDistance(0.1);
+    oor->setCamerasNearClippingDistance(0.1f);
     oor->initCameras();
     oor->initRttRendering();
     m_SceneManager = oor->getSceneManager();
@@ -906,3 +906,8 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
     m_SceneManager->setSkyDome(activate,materialName,curvature,tiling);
 }
 
+void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
+{
+	if(oor)
+		oor->setCamerasNearClippingDistance(nearClippingDistance);
+}
