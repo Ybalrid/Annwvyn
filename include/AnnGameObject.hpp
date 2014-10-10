@@ -149,7 +149,8 @@ namespace Annwvyn
 
             ///For engine : set node
             void setNode(Ogre::SceneNode* node);
-
+			
+			///Set the GameEngine pointer. 
 			void setEngine(AnnEngine* e);
 
             ///For engine : set Entity

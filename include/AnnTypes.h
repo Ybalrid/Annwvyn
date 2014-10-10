@@ -8,9 +8,7 @@
 * \version 0.0.2
 */
 
-
 #include "systemMacro.h"
-
 
 #include <vector>
 
@@ -73,15 +71,6 @@ namespace Annwvyn
 			SR,		//Straff Right
 			JUMP,	//Jump
 			RUN		//Run
-		};
-
-		enum VR_options
-		{
-			IPD_More,	//Incrase IPD
-			IPD_Less,	//Decrase IPD
-			IPD_Reset,	//Reset IPD
-			HUD_FW,		//Move HUD Forward 
-			HUD_BW		//Move HUD Backward
 		};
 	}
 }

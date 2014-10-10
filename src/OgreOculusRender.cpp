@@ -6,14 +6,14 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	root = NULL;
 	window = NULL;
 	smgr = NULL;
-	
+
 	for(size_t i(0); i < 2; i++)
 	{
 		cams[i] = NULL;
 		rtts[i] = NULL;
 		vpts[i] = NULL;
 	}
-	
+
 	oc = NULL;
 	CameraNode = NULL;
 	cameraPosition = Ogre::Vector3(0,0,10);
@@ -62,7 +62,7 @@ void OgreOculusRender::initLibraries()
 {
 	//Create the ogre root
 	root = new Ogre::Root("plugins.cfg","ogre.cfg","Ogre.log");
-	
+
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	oc = new OculusInterface();
 }
@@ -71,29 +71,29 @@ void OgreOculusRender::initialize()
 {
 	//init libraries;
 	initLibraries();
-	
+
 	//Mandatory. If thous pointers are unitilalized, program have to stop here.
 	assert(root != NULL && oc != NULL);
-	
+
 	//Get configuration via ogre.cfg OR via the config dialog.
 	getOgreConfig();
-	
+
 	//Create the render window with the given sice from the Oculus
 	createWindow();
-	
+
 	//Load resources from the resources.cfg file
 	loadReseourceFile("resources.cfg");
 	initAllResources();
-	
+
 	//Create scene manager
 	initScene();
-	
+
 	//Create cameras and handeling nodes
 	initCameras();
-	
+
 	//Create rtts and viewports on them
 	initRttRendering();
-	
+
 	//Init the oculus rendering
 	initOculus();
 }
@@ -110,18 +110,22 @@ void OgreOculusRender::createWindow()
 {
 	assert(root != NULL && oc != NULL);
 	Ogre::NameValuePairList misc;
+
 	//This one only works on windows : "Borderless = no decoration"
 	misc["border"]="none";
 	misc["vsync"]="true";
 	misc["displayFrequency"]="75";
 	misc["monitorIndex"]="1";
+
 	//Initialize a window ans specify that creation is manual
 	window = root->initialise(false, name);
+
 	//Create a non-fullscreen window using custom parameters
 	if(fullscreen)
 		window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, true,&misc);
 	else
 		window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, false, &misc);
+
 	//Put the window at the place given by the SDK
 	window->reposition(oc->getHmd()->WindowsPos.x,oc->getHmd()->WindowsPos.y);
 }
@@ -138,6 +142,7 @@ void OgreOculusRender::initCameras()
 		cams[i]->setNearClipDistance(1);
 		cams[i]->setFarClipDistance(1000);
 	}
+
 	//do NOT attach camera to this node...
 	CameraNode = smgr->getRootSceneNode()->createChildSceneNode();
 }
@@ -193,6 +198,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	//Get FOV
 	EyeFov[left] = oc->getHmd()->DefaultEyeFov[left];
 	EyeFov[right] = oc->getHmd()->DefaultEyeFov[right];
+
 	//Set OpenGL configuration
 	ovrGLConfig cfg;
 	cfg.OGL.Header.API = ovrRenderAPI_OpenGL;
@@ -219,6 +225,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	window->getCustomAttribute("WINDOW", &wID);
 	std::cout << "Wid : " << wID << endl;
 	cfg.OGL.Win = wID;
+
 	//Get X Display
 	Display* display;
 	window->getCustomAttribute("DISPLAY",&display);
@@ -315,22 +322,23 @@ void OgreOculusRender::RenderOneFrame()
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(camOrient.w,camOrient.x,camOrient.y,camOrient.z));
 
 		//Set Position
-		cams[eye]->setPosition( cameraPosition +
-			(cams[eye]->getOrientation() *(
-			-Ogre::Vector3(
-			EyeRenderDesc[eye].ViewAdjust.x,
-			EyeRenderDesc[eye].ViewAdjust.y,
+		cams[eye]->setPosition
+			(cameraPosition 
+			+ 
+			(cams[eye]->getOrientation() * - Ogre::Vector3(
+			EyeRenderDesc[eye].ViewAdjust.x, 
+			EyeRenderDesc[eye].ViewAdjust.y, 
 			EyeRenderDesc[eye].ViewAdjust.z)
-			)
-			+ Ogre::Vector3(headPose[eye].Position.x,headPose[eye].Position.y,headPose[eye].Position.z)
-			)
-			);
+
+			+ cams[eye]->getOrientation() * Ogre::Vector3(
+			headPose[eye].Position.x,
+			headPose[eye].Position.y,
+			headPose[eye].Position.z)));
 
 		root->_fireFrameRenderingQueued();
 		rtts[eye]->update();
-
 	}
-	
+
 	//Ogre::Root::getSingleton().getRenderSystem()->_setRenderTarget(window);
 
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
@@ -341,8 +349,14 @@ void OgreOculusRender::RenderOneFrame()
 
 	root->_fireFrameEnded();
 
-	returnPose.position = cameraPosition + Ogre::Vector3(headPose[0].Position.x,headPose[0].Position.y,headPose[0].Position.z);
-	returnPose.orientation = cameraOrientation * Ogre::Quaternion(headPose[0].Orientation.w,
+	returnPose.position = cameraPosition + 
+		Ogre::Vector3
+		(headPose[0].Position.x,
+		headPose[0].Position.y,
+		headPose[0].Position.z);
+	
+	returnPose.orientation = cameraOrientation * Ogre::Quaternion
+		(headPose[0].Orientation.w,
 		headPose[0].Orientation.x,
 		headPose[0].Orientation.y,
 		headPose[0].Orientation.z);
