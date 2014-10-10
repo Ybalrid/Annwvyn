@@ -23,17 +23,18 @@ namespace Annwvyn
 	public:
 		///class constuctor
 		AnnAudioEngine();
+
 		///class destructor
 		~AnnAudioEngine();
+
 		///init openal
-		
 		bool initOpenAL();
+
 		///shutdown and cleanup openal
 		void shutdownOpenAL();
 		
 		///load a sound file. return a sond buffer
 		ALuint loadSndFile(const std::string& Filename);
-		
 		
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
 		void playBGM(const std::string path, const float volume = 0.5f);
@@ -43,8 +44,8 @@ namespace Annwvyn
 		void updateListenerPos(Ogre::Vector3 pos);
 		
         ///For engine : update listener Oirentation
-        
         friend class Annwvyn::AnnEngine;
+
     private:
         void updateListenerOrient(Ogre::Quaternion orient);
 		std::string lastError;
@@ -52,8 +53,8 @@ namespace Annwvyn
 		ALCcontext* Context;
 	    
         ALuint buffer;
-		ALuint bgm;///background music source
-		///ALuint soundSource;
+		ALuint bgm;//background music source
+		//ALuint soundSource;
 	};
 }
 #endif

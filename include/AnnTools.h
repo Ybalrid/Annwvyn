@@ -3,7 +3,6 @@
 
 #include "systemMacro.h"
 
-
 #include <Ogre.h>
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>

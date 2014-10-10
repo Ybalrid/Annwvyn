@@ -38,7 +38,6 @@ namespace Annwvyn
             ///GetThreshold distance
             float getThreshold();
 
-
         private:	
             ///For engine : Set contact state 
             void setContactInformation(bool contact);

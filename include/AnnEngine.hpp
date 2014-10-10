@@ -47,13 +47,12 @@ namespace Annwvyn
 
             AnnEngine* getAddress() {return this;}
             void initCEGUI();
-            ///Display config window and return an ogre root (create a new one by default)
-            //Ogre::Root* askSetUpOgre(Ogre::Root* root = new Ogre::Root);
 
             ///Load data to the ressource group manager
             void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT");
             void loadDir(const char path[], const char resourceGroupNmame[] = "ANNWVYN_DEFAULT");
             void loadResFile(const char path[]);
+
             ///Init All ressources groups
             void initResources();
 
@@ -77,8 +76,10 @@ namespace Annwvyn
                     btCollisionShape* Shape = NULL,
                     btRigidBody* Body = NULL);
 
+			///Init the physics model
             void initPlayerPhysics();
-            ///Update player location/orientation from the bullet body
+
+			///Update player location/orientation from the bullet body
             void updatePlayerFromPhysics();
 
             ///Translate the player (DONT DETECT COLLISIONS HERE !!!)
@@ -115,15 +116,27 @@ namespace Annwvyn
 
             ///Update camera position/orientation from rift and virtual body
             void updateCamera();
+			
+			///Apply yaw transform with mouse relative X displacement
+			void applyMouseYaw();
+
+			///Get camera position and ask OOR to do the render
+			void doRender();
+			
+			///Sync all audo objects
+			void updateAudioSystemState();
+			
+			///Run the base gameplay loop content (WASD + jump + mouse for yaw)
+			void runBasicGameplay();
 
             ///Refresh all for you
             void refresh();
 
             ///Return a vector depending on WASD keys pressed
-            bool processWASD(Ogre::Vector3* translate);///return the translation vector to aply on the body
+            bool processWASD(Ogre::Vector3* translate); //return the translation vector to aply on the body
 
             ///Caputre event form keyboard and mouse
-            void captureEvents();///keyboard and mouse
+            void captureEvents(); //keyboard and mouse
 
             ///Update program time. retur the delay between the last call of this method
             float getTime();
@@ -150,7 +163,7 @@ namespace Annwvyn
             OIS::JoyStick* getOISJoyStick();
 
             ///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
-            bool isKeyDown(OIS::KeyCode key); ///this is simplier to use if you are on the OIS namespace ;-)
+            bool isKeyDown(OIS::KeyCode key); //this is simplier to use if you are on the OIS namespace ;-)
 
             ///Return true if you touch the ground
             bool collisionWithGround();
@@ -204,7 +217,6 @@ namespace Annwvyn
 			///Reset the Rift Orientation
             void resetOculusOrientation();
 
-			
 			OgrePose getPoseFromOOR()
 			{
 				if(oor)
@@ -212,26 +224,34 @@ namespace Annwvyn
 				OgrePose p; return p;
 			}
 		
+			///Set the distance of the near clipping  plane
 			void setNearClippingDistance(Ogre::Real setNearClippingDistance);
 
         private:
 			///Set up graphics
             void setUpOgre(const char title[]);
+
 			///Set up physics
             void setUpBullet();
+
 			///Set up inputs
             void setUpOIS();
+
 			///Set up timing
             void setUpTime();
+
 			///Set up 3D audio system
             void setUpAudio();
+
 			///Set up GUI/HUD rendering
             void setUpGUI();
 
 			///Create the bullet shape of the player's body
             void createVirtualBodyShape();
+
 			///Create a physical object from the calculated shape
             void createPlayerPhysicalVirtualBody();
+
 			///Add the players body to the Physics simulation
             void addPlayerPhysicalBodyToDynamicsWorld();
 			
@@ -306,7 +326,6 @@ namespace Annwvyn
             ///Audio engine
             AnnAudioEngine* AudioEngine;
 
-			
     };
 }
 #endif ///ANN_ENGINE

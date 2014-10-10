@@ -16,10 +16,9 @@
 //Annwvyn
 #include <Annwvyn.h>
 
-#include <Gorilla.h>
+//#include <Gorilla.h>
 
 using namespace std;
-
 
 class Sinbad : public Annwvyn::AnnGameObject
 {
@@ -55,7 +54,7 @@ class MyTrigger : public Annwvyn::AnnTriggerObject
 
 
 //If you want to redirect cout & cerr to cout.txt and cerr.txt, uncomment the folowing line : 
-#define OUTSTREAM_TO_FILE
+//#define OUTSTREAM_TO_FILE
 
 AnnMain()
 {

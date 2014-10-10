@@ -6,15 +6,12 @@ AnnEngine::AnnEngine(const char title[])
 {
     m_Camera = NULL;
 
-   
-
     //block ressources loading for now
     readyForLoadingRessources = false;
 
     //This structure handle player's body parameters
     m_bodyParams = new bodyParams;
     
-
     //here we set all the defaults parameters for the body.
     initBodyParams(m_bodyParams);
     
@@ -34,10 +31,10 @@ AnnEngine::AnnEngine(const char title[])
     VisualBodyAnimation = NULL;
     VisualBodyAnchor = NULL;
     //VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
+
 	refVisualBody = Ogre::Quaternion::IDENTITY;
     log("Annwvyn Game Engine - Step into the Other World",false);
     log("Desinged for Virtual Reality",false);
-
 }
 
 
@@ -176,7 +173,7 @@ void AnnEngine::setUpTime()
     log("Timer is setup");
 }
 
-///////////// Audio Steampunk
+///////////// Audio System
 void AnnEngine::setUpAudio()
 {
     AudioEngine = new AnnAudioEngine;
@@ -186,6 +183,7 @@ void AnnEngine::setUpAudio()
 ///////////// Interface 
 void AnnEngine::setUpGUI()
 {
+	//There is no GUI for now...
     return;
 }
 
@@ -359,11 +357,9 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
         obj->setBulletDynamicsWorld(m_DynamicsWorld);
 
-
         obj->postInit(); //Run post init directives
 
-        //pushBack
-        objects.push_back(obj); //keep address in list
+		objects.push_back(obj); //keep address in list
     }
     catch (std::string const& e)
     {
@@ -404,7 +400,6 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 }
 
 
-//will be private
 void AnnEngine::renderOneFrame()
 {
     oor->RenderOneFrame();
@@ -421,7 +416,7 @@ Annwvyn::AnnLightObject* AnnEngine::addLight()
 
 bool AnnEngine::requestStop()
 {
-    //pres ESC to quite. Stupid but efficient. I like that.
+    //pres ESC to quit. Stupid but efficient. I like that.
     if(m_Keyboard->isKeyDown(OIS::KC_ESCAPE))
         return true;
     return false;
@@ -432,24 +427,42 @@ void AnnEngine::updateCamera()
 {
     m_Camera->setPosition(m_bodyParams->Position);
     Ogre::Quaternion temp = QuatReference * m_bodyParams->Orientation.toQuaternion();
-    m_Camera->setOrientation(temp /* * m_Camera->getOrientation()*/);
+    m_Camera->setOrientation(temp);
 }
 
-void AnnEngine::refresh()
-{
-    //animations playing :
-    deltaT = updateTime();
-    playObjectsAnnimation();
-    m_DynamicsWorld->stepSimulation(deltaT,2);
 
+void AnnEngine::doRender()
+{
+    updateCamera(); //update camera opsition from GameLogic
+    renderOneFrame();
+}
+
+void AnnEngine::updateAudioSystemState()
+{
+    AudioEngine->updateListenerPos(oor->lastOculusPosition);
+    AudioEngine->updateListenerOrient(oor->lastOculusOrientation);
+    for(unsigned int i = 0; i < objects.size(); i++)
+        objects[i]->updateOpenAlPos();
+}
+
+void AnnEngine::applyMouseYaw()
+{
+	    m_bodyParams->Orientation.yaw
+			(Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
+}
+
+
+void AnnEngine::runBasicGameplay()
+{
+	
     //	OIS Events 
     captureEvents();
 
 	//Dissmiss health and safety warning
-	if(!oor->IsHsDissmissed())
-		for(int kc = 0x00; kc <= 0xED; kc++)
-			if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc)))
-				oor->dissmissHS();
+	if(!oor->IsHsDissmissed()) //If not already dissmissed
+		for(int kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
+			if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
+				oor->dissmissHS();	//dissmiss the Health and Safety warning.
 
 
     if(activateWASD && m_bodyParams->Body != NULL)//classic fps control
@@ -481,26 +494,30 @@ void AnnEngine::refresh()
     }
 
     //turn body with mouse TODO enclose this with a methode. That's ugly
-    m_bodyParams->Orientation.yaw(
-            Ogre::Radian(
-                -m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed
-                )
-            );
+	applyMouseYaw();
 
     if(m_bodyParams->Body != NULL)
         m_bodyParams->Position =
             Ogre::Vector3( 
                     m_bodyParams->Body->getCenterOfMassPosition().x(),
                     m_bodyParams->Body->getCenterOfMassPosition().y() + m_bodyParams->eyeHeight/2,
-                    m_bodyParams->Body->getCenterOfMassPosition().z());
+                    m_bodyParams->Body->getCenterOfMassPosition().z()
+					);
 
     //wow. So many 'if's. such test.
-    if(m_Ground != NULL)
-        if(activateJump)
-            if(collisionWithGround())
-                if(m_Keyboard->isKeyDown(OIS::KC_SPACE))
+    if(m_Ground != NULL && activateJump && collisionWithGround() && m_Keyboard->isKeyDown(OIS::KC_SPACE))
                     m_bodyParams->Body->applyCentralImpulse(btVector3(0,jumpForce,0));
+}
 
+void AnnEngine::refresh()
+{
+    //animations playing :
+    deltaT = updateTime();
+    playObjectsAnnimation();
+    m_DynamicsWorld->stepSimulation(deltaT,2);
+
+	runBasicGameplay();
+	
     processCollisionTesting();
     processTriggersContacts();
 
@@ -510,28 +527,15 @@ void AnnEngine::refresh()
         //TODO display triggers position, influence zone and state... 
     }
 
-    ///////////////////////////////////////////////////////////////////////////////// AUDIO
-    AudioEngine->updateListenerPos(oor->lastOculusPosition);
-    AudioEngine->updateListenerOrient(oor->lastOculusOrientation);
-    for(unsigned int i = 0; i < objects.size(); i++)
-        objects[i]->updateOpenAlPos();
-    /////////////////////////////////////////////////////////////////////////////////////////
-
     //Call of refresh method
     for(size_t i(0); i < objects.size(); i++)
         objects[i]->atRefresh();
 
-    //synchronise VisualBody
-    //VisualBodyAnchor->setOrientation(refVisualBody * m_bodyParams->Orientation.toQuaternion());
-    //VisualBodyAnchor->setPosition(m_bodyParams->Position - (m_bodyParams->Orientation.toQuaternion() * Ogre::Vector3(0,m_bodyParams->eyeHeight,visualBody_Zoffset)));
-
     if(VisualBodyAnimation)
         VisualBodyAnimation->addTime(getTime());
 
-    //////////////////////////////////////////////////////////////////////////////// VISUAL
-    updateCamera(); //update camera opsition from GameLogic
-    renderOneFrame();
-    //////////////////////////////////////////////////////////////////////////////////////
+	doRender();
+
 }
 
 bool AnnEngine::processWASD(Ogre::Vector3* translate)
@@ -577,7 +581,6 @@ float AnnEngine::updateTime()
 {
     last = now;
     now = oor->getTimer()->getMilliseconds();
-    std::cerr << "Time : " << oor->getTimer()->getMilliseconds();
     return (now-last)/1000.0f;
 }
 
@@ -594,7 +597,7 @@ bool AnnEngine::collisionWithGround()
     if(m_Ground == NULL || m_bodyParams == NULL || m_bodyParams->Body == NULL)
         return false;
     
-    //Getting rid of differences of types. There is polymorphism we don't care of, we are comparing memory addresses here!
+    //Getting rid of differences of types. There is polymorphism we don't care of, we are just comparing memory addresses here!
 
     void* player = (void*) m_bodyParams->Body;
     void* ground = (void*) m_Ground->getBody();
