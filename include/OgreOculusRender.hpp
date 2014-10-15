@@ -199,6 +199,7 @@ class DLL OgreOculusRender
         Ogre::Camera* cams[2];
 	
         Ogre::SceneNode* CameraNode;
+
 		///Textures used for RTT Rendering. Indexes are "left" and "right"
 		Ogre::RenderTexture* rtts[2];
 		///Vewports on textures. Textures are separated. One vieport for each textures
@@ -228,6 +229,7 @@ class DLL OgreOculusRender
 		
 		///On Windows only : true if RenderSystem Direct3D 11 is loaded instead of GL RenderSystem.
 		bool direct3D;
+
 #endif
 		///Size of left eye texture
         ovrSizei texSizeL;

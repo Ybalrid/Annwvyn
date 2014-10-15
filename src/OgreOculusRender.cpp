@@ -2,6 +2,7 @@
 
 OgreOculusRender::OgreOculusRender(std::string winName)
 {
+	//Initialize some variables
 	name = winName;
 	root = NULL;
 	window = NULL;
@@ -14,23 +15,29 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 		vpts[i] = NULL;
 	}
 
+	//Oc is an OculusInterface object. Communication with the Rift SDK is handeled by that class
 	oc = NULL;
 	CameraNode = NULL;
+
 	cameraPosition = Ogre::Vector3(0,0,10);
 	cameraOrientation = Ogre::Quaternion::IDENTITY;
+	
 	this->nearClippingDistance = (float) 0.05;
 	this->lastOculusPosition = cameraPosition;
 	this->lastOculusOrientation = cameraOrientation;
 	this->updateTime = 0;
+	
 	fullscreen = true;
 	hsDissmissed = false;
 }
 
 OgreOculusRender::~OgreOculusRender()
 {
+	//The only thig we dynamicly load is the oculus interface
 	delete oc;
 }
 
+//I may move this method back to the AnnEngine class... 
 void OgreOculusRender::loadReseourceFile(const char path[])
 {
 	/*from ogre wiki : load the given resource file*/
@@ -53,6 +60,7 @@ void OgreOculusRender::loadReseourceFile(const char path[])
 	}
 }
 
+//See commant of the loadResourceFile method
 void OgreOculusRender::initAllResources()
 {
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
@@ -60,7 +68,7 @@ void OgreOculusRender::initAllResources()
 
 void OgreOculusRender::initLibraries()
 {
-	//Create the ogre root
+	//Create the ogre root with standards Ogre configuration file
 	root = new Ogre::Root("plugins.cfg","ogre.cfg","Ogre.log");
 
 	//Class to get basic information from the Rift. Initialize the RiftSDK
@@ -72,7 +80,7 @@ void OgreOculusRender::initialize()
 	//init libraries;
 	initLibraries();
 
-	//Mandatory. If thous pointers are unitilalized, program have to stop here.
+	//Mandatory. If thouse pointers are unitilalized, program have to stop here.
 	assert(root != NULL && oc != NULL);
 
 	//Get configuration via ogre.cfg OR via the config dialog.
@@ -115,7 +123,7 @@ void OgreOculusRender::createWindow()
 	misc["border"]="none";
 	misc["vsync"]="true";
 	misc["displayFrequency"]="75";
-	misc["monitorIndex"]="1";
+	misc["monitorIndex"]="1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
 
 	//Initialize a window ans specify that creation is manual
 	window = root->initialise(false, name);
@@ -218,7 +226,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	window->getCustomAttribute("HDC", &dc);
 	cfg.OGL.DC = dc;
 
-#else //Linux
+#else //Linux, even if OVR 0.4.2 is still NOT running on Linux
 
 	//Get X window id
 	size_t wID;
@@ -340,7 +348,7 @@ void OgreOculusRender::RenderOneFrame()
 	}
 
 	//Ogre::Root::getSingleton().getRenderSystem()->_setRenderTarget(window);
-
+	 
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
 	//Do the rendering then the buffer swap
 
