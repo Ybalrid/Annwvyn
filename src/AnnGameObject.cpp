@@ -33,7 +33,7 @@ AnnGameObject::~AnnGameObject()
 
 void AnnGameObject::setAudioEngine(AnnAudioEngine* AudioEngine)
 {
-	///Get a pointer to the audio engine.
+	//Get a pointer to the audio engine.
     m_AudioEngine = AudioEngine;
 }
 

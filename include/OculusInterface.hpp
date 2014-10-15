@@ -2,6 +2,8 @@
 #define OCULUS_INTERFACE 
 
 #include <iostream>
+
+//Oculus VR API
 #include <OVR.h>
 #include <OVR_CAPI.h>
 
@@ -24,6 +26,7 @@ class DLL OculusInterface
     
     ///Return a quaternion orentetion
     OVR::Quatf getOrientation();
+
 
     ovrHmdDesc getHmdDesc();
 
