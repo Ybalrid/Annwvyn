@@ -331,14 +331,14 @@ void OgreOculusRender::RenderOneFrame()
 
 		//Set Position
 		cams[eye]->setPosition
-			(cameraPosition 
+			(cameraPosition  //the "gameplay" position of player's avatar head
 			+ 
-			(cams[eye]->getOrientation() * - Ogre::Vector3(
-			EyeRenderDesc[eye].ViewAdjust.x, 
+			(cams[eye]->getOrientation() * - Ogre::Vector3( //realword camera orientation + the oposite of the 
+			EyeRenderDesc[eye].ViewAdjust.x,                //view adjust vector. we translate the camera, not the whole world
 			EyeRenderDesc[eye].ViewAdjust.y, 
 			EyeRenderDesc[eye].ViewAdjust.z)
 
-			+ cams[eye]->getOrientation() * Ogre::Vector3(
+			+ cameraOrientation * Ogre::Vector3( //cameraOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
 			headPose[eye].Position.x,
 			headPose[eye].Position.y,
 			headPose[eye].Position.z)));

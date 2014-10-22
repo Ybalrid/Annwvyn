@@ -88,15 +88,11 @@ AnnMain()
 	GameEngine->initRessources();
 
 
-	//Create Objects
-
-
+	//Create Object
     Sinbad* S = (Sinbad*) GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
     Sinbad* S2 = (Sinbad*) GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
     S2->translate(5,0,0);
     
-    S->playAnimation(true);
-
     MyTrigger* T = (MyTrigger*) GameEngine->createTriggerObject(new MyTrigger);
     T->setPosition(-0.5,-1,3);
 
@@ -112,7 +108,7 @@ AnnMain()
 
 
 	GameEngine->initPlayerPhysics();
-	//GameEngine->setDebugPhysicState(true);
+	GameEngine->setDebugPhysicState(true);
 
 
 	//setUp Oculus system
