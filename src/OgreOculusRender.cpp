@@ -243,7 +243,8 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 	if(!ovrHmd_ConfigureRendering(
 		oc->getHmd(),
-		&cfg.Config,oc->getHmd()->DistortionCaps,
+		&cfg.Config,
+		oc->getHmd()->DistortionCaps,
 		EyeFov,
 		EyeRenderDesc))
 		abort();
