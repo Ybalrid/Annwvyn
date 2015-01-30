@@ -48,7 +48,7 @@ test: lib/libAnnwvyn.so
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
 
-lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o obj/AnnJoystickController.o obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o
+lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o obj/AnnJoystickController.o obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 obj/AnnEngine.o: src/AnnEngine.cpp include/AnnEngine.hpp
@@ -83,5 +83,8 @@ obj/OculusInterface.o: src/OculusInterface.cpp include/OculusInterface.hpp
 
 obj/OgreOculusRender.o: src/OgreOculusRender.cpp include/OgreOculusRender.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OgreOculusRender.cpp -o obj/OgreOculusRender.o
+
+obj/AnnCharacter.o: src/AnnCharacter.cpp include/AnnCharacter.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnCharacter.cpp -o obj/AnnCharacter.o
 
 endif
