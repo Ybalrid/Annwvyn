@@ -32,23 +32,10 @@ namespace Annwvyn
 
 	///Remove some ugliness : 
 	typedef std::vector<AnnTriggerObject * > AnnTriggerObjectVect;
-    typedef std::vector<Annwvyn::AnnGameObject * > AnnGameObjectVect;
+    typedef std::vector<AnnGameObject * > AnnGameObjectVect;
     typedef std::vector<AnnLightObject * > AnnLightVect; 
 
-	///Parameters of the VirtualBody	
-	struct bodyParams
-	{
-		float eyeHeight;
-		float walkSpeed;
-		float turnSpeed;
-		float mass;
-		Ogre::Vector3 Position;
-		Ogre::Euler Orientation;
-		Ogre::Quaternion HeadOrientation;
-		//bullet
-		btCollisionShape* Shape;
-		btRigidBody* Body;
-	};
+
 
 	enum phyShapeType {
 		staticShape, 

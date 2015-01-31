@@ -24,6 +24,7 @@
 #include "BtOgreGP.h"
 #include "BtOgreExtras.h"
 //Annwvyn
+#include "AnnPlayer.hpp"
 #include "AnnGameObject.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnTypes.h"
