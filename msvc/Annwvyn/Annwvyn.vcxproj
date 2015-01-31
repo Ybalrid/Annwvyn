@@ -91,6 +91,7 @@
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
     <ClInclude Include="..\..\include\AnnJoystickController.hpp" />
     <ClInclude Include="..\..\include\AnnMap.hpp" />
+    <ClInclude Include="..\..\include\AnnPlayer.hpp" />
     <ClInclude Include="..\..\include\AnnTools.h" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
     <ClInclude Include="..\..\include\AnnTypes.h" />
@@ -111,6 +112,7 @@
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
     <ClCompile Include="..\..\src\AnnJoystickController.cpp" />
     <ClCompile Include="..\..\src\AnnMap.cpp" />
+    <ClCompile Include="..\..\src\AnnPlayer.cpp" />
     <ClCompile Include="..\..\src\AnnTools.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />
