@@ -4,25 +4,28 @@
 
 #include "systemMacro.h"
 
+//Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
+
 //C++ STD & STL
 #include <vector>
 #include <sstream>
 #include <cassert>
+
 //Ogre 3D
 #include <Ogre.h>
 #include <OIS.h>
+
 //Bullet
 #include <btBulletCollisionCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
-//OgreOculus by kojack
-//#include "OgreOculus.h"
 
 //btOgre
 #include "BtOgrePG.h"
 #include "BtOgreGP.h"
 #include "BtOgreExtras.h"
+
 //Annwvyn
 #include "AnnPlayer.hpp"
 #include "AnnGameObject.hpp"
@@ -32,7 +35,7 @@
 #include "AnnAudioEngine.hpp"
 
 #ifdef __gnu_linux__
-#include <unistd.h>
+#include <unistd.h> //for some unix functions
 #endif
 
 namespace Annwvyn
@@ -47,7 +50,6 @@ namespace Annwvyn
             ~AnnEngine();
 
             AnnEngine* getAddress() {return this;}
-            void initCEGUI();
 
             ///Load data to the ressource group manager
             void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT");
@@ -66,16 +68,6 @@ namespace Annwvyn
             ///Init OgreOculus stuff
             void oculusInit(bool fullscreen = true);
 
-            ///Init the BodyParams variable
-            static void initBodyParams(Annwvyn::bodyParams* bodyP,
-                    float eyeHeight = 1.59f,
-                    float walkSpeed = 3.0f,
-                    float turnSpeed = 0.003f,
-                    float mass = 80.0f,
-                    Ogre::Vector3 Position = Ogre::Vector3(0,0,10),
-                    Ogre::Quaternion HeadOrientation = Ogre::Quaternion(1,0,0,0),
-                    btCollisionShape* Shape = NULL,
-                    btRigidBody* Body = NULL);
 
 			///Init the physics model
             void initPlayerPhysics();
@@ -263,7 +255,7 @@ namespace Annwvyn
             void emergency(void);
 
         private:
-            Annwvyn::bodyParams* m_bodyParams;
+			AnnPlayer* player;
 
             //Ogre::Root* m_Root;
             Ogre::RenderWindow* m_Window;
