@@ -10,10 +10,9 @@ AnnEngine::AnnEngine(const char title[])
     readyForLoadingRessources = false;
 
     //This structure handle player's body parameters
-    m_bodyParams = new bodyParams;
+    player = new AnnPlayer;
     
     //here we set all the defaults parameters for the body.
-    initBodyParams(m_bodyParams);
     
     //Launching initialisation routines : 
     setUpOgre(title);
@@ -50,7 +49,7 @@ AnnEngine::~AnnEngine()
     //Bullet
     delete m_DynamicsWorld;
     delete m_Broadphase;
-    delete m_bodyParams;
+    delete player;
     delete m_CollisionConfiguration;
     delete m_Dispatcher;
     delete m_Solver;
@@ -187,28 +186,6 @@ void AnnEngine::setUpGUI()
     return;
 }
 
-//TODO : create a class to handle VirtualBody ?
-//see the .hpp file for the defaults values
-void AnnEngine::initBodyParams(Annwvyn::bodyParams* bodyP,
-        float eyesHeight,
-        float walkSpeed,
-        float turnSpeed,
-        float mass,
-        Ogre::Vector3 Position,
-        Ogre::Quaternion HeadOrientation,
-        btCollisionShape* Shape,
-        btRigidBody* Body)
-{
-    bodyP->eyeHeight = eyesHeight;
-    bodyP->walkSpeed = walkSpeed;
-    bodyP->turnSpeed = turnSpeed;
-    bodyP->mass = mass;
-    bodyP->Position = Position;
-    bodyP->HeadOrientation = HeadOrientation;
-    bodyP->Shape = Shape;
-    bodyP->Body = Body;
-}
-
 //Convinient method to the user to call : do it and let go !
 void AnnEngine::initPlayerPhysics()
 {
@@ -220,60 +197,60 @@ void AnnEngine::initPlayerPhysics()
 //will be private 
 void AnnEngine::createVirtualBodyShape()
 {
-    assert(m_bodyParams != NULL);
+    assert(player->getLowLevelBodyParams() != NULL);
 
-    float height = m_bodyParams->eyeHeight;
-    m_bodyParams->Shape = new btCapsuleShape(0.5,(height)/2);
+    float height = player->getLowLevelBodyParams()->eyeHeight;
+    player->getLowLevelBodyParams()->Shape = new btCapsuleShape(0.5,(height)/2);
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
 {
-    assert(m_bodyParams->Shape);
+    assert(player->getLowLevelBodyParams()->Shape);
 
     BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState
         (m_Camera);
 
     btVector3 inertia;
 
-    m_bodyParams->Shape->calculateLocalInertia(m_bodyParams->mass,inertia);
+    player->getLowLevelBodyParams()->Shape->calculateLocalInertia(player->getLowLevelBodyParams()->mass,inertia);
 
-    m_bodyParams->Body = new btRigidBody(m_bodyParams->mass, 
+    player->getLowLevelBodyParams()->Body = new btRigidBody(player->getLowLevelBodyParams()->mass, 
             state,
-            m_bodyParams->Shape, 
+            player->getLowLevelBodyParams()->Shape, 
             inertia);	
 }
 
 void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
-    assert(m_bodyParams->Body);
+    assert(player->getLowLevelBodyParams()->Body);
 
-    float height(m_bodyParams->eyeHeight);
+    float height(player->getLowLevelBodyParams()->eyeHeight);
 
-    m_DynamicsWorld->addRigidBody(m_bodyParams->Body);
+    m_DynamicsWorld->addRigidBody(player->getLowLevelBodyParams()->Body);
 
-    btVector3 pos = btVector3(m_bodyParams->Position.x,
-            m_bodyParams->Position.y,
-            m_bodyParams->Position.z);
+    btVector3 pos = btVector3(player->getLowLevelBodyParams()->Position.x,
+            player->getLowLevelBodyParams()->Position.y,
+            player->getLowLevelBodyParams()->Position.z);
 
     pos += btVector3(0,height,0);
 
-    m_bodyParams->Body->translate(pos);
+    player->getLowLevelBodyParams()->Body->translate(pos);
 }
 
 void AnnEngine::updatePlayerFromPhysics()
 {
-    if(m_bodyParams->Body == NULL)
+    if(player->getLowLevelBodyParams()->Body == NULL)
         return;
 
     //Get pos from bullet
-    btVector3 phyPos = m_bodyParams->Body->getCenterOfMassPosition();
-    m_bodyParams->Position =
+    btVector3 phyPos = player->getLowLevelBodyParams()->Body->getCenterOfMassPosition();
+    player->getLowLevelBodyParams()->Position =
         Ogre::Vector3(phyPos.getX(),
                 phyPos.getY(),
                 phyPos.getZ());
 
     //Get orientation from bullet
-    btQuaternion phyOrient = m_bodyParams->Body->getOrientation();
+    btQuaternion phyOrient = player->getLowLevelBodyParams()->Body->getOrientation();
 
     Ogre::Euler GraphicOrient;
     GraphicOrient.fromQuaternion
@@ -281,19 +258,19 @@ void AnnEngine::updatePlayerFromPhysics()
                           phyOrient.getX(),
                           phyOrient.getY(),
                           phyOrient.getZ()));
-    m_bodyParams->Orientation = GraphicOrient;
+    player->getLowLevelBodyParams()->Orientation = GraphicOrient;
 }
 
 //move player's body IGNORING COLLISION !
 void AnnEngine::translatePhysicBody(Ogre::Vector3 translation)
 {
-    m_bodyParams->Body->translate(btVector3(translation.x,translation.y,translation.z));
+    player->getLowLevelBodyParams()->Body->translate(btVector3(translation.x,translation.y,translation.z));
 }
 
 //the most convinient for controling the player : set the linear velocity
 void AnnEngine::setPhysicBodyLinearSpeed(Ogre::Vector3 V)
 {
-    m_bodyParams->Body->setLinearVelocity(btVector3(V.x,V.y,V.z));
+    player->getLowLevelBodyParams()->Body->setLinearVelocity(btVector3(V.x,V.y,V.z));
 }
 
 //loading ressources
@@ -331,8 +308,8 @@ void AnnEngine::oculusInit(bool fullscreen)
 
     m_Camera = oor->getCameraInformationNode();
 
-    m_Camera->setPosition(m_bodyParams->Position + 
-            Ogre::Vector3(0.0f,m_bodyParams->eyeHeight,0.0f));
+    m_Camera->setPosition(player->getLowLevelBodyParams()->Position + 
+            Ogre::Vector3(0.0f,player->getLowLevelBodyParams()->eyeHeight,0.0f));
 }
 
 
@@ -425,8 +402,8 @@ bool AnnEngine::requestStop()
 
 void AnnEngine::updateCamera()
 {
-    m_Camera->setPosition(m_bodyParams->Position);
-    Ogre::Quaternion temp = QuatReference * m_bodyParams->Orientation.toQuaternion();
+    m_Camera->setPosition(player->getLowLevelBodyParams()->Position);
+    Ogre::Quaternion temp = QuatReference * player->getLowLevelBodyParams()->Orientation.toQuaternion();
     m_Camera->setOrientation(temp);
 }
 
@@ -447,8 +424,8 @@ void AnnEngine::updateAudioSystemState()
 
 void AnnEngine::applyMouseYaw()
 {
-	    m_bodyParams->Orientation.yaw
-			(Ogre::Radian(-m_Mouse->getMouseState().X.rel*m_bodyParams->turnSpeed));
+	    player->getLowLevelBodyParams()->Orientation.yaw
+			(Ogre::Radian(-m_Mouse->getMouseState().X.rel*player->getLowLevelBodyParams()->turnSpeed));
 }
 
 
@@ -465,48 +442,48 @@ void AnnEngine::runBasicGameplay()
 				oor->dissmissHS();	//dissmiss the Health and Safety warning.
 
 
-    if(activateWASD && m_bodyParams->Body != NULL)//classic fps control
+    if(activateWASD && player->getLowLevelBodyParams()->Body != NULL)//classic fps control
     {
         //TODO extract this piece of code and make it accesible with a method !!
-        m_bodyParams->Body->activate(); //don't sleep !
+        player->getLowLevelBodyParams()->Body->activate(); //don't sleep !
 
-        btVector3 curVel = m_bodyParams->Body->getLinearVelocity(); //get current velocity
+        btVector3 curVel = player->getLowLevelBodyParams()->Body->getLinearVelocity(); //get current velocity
 
         Ogre::Vector3 translate(Ogre::Vector3::ZERO);
         if(processWASD(&translate))//If player want to move w/ WASD
         {
-            Ogre::Vector3 velocity = m_bodyParams->Orientation*(translate);
-            m_bodyParams->Body->setLinearVelocity(
+            Ogre::Vector3 velocity = player->getLowLevelBodyParams()->Orientation*(translate);
+            player->getLowLevelBodyParams()->Body->setLinearVelocity(
                     btVector3(velocity.x,curVel.y(),velocity.z));
         }
         else
         {	
             //Just apply effect of gravity.
-            m_bodyParams->Body->setLinearVelocity((curVel * btVector3(0,1,0))); //we keep the original vertical velocity only
+            player->getLowLevelBodyParams()->Body->setLinearVelocity((curVel * btVector3(0,1,0))); //we keep the original vertical velocity only
         }
     }//body & WASD
 
-    if(m_bodyParams->Body != NULL) //if physic
+    if(player->getLowLevelBodyParams()->Body != NULL) //if physic
     {
-        btTransform Transform = m_bodyParams->Body->getCenterOfMassTransform();
+        btTransform Transform = player->getLowLevelBodyParams()->Body->getCenterOfMassTransform();
         Transform.setRotation(btQuaternion(0,0,0,1));
-        m_bodyParams->Body->setCenterOfMassTransform(Transform);
+        player->getLowLevelBodyParams()->Body->setCenterOfMassTransform(Transform);
     }
 
     //turn body with mouse TODO enclose this with a methode. That's ugly
 	applyMouseYaw();
 
-    if(m_bodyParams->Body != NULL)
-        m_bodyParams->Position =
+    if(player->getLowLevelBodyParams()->Body != NULL)
+        player->getLowLevelBodyParams()->Position =
             Ogre::Vector3( 
-                    m_bodyParams->Body->getCenterOfMassPosition().x(),
-                    m_bodyParams->Body->getCenterOfMassPosition().y() + m_bodyParams->eyeHeight/2,
-                    m_bodyParams->Body->getCenterOfMassPosition().z()
+                    player->getLowLevelBodyParams()->Body->getCenterOfMassPosition().x(),
+                    player->getLowLevelBodyParams()->Body->getCenterOfMassPosition().y() + player->getLowLevelBodyParams()->eyeHeight/2,
+                    player->getLowLevelBodyParams()->Body->getCenterOfMassPosition().z()
 					);
 
     //wow. So many 'if's. such test.
     if(m_Ground != NULL && activateJump && collisionWithGround() && m_Keyboard->isKeyDown(OIS::KC_SPACE))
-                    m_bodyParams->Body->applyCentralImpulse(btVector3(0,jumpForce,0));
+                    player->getLowLevelBodyParams()->Body->applyCentralImpulse(btVector3(0,jumpForce,0));
 }
 
 void AnnEngine::refresh()
@@ -544,22 +521,22 @@ bool AnnEngine::processWASD(Ogre::Vector3* translate)
     if(m_Keyboard->isKeyDown(OIS::KC_W))
     {
         move = true;
-        translate->z = -m_bodyParams->walkSpeed;
+        translate->z = -player->getLowLevelBodyParams()->walkSpeed;
     }
     if(m_Keyboard->isKeyDown(OIS::KC_S))
     {	
         move = true;
-        translate->z = m_bodyParams->walkSpeed;
+        translate->z = player->getLowLevelBodyParams()->walkSpeed;
     }
     if(m_Keyboard->isKeyDown(OIS::KC_A))
     {
         move = true;
-        translate->x = -m_bodyParams->walkSpeed;
+        translate->x = -player->getLowLevelBodyParams()->walkSpeed;
     }
     if(m_Keyboard->isKeyDown(OIS::KC_D))
     {
         move = true;
-        translate->x = m_bodyParams->walkSpeed;
+        translate->x = player->getLowLevelBodyParams()->walkSpeed;
     }
     if(m_Keyboard->isModifierDown(OIS::Keyboard::Shift))
     {
@@ -594,12 +571,12 @@ bool AnnEngine::isKeyDown(OIS::KeyCode key)
 bool AnnEngine::collisionWithGround()
 {
     //If collision isn't computable : 
-    if(m_Ground == NULL || m_bodyParams == NULL || m_bodyParams->Body == NULL)
+    if(m_Ground == NULL || player->getLowLevelBodyParams() == NULL || player->getLowLevelBodyParams()->Body == NULL)
         return false;
     
     //Getting rid of differences of types. There is polymorphism we don't care of, we are just comparing memory addresses here!
 
-    void* player = (void*) m_bodyParams->Body;
+    void* pplayer = (void*) player->getLowLevelBodyParams()->Body;
     void* ground = (void*) m_Ground->getBody();
 
     int numManifolds = m_Dispatcher->getNumManifolds();
@@ -615,7 +592,7 @@ bool AnnEngine::collisionWithGround()
         void* pair1 = (void*) obA;
         void* pair2 = (void*) obB;
 
-        if((pair1 == player && pair2 == ground) || (pair2 == player && pair1 == ground))
+        if((pair1 == pplayer && pair2 == ground) || (pair2 == pplayer && pair1 == ground))
         {
 
             int numContacts = contactManifold->getNumContacts();
@@ -700,7 +677,7 @@ void AnnEngine::processTriggersContacts()
 {
     for(size_t i = 0; i < triggers.size(); i++)
     {
-        if(Tools::Geometry::distance(m_bodyParams->Position,
+        if(Tools::Geometry::distance(player->getLowLevelBodyParams()->Position,
                     triggers[i]->getPosition()) <= triggers[i]->getThreshold())
         {
             triggers[i]->setContactInformation(true);
@@ -778,7 +755,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
     visualBody_Zoffset = z_offset;
     VisualBody = ent;
 
-    VisualBodyAnchor->setPosition(0,-m_bodyParams->eyeHeight,-visualBody_Zoffset);
+    VisualBodyAnchor->setPosition(0,-player->getLowLevelBodyParams()->eyeHeight,-visualBody_Zoffset);
     VisualBodyAnchor->setOrientation(refVisualBody);
 
     if(animated)
@@ -823,7 +800,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 
 Annwvyn::bodyParams* AnnEngine::getBodyParams()
 {
-    return m_bodyParams;
+    return player->getLowLevelBodyParams();
 }
 
 Ogre::SceneNode* AnnEngine::getCamera()
