@@ -197,60 +197,61 @@ void AnnEngine::initPlayerPhysics()
 //will be private 
 void AnnEngine::createVirtualBodyShape()
 {
-    assert(player->getLowLevelBodyParams() != NULL);
+    assert(player != NULL);
 
-    float height = player->getLowLevelBodyParams()->eyeHeight;
-    player->getLowLevelBodyParams()->Shape = new btCapsuleShape(0.5,(height)/2);
+	float height = player->getEyesHeight();
+    player->setShape(new btCapsuleShape(0.5,(height)/2));
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
 {
-    assert(player->getLowLevelBodyParams()->Shape);
+	assert(player->getShape());
 
     BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState
         (m_Camera);
 
     btVector3 inertia;
 
-    player->getLowLevelBodyParams()->Shape->calculateLocalInertia(player->getLowLevelBodyParams()->mass,inertia);
+	player->getShape()->calculateLocalInertia(player->getMass(),inertia);
 
-    player->getLowLevelBodyParams()->Body = new btRigidBody(player->getLowLevelBodyParams()->mass, 
+    player->setBody(new btRigidBody(player->getMass(), 
             state,
-            player->getLowLevelBodyParams()->Shape, 
-            inertia);	
+            player->getShape(), 
+            inertia));	
 }
 
 void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
-    assert(player->getLowLevelBodyParams()->Body);
+    assert(player->getBody());
 
     float height(player->getLowLevelBodyParams()->eyeHeight);
 
     m_DynamicsWorld->addRigidBody(player->getLowLevelBodyParams()->Body);
 
-    btVector3 pos = btVector3(player->getLowLevelBodyParams()->Position.x,
-            player->getLowLevelBodyParams()->Position.y,
-            player->getLowLevelBodyParams()->Position.z);
+	Ogre::Vector3 ogrePos = player->getPosition();
+
+    btVector3 pos = btVector3(ogrePos.x, ogrePos.y, ogrePos.z);
 
     pos += btVector3(0,height,0);
 
-    player->getLowLevelBodyParams()->Body->translate(pos);
+    player->getBody()->translate(pos);
 }
 
 void AnnEngine::updatePlayerFromPhysics()
 {
-    if(player->getLowLevelBodyParams()->Body == NULL)
+    if(!player->getBody())
         return;
 
     //Get pos from bullet
-    btVector3 phyPos = player->getLowLevelBodyParams()->Body->getCenterOfMassPosition();
-    player->getLowLevelBodyParams()->Position =
-        Ogre::Vector3(phyPos.getX(),
-                phyPos.getY(),
-                phyPos.getZ());
+    btVector3 phyPos = player->getBody()->getCenterOfMassPosition();
+
+    player->setPosition(Ogre::Vector3
+		(phyPos.getX(),
+         phyPos.getY(),
+         phyPos.getZ()));
 
     //Get orientation from bullet
-    btQuaternion phyOrient = player->getLowLevelBodyParams()->Body->getOrientation();
+    btQuaternion phyOrient = player->getBody()->getOrientation();
 
     Ogre::Euler GraphicOrient;
     GraphicOrient.fromQuaternion
@@ -258,19 +259,21 @@ void AnnEngine::updatePlayerFromPhysics()
                           phyOrient.getX(),
                           phyOrient.getY(),
                           phyOrient.getZ()));
-    player->getLowLevelBodyParams()->Orientation = GraphicOrient;
+
+
+    player->setOrientation (GraphicOrient);
 }
 
 //move player's body IGNORING COLLISION !
 void AnnEngine::translatePhysicBody(Ogre::Vector3 translation)
 {
-    player->getLowLevelBodyParams()->Body->translate(btVector3(translation.x,translation.y,translation.z));
+    player->getBody()->translate(btVector3(translation.x,translation.y,translation.z));
 }
 
 //the most convinient for controling the player : set the linear velocity
 void AnnEngine::setPhysicBodyLinearSpeed(Ogre::Vector3 V)
 {
-    player->getLowLevelBodyParams()->Body->setLinearVelocity(btVector3(V.x,V.y,V.z));
+    player->getBody()->setLinearVelocity(btVector3(V.x,V.y,V.z));
 }
 
 //loading ressources

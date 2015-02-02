@@ -36,11 +36,44 @@ namespace Annwvyn
 	public:
 		AnnPlayer();
 		~AnnPlayer();
+
+		void lockParameters();
+		
+		bool isLocked();
+
+		void setPosition(Ogre::Vector3 Position);
+		void setOrientation(Ogre::Euler Orientation);
+		void setHeadOrientation(Ogre::Quaternion HeadOrientation);
+		
+		//Physical parameters
+		void setEyesHeight(float eyeHeight);
+		void setWalkSpeed(float walkSpeed);
+		void setTurnSpeed(float turnSpeed);
+		void setMass(float mass);
+
+		void setShape(btCollisionShape* Shape);
+		void setBody(btRigidBody* Body);
+
+
+		float getEyesHeight();
+		float getWalkSpeed();
+		float getTurnSpeed();
+		float getMass();
+
+
+		Ogre::Vector3 getPosition();
+
+		btRigidBody* getBody();
+		btCollisionShape* getShape();
+
 	protected:
 		bodyParams* playerBody;
 	private:
+		void unlockParameters();
 		friend class AnnEngine;
 		bodyParams* getLowLevelBodyParams();
+
+		bool locked;
 	};
 
 }
