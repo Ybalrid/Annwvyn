@@ -4,6 +4,7 @@ using namespace Annwvyn;
 
 bodyParams::bodyParams()
 {
+	//these parameters looks good for testing. Costumise them before initializing the physics!
 	eyeHeight = 1.59f;
 	walkSpeed = 3.0f;
 	turnSpeed = 0.003f;
@@ -30,12 +31,10 @@ bool AnnPlayer::isLocked()
 	return locked;
 }
 
-
 void AnnPlayer::setPosition(Ogre::Vector3 Position)
 {
 		playerBody->Position = Position;
 }
-
 
 void AnnPlayer::setOrientation(Ogre::Euler Orientation)
 {
@@ -52,7 +51,6 @@ void AnnPlayer::setEyesHeight(float eyeHeight)
 	if(!isLocked())
 		playerBody->eyeHeight = eyeHeight;
 }
-
 
 void AnnPlayer::setWalkSpeed(float walk)
 {
@@ -84,9 +82,6 @@ void AnnPlayer::setBody(btRigidBody* Body)
 		playerBody->Body = Body;
 }
 
-
-
-
 void AnnPlayer::lockParameters()
 {
 	locked = true;
@@ -101,7 +96,6 @@ bodyParams* AnnPlayer::getLowLevelBodyParams()
 {
 	return playerBody;
 }
-
 
 float AnnPlayer::getWalkSpeed()
 {
@@ -123,12 +117,10 @@ float AnnPlayer::getMass()
 	return playerBody->mass;
 }
 
-
 btRigidBody* AnnPlayer::getBody()
 {
 	return playerBody->Body;
 }
-
 
 btCollisionShape* AnnPlayer::getShape()
 {

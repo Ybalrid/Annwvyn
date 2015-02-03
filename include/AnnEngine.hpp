@@ -210,6 +210,7 @@ namespace Annwvyn
 			///Reset the Rift Orientation
             void resetOculusOrientation();
 
+			///Get a pose information object
 			OgrePose getPoseFromOOR()
 			{
 				if(oor)
@@ -221,6 +222,7 @@ namespace Annwvyn
 			void setNearClippingDistance(Ogre::Real setNearClippingDistance);
 
         private:
+
 			///Set up graphics
             void setUpOgre(const char title[]);
 
@@ -255,6 +257,7 @@ namespace Annwvyn
             void emergency(void);
 
         private:
+
 			AnnPlayer* player;
 
             //Ogre::Root* m_Root;

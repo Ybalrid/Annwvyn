@@ -40,5 +40,6 @@
 #include "AnnTypes.h"
 #include "AnnTools.h"
 
+//external that has to be showed to user
 #include <OIS.h>
 #endif //ANNWVYN	

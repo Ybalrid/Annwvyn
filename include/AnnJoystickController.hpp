@@ -48,9 +48,13 @@ namespace Annwvyn
 			///Update mouvement from joystick state
             void update();
 
+			///Load a joystick configuration file 
 			void loadConfigFile(const char path[]);
+			///Save a joystick configuration file
 			void saveConfigFile(const char path[]);
+
         private:
+
             //private methods :
             void updateJoystickValues();
             void updateVirtualBodyValues(); 
