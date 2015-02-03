@@ -224,8 +224,8 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
     assert(player->getBody());
 
-    float height(player->getLowLevelBodyParams()->eyeHeight);
-    m_DynamicsWorld->addRigidBody(player->getLowLevelBodyParams()->Body);
+	float height(player->getEyesHeight());
+    m_DynamicsWorld->addRigidBody(player->getBody());
 
 	Ogre::Vector3 ogrePos = player->getPosition();
 
@@ -309,8 +309,8 @@ void AnnEngine::oculusInit(bool fullscreen)
 
     m_Camera = oor->getCameraInformationNode();
 
-    m_Camera->setPosition(player->getLowLevelBodyParams()->Position + 
-            Ogre::Vector3(0.0f,player->getLowLevelBodyParams()->eyeHeight,0.0f));
+    m_Camera->setPosition(player->getPosition() + 
+            Ogre::Vector3(0.0f,player->getEyesHeight(),0.0f));
 }
 
 
@@ -403,11 +403,9 @@ bool AnnEngine::requestStop()
 
 void AnnEngine::updateCamera()
 {
-    m_Camera->setPosition(player->getLowLevelBodyParams()->Position);
-    Ogre::Quaternion temp = QuatReference * player->getLowLevelBodyParams()->Orientation.toQuaternion();
-    m_Camera->setOrientation(temp);
+    m_Camera->setPosition(player->getPosition());
+    m_Camera->setOrientation(QuatReference * player->getOrientation().toQuaternion());
 }
-
 
 void AnnEngine::doRender()
 {
@@ -425,8 +423,10 @@ void AnnEngine::updateAudioSystemState()
 
 void AnnEngine::applyMouseYaw()
 {
-	    player->getLowLevelBodyParams()->Orientation.yaw
-			(Ogre::Radian(-m_Mouse->getMouseState().X.rel*player->getLowLevelBodyParams()->turnSpeed));
+    player->applyBodyYaw
+		(Ogre::Radian(-m_Mouse->getMouseState().X.rel*player->getTurnSpeed()));
+
+	//player->setOrientation(orientation);
 }
 
 
@@ -443,48 +443,48 @@ void AnnEngine::runBasicGameplay()
 				oor->dissmissHS();	//dissmiss the Health and Safety warning.
 
 
-    if(activateWASD && player->getLowLevelBodyParams()->Body != NULL)//classic fps control
+    if(activateWASD && player->getBody() != NULL)//classic fps control
     {
         //TODO extract this piece of code and make it accesible with a method !!
-        player->getLowLevelBodyParams()->Body->activate(); //don't sleep !
+        player->getBody()->activate(); //don't sleep !
 
-        btVector3 curVel = player->getLowLevelBodyParams()->Body->getLinearVelocity(); //get current velocity
+        btVector3 curVel = player->getBody()->getLinearVelocity(); //get current velocity
 
         Ogre::Vector3 translate(Ogre::Vector3::ZERO);
         if(processWASD(&translate))//If player want to move w/ WASD
         {
-            Ogre::Vector3 velocity = player->getLowLevelBodyParams()->Orientation*(translate);
-            player->getLowLevelBodyParams()->Body->setLinearVelocity(
+            Ogre::Vector3 velocity = player->getOrientation()*(translate);
+            player->getBody()->setLinearVelocity(
                     btVector3(velocity.x,curVel.y(),velocity.z));
         }
         else
         {	
             //Just apply effect of gravity.
-            player->getLowLevelBodyParams()->Body->setLinearVelocity((curVel * btVector3(0,1,0))); //we keep the original vertical velocity only
+            player->getBody()->setLinearVelocity(curVel * btVector3(0,1,0)); //we keep the original vertical velocity only
         }
     }//body & WASD
 
-    if(player->getLowLevelBodyParams()->Body != NULL) //if physic
+    if(player->getBody() != NULL) //if physic
     {
-        btTransform Transform = player->getLowLevelBodyParams()->Body->getCenterOfMassTransform();
+        btTransform Transform = player->getBody()->getCenterOfMassTransform();
         Transform.setRotation(btQuaternion(0,0,0,1));
-        player->getLowLevelBodyParams()->Body->setCenterOfMassTransform(Transform);
+        player->getBody()->setCenterOfMassTransform(Transform);
     }
 
     //turn body with mouse TODO enclose this with a methode. That's ugly
 	applyMouseYaw();
 
-    if(player->getLowLevelBodyParams()->Body != NULL)
-        player->getLowLevelBodyParams()->Position =
+    if(player->getBody() != NULL)
+        player->setPosition(
             Ogre::Vector3( 
-                    player->getLowLevelBodyParams()->Body->getCenterOfMassPosition().x(),
-                    player->getLowLevelBodyParams()->Body->getCenterOfMassPosition().y() + player->getLowLevelBodyParams()->eyeHeight/2,
-                    player->getLowLevelBodyParams()->Body->getCenterOfMassPosition().z()
-					);
+                    player->getBody()->getCenterOfMassPosition().x(),
+                    player->getBody()->getCenterOfMassPosition().y() + player->getEyesHeight()/2,
+                    player->getBody()->getCenterOfMassPosition().z()
+					));
 
     //wow. So many 'if's. such test.
     if(m_Ground != NULL && activateJump && collisionWithGround() && m_Keyboard->isKeyDown(OIS::KC_SPACE))
-                    player->getLowLevelBodyParams()->Body->applyCentralImpulse(btVector3(0,jumpForce,0));
+                    player->getBody()->applyCentralImpulse(btVector3(0,jumpForce,0));
 }
 
 void AnnEngine::refresh()
@@ -522,22 +522,22 @@ bool AnnEngine::processWASD(Ogre::Vector3* translate)
     if(m_Keyboard->isKeyDown(OIS::KC_W))
     {
         move = true;
-        translate->z = -player->getLowLevelBodyParams()->walkSpeed;
+        translate->z = -player->getWalkSpeed();
     }
     if(m_Keyboard->isKeyDown(OIS::KC_S))
     {	
         move = true;
-        translate->z = player->getLowLevelBodyParams()->walkSpeed;
+        translate->z = player->getWalkSpeed();
     }
     if(m_Keyboard->isKeyDown(OIS::KC_A))
     {
         move = true;
-        translate->x = -player->getLowLevelBodyParams()->walkSpeed;
+        translate->x = -player->getWalkSpeed();
     }
     if(m_Keyboard->isKeyDown(OIS::KC_D))
     {
         move = true;
-        translate->x = player->getLowLevelBodyParams()->walkSpeed;
+        translate->x = player->getWalkSpeed();
     }
     if(m_Keyboard->isModifierDown(OIS::Keyboard::Shift))
     {
@@ -572,12 +572,12 @@ bool AnnEngine::isKeyDown(OIS::KeyCode key)
 bool AnnEngine::collisionWithGround()
 {
     //If collision isn't computable : 
-    if(m_Ground == NULL || player->getLowLevelBodyParams() == NULL || player->getLowLevelBodyParams()->Body == NULL)
+    if(m_Ground == NULL || player->getBody() == NULL)
         return false;
     
     //Getting rid of differences of types. There is polymorphism we don't care of, we are just comparing memory addresses here!
 
-    void* pplayer = (void*) player->getLowLevelBodyParams()->Body;
+    void* pplayer = (void*) player->getBody();
     void* ground = (void*) m_Ground->getBody();
 
     int numManifolds = m_Dispatcher->getNumManifolds();
@@ -675,7 +675,7 @@ void AnnEngine::processTriggersContacts()
 {
     for(size_t i = 0; i < triggers.size(); i++)
     {
-        if(Tools::Geometry::distance(player->getLowLevelBodyParams()->Position,
+        if(Tools::Geometry::distance(player->getPosition(),
                     triggers[i]->getPosition()) <= triggers[i]->getThreshold())
         {
             triggers[i]->setContactInformation(true);
@@ -753,7 +753,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
     visualBody_Zoffset = z_offset;
     VisualBody = ent;
 
-    VisualBodyAnchor->setPosition(0,-player->getLowLevelBodyParams()->eyeHeight,-visualBody_Zoffset);
+    VisualBodyAnchor->setPosition(0,-player->getEyesHeight(),-visualBody_Zoffset);
     VisualBodyAnchor->setOrientation(refVisualBody);
 
     if(animated)
