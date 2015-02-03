@@ -131,3 +131,13 @@ Ogre::Vector3 AnnPlayer::getPosition()
 {
 	return playerBody->Position;
 }
+
+Ogre::Euler AnnPlayer::getOrientation()
+{
+	return playerBody->Orientation;
+}
+
+void AnnPlayer::applyBodyYaw(Ogre::Radian angle)
+{
+	playerBody->Orientation.yaw(angle);
+}

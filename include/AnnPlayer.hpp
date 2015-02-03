@@ -77,11 +77,15 @@ namespace Annwvyn
 
 		///Get position vector
 		Ogre::Vector3 getPosition();
+		///Get body orientation (euler vector)
+		Ogre::Euler getOrientation();
 
 		///Get rigid body
 		btRigidBody* getBody();
 		///Get Shape
 		btCollisionShape* getShape();
+
+		void applyBodyYaw(Ogre::Radian angle);
 
 	protected:
 
