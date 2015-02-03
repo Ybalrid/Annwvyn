@@ -46,6 +46,7 @@ public:
 	{
 		return btQuaternion(q.x, q.y, q.z, q.w);
 	}
+
 	static btVector3 toBullet(const Ogre::Vector3 &v)
 	{
 		return btVector3(v.x, v.y, v.z);
@@ -55,6 +56,7 @@ public:
 	{
 		return Ogre::Quaternion(q.w(), q.x(), q.y(), q.z());
 	}
+
 	static Ogre::Vector3 toOgre(const btVector3 &v)
 	{
 		return Ogre::Vector3(v.x(), v.y(), v.z());

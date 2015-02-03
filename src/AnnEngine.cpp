@@ -32,8 +32,8 @@ AnnEngine::AnnEngine(const char title[])
     //VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 
 	refVisualBody = Ogre::Quaternion::IDENTITY;
-    log("Annwvyn Game Engine - Step into the Other World",false);
-    log("Desinged for Virtual Reality",false);
+    log("Annwvyn Game Engine - Step into the Other World", false);
+    log("Desinged for Virtual Reality", false);
 }
 
 
@@ -67,10 +67,11 @@ AnnEngine::~AnnEngine()
 
 void AnnEngine::log(std::string message, bool flag)
 {
-
   Ogre::String messageForLog;
+
   if(flag)
 	  messageForLog += "Annwvyn - ";
+  
   messageForLog += message;
   Ogre::LogManager::getSingleton().logMessage(messageForLog);
 }
@@ -148,11 +149,11 @@ void AnnEngine::setUpOIS()
     m_InputManager = OIS::InputManager::createInputSystem(pl);
 
 
-    m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject(OIS::OISKeyboard,true));
-    m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject(OIS::OISMouse,true));
+    m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject(OIS::OISKeyboard, true));
+    m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject(OIS::OISMouse, true));
 
     if(m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
-        m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick,true));
+        m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, true));
 
     //basic gameplay that you can use out of the box
     activateWASD = true; 
@@ -211,7 +212,6 @@ void AnnEngine::createPlayerPhysicalVirtualBody()
         (m_Camera);
 
     btVector3 inertia;
-
 	player->getShape()->calculateLocalInertia(player->getMass(),inertia);
 
     player->setBody(new btRigidBody(player->getMass(), 
@@ -225,13 +225,11 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
     assert(player->getBody());
 
     float height(player->getLowLevelBodyParams()->eyeHeight);
-
     m_DynamicsWorld->addRigidBody(player->getLowLevelBodyParams()->Body);
 
 	Ogre::Vector3 ogrePos = player->getPosition();
 
     btVector3 pos = btVector3(ogrePos.x, ogrePos.y, ogrePos.z);
-
     pos += btVector3(0,height,0);
 
     player->getBody()->translate(pos);
@@ -267,7 +265,7 @@ void AnnEngine::updatePlayerFromPhysics()
 //move player's body IGNORING COLLISION !
 void AnnEngine::translatePhysicBody(Ogre::Vector3 translation)
 {
-    player->getBody()->translate(btVector3(translation.x,translation.y,translation.z));
+    player->getBody()->translate(btVector3(translation.x, translation.y, translation.z));
 }
 
 //the most convinient for controling the player : set the linear velocity
@@ -597,7 +595,6 @@ bool AnnEngine::collisionWithGround()
 
         if((pair1 == pplayer && pair2 == ground) || (pair2 == pplayer && pair1 == ground))
         {
-
             int numContacts = contactManifold->getNumContacts();
             if(numContacts > 0)
                 return true;
@@ -636,7 +633,7 @@ void AnnEngine::processCollisionTesting()
         
         //CAUTION HERE !
         //
-        //we deliberatly lost track of objects types to ensure the test is ON THE ADDRESS of the pointer
+        //we deliberatly lost track of objects types to just test THE ADDRESS of the pointer
         //Comparaison between pointer of differents types aren't permited in C++.
 
 
@@ -647,7 +644,6 @@ void AnnEngine::processCollisionTesting()
         {
             void* body1 = (void*) pairs[p]->Object->getBody();
             void* body2 = (void*) pairs[p]->Receiver->getBody();
-
 
             if((pair1 == body1 && pair2 == body2) || 
                     (pair2 == body1 && pair1 == body2))
@@ -665,7 +661,6 @@ void AnnEngine::processCollisionTesting()
             }
         }
     }
-
 }
 
 AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
