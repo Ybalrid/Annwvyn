@@ -199,9 +199,7 @@ void AnnEngine::initPlayerPhysics()
 void AnnEngine::createVirtualBodyShape()
 {
     assert(player != NULL);
-
-	float height = player->getEyesHeight();
-    player->setShape(new btCapsuleShape(0.5,(height)/2));
+    player->setShape(new btCapsuleShape(0.5,player->getEyesHeight()/2));
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
