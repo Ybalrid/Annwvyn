@@ -137,7 +137,7 @@ Ogre::Euler AnnPlayer::getOrientation()
 	return playerBody->Orientation;
 }
 
-void AnnPlayer::applyBodyYaw(Ogre::Radian angle)
+void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 {
 	playerBody->Orientation.yaw(angle);
 }
