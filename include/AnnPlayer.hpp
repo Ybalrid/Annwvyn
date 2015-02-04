@@ -85,7 +85,7 @@ namespace Annwvyn
 		///Get Shape
 		btCollisionShape* getShape();
 
-		void applyBodyYaw(Ogre::Radian angle);
+		void applyRelativeBodyYaw(Ogre::Radian angle);
 
 	protected:
 

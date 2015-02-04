@@ -64,7 +64,6 @@ AnnEngine::~AnnEngine()
 }
 
 ////////////////////////////////////////////////////////// UTILITY
-
 void AnnEngine::log(std::string message, bool flag)
 {
   Ogre::String messageForLog;
@@ -212,7 +211,7 @@ void AnnEngine::createPlayerPhysicalVirtualBody()
         (m_Camera);
 
     btVector3 inertia;
-	player->getShape()->calculateLocalInertia(player->getMass(),inertia);
+	player->getShape()->calculateLocalInertia(player->getMass(), inertia);
 
     player->setBody(new btRigidBody(player->getMass(), 
             state,
@@ -271,7 +270,7 @@ void AnnEngine::translatePhysicBody(Ogre::Vector3 translation)
 //the most convinient for controling the player : set the linear velocity
 void AnnEngine::setPhysicBodyLinearSpeed(Ogre::Vector3 V)
 {
-    player->getBody()->setLinearVelocity(btVector3(V.x,V.y,V.z));
+    player->getBody()->setLinearVelocity(btVector3(V.x, V.y, V.z));
 }
 
 //loading ressources
@@ -280,7 +279,7 @@ void AnnEngine::loadZip(const char path[], const char resourceGroupName[])
     log("Loading resources from Zip archive :");
     log(path, false);
     if(readyForLoadingRessources)
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path,"Zip", resourceGroupName);
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
 }
 
 void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
@@ -288,7 +287,7 @@ void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
     log("Loading resources from Filesystem directory :");
     log(path, false);
     if(readyForLoadingRessources)
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path,"FileSystem", resourceGroupName);
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
 }
 
 void AnnEngine::loadResFile(const char path[])
@@ -310,7 +309,7 @@ void AnnEngine::oculusInit(bool fullscreen)
     m_Camera = oor->getCameraInformationNode();
 
     m_Camera->setPosition(player->getPosition() + 
-            Ogre::Vector3(0.0f,player->getEyesHeight(),0.0f));
+            Ogre::Vector3(0.0f, player->getEyesHeight(), 0.0f));
 }
 
 
@@ -360,7 +359,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
         if(objects[i] == object)
         {
             std::cout << "Object found" << std::endl;
-            objects.erase(objects.begin()+i);
+            objects.erase(objects.begin() + i);
             Ogre::SceneNode* node = object->node();
 
             node->getParent()->removeChild(node);
@@ -423,10 +422,8 @@ void AnnEngine::updateAudioSystemState()
 
 void AnnEngine::applyMouseYaw()
 {
-    player->applyBodyYaw
+    player->applyRelativeBodyYaw
 		(Ogre::Radian(-m_Mouse->getMouseState().X.rel*player->getTurnSpeed()));
-
-	//player->setOrientation(orientation);
 }
 
 
@@ -455,7 +452,7 @@ void AnnEngine::runBasicGameplay()
         {
             Ogre::Vector3 velocity = player->getOrientation()*(translate);
             player->getBody()->setLinearVelocity(
-                    btVector3(velocity.x,curVel.y(),velocity.z));
+                    btVector3(velocity.x, curVel.y(), velocity.z));
         }
         else
         {	
@@ -513,7 +510,6 @@ void AnnEngine::refresh()
         VisualBodyAnimation->addTime(getTime());
 
 	doRender();
-
 }
 
 bool AnnEngine::processWASD(Ogre::Vector3* translate)
@@ -559,7 +555,7 @@ float AnnEngine::updateTime()
 {
     last = now;
     now = oor->getTimer()->getMilliseconds();
-    return (now-last)/1000.0f;
+    return (now - last)/1000.0f;
 }
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
