@@ -52,163 +52,163 @@ namespace Annwvyn
             AnnEngine* getAddress() {return this;}
 
             ///Load data to the ressource group manager
-            void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT");
-            void loadDir(const char path[], const char resourceGroupNmame[] = "ANNWVYN_DEFAULT");
-            void loadResFile(const char path[]);
+            void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT"); //resource 
+            void loadDir(const char path[], const char resourceGroupNmame[] = "ANNWVYN_DEFAULT"); //resource
+            void loadResFile(const char path[]); //resource
 
             ///Init All ressources groups
-            void initResources();
+            void initResources(); //resource
 
 			///Deprecated: spelling problem here. I'm French
-			void initRessources(){initResources();}
+			void initRessources(){initResources();} //resource
 
 			///Init a resource group
-			void initAResourceGroup(std::string resourceGroup);
+			void initAResourceGroup(std::string resourceGroup); //resource
 
             ///Init OgreOculus stuff
-            void oculusInit(bool fullscreen = true);
+            void oculusInit(bool fullscreen = true); //oculus
 
 
 			///Init the physics model
-            void initPlayerPhysics();
+            void initPlayerPhysics(); //physics on player 
 
 			///Update player location/orientation from the bullet body
-            void updatePlayerFromPhysics();
+            void updatePlayerFromPhysics(); //physics on player
 
             ///Translate the player (DONT DETECT COLLISIONS HERE !!!)
-            void translatePhysicBody(Ogre::Vector3 translation);
+            void translatePhysicBody(Ogre::Vector3 translation); //physics on player 
 
             ///Set player linear speed from a 3D vector
-            void setPhysicBodyLinearSpeed(Ogre::Vector3 V);
+            void setPhysicBodyLinearSpeed(Ogre::Vector3 V); //physics on player
 
             ///Create a game object form the name of an entity.
-            AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject);
+            AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject); //object factory
 
-            bool destroyGameObject(AnnGameObject* object);
+            bool destroyGameObject(AnnGameObject* object); //object factory
 
             ///Set the ambiant light
-            void setAmbiantLight(Ogre::ColourValue v);
+            void setAmbiantLight(Ogre::ColourValue v); //scene parameter
 
             ///Add a light to the scene. return a pointer to the new light
-            AnnLightObject* addLight();
+            AnnLightObject* addLight(); //object factory
 
             ///Calculate one frame of the game
-            void renderOneFrame();
+            void renderOneFrame(); //graphics
 
             ///Display bullet debuging drawing
-            void setDebugPhysicState(bool state);///if state == true, display physics debug
+            void setDebugPhysicState(bool state); //engine debug
 
             ///Run objects physics
-            void runPhysics(); 
+            void runPhysics(); //physics engine call
 
             ///Return true if the game want to terminate the program
-            bool requestStop();
+            bool requestStop(); //engine
 
             ///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
-            static void log(std::string message, bool flag = true);
+            static void log(std::string message, bool flag = true); //engine
 
             ///Update camera position/orientation from rift and virtual body
-            void updateCamera();
+            void updateCamera(); //graphics
 			
 			///Apply yaw transform with mouse relative X displacement
-			void applyMouseYaw();
+			void applyMouseYaw(); //player engine call
 
 			///Get camera position and ask OOR to do the render
-			void doRender();
+			void doRender(); //graphics engine call 
 			
 			///Sync all audo objects
-			void updateAudioSystemState();
+			void updateAudioSystemState(); //audio
 			
 			///Run the base gameplay loop content (WASD + jump + mouse for yaw)
-			void runBasicGameplay();
+			void runBasicGameplay(); //gameplay on user
 
             ///Refresh all for you
-            void refresh();
+            void refresh(); //engine main loop
 
             ///Return a vector depending on WASD keys pressed
-            bool processWASD(Ogre::Vector3* translate); //return the translation vector to aply on the body
+            bool processWASD(Ogre::Vector3* translate); //event on user
 
             ///Caputre event form keyboard and mouse
-            void captureEvents(); //keyboard and mouse
+            void captureEvents(); //events
 
             ///Update program time. retur the delay between the last call of this method
-            float getTime();
+            float getTime();//engine
 
             ///Get elapsed time from engine startup
-            float getTimeFromStartUp();
+            float getTimeFromStartUp();//engine
 
             ///Step Objects animation
-            void playObjectsAnnimation();
+            void playObjectsAnnimation(); //object engine call
 
             ///Set the ground object
-            void setGround(AnnGameObject* Ground);
+            void setGround(AnnGameObject* Ground); //scene
 
             ///Return the Annwvyn OpenAL simplified audio engine
-            AnnAudioEngine* getAudioEngine();
+            AnnAudioEngine* getAudioEngine(); //audio
 
             ///LowLevel OIS Mouse
-            OIS::Mouse* getOISMouse();
+            OIS::Mouse* getOISMouse(); //event
 
             ///LowLevel OIS Keyboard
-            OIS::Keyboard* getOISKeyboard();
+            OIS::Keyboard* getOISKeyboard(); //event
 
             ///LowLevel OIS Joystick
-            OIS::JoyStick* getOISJoyStick();
+            OIS::JoyStick* getOISJoyStick(); //event
 
             ///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
-            bool isKeyDown(OIS::KeyCode key); //this is simplier to use if you are on the OIS namespace ;-)
+            bool isKeyDown(OIS::KeyCode key); //event
 
             ///Return true if you touch the ground
-            bool collisionWithGround();
+            bool collisionWithGround(); //physics
 
             ///Process collision test form bullet manifold and objects collision mask
-            void processCollisionTesting();
+            void processCollisionTesting(); //physics on object engine call
 
             ///Get the dynamicsWorld
-            btDiscreteDynamicsWorld* getDynamicsWorld();
+            btDiscreteDynamicsWorld* getDynamicsWorld(); //physics
 
             ///Create a trigger object
-            AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject);
+            AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject); //object factory
 
             ///Process contact test with triggers
-            void processTriggersContacts();
+            void processTriggersContacts(); //gameplay engine call 
 
             ///Get ogre scene manager
-            Ogre::SceneManager* getSceneManager();
+            Ogre::SceneManager* getSceneManager(); //scene or graphics
 
             ///Set the ogre material for the skydime with params
-            void setSkyDomeMaterial(bool activate, const char materialName[], float curvature = 2.0f, float tiling = 1.0f);
+            void setSkyDomeMaterial(bool activate, const char materialName[], float curvature = 2.0f, float tiling = 1.0f); //scene
 
             ///Get the AnnObject the player is looking at
-            Annwvyn::AnnGameObject* playerLookingAt();
+            Annwvyn::AnnGameObject* playerLookingAt(); //physics
 
             ///Get the AnnGameObject form the given Ogre node
-            Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node);
+            Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
 
-            ///Get bodyParams
-            Annwvyn::bodyParams* getBodyParams();
+            ///DEPRECATED Get bodyParams
+            Annwvyn::bodyParams* getBodyParams(); 
 
             ///Get ogre camera scene node
-            Ogre::SceneNode* getCamera();
+            Ogre::SceneNode* getCamera(); //... 
             
             ///Get offset between viewport and distortion centre
-            float getCentreOffset();
+            float getCentreOffset(); //...
 
 			///Reference orientation. Usefull if you are inside a vehicule for example
-            void setReferenceQuaternion(Ogre::Quaternion q);
+            void setReferenceQuaternion(Ogre::Quaternion q); //engine...
 
 			///Retrive the said reference quaternion
-            Ogre::Quaternion getReferenceQuaternion();
+            Ogre::Quaternion getReferenceQuaternion(); //engine 
 
 			///Attach a 3D mesh to the camera to act as player's body.
-            void attachVisualBody(const std::string entityName, 
+            void attachVisualBody(const std::string entityName,  
                     float z_offset = -0.0644f, 
                     bool flip = false, 
                     bool animated = false, 
-                    Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE);
+                    Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE); //I seriously have something to do about that...
 
 			///Reset the Rift Orientation
-            void resetOculusOrientation();
+            void resetOculusOrientation();///Gameplay... but engine related function. 
 
 			///Get a pose information object
 			OgrePose getPoseFromOOR()
@@ -219,7 +219,7 @@ namespace Annwvyn
 			}
 		
 			///Set the distance of the near clipping  plane
-			void setNearClippingDistance(Ogre::Real setNearClippingDistance);
+			void setNearClippingDistance(Ogre::Real setNearClippingDistance); //graphics
 
         private:
 
