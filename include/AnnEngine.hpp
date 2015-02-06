@@ -281,7 +281,7 @@ namespace Annwvyn
             AnnTriggerObjectVect triggers;
 
             ///Events processing : 
-            OIS::InputManager *m_InputManager ;
+            OIS::InputManager *m_InputManager;
             OIS::Keyboard *m_Keyboard;
             OIS::Mouse *m_Mouse;
             OIS::JoyStick *m_Joystick;

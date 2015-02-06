@@ -88,8 +88,10 @@
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
     <ClInclude Include="..\..\include\AnnCharacter.hpp" />
     <ClInclude Include="..\..\include\AnnEngine.hpp" />
+    <ClInclude Include="..\..\include\AnnEventManager.hpp" />
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
     <ClInclude Include="..\..\include\AnnJoystickController.hpp" />
+    <ClInclude Include="..\..\include\AnnKeyCode.h" />
     <ClInclude Include="..\..\include\AnnMap.hpp" />
     <ClInclude Include="..\..\include\AnnPlayer.hpp" />
     <ClInclude Include="..\..\include\AnnTools.h" />
@@ -108,7 +110,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
     <ClCompile Include="..\..\src\AnnCharacter.cpp" />
+    <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp" />
     <ClCompile Include="..\..\src\AnnEngine.cpp" />
+    <ClCompile Include="..\..\src\AnnEventManager.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
     <ClCompile Include="..\..\src\AnnJoystickController.cpp" />
     <ClCompile Include="..\..\src\AnnMap.cpp" />
