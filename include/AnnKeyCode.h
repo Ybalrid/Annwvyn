@@ -7,7 +7,7 @@ namespace Annwvyn
 {
 	namespace KeyCode
 	{
-		enum
+		enum code
 		{
 			unassigned		= OIS::KC_UNASSIGNED  ,
 			escape			= OIS::KC_ESCAPE      ,
@@ -154,6 +154,7 @@ namespace Annwvyn
 			mycomputer		= OIS::KC_MYCOMPUTER  ,    // My Computer
 			mail			= OIS::KC_MAIL        ,    // Mail
 			mediaselect		= OIS::KC_MEDIASELECT ,    // Media Select
+			SIZE
 		};
 	}
 }

@@ -10,15 +10,21 @@
 namespace Annwvyn
 {
 	class AnnEngine;
+	class AnnEventManager; //predeclaration of the event manager for class friendness directives
 
 	class DLL AnnEvent
 	{
+	public:
+		AnnEvent();
 	protected:
 		bool accepted;
 		bool rejected;
 		bool unpopulated;
-
 		bool valid;
+
+		friend class AnnEventManager;
+		void validate();
+		void populate();
 	};
 
 	class DLL AnnMouseEvent : public AnnEvent
@@ -27,6 +33,23 @@ namespace Annwvyn
 
 	class DLL AnnKeyEvent : public AnnEvent
 	{
+		AnnKeyEvent();
+	public:
+		Annwvyn::KeyCode::code getKey();
+		bool isPressed();
+		bool isRelased();
+
+	private:
+		Annwvyn::KeyCode::code key;
+		bool pressed;
+		bool relased;
+		
+		friend class AnnEventManager;
+		void setPressed();
+		void setRelased();
+
+		void setCode(KeyCode::code c);
+
 	};
 
 	class DLL AnnStickEvent : public AnnEvent
@@ -68,6 +91,7 @@ namespace Annwvyn
 
 		OIS::Keyboard* Keyboard;
 		OIS::Mouse* Mouse;
+		OIS::JoyStick* Joystick;
 	};
 }
 

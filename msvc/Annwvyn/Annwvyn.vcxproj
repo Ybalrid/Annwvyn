@@ -113,6 +113,7 @@
     <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp" />
     <ClCompile Include="..\..\src\AnnEngine.cpp" />
     <ClCompile Include="..\..\src\AnnEventManager.cpp" />
+    <ClCompile Include="..\..\src\AnnEvents.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
     <ClCompile Include="..\..\src\AnnJoystickController.cpp" />
     <ClCompile Include="..\..\src\AnnMap.cpp" />
