@@ -26,6 +26,7 @@ AnnEventManager::AnnEventManager() :
 	Mouse(NULL),
 	Joystick(NULL)
 {
+	for(size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
 }
 
 AnnEventManager::~AnnEventManager()
@@ -51,18 +52,40 @@ void AnnEventManager::setJoystick(OIS::JoyStick* stick)
 
 void AnnEventManager::update()
 {
+	//if keyboard system initialized
 	if(Keyboard)
 	{
+		//for each key of the keyboard
 		for(int c (0) ; c < KeyCode::SIZE; c++)
 		{
+			//if it's pressed
 			if(Keyboard->isKeyDown(static_cast<OIS::KeyCode>(c)))
 			{
-				AnnKeyEvent e;
-				e.setCode((KeyCode::code)c);
-				e.setPressed();
-				e.validate();
-				if(listener)
-					listener->KeyEvent(e);
+				//and wasn't before
+				if(!previousKeyStates[c])
+				{
+					//create a coresponding key event 
+					AnnKeyEvent e;
+					e.setCode((KeyCode::code)c);
+					e.setPressed();
+					e.validate();
+					if(listener) //notify an eventual listener
+						listener->KeyEvent(e);
+				}
+			}
+			else //key not pressed atm
+			{
+				//but was pressed just before
+				if(previousKeyStates[c])
+				{
+					//same thing
+					AnnKeyEvent e;
+					e.setCode((KeyCode::code)c);
+					e.setRelased();
+					e.validate();
+					if(listener)
+						listener->KeyEvent(e);
+				}
 			}
 		}
 	}
