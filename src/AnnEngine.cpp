@@ -11,6 +11,7 @@ AnnEngine::AnnEngine(const char title[])
 
     //This structure handle player's body parameters
     player = new AnnPlayer;
+	eventManager = new AnnEventManager;
     
     //here we set all the defaults parameters for the body.
     
@@ -39,6 +40,8 @@ AnnEngine::AnnEngine(const char title[])
 
 AnnEngine::~AnnEngine()
 {
+	delete eventManager;
+
     //All AnnGameObject
     for(unsigned int i(0); i < objects.size(); i++)
     {

@@ -80,6 +80,8 @@ namespace Annwvyn
 		AnnEventManager();
 		~AnnEventManager();
 
+		void setListener(AnnAbstractEventListener* callbackObject);
+
 	private:
 		AnnAbstractEventListener* listener;
 		friend class AnnEngine;
@@ -92,6 +94,8 @@ namespace Annwvyn
 		OIS::Keyboard* Keyboard;
 		OIS::Mouse* Mouse;
 		OIS::JoyStick* Joystick;
+
+		bool previousKeyStates[static_cast<unsigned int>(KeyCode::SIZE)];
 	};
 }
 

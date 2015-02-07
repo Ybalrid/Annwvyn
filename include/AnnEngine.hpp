@@ -28,6 +28,7 @@
 
 //Annwvyn
 #include "AnnPlayer.hpp"
+#include "AnnEventManager.hpp"
 #include "AnnGameObject.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnTypes.h"
@@ -259,6 +260,8 @@ namespace Annwvyn
         private:
 
 			AnnPlayer* player;
+			AnnEventManager* eventManager;
+			
 
             //Ogre::Root* m_Root;
             Ogre::RenderWindow* m_Window;
