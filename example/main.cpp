@@ -36,6 +36,37 @@ class Sinbad : public Annwvyn::AnnGameObject
 
 };
 
+class CustomEventListener : public Annwvyn::AnnAbstractEventListener
+{
+	public:
+		CustomEventListener() : AnnAbstractEventListener()
+		{
+
+		}
+
+	void KeyEvent(Annwvyn::AnnKeyEvent e)
+	{
+		if(e.isPressed() && e.getKey() == Annwvyn::KeyCode::enter)
+		{
+			cerr << "ENTER PRESSED" << endl;
+		}
+
+			if(e.isRelased() && e.getKey() == Annwvyn::KeyCode::enter)
+		{
+			cerr << "ENTER RELASED" << endl;
+		}
+
+	}
+
+	void MouseEvent(Annwvyn::AnnMouseEvent e)
+	{
+	}
+
+	void StickEvent(Annwvyn::AnnStickEvent e)
+	{
+	}
+};
+
 class MyTrigger : public Annwvyn::AnnTriggerObject
 {
     void postInit()
@@ -54,7 +85,7 @@ class MyTrigger : public Annwvyn::AnnTriggerObject
 
 
 //If you want to redirect cout & cerr to cout.txt and cerr.txt, uncomment the folowing line : 
-//#define OUTSTREAM_TO_FILE
+#define OUTSTREAM_TO_FILE
 
 AnnMain()
 {
@@ -77,6 +108,9 @@ AnnMain()
 
 	//create Annwvyn engine
 	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
+	CustomEventListener* el = new CustomEventListener;
+
+	GameEngine->getEventManager()->setListener(el);
 
 	//load ressources
 	GameEngine->loadDir("media");

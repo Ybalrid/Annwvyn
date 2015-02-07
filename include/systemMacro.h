@@ -1,6 +1,6 @@
 //PLEASE INCLUDE THIS FILE ON ANY ANNWVYN HEADER
 
-/*This file conrain macro and symbols definition that have to be
+/*This file conrain macros and symbols definition that have to be
 * parsed by precompiler on each file.
 * They handle diferencies between compilers
 */

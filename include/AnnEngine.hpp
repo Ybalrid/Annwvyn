@@ -51,6 +51,7 @@ namespace Annwvyn
             ~AnnEngine();
 
             AnnEngine* getAddress() {return this;}
+			AnnEventManager* getEventManager();
 
             ///Load data to the ressource group manager
             void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT"); //resource 

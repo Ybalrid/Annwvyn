@@ -36,7 +36,6 @@ bool AnnKeyEvent::isRelased()
 	return relased;
 }
 
-
 Annwvyn::KeyCode::code AnnKeyEvent::getKey()
 {
 	return key;

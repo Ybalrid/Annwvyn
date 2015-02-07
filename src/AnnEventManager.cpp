@@ -2,6 +2,11 @@
 
 using namespace Annwvyn;
 
+AnnAbstractEventListener::AnnAbstractEventListener()
+{
+	//do nothing spetial yet...
+}
+
 AnnEvent::AnnEvent() :
 	accepted(false),
 	rejected(false),
@@ -31,6 +36,11 @@ AnnEventManager::AnnEventManager() :
 
 AnnEventManager::~AnnEventManager()
 {
+}
+
+void AnnEventManager::setListener(AnnAbstractEventListener* l)
+{
+	listener = l;
 }
 
 //////////////// PRIVATE SETTERS
@@ -71,6 +81,8 @@ void AnnEventManager::update()
 					e.validate();
 					if(listener) //notify an eventual listener
 						listener->KeyEvent(e);
+
+					previousKeyStates[c] = true;
 				}
 			}
 			else //key not pressed atm
@@ -85,8 +97,12 @@ void AnnEventManager::update()
 					e.validate();
 					if(listener)
 						listener->KeyEvent(e);
+
+					previousKeyStates[c] = false;
 				}
 			}
+
+			 
 		}
 	}
 
