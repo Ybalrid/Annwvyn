@@ -27,10 +27,6 @@ namespace Annwvyn
 		void populate();
 	};
 
-	class DLL AnnMouseEvent : public AnnEvent
-	{
-	};
-
 	class DLL AnnKeyEvent : public AnnEvent
 	{
 		AnnKeyEvent();
@@ -50,6 +46,10 @@ namespace Annwvyn
 
 		void setCode(KeyCode::code c);
 
+	};
+
+	class DLL AnnMouseEvent : public AnnEvent
+	{
 	};
 
 	class DLL AnnStickEvent : public AnnEvent

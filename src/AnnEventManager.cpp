@@ -44,6 +44,7 @@ void AnnEventManager::setListener(AnnAbstractEventListener* l)
 }
 
 //////////////// PRIVATE SETTERS
+
 void AnnEventManager::setKeyboard(OIS::Keyboard* k)
 {
 	Keyboard = k;
@@ -58,7 +59,9 @@ void AnnEventManager::setJoystick(OIS::JoyStick* stick)
 {
 	Joystick = stick;
 }
+
 //////////////////////////////////////
+
 
 void AnnEventManager::update()
 {
@@ -78,6 +81,7 @@ void AnnEventManager::update()
 					AnnKeyEvent e;
 					e.setCode((KeyCode::code)c);
 					e.setPressed();
+					e.populate();
 					e.validate();
 					if(listener) //notify an eventual listener
 						listener->KeyEvent(e);
@@ -94,6 +98,7 @@ void AnnEventManager::update()
 					AnnKeyEvent e;
 					e.setCode((KeyCode::code)c);
 					e.setRelased();
+					e.populate();
 					e.validate();
 					if(listener)
 						listener->KeyEvent(e);
@@ -108,9 +113,11 @@ void AnnEventManager::update()
 
 	if(Mouse)
 	{
+		//not implemented yet
 	}
 
 	if(Joystick)
 	{
+		//not implemented yet
 	}
 }
