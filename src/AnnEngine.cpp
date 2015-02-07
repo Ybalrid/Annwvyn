@@ -66,6 +66,11 @@ AnnEngine::~AnnEngine()
     delete AudioEngine;
 }
 
+AnnEventManager* AnnEngine::getEventManager()
+{
+	return eventManager;
+}
+
 ////////////////////////////////////////////////////////// UTILITY
 void AnnEngine::log(std::string message, bool flag)
 {
@@ -164,6 +169,13 @@ void AnnEngine::setUpOIS()
     activateJump = true; 
     //jump with space if your feet touch the ground (m_Groudn object)
     jumpForce = 25.0f;
+
+	if(eventManager)
+	{
+		eventManager->setKeyboard(m_Keyboard);
+		eventManager->setMouse(m_Mouse);
+		eventManager->setJoystick(m_Joystick);
+	}
 }
 
 ///////////// Time system
@@ -493,6 +505,7 @@ void AnnEngine::refresh()
     m_DynamicsWorld->stepSimulation(deltaT,2);
 
 	runBasicGameplay();
+	eventManager->update();
 	
     processCollisionTesting();
     processTriggersContacts();
