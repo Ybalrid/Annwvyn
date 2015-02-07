@@ -1,3 +1,6 @@
+#ifndef OGRE_OCULUS_RENDERER
+#define OGRE_OCULUS_RENDERER
+
 #include <glew.h>
 #ifndef _WIN32 //NOT ON WINDOWS (Assuming Linux. Usinig X Window System as display server
 #include <glxew.h> //Need GLX glew on X window system
@@ -251,3 +254,4 @@ class DLL OgreOculusRender
 };
 
 
+#endif //OGRE_OCULUS_RENDERER
