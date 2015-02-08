@@ -50,13 +50,21 @@ namespace Annwvyn
             ///Class destructor. Do clean up stuff.
             ~AnnEngine();
 
-            AnnEngine* getAddress() {return this;}
+			///Return pointer to the engine itself
+			AnnEngine* getAddress() {return this;}
+
+			///Get the event manager
 			AnnEventManager* getEventManager();
+			
+			///Get the player
 			AnnPlayer* getPlayer();
 
-            ///Load data to the ressource group manager
-            void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT"); //resource 
-            void loadDir(const char path[], const char resourceGroupNmame[] = "ANNWVYN_DEFAULT"); //resource
+            ///Give a zipped archive resource location to the Ogre Resource Group Manager
+            void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT");
+			///Give a directory resouce location to the Ogre Resource Group Manager
+            void loadDir(const char path[], const char resourceGroupNmame[] = "ANNWVYN_DEFAULT");
+
+			///Load a standard Ogre resource.cfg file
             void loadResFile(const char path[]); //resource
 
             ///Init All ressources groups

@@ -3,9 +3,9 @@
 
 /*!
 * \file Annwvyn.h
-* \brief main Annwvyn include
+* \brief Main Annwvyn include file (to be used by client application)
 * \author Arthur Brainville
-* \version 0.0.2
+* \version 0.0.5
 */
 
 /*!
@@ -16,7 +16,7 @@
  *
  * Here you'll find the complete & exhaustive documentation of the engine (last version avilable in the master branch at generation date).
  *
- * I strongly recomned you to go to <a href="http://annwvyn.org/wiki">the wiki</a> to get a more comprehensible help to start using the engine.
+ * I strongly recomned you to go to <a href="http://wiki.annwvyn.org/">the wiki</a> to get a more comprehensible help to start using the engine.
  *
  * There is a quick-start tutorial you can check-out. At the moment, good knowledge of OGRE is required to basicaly do stuff.
  *

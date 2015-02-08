@@ -46,7 +46,7 @@ namespace Annwvyn
 		sphereShape
 	};
 
-	
+	/* useless
 	//controls
 	namespace Keys
 	{
@@ -60,5 +60,7 @@ namespace Annwvyn
 			RUN		//Run
 		};
 	}
+
+	*/
 }
 #endif

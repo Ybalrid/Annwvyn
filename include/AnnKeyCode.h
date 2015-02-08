@@ -7,6 +7,8 @@ namespace Annwvyn
 {
 	namespace KeyCode
 	{
+		///Every key usable on the keyboard is described here.
+		///These keycode are layout independant on Windows, but layout dependent on Linux
 		enum code
 		{
 			unassigned		= OIS::KC_UNASSIGNED  ,

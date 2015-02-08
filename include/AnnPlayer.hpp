@@ -13,9 +13,12 @@ namespace Annwvyn
 	///Parameters of the VirtualBody		
 	class bodyParams
 	{
+		/**
+		* That class was a structure. It is keeped as a class with public attributes to keep compatibility with legacy code.
+		*/
 	public:
 
-		//Constructor that handle the default body parameters. 
+		///Constructor that handle the default body parameters. 
 		bodyParams();
 
 		float eyeHeight;
@@ -36,7 +39,10 @@ namespace Annwvyn
 	{
 	public:
 
+		///Construct the player object
 		AnnPlayer();
+		
+		///Destroy the player object
 		~AnnPlayer();
 
 		///Prevent modification of physical parameter
