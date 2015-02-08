@@ -71,6 +71,11 @@ AnnEventManager* AnnEngine::getEventManager()
 	return eventManager;
 }
 
+AnnPlayer* AnnEngine::getPlayer()
+{
+	return player;
+}
+
 ////////////////////////////////////////////////////////// UTILITY
 void AnnEngine::log(std::string message, bool flag)
 {
