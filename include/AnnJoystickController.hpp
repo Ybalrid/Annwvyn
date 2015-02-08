@@ -10,6 +10,7 @@
 #include "AnnEngine.hpp"
 #include "AnnTypes.h"
 #include "euler.h"
+
 using namespace std;
 using namespace OIS;
 using namespace Annwvyn;
