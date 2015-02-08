@@ -174,11 +174,13 @@ class DLL OgreOculusRender
 			ovrHmd_RecenterPose(oc->getHmd());
 		}
 
+		///Get to know if the Health and Safety warning dissmiss has be requested
 		bool IsHsDissmissed()
 		{
 			return hsDissmissed;
 		}
-
+		
+		///Request the dissmiss of the Health and Safety warning
 		void dissmissHS();
 
     private:

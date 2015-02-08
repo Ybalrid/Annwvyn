@@ -77,25 +77,38 @@ namespace Annwvyn
 	class DLL AnnEventManager
 	{
 	public:
+		///Construct the event manager
 		AnnEventManager();
+		///Destroy the event manager
 		~AnnEventManager();
 
+		///Set the listener object to the event manager.
 		void setListener(AnnAbstractEventListener* callbackObject);
+		
+		///Make the event manager forget about the listener
 		void removeListener();
 
 	private:
 		AnnAbstractEventListener* listener;
 		friend class AnnEngine;
+		///Engine call for refreshing the event system
 		void update();
 
+		///Engine initialization for keyboard events
 		void setKeyboard(OIS::Keyboard* k);
+		///Engine initialization for Mouse events
 		void setMouse(OIS::Mouse* m);
+		///Engine initialization for Joystick events 
 		void setJoystick(OIS::JoyStick* stick);
 
+		///Pointer that holds the keyboard
 		OIS::Keyboard* Keyboard;
+		///Pointer that holds the Mouse
 		OIS::Mouse* Mouse;
+		///Pointer that holds the stick
 		OIS::JoyStick* Joystick;
 
+		///Array for remembering the key states at last update. 
 		bool previousKeyStates[static_cast<unsigned int>(KeyCode::SIZE)];
 	};
 }

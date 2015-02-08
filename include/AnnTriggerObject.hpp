@@ -46,13 +46,17 @@ namespace Annwvyn
             friend class Annwvyn::AnnEngine;
 
         private:
+			///Position of the object
             Ogre::Vector3 m_position;
+			///Distance where the trigger is triggered
             float m_threshold;
+			///True if trigger triggerd
             bool m_contactWithPlayer;
 
         public:
-            ///When contact happend
+            ///When contact happened
             virtual void atContact() {return;}
+			///After initialization
             virtual void postInit() {return;}
     };
 }
