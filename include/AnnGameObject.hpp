@@ -6,18 +6,17 @@
 
 #include <string>
 
-///Ogre3D
+//Ogre3D
 #include <Ogre.h>
-///Bullet
+//Bullet
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-///btOgre
+//btOgre
 #include "BtOgrePG.h"
 #include "BtOgreGP.h"
 #include "BtOgreExtras.h"
-///Annwvyn
+//Annwvyn
 #include "AnnTypes.h"
-///#include "AnnEngine.hpp"
 #include "AnnAudioEngine.hpp"
 
 namespace Annwvyn

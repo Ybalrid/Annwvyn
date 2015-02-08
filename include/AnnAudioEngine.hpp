@@ -8,10 +8,10 @@
 #include <iostream>
 #include <string.h>
 
-///OpenAl
+//OpenAl
 #include <al.h>
 #include <alc.h>
-///libsndfile
+//libsndfile
 #include <sndfile.h>
 
 
