@@ -43,6 +43,11 @@ void AnnEventManager::setListener(AnnAbstractEventListener* l)
 	listener = l;
 }
 
+void AnnEventManager::removeListener()
+{
+	listener = NULL;
+}
+
 //////////////// PRIVATE SETTERS
 
 void AnnEventManager::setKeyboard(OIS::Keyboard* k)
