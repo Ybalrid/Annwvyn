@@ -61,6 +61,7 @@ namespace Annwvyn
 
             ///Give a zipped archive resource location to the Ogre Resource Group Manager
             void loadZip(const char path[], const char ressourceGroupName[] = "ANNWVYN_DEFAULT");
+
 			///Give a directory resouce location to the Ogre Resource Group Manager
             void loadDir(const char path[], const char resourceGroupNmame[] = "ANNWVYN_DEFAULT");
 
@@ -78,7 +79,6 @@ namespace Annwvyn
 
             ///Init OgreOculus stuff
             void oculusInit(bool fullscreen = true); //oculus
-
 
 			///Init the physics model
             void initPlayerPhysics(); //physics on player 
@@ -269,7 +269,11 @@ namespace Annwvyn
 
         private:
 
+			//Audio engine
+            AnnAudioEngine* AudioEngine;
+			//Player
 			AnnPlayer* player;
+			//Event manager
 			AnnEventManager* eventManager;
 			
 
@@ -293,7 +297,7 @@ namespace Annwvyn
             AnnGameObjectVect objects;
             AnnTriggerObjectVect triggers;
 
-            ///Events processing : 
+            //Events processing : 
             OIS::InputManager *m_InputManager;
             OIS::Keyboard *m_Keyboard;
             OIS::Mouse *m_Mouse;
@@ -307,10 +311,10 @@ namespace Annwvyn
             bool activateJump;
             float jumpForce;
 
-            ///Time
+            //Time
             unsigned long last,now; //Milisec
             
-            ///Elapsed time
+            //Elapsed time
             float deltaT; //Sec
 
             //bullet
@@ -320,7 +324,7 @@ namespace Annwvyn
             btSequentialImpulseConstraintSolver* m_Solver;
             btGhostPairCallback* m_ghostPairCallback;
             
-            ///Bullet Dynamics World
+            //Bullet Dynamics World
             btDiscreteDynamicsWorld* m_DynamicsWorld;
             
             bool debugPhysics;
@@ -332,8 +336,7 @@ namespace Annwvyn
 
             AnnGameObject* m_Ground;
 
-            ///Audio engine
-            AnnAudioEngine* AudioEngine;
+         
 
     };
 }
