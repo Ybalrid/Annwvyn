@@ -73,7 +73,7 @@ namespace Annwvyn
 		void MouseEvent(AnnMouseEvent e);
 		void StickEvent(AnnStickEvent e);
 	};
-
+		
 	class DLL AnnEventManager
 	{
 	public:
@@ -81,6 +81,7 @@ namespace Annwvyn
 		~AnnEventManager();
 
 		void setListener(AnnAbstractEventListener* callbackObject);
+		void removeListener();
 
 	private:
 		AnnAbstractEventListener* listener;

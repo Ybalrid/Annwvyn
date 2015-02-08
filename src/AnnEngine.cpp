@@ -891,7 +891,7 @@ void AnnEngine::setGround(AnnGameObject* Ground)
 
 void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)
 {
-    m_SceneManager->setSkyDome(activate,materialName,curvature,tiling);
+    m_SceneManager->setSkyDome(activate, materialName, curvature, tiling);
 }
 
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
