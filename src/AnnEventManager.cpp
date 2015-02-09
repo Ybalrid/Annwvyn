@@ -74,7 +74,7 @@ void AnnEventManager::update()
 	if(Keyboard)
 	{
 		//for each key of the keyboard
-		for(int c (0) ; c < KeyCode::SIZE; c++)
+		for(int c (0); c < KeyCode::SIZE; c++)
 		{
 			//if it's pressed
 			if(Keyboard->isKeyDown(static_cast<OIS::KeyCode>(c)))
