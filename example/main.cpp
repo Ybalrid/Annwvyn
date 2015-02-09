@@ -107,9 +107,8 @@ AnnMain()
 
 	//create Annwvyn engine
 	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
-	CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
-
-	GameEngine->getEventManager()->setListener(el);
+	//CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
+	//GameEngine->getEventManager()->setListener(el);
 
 	//load ressources
 	GameEngine->loadDir("media");
