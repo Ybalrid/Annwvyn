@@ -2,7 +2,7 @@
 
 using namespace Annwvyn;
 
-AnnDefaultEventListener::AnnDefaultEventListener() : 
+AnnDefaultEventListener::AnnDefaultEventListener(AnnPlayer* p) : AnnAbstractEventListener(p),
 	forward(KeyCode::w),
 	backward(KeyCode::s),
 	straffleft(KeyCode::a),

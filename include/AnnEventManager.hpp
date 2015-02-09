@@ -4,6 +4,7 @@
 #include "systemMacro.h"
 
 #include "AnnKeyCode.h"
+#include "AnnPlayer.hpp"
 
 #include <OIS.h>
 
@@ -59,16 +60,18 @@ namespace Annwvyn
 	class DLL AnnAbstractEventListener 
 	{
 	public:
-		AnnAbstractEventListener();
+		AnnAbstractEventListener(AnnPlayer* p);
 		virtual void KeyEvent(AnnKeyEvent e) = 0;
 		virtual void MouseEvent(AnnMouseEvent e) = 0;
 		virtual void StickEvent(AnnStickEvent e) = 0;
+	private:
+		AnnPlayer* player;
 	};
 
 	class DLL AnnDefaultEventListener : public AnnAbstractEventListener
 	{
 	public:
-		AnnDefaultEventListener();
+		AnnDefaultEventListener(AnnPlayer* p);
 		void KeyEvent(AnnKeyEvent e);
 		void MouseEvent(AnnMouseEvent e);
 		void StickEvent(AnnStickEvent e);

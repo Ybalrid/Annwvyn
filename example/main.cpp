@@ -40,6 +40,9 @@ class CustomEventListener : public Annwvyn::AnnAbstractEventListener
 {
 public:
 
+	CustomEventListener(AnnPlayer* p) : AnnAbstractEventListener(p)
+	{}
+
 	void KeyEvent(Annwvyn::AnnKeyEvent e)
 	{
 		if(e.isPressed() && e.getKey() == Annwvyn::KeyCode::enter)
@@ -104,7 +107,7 @@ AnnMain()
 
 	//create Annwvyn engine
 	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
-	CustomEventListener* el = new CustomEventListener;
+	CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
 
 	GameEngine->getEventManager()->setListener(el);
 
