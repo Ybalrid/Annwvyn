@@ -2,9 +2,9 @@
 
 using namespace Annwvyn;
 
-AnnAbstractEventListener::AnnAbstractEventListener()
+AnnAbstractEventListener::AnnAbstractEventListener(AnnPlayer* p)
 {
-	//do nothing spetial yet...
+	player = p;
 }
 
 AnnEvent::AnnEvent() :
