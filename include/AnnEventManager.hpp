@@ -72,6 +72,16 @@ namespace Annwvyn
 		void KeyEvent(AnnKeyEvent e);
 		void MouseEvent(AnnMouseEvent e);
 		void StickEvent(AnnStickEvent e);
+
+		void setKeys(KeyCode::code fw, KeyCode::code bw, KeyCode::code sl, KeyCode::code sr, KeyCode::code jmp, KeyCode::code rn); 
+
+	private:
+		KeyCode::code forward;
+		KeyCode::code backward;
+		KeyCode::code straffleft;
+		KeyCode::code straffright;
+		KeyCode::code jump;
+		KeyCode::code run;
 	};
 		
 	class DLL AnnEventManager
