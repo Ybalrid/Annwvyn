@@ -312,7 +312,7 @@ namespace Annwvyn
             float jumpForce;
 
             //Time
-            unsigned long last,now; //Milisec
+            unsigned long last, now; //Milisec
             
             //Elapsed time
             float deltaT; //Sec
