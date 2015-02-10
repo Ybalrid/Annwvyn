@@ -1,3 +1,9 @@
+/**
+ * \file AnnPlayer.hpp
+ * \brief class that represent the player
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANN_PLAYER
 #define ANN_PLAYER
 
@@ -116,3 +122,4 @@ namespace Annwvyn
 }
 
 #endif //ANN_PLAYER
+

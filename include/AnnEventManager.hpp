@@ -1,3 +1,9 @@
+/**
+ * \file AnnEventManager.hpp
+ * \brief event management for Annwvyn
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANNEVENTMANAGER
 #define ANNEVENTMANAGER
 

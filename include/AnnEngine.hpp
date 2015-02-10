@@ -1,3 +1,14 @@
+/**
+ * \file AnnEngine.hpp
+ * \brief Main Annwvyn Engine class
+ *        handle intialization, destruction of object at runtime
+ *        handle rendering initialization, physics initialization and sound engine initialization
+ * \author A. Brainville (Ybalrid)
+ */
+
+
+
+
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
 
