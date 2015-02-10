@@ -1,3 +1,9 @@
+/**
+ * \file AnnJoystickController.hpp
+ * \brief Legacy code for using a game controller with Annwvyn
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANN_JOYSTICK_CONTROLLER
 #define ANN_JOYSTICK_CONTROLLER
 

@@ -1,3 +1,11 @@
+/**
+ * \file AnnAudioEngine.hpp
+ * \brief OpenAL audio handeling for Annwvvyn
+ *        handle the OpenAL context creation and the loading of sound files
+ *        handle the position/orientation of the listener
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANN_AUDIO
 #define ANN_AUDIO
 

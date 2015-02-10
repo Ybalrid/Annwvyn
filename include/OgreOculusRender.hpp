@@ -1,3 +1,9 @@
+/**
+ * \file OgreOculusRenderer.hpp
+ * \brief Initialize rendering for the rift with SDK post traitement (OpenGL)
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
 

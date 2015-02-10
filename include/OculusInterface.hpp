@@ -1,3 +1,9 @@
+/**
+ * \file OculusInterface.hpp
+ * \brief Simple class for accessing Oculus Rift data
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef OCULUS_INTERFACE 
 #define OCULUS_INTERFACE 
 

@@ -1,3 +1,10 @@
+/**
+ * \file systemMacro.h
+ * \brief file that permit to handle differencies between operating systemps
+ *        (Windows and GNU/Linux)
+ * \author A. Brainville
+ */
+
 //PLEASE INCLUDE THIS FILE ON ANY ANNWVYN HEADER
 
 /*This file conrain macros and symbols definition that have to be

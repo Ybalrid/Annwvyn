@@ -1,3 +1,9 @@
+/**
+ * \file AnnCharacter.hpp
+ * \brief Class representing an in-game (non-player) character
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANN_CHARACTER
 #define ANN_CHARACTER
 

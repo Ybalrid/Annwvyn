@@ -1,3 +1,9 @@
+/**
+ * \file AnnGameObject.hpp
+ * \brief Game Object class
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANNGAMEOBJECT
 #define ANNGAMEOBJECT
 

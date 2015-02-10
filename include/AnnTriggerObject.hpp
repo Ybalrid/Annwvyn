@@ -1,3 +1,9 @@
+/**
+ * \file AnnTriggerObject.hpp
+ * \brief Object for representing a volume that trigger an event
+ * \author A. Brainville
+ */
+
 #ifndef ANNTRIGGEROBJECT
 #define ANNTRIGGEROBJECT
 
