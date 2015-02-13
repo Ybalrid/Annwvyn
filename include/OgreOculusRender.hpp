@@ -1,6 +1,6 @@
 /**
  * \file OgreOculusRenderer.hpp
- * \brief Initialize rendering for the rift with SDK post traitement (OpenGL)
+ * \brief Initialize rendering for the rift with SDK post traitement (OpenGL ONLY)
  * \author A. Brainville (Ybalrid)
  */
 
@@ -14,25 +14,28 @@
 #include <wglew.h> //Need wgelw
 #endif
 
+
+//Oculus Rift Lib
+#include <OVR.h>
+
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
+#include <OVR_CAPI_GL.h>
+
 //C++ SDL Includes
 #include <iostream>
 #include <sstream>
 
-//Oculus Rift Lib
-#include <OVR.h>
-//CAPI
-#include <OVR_CAPI.h>
-
-//OpenGL CAPI OVR
-#include <OVR_CAPI_GL.h>
-#include <CAPI/GL/CAPI_GL_Util.h>
-
+/*
 #ifdef _WIN32
 //Direct3D CAPI OVR. Forcing version 11
 #define OVR_D3D_VERSION 11
 #include <OVR_CAPI_D3D.h>
 #include <CAPI/D3D1X/CAPI_D3D1X_Util.h>
 #endif
+*/
 
 #ifndef _WIN32 //Assuming Linux  here. Any Unix based have that header includable
 #include <unistd.h>
@@ -50,12 +53,13 @@
 #include <RenderSystems/GL/OgreGLTexture.h>
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 
+/*
 #ifdef _WIN32 //Possibility of adding D3D11 compatibility
 #include <RenderSystems/Direct3D11/OgreD3D11RenderSystem.h>
 #include <RenderSystems/Direct3D11/OgreD3D11Texture.h>
 #include <RenderSystems/Direct3D11/OgreD3D11TextureManager.h>
 #endif
-
+*/
 //Accessing Oculus Rift through a class : 
 #include "OculusInterface.hpp"
 
@@ -230,7 +234,7 @@ class DLL OgreOculusRender
         ovrGLConfig cfg;
 		///OpenGL Textures
         ovrGLTexture EyeTexture[2];
-
+/*
 #ifdef _WIN32
 		///D3D11 Configuration
 		ovrD3D11Config D3D11cfg;
@@ -242,6 +246,7 @@ class DLL OgreOculusRender
 		bool direct3D;
 
 #endif
+		*/
 		///Size of left eye texture
         ovrSizei texSizeL;
 		///Size of right eye texture
