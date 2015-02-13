@@ -1,6 +1,6 @@
 /**
  * \file OgreOculusRenderer.hpp
- * \brief Initialize rendering for the rift with SDK post traitement (OpenGL)
+ * \brief Initialize rendering for the rift with SDK post traitement (OpenGL ONLY)
  * \author A. Brainville (Ybalrid)
  */
 
