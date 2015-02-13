@@ -19,33 +19,15 @@
 #include <OVR.h>
 
 #ifdef _WIN32
- #include <Windows.h>
+#include <Windows.h>
 #endif
+
 #include <OVR_CAPI_GL.h>
-/*
-#include <OVR_CAPI.h>
-
-//OpenGL CAPI OVR
-#include <OVR_CAPI_GL.h>
-#include <CAPI/GL/CAPI_GL_Util.h>
-*/
-
-
 
 //C++ SDL Includes
 #include <iostream>
 #include <sstream>
 
-/*
-//Oculus Rift Lib
-#include <OVR.h>
-//CAPI
-#include <OVR_CAPI.h>
-
-//OpenGL CAPI OVR
-#include <OVR_CAPI_GL.h>
-#include <CAPI/GL/CAPI_GL_Util.h>
-*/
 /*
 #ifdef _WIN32
 //Direct3D CAPI OVR. Forcing version 11
@@ -71,13 +53,13 @@
 #include <RenderSystems/GL/OgreGLTexture.h>
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 
-
+/*
 #ifdef _WIN32 //Possibility of adding D3D11 compatibility
 #include <RenderSystems/Direct3D11/OgreD3D11RenderSystem.h>
 #include <RenderSystems/Direct3D11/OgreD3D11Texture.h>
 #include <RenderSystems/Direct3D11/OgreD3D11TextureManager.h>
 #endif
-
+*/
 //Accessing Oculus Rift through a class : 
 #include "OculusInterface.hpp"
 
