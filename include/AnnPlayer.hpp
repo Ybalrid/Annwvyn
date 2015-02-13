@@ -99,6 +99,14 @@ namespace Annwvyn
 
 		void applyRelativeBodyYaw(Ogre::Radian angle);
 
+		///manual speed management
+		void setLinearSpeed(Ogre::Vector3 v);		
+		void killLinearSpeed();
+		void addLinearSpeed(Ogre::Vector3 v);
+
+		void walk();
+		void stopWalk();
+
 	protected:
 
 		///Object that keep body parameters (= legacy structure)

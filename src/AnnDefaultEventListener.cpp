@@ -12,7 +12,12 @@ AnnDefaultEventListener::AnnDefaultEventListener(AnnPlayer* p) : AnnAbstractEven
 {
 }
 
-void AnnDefaultEventListener::setKeys(KeyCode::code fw, KeyCode::code bw, KeyCode::code sl, KeyCode::code sr, KeyCode::code jmp, KeyCode::code rn)
+void AnnDefaultEventListener::setKeys(KeyCode::code fw, 
+									  KeyCode::code bw, 
+									  KeyCode::code sl, 
+									  KeyCode::code sr, 
+									  KeyCode::code jmp, 
+									  KeyCode::code rn)
 {
 	forward = fw;
 	backward = bw;
@@ -30,6 +35,7 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		//modify linear speed vector
 		if(e.getKey() == forward)
 		{
+
 		}
 		if(e.getKey() == backward)
 		{
