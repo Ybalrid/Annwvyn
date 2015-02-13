@@ -211,7 +211,8 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	ovrGLConfig cfg;
 	cfg.OGL.Header.API = ovrRenderAPI_OpenGL;
 	cfg.OGL.Header.Multisample = 1;
-	cfg.OGL.Header.RTSize = oc->getHmd()->Resolution;
+	cfg.OGL.Header.BackBufferSize = oc->getHmd()->Resolution;
+	//cfg.OGL.Header.RTSize = oc->getHmd()->Resolution;
 
 	//OpenGL initialization differ between Windows and Linux
 #ifdef _WIN32 //If windows
@@ -308,7 +309,7 @@ void OgreOculusRender::RenderOneFrame()
 		vpts[eye]->clear();
 
 		//Get the eye pose
-		ovrPosef eyePose = ovrHmd_GetEyePose(oc->getHmd(), eye);
+		ovrPosef eyePose = ovrHmd_GetHmdPosePerEye(oc->getHmd(), eye);
 		headPose[eye] = eyePose;
 
 		//Get the hmd orientation
@@ -335,9 +336,9 @@ void OgreOculusRender::RenderOneFrame()
 			(cameraPosition  //the "gameplay" position of player's avatar head
 			+ 
 			(cams[eye]->getOrientation() * - Ogre::Vector3( //realword camera orientation + the oposite of the 
-			EyeRenderDesc[eye].ViewAdjust.x,                //view adjust vector. we translate the camera, not the whole world
-			EyeRenderDesc[eye].ViewAdjust.y, 
-			EyeRenderDesc[eye].ViewAdjust.z)
+			EyeRenderDesc[eye].HmdToEyeViewOffset.x, //view adjust vector. we translate the camera, not the whole world
+			EyeRenderDesc[eye].HmdToEyeViewOffset.y,
+			EyeRenderDesc[eye].HmdToEyeViewOffset.z)
 
 			+ cameraOrientation * Ogre::Vector3( //cameraOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
 			headPose[eye].Position.x,
