@@ -21,12 +21,12 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 
 	cameraPosition = Ogre::Vector3(0,0,10);
 	cameraOrientation = Ogre::Quaternion::IDENTITY;
-	
+
 	this->nearClippingDistance = (float) 0.05;
 	this->lastOculusPosition = cameraPosition;
 	this->lastOculusOrientation = cameraOrientation;
 	this->updateTime = 0;
-	
+
 	fullscreen = true;
 	hsDissmissed = false;
 }
@@ -120,21 +120,17 @@ void OgreOculusRender::createWindow()
 	Ogre::NameValuePairList misc;
 
 	//This one only works on windows : "Borderless = no decoration"
-	misc["border"]="none";
+	misc["border"]="none"; //In case the program is not running in fullscreen mode, don't put windwo borders
 	misc["vsync"]="true";
 	misc["displayFrequency"]="75";
 	misc["monitorIndex"]="1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
 
 	//Initialize a window ans specify that creation is manual
 	window = root->initialise(false, name);
+	//Actually create the window
+	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen,&misc);
 
-	//Create a non-fullscreen window using custom parameters
-	if(fullscreen)
-		window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, true,&misc);
-	else
-		window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, false, &misc);
-
-	//Put the window at the place given by the SDK
+	//Put the window at the place given by the SDK (usefull on linux system where the X server thinks multiscreen is a single big one...)
 	window->reposition(oc->getHmd()->WindowsPos.x,oc->getHmd()->WindowsPos.y);
 }
 
@@ -350,7 +346,7 @@ void OgreOculusRender::RenderOneFrame()
 	}
 
 	//Ogre::Root::getSingleton().getRenderSystem()->_setRenderTarget(window);
-	 
+
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
 	//Do the rendering then the buffer swap
 
@@ -364,7 +360,7 @@ void OgreOculusRender::RenderOneFrame()
 		(headPose[0].Position.x,
 		headPose[0].Position.y,
 		headPose[0].Position.z);
-	
+
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion
 		(headPose[0].Orientation.w,
 		headPose[0].Orientation.x,
@@ -376,4 +372,78 @@ void OgreOculusRender::dissmissHS()
 {
 	ovrHmd_DismissHSWDisplay(oc->getHmd());
 	hsDissmissed = true;
+}
+
+
+
+///Set fullscreen. Value only used at window creation
+void OgreOculusRender::setFullScreen(bool fs)
+{
+	fullscreen = fs;
+}
+
+///Return true if fullscreen set.
+bool OgreOculusRender::isFullscreen()
+{
+	return fullscreen;
+}
+
+///Get the scene manager.
+Ogre::SceneManager* OgreOculusRender::getSceneManager()
+{
+	return smgr;
+}
+
+///Get the RenderWindow
+Ogre::RenderWindow* OgreOculusRender::getWindow()
+{
+	return window;
+}
+
+///Print various informations about the cameras
+void OgreOculusRender::debugPrint()
+{
+	for(int i(0); i < 2; i++)
+	{
+		cout << "cam " << i << " " << cams[i]->getPosition() << endl;
+		cout << cams[i]->getOrientation() << endl;
+	}
+}
+
+///Save content of 'left eye' RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
+void OgreOculusRender::debugSaveToFile(const char path[])
+{
+	if(rtts[0]) rtts[0]->writeContentsToFile(path);
+}
+
+///Get a node representing the camera. NOTE: Camera isn"t attached.
+Ogre::SceneNode* OgreOculusRender::getCameraInformationNode()
+{
+	return CameraNode;
+}
+
+///Get the timer
+Ogre::Timer* OgreOculusRender::getTimer()
+{
+	if(root)
+		return root->getTimer();
+	return NULL;
+}
+
+///Get time between frames
+float OgreOculusRender::getUpdateTime()
+{
+	return updateTime;
+}
+
+///Recenter rift to default position.
+void OgreOculusRender::recenter()
+{
+	ovrHmd_RecenterPose(oc->getHmd());
+}
+
+///Get to know if the Health and Safety warning dissmiss has be requested
+bool OgreOculusRender::IsHsDissmissed()
+{
+	return hsDissmissed;
 }
