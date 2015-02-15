@@ -59,14 +59,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(AnnwvynSDK)\Annwvyn\include;$(AnnwvynSDK)\AL\openal-soft-1.15.1\include\AL;$(AnnwvynSDK)\libsndfile\include;$(AnnwvynSDK)\AL\openal-soft-1.15.1\OpenAL32\Include;$(AnnwvynSDK)\OculusSDK\LibOVR\Include;$(AnnwvynSDK)\bullet3\src;$(AnnwvynSDK)\OgreSDK\boost;$(AnnwvynSDK)\OgreSDK\include\OGRE;$(AnnwvynSDK)\OIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(AnnwvynSDK)\Annwvyn\include;$(AnnwvynSDK)\AL\openal-soft-1.15.1\include\AL;$(AnnwvynSDK)\libsndfile\include;$(AnnwvynSDK)\AL\openal-soft-1.15.1\OpenAL32\Include;$(AnnwvynSDK)\OculusSDK\LibOVR\Src;$(AnnwvynSDK)\OculusSDK\LibOVR\Include;$(AnnwvynSDK)\bullet3\src;$(AnnwvynSDK)\OgreSDK\boost;$(AnnwvynSDK)\OgreSDK\include\OGRE;$(AnnwvynSDK)\OIS\include;$(AnnwvynSDK)\glew\include\GL;$(AnnwvynSDK)\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Annwvyn.lib;OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;OpenAL32.lib;libsndfile-1.lib;libboost_chrono-vc110-mt-1_55.lib;libboost_system-vc110-mt-1_55.lib;libboost_date_time-vc110-mt-1_55.lib;libboost_thread-vc110-mt-1_55.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(AnnwvynSDK)\Annwvyn\lib;$(AnnwvynSDK)\AL\openal-soft-1.15.1\build\Release;$(AnnwvynSDK)\bullet3\lib;$(AnnwvynSDK)\libsndfile\lib;$(AnnwvynSDK)\OIS\lib;$(AnnwvynSDK)\OculusSDK\LibOVR\Lib\Win32;$(AnnwvynSDK)\OgreSDK\lib\Release\opt;$(AnnwvynSDK)\OgreSDK\lib\Release;$(AnnwvynSDK)\OgreSDK\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(AnnwvynSDK)\Annwvyn\lib;$(AnnwvynSDK)\AL\openal-soft-1.15.1\build\Release;$(AnnwvynSDK)\bullet3\lib;$(AnnwvynSDK)\libsndfile\lib;$(AnnwvynSDK)\OIS\lib;$(AnnwvynSDK)\OculusSDK\LibOVR\Lib\Win32\VS2012;$(AnnwvynSDK)\OgreSDK\lib\Release\opt;$(AnnwvynSDK)\OgreSDK\lib\Release;$(AnnwvynSDK)\OgreSDK\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
