@@ -108,9 +108,13 @@ void OgreOculusRender::initialize()
 
 void OgreOculusRender::getOgreConfig()
 {
+	//Ogre as to be initialized
 	assert(root != NULL);
+	//Try to resore the config from an ogre.cfg file
 	if(!root->restoreConfig())
+		//Open the config dialog of Ogre (even if we're ignoring part of the parameters you can input from it)
 		if(!root->showConfigDialog())
+			//If the user clicked the "cancel" button or other bad stuff happened during the configuration (like a dragon attack)
 			abort();
 }
 
@@ -223,7 +227,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	window->getCustomAttribute("HDC", &dc);
 	cfg.OGL.DC = dc;
 
-#else //Linux, even if OVR 0.4.2 is still NOT running on Linux
+#else //Linux; untested code (yet)
 
 	//Get X window id
 	size_t wID;
@@ -376,31 +380,26 @@ void OgreOculusRender::dissmissHS()
 
 
 
-///Set fullscreen. Value only used at window creation
 void OgreOculusRender::setFullScreen(bool fs)
 {
 	fullscreen = fs;
 }
 
-///Return true if fullscreen set.
 bool OgreOculusRender::isFullscreen()
 {
 	return fullscreen;
 }
 
-///Get the scene manager.
 Ogre::SceneManager* OgreOculusRender::getSceneManager()
 {
 	return smgr;
 }
 
-///Get the RenderWindow
 Ogre::RenderWindow* OgreOculusRender::getWindow()
 {
 	return window;
 }
 
-///Print various informations about the cameras
 void OgreOculusRender::debugPrint()
 {
 	for(int i(0); i < 2; i++)
@@ -410,19 +409,16 @@ void OgreOculusRender::debugPrint()
 	}
 }
 
-///Save content of 'left eye' RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
 void OgreOculusRender::debugSaveToFile(const char path[])
 {
 	if(rtts[0]) rtts[0]->writeContentsToFile(path);
 }
 
-///Get a node representing the camera. NOTE: Camera isn"t attached.
 Ogre::SceneNode* OgreOculusRender::getCameraInformationNode()
 {
 	return CameraNode;
 }
 
-///Get the timer
 Ogre::Timer* OgreOculusRender::getTimer()
 {
 	if(root)
@@ -430,19 +426,16 @@ Ogre::Timer* OgreOculusRender::getTimer()
 	return NULL;
 }
 
-///Get time between frames
 float OgreOculusRender::getUpdateTime()
 {
 	return updateTime;
 }
 
-///Recenter rift to default position.
 void OgreOculusRender::recenter()
 {
 	ovrHmd_RecenterPose(oc->getHmd());
 }
 
-///Get to know if the Health and Safety warning dissmiss has be requested
 bool OgreOculusRender::IsHsDissmissed()
 {
 	return hsDissmissed;
