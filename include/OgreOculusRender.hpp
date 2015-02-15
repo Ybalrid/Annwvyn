@@ -168,7 +168,11 @@ class DLL OgreOculusRender
             right = 1
         };
 
+		///If true, window will be created in full screen mode
 		bool fullscreen;
+
+		///background color of viewports
+		Ogre::ColourValue backgroundColor;
 
         ///Name of the Window
         string name;

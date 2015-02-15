@@ -29,6 +29,8 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 
 	fullscreen = true;
 	hsDissmissed = false;
+
+	backgroundColor = Ogre::ColourValue(0.3f,0.3f,0.9f);
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -169,8 +171,10 @@ void OgreOculusRender::initScene()
 void OgreOculusRender::initRttRendering()
 {
 	//get texture sice from ovr with default FOV
-	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->DefaultEyeFov[0], 1.0f);
-	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->DefaultEyeFov[1], 1.0f);
+	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[0], 1.0f);
+	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[1], 1.0f);
+
+	std::cerr << "Texure size to create : " << texSizeL.w << " x " <<texSizeL.h  << " px" << std::endl;
 
 	//Create texture
 	Ogre::TexturePtr rtt_textureL = Ogre::TextureManager::getSingleton().createManual("RttTexL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeL.w, texSizeL.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
@@ -182,9 +186,9 @@ void OgreOculusRender::initRttRendering()
 
 	//Create and bind a viewport to the texture
 	Ogre::Viewport* vptl = rttEyeLeft->addViewport(cams[left]);
-	vptl->setBackgroundColour(Ogre::ColourValue(0.3f,0.3f,0.9f));
+	vptl->setBackgroundColour(backgroundColor);
 	Ogre::Viewport* vptr = rttEyeRight->addViewport(cams[right]);
-	vptr->setBackgroundColour(Ogre::ColourValue(0.3f,0.3f,0.9f));
+	vptr->setBackgroundColour(backgroundColor);
 
 	//Store viewport pointer
 	vpts[left] = vptl;
@@ -204,8 +208,8 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	setFullScreen(fullscreenState);
 
 	//Get FOV
-	EyeFov[left] = oc->getHmd()->DefaultEyeFov[left];
-	EyeFov[right] = oc->getHmd()->DefaultEyeFov[right];
+	EyeFov[left] = oc->getHmd()->MaxEyeFov[left];
+	EyeFov[right] = oc->getHmd()->MaxEyeFov[right];
 
 	//Set OpenGL configuration
 	ovrGLConfig cfg;
@@ -237,7 +241,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 	//Get X Display
 	Display* display;
-	window->getCustomAttribute("DISPLAY",&display);
+	window->getCustomAttribute("DISPLAY", &display);
 	cfg.OGL.Disp = display;
 
 #endif
