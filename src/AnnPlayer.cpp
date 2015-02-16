@@ -141,3 +141,25 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 {
 	playerBody->Orientation.yaw(angle);
 }
+
+
+void AnnPlayer::setLinearSpeed(Ogre::Vector3 v)
+{
+	if(!playerBody->Body) return;
+	playerBody->Body->setLinearVelocity(btVector3(v.x, v.y, v.z));
+}
+
+void AnnPlayer::killLinearSpeed()
+{
+	if(!playerBody->Body) return;
+	playerBody->Body->setLinearVelocity(btVector3(0, 0, 0));
+}
+
+void AnnPlayer::addLinearSpeed(Ogre::Vector3 v)
+{
+		if(!playerBody->Body) return;
+		playerBody->Body->setLinearVelocity(
+			playerBody->Body->getLinearVelocity() 
+			+ btVector3(v.x, v.y, v.z));
+
+}

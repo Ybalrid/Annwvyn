@@ -21,14 +21,16 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 
 	cameraPosition = Ogre::Vector3(0,0,10);
 	cameraOrientation = Ogre::Quaternion::IDENTITY;
-	
+
 	this->nearClippingDistance = (float) 0.05;
 	this->lastOculusPosition = cameraPosition;
 	this->lastOculusOrientation = cameraOrientation;
 	this->updateTime = 0;
-	
+
 	fullscreen = true;
 	hsDissmissed = false;
+
+	backgroundColor = Ogre::ColourValue(0.3f,0.3f,0.9f);
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -108,9 +110,13 @@ void OgreOculusRender::initialize()
 
 void OgreOculusRender::getOgreConfig()
 {
+	//Ogre as to be initialized
 	assert(root != NULL);
+	//Try to resore the config from an ogre.cfg file
 	if(!root->restoreConfig())
+		//Open the config dialog of Ogre (even if we're ignoring part of the parameters you can input from it)
 		if(!root->showConfigDialog())
+			//If the user clicked the "cancel" button or other bad stuff happened during the configuration (like a dragon attack)
 			abort();
 }
 
@@ -120,21 +126,17 @@ void OgreOculusRender::createWindow()
 	Ogre::NameValuePairList misc;
 
 	//This one only works on windows : "Borderless = no decoration"
-	misc["border"]="none";
+	misc["border"]="none"; //In case the program is not running in fullscreen mode, don't put windwo borders
 	misc["vsync"]="true";
 	misc["displayFrequency"]="75";
 	misc["monitorIndex"]="1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
 
 	//Initialize a window ans specify that creation is manual
 	window = root->initialise(false, name);
+	//Actually create the window
+	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen,&misc);
 
-	//Create a non-fullscreen window using custom parameters
-	if(fullscreen)
-		window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, true,&misc);
-	else
-		window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, false, &misc);
-
-	//Put the window at the place given by the SDK
+	//Put the window at the place given by the SDK (usefull on linux system where the X server thinks multiscreen is a single big one...)
 	window->reposition(oc->getHmd()->WindowsPos.x,oc->getHmd()->WindowsPos.y);
 }
 
@@ -169,8 +171,10 @@ void OgreOculusRender::initScene()
 void OgreOculusRender::initRttRendering()
 {
 	//get texture sice from ovr with default FOV
-	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->DefaultEyeFov[0], 1.0f);
-	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->DefaultEyeFov[1], 1.0f);
+	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[0], 1.0f);
+	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[1], 1.0f);
+
+	std::cerr << "Texure size to create : " << texSizeL.w << " x " <<texSizeL.h  << " px" << std::endl;
 
 	//Create texture
 	Ogre::TexturePtr rtt_textureL = Ogre::TextureManager::getSingleton().createManual("RttTexL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeL.w, texSizeL.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
@@ -182,9 +186,9 @@ void OgreOculusRender::initRttRendering()
 
 	//Create and bind a viewport to the texture
 	Ogre::Viewport* vptl = rttEyeLeft->addViewport(cams[left]);
-	vptl->setBackgroundColour(Ogre::ColourValue(0.3f,0.3f,0.9f));
+	vptl->setBackgroundColour(backgroundColor);
 	Ogre::Viewport* vptr = rttEyeRight->addViewport(cams[right]);
-	vptr->setBackgroundColour(Ogre::ColourValue(0.3f,0.3f,0.9f));
+	vptr->setBackgroundColour(backgroundColor);
 
 	//Store viewport pointer
 	vpts[left] = vptl;
@@ -204,14 +208,15 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	setFullScreen(fullscreenState);
 
 	//Get FOV
-	EyeFov[left] = oc->getHmd()->DefaultEyeFov[left];
-	EyeFov[right] = oc->getHmd()->DefaultEyeFov[right];
+	EyeFov[left] = oc->getHmd()->MaxEyeFov[left];
+	EyeFov[right] = oc->getHmd()->MaxEyeFov[right];
 
 	//Set OpenGL configuration
 	ovrGLConfig cfg;
 	cfg.OGL.Header.API = ovrRenderAPI_OpenGL;
 	cfg.OGL.Header.Multisample = 1;
-	cfg.OGL.Header.RTSize = oc->getHmd()->Resolution;
+	cfg.OGL.Header.BackBufferSize = oc->getHmd()->Resolution;
+	//cfg.OGL.Header.RTSize = oc->getHmd()->Resolution;
 
 	//OpenGL initialization differ between Windows and Linux
 #ifdef _WIN32 //If windows
@@ -226,7 +231,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	window->getCustomAttribute("HDC", &dc);
 	cfg.OGL.DC = dc;
 
-#else //Linux, even if OVR 0.4.2 is still NOT running on Linux
+#else //Linux; untested code (yet)
 
 	//Get X window id
 	size_t wID;
@@ -236,7 +241,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 	//Get X Display
 	Display* display;
-	window->getCustomAttribute("DISPLAY",&display);
+	window->getCustomAttribute("DISPLAY", &display);
 	cfg.OGL.Disp = display;
 
 #endif
@@ -308,7 +313,7 @@ void OgreOculusRender::RenderOneFrame()
 		vpts[eye]->clear();
 
 		//Get the eye pose
-		ovrPosef eyePose = ovrHmd_GetEyePose(oc->getHmd(), eye);
+		ovrPosef eyePose = ovrHmd_GetHmdPosePerEye(oc->getHmd(), eye);
 		headPose[eye] = eyePose;
 
 		//Get the hmd orientation
@@ -335,9 +340,9 @@ void OgreOculusRender::RenderOneFrame()
 			(cameraPosition  //the "gameplay" position of player's avatar head
 			+ 
 			(cams[eye]->getOrientation() * - Ogre::Vector3( //realword camera orientation + the oposite of the 
-			EyeRenderDesc[eye].ViewAdjust.x,                //view adjust vector. we translate the camera, not the whole world
-			EyeRenderDesc[eye].ViewAdjust.y, 
-			EyeRenderDesc[eye].ViewAdjust.z)
+			EyeRenderDesc[eye].HmdToEyeViewOffset.x, //view adjust vector. we translate the camera, not the whole world
+			EyeRenderDesc[eye].HmdToEyeViewOffset.y,
+			EyeRenderDesc[eye].HmdToEyeViewOffset.z)
 
 			+ cameraOrientation * Ogre::Vector3( //cameraOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
 			headPose[eye].Position.x,
@@ -349,7 +354,7 @@ void OgreOculusRender::RenderOneFrame()
 	}
 
 	//Ogre::Root::getSingleton().getRenderSystem()->_setRenderTarget(window);
-	 
+
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
 	//Do the rendering then the buffer swap
 
@@ -363,7 +368,7 @@ void OgreOculusRender::RenderOneFrame()
 		(headPose[0].Position.x,
 		headPose[0].Position.y,
 		headPose[0].Position.z);
-	
+
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion
 		(headPose[0].Orientation.w,
 		headPose[0].Orientation.x,
@@ -375,4 +380,67 @@ void OgreOculusRender::dissmissHS()
 {
 	ovrHmd_DismissHSWDisplay(oc->getHmd());
 	hsDissmissed = true;
+}
+
+
+
+void OgreOculusRender::setFullScreen(bool fs)
+{
+	fullscreen = fs;
+}
+
+bool OgreOculusRender::isFullscreen()
+{
+	return fullscreen;
+}
+
+Ogre::SceneManager* OgreOculusRender::getSceneManager()
+{
+	return smgr;
+}
+
+Ogre::RenderWindow* OgreOculusRender::getWindow()
+{
+	return window;
+}
+
+void OgreOculusRender::debugPrint()
+{
+	for(int i(0); i < 2; i++)
+	{
+		cout << "cam " << i << " " << cams[i]->getPosition() << endl;
+		cout << cams[i]->getOrientation() << endl;
+	}
+}
+
+void OgreOculusRender::debugSaveToFile(const char path[])
+{
+	if(rtts[0]) rtts[0]->writeContentsToFile(path);
+}
+
+Ogre::SceneNode* OgreOculusRender::getCameraInformationNode()
+{
+	return CameraNode;
+}
+
+Ogre::Timer* OgreOculusRender::getTimer()
+{
+	if(root)
+		return root->getTimer();
+	return NULL;
+}
+
+float OgreOculusRender::getUpdateTime()
+{
+	return updateTime;
+}
+
+void OgreOculusRender::recenter()
+{
+	ovrHmd_RecenterPose(oc->getHmd());
+}
+
+bool OgreOculusRender::IsHsDissmissed()
+{
+	return hsDissmissed;
 }

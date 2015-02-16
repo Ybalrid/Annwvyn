@@ -13,10 +13,11 @@
 #define ANN_ENGINE
 
 
-#include "systemMacro.h"
-
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
+
+
+#include "systemMacro.h"
 
 //C++ STD & STL
 #include <vector>

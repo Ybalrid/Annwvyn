@@ -1,6 +1,6 @@
 /**
  * \file OgreOculusRenderer.hpp
- * \brief Initialize rendering for the rift with SDK post traitement (OpenGL)
+ * \brief Initialize rendering for the rift with SDK post traitement (OpenGL ONLY)
  * \author A. Brainville (Ybalrid)
  */
 
@@ -14,25 +14,28 @@
 #include <wglew.h> //Need wgelw
 #endif
 
+
+//Oculus Rift Lib
+#include <OVR.h>
+
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
+#include <OVR_CAPI_GL.h>
+
 //C++ SDL Includes
 #include <iostream>
 #include <sstream>
 
-//Oculus Rift Lib
-#include <OVR.h>
-//CAPI
-#include <OVR_CAPI.h>
-
-//OpenGL CAPI OVR
-#include <OVR_CAPI_GL.h>
-#include <CAPI/GL/CAPI_GL_Util.h>
-
+/*
 #ifdef _WIN32
 //Direct3D CAPI OVR. Forcing version 11
 #define OVR_D3D_VERSION 11
 #include <OVR_CAPI_D3D.h>
 #include <CAPI/D3D1X/CAPI_D3D1X_Util.h>
 #endif
+*/
 
 #ifndef _WIN32 //Assuming Linux  here. Any Unix based have that header includable
 #include <unistd.h>
@@ -50,12 +53,13 @@
 #include <RenderSystems/GL/OgreGLTexture.h>
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 
+/*
 #ifdef _WIN32 //Possibility of adding D3D11 compatibility
 #include <RenderSystems/Direct3D11/OgreD3D11RenderSystem.h>
 #include <RenderSystems/Direct3D11/OgreD3D11Texture.h>
 #include <RenderSystems/Direct3D11/OgreD3D11TextureManager.h>
 #endif
-
+*/
 //Accessing Oculus Rift through a class : 
 #include "OculusInterface.hpp"
 
@@ -115,77 +119,45 @@ class DLL OgreOculusRender
 		void initOculus(bool fullscreenState = true);
 
 		///Set fullscreen. Value only used at window creation
-		void setFullScreen(bool fs = true)
-		{
-			fullscreen = fs;
-		}
+		void setFullScreen(bool fs = true);
+
 
 		///Return true if fullscreen set.
-		bool isFullscreen()
-		{
-			return fullscreen;
-		}
+		bool isFullscreen();
+
 
 		///Get the scene manager.
-        Ogre::SceneManager* getSceneManager()
-        {
-            return smgr;
-        }
+        Ogre::SceneManager* getSceneManager();
+
 
 		///Get the RenderWindow
-        Ogre::RenderWindow* getWindow()
-        {
-            return window;
-        }
+        Ogre::RenderWindow* getWindow();
+
 
 		///Print various informations about the cameras
-        void debugPrint()
-        {
-            for(int i(0); i < 2; i++)
-            {
-               cout << "cam " << i << " " << cams[i]->getPosition() << endl;
-               cout << cams[i]->getOrientation() << endl;
-            }
-        }
+        void debugPrint();
+
 
 		///Save content of 'left eye' RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
-        void debugSaveToFile(const char path[])
-        {
-            if(rtts[0]) rtts[0]->writeContentsToFile(path);
-        }
+        void debugSaveToFile(const char path[]);
+
 
 		///Get a node representing the camera. NOTE: Camera isn"t attached.
-        Ogre::SceneNode* getCameraInformationNode()
-        {
-            return CameraNode;
-        }
+        Ogre::SceneNode* getCameraInformationNode();
 
 		///Get the timer
-        Ogre::Timer* getTimer()
-        {
-            if(root)
-                return root->getTimer();
-            return NULL;
-        }
+        Ogre::Timer* getTimer();
+
 
 		///Get time between frames
-        float getUpdateTime()
-        {
-            return updateTime;
-        }
+        float getUpdateTime();
 
 		///Recenter rift to default position.
-		void recenter()
-		{
-			ovrHmd_RecenterPose(oc->getHmd());
-		}
+		void recenter();
 
 		///Get to know if the Health and Safety warning dissmiss has be requested
-		bool IsHsDissmissed()
-		{
-			return hsDissmissed;
-		}
-		
+		bool IsHsDissmissed();
+
 		///Request the dissmiss of the Health and Safety warning
 		void dissmissHS();
 
@@ -196,7 +168,11 @@ class DLL OgreOculusRender
             right = 1
         };
 
+		///If true, window will be created in full screen mode
 		bool fullscreen;
+
+		///background color of viewports
+		Ogre::ColourValue backgroundColor;
 
         ///Name of the Window
         string name;
@@ -230,7 +206,7 @@ class DLL OgreOculusRender
         ovrGLConfig cfg;
 		///OpenGL Textures
         ovrGLTexture EyeTexture[2];
-
+/*
 #ifdef _WIN32
 		///D3D11 Configuration
 		ovrD3D11Config D3D11cfg;
@@ -242,6 +218,7 @@ class DLL OgreOculusRender
 		bool direct3D;
 
 #endif
+		*/
 		///Size of left eye texture
         ovrSizei texSizeL;
 		///Size of right eye texture
