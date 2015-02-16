@@ -23,6 +23,7 @@ using namespace Annwvyn;
 
 namespace Annwvyn
 {
+	///Get axes value and move player with them.
     class DLL AnnJoystickController
     {
         private: //datatypes 

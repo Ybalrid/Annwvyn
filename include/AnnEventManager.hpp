@@ -19,6 +19,7 @@ namespace Annwvyn
 	class AnnEngine;
 	class AnnEventManager; //predeclaration of the event manager for class friendness directives
 
+	///An input event
 	class DLL AnnEvent
 	{
 	public:
@@ -34,6 +35,7 @@ namespace Annwvyn
 		void populate();
 	};
 
+	///A keyboard event
 	class DLL AnnKeyEvent : public AnnEvent
 	{
 		AnnKeyEvent();
@@ -55,14 +57,17 @@ namespace Annwvyn
 
 	};
 
+	///A mouse event
 	class DLL AnnMouseEvent : public AnnEvent
 	{
 	};
 
+	///A joystick event
 	class DLL AnnStickEvent : public AnnEvent
 	{
 	};
 
+	///Base Event listener class
 	class DLL AnnAbstractEventListener 
 	{
 	public:
@@ -74,6 +79,7 @@ namespace Annwvyn
 		AnnPlayer* player;
 	};
 
+	///The default event listener that make WASD controlls move the player
 	class DLL AnnDefaultEventListener : public AnnAbstractEventListener
 	{
 	public:
@@ -93,6 +99,7 @@ namespace Annwvyn
 		KeyCode::code run;
 	};
 		
+	///The event manager
 	class DLL AnnEventManager
 	{
 	public:

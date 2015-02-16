@@ -7,6 +7,7 @@
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
 
+//Include glew stuff before
 #include <glew.h>
 #ifndef _WIN32 //NOT ON WINDOWS (Assuming Linux. Usinig X Window System as display server
 #include <glxew.h> //Need GLX glew on X window system
@@ -18,6 +19,8 @@
 //Oculus Rift Lib
 #include <OVR.h>
 
+
+//Because the Oculus CAPI_GL assume that this header is allready included on Windows systems
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -28,14 +31,6 @@
 #include <iostream>
 #include <sstream>
 
-/*
-#ifdef _WIN32
-//Direct3D CAPI OVR. Forcing version 11
-#define OVR_D3D_VERSION 11
-#include <OVR_CAPI_D3D.h>
-#include <CAPI/D3D1X/CAPI_D3D1X_Util.h>
-#endif
-*/
 
 #ifndef _WIN32 //Assuming Linux  here. Any Unix based have that header includable
 #include <unistd.h>
@@ -43,6 +38,13 @@
 
 //Ogre
 #include <Ogre.h>
+
+//Accessing Oculus Rift through a class : 
+#include "OculusInterface.hpp"
+
+//OS Specific build macro 
+#include "systemMacro.h"
+
 
 //Texture manipulation
 #include <OgreTexture.h>
@@ -53,6 +55,15 @@
 #include <RenderSystems/GL/OgreGLTexture.h>
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 
+
+/*
+#ifdef _WIN32
+//Direct3D CAPI OVR. Forcing version 11
+#define OVR_D3D_VERSION 11
+#include <OVR_CAPI_D3D.h>
+#include <CAPI/D3D1X/CAPI_D3D1X_Util.h>
+#endif
+*/
 /*
 #ifdef _WIN32 //Possibility of adding D3D11 compatibility
 #include <RenderSystems/Direct3D11/OgreD3D11RenderSystem.h>
@@ -60,11 +71,6 @@
 #include <RenderSystems/Direct3D11/OgreD3D11TextureManager.h>
 #endif
 */
-//Accessing Oculus Rift through a class : 
-#include "OculusInterface.hpp"
-
-//OS Specific build macro 
-#include "systemMacro.h"
 
 using namespace std;
 using namespace OVR;
@@ -75,6 +81,7 @@ struct OgrePose
 	Ogre::Quaternion orientation;
 };
 
+///Do the initialization and graphical rendering for the Oculus Rift using Ogre
 class DLL OgreOculusRender
 {
     public:

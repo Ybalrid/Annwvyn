@@ -26,6 +26,8 @@
 namespace Annwvyn
 {
     class AnnEngine;
+
+	///Class that handle the OpenAL audio.
 	class DLL AnnAudioEngine
 	{
 	public:

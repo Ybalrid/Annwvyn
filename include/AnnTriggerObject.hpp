@@ -14,9 +14,10 @@
 
 namespace Annwvyn
 {
-    ///Anticipated declaration of AnnEngine class 
+    //Anticipated declaration of AnnEngine class 
     class AnnEngine;
     
+	///Object for representing a volume that trigger an event
     class DLL AnnTriggerObject
     {
         public:

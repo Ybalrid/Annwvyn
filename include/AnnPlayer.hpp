@@ -16,6 +16,7 @@
 namespace Annwvyn
 {
 	class AnnEngine; //predeclaration of AnnEngine
+
 	///Parameters of the VirtualBody		
 	class bodyParams
 	{
@@ -40,7 +41,7 @@ namespace Annwvyn
 		btRigidBody* Body;
 	};
 
-
+	///class that represent the player
 	class AnnPlayer
 	{
 	public:

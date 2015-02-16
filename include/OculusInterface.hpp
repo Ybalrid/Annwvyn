@@ -18,6 +18,7 @@
 using namespace std;
 using namespace OVR;
 
+///Comunicate with the Rift (initialize OVR and get the info)
 class DLL OculusInterface
 {
     public:

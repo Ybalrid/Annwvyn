@@ -16,6 +16,7 @@ typedef bool lifeStatus;
 
 namespace Annwvyn
 {
+	///An NPC
 	class DLL AnnCharacter : public Annwvyn::AnnGameObject
 	{
 	public:

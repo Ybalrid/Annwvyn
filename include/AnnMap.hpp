@@ -13,6 +13,7 @@
 
 namespace Annwvyn
 {
+	///Object that represent a map
     class DLL AnnMap
     {
         public:
