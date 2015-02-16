@@ -51,6 +51,7 @@
 #include <unistd.h> //for some unix functions
 #endif
 
+///Main engine class. Creating an instance of that class make the engine start.
 namespace Annwvyn
 {
     class DLL AnnEngine

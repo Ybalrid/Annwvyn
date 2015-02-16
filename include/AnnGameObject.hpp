@@ -29,7 +29,7 @@ namespace Annwvyn
 {
     class DLL AnnGameObject; 
 
-
+	///Simple collision state representation (pointer between 2 objects and a boolean)
     struct collisionTest
     {
         ///The object tested
@@ -42,6 +42,7 @@ namespace Annwvyn
         bool collisionState;
     };
 
+	///An object that exist in the game. Graphicaly and Potentialy Physicialy
     class DLL AnnGameObject
     {
         public:

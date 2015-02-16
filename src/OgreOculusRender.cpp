@@ -252,7 +252,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 		oc->getHmd()->DistortionCaps,
 		EyeFov,
 		EyeRenderDesc))
-		abort();
+		abort(); //if something goes wrong while configuring the rendering, abort.
 
 	// Direct rendering from a window handle to the Hmd.
 	// Not required if ovrHmdCap_ExtendDesktop flag is set.
@@ -341,8 +341,8 @@ void OgreOculusRender::RenderOneFrame()
 			+ 
 			(cams[eye]->getOrientation() * - Ogre::Vector3( //realword camera orientation + the oposite of the 
 			EyeRenderDesc[eye].HmdToEyeViewOffset.x, //view adjust vector. we translate the camera, not the whole world
-			EyeRenderDesc[eye].HmdToEyeViewOffset.y,
-			EyeRenderDesc[eye].HmdToEyeViewOffset.z)
+			EyeRenderDesc[eye].HmdToEyeViewOffset.y, //The translations has to occur in function of the current head orientation.
+			EyeRenderDesc[eye].HmdToEyeViewOffset.z) //That's why just multiply by the quaternion we just calculated. 
 
 			+ cameraOrientation * Ogre::Vector3( //cameraOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
 			headPose[eye].Position.x,
@@ -381,8 +381,6 @@ void OgreOculusRender::dissmissHS()
 	ovrHmd_DismissHSWDisplay(oc->getHmd());
 	hsDissmissed = true;
 }
-
-
 
 void OgreOculusRender::setFullScreen(bool fs)
 {
