@@ -257,9 +257,9 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	// Direct rendering from a window handle to the Hmd.
 	// Not required if ovrHmdCap_ExtendDesktop flag is set.
 #ifdef _WIN32
-	HWND directHWND;
+	/*HWND directHWND;
 	window->getCustomAttribute("WINDOW", &directHWND);
-	ovrHmd_AttachToWindow(oc->getHmd(), directHWND, NULL, NULL);
+	ovrHmd_AttachToWindow(oc->getHmd(), directHWND, NULL, NULL);*/
 #else
 	//Not currently available
 #endif

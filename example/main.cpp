@@ -10,7 +10,7 @@
 */
 
 //C++ includes
-#include <iostream>
+#include <ios>
 #include <streambuf>
 #include <fstream>
 //Annwvyn

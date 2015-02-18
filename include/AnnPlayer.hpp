@@ -105,8 +105,6 @@ namespace Annwvyn
 		void killLinearSpeed();
 		void addLinearSpeed(Ogre::Vector3 v);
 
-		void walk();
-		void stopWalk();
 
 	protected:
 
@@ -120,6 +118,9 @@ namespace Annwvyn
 
 		///Give Annwvyn::AnnEngine the rght to access private members
 		friend class AnnEngine;
+
+		///Engine update call for each frame
+		void engineUpdate();
 
 		///Get the pointer to bodyParams (compatibility with legacy code here. Highly dangerous, do not mess with whatever is pointed by that vector. Seriously.
 		bodyParams* getLowLevelBodyParams();

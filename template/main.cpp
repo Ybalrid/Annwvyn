@@ -12,7 +12,7 @@ AnnMain()
 
 	GameEngine->initRessources();
 
-	GameEngine->oculusInit(true);
+	GameEngine->oculusInit();
 
 	while(!GameEngine->requestStop())
 	{
