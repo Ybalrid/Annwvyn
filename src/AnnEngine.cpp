@@ -427,6 +427,11 @@ void AnnEngine::doRender()
 {
     updateCamera(); //update camera opsition from GameLogic
     renderOneFrame();
+#ifdef _WIN32
+	Sleep(1);
+#else
+	usleep(1000);
+#endif
 }
 
 void AnnEngine::updateAudioSystemState()
