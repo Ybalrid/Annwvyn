@@ -276,7 +276,7 @@ void AnnEngine::updatePlayerFromPhysics()
                           phyOrient.getZ()));
 
 
-    player->setOrientation (GraphicOrient);
+    player->setOrientation(GraphicOrient);
 }
 
 //move player's body IGNORING COLLISION !
@@ -417,7 +417,6 @@ bool AnnEngine::requestStop()
     return false;
 }
 
-
 void AnnEngine::updateCamera()
 {
     m_Camera->setPosition(player->getPosition());
@@ -444,12 +443,12 @@ void AnnEngine::applyMouseYaw()
 		(Ogre::Radian(-m_Mouse->getMouseState().X.rel*player->getTurnSpeed()));
 }
 
-
 void AnnEngine::runBasicGameplay()
 {
-	
     //	OIS Events 
     captureEvents();
+
+	player->engineUpdate();
 
 	//Dissmiss health and safety warning
 	if(!oor->IsHsDissmissed()) //If not already dissmissed
@@ -458,7 +457,7 @@ void AnnEngine::runBasicGameplay()
 				oor->dissmissHS();	//dissmiss the Health and Safety warning.
 
 
-    if(activateWASD && player->getBody() != NULL)//classic fps control
+    if(activateWASD && player->getBody() != NULL) //classic fps control
     {
         //TODO extract this piece of code and make it accesible with a method !!
         player->getBody()->activate(); //don't sleep !
@@ -466,7 +465,7 @@ void AnnEngine::runBasicGameplay()
         btVector3 curVel = player->getBody()->getLinearVelocity(); //get current velocity
 
         Ogre::Vector3 translate(Ogre::Vector3::ZERO);
-        if(processWASD(&translate))//If player want to move w/ WASD
+        if(processWASD(&translate)) //If player want to move w/ WASD
         {
             Ogre::Vector3 velocity = player->getOrientation()*(translate);
             player->getBody()->setLinearVelocity(

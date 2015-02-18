@@ -163,3 +163,8 @@ void AnnPlayer::addLinearSpeed(Ogre::Vector3 v)
 			+ btVector3(v.x, v.y, v.z));
 
 }
+
+void AnnPlayer::engineUpdate()
+{
+
+}
