@@ -464,8 +464,11 @@ void OgreOculusRender::RenderOneFrame()
 	//Tells ogre about the rendering
 	root->_fireFrameStarted();
 	Ogre::WindowEventUtilities::messagePump();
+	
 	for (Ogre::SceneManagerEnumerator::SceneManagerIterator it = root->getSceneManagerIterator(); it.hasMoreElements(); it.moveNext())
 		it.peekNextValue()->_handleLodEvents();
+
+	smgr->_handleLodEvents();
 
 
 	if (ts.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked))
@@ -473,6 +476,8 @@ void OgreOculusRender::RenderOneFrame()
 		Posef pose = ts.HeadPose.ThePose;
 
 	}
+
+	root->_fireFrameRenderingQueued();
 
 
 	root->renderOneFrame();
@@ -561,7 +566,7 @@ void OgreOculusRender::RenderOneFrame()
 		headPose[0].Orientation.y,
 		headPose[0].Orientation.z);
 		*/
-
+	this->updateTime = hmdFrameTiming.DeltaSeconds;
 	root->_fireFrameEnded();
 
 }
