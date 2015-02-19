@@ -111,6 +111,7 @@ AnnMain()
 	//GameEngine->getEventManager()->setListener(el);
 
 	//load ressources
+	GameEngine->loadZip("media/CORE.zip");
 	GameEngine->loadDir("media");
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
