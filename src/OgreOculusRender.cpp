@@ -470,10 +470,52 @@ void OgreOculusRender::RenderOneFrame()
 
 	smgr->_handleLodEvents();
 
+	ovrPosef headPose[2];
 
 	if (ts.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked))
 	{
 		Posef pose = ts.HeadPose.ThePose;
+
+		for(int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
+		{
+			ovrEyeType eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
+
+			ovrPosef eyePose = ovrHmd_GetHmdPosePerEye(oc->getHmd(), eye);
+			headPose[eye] = eyePose;
+
+			//Get the hmd orientation
+			OVR::Quatf camOrient = eyePose.Orientation;
+
+			//Get the projection matrix
+		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov,static_cast<float>(nearClippingDistance), 10000.0f, true);
+
+		//Convert it to Ogre matrix
+		Ogre::Matrix4 OgreProj;
+		for(int x(0); x < 4; x++)
+			for(int y(0); y < 4; y++)
+				OgreProj[x][y] = proj.M[x][y];
+
+		//Set the matrix
+		cams[eye]->setCustomProjectionMatrix(true, OgreProj);
+
+			cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(camOrient.w,camOrient.x,camOrient.y,camOrient.z));
+
+
+			cams[eye]->setPosition
+			(cameraPosition  //the "gameplay" position of player's avatar head
+			+ 
+			(cams[eye]->getOrientation() * - Ogre::Vector3( //realword camera orientation + the oposite of the 
+			EyeRenderDesc[eye].HmdToEyeViewOffset.x, //view adjust vector. we translate the camera, not the whole world
+			EyeRenderDesc[eye].HmdToEyeViewOffset.y, //The translations has to occur in function of the current head orientation.
+			EyeRenderDesc[eye].HmdToEyeViewOffset.z) //That's why just multiply by the quaternion we just calculated. 
+
+			+ cameraOrientation * Ogre::Vector3( //cameraOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
+			headPose[eye].Position.x,
+			headPose[eye].Position.y,
+			headPose[eye].Position.z)));
+
+
+		}
 
 	}
 
@@ -554,6 +596,8 @@ void OgreOculusRender::RenderOneFrame()
 
 	root->_fireFrameEnded();
 
+	*/
+
 	returnPose.position = cameraPosition + 
 		Ogre::Vector3
 		(headPose[0].Position.x,
@@ -565,7 +609,7 @@ void OgreOculusRender::RenderOneFrame()
 		headPose[0].Orientation.x,
 		headPose[0].Orientation.y,
 		headPose[0].Orientation.z);
-		*/
+	
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
 	root->_fireFrameEnded();
 
