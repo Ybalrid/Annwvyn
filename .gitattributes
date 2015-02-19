@@ -1,4 +1,4 @@
-msvc/* linguist-vendored
-Logo/* linguist-vendored
-doc/* linguist-documentation
+msvc/* linguist-vendored=true
+Logo/* linguist-vendored=true
+doc/* linguist-vendored=true
 
