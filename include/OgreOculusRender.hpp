@@ -4,6 +4,9 @@
  * \author A. Brainville (Ybalrid)
  */
 
+
+///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
+
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
 
