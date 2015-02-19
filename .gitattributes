@@ -2,4 +2,10 @@ msvc/* linguist-vendored
 Logo/* linguist-vendored
 doc/* linguist-vendored
 
+*.svg linguist-vendored
+*.vcxproj linguist-vendored
+*.xml linguist-vendored
+*.vcxproj.filters linguist-vendored
+
+
 
