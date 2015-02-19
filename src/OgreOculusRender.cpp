@@ -454,6 +454,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 void OgreOculusRender::RenderOneFrame()
 {
+	float timerStart = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
 	//get some info
 	cameraPosition = this->CameraNode->getPosition();
 	cameraOrientation = this->CameraNode->getOrientation();
@@ -609,8 +610,18 @@ void OgreOculusRender::RenderOneFrame()
 		headPose[0].Orientation.y,
 		headPose[0].Orientation.z);
 	
-	this->updateTime = hmdFrameTiming.DeltaSeconds;
 	root->_fireFrameEnded();
+	ovrHmd_EndFrameTiming(oc->getHmd());
+
+	this->updateTime = hmdFrameTiming.DeltaSeconds;
+
+	if(updateTime == 0)
+	{
+			float timerStop = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
+			updateTime = (timerStart - timerStop) / 1000.0f;
+	}
+
+
 
 }
 
