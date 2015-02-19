@@ -7,25 +7,8 @@
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
 
-//Include glew stuff before
-#include <glew.h>
-#ifndef _WIN32 //NOT ON WINDOWS (Assuming Linux. Usinig X Window System as display server
-#include <glxew.h> //Need GLX glew on X window system
-#else
-#include <wglew.h> //Need wgelw
-#endif
-
-
 //Oculus Rift Lib
 #include <OVR.h>
-
-
-//Because the Oculus CAPI_GL assume that this header is allready included on Windows systems
-#ifdef _WIN32
-#include <Windows.h>
-#endif
-
-#include <OVR_CAPI_GL.h>
 
 //C++ SDL Includes
 #include <iostream>
@@ -46,31 +29,7 @@
 #include "systemMacro.h"
 
 
-//Texture manipulation
-#include <OgreTexture.h>
 
-//OpenGL Classes. Some low level access required
-#include <RenderSystems/GL/OgreGLRenderSystem.h>
-#include <RenderSystems/GL/OgreGLRenderTexture.h>
-#include <RenderSystems/GL/OgreGLTexture.h>
-#include <RenderSystems/GL/OgreGLTextureManager.h>
-
-
-/*
-#ifdef _WIN32
-//Direct3D CAPI OVR. Forcing version 11
-#define OVR_D3D_VERSION 11
-#include <OVR_CAPI_D3D.h>
-#include <CAPI/D3D1X/CAPI_D3D1X_Util.h>
-#endif
-*/
-/*
-#ifdef _WIN32 //Possibility of adding D3D11 compatibility
-#include <RenderSystems/Direct3D11/OgreD3D11RenderSystem.h>
-#include <RenderSystems/Direct3D11/OgreD3D11Texture.h>
-#include <RenderSystems/Direct3D11/OgreD3D11TextureManager.h>
-#endif
-*/
 
 using namespace std;
 using namespace OVR;
@@ -188,9 +147,24 @@ class DLL OgreOculusRender
 		///Ogre Render Window
         Ogre::RenderWindow* window;
 		///Ogre Scene Manager
-        Ogre::SceneManager* smgr;
+        Ogre::SceneManager* smgr;	
 		///Stereoscopic camera array. Indexes are "left" and "right"
         Ogre::Camera* cams[2];
+
+		///For distortion rendering
+		Ogre::SceneManager* rift_smgr;
+		Ogre::Camera* rift_cam;
+
+		Ogre::MaterialPtr mMatLeft;
+		Ogre::MaterialPtr mMatRight;
+
+		Ogre::TexturePtr mLeftEyeRenderTexture;
+	    Ogre::TexturePtr mRightEyeRenderTexture;
+
+		Ogre::Viewport* mViewport;
+
+		float IPD;
+
 	
         Ogre::SceneNode* CameraNode;
 
@@ -210,22 +184,8 @@ class DLL OgreOculusRender
 		///Render descriptor for each eye. Indexes are "left" and "right"
         ovrEyeRenderDesc EyeRenderDesc[2];
 		///OpenGL Configuration
-        ovrGLConfig cfg;
-		///OpenGL Textures
-        ovrGLTexture EyeTexture[2];
-/*
-#ifdef _WIN32
-		///D3D11 Configuration
-		ovrD3D11Config D3D11cfg;
-		
-		///D3D11 Textures
-		ovrD3D11Texture D3D11EyeTexture[2];
-		
-		///On Windows only : true if RenderSystem Direct3D 11 is loaded instead of GL RenderSystem.
-		bool direct3D;
 
-#endif
-		*/
+
 		///Size of left eye texture
         ovrSizei texSizeL;
 		///Size of right eye texture
