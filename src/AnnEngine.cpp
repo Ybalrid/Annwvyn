@@ -313,10 +313,19 @@ void AnnEngine::loadResFile(const char path[])
     oor->loadReseourceFile(path);
 }
 
+
+
 void AnnEngine::initResources()
 {
+	addDefaultResourceLocaton();
     oor->initAllResources();
     log("Resources initialized");
+}
+
+void AnnEngine::addDefaultResourceLocaton()
+{
+	loadDir("media");
+	loadZip("media/CORE.zip");
 }
 
 //initalize oculus rendering

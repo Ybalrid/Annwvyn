@@ -87,6 +87,8 @@ namespace Annwvyn
 			///Deprecated: spelling problem here. I'm French
 			void initRessources(){initResources();} //resource
 
+			void addDefaultResourceLocaton();
+
 			///Init a resource group
 			void initAResourceGroup(std::string resourceGroup); //resource
 
