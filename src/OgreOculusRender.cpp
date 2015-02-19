@@ -208,6 +208,7 @@ void OgreOculusRender::initRttRendering()
 	*/
 
 	rift_smgr = root->createSceneManager(Ogre::ST_GENERIC);
+	rift_smgr->setAmbientLight(Ogre::ColourValue(1,1,1));
 	mLeftEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual("RttTexL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeL.w, texSizeL.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
 	mRightEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual("RttTexR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeR.w, texSizeR.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
 
@@ -472,9 +473,7 @@ void OgreOculusRender::RenderOneFrame()
 
 	ovrPosef headPose[2];
 
-	if (ts.StatusFlags & (ovrStatus_OrientationTracked | ovrStatus_PositionTracked))
-	{
-		Posef pose = ts.HeadPose.ThePose;
+	
 
 		for(int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 		{
@@ -517,7 +516,7 @@ void OgreOculusRender::RenderOneFrame()
 
 		}
 
-	}
+	
 
 	root->_fireFrameRenderingQueued();
 
