@@ -83,6 +83,18 @@
       <AdditionalLibraryDirectories>..\..\..\AL\openal-soft-1.15.1\build\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\lib;..\..\..\OgreSDK\boost\lib;..\..\..\OgreSDK\lib\Release\opt;..\..\..\OgreSDK\lib\Release;..\..\..\OculusSDK\LibOVR\Lib\Win32\VS2012;C:\Oculus\AnnwvynSDK\glew\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;OgreMain.lib;RenderSystem_GL.lib;RenderSystem_Direct3D11.lib;d3d11.lib;OIS.lib;Setupapi.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;OpenAL32.lib;libsndfile-1.lib;libboost_chrono-vc110-mt-1_55.lib;libboost_system-vc110-mt-1_55.lib;libboost_date_time-vc110-mt-1_55.lib;libboost_thread-vc110-mt-1_55.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>ECHO Updating DLL and coresponding PDB files to the example and template directories
+COPY "$(TargetDir)\Annwvyn.dll" "$(TargetDir)\..\example\"
+COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\example\"
+COPY "$(TargetDir)\Annwvyn.dll" "$(TargetDir)\..\example\"
+COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\example\"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
