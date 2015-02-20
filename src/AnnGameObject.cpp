@@ -401,8 +401,13 @@ void AnnGameObject::setVisible()
 	node()->setVisible(true);
 }
 
-void AnnGameObject::setVisible()
+void AnnGameObject::setInvisible()
 {
 	visible = false;
 	node()->setVisible(false);
+}
+
+bool AnnGameObject::isVisible()
+{
+	return visible;
 }

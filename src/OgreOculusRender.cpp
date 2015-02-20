@@ -298,13 +298,13 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	IPD = ovrHmd_GetFloat(oc->getHmd(), OVR_KEY_IPD,  0.064f);
 
 	Ogre::RenderTexture* renderTexture = mLeftEyeRenderTexture->getBuffer()->getRenderTarget();
-	renderTexture->addViewport(cams[0]);
+	vpts[0] = renderTexture->addViewport(cams[0]);
 	renderTexture->getViewport(0)->setClearEveryFrame(true);
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
 	renderTexture->getViewport(0)->setOverlaysEnabled(true);
 
 	renderTexture = mRightEyeRenderTexture->getBuffer()->getRenderTarget();
-	renderTexture->addViewport(cams[1]);
+	vpts[1] = renderTexture->addViewport(cams[1]);
 	renderTexture->getViewport(0)->setClearEveryFrame(true);
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
 	renderTexture->getViewport(0)->setOverlaysEnabled(true);
@@ -336,31 +336,12 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 		projR.M[1][0], projR.M[1][1], projR.M[1][2], projR.M[1][3],
 		projR.M[2][0], projR.M[2][1], projR.M[2][2], projR.M[2][3],
 		projR.M[3][0], projR.M[3][1], projR.M[3][2], projR.M[3][3] ) );
-}
 
-void OgreOculusRender::RenderOneFrame()
-{
-	Ogre::WindowEventUtilities::messagePump();
-	unsigned long timerStart = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
-	//get some info
-	cameraPosition = this->CameraNode->getPosition();
-	cameraOrientation = this->CameraNode->getOrientation();
-
-	//Begin frame
-	ovrFrameTiming hmdFrameTiming = ovrHmd_BeginFrame(oc->getHmd(), 0);
-	ovrTrackingState ts = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.ScanoutMidpointSeconds);
-
-	ovrPosef headPose[2];
-
-	for(int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
-	{
+		
+		//The average  human has 2 eyes
+		for(int eyeIndex(0); eyeIndex < 2; eyeIndex++)
+		{
 		ovrEyeType eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
-
-		ovrPosef eyePose = ovrHmd_GetHmdPosePerEye(oc->getHmd(), eye);
-		headPose[eye] = eyePose;
-
-		//Get the hmd orientation
-		OVR::Quatf camOrient = eyePose.Orientation;
 
 		//Get the projection matrix
 		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov,static_cast<float>(nearClippingDistance), 10000.0f, true);
@@ -373,7 +354,28 @@ void OgreOculusRender::RenderOneFrame()
 
 		//Set the matrix
 		cams[eye]->setCustomProjectionMatrix(true, OgreProj);
+		}
+}
 
+void OgreOculusRender::RenderOneFrame()
+{
+	//Ogre::WindowEventUtilities::messagePump();
+	unsigned long timerStart = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
+	//get some info
+	cameraPosition = this->CameraNode->getPosition();
+	cameraOrientation = this->CameraNode->getOrientation();
+
+	//Begin frame
+	ovrFrameTiming hmdFrameTiming = ovrHmd_BeginFrame(oc->getHmd(), 0);
+	ovrTrackingState ts = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.ScanoutMidpointSeconds);
+	Posef pose = ts.HeadPose.ThePose;
+	//Get the hmd orientation
+	OVR::Quatf camOrient = pose.Rotation;
+	OVR::Vector3f camPos = pose.Translation;
+	ovrEyeType eye;
+	for(int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
+	{
+		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(camOrient.w,camOrient.x,camOrient.y,camOrient.z));
 
 		cams[eye]->setPosition
@@ -385,42 +387,24 @@ void OgreOculusRender::RenderOneFrame()
 			EyeRenderDesc[eye].HmdToEyeViewOffset.z) //That's why just multiply by the quaternion we just calculated. 
 
 			+ cameraOrientation * Ogre::Vector3( //cameraOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
-			headPose[eye].Position.x,
-			headPose[eye].Position.y,
-			headPose[eye].Position.z)));
-
-
+			camPos.x,
+			camPos.y,
+			camPos.z)));
 	}
-	root->renderOneFrame();
-
-	/*)returnPose.position = cameraPosition + 
-		Ogre::Vector3
-		(headPose[0].Position.x,
-		headPose[0].Position.y,
-		headPose[0].Position.z);
-
-	returnPose.orientation = cameraOrientation * Ogre::Quaternion
-		(headPose[0].Orientation.w,
-		headPose[0].Orientation.x,
-		headPose[0].Orientation.y,
-		headPose[0].Orientation.z);*/
-
-	//root->_fireFrameEnded();
-	ovrHmd_EndFrameTiming(oc->getHmd());
-
+	
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
-
 	if(updateTime == 0)
 	{
 		unsigned long timerStop = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
 		updateTime = (timerStart - timerStop) / 1000.0f;
 	}
-
 	//update the pose for gameplay purposes
-	ovrPosef pose = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.ScanoutMidpointSeconds).HeadPose.ThePose;
+	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(camPos.x, camPos.y, camPos.z);
+	returnPose.orientation = cameraOrientation * Ogre::Quaternion(camOrient.w, camOrient.x, camOrient.y, camOrient.z);
+	
+	ovrHmd_EndFrameTiming(oc->getHmd());
+	root->renderOneFrame();
 
-	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(pose.Position.x, pose.Position.y, pose.Position.z);
-	returnPose.orientation = cameraOrientation * Ogre::Quaternion(pose.Orientation.w, pose.Orientation.x, pose.Orientation.y, pose.Orientation.z);
 }
 
 void OgreOculusRender::dissmissHS()
