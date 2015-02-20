@@ -37,9 +37,13 @@
 using namespace std;
 using namespace OVR;
 
+///A pose refer to the combinaison of a position and an orientation. 
+///It permit to define the placement of an object with 6DOF
 struct OgrePose
 {
+	///A 3D vector representing a position
 	Ogre::Vector3 position;
+	///A quaternion representiong an orientation
 	Ogre::Quaternion orientation;
 };
 

@@ -393,7 +393,7 @@ void OgreOculusRender::RenderOneFrame()
 	}
 	root->renderOneFrame();
 
-	returnPose.position = cameraPosition + 
+	/*)returnPose.position = cameraPosition + 
 		Ogre::Vector3
 		(headPose[0].Position.x,
 		headPose[0].Position.y,
@@ -403,7 +403,7 @@ void OgreOculusRender::RenderOneFrame()
 		(headPose[0].Orientation.w,
 		headPose[0].Orientation.x,
 		headPose[0].Orientation.y,
-		headPose[0].Orientation.z);
+		headPose[0].Orientation.z);*/
 
 	//root->_fireFrameEnded();
 	ovrHmd_EndFrameTiming(oc->getHmd());
@@ -415,6 +415,12 @@ void OgreOculusRender::RenderOneFrame()
 		unsigned long timerStop = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
 		updateTime = (timerStart - timerStop) / 1000.0f;
 	}
+
+	//update the pose for gameplay purposes
+	ovrPosef pose = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.ScanoutMidpointSeconds).HeadPose.ThePose;
+
+	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(pose.Position.x, pose.Position.y, pose.Position.z);
+	returnPose.orientation = cameraOrientation * Ogre::Quaternion(pose.Orientation.w, pose.Orientation.x, pose.Orientation.y, pose.Orientation.z);
 }
 
 void OgreOculusRender::dissmissHS()
