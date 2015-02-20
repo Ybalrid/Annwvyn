@@ -174,6 +174,15 @@ namespace Annwvyn
             ///For engine set Audio engine    
 			void setAudioEngine(AnnAudioEngine* AudioEngine);
 
+			///Make the object visible
+			void setVisible();
+
+			///Make the object invisible
+			void setInvisible();
+
+			///Get if object visible
+			bool isVisible();
+
         private:
 			/**
 			* You will certainly find strange to see that the Object does not cary a "position" vector.
@@ -210,6 +219,9 @@ namespace Annwvyn
 			Ogre::Vector3 visualLinearSpeed;
 
 			std::string name;
+
+
+			bool visible;
 
         public:
             ///Executed after object initialization
