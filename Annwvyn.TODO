@@ -3,9 +3,7 @@ TODO :
 - Add friction setting for bullet
 - Add name identification for objects to be found in Map Files
 - Add light vector to AnnMap Class
-- Add External C++ interface for code-running
 - Allow playing multiple animations
 - Object parenting
-- Oculus Latency Tester integration
 - Add debug drawing for trigger position when debug drawing is active for bullet
 - Permit to create non spherical trigger
