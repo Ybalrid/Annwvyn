@@ -63,3 +63,6 @@ vgcore.*
 template/Game
 template/Game.exe
 
+
+#utilities have to be manually tracked
+utils/
