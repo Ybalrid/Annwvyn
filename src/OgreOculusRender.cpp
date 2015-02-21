@@ -370,13 +370,13 @@ void OgreOculusRender::RenderOneFrame()
 	ovrTrackingState ts = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.ScanoutMidpointSeconds);
 	Posef pose = ts.HeadPose.ThePose;
 	//Get the hmd orientation
-	OVR::Quatf camOrient = pose.Rotation;
-	OVR::Vector3f camPos = pose.Translation;
+	OVR::Quatf oculusOrient = pose.Rotation;
+	OVR::Vector3f oculusPos = pose.Translation;
 	ovrEyeType eye;
 	for(int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
-		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(camOrient.w,camOrient.x,camOrient.y,camOrient.z));
+		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w,oculusOrient.x,oculusOrient.y,oculusOrient.z));
 
 		cams[eye]->setPosition
 			(cameraPosition  //the "gameplay" position of player's avatar head
@@ -387,9 +387,9 @@ void OgreOculusRender::RenderOneFrame()
 			EyeRenderDesc[eye].HmdToEyeViewOffset.z) //That's why just multiply by the quaternion we just calculated. 
 
 			+ cameraOrientation * Ogre::Vector3( //cameraOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
-			camPos.x,
-			camPos.y,
-			camPos.z)));
+			oculusPos.x,
+			oculusPos.y,
+			oculusPos.z)));
 	}
 	
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
@@ -399,8 +399,8 @@ void OgreOculusRender::RenderOneFrame()
 		updateTime = (timerStart - timerStop) / 1000.0f;
 	}
 	//update the pose for gameplay purposes
-	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(camPos.x, camPos.y, camPos.z);
-	returnPose.orientation = cameraOrientation * Ogre::Quaternion(camOrient.w, camOrient.x, camOrient.y, camOrient.z);
+	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
+	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
 	
 	ovrHmd_EndFrameTiming(oc->getHmd());
 	root->renderOneFrame();
