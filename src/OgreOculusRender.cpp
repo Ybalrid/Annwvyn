@@ -39,7 +39,6 @@ OgreOculusRender::~OgreOculusRender()
 	delete oc;
 }
 
-
 void OgreOculusRender::dissmissHS()
 {
 	ovrHmd_DismissHSWDisplay(oc->getHmd());
@@ -194,7 +193,7 @@ void OgreOculusRender::createWindow()
 	Ogre::NameValuePairList misc;
 
 	//This one only works on windows : "Borderless = no decoration"
-	misc["border"]="none"; //In case the program is not running in fullscreen mode, don't put windwo borders
+	misc["border"]="none"; //In case the program is not running in fullscreen mode, don't put window borders
 	misc["vsync"]="true";
 	misc["displayFrequency"]="75";
 	misc["monitorIndex"]="1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
@@ -398,7 +397,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 void OgreOculusRender::RenderOneFrame()
 {
-	//Ogre::WindowEventUtilities::messagePump();
+	Ogre::WindowEventUtilities::messagePump();
 	unsigned long timerStart = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
 	//get some info
 	cameraPosition = this->CameraNode->getPosition();
