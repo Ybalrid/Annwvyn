@@ -313,8 +313,6 @@ void AnnEngine::loadResFile(const char path[])
     oor->loadReseourceFile(path);
 }
 
-
-
 void AnnEngine::initResources()
 {
 	addDefaultResourceLocaton();
@@ -338,7 +336,6 @@ void AnnEngine::oculusInit(bool fullscreen)
     m_Camera->setPosition(player->getPosition() + 
             Ogre::Vector3(0.0f, player->getEyesHeight(), 0.0f));
 }
-
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
 {

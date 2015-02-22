@@ -6,9 +6,6 @@
  * \author A. Brainville (Ybalrid)
  */
 
-
-
-
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
 

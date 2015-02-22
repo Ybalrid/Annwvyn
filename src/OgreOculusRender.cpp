@@ -39,6 +39,74 @@ OgreOculusRender::~OgreOculusRender()
 	delete oc;
 }
 
+
+void OgreOculusRender::dissmissHS()
+{
+	ovrHmd_DismissHSWDisplay(oc->getHmd());
+	hsDissmissed = true;
+}
+
+void OgreOculusRender::setFullScreen(bool fs)
+{
+	fullscreen = fs;
+}
+
+bool OgreOculusRender::isFullscreen()
+{
+	return fullscreen;
+}
+
+Ogre::SceneManager* OgreOculusRender::getSceneManager()
+{
+	return smgr;
+}
+
+Ogre::RenderWindow* OgreOculusRender::getWindow()
+{
+	return window;
+}
+
+void OgreOculusRender::debugPrint()
+{
+	for(int i(0); i < 2; i++)
+	{
+		cout << "cam " << i << " " << cams[i]->getPosition() << endl;
+		cout << cams[i]->getOrientation() << endl;
+	}
+}
+
+void OgreOculusRender::debugSaveToFile(const char path[])
+{
+	if(rtts[0]) rtts[0]->writeContentsToFile(path);
+}
+
+Ogre::SceneNode* OgreOculusRender::getCameraInformationNode()
+{
+	return CameraNode;
+}
+
+Ogre::Timer* OgreOculusRender::getTimer()
+{
+	if(root)
+		return root->getTimer();
+	return NULL;
+}
+
+float OgreOculusRender::getUpdateTime()
+{
+	return updateTime;
+}
+
+void OgreOculusRender::recenter()
+{
+	ovrHmd_RecenterPose(oc->getHmd());
+}
+
+bool OgreOculusRender::IsHsDissmissed()
+{
+	return hsDissmissed;
+}
+
 //I may move this method back to the AnnEngine class... 
 void OgreOculusRender::loadReseourceFile(const char path[])
 {
@@ -309,42 +377,13 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
 	renderTexture->getViewport(0)->setOverlaysEnabled(true);
 
-	ovrFovPort fovLeft = oc->getHmd()->MaxEyeFov[ovrEye_Left];
-	ovrFovPort fovRight = oc->getHmd()->MaxEyeFov[ovrEye_Right];
-
-	float combinedTanHalfFovHorizontal = std::max( fovLeft.LeftTan, fovLeft.RightTan );
-	float combinedTanHalfFovVertical = std::max( fovLeft.UpTan, fovLeft.DownTan );
-
-	float aspectRatio = combinedTanHalfFovHorizontal / combinedTanHalfFovVertical;
-
-	Ogre::Camera* camLeft = cams[0];
-	Ogre::Camera* camRight = cams[1];
-
-	camLeft->setAspectRatio( aspectRatio );
-	camRight->setAspectRatio( aspectRatio );
-
-	ovrMatrix4f projL = ovrMatrix4f_Projection ( fovLeft, 0.001, 50.0, true );
-	ovrMatrix4f projR = ovrMatrix4f_Projection ( fovRight, 0.001, 50.0, true );
-
-	camLeft->setCustomProjectionMatrix( true,
-		Ogre::Matrix4( projL.M[0][0], projL.M[0][1], projL.M[0][2], projL.M[0][3],
-		projL.M[1][0], projL.M[1][1], projL.M[1][2], projL.M[1][3],
-		projL.M[2][0], projL.M[2][1], projL.M[2][2], projL.M[2][3],
-		projL.M[3][0], projL.M[3][1], projL.M[3][2], projL.M[3][3] ) );
-	camRight->setCustomProjectionMatrix( true,
-		Ogre::Matrix4( projR.M[0][0], projR.M[0][1], projR.M[0][2], projR.M[0][3],
-		projR.M[1][0], projR.M[1][1], projR.M[1][2], projR.M[1][3],
-		projR.M[2][0], projR.M[2][1], projR.M[2][2], projR.M[2][3],
-		projR.M[3][0], projR.M[3][1], projR.M[3][2], projR.M[3][3] ) );
-
-		
-		//The average  human has 2 eyes
-		for(int eyeIndex(0); eyeIndex < 2; eyeIndex++)
-		{
+	//The average  human has 2 eyes
+	for(int eyeIndex(0); eyeIndex < 2; eyeIndex++)
+	{
 		ovrEyeType eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
 
 		//Get the projection matrix
-		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov,static_cast<float>(nearClippingDistance), 10000.0f, true);
+		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov, static_cast<float>(nearClippingDistance), 10000.0f, true);
 
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
@@ -354,7 +393,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 		//Set the matrix
 		cams[eye]->setCustomProjectionMatrix(true, OgreProj);
-		}
+	}
 }
 
 void OgreOculusRender::RenderOneFrame()
@@ -391,7 +430,7 @@ void OgreOculusRender::RenderOneFrame()
 			oculusPos.y,
 			oculusPos.z)));
 	}
-	
+
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
 	if(updateTime == 0)
 	{
@@ -401,75 +440,11 @@ void OgreOculusRender::RenderOneFrame()
 	//update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
-	
+
+	//Timewarp is not implemented yet...
+	ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
+
 	ovrHmd_EndFrameTiming(oc->getHmd());
 	root->renderOneFrame();
 
-}
-
-void OgreOculusRender::dissmissHS()
-{
-	ovrHmd_DismissHSWDisplay(oc->getHmd());
-	hsDissmissed = true;
-}
-
-void OgreOculusRender::setFullScreen(bool fs)
-{
-	fullscreen = fs;
-}
-
-bool OgreOculusRender::isFullscreen()
-{
-	return fullscreen;
-}
-
-Ogre::SceneManager* OgreOculusRender::getSceneManager()
-{
-	return smgr;
-}
-
-Ogre::RenderWindow* OgreOculusRender::getWindow()
-{
-	return window;
-}
-
-void OgreOculusRender::debugPrint()
-{
-	for(int i(0); i < 2; i++)
-	{
-		cout << "cam " << i << " " << cams[i]->getPosition() << endl;
-		cout << cams[i]->getOrientation() << endl;
-	}
-}
-
-void OgreOculusRender::debugSaveToFile(const char path[])
-{
-	if(rtts[0]) rtts[0]->writeContentsToFile(path);
-}
-
-Ogre::SceneNode* OgreOculusRender::getCameraInformationNode()
-{
-	return CameraNode;
-}
-
-Ogre::Timer* OgreOculusRender::getTimer()
-{
-	if(root)
-		return root->getTimer();
-	return NULL;
-}
-
-float OgreOculusRender::getUpdateTime()
-{
-	return updateTime;
-}
-
-void OgreOculusRender::recenter()
-{
-	ovrHmd_RecenterPose(oc->getHmd());
-}
-
-bool OgreOculusRender::IsHsDissmissed()
-{
-	return hsDissmissed;
 }
