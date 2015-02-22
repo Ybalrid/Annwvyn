@@ -103,8 +103,8 @@ void AnnEngine::setUpOgre(const char title[])
     oor->getOgreConfig();
     oor->createWindow();
     oor->initScene();
-    oor->setCamerasNearClippingDistance(0.1f);
     oor->initCameras();
+	oor->setCamerasNearClippingDistance(0.15f);
     oor->initRttRendering();
     m_SceneManager = oor->getSceneManager();
     m_Window = oor->getWindow();
