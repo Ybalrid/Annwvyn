@@ -786,12 +786,10 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
     }
 }
 
-
 void AnnEngine::resetOculusOrientation()
 {
 	oor->recenter();
 }
-
 
 Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 {
@@ -824,12 +822,6 @@ Annwvyn::bodyParams* AnnEngine::getBodyParams()
 Ogre::SceneNode* AnnEngine::getCamera()
 {
     return m_Camera;
-}
-
-float AnnEngine::getCentreOffset()
-{
-    //return oculus.getCentreOffset();
-    return 0.0f;
 }
 
 Ogre::Quaternion AnnEngine::getReferenceQuaternion()

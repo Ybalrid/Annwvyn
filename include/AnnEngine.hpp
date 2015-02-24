@@ -214,10 +214,7 @@ namespace Annwvyn
 
             ///Get ogre camera scene node
             Ogre::SceneNode* getCamera(); //... 
-            
-            ///Get offset between viewport and distortion centre
-            float getCentreOffset(); //...
-
+        
 			///Reference orientation. Usefull if you are inside a vehicule for example
             void setReferenceQuaternion(Ogre::Quaternion q); //engine...
 
