@@ -460,8 +460,10 @@ void AnnEngine::runBasicGameplay()
 	if(!oor->IsHsDissmissed()) //If not already dissmissed
 		for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
 			if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
+			{
 				oor->dissmissHS();	//dissmiss the Health and Safety warning.
-
+				break;
+			}
 
     if(activateWASD && player->getBody() != NULL) //classic fps control
     {
