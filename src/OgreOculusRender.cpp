@@ -259,14 +259,14 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 {
 	setFullScreen(fullscreenState);
 
-	mMatLeft = Ogre::MaterialManager::getSingleton().getByName( "Oculus/LeftEye" );
-	mMatLeft->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture( mLeftEyeRenderTexture );
-	mMatRight = Ogre::MaterialManager::getSingleton().getByName( "Oculus/RightEye" );
-	mMatRight->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture( mRightEyeRenderTexture );
+	mMatLeft = Ogre::MaterialManager::getSingleton().getByName("Oculus/LeftEye");
+	mMatLeft->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(mLeftEyeRenderTexture);
+	mMatRight = Ogre::MaterialManager::getSingleton().getByName("Oculus/RightEye");
+	mMatRight->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(mRightEyeRenderTexture);
 
 
-	EyeRenderDesc[0] = ovrHmd_GetRenderDesc( oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[0] );
-	EyeRenderDesc[1] = ovrHmd_GetRenderDesc( oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[1] );
+	EyeRenderDesc[0] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[0]);
+	EyeRenderDesc[1] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[1]);
 
 	ovrVector2f UVScaleOffset[2];
 	ovrRecti viewports[2];
@@ -293,23 +293,23 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 		if(eyeNum == 0)
 		{
-			ovrHmd_GetRenderScaleAndOffset( EyeRenderDesc[eyeNum].Fov,
+			ovrHmd_GetRenderScaleAndOffset(EyeRenderDesc[eyeNum].Fov,
 				texSizeL, viewports[eyeNum],
 				UVScaleOffset);
 			params = mMatLeft->getTechnique(0)->getPass(0)->getVertexProgramParameters();
 		}
 		else
 		{
-			ovrHmd_GetRenderScaleAndOffset( EyeRenderDesc[eyeNum].Fov,
+			ovrHmd_GetRenderScaleAndOffset(EyeRenderDesc[eyeNum].Fov,
 				texSizeR, viewports[eyeNum],
 				UVScaleOffset);
 			params = mMatRight->getTechnique(0)->getPass(0)->getVertexProgramParameters();
 		}
 
-		params->setNamedConstant( "eyeToSourceUVScale",
-			Ogre::Vector2( UVScaleOffset[0].x, UVScaleOffset[0].y ) );
-		params->setNamedConstant( "eyeToSourceUVOffset",
-			Ogre::Vector2( UVScaleOffset[1].x, UVScaleOffset[1].y ) );
+		params->setNamedConstant("eyeToSourceUVScale",
+			Ogre::Vector2(UVScaleOffset[0].x, UVScaleOffset[0].y ));
+		params->setNamedConstant("eyeToSourceUVOffset",
+			Ogre::Vector2(UVScaleOffset[1].x, UVScaleOffset[1].y ));
 		Ogre::ManualObject* manual;
 		if( eyeNum == 0 )
 		{
@@ -327,44 +327,44 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 		for( unsigned int i = 0; i < meshData.VertexCount; i++ )
 		{
 			ovrDistortionVertex v = meshData.pVertexData[i];
-			manual->position( v.ScreenPosNDC.x,
-				v.ScreenPosNDC.y, 0 );
-			manual->textureCoord( v.TanEyeAnglesR.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
+			manual->position(v.ScreenPosNDC.x,
+				v.ScreenPosNDC.y, 0);
+			manual->textureCoord(v.TanEyeAnglesR.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
 				v.TanEyeAnglesR.y);//*UVScaleOffset[0].y + UVScaleOffset[1].y);
-			manual->textureCoord( v.TanEyeAnglesG.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
+			manual->textureCoord(v.TanEyeAnglesG.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
 				v.TanEyeAnglesG.y);//*UVScaleOffset[0].y + UVScaleOffset[1].y);
-			manual->textureCoord( v.TanEyeAnglesB.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
+			manual->textureCoord(v.TanEyeAnglesB.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
 				v.TanEyeAnglesB.y);//*UVScaleOffset[0].y + UVScaleOffset[1].y);
-			float vig = std::max( v.VignetteFactor, (float)0.0 );
-			manual->colour( vig, vig, vig, vig );
+			float vig = std::max(v.VignetteFactor, (float)0.0 );
+			manual->colour(vig, vig, vig, vig);
 		}
-		for( unsigned int i = 0; i < meshData.IndexCount; i++ )
+		for(unsigned int i = 0; i < meshData.IndexCount; i++)
 		{
-			manual->index( meshData.pIndexData[i] );
+			manual->index(meshData.pIndexData[i]);
 		}
 
 
 		// tell Ogre, your definition has finished
 		manual->end();
 
-		ovrHmd_DestroyDistortionMesh( &meshData );
+		ovrHmd_DestroyDistortionMesh(&meshData);
 
-		meshNode->attachObject( manual );
+		meshNode->attachObject(manual);
 	}
 
 	// Create a camera in the (new, external) scene so the mesh can be rendered onto it:
 	rift_cam = rift_smgr->createCamera("OculusRiftExternalCamera");
-	rift_cam->setFarClipDistance( 50 );
-	rift_cam->setNearClipDistance( 0.001f );
-	rift_cam->setProjectionType( Ogre::PT_ORTHOGRAPHIC );
-	rift_cam->setOrthoWindow( 2, 2 );
+	rift_cam->setFarClipDistance(50);
+	rift_cam->setNearClipDistance(0.001f);
+	rift_cam->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
+	rift_cam->setOrthoWindow(2, 2);
 
 	rift_smgr->getRootSceneNode()->attachObject(rift_cam);
 
-	meshNode->setPosition( 0, 0, -1 );
-	meshNode->setScale( 1, 1, -1 );
+	meshNode->setPosition(0, 0, -1);
+	meshNode->setScale(1, 1, -1);
 
-	mViewport = window->addViewport( rift_cam );
+	mViewport = window->addViewport(rift_cam);
 	mViewport->setBackgroundColour(Ogre::ColourValue::Black);
 	mViewport->setOverlaysEnabled(true);
 
@@ -425,7 +425,7 @@ void OgreOculusRender::RenderOneFrame()
 	for(int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
-		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w,oculusOrient.x,oculusOrient.y,oculusOrient.z));
+		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
 
 		cams[eye]->setPosition
 			(cameraPosition  //the "gameplay" position of player's avatar head
@@ -451,10 +451,12 @@ void OgreOculusRender::RenderOneFrame()
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
 
+	root->renderOneFrame();
+
+
 	//Timewarp is not implemented yet...
 	ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
 
 	ovrHmd_EndFrameTiming(oc->getHmd());
-	root->renderOneFrame();
 
 }
