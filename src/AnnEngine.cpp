@@ -43,7 +43,7 @@ AnnEngine::~AnnEngine()
 	delete eventManager;
 
     //All AnnGameObject
-    for(unsigned int i(0); i < objects.size(); i++)
+    for(size_t i(0); i < objects.size(); i++)
     {
         destroyGameObject(objects[i]);
         objects.erase(objects.begin()+i);
@@ -458,7 +458,7 @@ void AnnEngine::runBasicGameplay()
 
 	//Dissmiss health and safety warning
 	if(!oor->IsHsDissmissed()) //If not already dissmissed
-		for(int kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
+		for(char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
 			if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
 				oor->dissmissHS();	//dissmiss the Health and Safety warning.
 

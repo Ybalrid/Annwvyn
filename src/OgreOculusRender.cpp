@@ -41,7 +41,7 @@ OgreOculusRender::~OgreOculusRender()
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
-	for(int i(0); i < 2; i++)
+	for(size_t i(0); i < 2; i++)
 		vpts[i]->setBackgroundColour(color);
 }
 
@@ -73,7 +73,7 @@ Ogre::RenderWindow* OgreOculusRender::getWindow()
 
 void OgreOculusRender::debugPrint()
 {
-	for(int i(0); i < 2; i++)
+	for(size_t i(0); i < 2; i++)
 	{
 		cout << "cam " << i << " " << cams[i]->getPosition() << endl;
 		cout << cams[i]->getOrientation() << endl;
@@ -188,9 +188,9 @@ void OgreOculusRender::getOgreConfig()
 	//Try to resore the config from an ogre.cfg file
 	if(!root->restoreConfig())
 		//Open the config dialog of Ogre (even if we're ignoring part of the parameters you can input from it)
-			if(!root->showConfigDialog())
+		if(!root->showConfigDialog())
 				//If the user clicked the "cancel" button or other bad stuff happened during the configuration (like a dragon attack)
-					abort();
+				abort();
 }
 
 void OgreOculusRender::createWindow()
@@ -207,7 +207,7 @@ void OgreOculusRender::createWindow()
 	//Initialize a window ans specify that creation is manual
 	window = root->initialise(false, name);
 	//Actually create the window
-	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen,&misc);
+	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
 
 	//Put the window at the place given by the SDK (usefull on linux system where the X server thinks multiscreen is a single big one...)
 	window->reposition(oc->getHmd()->WindowsPos.x,oc->getHmd()->WindowsPos.y);
@@ -218,12 +218,10 @@ void OgreOculusRender::initCameras()
 	assert(smgr != NULL);
 	cams[left] = smgr->createCamera("lcam");
 	cams[right] = smgr->createCamera("rcam");
-	for(int i = 0; i < 2; i++)
+	for(size_t i = 0; i < 2; i++)
 	{
 		cams[i]->setPosition(cameraPosition);
 		cams[i]->setAutoAspectRatio(true);
-		cams[i]->setNearClipDistance(1);
-		cams[i]->setFarClipDistance(1000);
 	}
 
 	//do NOT attach camera to this node...
@@ -315,26 +313,24 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 		{
 			manual = rift_smgr->createManualObject("RiftRenderObjectLeft");
 			manual->begin("Oculus/LeftEye", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-			//manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 		}
 		else
 		{
 			manual = rift_smgr->createManualObject("RiftRenderObjectRight");
 			manual->begin("Oculus/RightEye", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-			//manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 		}
 
-		for( unsigned int i = 0; i < meshData.VertexCount; i++ )
+		for(unsigned int i = 0; i < meshData.VertexCount; i++)
 		{
 			ovrDistortionVertex v = meshData.pVertexData[i];
 			manual->position(v.ScreenPosNDC.x,
 				v.ScreenPosNDC.y, 0);
-			manual->textureCoord(v.TanEyeAnglesR.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
-				v.TanEyeAnglesR.y);//*UVScaleOffset[0].y + UVScaleOffset[1].y);
-			manual->textureCoord(v.TanEyeAnglesG.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
-				v.TanEyeAnglesG.y);//*UVScaleOffset[0].y + UVScaleOffset[1].y);
-			manual->textureCoord(v.TanEyeAnglesB.x,//*UVScaleOffset[0].x + UVScaleOffset[1].x,
-				v.TanEyeAnglesB.y);//*UVScaleOffset[0].y + UVScaleOffset[1].y);
+			manual->textureCoord(v.TanEyeAnglesR.x,
+				v.TanEyeAnglesR.y);
+			manual->textureCoord(v.TanEyeAnglesG.x,
+				v.TanEyeAnglesG.y);
+			manual->textureCoord(v.TanEyeAnglesB.x,
+				v.TanEyeAnglesB.y);
 			float vig = std::max(v.VignetteFactor, (float)0.0 );
 			manual->colour(vig, vig, vig, vig);
 		}
@@ -385,31 +381,28 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	calculateProjectionMatrix();
 }
 
-
 void OgreOculusRender::calculateProjectionMatrix()
 {
 	//The average  human has 2 eyes
-	for(int eyeIndex(0); eyeIndex < 2; eyeIndex++)
+	for(size_t eyeIndex(0); eyeIndex < 2; eyeIndex++)
 	{
-		ovrEyeType eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
-
 		//Get the projection matrix
-		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov, static_cast<float>(nearClippingDistance), 8000.0f, true);
+		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, static_cast<float>(nearClippingDistance), 8000.0f, true);
 
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
-		for(int x(0); x < 4; x++)
-			for(int y(0); y < 4; y++)
+		for(size_t x(0); x < 4; x++)
+			for(size_t y(0); y < 4; y++)
 				OgreProj[x][y] = proj.M[x][y];
 
 		//Set the matrix
-		cams[eye]->setCustomProjectionMatrix(true, OgreProj);
+		cams[eyeIndex]->setCustomProjectionMatrix(true, OgreProj);
 	}
 }
 void OgreOculusRender::RenderOneFrame()
 {
 	Ogre::WindowEventUtilities::messagePump();
-	unsigned long timerStart = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
+	unsigned long timerStart = getTimer()->getMilliseconds();
 	//get some info
 	cameraPosition = this->CameraNode->getPosition();
 	cameraOrientation = this->CameraNode->getOrientation();
@@ -422,7 +415,7 @@ void OgreOculusRender::RenderOneFrame()
 	OVR::Quatf oculusOrient = pose.Rotation;
 	OVR::Vector3f oculusPos = pose.Translation;
 	ovrEyeType eye;
-	for(int eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
+	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
@@ -444,7 +437,7 @@ void OgreOculusRender::RenderOneFrame()
 	this->updateTime = hmdFrameTiming.DeltaSeconds;
 	if(updateTime == 0)
 	{
-		unsigned long timerStop = Ogre::Root::getSingleton().getTimer()->getMilliseconds();
+		unsigned long timerStop = getTimer()->getMilliseconds();
 		updateTime = (timerStart - timerStop) / 1000.0f;
 	}
 	//update the pose for gameplay purposes
