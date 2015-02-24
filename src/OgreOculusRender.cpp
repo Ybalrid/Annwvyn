@@ -39,6 +39,12 @@ OgreOculusRender::~OgreOculusRender()
 	delete oc;
 }
 
+void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
+{
+	for(int i(0); i < 2; i++)
+		vpts[i]->setBackgroundColour(color);
+}
+
 void OgreOculusRender::dissmissHS()
 {
 	ovrHmd_DismissHSWDisplay(oc->getHmd());
@@ -349,7 +355,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	// Create a camera in the (new, external) scene so the mesh can be rendered onto it:
 	rift_cam = rift_smgr->createCamera("OculusRiftExternalCamera");
 	rift_cam->setFarClipDistance( 50 );
-	rift_cam->setNearClipDistance( 0.001 );
+	rift_cam->setNearClipDistance( 0.001f );
 	rift_cam->setProjectionType( Ogre::PT_ORTHOGRAPHIC );
 	rift_cam->setOrthoWindow( 2, 2 );
 
@@ -376,13 +382,19 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
 	renderTexture->getViewport(0)->setOverlaysEnabled(true);
 
+	calculateProjectionMatrix();
+}
+
+
+void OgreOculusRender::calculateProjectionMatrix()
+{
 	//The average  human has 2 eyes
 	for(int eyeIndex(0); eyeIndex < 2; eyeIndex++)
 	{
 		ovrEyeType eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
 
 		//Get the projection matrix
-		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov, static_cast<float>(nearClippingDistance), 10000.0f, true);
+		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eye].Fov, static_cast<float>(nearClippingDistance), 8000.0f, true);
 
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
@@ -394,7 +406,6 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 		cams[eye]->setCustomProjectionMatrix(true, OgreProj);
 	}
 }
-
 void OgreOculusRender::RenderOneFrame()
 {
 	Ogre::WindowEventUtilities::messagePump();

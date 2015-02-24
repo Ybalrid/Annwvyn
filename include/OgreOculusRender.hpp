@@ -134,6 +134,13 @@ class DLL OgreOculusRender
 		///Request the dissmiss of the Health and Safety warning
 		void dissmissHS();
 
+		///Compute from OVR the correct projection matrix for the given clipping distance
+		void calculateProjectionMatrix();
+
+		///change main viewport background color
+		void changeViewportBackgroundColor(Ogre::ColourValue color);
+
+
     private:
         enum 
         {
