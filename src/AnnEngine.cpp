@@ -451,8 +451,7 @@ void AnnEngine::applyMouseYaw()
 
 void AnnEngine::runBasicGameplay()
 {
-    //	OIS Events 
-    captureEvents();
+  
 
 	player->engineUpdate();
 
@@ -491,7 +490,7 @@ void AnnEngine::runBasicGameplay()
         player->getBody()->setCenterOfMassTransform(Transform);
     }
 
-    //turn body with mouse TODO enclose this with a methode. That's ugly
+    
 	applyMouseYaw();
 
     if(player->getBody() != NULL)
@@ -502,13 +501,17 @@ void AnnEngine::runBasicGameplay()
                     player->getBody()->getCenterOfMassPosition().z()
 					));
 
-    //wow. So many 'if's. such test.
+
     if(m_Ground != NULL && activateJump && collisionWithGround() && m_Keyboard->isKeyDown(OIS::KC_SPACE))
                     player->getBody()->applyCentralImpulse(btVector3(0,jumpForce,0));
 }
 
 void AnnEngine::refresh()
 {
+
+	//OIS Events 
+    captureEvents();
+
     //animations playing :
     deltaT = updateTime();
     playObjectsAnnimation();
