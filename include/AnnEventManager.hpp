@@ -57,9 +57,49 @@ namespace Annwvyn
 
 	};
 
+
+	///Name and number of axes
+	enum MouseAxisId {X, Y, Z, nbAxes, invalidAxis};
+	///Name and number of mouse button
+	enum MouseButtonId {Left, Right, Middle, Button3, Button4, Button5, Button6, Button7, nbButtons, invalidButton};
+
+	///A mouse axis
+	class DLL AnnMouseAxis
+	{
+	public:
+		AnnMouseAxis();
+		AnnMouseAxis(MouseAxisId ax, int rel, int abs);
+		void setAxis(MouseAxisId ax);
+		void setRelValue(int rel); 
+		void setAbsValue(int abs);
+		
+		MouseAxisId getMouseAxisId();
+		int getRelValue();
+		int getAbsValue();
+
+	private:
+		MouseAxisId id;
+		int rel;
+		int abs;
+	};
+	
 	///A mouse event
 	class DLL AnnMouseEvent : public AnnEvent
 	{
+	public:
+		AnnMouseEvent();
+		///Returns true if given butoon is pressed
+		bool getButtonState(MouseButtonId id);
+		AnnMouseAxis getAxis(MouseAxisId id);
+
+	private:
+		AnnMouseAxis axes[MouseAxisId::nbAxes];
+		bool buttonsStatus[MouseButtonId::nbButtons];
+
+		friend class AnnEventManager;
+
+		void setButtonStatus(MouseButtonId id, bool value);
+		void setAxisInformation(MouseAxisId id, AnnMouseAxis information);
 	};
 
 	///A joystick event
