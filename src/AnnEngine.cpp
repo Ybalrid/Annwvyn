@@ -173,7 +173,7 @@ void AnnEngine::setUpOIS()
     //run with SHIFT pressed
     activateJump = true; 
     //jump with space if your feet touch the ground (m_Groudn object)
-    jumpForce = 25.0f;
+    jumpForce = 100.0f;
 
 	if(eventManager)
 	{
@@ -433,11 +433,6 @@ void AnnEngine::doRender()
 {
     updateCamera(); //update camera opsition from GameLogic
     renderOneFrame();
-#ifdef _WIN32
-	Sleep(1);
-#else
-	usleep(1000);
-#endif
 }
 
 void AnnEngine::updateAudioSystemState()
