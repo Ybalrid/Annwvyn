@@ -90,6 +90,7 @@ namespace Annwvyn
 		AnnMouseEvent();
 		///Returns true if given butoon is pressed
 		bool getButtonState(MouseButtonId id);
+		///Get given axis data
 		AnnMouseAxis getAxis(MouseAxisId id);
 
 	private:
