@@ -36,11 +36,11 @@ public:
 
 };
 
-class CustomEventListener : public Annwvyn::AnnAbstractEventListener
+class CustomEventListener : LISTENER
 {
 public:
 
-	CustomEventListener(AnnPlayer* p) : AnnAbstractEventListener(p)
+	CustomEventListener(AnnPlayer* p) : constructListener(p)
 	{}
 
 	void KeyEvent(Annwvyn::AnnKeyEvent e)
@@ -59,6 +59,8 @@ public:
 
 	void MouseEvent(Annwvyn::AnnMouseEvent e)
 	{
+		bool left(e.getButtonState(Annwvyn::MouseButtonId::Left));
+		std::cerr << left << endl;
 	}
 
 	void StickEvent(Annwvyn::AnnStickEvent e)
@@ -107,8 +109,8 @@ AnnMain()
 
 	//create Annwvyn engine
 	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
-	//CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
-	//GameEngine->getEventManager()->setListener(el);
+	CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
+	GameEngine->getEventManager()->setListener(el);
 
 	//load ressources
 	//GameEngine->loadZip("media/CORE.zip");
