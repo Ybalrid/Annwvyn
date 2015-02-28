@@ -118,7 +118,17 @@ void AnnEventManager::update()
 
 	if(Mouse)
 	{
-		//not implemented yet
+		OIS::MouseState state(Mouse->getMouseState());
+		AnnMouseEvent e;
+		for(size_t i(0); i < MouseButtonId::nbButtons; i++)
+			e.setButtonStatus(MouseButtonId(i),state.buttonDown(OIS::MouseButtonID(i)));
+
+		e.setAxisInformation(MouseAxisId::X,AnnMouseAxis(MouseAxisId::X, state.X.rel, state.X.abs));
+		e.setAxisInformation(MouseAxisId::Y,AnnMouseAxis(MouseAxisId::Y, state.Y.rel, state.Y.abs));
+		e.setAxisInformation(MouseAxisId::Z,AnnMouseAxis(MouseAxisId::Z, state.Z.rel, state.Z.abs));
+
+		if(listener)
+			listener->MouseEvent(e);
 	}
 
 	if(Joystick)

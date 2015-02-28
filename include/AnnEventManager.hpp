@@ -14,6 +14,11 @@
 
 #include <OIS.h>
 
+
+#define LISTENER public Annwvyn::AnnAbstractEventListener
+#define constructListener(p) AnnAbstractEventListener(p) 
+
+
 namespace Annwvyn
 {
 	class AnnEngine;
@@ -68,10 +73,7 @@ namespace Annwvyn
 	{
 	public:
 		AnnMouseAxis();
-		AnnMouseAxis(MouseAxisId ax, int rel, int abs);
-		void setAxis(MouseAxisId ax);
-		void setRelValue(int rel); 
-		void setAbsValue(int abs);
+		
 		
 		MouseAxisId getMouseAxisId();
 		int getRelValue();
@@ -81,6 +83,14 @@ namespace Annwvyn
 		MouseAxisId id;
 		int rel;
 		int abs;
+
+		void setAxis(MouseAxisId ax);
+		void setRelValue(int rel); 
+		void setAbsValue(int abs);
+		AnnMouseAxis(MouseAxisId ax, int rel, int abs);
+
+		friend class AnnEventManager;
+		friend class AnnMouseEvent;
 	};
 	
 	///A mouse event
@@ -177,6 +187,9 @@ namespace Annwvyn
 
 		///Array for remembering the key states at last update. 
 		bool previousKeyStates[static_cast<unsigned int>(KeyCode::SIZE)];
+		
+		///Array for remembering the button states at last update
+		bool previousMouseButtonStates[static_cast<unsigned int>(MouseButtonId::nbButtons)];
 	};
 }
 
