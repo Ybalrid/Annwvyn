@@ -120,7 +120,6 @@ void AnnMouseEvent::setButtonStatus(MouseButtonId id, bool value)
 		buttonsStatus[id]=value;
 }
 
-
 void AnnMouseEvent::setAxisInformation(MouseAxisId id, AnnMouseAxis information)
 {
 	if((int)id < (int)MouseAxisId::nbAxes)
