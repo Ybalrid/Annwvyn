@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Fichiers de ressources">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -31,49 +23,60 @@
     <Filter Include="Oculus rendering for Ogre\Source">
       <UniqueIdentifier>{be30c26c-4830-4806-8d92-e51309629354}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn">
+      <UniqueIdentifier>{71f4958c-4a0c-4d65-b5f2-9132994bfa62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Annwvyn\Sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnEngine.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnGameObject.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnTools.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnTypes.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Annwvyn.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnMap.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnJoystickController.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\systemMacro.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnCharacter.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnPlayer.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnEventManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnKeyCode.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\BtOgreExtras.h">
       <Filter>ExternalLib\Header</Filter>
@@ -99,40 +102,40 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnEngine.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnGameObject.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnTools.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnMap.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnJoystickController.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnCharacter.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnPlayer.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnEventManager.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnEvents.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\BtOgre.cpp">
       <Filter>ExternalLib\Source</Filter>
