@@ -14,10 +14,10 @@
 
 #include <OIS.h>
 
-
+///Macro for declaring a listener
 #define LISTENER public Annwvyn::AnnAbstractEventListener
+///Macro for declaring a listener constructer
 #define constructListener(p) AnnAbstractEventListener(p) 
-
 
 namespace Annwvyn
 {
@@ -72,9 +72,7 @@ namespace Annwvyn
 	class DLL AnnMouseAxis
 	{
 	public:
-		AnnMouseAxis();
-		
-		
+		AnnMouseAxis();		
 		MouseAxisId getMouseAxisId();
 		int getRelValue();
 		int getAbsValue();
@@ -84,13 +82,12 @@ namespace Annwvyn
 		int rel;
 		int abs;
 
+		friend class AnnEventManager;
+		friend class AnnMouseEvent;
 		void setAxis(MouseAxisId ax);
 		void setRelValue(int rel); 
 		void setAbsValue(int abs);
 		AnnMouseAxis(MouseAxisId ax, int rel, int abs);
-
-		friend class AnnEventManager;
-		friend class AnnMouseEvent;
 	};
 	
 	///A mouse event
@@ -149,7 +146,7 @@ namespace Annwvyn
 		KeyCode::code jump;
 		KeyCode::code run;
 	};
-		
+	
 	///The event manager
 	class DLL AnnEventManager
 	{
