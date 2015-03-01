@@ -121,7 +121,7 @@ AnnMain()
 	GameEngine->loadDir("media/plane");
 	GameEngine->loadDir("media/body");
 	GameEngine->loadDir("media/GUI");
-	GameEngine->initRessources();
+	GameEngine->initResources();
 
 
 	//Create Object
