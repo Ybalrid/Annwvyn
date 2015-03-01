@@ -81,9 +81,6 @@ namespace Annwvyn
             ///Init All ressources groups
             void initResources(); //resource
 
-			///Deprecated: spelling problem here. I'm French
-			void initRessources(){initResources();} //resource
-
 			///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
 			void addDefaultResourceLocaton();
 
