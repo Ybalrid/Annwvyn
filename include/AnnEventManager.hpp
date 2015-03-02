@@ -36,7 +36,9 @@ namespace Annwvyn
 		bool valid;
 
 		friend class AnnEventManager;
+		///Class called by the event manager to tell that the event is valid (correctly constructed)
 		void validate();
+		///Method being called by the event manager to signifiy that the event object has been populated with data
 		void populate();
 	};
 
@@ -45,8 +47,11 @@ namespace Annwvyn
 	{
 		AnnKeyEvent();
 	public:
+		///Get the key involved in that event
 		Annwvyn::KeyCode::code getKey();
+		///Return true if it's a key press. Key event are debounced.
 		bool isPressed();
+		///Return ture if it's a key release. Key event are debounced.
 		bool isRelased();
 
 	private:
@@ -158,7 +163,6 @@ namespace Annwvyn
 
 		///Set the listener object to the event manager.
 		void setListener(AnnAbstractEventListener* callbackObject);
-		
 		///Make the event manager forget about the listener
 		void removeListener();
 
