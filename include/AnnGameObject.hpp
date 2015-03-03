@@ -71,7 +71,7 @@ namespace Annwvyn
             void setOrientation(float w, float x, float y, float z);
 
             ///Set Orientation from Quaternion
-			/// \parm orient Quaternion for aboslute orientation
+			/// \param orient Quaternion for aboslute orientation
             void setOrientation(Ogre::Quaternion orient);
 
             ///Set scale
@@ -103,13 +103,13 @@ namespace Annwvyn
             btCollisionShape* getShape();
 
             ///Get distance from another object 
-			/// \parm otherObject The object we're counting the distance from
+			/// \param otherObject The object we're counting the distance from
             float getDistance(AnnGameObject* otherObject);
 
             ///Play a sond file
 			/// \param path Path to the audio file
-			/// \parm loop If set to true, will play the sound in loop
-			/// \parm volume Floating point number between 0 and 1 to set the loudness of the sound
+			/// \param loop If set to true, will play the sound in loop
+			/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
             void playSound(std::string path, bool loop = false, float volume = 1.0f);
 
             ///collision handeling
@@ -131,12 +131,12 @@ namespace Annwvyn
 
             ///change the collisionState
 			/// \param Object the object we are testing
-			/// \parm collisionState the state of the collision. True if contact.
+			/// \param collisionState the state of the collision. True if contact.
             void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
 
             ///return the collisionState with the object from the collisionMask. 
             ///if the object is not on the collisionMask, return false
-			/// \parm Object the objet we want to know the current collision state
+			/// \param Object the objet we want to know the current collision state
             bool collideWith(AnnGameObject* Object);
 
             ///Set curently playing animation
@@ -159,12 +159,12 @@ namespace Annwvyn
             void applyImpulse(Ogre::Vector3 impulse);
 			
 			///Set the linear speed of the objet
-			/// \parm v The linear speed
+			/// \param v The linear speed
 			void setLinearSpeed(Ogre::Vector3 v);
 
             ///Set up Bullet 
             /// \param mass The mass of the object
-			/// \parma type The type of shape you want to define for the object
+			/// \param type The type of shape you want to define for the object
 			void setUpBullet(float mass = 0, phyShapeType type = staticShape);
 
             ///SetUpPhysics

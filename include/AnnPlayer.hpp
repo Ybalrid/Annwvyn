@@ -62,17 +62,17 @@ namespace Annwvyn
 		/// \param Position 3D vector representing the position of the player (refernced by the point between his eyes)
 		void setPosition(Ogre::Vector3 Position);
 		///Set body orientation
-		/// \parm Orientation Euler angle that represent the orientation of the player's BODY. That orientation is used as a "zero point" for the head orientation.
+		/// \param Orientation Euler angle that represent the orientation of the player's BODY. That orientation is used as a "zero point" for the head orientation.
 		void setOrientation(Ogre::Euler Orientation);
 		///Set the head orientation
 		/// \param HeadOrientation A quaternion representing the orientation of the head
 		void setHeadOrientation(Ogre::Quaternion HeadOrientation);
 		
 		///distance between footplane and eyes
-		/// \parm eyeHeight floating point number in metter
+		/// \param eyeHeight floating point number in metter
 		void setEyesHeight(float eyeHeight);
 		///WalkSpeed, metters by second
-		/// \parm walkSpeed The speed a the user is walking
+		/// \param walkSpeed The speed a the user is walking
 		void setWalkSpeed(float walkSpeed);
 		///Turnspeed
 		/// \param turnSpeed Angular speed that the user can turn his body
@@ -82,10 +82,10 @@ namespace Annwvyn
 		void setMass(float mass);
 
 		///Bullet shape
-		/// \parm Shape the Bullet collision shape used to simulate player physics
+		/// \param Shape the Bullet collision shape used to simulate player physics
 		void setShape(btCollisionShape* Shape);
 		///Bullet RIGID body
-		/// \parm The bullet rigid body used for simulating player's physics
+		/// \param The bullet rigid body used for simulating player's physics
 		void setBody(btRigidBody* Body);
 
 		///Get the distance between footplane and eyes in metters
@@ -108,7 +108,7 @@ namespace Annwvyn
 		btCollisionShape* getShape();
 
 		///Apply a relative yaw transform to the player. Usefull to bind it to the mouse X axis for FPS-like gameplay.
-		/// \parm angle Radian angle of the transformaton.
+		/// \param angle Radian angle of the transformaton.
 		void applyRelativeBodyYaw(Ogre::Radian angle);
 
 		///manual speed management
