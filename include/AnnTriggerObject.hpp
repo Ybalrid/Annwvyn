@@ -28,12 +28,14 @@ namespace Annwvyn
 			virtual ~AnnTriggerObject(){}
 
             ///Set position form Vector 3D
+			/// \param pos 3D vector positioning the object
             void setPosition(Ogre::Vector3 pos);
 
             ///Set position form Variables
             void setPosition(float x, float y, float z);
             
             ///Set contact information
+			/// \param threshold Radius of the "activation sphere" of the trigger"
             void setThreshold(float threshold);
 
             ///Get position

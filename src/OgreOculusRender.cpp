@@ -448,7 +448,7 @@ void OgreOculusRender::RenderOneFrame()
 
 
 	//Timewarp is not implemented yet...
-	ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
+	//ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
 
 	ovrHmd_EndFrameTiming(oc->getHmd());
 
