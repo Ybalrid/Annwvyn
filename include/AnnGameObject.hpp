@@ -57,21 +57,28 @@ namespace Annwvyn
             void setPos(float x, float y, float z);
 
             ///Set position from Vector 3D
+			/// \param pos 3D position vector. Relative to scene root position
             void setPos(Ogre::Vector3 pos);
 
             ///Translate 
             void translate(float x, float y, float z);
 
             ///Set orientation from Quaternion components
+			/// \param w W composant of a quaternion
+			/// \param x X composant of a quaternion
+			/// \param y Y composant of a quaternion
+			/// \param z Z composant of a quaternion
             void setOrientation(float w, float x, float y, float z);
 
             ///Set Orientation from Quaternion
+			/// \parm orient Quaternion for aboslute orientation
             void setOrientation(Ogre::Quaternion orient);
 
             ///Set scale
             void setScale(float x, float y, float z);
 
             ///Set scale from Vector 3D
+			/// \param scale Relative scaling factor
             void setScale(Ogre::Vector3 scale);
 
             ///Get Position
@@ -96,9 +103,13 @@ namespace Annwvyn
             btCollisionShape* getShape();
 
             ///Get distance from another object 
+			/// \parm otherObject The object we're counting the distance from
             float getDistance(AnnGameObject* otherObject);
 
             ///Play a sond file
+			/// \param path Path to the audio file
+			/// \parm loop If set to true, will play the sound in loop
+			/// \parm volume Floating point number between 0 and 1 to set the loudness of the sound
             void playSound(std::string path, bool loop = false, float volume = 1.0f);
 
             ///collision handeling
@@ -111,37 +122,50 @@ namespace Annwvyn
             void cleanCollisionMask();
 
             ///remove this object of the collisionMask
+			/// \param Object Object we don't want to know if we collide anymore
             void stopGettingCollisionWith(AnnGameObject* Object);
 
             ///add this object to the collisionState
+			/// \param Object the object we want to know collision information
             void testCollisionWith(AnnGameObject* Object);
 
             ///change the collisionState
+			/// \param Object the object we are testing
+			/// \parm collisionState the state of the collision. True if contact.
             void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
 
             ///return the collisionState with the object from the collisionMask. 
-            //if the object is not on the collisionMask, return false
+            ///if the object is not on the collisionMask, return false
+			/// \parm Object the objet we want to know the current collision state
             bool collideWith(AnnGameObject* Object);
 
             ///Set curently playing animation
+			/// \param name Name of the animation as defined by the 3D entity
             void setAnimation(const char name[]);
 
-            ///Play the animation ?
+            ///Set if we want to play the animation
+			/// \param play the playing state we want to apply
             void playAnimation(bool play = true);
 
             ///Loop the animation ?
+			/// \param loop the looping state of the animation
             void loopAnimation(bool loop = true);
 
             ///Apply a physical force            
             void applyForce(Ogre::Vector3 force);
 
             ///Apply a physical impultion
+			/// \param the impultion force
             void applyImpulse(Ogre::Vector3 impulse);
-
+			
+			///Set the linear speed of the objet
+			/// \parm v The linear speed
 			void setLinearSpeed(Ogre::Vector3 v);
 
             ///Set up Bullet 
-            void setUpBullet(float mass = 0, phyShapeType type = staticShape);
+            /// \param mass The mass of the object
+			/// \parma type The type of shape you want to define for the object
+			void setUpBullet(float mass = 0, phyShapeType type = staticShape);
 
             ///SetUpPhysics
             void setUpPhysics(float mass = 0, phyShapeType type = staticShape){setUpBullet(mass,type);}
