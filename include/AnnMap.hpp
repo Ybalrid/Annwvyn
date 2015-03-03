@@ -18,12 +18,16 @@ namespace Annwvyn
     {
         public:
 			///Map loader base constructor
+			/// \param engine Callback pointer to make object creation call.
             AnnMap(Annwvyn::AnnEngine* engine);
 			///Map loader that directly load a map file
+			/// \param engine Callback pointer to make object creation call.
+			/// \param mapFile path to the file (relative or absolute)
             AnnMap(Annwvyn::AnnEngine* engine, const char mapFile[]);
 			///Destroy the map
             ~AnnMap();
 			///Load a map file (only once)
+			/// \param mapFile path to the map file
             void loadFile(const char mapFile[]);
             
 			///Get the content of the map
