@@ -127,6 +127,9 @@ void AnnEventManager::update()
 		e.setAxisInformation(MouseAxisId::Y,AnnMouseAxis(MouseAxisId::Y, state.Y.rel, state.Y.abs));
 		e.setAxisInformation(MouseAxisId::Z,AnnMouseAxis(MouseAxisId::Z, state.Z.rel, state.Z.abs));
 
+		e.populate();
+		e.validate();
+
 		if(listener)
 			listener->MouseEvent(e);
 	}
