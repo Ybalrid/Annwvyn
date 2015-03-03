@@ -12,6 +12,7 @@
 #include "AnnKeyCode.h"
 #include "AnnPlayer.hpp"
 
+//Include the Object-Oriented Input Library
 #include <OIS.h>
 
 ///Macro for declaring a listener
