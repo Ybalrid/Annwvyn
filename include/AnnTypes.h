@@ -46,21 +46,5 @@ namespace Annwvyn
 		sphereShape
 	};
 
-	/* useless
-	//controls
-	namespace Keys
-	{
-		enum FPS_controllSheme
-		{
-			FW,		//Foward
-			BK,		//Backward
-			SL,		//Straff Left
-			SR,		//Straff Right
-			JUMP,	//Jump
-			RUN		//Run
-		};
-	}
-
-	*/
 }
 #endif
