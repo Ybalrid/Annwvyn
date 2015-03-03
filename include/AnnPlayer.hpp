@@ -59,24 +59,33 @@ namespace Annwvyn
 		bool isLocked();
 
 		///Set the position of the player.
+		/// \param Position 3D vector representing the position of the player (refernced by the point between his eyes)
 		void setPosition(Ogre::Vector3 Position);
 		///Set body orientation
+		/// \parm Orientation Euler angle that represent the orientation of the player's BODY. That orientation is used as a "zero point" for the head orientation.
 		void setOrientation(Ogre::Euler Orientation);
 		///Set the head orientation
+		/// \param HeadOrientation A quaternion representing the orientation of the head
 		void setHeadOrientation(Ogre::Quaternion HeadOrientation);
 		
-		///distance between footplane and eyes in meters
+		///distance between footplane and eyes
+		/// \parm eyeHeight floating point number in metter
 		void setEyesHeight(float eyeHeight);
 		///WalkSpeed, metters by second
+		/// \parm walkSpeed The speed a the user is walking
 		void setWalkSpeed(float walkSpeed);
-		///Turnspeed on rad/sec
+		///Turnspeed
+		/// \param turnSpeed Angular speed that the user can turn his body
 		void setTurnSpeed(float turnSpeed);
 		///Mass in Kg
+		/// \param mass Mass of the player in Kg 
 		void setMass(float mass);
 
 		///Bullet shape
+		/// \parm Shape the Bullet collision shape used to simulate player physics
 		void setShape(btCollisionShape* Shape);
 		///Bullet RIGID body
+		/// \parm The bullet rigid body used for simulating player's physics
 		void setBody(btRigidBody* Body);
 
 		///Get the distance between footplane and eyes in metters
@@ -98,6 +107,8 @@ namespace Annwvyn
 		///Get Shape
 		btCollisionShape* getShape();
 
+		///Apply a relative yaw transform to the player. Usefull to bind it to the mouse X axis for FPS-like gameplay.
+		/// \parm angle Radian angle of the transformaton.
 		void applyRelativeBodyYaw(Ogre::Radian angle);
 
 		///manual speed management
