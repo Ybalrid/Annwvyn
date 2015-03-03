@@ -55,7 +55,7 @@ namespace Annwvyn
     {
         public:
             ///Class constructor. take the name of the window
-			/// \parm title The title of the windows that will be created by the operating system
+			/// \param title The title of the windows that will be created by the operating system
             AnnEngine(const char title[] = "Annwvyn Game Engine");
 
             ///Class destructor. Do clean up stuff.
@@ -81,7 +81,7 @@ namespace Annwvyn
             void loadDir(const char path[], const char resourceGroupName[] = "ANNWVYN_DEFAULT");
 
 			///Load a standard Ogre resource.cfg file
-			/// \parm path path to the resource file
+			/// \param path path to the resource file
             void loadResFile(const char path[]); //resource
 
             ///Init All ressources groups
@@ -111,7 +111,7 @@ namespace Annwvyn
 
             ///Create a game object form the name of an entity.
 			/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
-			/// \parm object An instance of an empty AnnGameObject. Usefull for creating object of herited class
+			/// \param object An instance of an empty AnnGameObject. Usefull for creating object of herited class
             AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject); //object factory
 
 			///Destroy the given object
@@ -206,7 +206,7 @@ namespace Annwvyn
             btDiscreteDynamicsWorld* getDynamicsWorld(); //physics
 
             ///Create a trigger object
-            /// \parm trigger an empty trigger object
+            /// \param trigger an empty trigger object
 			AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject); //object factory
 
             ///Process contact test with triggers

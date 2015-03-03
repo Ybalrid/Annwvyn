@@ -63,7 +63,7 @@ namespace Annwvyn
 		friend class AnnEventManager;
 		void setPressed();
 		void setRelased();
-		/// \parma c Keycode
+		/// \param c Keycode
 		void setCode(KeyCode::code c);
 
 	};
@@ -181,7 +181,7 @@ namespace Annwvyn
 		/// \param m Yhe mouse object
 		void setMouse(OIS::Mouse* m);
 		///Engine initialization for Joystick events 
-		/// \parm stick the Joystick object.
+		/// \param stick the Joystick object.
 		void setJoystick(OIS::JoyStick* stick);
 
 		///Pointer that holds the keyboard
