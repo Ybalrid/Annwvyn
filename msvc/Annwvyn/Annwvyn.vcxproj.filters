@@ -152,5 +152,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Annwvyn.TODO" />
+    <None Include="Main Class Diagram.cd" />
   </ItemGroup>
 </Project>

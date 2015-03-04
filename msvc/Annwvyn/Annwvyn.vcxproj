@@ -139,6 +139,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\example\"
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Annwvyn.TODO" />
+    <None Include="Main Class Diagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
