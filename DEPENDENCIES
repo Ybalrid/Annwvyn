@@ -1,4 +1,4 @@
-You need to link :
+For building the engine, you need to link :
 
 Ogre 1.9.x
 Bullet >= 2.8
@@ -6,8 +6,9 @@ OpenAL lattest available should work
 libsndfile lattest available should work
 libOVR 0.4.4
 
-for windows :
-Please use the SDK from http://annwvyn.org/
+On Windows you can download the SDK from http://annwvyn.org/
+You'll need MSVC 2012 to build Annwvyn. The embeded boost version is build with vctoolkit 11.
+The SDK is probably not up to date, but it contain a full copy of this repo. You can just "git pull" the Annwvyn repository and rebuild the msvc solution under Annwvyn/msvc/Annwvyn.sln
 
 for GNU/Linux :
 Use OVR 0.4.4 form http://developer.oculusvr.com/
