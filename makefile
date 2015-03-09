@@ -6,8 +6,8 @@ SYSARCH       = x86_64
 endif
 
 
-CFLAGS =
-LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/  -lovr -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system  -lXrandr -lXxf86vm -lGL 
+CFLAGS = --std=c++0x
+LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/  -lovr -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system  -lXrandr -lXxf86vm -lGL -lrt
 IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include -I../OculusSDK/LibOVR/Src  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ -I/usr/include/GL
 
 INSTALL_PREFIX = /usr/local
@@ -48,7 +48,7 @@ test: lib/libAnnwvyn.so
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
 
-lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o obj/AnnJoystickController.o obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o
+lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o obj/AnnJoystickController.o obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 obj/AnnEngine.o: src/AnnEngine.cpp include/AnnEngine.hpp
@@ -86,5 +86,19 @@ obj/OgreOculusRender.o: src/OgreOculusRender.cpp include/OgreOculusRender.hpp
 
 obj/AnnCharacter.o: src/AnnCharacter.cpp include/AnnCharacter.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnCharacter.cpp -o obj/AnnCharacter.o
+
+obj/AnnDefaultEventListener.o: src/AnnDefaultEventListener.cpp include/AnnEventManager.hpp include/AnnKeyCode.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnDefaultEventListener.cpp -o obj/AnnDefaultEventListener.o
+
+obj/AnnEventManager.o: src/AnnEventManager.cpp include/AnnEventManager.hpp include/AnnKeyCode.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnEventManager.cpp -o obj/AnnEventManager.o
+
+obj/AnnEvents.o: src/AnnEvents.cpp include/AnnEventManager.hpp include/AnnKeyCode.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnEvents.cpp -o obj/AnnEvents.o 
+
+obj/AnnPlayer.o: src/AnnPlayer.cpp include/AnnPlayer.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnPlayer.cpp -o obj/AnnPlayer.o
+
+
 
 endif
