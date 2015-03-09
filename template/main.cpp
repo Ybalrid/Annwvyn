@@ -10,7 +10,7 @@ AnnMain()
 {
 	AnnEngine* GameEngine = new AnnEngine("My Game");
 
-	GameEngine->initRessources();
+	GameEngine->initResources();
 
 	GameEngine->oculusInit();
 
