@@ -29,6 +29,8 @@ clean:
 
 .PHONY: instal
 install: all
+	@echo cleaning all old installation of Annwvyn
+	rm -rf $(INSTALL_PREFIX)/include/Annwvn $(INSTALL_PREFIX)/lib/Annwvyn 2> /dev/null >/dev/null 
 	@echo -------------------------------------------------------------------------
 	@echo Create install directories on $(INSTALL_PREFIX)
 	mkdir --parent $(INSTALL_PREFIX)/lib/Annwvyn $(INSTALL_PREFIX)/include/Annwvyn
@@ -98,7 +100,5 @@ obj/AnnEvents.o: src/AnnEvents.cpp include/AnnEventManager.hpp include/AnnKeyCod
 
 obj/AnnPlayer.o: src/AnnPlayer.cpp include/AnnPlayer.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnPlayer.cpp -o obj/AnnPlayer.o
-
-
 
 endif

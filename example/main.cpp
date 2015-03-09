@@ -60,7 +60,7 @@ public:
 	void MouseEvent(Annwvyn::AnnMouseEvent e)
 	{
 		bool left(e.getButtonState(Annwvyn::MouseButtonId::Left));
-		std::cerr << left << endl;
+		//std::cerr << left << endl;
 	}
 
 	void StickEvent(Annwvyn::AnnStickEvent e)
