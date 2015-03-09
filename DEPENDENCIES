@@ -2,25 +2,24 @@ You need to link :
 
 Ogre 1.9.x
 Bullet >= 2.8
-OpenAL lattest available
-libsndfile lattest available 
-libOVR 0.2.5
-CEGUI >0.8.2 (Build with your own Ogre build, we need the OgreRenderer to use the correct version of Ogre)
+OpenAL lattest available should work
+libsndfile lattest available should work
+libOVR 0.4.4
 
 for windows :
 Please use the SDK from http://annwvyn.org/
 
 for GNU/Linux :
-0.2.4 or higher
-+ join Ogre *.so plugins files along your executable (or just specify the place they have to be on your system in plugin.cfg)
+Use OVR 0.4.4 form http://developer.oculusvr.com/
+Join Ogre *.so plugins files along your executable (or just specify the place they have to be on your system in plugin.cfg)
 Make sure the Ogre shared objects directory is on your ld.so.conf, in some distrib, ld does not search on the /usr/local/lib for exemple directory.
 
 
 Included libraries : (compiled with the source code)
 BtOgre
-OgreOculus modified, (I will update my personal fork of Kojack's work later...)
+Gorilla
 
 More information : http://annwvyn.org
-Documentation wiki : http://annwvyn.org/wiki/
+Documentation wiki : http://wiki.annwvyn.org/
 
 Official Git repo : https://github.com/Ybalrid/Annwvyn.git
