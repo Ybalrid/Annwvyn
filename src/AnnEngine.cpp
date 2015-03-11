@@ -218,7 +218,7 @@ void AnnEngine::initPlayerPhysics()
 void AnnEngine::createVirtualBodyShape()
 {
     assert(player != NULL);
-    player->setShape(new btCapsuleShape(0.5,player->getEyesHeight()/2));
+    player->setShape(new btCapsuleShape(0.25,player->getEyesHeight()/2));
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
@@ -243,13 +243,6 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 
 	float height(player->getEyesHeight());
     m_DynamicsWorld->addRigidBody(player->getBody());
-
-	Ogre::Vector3 ogrePos = player->getPosition();
-
-    btVector3 pos = btVector3(ogrePos.x, ogrePos.y, ogrePos.z);
-    pos += btVector3(0,height,0);
-
-    player->getBody()->translate(pos);
 }
 
 void AnnEngine::updatePlayerFromPhysics()
