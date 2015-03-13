@@ -18,7 +18,7 @@ namespace Annwvyn
 	class AnnEngine; //predeclaration of AnnEngine
 
 	///Parameters of the VirtualBody		
-	class bodyParams
+	class DLL bodyParams
 	{
 		/**
 		* That class was a structure. It is keeped as a class with public attributes to keep compatibility with legacy code.
@@ -42,7 +42,7 @@ namespace Annwvyn
 	};
 
 	///class that represent the player
-	class AnnPlayer
+	class DLL AnnPlayer
 	{
 	public:
 

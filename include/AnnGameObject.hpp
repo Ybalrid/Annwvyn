@@ -165,10 +165,10 @@ namespace Annwvyn
             ///Set up Bullet 
             /// \param mass The mass of the object
 			/// \param type The type of shape you want to define for the object
-			void setUpBullet(float mass = 0, phyShapeType type = staticShape);
+			void setUpBullet(float mass = 0, phyShapeType type = staticShape, bool colideWithPlayer = true);
 
             ///SetUpPhysics
-            void setUpPhysics(float mass = 0, phyShapeType type = staticShape){setUpBullet(mass,type);}
+            void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true){setUpBullet(mass,type,colide);}
 
         private:
             ///Make Annwvyn::AnnEngine acces these methods : 

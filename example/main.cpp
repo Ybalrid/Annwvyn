@@ -31,7 +31,7 @@ public:
 		playAnimation(true);
 		loopAnimation(true);
 
-		setUpBullet(40, Annwvyn::boxShape);
+	//	setUpBullet(40, Annwvyn::boxShape);
 	}
 
 };
@@ -125,10 +125,7 @@ AnnMain()
 
 
 	//Create Object
-	Sinbad* S = (Sinbad*) GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
-	Sinbad* S2 = (Sinbad*) GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
-	S2->translate(5,0,0);
-
+	
 	MyTrigger* T = (MyTrigger*) GameEngine->createTriggerObject(new MyTrigger);
 	T->setPosition(-0.5,-1,3);
 
@@ -185,6 +182,11 @@ AnnMain()
 
 	AnnJoystickController* ajc = new AnnJoystickController(GameEngine);
 	GameEngine->resetOculusOrientation();
+
+	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh");
+	S->setPos(0,5,-5);
+	S->setUpBullet(40, Annwvyn::boxShape, false);
+
 	while(!GameEngine->requestStop())
 	{   
 		if(GameEngine->isKeyDown(OIS::KC_F12))

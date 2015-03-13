@@ -176,7 +176,7 @@ void AnnGameObject::setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorl
 }
 
 
-void AnnGameObject::setUpBullet(float mass, phyShapeType type)
+void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPlayer)
 {
     //check if everything is OK
     if(m_DynamicsWorld == NULL)
@@ -233,13 +233,23 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type)
         inertia = btVector3(0,0,0); //No influence. But mass zero objects are static
 
 	
-    BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(m_node);
 
     //create rigidBody from shape
-    m_Body = new btRigidBody(mass, state, m_Shape, inertia);
+	if(!m_Body)
+	{
+		BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(m_node);
+		m_Body = new btRigidBody(mass, state, m_Shape, inertia);
+	}
 
     if(m_Body != NULL)
-        m_DynamicsWorld->addRigidBody(m_Body);
+		if(colideWithPlayer)
+        {
+			m_DynamicsWorld->addRigidBody(m_Body, BIT(1), BIT(0) | BIT(1));
+		}
+		else
+		{
+			m_DynamicsWorld->addRigidBody(m_Body, BIT(1), BIT(1));
+		}
     else
         return; //Unable to create the physical representation
 
