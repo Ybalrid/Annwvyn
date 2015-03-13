@@ -218,7 +218,8 @@ void AnnEngine::initPlayerPhysics()
 void AnnEngine::createVirtualBodyShape()
 {
     assert(player != NULL);
-    player->setShape(new btCapsuleShape(0.25,player->getEyesHeight()/2));
+	float radius(0.25f);
+    player->setShape(new btCapsuleShape(radius,player->getEyesHeight()-2*radius));
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
@@ -242,7 +243,9 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
     assert(player->getBody());
 
 	float height(player->getEyesHeight());
-    m_DynamicsWorld->addRigidBody(player->getBody());
+		//player->getBody()->translate(btVector3(0,height,0));
+    m_DynamicsWorld->addRigidBody(player->getBody(), BIT(0), BIT(1));
+
 }
 
 void AnnEngine::updatePlayerFromPhysics()
