@@ -433,8 +433,8 @@ void AnnEngine::doRender()
 
 void AnnEngine::updateAudioSystemState()
 {
-    AudioEngine->updateListenerPos(oor->lastOculusPosition);
-    AudioEngine->updateListenerOrient(oor->lastOculusOrientation);
+	AudioEngine->updateListenerPos(oor->returnPose.position);
+    AudioEngine->updateListenerOrient(oor->returnPose.orientation);
     for(unsigned int i = 0; i < objects.size(); i++)
         objects[i]->updateOpenAlPos();
 }
@@ -532,6 +532,7 @@ void AnnEngine::refresh()
     if(VisualBodyAnimation)
         VisualBodyAnimation->addTime(getTime());
 
+	updateAudioSystemState();
 	doRender();
 }
 

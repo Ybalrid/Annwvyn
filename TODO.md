@@ -6,6 +6,7 @@ Critial
 - [ ] Need to think of a proper way of giving arguments to the engine befor graphical initialization...
 - [ ] Allow playing multiple animations
 - [ ] Create Annwvyn classes for representing vectors and quaternion relying on Ogre code + being able to convert itself to Bullet equivalent or other in-engine dependencies
+- [ ] Consolidate the audio system (but don't waste time, Oculus Audio SDK incoming, maybe...)
 
 Non critial
 - [ ] Add friction setting for bullet
