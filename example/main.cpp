@@ -30,8 +30,6 @@ public:
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
-
-	//	setUpBullet(40, Annwvyn::boxShape);
 	}
 
 };
@@ -183,12 +181,20 @@ AnnMain()
 	AnnJoystickController* ajc = new AnnJoystickController(GameEngine);
 	GameEngine->resetOculusOrientation();
 
-	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh");
+	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
 	S->setPos(0,5,-5);
-	S->setUpBullet(40, Annwvyn::boxShape, false);
+	S->setUpBullet(40, Annwvyn::boxShape, true);
 
+
+	bool debounce;
+	bool current(false);
 	while(!GameEngine->requestStop())
 	{   
+		debounce = current;
+		current = GameEngine->isKeyDown(OIS::KC_RETURN);
+
+		if(current && !debounce)
+			S->playSound("media/monster.wav");
 		if(GameEngine->isKeyDown(OIS::KC_F12))
 			GameEngine->resetOculusOrientation();
 		GameEngine->refresh();
