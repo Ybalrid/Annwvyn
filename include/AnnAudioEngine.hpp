@@ -49,6 +49,8 @@ namespace Annwvyn
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
 		void playBGM(const std::string path, const float volume = 0.5f);
 
+		const std::string getLastError();
+
 	private:
 		///For engine : uptade listenter pos and orientation with Ogre coordinates
 		void updateListenerPos(Ogre::Vector3 pos);
