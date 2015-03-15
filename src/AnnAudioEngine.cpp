@@ -4,11 +4,14 @@ using namespace Annwvyn;
 
 AnnAudioEngine::AnnAudioEngine()
 {
-	lastError = "No error";
+	lastError = "Initialize OpenAL based sound system";
 	if(!initOpenAL())
 		lastError = "Cannot Init OpenAL";
 
-	std::cerr << lastError << std::endl;
+	//std::cerr << lastError << std::endl;
+
+	Ogre::LogManager::getSingleton().logMessage(lastError);
+
 	alListener3f(AL_POSITION, 0.0f, 0.0f, 10.0f);
 
 	ALfloat Orientation[] = {0.0f, 0.0f, 1.0f,
@@ -67,7 +70,10 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 	 // Lecture des échantillons audio au format entier 16 bits signé (le plus commun)
     std::vector<ALshort> Samples(NbSamples);
     if (sf_read_short(File, &Samples[0], NbSamples) < NbSamples)
+	{
+		lastError = "Error while reading the file" + Filename + " through sndfile library";
         return 0;
+	}
 
 	  // close file
     sf_close(File);
@@ -91,7 +97,10 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
  
     // check errors
     if (alGetError() != AL_NO_ERROR)
+	{
+		lastError = "Error : cannot create an audio buffer for : " + Filename;
         return 0;
+	}
  
     return buffer;
 }
@@ -104,7 +113,7 @@ void AnnAudioEngine::playBGM(const std::string path, const float volume)
 	alGenSources(1, &bgm);
 	alSourcei(bgm, AL_BUFFER, buffer);
 	alSourcei(bgm, AL_LOOPING, AL_TRUE);
-	alSourcef(bgm,AL_GAIN,volume);
+	alSourcef(bgm, AL_GAIN, volume);
 
 	alSourcePlay(bgm);
 }
@@ -123,4 +132,9 @@ void AnnAudioEngine::updateListenerOrient(Ogre::Quaternion orient)
 							Up.x, Up.y, Up.z};
 
 	alListenerfv(AL_ORIENTATION, Orientation);
+}
+
+const std::string AnnAudioEngine::getLastError()
+{
+	return lastError;
 }
