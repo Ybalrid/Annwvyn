@@ -111,13 +111,11 @@ void AnnAudioEngine::playBGM(const std::string path, const float volume)
 
 void AnnAudioEngine::updateListenerPos(Ogre::Vector3 pos)
 {
-	Ogre::LogManager::getSingleton().logMessage("OPENAL POSITION UPDATE");
 	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
 }
 
 void AnnAudioEngine::updateListenerOrient(Ogre::Quaternion orient)
 {
-	Ogre::LogManager::getSingleton().logMessage("OPENAL ORIENTATION UPDATE");
 	Ogre::Vector3 At = (orient * Ogre::Vector3::NEGATIVE_UNIT_Z); // Direction object facing 
 	Ogre::Vector3 Up = (orient * Ogre::Vector3::UNIT_Y); // Up Vector 
 
