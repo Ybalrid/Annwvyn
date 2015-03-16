@@ -46,8 +46,10 @@ AnnEngine::~AnnEngine()
     for(size_t i(0); i < objects.size(); i++)
     {
         destroyGameObject(objects[i]);
-        objects.erase(objects.begin()+i);
-    }
+		objects[i] = NULL;  //don't change the size of the vector while iterating throug it
+	}
+
+	objects.clear();
 
     //Bullet
     delete m_DynamicsWorld;
@@ -115,7 +117,6 @@ void AnnEngine::setUpOgre(const char title[])
 ///////////// Physics
 void AnnEngine::setUpBullet()
 {
-
     log("Init Bullet physics");
 
     m_Broadphase = new btDbvtBroadphase();
@@ -250,8 +251,7 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 
 void AnnEngine::updatePlayerFromPhysics()
 {
-    if(!player->getBody())
-        return;
+    assert(player->getBody());
 
     //Get pos from bullet
     btVector3 phyPos = player->getBody()->getCenterOfMassPosition();
@@ -357,6 +357,10 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
         obj->postInit(); //Run post init directives
 
 		objects.push_back(obj); //keep address in list
+
+		std::stringstream ss;
+		ss << "The object " << entityName << "has been created. Annwvyn memory address " << obj;  
+		log(ss.str());
     }
     catch (std::string const& e)
     {
@@ -369,16 +373,22 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
+	std::stringstream ss;
     bool returnCode(false);
     for(size_t i(0); i < objects.size(); i++)
     {
-        std::cerr << "Object " << static_cast<void*>(objects[i]) << " stop collision test" << std::endl;
+    
+		ss << "Object " << static_cast<void*>(objects[i]) << " stop collision test" << std::endl;
+		log(ss.str());
 
         objects[i]->stopGettingCollisionWith(object);
 
         if(objects[i] == object)
         {
-            std::cout << "Object found" << std::endl;
+			ss.clear();
+            ss << "Object found" << std::endl;
+			log(ss.str());
+
             objects.erase(objects.begin() + i);
             Ogre::SceneNode* node = object->node();
 
@@ -504,7 +514,6 @@ void AnnEngine::runBasicGameplay()
 
 void AnnEngine::refresh()
 {
-
 	//OIS Events 
     captureEvents();
 
@@ -520,14 +529,12 @@ void AnnEngine::refresh()
     processTriggersContacts();
 
     if(debugPhysics)
-    {
         m_debugDrawer->step();
-        //TODO display triggers position, influence zone and state... 
-    }
 
     //Call of refresh method
-    for(size_t i(0); i < objects.size(); i++)
-        objects[i]->atRefresh();
+	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
+		(*it)->atRefresh();
+		
 
     if(VisualBodyAnimation)
         VisualBodyAnimation->addTime(getTime());
@@ -584,8 +591,7 @@ float AnnEngine::updateTime()
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
-    assert(m_Keyboard != NULL);
-    return m_Keyboard->isKeyDown(key);
+	return m_Keyboard->isKeyDown(key);
 }
 
 
@@ -778,11 +784,11 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
     if(animated)
     {
-        Ogre::AnimationState* as = ent->getAnimationState("IDLE");
+        /*Ogre::AnimationState* as = ent->getAnimationState("IDLE");
         as->setLoop(true);
         as->setEnabled(true);
 
-        VisualBodyAnimation = as;
+        VisualBodyAnimation = as;*/
     }
 }
 
@@ -816,6 +822,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 
 Annwvyn::bodyParams* AnnEngine::getBodyParams()
 {
+	//BAD!
     return player->getLowLevelBodyParams();
 }
 
