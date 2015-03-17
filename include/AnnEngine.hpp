@@ -338,6 +338,8 @@ namespace Annwvyn
             OIS::Mouse *m_Mouse;
             OIS::JoyStick *m_Joystick;
             OIS::ParamList pl;
+            
+            std::string x11LayoutAtStartup;
 
             size_t windowHnd;
             std::ostringstream windowHndStr;

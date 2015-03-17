@@ -35,6 +35,30 @@ AnnEngine::AnnEngine(const char title[])
 	refVisualBody = Ogre::Quaternion::IDENTITY;
     log("Annwvyn Game Engine - Step into the Other World", false);
     log("Desinged for Virtual Reality", false);
+
+#ifdef __gnu_linux__
+
+    log("we are running on linux. getting x11 keyboard layout from the system");
+    FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
+    char* buffer = static_cast<char *>(malloc(128*sizeof(char)));
+    
+    if(!layout)
+        log("cannot get the layout");
+    if(!buffer)
+        log("cannot create a 128 byte text buffer (weird...)");
+
+    if(layout && buffer)
+    {
+        fscanf(layout, "%s", buffer);
+        x11LayoutAtStartup = std::string(buffer);
+
+        log("Saving keyboard layout for shutdown.");
+        log("saved layout="+x11LayoutAtStartup, false);
+    }
+    free(buffer);
+    buffer = NULL;
+    system("setxkbmap us");
+#endif
 }
 
 
@@ -66,6 +90,11 @@ AnnEngine::~AnnEngine()
 
     //Audio
     delete AudioEngine;
+
+#ifdef __gnu_linux__
+    log("setting back the keyboard to " + x11LayoutAtStartup);
+    system(std::string("setxkbmap " + x11LayoutAtStartup).c_str());
+#endif
 }
 
 AnnEventManager* AnnEngine::getEventManager()
@@ -142,6 +171,7 @@ void AnnEngine::setUpBullet()
 ///////////// Inputs
 void AnnEngine::setUpOIS()
 {
+
     //We use OIS to catch all user inputs
     //Only keyboard/mouse is suported for now but in the future we will try joystick and this kind of controller.
 
@@ -182,6 +212,8 @@ void AnnEngine::setUpOIS()
 		eventManager->setMouse(m_Mouse);
 		eventManager->setJoystick(m_Joystick);
 	}
+
+    log("Layout is " + x11LayoutAtStartup);
 }
 
 ///////////// Time system
@@ -514,6 +546,7 @@ void AnnEngine::runBasicGameplay()
 
 void AnnEngine::refresh()
 {
+    log("Layout is " + x11LayoutAtStartup);
 	//OIS Events 
     captureEvents();
 
