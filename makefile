@@ -1,58 +1,75 @@
 CC = g++
 
+#Get the operating system type.
 SYSARCH       = i386
 ifeq ($(shell uname -m),x86_64)
 SYSARCH       = x86_64
 endif
 
-
+#define flags
 CFLAGS = --std=c++0x -Wall -O2
 LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/  -lovr -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system  -lXrandr -lXxf86vm -lGL -lrt
 IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include -I../OculusSDK/LibOVR/Src  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ -I/usr/include/GL
 
+#define the installation location for the engine (should be a local system folder)
 INSTALL_PREFIX = /usr/local
 
+#if we are on linux
 ifeq ($(shell uname), Linux)
 all: lib/libAnnwvyn.so
 
+#build doxygen documentation
 .PHONY: doc
 doc:
 	(cd doxygen;doxygen Doxyfile)
 	(cd doxygen/Gen/latex;make)
 
 
+#remove everything created with the makefile
 .PHONY: clean
 clean:
-	rm -r obj/*.o lib/*.so 
-	rm -r doxygen/Gen 
+	@echo "Clear .o and .so file"
+	rm -rf obj/*.o lib/*.so 2> /dev/null > /dev/null
+	@echo "Clear doxygen generated site"
+	rm -rf doxygen/Gen  2> /dev/null > /dev/null
 
-
-.PHONY: instal
+#install the library to the system, configuration
+.PHONY: install
 install: all
 	@echo cleaning all old installation of Annwvyn
 	rm -rf $(INSTALL_PREFIX)/include/Annwvn $(INSTALL_PREFIX)/lib/Annwvyn 2> /dev/null >/dev/null 
 	@echo -------------------------------------------------------------------------
 	@echo Create install directories on $(INSTALL_PREFIX)
 	mkdir --parent $(INSTALL_PREFIX)/lib/Annwvyn $(INSTALL_PREFIX)/include/Annwvyn
+	@echo -------------------------------------------------------------------------
 	@echo install compiled shared object on $(INSTALL_PREFIX)/lib/Annwvyn/libAnnwvyn.so
 	install lib/libAnnwvyn.so $(INSTALL_PREFIX)/lib/Annwvyn/libAnnwvyn.so
+	@echo -------------------------------------------------------------------------
 	@echo install library headers on  $(INSTALL_PREFIX)/include/Annwvyn/
 	install include/* $(INSTALL_PREFIX)/include/Annwvyn/
+	@echo -------------------------------------------------------------------------
 	@echo install ldconfig Annvyn.conf
 	install configFiles/Annwvyn.conf /etc/ld.so.conf.d/Annwvyn.conf
+	@echo -------------------------------------------------------------------------
 	@echo run ldconfig and display Annwvyn related content
-	ldconfig -v | grep Ann | tee ld.log
-	@echo DONE ! you can see library install log on ld.log 
+	ldconfig -v | grep Ann | tee ldconfig_update.log
+	@echo -------------------------------------------------------------------------
+	@echo "Installation finished. You can see library install log on ldconfig_update.log"
 
+#build the test programm
 test: lib/libAnnwvyn.so
 	$(CC) example/main.cpp -o example/test  -L./lib -lAnnwvyn $(CFLAGS) $(LDFLAGS) $(IFLAGS) -lpthread
 	@echo 'Copying Shared object to program floder'
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
+	@echo "(you may need to call sudo make install tu actually run the test with the lattest Annwvyn version)"
 
+
+#build the DSO from the objects file
 lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o obj/AnnJoystickController.o obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
+#build each class separatly
 obj/AnnEngine.o: src/AnnEngine.cpp include/AnnEngine.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnEngine.cpp -o obj/AnnEngine.o
 
