@@ -546,7 +546,6 @@ void AnnEngine::runBasicGameplay()
 
 void AnnEngine::refresh()
 {
-    log("Layout is " + x11LayoutAtStartup);
 	//OIS Events 
     captureEvents();
 
