@@ -13,6 +13,7 @@ Non critial
 - [ ] Object parenting
 - [ ] Add debug drawing for trigger position when debug drawing is active for bullet
 - [ ] Permit to create non spherical trigger
+- [ ] Simplify the linux makefile template. Maybe make something to regenerate it from a list of files
 
 Will probably not be added to the engine (map system has to be redone from scratch...)
 - [ ] Add name identification for objects to be found in Map Files
