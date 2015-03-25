@@ -207,7 +207,12 @@ void OgreOculusRender::createWindow()
 	//Initialize a window ans specify that creation is manual
 	window = root->initialise(false, name);
 	//Actually create the window
-	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
+#ifdef __gnu_linux__
+    //Assuming the 2nd screen is used as a "normal" display, rotated : 
+    fullscreen = false;
+
+#endif
+    window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
 
 	//Put the window at the place given by the SDK (usefull on linux system where the X server thinks multiscreen is a single big one...)
 	window->reposition(oc->getHmd()->WindowsPos.x,oc->getHmd()->WindowsPos.y);
