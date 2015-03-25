@@ -1,5 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Annwvyn", "Annwvyn.vcxproj", "{97023299-5F70-417C-A8C2-A3521719B5A8}"
 EndProject
