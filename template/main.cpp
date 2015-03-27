@@ -14,6 +14,8 @@ AnnMain()
 
 	GameEngine->oculusInit();
 
+
+
 	while(!GameEngine->requestStop())
 	{
 		GameEngine->refresh();
