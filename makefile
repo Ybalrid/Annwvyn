@@ -21,9 +21,8 @@ all: lib/libAnnwvyn.so
 #build doxygen documentation
 .PHONY: doc
 doc:
-	(cd doxygen;doxygen Doxyfile)
-	(cd doxygen/Gen/latex;make)
-
+	(cd doxygen; doxygen Doxyfile)
+	(cd doxygen/Gen/latex; make)
 
 #remove everything created with the makefile
 .PHONY: clean

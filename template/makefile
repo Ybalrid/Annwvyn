@@ -3,6 +3,7 @@ ifeq ($(shell uname -m),x86_64)
 SYSARCH       = x86_64
 endif
 
+#Change the name of your project here
 NAME=Game
 
 ifeq ($(shell uname), Linux)
@@ -17,13 +18,17 @@ IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I ~/OculusSDK/LibOVR/In
 
 all: $(NAME)
 
-$(NAME): obj/main.o
+#edit that target to match the configuration of your project.
+$(NAME): obj/main.o 
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) obj/main.o -o $(NAME)
 
 obj/main.o: main.cpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) main.cpp -c -o obj/main.o
 
-
 clean:
 	rm $(NAME) obj/*.o 2> /dev/null
+
+#here you can add the other objects you need to build.
+
+
 endif
