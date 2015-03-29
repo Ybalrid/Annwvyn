@@ -151,7 +151,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Annwvyn.TODO" />
     <None Include="Main Class Diagram.cd" />
+    <None Include="..\..\TODO.md" />
   </ItemGroup>
 </Project>

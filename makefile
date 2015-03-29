@@ -8,8 +8,9 @@ endif
 
 #define flags
 CFLAGS = --std=c++0x -Wall -O2
-LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/  -lovr -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system  -lXrandr -lXxf86vm -lGL -lrt
-IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include -I../OculusSDK/LibOVR/Src  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ -I/usr/include/GL
+LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/ -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11 -lXinerama -ludev -lboost_system  -lXrandr -lXxf86vm -lGL -lrt -lOVR -lm -ldl
+
+IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include -I../OculusSDK/LibOVR/Src -I../OculusSDK/LibOVRKernel/Src  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ -I/usr/include/GL
 
 #define the installation location for the engine (should be a local system folder)
 INSTALL_PREFIX = /usr/local
