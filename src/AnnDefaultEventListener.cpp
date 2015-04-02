@@ -42,16 +42,21 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		//modify linear speed vector
 		if(e.getKey() == forward)
 		{
-
+			player->walking[AnnPlayer::walkDirection::forward] = true;
 		}
 		if(e.getKey() == backward)
 		{
+			player->walking[AnnPlayer::walkDirection::backward] = true;
+
 		}
 		if(e.getKey() == straffleft)
 		{
+			player->walking[AnnPlayer::walkDirection::left] = true;
+
 		}
 		if(e.getKey() == straffright)
 		{
+			player->walking[AnnPlayer::walkDirection::right] = true;
 		}
 
 	}
@@ -60,21 +65,29 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		//modify linear speed vector
 		if(e.getKey() == forward)
 		{
+			player->walking[AnnPlayer::walkDirection::forward] = false;
 		}
 		if(e.getKey() == backward)
 		{
+			player->walking[AnnPlayer::walkDirection::backward] = false;
+
 		}
 		if(e.getKey() == straffleft)
 		{
+			player->walking[AnnPlayer::walkDirection::left] = false;
+
 		}
 		if(e.getKey() == straffright)
 		{
+			player->walking[AnnPlayer::walkDirection::right] = false;
 		}
 	}
 }
 
 void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 {
+	int rotationValue(-e.getAxis(MouseAxisId::X).getRelValue());
+	player->applyRelativeBodyYaw(Ogre::Radian(float(rotationValue)*player->getTurnSpeed()));
 }
 
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)

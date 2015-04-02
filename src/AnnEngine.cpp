@@ -12,6 +12,7 @@ AnnEngine::AnnEngine(const char title[])
     //This structure handle player's body parameters
     player = new AnnPlayer;
 	eventManager = new AnnEventManager;
+	defaultEventListener = NULL;
     
     //here we set all the defaults parameters for the body.
     
@@ -500,7 +501,7 @@ void AnnEngine::runBasicGameplay()
 				oor->dissmissHS();	//dissmiss the Health and Safety warning.
 
 
-    if(activateWASD && player->getBody() != NULL) //classic fps control
+    /*if(activateWASD && player->getBody() != NULL) //classic fps control
     {
         //TODO extract this piece of code and make it accesible with a method !!
         player->getBody()->activate(); //don't sleep !
@@ -541,7 +542,7 @@ void AnnEngine::runBasicGameplay()
 
 
     if(m_Ground != NULL && activateJump && collisionWithGround() && m_Keyboard->isKeyDown(OIS::KC_SPACE))
-                    player->getBody()->applyCentralImpulse(btVector3(0,jumpForce,0));
+                    player->getBody()->applyCentralImpulse(btVector3(0,jumpForce,0));*/
 }
 
 void AnnEngine::refresh()
@@ -943,7 +944,13 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 
 void AnnEngine::useDefaultEventListener()
 {
-	assert(eventManager);
+	std::stringstream ss;
+	ss << "DEBUG: enventManager memory address : ";
+	ss << (void*) eventManager;
+	
+	log(ss.str().c_str());
+
+	assert(eventManager != NULL);
 
 	log("Reconfiguring the engine to use the default event listener");
 

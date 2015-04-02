@@ -129,7 +129,7 @@ namespace Annwvyn
 		virtual void KeyEvent(AnnKeyEvent e) = 0;
 		virtual void MouseEvent(AnnMouseEvent e) = 0;
 		virtual void StickEvent(AnnStickEvent e) = 0;
-	private:
+	protected:
 		AnnPlayer* player;
 	};
 
