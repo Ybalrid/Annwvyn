@@ -1,7 +1,7 @@
 
 Todo list : 
 Critial
-- [ ] Finish event system and remove the really bad and ugly gameplay code from the AnnEngine class
+- [X] Finish event system and remove the really bad and ugly gameplay code from the AnnEngine class
 - [X] Have to set a shadow technique on the main scene manager BEFORE doing everything. 
 - [ ] Need to think of a proper way of giving arguments to the engine befor graphical initialization...
 - [ ] Allow playing multiple animations
