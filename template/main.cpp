@@ -10,14 +10,16 @@ AnnMain()
 {
 	AnnEngine* GameEngine = new AnnEngine("My Game");
 
-	GameEngine->initResources();
+	//Load your ressources here
 
+	GameEngine->initResources();
 	GameEngine->oculusInit();
 
-
+	//Do the other initialization here
 
 	while(!GameEngine->requestStop())
 	{
+		//Put your gameplay code here
 		GameEngine->refresh();
 	}
 
