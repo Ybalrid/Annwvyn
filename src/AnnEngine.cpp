@@ -940,3 +940,22 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 	if(oor)
 		oor->setCamerasNearClippingDistance(nearClippingDistance);
 }
+
+void AnnEngine::useDefaultEventListener()
+{
+	assert(eventManager);
+
+	log("Reconfiguring the engine to use the default event listener");
+
+	eventManager->removeListener();
+
+	if(!defaultEventListener)//if the method has been already called, don't intanciate a new listener
+		defaultEventListener = new AnnDefaultEventListener(getPlayer());
+
+	eventManager->setListener(defaultEventListener);
+}
+
+AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
+{
+	return defaultEventListener;
+}

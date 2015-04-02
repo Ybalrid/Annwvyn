@@ -10,6 +10,13 @@ AnnDefaultEventListener::AnnDefaultEventListener(AnnPlayer* p) : AnnAbstractEven
 	jump(KeyCode::space),
 	run(KeyCode::lshift)
 {
+	//Use WASD, SPACE and LEFT_SHIFT fot the controll
+	setKeys(KeyCode::w,
+		KeyCode::s,
+		KeyCode::a,
+		KeyCode::d,
+		KeyCode::space,
+		KeyCode::lshift);
 }
 
 void AnnDefaultEventListener::setKeys(KeyCode::code fw, 

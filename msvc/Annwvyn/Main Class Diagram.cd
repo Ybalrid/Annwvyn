@@ -4,8 +4,8 @@
     <Position X="0.5" Y="0.5" Width="4" />
     <AssociationLine Name="AudioEngine" Type="Annwvyn::AnnAudioEngine" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="4.5" Y="3.25" />
-        <Point X="4.762" Y="3.25" />
+        <Point X="4.5" Y="3.324" />
+        <Point X="4.762" Y="3.324" />
         <Point X="4.762" Y="3.248" />
         <Point X="11.25" Y="3.248" />
         <Point X="11.25" Y="6.25" />
@@ -13,8 +13,8 @@
     </AssociationLine>
     <AssociationLine Name="player" Type="Annwvyn::AnnPlayer" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="4.5" Y="6.687" />
-        <Point X="4.875" Y="6.687" />
+        <Point X="4.5" Y="6.854" />
+        <Point X="4.875" Y="6.854" />
         <Point X="4.875" Y="9.624" />
         <Point X="5.25" Y="9.624" />
       </Path>
@@ -24,15 +24,15 @@
     </AssociationLine>
     <AssociationLine Name="oor" Type="OgreOculusRender" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="4.5" Y="7.313" />
-        <Point X="4.76" Y="7.313" />
+        <Point X="4.5" Y="7.497" />
+        <Point X="4.76" Y="7.497" />
         <Point X="4.76" Y="13.247" />
         <Point X="5.5" Y="13.247" />
         <Point X="5.5" Y="14.5" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>ywhCT2AH5UiwMYEhJFEJuDrQCTChFUBdwDOIQkkoC4A=</HashCode>
+      <HashCode>ywlCT2AH5UiwMYEhJlEJuDrQCTChFVBdwDOIQkkoC8A=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEngine.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
