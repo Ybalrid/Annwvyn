@@ -17,7 +17,7 @@
 
 ///Macro for declaring a listener
 #define LISTENER public Annwvyn::AnnAbstractEventListener
-///Macro for declaring a listener constructer
+///Macro for declaring a listener constructor
 #define constructListener(p) AnnAbstractEventListener(p) 
 
 namespace Annwvyn
@@ -129,7 +129,7 @@ namespace Annwvyn
 		virtual void KeyEvent(AnnKeyEvent e) = 0;
 		virtual void MouseEvent(AnnMouseEvent e) = 0;
 		virtual void StickEvent(AnnStickEvent e) = 0;
-	private:
+	protected:
 		AnnPlayer* player;
 	};
 
@@ -142,7 +142,12 @@ namespace Annwvyn
 		void MouseEvent(AnnMouseEvent e);
 		void StickEvent(AnnStickEvent e);
 
-		void setKeys(KeyCode::code fw, KeyCode::code bw, KeyCode::code sl, KeyCode::code sr, KeyCode::code jmp, KeyCode::code rn); 
+		void setKeys(KeyCode::code fw, 
+			KeyCode::code bw, 
+			KeyCode::code sl, 
+			KeyCode::code sr, 
+			KeyCode::code jmp, 
+			KeyCode::code rn); 
 
 	private:
 		KeyCode::code forward;
@@ -165,6 +170,8 @@ namespace Annwvyn
 		///Set the listener object to the event manager.
 		/// \param callbackObject The instance of an event listener that will receive event informations
 		void setListener(AnnAbstractEventListener* callbackObject);
+
+
 		///Make the event manager forget about the listener
 		void removeListener();
 

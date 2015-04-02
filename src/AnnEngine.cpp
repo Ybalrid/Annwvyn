@@ -11,10 +11,11 @@ AnnEngine::AnnEngine(const char title[])
 
     //This structure handle player's body parameters
     player = new AnnPlayer;
-	eventManager = new AnnEventManager;
-    
+    eventManager = new AnnEventManager;
+    defaultEventListener = NULL;
+
     //here we set all the defaults parameters for the body.
-    
+
     //Launching initialisation routines : 
     setUpOgre(title);
     setUpOIS();
@@ -25,32 +26,31 @@ AnnEngine::AnnEngine(const char title[])
 
     //Setting up reference quaternion for the camera coordinate system.
     QuatReference = Ogre::Quaternion::IDENTITY;
-    
+
     //Setting up the Visual Body management 
     VisualBody = NULL;
     VisualBodyAnimation = NULL;
     VisualBodyAnchor = NULL;
     //VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 
-	refVisualBody = Ogre::Quaternion::IDENTITY;
+    refVisualBody = Ogre::Quaternion::IDENTITY;
     log("Annwvyn Game Engine - Step into the Other World", false);
     log("Desinged for Virtual Reality", false);
-
 }
 
 
 AnnEngine::~AnnEngine()
 {
-	delete eventManager;
+    delete eventManager;
 
     //All AnnGameObject
     for(size_t i(0); i < objects.size(); i++)
     {
         destroyGameObject(objects[i]);
-		objects[i] = NULL;  //don't change the size of the vector while iterating throug it
-	}
+        objects[i] = NULL;  //don't change the size of the vector while iterating throug it
+    }
 
-	objects.clear();
+    objects.clear();
 
     //Bullet
     delete m_DynamicsWorld;
@@ -70,31 +70,30 @@ AnnEngine::~AnnEngine()
 
 #ifdef __gnu_linux__
     log("setting back the keyboard to " + x11LayoutAtStartup);
-	if(x11LayoutAtStartup != "unknown")
 		system(std::string("setxkbmap " + x11LayoutAtStartup).c_str());
 #endif
 }
 
 AnnEventManager* AnnEngine::getEventManager()
 {
-	return eventManager;
+    return eventManager;
 }
 
 AnnPlayer* AnnEngine::getPlayer()
 {
-	return player;
+    return player;
 }
 
 ////////////////////////////////////////////////////////// UTILITY
 void AnnEngine::log(std::string message, bool flag)
 {
-  Ogre::String messageForLog;
+    Ogre::String messageForLog;
 
-  if(flag)
-	  messageForLog += "Annwvyn - ";
-  
-  messageForLog += message;
-  Ogre::LogManager::getSingleton().logMessage(messageForLog);
+    if(flag)
+        messageForLog += "Annwvyn - ";
+
+    messageForLog += message;
+    Ogre::LogManager::getSingleton().logMessage(messageForLog);
 }
 
 void AnnEngine::emergency(void)
@@ -113,7 +112,7 @@ void AnnEngine::setUpOgre(const char title[])
     oor->createWindow();
     oor->initScene();
     oor->initCameras();
-	oor->setCamerasNearClippingDistance(0.15f);
+    oor->setCamerasNearClippingDistance(0.15f);
     oor->initRttRendering();
     m_SceneManager = oor->getSceneManager();
     m_Window = oor->getWindow();
@@ -211,12 +210,12 @@ void AnnEngine::setUpOIS()
     //jump with space if your feet touch the ground (m_Groudn object)
     jumpForce = 100.0f;
 
-	if(eventManager)
-	{
-		eventManager->setKeyboard(m_Keyboard);
-		eventManager->setMouse(m_Mouse);
-		eventManager->setJoystick(m_Joystick);
-	}
+    if(eventManager)
+    {
+        eventManager->setKeyboard(m_Keyboard);
+        eventManager->setMouse(m_Mouse);
+        eventManager->setJoystick(m_Joystick);
+    }
 
     log("Layout is " + x11LayoutAtStartup);
 }
@@ -240,7 +239,7 @@ void AnnEngine::setUpAudio()
 ///////////// Interface 
 void AnnEngine::setUpGUI()
 {
-	//There is no GUI for now...
+    //There is no GUI for now...
     return;
 }
 
@@ -256,32 +255,32 @@ void AnnEngine::initPlayerPhysics()
 void AnnEngine::createVirtualBodyShape()
 {
     assert(player != NULL);
-	float radius(0.25f);
+    float radius(0.25f);
     player->setShape(new btCapsuleShape(radius,player->getEyesHeight()-2*radius));
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
 {
-	assert(player->getShape());
+    assert(player->getShape());
 
     BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState
         (m_Camera);
 
     btVector3 inertia;
-	player->getShape()->calculateLocalInertia(player->getMass(), inertia);
+    player->getShape()->calculateLocalInertia(player->getMass(), inertia);
 
     player->setBody(new btRigidBody(player->getMass(), 
-            state,
-            player->getShape(), 
-            inertia));	
+                state,
+                player->getShape(), 
+                inertia));	
 }
 
 void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
     assert(player->getBody());
 
-	float height(player->getEyesHeight());
-		//player->getBody()->translate(btVector3(0,height,0));
+    float height(player->getEyesHeight());
+    //player->getBody()->translate(btVector3(0,height,0));
     m_DynamicsWorld->addRigidBody(player->getBody(), BIT(0), BIT(1));
 
 }
@@ -294,9 +293,9 @@ void AnnEngine::updatePlayerFromPhysics()
     btVector3 phyPos = player->getBody()->getCenterOfMassPosition();
 
     player->setPosition(Ogre::Vector3
-		(phyPos.getX(),
-         phyPos.getY(),
-         phyPos.getZ()));
+            (phyPos.getX(),
+             phyPos.getY(),
+             phyPos.getZ()));
 
     //Get orientation from bullet
     btQuaternion phyOrient = player->getBody()->getOrientation();
@@ -348,15 +347,15 @@ void AnnEngine::loadResFile(const char path[])
 
 void AnnEngine::initResources()
 {
-	addDefaultResourceLocaton();
+    addDefaultResourceLocaton();
     oor->initAllResources();
     log("Resources initialized");
 }
 
 void AnnEngine::addDefaultResourceLocaton()
 {
-	loadDir("media");
-	loadZip("media/CORE.zip");
+    loadDir("media");
+    loadZip("media/CORE.zip");
 }
 
 //initalize oculus rendering
@@ -393,15 +392,15 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
         obj->postInit(); //Run post init directives
 
-		objects.push_back(obj); //keep address in list
+        objects.push_back(obj); //keep address in list
 
-		std::stringstream ss;
-		ss << "The object " << entityName << "has been created. Annwvyn memory address " << obj;  
-		log(ss.str());
+        std::stringstream ss;
+        ss << "The object " << entityName << "has been created. Annwvyn memory address " << obj;  
+        log(ss.str());
     }
     catch (std::string const& e)
     {
-		log(e,false);
+        log(e,false);
         delete obj;
         return NULL;
     }
@@ -410,21 +409,21 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
-	std::stringstream ss;
+    std::stringstream ss;
     bool returnCode(false);
     for(size_t i(0); i < objects.size(); i++)
     {
-    
-		ss << "Object " << static_cast<void*>(objects[i]) << " stop collision test" << std::endl;
-		log(ss.str());
+
+        ss << "Object " << static_cast<void*>(objects[i]) << " stop collision test" << std::endl;
+        log(ss.str());
 
         objects[i]->stopGettingCollisionWith(object);
 
         if(objects[i] == object)
         {
-			ss.clear();
+            ss.clear();
             ss << "Object found" << std::endl;
-			log(ss.str());
+            log(ss.str());
 
             objects.erase(objects.begin() + i);
             Ogre::SceneNode* node = object->node();
@@ -480,7 +479,7 @@ void AnnEngine::doRender()
 
 void AnnEngine::updateAudioSystemState()
 {
-	AudioEngine->updateListenerPos(oor->returnPose.position);
+    AudioEngine->updateListenerPos(oor->returnPose.position);
     AudioEngine->updateListenerOrient(oor->returnPose.orientation);
     for(unsigned int i = 0; i < objects.size(); i++)
         objects[i]->updateOpenAlPos();
@@ -489,69 +488,25 @@ void AnnEngine::updateAudioSystemState()
 void AnnEngine::applyMouseYaw()
 {
     player->applyRelativeBodyYaw
-		(Ogre::Radian(-m_Mouse->getMouseState().X.rel*player->getTurnSpeed()));
+        (Ogre::Radian(-m_Mouse->getMouseState().X.rel*player->getTurnSpeed()));
 }
 
 void AnnEngine::runBasicGameplay()
 {
-  
 
-	player->engineUpdate();
+    collisionWithGround();
+    player->engineUpdate();
 
-	//Dissmiss health and safety warning
-	if(!oor->IsHsDissmissed()) //If not already dissmissed
-		for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
-			if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
-				oor->dissmissHS();	//dissmiss the Health and Safety warning.
-
-
-    if(activateWASD && player->getBody() != NULL) //classic fps control
-    {
-        //TODO extract this piece of code and make it accesible with a method !!
-        player->getBody()->activate(); //don't sleep !
-
-        btVector3 curVel = player->getBody()->getLinearVelocity(); //get current velocity
-
-        Ogre::Vector3 translate(Ogre::Vector3::ZERO);
-        if(processWASD(&translate)) //If player want to move w/ WASD
-        {
-            Ogre::Vector3 velocity = player->getOrientation()*(translate);
-            player->getBody()->setLinearVelocity(
-                    btVector3(velocity.x, curVel.y(), velocity.z));
-        }
-        else
-        {	
-            //Just apply effect of gravity.
-            player->getBody()->setLinearVelocity(curVel * btVector3(0,1,0)); //we keep the original vertical velocity only
-        }
-    }//body & WASD
-
-    if(player->getBody() != NULL) //if physic
-    {
-        btTransform Transform = player->getBody()->getCenterOfMassTransform();
-        Transform.setRotation(btQuaternion(0,0,0,1));
-        player->getBody()->setCenterOfMassTransform(Transform);
-    }
-
-    
-	applyMouseYaw();
-
-    if(player->getBody() != NULL)
-        player->setPosition(
-            Ogre::Vector3( 
-                    player->getBody()->getCenterOfMassPosition().x(),
-                    player->getBody()->getCenterOfMassPosition().y() + player->getEyesHeight()/2,
-                    player->getBody()->getCenterOfMassPosition().z()
-					));
-
-
-    if(m_Ground != NULL && activateJump && collisionWithGround() && m_Keyboard->isKeyDown(OIS::KC_SPACE))
-                    player->getBody()->applyCentralImpulse(btVector3(0,jumpForce,0));
+    //Dissmiss health and safety warning
+    if(!oor->IsHsDissmissed()) //If not already dissmissed
+        for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
+            if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
+                oor->dissmissHS();	//dissmiss the Health and Safety warning.
 }
 
 void AnnEngine::refresh()
 {
-	//OIS Events 
+    //OIS Events 
     captureEvents();
 
     //animations playing :
@@ -559,9 +514,9 @@ void AnnEngine::refresh()
     playObjectsAnnimation();
     m_DynamicsWorld->stepSimulation(deltaT,2);
 
-	runBasicGameplay();
-	eventManager->update();
-	
+    runBasicGameplay();
+    eventManager->update();
+
     processCollisionTesting();
     processTriggersContacts();
 
@@ -569,46 +524,14 @@ void AnnEngine::refresh()
         m_debugDrawer->step();
 
     //Call of refresh method
-	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
-		(*it)->atRefresh();
-		
+    for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
+        (*it)->atRefresh();
 
     if(VisualBodyAnimation)
         VisualBodyAnimation->addTime(getTime());
 
-	updateAudioSystemState();
-	doRender();
-}
-
-bool AnnEngine::processWASD(Ogre::Vector3* translate)
-{
-    bool move(false);
-    if(m_Keyboard->isKeyDown(OIS::KC_W))
-    {
-        move = true;
-        translate->z = -player->getWalkSpeed();
-    }
-    if(m_Keyboard->isKeyDown(OIS::KC_S))
-    {	
-        move = true;
-        translate->z = player->getWalkSpeed();
-    }
-    if(m_Keyboard->isKeyDown(OIS::KC_A))
-    {
-        move = true;
-        translate->x = -player->getWalkSpeed();
-    }
-    if(m_Keyboard->isKeyDown(OIS::KC_D))
-    {
-        move = true;
-        translate->x = player->getWalkSpeed();
-    }
-    if(m_Keyboard->isModifierDown(OIS::Keyboard::Shift))
-    {
-        move = true;
-        *translate *= 5;
-    }
-    return move;
+    updateAudioSystemState();
+    doRender();
 }
 
 void AnnEngine::captureEvents()
@@ -628,7 +551,7 @@ float AnnEngine::updateTime()
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
-	return m_Keyboard->isKeyDown(key);
+    return m_Keyboard->isKeyDown(key);
 }
 
 
@@ -637,7 +560,7 @@ bool AnnEngine::collisionWithGround()
     //If collision isn't computable : 
     if(m_Ground == NULL || player->getBody() == NULL)
         return false;
-    
+
     //Getting rid of differences of types. There is polymorphism we don't care of, we are just comparing memory addresses here!
 
     void* pplayer = (void*) player->getBody();
@@ -660,8 +583,15 @@ bool AnnEngine::collisionWithGround()
         {
             int numContacts = contactManifold->getNumContacts();
             if(numContacts > 0)
+            {
+                player->contactWithGround = true;
                 return true;
-            return false;
+            }
+            else
+            {
+                player->contactWithGround = false;
+                return false;
+            }
         }
     }
     return false;
@@ -693,7 +623,7 @@ void AnnEngine::processCollisionTesting()
 
         const btCollisionObject* obA = (btCollisionObject*) contactManifold->getBody0();
         const btCollisionObject* obB = (btCollisionObject*) contactManifold->getBody1();
-        
+
         //CAUTION HERE !
         //
         //we deliberatly lost track of objects types to just test THE ADDRESS of the pointer
@@ -822,16 +752,16 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
     if(animated)
     {
         /*Ogre::AnimationState* as = ent->getAnimationState("IDLE");
-        as->setLoop(true);
-        as->setEnabled(true);
+          as->setLoop(true);
+          as->setEnabled(true);
 
-        VisualBodyAnimation = as;*/
+          VisualBodyAnimation = as;*/
     }
 }
 
 void AnnEngine::resetOculusOrientation()
 {
-	oor->recenter();
+    oor->recenter();
 }
 
 Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
@@ -843,11 +773,11 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
     } 
     catch (int e) 
     { 
-		if(e==0)
-        log("Plese do not try to identify a NULL node.");
+        if(e==0)
+            log("Plese do not try to identify a NULL node.");
         return NULL;
     }
-    
+
     //This methods only test memory address
     for(size_t i(0); i < objects.size(); i++)
         if((void*)objects[i]->node() == (void*)node)
@@ -859,7 +789,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 
 Annwvyn::bodyParams* AnnEngine::getBodyParams()
 {
-	//BAD!
+    //BAD!
     return player->getLowLevelBodyParams();
 }
 
@@ -942,6 +872,31 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
 
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 {
-	if(oor)
-		oor->setCamerasNearClippingDistance(nearClippingDistance);
+    if(oor)
+        oor->setCamerasNearClippingDistance(nearClippingDistance);
+}
+
+void AnnEngine::useDefaultEventListener()
+{
+    std::stringstream ss;
+    ss << "DEBUG: enventManager memory address : ";
+    ss << (void*) eventManager;
+
+    log(ss.str().c_str());
+
+    assert(eventManager != NULL);
+
+    log("Reconfiguring the engine to use the default event listener");
+
+    eventManager->removeListener();
+
+    if(!defaultEventListener)//if the method has been already called, don't intanciate a new listener
+        defaultEventListener = new AnnDefaultEventListener(getPlayer());
+
+    eventManager->setListener(defaultEventListener);
+}
+
+AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
+{
+    return defaultEventListener;
 }

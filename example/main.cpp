@@ -34,7 +34,7 @@ public:
 
 };
 
-class CustomEventListener : LISTENER
+/*class CustomEventListener : LISTENER
 {
 public:
 
@@ -64,7 +64,9 @@ public:
 	void StickEvent(Annwvyn::AnnStickEvent e)
 	{
 	}
-};
+};*/
+
+
 
 class MyTrigger : public Annwvyn::AnnTriggerObject
 {
@@ -107,8 +109,9 @@ AnnMain()
 
 	//create Annwvyn engine
 	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
-	CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
-	GameEngine->getEventManager()->setListener(el);
+	//CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
+	//GameEngine->getEventManager()->setListener(el);
+
 
 	//load ressources
 	//GameEngine->loadZip("media/CORE.zip");
@@ -139,7 +142,7 @@ AnnMain()
 
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(false);
+	GameEngine->setDebugPhysicState(true);
 
 
 	//setUp Oculus system
@@ -186,8 +189,15 @@ AnnMain()
 	S->setUpBullet(40, Annwvyn::boxShape, true);
 
 
+
+    GameEngine->useDefaultEventListener();
+
+
+
 	bool debounce;
 	bool current(false);
+
+
 	while(!GameEngine->requestStop())
 	{   
 		debounce = current;
