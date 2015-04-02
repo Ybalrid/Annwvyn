@@ -1,3 +1,7 @@
+#if we are on linux
+ifeq ($(shell uname), Linux)
+all: lib/libAnnwvyn.so
+
 CC = g++
 
 #Get the operating system type.
@@ -14,24 +18,6 @@ IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/In
 
 #define the installation location for the engine (should be a local system folder)
 INSTALL_PREFIX = /usr/local
-
-#if we are on linux
-ifeq ($(shell uname), Linux)
-all: lib/libAnnwvyn.so
-
-#build doxygen documentation
-.PHONY: doc
-doc:
-	(cd doxygen; doxygen Doxyfile)
-	(cd doxygen/Gen/latex; make)
-
-#remove everything created with the makefile
-.PHONY: clean
-clean:
-	@echo "Clear .o and .so file"
-	rm -rf obj/*.o lib/*.so 2> /dev/null > /dev/null
-	@echo "Clear doxygen generated site"
-	rm -rf doxygen/Gen  2> /dev/null > /dev/null
 
 #install the library to the system, configuration
 .PHONY: install
@@ -55,6 +41,23 @@ install: all
 	ldconfig -v | grep Ann | tee ldconfig_update.log
 	@echo -------------------------------------------------------------------------
 	@echo "Installation finished. You can see library install log on ldconfig_update.log"
+
+endif
+
+#build doxygen documentation
+.PHONY: doc
+doc:
+	(cd doxygen; doxygen Doxyfile)
+	(cd doxygen/Gen/latex; make)
+
+#remove everything created with the makefile
+.PHONY: clean
+clean:
+	@echo "Clear .o and .so file"
+	rm -rf obj/*.o lib/*.so 2> /dev/null > /dev/null
+	@echo "Clear doxygen generated site"
+	rm -rf doxygen/Gen  2> /dev/null > /dev/null
+
 
 #build the test programm
 test: lib/libAnnwvyn.so
@@ -118,4 +121,3 @@ obj/AnnEvents.o: src/AnnEvents.cpp include/AnnEventManager.hpp include/AnnKeyCod
 obj/AnnPlayer.o: src/AnnPlayer.cpp include/AnnPlayer.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnPlayer.cpp -o obj/AnnPlayer.o
 
-endif

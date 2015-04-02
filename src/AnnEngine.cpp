@@ -5,7 +5,7 @@ using namespace Annwvyn;
 AnnEngine::AnnEngine(const char title[])
 {
     m_Camera = NULL;
-
+	x11LayoutAtStartup = "unknown";
     //block ressources loading for now
     readyForLoadingRessources = false;
 
@@ -36,30 +36,6 @@ AnnEngine::AnnEngine(const char title[])
     refVisualBody = Ogre::Quaternion::IDENTITY;
     log("Annwvyn Game Engine - Step into the Other World", false);
     log("Desinged for Virtual Reality", false);
-
-#ifdef __gnu_linux__
-
-    log("we are running on linux. getting x11 keyboard layout from the system");
-    FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
-    char* buffer = static_cast<char *>(malloc(128*sizeof(char)));
-
-    if(!layout)
-        log("cannot get the layout");
-    if(!buffer)
-        log("cannot create a 128 byte text buffer (weird...)");
-
-    if(layout && buffer)
-    {
-        fscanf(layout, "%s", buffer);
-        x11LayoutAtStartup = std::string(buffer);
-
-        log("Saving keyboard layout for shutdown.");
-        log("saved layout="+x11LayoutAtStartup, false);
-    }
-    free(buffer);
-    buffer = NULL;
-    system("setxkbmap us");
-#endif
 }
 
 
@@ -94,7 +70,7 @@ AnnEngine::~AnnEngine()
 
 #ifdef __gnu_linux__
     log("setting back the keyboard to " + x11LayoutAtStartup);
-    system(std::string("setxkbmap " + x11LayoutAtStartup).c_str());
+		system(std::string("setxkbmap " + x11LayoutAtStartup).c_str());
 #endif
 }
 
@@ -172,9 +148,36 @@ void AnnEngine::setUpBullet()
 ///////////// Inputs
 void AnnEngine::setUpOIS()
 {
-
     //We use OIS to catch all user inputs
-    //Only keyboard/mouse is suported for now but in the future we will try joystick and this kind of controller.
+
+#ifdef __gnu_linux__
+	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
+	//Under windows the keycode match the standard US QWERTY layout. Under linux they are converted to whatever you're using.
+	//I use a French AZERTY keyboard layout so it's not that bad. If you have a greek keyboard you're out of luck...
+	//So, assuming that the only program that has the focus is the Annwvyn powered application, we can just switch the layout to US 
+	//then switch back to the original layout.
+
+    log("we are running on linux. getting x11 keyboard layout from the system");
+    FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
+    char* buffer = static_cast<char *>(malloc(128*sizeof(char)));
+    
+    if(!layout)
+        log("cannot get the layout");
+    if(!buffer)
+        log("cannot create a 128 byte text buffer (weird...)");
+
+    if(layout && buffer)
+    {
+        fscanf(layout, "%s", buffer);
+        x11LayoutAtStartup = std::string(buffer);
+
+        log("Saving keyboard layout for shutdown.");
+        log("saved layout="+x11LayoutAtStartup, false);
+    }
+    free(buffer);
+    buffer = NULL;
+    system("setxkbmap us");
+#endif
 
     //init OIS
     log("Initialize OIS");
