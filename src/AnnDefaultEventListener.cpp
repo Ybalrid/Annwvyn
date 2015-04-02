@@ -59,6 +59,16 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 			player->walking[AnnPlayer::walkDirection::right] = true;
 		}
 
+        if(e.getKey() == jump)
+        {
+            player->jump();
+        }
+
+        if(e.getKey() == run)
+        {
+            player->run = true;
+        }
+
 	}
 	else if(e.isRelased())
 	{
@@ -81,13 +91,21 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		{
 			player->walking[AnnPlayer::walkDirection::right] = false;
 		}
+
+        if(e.getKey() == jump)
+        {
+        }
+
+        if(e.getKey() == run)
+        {
+            player->run = false;
+        }
 	}
 }
 
 void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 {
-	int rotationValue(-e.getAxis(MouseAxisId::X).getRelValue());
-	player->applyRelativeBodyYaw(Ogre::Radian(float(rotationValue)*player->getTurnSpeed()));
+	player->applyRelativeBodyYaw(Ogre::Radian(float(-e.getAxis(MouseAxisId::X).getRelValue())*player->getTurnSpeed()));
 }
 
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
