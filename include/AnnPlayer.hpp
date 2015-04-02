@@ -27,9 +27,11 @@ namespace Annwvyn
 
 		///Constructor that handle the default body parameters. 
 		bodyParams();
-
+        
+        float jumpInterval;
 		float eyeHeight;
 		float walkSpeed;
+        float runFactor;
 		float turnSpeed;
 		float mass;
 		Ogre::Vector3 Position;
@@ -39,6 +41,7 @@ namespace Annwvyn
 		//bullet
 		btCollisionShape* Shape;
 		btRigidBody* Body;
+        btVector3 jumpForce;
 	};
 
 	///class that represent the player
@@ -116,7 +119,7 @@ namespace Annwvyn
 		void killLinearSpeed();
 		void addLinearSpeed(Ogre::Vector3 v);
 
-
+        void jump();
 	protected:
 
 		///Object that keep body parameters (= legacy structure)
@@ -124,7 +127,7 @@ namespace Annwvyn
 
 	private:
 
-		///Give back the right to
+		///Give back the right to modify some parameters
 		void unlockParameters();
 
 		///Give Annwvyn::AnnEngine the rght to access private members
@@ -138,6 +141,18 @@ namespace Annwvyn
 
 		///The famous boolean that permit to prevent YOU for breaking my work! :D
 		bool locked;
+
+
+		Ogre::Vector3 getTranslation();
+
+        bool contactWithGround;
+
+
+
+	public:
+		enum walkDirection{forward, backward, left, right};
+		bool walking[4];
+        bool run;
 	};
 
 }

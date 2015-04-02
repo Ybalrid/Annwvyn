@@ -161,9 +161,6 @@ namespace Annwvyn
             ///Refresh all for you
             void refresh(); //engine main loop
 
-            ///Return a vector depending on WASD keys pressed
-            bool processWASD(Ogre::Vector3* translate); //event on user
-
             ///Caputre event form keyboard and mouse
             void captureEvents(); //events
 
@@ -267,6 +264,16 @@ namespace Annwvyn
 			/// \param distace the distance to the clipping plane
 			void setNearClippingDistance(Ogre::Real distance); //graphics
 
+			///Set the engine to use the "default" event listener.
+			///The default event listerner implement a simple "FPS-like" controll scheme 
+			/// WASD for walking
+			/// Horizontal view with mouse X relative mouvement
+			/// That event listener is designed as an example of an event listener, and for exploring the environement without having to write a custom event listene
+			void useDefaultEventListener();
+			
+			///Get the address of the default event listener declared by "use default event listener"
+			AnnDefaultEventListener* getInEngineDefaultListener();
+
         private:
 
 			///Set up graphics
@@ -301,6 +308,7 @@ namespace Annwvyn
             
             ///Unable to continue, we have to cleanly cut the program before creating an error
             void emergency(void);
+
 
         private:
 
@@ -372,6 +380,8 @@ namespace Annwvyn
             Ogre::Quaternion QuatReference;
 
             AnnGameObject* m_Ground;
+
+			AnnDefaultEventListener* defaultEventListener;
     };
 }
 #endif ///ANN_ENGINE
