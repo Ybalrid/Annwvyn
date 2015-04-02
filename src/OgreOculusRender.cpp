@@ -242,7 +242,7 @@ void OgreOculusRender::initScene()
 {
 	assert(root != NULL);
 	smgr = root->createSceneManager("OctreeSceneManager","OSM_SMGR");
-	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
+	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
 }
 
 void OgreOculusRender::initRttRendering()
