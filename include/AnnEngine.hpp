@@ -161,9 +161,6 @@ namespace Annwvyn
             ///Refresh all for you
             void refresh(); //engine main loop
 
-            ///Return a vector depending on WASD keys pressed
-            bool processWASD(Ogre::Vector3* translate); //event on user
-
             ///Caputre event form keyboard and mouse
             void captureEvents(); //events
 

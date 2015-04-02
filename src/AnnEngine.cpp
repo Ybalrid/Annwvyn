@@ -499,50 +499,6 @@ void AnnEngine::runBasicGameplay()
         for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
             if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
                 oor->dissmissHS();	//dissmiss the Health and Safety warning.
-
-
-    /*if(activateWASD && player->getBody() != NULL) //classic fps control
-      {
-    //TODO extract this piece of code and make it accesible with a method !!
-    player->getBody()->activate(); //don't sleep !
-
-    btVector3 curVel = player->getBody()->getLinearVelocity(); //get current velocity
-
-    Ogre::Vector3 translate(Ogre::Vector3::ZERO);
-    if(processWASD(&translate)) //If player want to move w/ WASD
-    {
-    Ogre::Vector3 velocity = player->getOrientation()*(translate);
-    player->getBody()->setLinearVelocity(
-    btVector3(velocity.x, curVel.y(), velocity.z));
-    }
-    else
-    {	
-    //Just apply effect of gravity.
-    player->getBody()->setLinearVelocity(curVel * btVector3(0,1,0)); //we keep the original vertical velocity only
-    }
-    }//body & WASD
-
-    if(player->getBody() != NULL) //if physic
-    {
-    btTransform Transform = player->getBody()->getCenterOfMassTransform();
-    Transform.setRotation(btQuaternion(0,0,0,1));
-    player->getBody()->setCenterOfMassTransform(Transform);
-    }
-
-
-    applyMouseYaw();
-
-    if(player->getBody() != NULL)
-    player->setPosition(
-    Ogre::Vector3( 
-    player->getBody()->getCenterOfMassPosition().x(),
-    player->getBody()->getCenterOfMassPosition().y() + player->getEyesHeight()/2,
-    player->getBody()->getCenterOfMassPosition().z()
-    ));
-
-
-    if(m_Ground != NULL && activateJump && collisionWithGround() && m_Keyboard->isKeyDown(OIS::KC_SPACE))
-    player->getBody()->applyCentralImpulse(btVector3(0,jumpForce,0));*/
 }
 
 void AnnEngine::refresh()
@@ -568,43 +524,11 @@ void AnnEngine::refresh()
     for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
         (*it)->atRefresh();
 
-
     if(VisualBodyAnimation)
         VisualBodyAnimation->addTime(getTime());
 
     updateAudioSystemState();
     doRender();
-}
-
-bool AnnEngine::processWASD(Ogre::Vector3* translate)
-{
-    bool move(false);
-    if(m_Keyboard->isKeyDown(OIS::KC_W))
-    {
-        move = true;
-        translate->z = -player->getWalkSpeed();
-    }
-    if(m_Keyboard->isKeyDown(OIS::KC_S))
-    {	
-        move = true;
-        translate->z = player->getWalkSpeed();
-    }
-    if(m_Keyboard->isKeyDown(OIS::KC_A))
-    {
-        move = true;
-        translate->x = -player->getWalkSpeed();
-    }
-    if(m_Keyboard->isKeyDown(OIS::KC_D))
-    {
-        move = true;
-        translate->x = player->getWalkSpeed();
-    }
-    if(m_Keyboard->isModifierDown(OIS::Keyboard::Shift))
-    {
-        move = true;
-        *translate *= 5;
-    }
-    return move;
 }
 
 void AnnEngine::captureEvents()
