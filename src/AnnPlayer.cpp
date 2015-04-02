@@ -13,12 +13,18 @@ bodyParams::bodyParams()
 	HeadOrientation = Ogre::Quaternion(1,0,0,0);
 	Shape = NULL;
 	Body = NULL;
+
 }
 
 AnnPlayer::AnnPlayer()
 {
 	playerBody = new bodyParams;
 	locked = false;
+	
+	walking[forward] = false;
+	walking[backward] = false;
+	walking[left] = false;
+	walking[right] = false;
 }
 
 AnnPlayer::~AnnPlayer()
@@ -164,7 +170,68 @@ void AnnPlayer::addLinearSpeed(Ogre::Vector3 v)
 
 }
 
-void AnnPlayer::engineUpdate()
+Ogre::Vector3 AnnPlayer::getTranslation()
 {
 
+	Ogre::Vector3 translation (Ogre::Vector3::ZERO);
+	if(walking[forward])
+		translation.z -= getWalkSpeed();
+	if(walking[backward])
+		translation.z += getWalkSpeed();
+	if(walking[left])
+		translation.x -= getWalkSpeed();
+	if(walking[right])
+		translation.x += getWalkSpeed();
+
+
+	return translation;
+}
+
+void AnnPlayer::engineUpdate()
+{
+	bool standing = true;
+	if(getBody())
+	{
+		Ogre::Vector3 translate(getTranslation());
+		btVector3 currentVelocity = getBody()->getLinearVelocity();
+
+		//Prevent the rigid body to be put asleep by the physics engine
+		getBody()->activate();
+
+		//if the player can stand (= not dead or something like that)
+
+		//if no  user input, be just pull toward the ground by gravity (not physicly realist, but usefull)
+		if(translate.isZeroLength())
+		{
+			getBody()->setLinearVelocity(btVector3(
+				0,
+				currentVelocity.y(),
+				0
+				));
+		}
+		else
+		{
+			Ogre::Vector3 velocity(getOrientation()*translate);
+			getBody()->setLinearVelocity(btVector3(
+				velocity.x,
+				currentVelocity.y(),
+				velocity.z
+				));
+		}
+
+		if(standing) //if physic
+		{
+			btTransform Transform = getBody()->getCenterOfMassTransform();
+			Transform.setRotation(btQuaternion(0,0,0,1));
+			getBody()->setCenterOfMassTransform(Transform);
+		}
+
+		setPosition(
+            Ogre::Vector3( 
+                    getBody()->getCenterOfMassPosition().x(),
+                    getBody()->getCenterOfMassPosition().y() + getEyesHeight()/2,
+                    getBody()->getCenterOfMassPosition().z()
+				));
+
+	}
 }

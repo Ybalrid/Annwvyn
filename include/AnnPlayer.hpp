@@ -138,6 +138,14 @@ namespace Annwvyn
 
 		///The famous boolean that permit to prevent YOU for breaking my work! :D
 		bool locked;
+
+
+		Ogre::Vector3 getTranslation();
+
+
+	public:
+		enum walkDirection{forward, backward, left, right};
+		bool walking[4];
 	};
 
 }
