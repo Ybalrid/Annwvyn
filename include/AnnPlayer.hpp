@@ -44,6 +44,10 @@ namespace Annwvyn
         btVector3 jumpForce;
 	};
 
+	///Correspondance between array position and walk direction for the "walking" array
+	enum walkDirection{forward, backward, left, right};
+
+
 	///class that represent the player
 	class DLL AnnPlayer
 	{
@@ -150,12 +154,13 @@ namespace Annwvyn
 
 
 	public:
-		enum walkDirection{forward, backward, left, right};
+		
 		bool walking[4];
         bool run;
 	};
 
 }
+
 
 #endif //ANN_PLAYER
 

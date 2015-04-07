@@ -42,19 +42,19 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		//modify linear speed vector
 		if(e.getKey() == forward)
 		{
-			player->walking[AnnPlayer::walkDirection::forward] = true;
+			player->walking[walkDirection::forward] = true;
 		}
 		if(e.getKey() == backward)
 		{
-			player->walking[AnnPlayer::walkDirection::backward] = true;
+			player->walking[walkDirection::backward] = true;
 		}
 		if(e.getKey() == straffleft)
 		{
-			player->walking[AnnPlayer::walkDirection::left] = true;
+			player->walking[walkDirection::left] = true;
 		}
 		if(e.getKey() == straffright)
 		{
-			player->walking[AnnPlayer::walkDirection::right] = true;
+			player->walking[walkDirection::right] = true;
 		}
         if(e.getKey() == jump)
         {
@@ -71,19 +71,19 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		//modify linear speed vector
 		if(e.getKey() == forward)
 		{
-			player->walking[AnnPlayer::walkDirection::forward] = false;
+			player->walking[walkDirection::forward] = false;
 		}
 		if(e.getKey() == backward)
 		{
-			player->walking[AnnPlayer::walkDirection::backward] = false;
+			player->walking[walkDirection::backward] = false;
 		}
 		if(e.getKey() == straffleft)
 		{
-			player->walking[AnnPlayer::walkDirection::left] = false;
+			player->walking[walkDirection::left] = false;
 		}
 		if(e.getKey() == straffright)
 		{
-			player->walking[AnnPlayer::walkDirection::right] = false;
+			player->walking[walkDirection::right] = false;
 		}
         if(e.getKey() == jump)
         {
