@@ -141,10 +141,10 @@ void OgreOculusRender::initAllResources()
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
 
-void OgreOculusRender::initLibraries()
+void OgreOculusRender::initLibraries(std::string loggerName)
 {
 	//Create the ogre root with standards Ogre configuration file
-	root = new Ogre::Root("plugins.cfg","ogre.cfg","Ogre.log");
+	root = new Ogre::Root("plugins.cfg","ogre.cfg",loggerName.c_str());
 
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	oc = new OculusInterface();

@@ -114,7 +114,7 @@ void AnnEngine::setUpOgre(const char title[])
 {
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
     oor = new OgreOculusRender(title);
-    oor->initLibraries();
+    oor->initLibraries("Annwvyn.log");
     oor->getOgreConfig();
     oor->createWindow();
     oor->initScene();
@@ -459,12 +459,6 @@ void AnnEngine::updateAudioSystemState()
     AudioEngine->updateListenerOrient(oor->returnPose.orientation);
     for(unsigned int i = 0; i < objects.size(); i++)
         objects[i]->updateOpenAlPos();
-}
-
-void AnnEngine::applyMouseYaw()
-{
-    player->applyRelativeBodyYaw
-        (Ogre::Radian(-m_Mouse->getMouseState().X.rel*player->getTurnSpeed()));
 }
 
 void AnnEngine::runBasicGameplay()
