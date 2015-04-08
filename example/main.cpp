@@ -84,29 +84,8 @@ class MyTrigger : public Annwvyn::AnnTriggerObject
 
 };
 
-
-//If you want to redirect cout & cerr to cout.txt and cerr.txt, uncomment the folowing line : 
-#define OUTSTREAM_TO_FILE
-
 AnnMain()
 {
-#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-#ifdef OUTSTREAM_TO_FILE
-	//If we are running a win32 application we cannot acces stdout & stderr on a console
-	//so all output stream are redirected into files. It's ugly but usefull for debuging
-	std::ofstream file;
-	file.open ("cout.txt");
-	std::streambuf* sbuf = std::cout.rdbuf();
-	std::cout.rdbuf(file.rdbuf());
-
-	std::ofstream file2;
-	file2.open ("cerr.txt");
-	std::streambuf* sbuf2 = std::cerr.rdbuf();
-	std::cerr.rdbuf(file2.rdbuf());
-#endif //files
-#endif //windows
-
-
 	//create Annwvyn engine
 	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
 	//CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
@@ -142,7 +121,7 @@ AnnMain()
 
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(true);
+	GameEngine->setDebugPhysicState(false);
 
 
 	//setUp Oculus system
