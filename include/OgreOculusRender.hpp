@@ -6,6 +6,7 @@
 
 
 ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
+///Shout out to Kocjack too for his post of an OgreOculus a short time after DK1 was out
 
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER

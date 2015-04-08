@@ -67,7 +67,6 @@ void AnnEventManager::setJoystick(OIS::JoyStick* stick)
 
 //////////////////////////////////////
 
-
 void AnnEventManager::update()
 {
 	//if keyboard system initialized
@@ -111,8 +110,6 @@ void AnnEventManager::update()
 					previousKeyStates[c] = false;
 				}
 			}
-
-			 
 		}
 	}
 

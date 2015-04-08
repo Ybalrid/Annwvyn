@@ -150,6 +150,11 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
     playerBody->Orientation.yaw(angle);
 }
 
+void AnnPlayer::applyMouseRelativeRotation(int relValue)
+{
+	applyRelativeBodyYaw(Ogre::Radian(-float(relValue)*getTurnSpeed()));
+}
+
 
 void AnnPlayer::setLinearSpeed(Ogre::Vector3 v)
 {
