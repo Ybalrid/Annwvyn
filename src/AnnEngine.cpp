@@ -70,8 +70,15 @@ AnnEngine::~AnnEngine()
 
 #ifdef __gnu_linux__
     log("setting back the keyboard to " + x11LayoutAtStartup);
+	if(x11LayoutAtStartup != "unknown")
+	{
 		system(std::string("setxkbmap " + x11LayoutAtStartup).c_str());
+		log("Done system call to setxkbmap");
+	}
 #endif
+
+	log("Game engine sucessfully destroyed.");
+	log("Good luck with the real world now! :3");
 }
 
 AnnEventManager* AnnEngine::getEventManager()
@@ -106,6 +113,7 @@ void AnnEngine::emergency(void)
 ///////////// Graphics
 void AnnEngine::setUpOgre(const char title[])
 {
+	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
     oor = new OgreOculusRender(title);
     oor->initLibraries();
     oor->getOgreConfig();
@@ -149,7 +157,6 @@ void AnnEngine::setUpBullet()
 void AnnEngine::setUpOIS()
 {
     //We use OIS to catch all user inputs
-
 #ifdef __gnu_linux__
 	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
 	//Under windows the keycode match the standard US QWERTY layout. Under linux they are converted to whatever you're using.
@@ -202,13 +209,7 @@ void AnnEngine::setUpOIS()
     if(m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
         m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, true));
 
-    //basic gameplay that you can use out of the box
-    activateWASD = true; 
-    //move around with WASD keys
-    //run with SHIFT pressed
-    activateJump = true; 
-    //jump with space if your feet touch the ground (m_Groudn object)
-    jumpForce = 100.0f;
+  
 
     if(eventManager)
     {
@@ -216,17 +217,14 @@ void AnnEngine::setUpOIS()
         eventManager->setMouse(m_Mouse);
         eventManager->setJoystick(m_Joystick);
     }
-
-    log("Layout is " + x11LayoutAtStartup);
 }
 
 ///////////// Time system
 void AnnEngine::setUpTime()
 {
-    log("Setup time");
+    log("Setup time system");
     last = oor->getTimer()->getMilliseconds();
     now = last;
-    log("Timer is setup");
 }
 
 ///////////// Audio System
@@ -239,7 +237,7 @@ void AnnEngine::setUpAudio()
 ///////////// Interface 
 void AnnEngine::setUpGUI()
 {
-    //There is no GUI for now...
+	//TODO initialize Gorilla here
     return;
 }
 
@@ -254,21 +252,25 @@ void AnnEngine::initPlayerPhysics()
 //will be private 
 void AnnEngine::createVirtualBodyShape()
 {
-    assert(player != NULL);
+    assert(player);
     float radius(0.25f);
     player->setShape(new btCapsuleShape(radius,player->getEyesHeight()-2*radius));
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
 {
+	//Player need to have a shape (capsule)
     assert(player->getShape());
 
+	//Create a rigid body state through BtOgre
     BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState
         (m_Camera);
 
+	//Get inertia vector
     btVector3 inertia;
     player->getShape()->calculateLocalInertia(player->getMass(), inertia);
 
+	//Set the body to the player
     player->setBody(new btRigidBody(player->getMass(), 
                 state,
                 player->getShape(), 
@@ -281,34 +283,9 @@ void AnnEngine::addPlayerPhysicalBodyToDynamicsWorld()
 
     float height(player->getEyesHeight());
     //player->getBody()->translate(btVector3(0,height,0));
+
+	//TODO define name for the bullet's collision masks
     m_DynamicsWorld->addRigidBody(player->getBody(), BIT(0), BIT(1));
-
-}
-
-void AnnEngine::updatePlayerFromPhysics()
-{
-    assert(player->getBody());
-
-    //Get pos from bullet
-    btVector3 phyPos = player->getBody()->getCenterOfMassPosition();
-
-    player->setPosition(Ogre::Vector3
-            (phyPos.getX(),
-             phyPos.getY(),
-             phyPos.getZ()));
-
-    //Get orientation from bullet
-    btQuaternion phyOrient = player->getBody()->getOrientation();
-
-    Ogre::Euler GraphicOrient;
-    GraphicOrient.fromQuaternion
-        (Ogre::Quaternion(phyOrient.getW(),
-                          phyOrient.getX(),
-                          phyOrient.getY(),
-                          phyOrient.getZ()));
-
-
-    player->setOrientation(GraphicOrient);
 }
 
 //move player's body IGNORING COLLISION !
@@ -493,7 +470,7 @@ void AnnEngine::applyMouseYaw()
 
 void AnnEngine::runBasicGameplay()
 {
-
+	//Test if there is a collision with the ground
     collisionWithGround();
     player->engineUpdate();
 
@@ -502,36 +479,6 @@ void AnnEngine::runBasicGameplay()
         for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
             if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
                 oor->dissmissHS();	//dissmiss the Health and Safety warning.
-}
-
-void AnnEngine::refresh()
-{
-    //OIS Events 
-    captureEvents();
-
-    //animations playing :
-    deltaT = updateTime();
-    playObjectsAnnimation();
-    m_DynamicsWorld->stepSimulation(deltaT,2);
-
-    runBasicGameplay();
-    eventManager->update();
-
-    processCollisionTesting();
-    processTriggersContacts();
-
-    if(debugPhysics)
-        m_debugDrawer->step();
-
-    //Call of refresh method
-    for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
-        (*it)->atRefresh();
-
-    if(VisualBodyAnimation)
-        VisualBodyAnimation->addTime(getTime());
-
-    updateAudioSystemState();
-    doRender();
 }
 
 void AnnEngine::captureEvents()
@@ -549,11 +496,38 @@ float AnnEngine::updateTime()
     return (now - last)/1000.0f;
 }
 
+void AnnEngine::refresh()
+{
+	//OIS Events
+	captureEvents();
+	//animations playing :
+	deltaT = updateTime();
+	playObjectsAnnimation();
+	m_DynamicsWorld->stepSimulation(deltaT,2);
+
+	runBasicGameplay();
+	eventManager->update();
+
+	processCollisionTesting();
+	processTriggersContacts();
+
+	if(debugPhysics)
+		m_debugDrawer->step();
+
+	//Call of refresh method
+	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
+		(*it)->atRefresh();
+
+	if(VisualBodyAnimation)
+		VisualBodyAnimation->addTime(getTime());
+	updateAudioSystemState();
+	doRender();
+}
+
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
     return m_Keyboard->isKeyDown(key);
 }
-
 
 bool AnnEngine::collisionWithGround()
 {
@@ -562,7 +536,6 @@ bool AnnEngine::collisionWithGround()
         return false;
 
     //Getting rid of differences of types. There is polymorphism we don't care of, we are just comparing memory addresses here!
-
     void* pplayer = (void*) player->getBody();
     void* ground = (void*) m_Ground->getBody();
 
@@ -629,7 +602,6 @@ void AnnEngine::processCollisionTesting()
         //we deliberatly lost track of objects types to just test THE ADDRESS of the pointer
         //Comparaison between pointer of differents types aren't permited in C++.
 
-
         void* pair1 = (void*) obA;
         void* pair2 = (void*) obB;
 
@@ -658,7 +630,7 @@ void AnnEngine::processCollisionTesting()
 
 AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 {
-    assert(object != NULL);
+    assert(object);
     triggers.push_back(object);
     object->postInit();
     return object;
@@ -751,11 +723,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
     if(animated)
     {
-        /*Ogre::AnimationState* as = ent->getAnimationState("IDLE");
-          as->setLoop(true);
-          as->setEnabled(true);
-
-          VisualBodyAnimation = as;*/
+       //TODO play idle animation
     }
 }
 
@@ -878,21 +846,18 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 
 void AnnEngine::useDefaultEventListener()
 {
-    std::stringstream ss;
-    ss << "DEBUG: enventManager memory address : ";
-    ss << (void*) eventManager;
-
-    log(ss.str().c_str());
-
-    assert(eventManager != NULL);
+    assert(eventManager);
 
     log("Reconfiguring the engine to use the default event listener");
 
+	//Remove the current event listener (if any)
     eventManager->removeListener();
 
-    if(!defaultEventListener)//if the method has been already called, don't intanciate a new listener
+	//If the event listenre isn't allready initialized, allocate one
+    if(!defaultEventListener)
         defaultEventListener = new AnnDefaultEventListener(getPlayer());
 
+	//Set the default event listener to the event manager
     eventManager->setListener(defaultEventListener);
 }
 

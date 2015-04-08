@@ -100,9 +100,6 @@ namespace Annwvyn
 			///Init the physics model
             void initPlayerPhysics(); //physics on player 
 
-			///Update player location/orientation from the bullet body
-            void updatePlayerFromPhysics(); //physics on player
-
             ///Translate the player (DONT DETECT COLLISIONS HERE !!!)
             void translatePhysicBody(Ogre::Vector3 translation); //physics on player 
 
@@ -351,10 +348,6 @@ namespace Annwvyn
 
             size_t windowHnd;
             std::ostringstream windowHndStr;
-
-            bool activateWASD;
-            bool activateJump;
-            float jumpForce;
 
             //Time
             unsigned long last, now; //Milisec
