@@ -30,7 +30,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>ywlCT2AH5UiwMYEhBlEJuDrQCTChFVBdwDOIQkkoC8A=</HashCode>
+      <HashCode>ywlCT2ADxUiQMYEhBkEJuDrQCSChFRBdwBOIQkkoC8A=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEngine.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -174,7 +174,7 @@
     <Position X="5.25" Y="6.25" Width="2.5" />
     <AssociationLine Name="playerBody" Type="Annwvyn::bodyParams">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="-0.213" Y="0.279" Height="0.182" Width="0.995" />
+        <Position X="0.279" Y="-0.213" Height="0.182" Width="0.995" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
