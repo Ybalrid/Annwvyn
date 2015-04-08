@@ -97,8 +97,6 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 
 void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 {
-	//player->applyRelativeBodyYaw
-	//	(Ogre::Radian(float(-e.getAxis(MouseAxisId::X).getRelValue()) * player->getTurnSpeed()));
 	player->applyMouseRelativeRotation(e.getAxis(MouseAxisId(X)).getRelValue());
 }
 
