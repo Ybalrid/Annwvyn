@@ -117,6 +117,7 @@ namespace Annwvyn
 		///Apply a relative yaw transform to the player. Usefull to bind it to the mouse X axis for FPS-like gameplay.
 		/// \param angle Radian angle of the transformaton.
 		void applyRelativeBodyYaw(Ogre::Radian angle);
+		void applyMouseRelativeRotation(int relValue);
 
 		///manual speed management
 		void setLinearSpeed(Ogre::Vector3 v);		
