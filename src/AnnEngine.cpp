@@ -34,8 +34,10 @@ AnnEngine::AnnEngine(const char title[])
     //VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 
     refVisualBody = Ogre::Quaternion::IDENTITY;
+	log("---------------------------------------------------", false);
     log("Annwvyn Game Engine - Step into the Other World", false);
     log("Desinged for Virtual Reality", false);
+	log("---------------------------------------------------", false);
 }
 
 
@@ -254,7 +256,7 @@ void AnnEngine::createVirtualBodyShape()
 {
     assert(player);
     float radius(0.25f);
-    player->setShape(new btCapsuleShape(radius,player->getEyesHeight()-2*radius));
+    player->setShape(new btCapsuleShape(radius, player->getEyesHeight() - 2 * radius));
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
