@@ -105,6 +105,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\example\"
     <ClInclude Include="..\..\include\AnnJoystickController.hpp" />
     <ClInclude Include="..\..\include\AnnKeyCode.h" />
     <ClInclude Include="..\..\include\AnnMap.hpp" />
+    <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp" />
     <ClInclude Include="..\..\include\AnnPlayer.hpp" />
     <ClInclude Include="..\..\include\AnnTools.h" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />

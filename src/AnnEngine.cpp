@@ -24,9 +24,6 @@ AnnEngine::AnnEngine(const char title[])
     setUpAudio();
     setUpGUI();
 
-    //Setting up reference quaternion for the camera coordinate system.
-    QuatReference = Ogre::Quaternion::IDENTITY;
-
     //Setting up the Visual Body management 
     VisualBody = NULL;
     VisualBodyAnimation = NULL;
@@ -447,7 +444,7 @@ bool AnnEngine::requestStop()
 void AnnEngine::updateCamera()
 {
     m_Camera->setPosition(player->getPosition());
-    m_Camera->setOrientation(QuatReference * player->getOrientation().toQuaternion());
+    m_Camera->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
 }
 
 void AnnEngine::doRender()
@@ -768,11 +765,6 @@ Ogre::SceneNode* AnnEngine::getCamera()
     return m_Camera;
 }
 
-Ogre::Quaternion AnnEngine::getReferenceQuaternion()
-{
-    return QuatReference;
-}
-
 float AnnEngine::getTime()
 {
     return deltaT;
@@ -814,11 +806,6 @@ float AnnEngine::getTimeFromStartUp()
 }
 
 ////////////////////////////////////////////////////////// SETTERS
-
-void AnnEngine::setReferenceQuaternion(Ogre::Quaternion q)
-{
-    QuatReference = q;
-}
 
 void AnnEngine::setDebugPhysicState(bool state)
 {

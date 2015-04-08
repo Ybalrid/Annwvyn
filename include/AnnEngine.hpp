@@ -9,10 +9,8 @@
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
 
-
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
-
 
 #include "systemMacro.h"
 
@@ -272,7 +270,6 @@ namespace Annwvyn
 			AnnDefaultEventListener* getInEngineDefaultListener();
 
         private:
-
 			///Set up graphics
             void setUpOgre(const char title[]);
 
@@ -308,14 +305,12 @@ namespace Annwvyn
 
 
         private:
-
 			//Audio engine
             AnnAudioEngine* AudioEngine;
 			//Player
 			AnnPlayer* player;
 			//Event manager
 			AnnEventManager* eventManager;
-			
 
             //Ogre::Root* m_Root;
             Ogre::RenderWindow* m_Window;
@@ -327,8 +322,6 @@ namespace Annwvyn
             Ogre::AnimationState* VisualBodyAnimation;
 			float visualBody_Zoffset;
             bool readyForLoadingRessources;
-
-            Ogre::Entity* m_ent; //only used for creating nodes into the smgr
 
             //Oculus oculus;
             OgreOculusRender* oor;
@@ -367,10 +360,6 @@ namespace Annwvyn
             
             bool debugPhysics;
             BtOgre::DebugDrawer* m_debugDrawer;
-
-            btQuaternion fixedBodyOrient;
-
-            Ogre::Quaternion QuatReference;
 
             AnnGameObject* m_Ground;
 
