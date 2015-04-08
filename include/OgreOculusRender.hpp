@@ -65,7 +65,7 @@ class DLL OgreOculusRender
         void initialize();
 
 		///Start Oculus and Ogre libraries.
-        void initLibraries();
+        void initLibraries(std::string = "Ogre.log");
 
 		///Load the given 'resource.cfg' file. See Ogre Help for referene here.
         void loadReseourceFile(const char path[]);

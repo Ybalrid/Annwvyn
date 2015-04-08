@@ -68,6 +68,9 @@ namespace Annwvyn
 			///Get the player
 			AnnPlayer* getPlayer();
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
+
             ///Give a zipped archive resource location to the Ogre Resource Group Manager
 			/// \param path The path to a zip file.
 			/// \param resourceGroupName name of the resource group where the content will be added
@@ -91,6 +94,9 @@ namespace Annwvyn
 			///Init a resource group
 			/// \param resourceGroup name of the resourceGroup
 			void initAResourceGroup(std::string resourceGroup); //resource
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
+
 
             ///Init OgreOculus stuff
             void oculusInit(bool fullscreen = true); //oculus
@@ -140,9 +146,6 @@ namespace Annwvyn
 
             ///Update camera position/orientation from rift and virtual body
             void updateCamera(); //graphics
-			
-			///Apply yaw transform with mouse relative X displacement
-			void applyMouseYaw(); //player engine call
 
 			///Get camera position and ask OOR to do the render
 			void doRender(); //graphics engine call 
