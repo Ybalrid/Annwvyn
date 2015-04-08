@@ -258,7 +258,7 @@ void AnnEngine::createVirtualBodyShape()
 {
     assert(player != NULL);
     float radius(0.25f);
-    player->setShape(new btCapsuleShape(radius,player->getEyesHeight()-2*radius));
+    player->setShape(new btCapsuleShape(radius, player->getEyesHeight() - 2 * radius));
 }
 
 void AnnEngine::createPlayerPhysicalVirtualBody()
