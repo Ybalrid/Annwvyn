@@ -1,11 +1,14 @@
 material Sky/dome1
 {
-    technique
+    
+	technique
     {
        pass
        {
           lighting off
           depth_write off
+		  receive_shadows off
+
 
 			texture_unit
 			{
