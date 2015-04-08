@@ -99,6 +99,9 @@
     <ClInclude Include="..\..\include\OgreOculusRender.hpp">
       <Filter>Oculus rendering for Ogre\Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
