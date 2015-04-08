@@ -201,14 +201,11 @@ void AnnEngine::setUpOIS()
 
     m_InputManager = OIS::InputManager::createInputSystem(pl);
 
-
     m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject(OIS::OISKeyboard, true));
     m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject(OIS::OISMouse, true));
 
     if(m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
         m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, true));
-
-  
 
     if(eventManager)
     {
@@ -216,6 +213,28 @@ void AnnEngine::setUpOIS()
         eventManager->setMouse(m_Mouse);
         eventManager->setJoystick(m_Joystick);
     }
+}
+
+void AnnEngine::useDefaultEventListener()
+{
+    assert(eventManager);
+
+    log("Reconfiguring the engine to use the default event listener");
+
+	//Remove the current event listener (if any)
+    eventManager->removeListener();
+
+	//If the event listenre isn't allready initialized, allocate one
+    if(!defaultEventListener)
+        defaultEventListener = new AnnDefaultEventListener(getPlayer());
+
+	//Set the default event listener to the event manager
+    eventManager->setListener(defaultEventListener);
+}
+
+AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
+{
+    return defaultEventListener;
 }
 
 ///////////// Time system
@@ -825,26 +844,4 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 {
     if(oor)
         oor->setCamerasNearClippingDistance(nearClippingDistance);
-}
-
-void AnnEngine::useDefaultEventListener()
-{
-    assert(eventManager);
-
-    log("Reconfiguring the engine to use the default event listener");
-
-	//Remove the current event listener (if any)
-    eventManager->removeListener();
-
-	//If the event listenre isn't allready initialized, allocate one
-    if(!defaultEventListener)
-        defaultEventListener = new AnnDefaultEventListener(getPlayer());
-
-	//Set the default event listener to the event manager
-    eventManager->setListener(defaultEventListener);
-}
-
-AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
-{
-    return defaultEventListener;
 }

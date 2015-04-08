@@ -2,6 +2,7 @@
 Todo list : 
 Critial
 - [ ] Start to "ungodify" the AnnEngine class by removing everything that has something to do with bullet and collision testing from it.
+- [ ] Need a proper object factory for class like AnnGameObject
 - [ ] Need to think of a proper way of giving arguments to the engine befor graphical initialization...
 - [ ] Allow playing multiple animations
 - [ ] Create Annwvyn classes for representing vectors and quaternion relying on Ogre code + being able to convert itself to Bullet equivalent or other in-engine dependencies
