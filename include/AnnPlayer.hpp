@@ -137,6 +137,7 @@ namespace Annwvyn
 
 		///Give Annwvyn::AnnEngine the rght to access private members
 		friend class AnnEngine;
+		friend class AnnPhysicsEngine;
 
 		///Engine update call for each frame
 		void engineUpdate();

@@ -41,6 +41,7 @@
 #include "AnnTypes.h"
 #include "AnnTools.h"
 #include "AnnAudioEngine.hpp"
+#include "AnnPhysicsEngine.hpp"
 
 #ifdef __gnu_linux__
 #include <unistd.h> //for some unix functions
@@ -103,12 +104,6 @@ namespace Annwvyn
 
 			///Init the physics model
             void initPlayerPhysics(); //physics on player 
-
-            ///Translate the player (DONT DETECT COLLISIONS HERE !!!)
-            void translatePhysicBody(Ogre::Vector3 translation); //physics on player 
-
-            ///Set player linear speed from a 3D vector
-            void setPhysicBodyLinearSpeed(Ogre::Vector3 V); //physics on player
 
             ///Create a game object form the name of an entity.
 			/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
@@ -190,12 +185,6 @@ namespace Annwvyn
             ///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
             /// key an OIS key code
 			bool isKeyDown(OIS::KeyCode key); //event
-
-            ///Return true if you touch the ground
-            bool collisionWithGround(); //physics
-
-            ///Process collision test form bullet manifold and objects collision mask
-            void processCollisionTesting(); //physics on object engine call
 
             ///Get the dynamicsWorld
             btDiscreteDynamicsWorld* getDynamicsWorld(); //physics
@@ -294,18 +283,11 @@ namespace Annwvyn
 			///Create the bullet shape of the player's body
             void createVirtualBodyShape();
 
-			///Create a physical object from the calculated shape
-            void createPlayerPhysicalVirtualBody();
-
-			///Add the players body to the Physics simulation
-            void addPlayerPhysicalBodyToDynamicsWorld();
-			
 			///Returns internal timing
             float updateTime();
             
             ///Unable to continue, we have to cleanly cut the program before creating an error
             void emergency(void);
-
 
         private:
 			//Audio engine
@@ -314,6 +296,8 @@ namespace Annwvyn
 			AnnPlayer* player;
 			//Event manager
 			AnnEventManager* eventManager;
+			//Physics
+			AnnPhysicsEngine* physicsEngine;
 
             //Ogre::Root* m_Root;
             Ogre::RenderWindow* m_Window;
@@ -340,8 +324,9 @@ namespace Annwvyn
             OIS::JoyStick *m_Joystick;
             OIS::ParamList pl;
             
+#ifdef __gnu_linux__
             std::string x11LayoutAtStartup;
-
+#endif
             size_t windowHnd;
             std::ostringstream windowHndStr;
 
@@ -350,21 +335,6 @@ namespace Annwvyn
             
             //Elapsed time
             float deltaT; //Sec
-
-            //bullet
-            btBroadphaseInterface* m_Broadphase;
-            btDefaultCollisionConfiguration* m_CollisionConfiguration;
-            btCollisionDispatcher* m_Dispatcher;
-            btSequentialImpulseConstraintSolver* m_Solver;
-            btGhostPairCallback* m_ghostPairCallback;
-            
-            //Bullet Dynamics World
-            btDiscreteDynamicsWorld* m_DynamicsWorld;
-            
-            bool debugPhysics;
-            BtOgre::DebugDrawer* m_debugDrawer;
-
-            AnnGameObject* m_Ground;
 
 			AnnDefaultEventListener* defaultEventListener;
     };

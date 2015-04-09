@@ -1,7 +1,7 @@
 
 Todo list : 
 Critial
-- [ ] Start to "ungodify" the AnnEngine class by removing everything that has something to do with bullet and collision testing from it.
+- [X] Start to "ungodify" the AnnEngine class by removing everything that has something to do with bullet and collision testing from it.
 - [ ] Need a proper object factory for class like AnnGameObject
 
 Non critial
