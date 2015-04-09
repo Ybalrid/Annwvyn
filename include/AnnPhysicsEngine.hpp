@@ -32,9 +32,12 @@ namespace Annwvyn
 		void step(float delta);
 		bool collisionWithGround(AnnPlayer* player);
 		void processCollisionTesting(AnnGameObjectVect& object);
+		void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObjectVect& triggers);
 		void removeRigidBody(btRigidBody* body);
 		void initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node);
 		void setGround(AnnGameObject* ground);
+		void setDebugPhysics(bool state);
+
 	private:
 		btBroadphaseInterface* m_Broadphase;
 		btDefaultCollisionConfiguration* m_CollisionConfiguration;

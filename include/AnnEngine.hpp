@@ -128,9 +128,6 @@ namespace Annwvyn
 			/// \param state debug state
             void setDebugPhysicState(bool state); //engine debug
 
-            ///Run objects physics
-            void runPhysics(); //physics engine call
-
             ///Return true if the game want to terminate the program
             bool requestStop(); //engine
 
@@ -153,9 +150,6 @@ namespace Annwvyn
 
             ///Refresh all for you
             void refresh(); //engine main loop
-
-            ///Caputre event form keyboard and mouse
-            void captureEvents(); //events
 
             ///Update program time. retur the delay between the last call of this method
             float getTime();//engine
@@ -186,15 +180,9 @@ namespace Annwvyn
             /// key an OIS key code
 			bool isKeyDown(OIS::KeyCode key); //event
 
-            ///Get the dynamicsWorld
-            btDiscreteDynamicsWorld* getDynamicsWorld(); //physics
-
             ///Create a trigger object
             /// \param trigger an empty trigger object
 			AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject); //object factory
-
-            ///Process contact test with triggers
-            void processTriggersContacts(); //gameplay engine call 
 
             ///Get ogre scene manager
             Ogre::SceneManager* getSceneManager(); //scene or graphics
@@ -280,9 +268,6 @@ namespace Annwvyn
 			///Set up GUI/HUD rendering
             void setUpGUI();
 
-			///Create the bullet shape of the player's body
-            void createVirtualBodyShape();
-
 			///Returns internal timing
             float updateTime();
             
@@ -314,8 +299,8 @@ namespace Annwvyn
             OgreOculusRender* oor;
 
             ///Dynamic container for games objects
-            AnnGameObjectVect objects;
-            AnnTriggerObjectVect triggers;
+            std::vector<AnnGameObject*>	objects;
+			std::vector<AnnTriggerObject*> triggers;
 
             //Events processing : 
             OIS::InputManager *m_InputManager;
