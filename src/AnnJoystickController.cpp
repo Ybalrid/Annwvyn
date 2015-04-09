@@ -119,7 +119,7 @@ void AnnJoystickController::updateVirtualBodyValues()
     virtualBody->Orientation = Ogre::Euler(yaw, pitch, roll);
 
     //calculate and apply the speed vector "V"
-    m_engine->setPhysicBodyLinearSpeed(virtualBody->Orientation.toQuaternion()*Ogre::Vector3(side, Yvel, -forward));
+    //m_engine->setPhysicBodyLinearSpeed(virtualBody->Orientation.toQuaternion()*Ogre::Vector3(side, Yvel, -forward));
 }
 
 //print stick value
