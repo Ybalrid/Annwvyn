@@ -16,6 +16,7 @@ namespace Annwvyn
 {
     //Anticipated declaration of AnnEngine class 
     class AnnEngine;
+	class AnnPhysicsGameEngine;
     
 	///Object for representing a volume that trigger an event
     class DLL AnnTriggerObject
@@ -52,7 +53,8 @@ namespace Annwvyn
             void setContactInformation(bool contact);
             
             ///Make AnnEngine class friend to permit acces to setContactInformation(bool)
-            friend class Annwvyn::AnnEngine;
+            friend class AnnEngine;
+			friend class AnnPhysicsEngine;
 
         private:
 			///Position of the object
