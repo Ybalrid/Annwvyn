@@ -17,25 +17,39 @@
 
 namespace Annwvyn
 {
+	///Class that abstract the physics engine initialisation and collision information querries for Annwvyn.
 	class DLL AnnPhysicsEngine
 	{
 	public:
 		AnnPhysicsEngine(Ogre::SceneNode* rootNode);
 		~AnnPhysicsEngine();
 
+		///Add the player body to the dynamics world
 		void addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player);
+		///Create player's rigidbody
 		void createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::SceneNode* node);
+		///Create player's body shape (a capsule)
 		void createVirtualBodyShape(AnnPlayer* player);
 		
+		///Pointer to the bullet's dynamics world
 		btDiscreteDynamicsWorld* getWorld();
 		
+		///Step the simulation
+		/// \param delta Interval in seconds that time has to be simulated
 		void step(float delta);
+		///Process collison information between ground and player
 		bool collisionWithGround(AnnPlayer* player);
+		///Process the collision querry system
 		void processCollisionTesting(AnnGameObjectVect& object);
-		void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObjectVect& triggers);
+		///Process triggers contact event
+		void processTriggersContacts(AnnPlayer* player, AnnTriggerObjectVect& triggers);
+		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body);
+		///Init player's body physical simulation
 		void initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node);
+		///Set the "ground" object
 		void setGround(AnnGameObject* ground);
+		///Set the debug drawer state
 		void setDebugPhysics(bool state);
 
 	private:
