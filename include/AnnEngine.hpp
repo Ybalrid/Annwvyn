@@ -167,15 +167,6 @@ namespace Annwvyn
             ///Return the Annwvyn OpenAL simplified audio engine
             AnnAudioEngine* getAudioEngine(); //audio
 
-            ///LowLevel OIS Mouse
-            OIS::Mouse* getOISMouse(); //event
-
-            ///LowLevel OIS Keyboard
-            OIS::Keyboard* getOISKeyboard(); //event
-
-            ///LowLevel OIS Joystick
-            OIS::JoyStick* getOISJoyStick(); //event
-
             ///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
             /// key an OIS key code
 			bool isKeyDown(OIS::KeyCode key); //event
@@ -250,24 +241,6 @@ namespace Annwvyn
 			AnnDefaultEventListener* getInEngineDefaultListener();
 
         private:
-			///Set up graphics
-            void setUpOgre(const char title[]);
-
-			///Set up physics
-            void setUpBullet();
-
-			///Set up inputs
-            void setUpOIS();
-
-			///Set up timing
-            void setUpTime();
-
-			///Set up 3D audio system
-            void setUpAudio();
-
-			///Set up GUI/HUD rendering
-            void setUpGUI();
-
 			///Returns internal timing
             float updateTime();
             
@@ -300,15 +273,7 @@ namespace Annwvyn
 
             ///Dynamic container for games objects
             std::vector<AnnGameObject*>	objects;
-			std::vector<AnnTriggerObject*> triggers;
-
-            //Events processing : 
-            OIS::InputManager *m_InputManager;
-            OIS::Keyboard *m_Keyboard;
-            OIS::Mouse *m_Mouse;
-            OIS::JoyStick *m_Joystick;
-            OIS::ParamList pl;
-            
+			std::vector<AnnTriggerObject*> triggers;     
 #ifdef __gnu_linux__
             std::string x11LayoutAtStartup;
 #endif

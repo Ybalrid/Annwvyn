@@ -16,7 +16,7 @@
 //Annwvyn
 #include <Annwvyn.h>
 
-//#include <Gorilla.h>
+#include <Gorilla.h>
 
 using namespace std;
 
@@ -137,7 +137,7 @@ AnnMain()
 	//You have to flip the character if you modeled it whith the head facing you on your 3D software (witch is the good way to do it anyway...)
 
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1 ,true);
-	/*
+	
 	//////////////////////////// INIT GUI TEST 
 	Ogre::SceneNode* camera = GameEngine->getCamera();
 	Ogre::SceneNode* GUI_root = camera->createChildSceneNode();
@@ -150,13 +150,13 @@ AnnMain()
 
 	Gorilla::Layer* baseLayer = screen->createLayer(0);
 	Gorilla::Rectangle* background = baseLayer->createRectangle(0,0,300,200);
-	background->background_colour(Gorilla::rgb(255,0,0,50));
+	background->background_colour(Gorilla::rgb(255,0,0,0));
 
 	Gorilla::Caption* testText = baseLayer->createCaption(9,20,20,"Test");
 	testText->colour(Ogre::ColourValue::Black);
 	testText->height(5);
 	testText->_redraw();
-	*/
+	
 
 	GameEngine->setNearClippingDistance(0.20f);
 

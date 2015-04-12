@@ -24,8 +24,8 @@ AnnJoystickController::AnnJoystickController(AnnEngine* engine)
     reverse[STRAFF] = false;
     reverse[ROTATE] = true;
 
-    if(m_engine->getOISJoyStick())
-        MAX = m_engine->getOISJoyStick()->MAX_AXIS;
+   // if(m_engine->getOISJoyStick())
+       // MAX = m_engine->getOISJoyStick()->MAX_AXIS;
 }
 
 //setters to change axis used for each action
@@ -63,7 +63,7 @@ void AnnJoystickController::setReverseRotate(bool state)
 void AnnJoystickController::update()
 {
     //check if joystick exist
-    if(!m_engine->getOISJoyStick()) return; //if no joystick, cut here
+//    if(!m_engine->getOISJoyStick()) return; //if no joystick, cut here
     
     //update values from sticks
     updateJoystickValues();
@@ -76,10 +76,11 @@ void AnnJoystickController::update()
 //Get the axis value. float between -1 and 1 (aproximatly) 
 float AnnJoystickController::getAxisValue(int axisID)
 {
-    return trimToFitDeadzone(static_cast<float>(m_engine->
+   /* return trimToFitDeadzone(static_cast<float>(m_engine->
             getOISJoyStick()->getJoyStickState().mAxes[
             axesID[axisID]
-            ].abs)/static_cast<float>(MAX));
+            ].abs)/static_cast<float>(MAX));*/
+	return 0;
 }
 
 //updates valules

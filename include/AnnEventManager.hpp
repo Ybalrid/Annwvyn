@@ -163,7 +163,7 @@ namespace Annwvyn
 	{
 	public:
 		///Construct the event manager
-		AnnEventManager();
+		AnnEventManager(Ogre::RenderWindow* w);
 		///Destroy the event manager
 		~AnnEventManager();
 
@@ -191,12 +191,17 @@ namespace Annwvyn
 		/// \param stick the Joystick object.
 		void setJoystick(OIS::JoyStick* stick);
 
+		///OIS Event Manager
+		OIS::InputManager *InputManager;
 		///Pointer that holds the keyboard
 		OIS::Keyboard* Keyboard;
 		///Pointer that holds the Mouse
 		OIS::Mouse* Mouse;
 		///Pointer that holds the stick
 		OIS::JoyStick* Joystick;
+		///parameter list for OIS
+		OIS::ParamList pl;
+
 
 		///Array for remembering the key states at last update. 
 		bool previousKeyStates[static_cast<unsigned int>(KeyCode::SIZE)];

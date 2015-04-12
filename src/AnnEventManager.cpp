@@ -25,17 +25,41 @@ void AnnEvent::populate()
 	unpopulated = false;
 }
 
-AnnEventManager::AnnEventManager() :
+AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	listener(NULL),
 	Keyboard(NULL),
 	Mouse(NULL),
 	Joystick(NULL)
 {
+
 	for(size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
+
+	//AnnEngine::log("Initialize OIS");
+	InputManager = NULL;
+
+	size_t windowHnd;
+	std::stringstream windowHndStr;
+	w->getCustomAttribute("WINDOW",&windowHnd);
+	windowHndStr << windowHnd;
+
+	pl.insert(std::make_pair(
+		std::string("WINDOW"), windowHndStr.str()));
+
+	InputManager = OIS::InputManager::createInputSystem(pl);
+
+	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
+	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
+
+	if(InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
+		Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 }
 
 AnnEventManager::~AnnEventManager()
 {
+	delete Keyboard;
+	delete Mouse;
+	delete Joystick;
+	//delete InputManager;
 }
 
 void AnnEventManager::setListener(AnnAbstractEventListener* l)
@@ -69,6 +93,12 @@ void AnnEventManager::setJoystick(OIS::JoyStick* stick)
 
 void AnnEventManager::update()
 {
+	//Capture events
+	Keyboard->capture();
+	Mouse->capture();
+	if(Joystick)
+		Joystick->capture();
+
 	//if keyboard system initialized
 	if(Keyboard)
 	{
