@@ -14,18 +14,66 @@ AnnEngine::AnnEngine(const char title[])
 
 	//This structure handle player's body parameters
 	player = new AnnPlayer;
-	eventManager = new AnnEventManager;
 	defaultEventListener = NULL;
 
-	//here we set all the defaults parameters for the body.
-
 	//Launching initialisation routines : 
-	setUpOgre(title);
-	setUpOIS();
-	setUpTime();
-	setUpBullet();
-	setUpAudio();
-	setUpGUI();
+	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
+	log("Setup Ogre Oculus Renderer");
+	oor = new OgreOculusRender(title);
+	oor->initLibraries("Annwvyn.log");
+	oor->getOgreConfig();
+	oor->createWindow();
+	oor->initScene();
+	oor->initCameras();
+	oor->setCamerasNearClippingDistance(0.15f);
+	oor->initRttRendering();
+	m_SceneManager = oor->getSceneManager();
+	m_Window = oor->getWindow();
+
+	readyForLoadingRessources = true;
+
+//We use OIS to catch all user inputs
+#ifdef __gnu_linux__
+	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
+	//Under windows the keycode match the standard US QWERTY layout. Under linux they are converted to whatever you're using.
+	//I use a French AZERTY keyboard layout so it's not that bad. If you have a greek keyboard you're out of luck...
+	//So, assuming that the only program that has the focus is the Annwvyn powered application, we can just switch the layout to US 
+	//then switch back to the original layout.
+
+	log("we are running on linux. getting x11 keyboard layout from the system");
+	FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
+	char* buffer = static_cast<char *>(malloc(128*sizeof(char)));
+
+	if(!layout)
+		log("cannot get the layout");
+	if(!buffer)
+		log("cannot create a 128 byte text buffer (weird...)");
+
+	if(layout && buffer)
+	{
+		fscanf(layout, "%s", buffer);
+		x11LayoutAtStartup = std::string(buffer);
+
+		log("Saving keyboard layout for shutdown.");
+		log("saved layout="+x11LayoutAtStartup, false);
+	}
+	free(buffer);
+	buffer = NULL;
+	system("setxkbmap us");
+#endif
+
+	log("Setup event system");
+	eventManager = new AnnEventManager(m_Window);
+
+	log("Setup time system");
+	last = oor->getTimer()->getMilliseconds();
+	now = last;
+
+	log("Setup physics engine");
+	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode());
+		
+	log("Setup audio engine");
+	AudioEngine = new AnnAudioEngine;
 
 	//Setting up the Visual Body management 
 	VisualBody = NULL;
@@ -55,8 +103,6 @@ AnnEngine::~AnnEngine()
 	objects.clear();
 	delete physicsEngine;
 	delete player;
-	delete m_Keyboard;
-	delete m_Mouse;
 
 	//Audio
 	delete AudioEngine;
@@ -102,95 +148,6 @@ void AnnEngine::emergency(void)
 	abort();
 }
 
-////////////////////////////////////// INITALIZATION
-///////////// Graphics
-void AnnEngine::setUpOgre(const char title[])
-{
-	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
-	oor = new OgreOculusRender(title);
-	oor->initLibraries("Annwvyn.log");
-	oor->getOgreConfig();
-	oor->createWindow();
-	oor->initScene();
-	oor->initCameras();
-	oor->setCamerasNearClippingDistance(0.15f);
-	oor->initRttRendering();
-	m_SceneManager = oor->getSceneManager();
-	m_Window = oor->getWindow();
-
-	readyForLoadingRessources = true;
-}
-
-///////////// Inputs
-void AnnEngine::setUpOIS()
-{
-	//We use OIS to catch all user inputs
-#ifdef __gnu_linux__
-	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
-	//Under windows the keycode match the standard US QWERTY layout. Under linux they are converted to whatever you're using.
-	//I use a French AZERTY keyboard layout so it's not that bad. If you have a greek keyboard you're out of luck...
-	//So, assuming that the only program that has the focus is the Annwvyn powered application, we can just switch the layout to US 
-	//then switch back to the original layout.
-
-	log("we are running on linux. getting x11 keyboard layout from the system");
-	FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
-	char* buffer = static_cast<char *>(malloc(128*sizeof(char)));
-
-	if(!layout)
-		log("cannot get the layout");
-	if(!buffer)
-		log("cannot create a 128 byte text buffer (weird...)");
-
-	if(layout && buffer)
-	{
-		fscanf(layout, "%s", buffer);
-		x11LayoutAtStartup = std::string(buffer);
-
-		log("Saving keyboard layout for shutdown.");
-		log("saved layout="+x11LayoutAtStartup, false);
-	}
-	free(buffer);
-	buffer = NULL;
-	system("setxkbmap us");
-#endif
-
-	//init OIS
-	log("Initialize OIS");
-	m_InputManager = NULL;
-	m_Keyboard = NULL;
-	m_Mouse = NULL;
-	m_Joystick = NULL;
-	windowHnd = 0; 
-
-	m_Window->getCustomAttribute("WINDOW",&windowHnd);
-	windowHndStr << windowHnd;
-
-	pl.insert(std::make_pair(
-		std::string("WINDOW"), windowHndStr.str()));
-
-	m_InputManager = OIS::InputManager::createInputSystem(pl);
-
-	m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject(OIS::OISKeyboard, true));
-	m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject(OIS::OISMouse, true));
-
-	if(m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
-		m_Joystick = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, true));
-
-	if(eventManager)
-	{
-		eventManager->setKeyboard(m_Keyboard);
-		eventManager->setMouse(m_Mouse);
-		eventManager->setJoystick(m_Joystick);
-	}
-}
-
-///////////// Physics
-void AnnEngine::setUpBullet()
-{
-	log("Init Bullet physics");
-	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode());
-}
-
 void AnnEngine::useDefaultEventListener()
 {
 	assert(eventManager);
@@ -211,28 +168,6 @@ void AnnEngine::useDefaultEventListener()
 AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
 {
 	return defaultEventListener;
-}
-
-///////////// Time system
-void AnnEngine::setUpTime()
-{
-	log("Setup time system");
-	last = oor->getTimer()->getMilliseconds();
-	now = last;
-}
-
-///////////// Audio System
-void AnnEngine::setUpAudio()
-{
-	AudioEngine = new AnnAudioEngine;
-	log("Audio Engine started");
-}
-
-///////////// Interface 
-void AnnEngine::setUpGUI()
-{
-	//TODO initialize Gorilla here
-	return;
 }
 
 //Convinient method to the user to call : do it and let go !
@@ -316,7 +251,7 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 	}
 	catch (std::string const& e)
 	{
-		log(e,false);
+		log(e, false);
 		delete obj;
 		return NULL;
 	}
@@ -372,7 +307,7 @@ Annwvyn::AnnLightObject* AnnEngine::addLight()
 bool AnnEngine::requestStop()
 {
 	//pres ESC to quit. Stupid but efficient. I like that.
-	if(m_Keyboard->isKeyDown(OIS::KC_ESCAPE))
+	if(isKeyDown(OIS::KC_ESCAPE))
 		return true;
 	return false;
 }
@@ -406,7 +341,7 @@ void AnnEngine::runBasicGameplay()
 	//Dissmiss health and safety warning
 	if(!oor->IsHsDissmissed()) //If not already dissmissed
 		for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
-			if(m_Keyboard->isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
+			if(isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
 				oor->dissmissHS();	//dissmiss the Health and Safety warning.
 }
 
@@ -419,11 +354,6 @@ float AnnEngine::updateTime()
 
 void AnnEngine::refresh()
 {
-	m_Keyboard->capture();
-	m_Mouse->capture();
-	if(m_Joystick)
-		m_Joystick->capture();
-
 	//animations playing :
 	deltaT = updateTime();
 	playObjectsAnnimation();
@@ -446,7 +376,7 @@ void AnnEngine::refresh()
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
-	return m_Keyboard->isKeyDown(key);
+	return eventManager->Keyboard->isKeyDown(key);
 }
 
 
@@ -474,7 +404,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	Ogre::Vector3 LookAt = Orient * Ogre::Vector3::NEGATIVE_UNIT_Z;
 
 	//create ray
-	Ogre::Ray ray(Orig,LookAt);
+	Ogre::Ray ray(Orig, LookAt);
 
 	//create query
 	Ogre::RaySceneQuery* raySceneQuery = m_SceneManager->createRayQuery(ray);
@@ -579,21 +509,6 @@ AnnAudioEngine* AnnEngine::getAudioEngine()
 	return AudioEngine;
 }
 
-OIS::Mouse* AnnEngine::getOISMouse()
-{
-	return m_Mouse;
-}
-
-OIS::Keyboard* AnnEngine::getOISKeyboard()
-{
-	return m_Keyboard;
-}
-
-OIS::JoyStick* AnnEngine::getOISJoyStick()
-{
-	return m_Joystick;
-}
-
 Ogre::SceneManager* AnnEngine::getSceneManager()
 {
 	return m_SceneManager;
@@ -605,10 +520,10 @@ float AnnEngine::getTimeFromStartUp()
 }
 
 ////////////////////////////////////////////////////////// SETTERS
-
 void AnnEngine::setDebugPhysicState(bool state)
 {
-	//debugPhysics = state;
+	assert(physicsEngine);
+	physicsEngine->setDebugPhysics(state);
 }
 
 void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
