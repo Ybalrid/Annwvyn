@@ -34,18 +34,6 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: "C:\Oculus\AnnwvynSDK\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\AL\*" DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\README.TXT"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "C:\Oculus\AnnwvynSDK\RUNME.BAT"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "C:\Oculus\AnnwvynSDK\Annwvyn\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\AnnwvynEditor\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\bullet3\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\glew\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\libsndfile\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\OculusSDK\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\OgreSDK\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\Oculus\AnnwvynSDK\OIS\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: "C:\OgreCommandLineTools\*"; DestDir: "{sd}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
