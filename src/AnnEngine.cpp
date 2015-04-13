@@ -18,7 +18,7 @@ AnnEngine::AnnEngine(const char title[])
 
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
-	log("Setup Ogre Oculus Renderer");
+	//log("Setup Ogre Oculus Renderer");
 	oor = new OgreOculusRender(title);
 	oor->initLibraries("Annwvyn.log");
 	oor->getOgreConfig();
@@ -488,12 +488,6 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 }
 
 ////////////////////////////////////////////////////////// GETTERS
-Annwvyn::bodyParams* AnnEngine::getBodyParams()
-{
-	//BAD!
-	return player->getLowLevelBodyParams();
-}
-
 Ogre::SceneNode* AnnEngine::getCamera()
 {
 	return m_Camera;
