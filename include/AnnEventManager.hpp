@@ -181,16 +181,6 @@ namespace Annwvyn
 		///Engine call for refreshing the event system
 		void update();
 
-		///Engine initialization for keyboard events
-		/// \param k The keyboard object
-		void setKeyboard(OIS::Keyboard* k);
-		///Engine initialization for Mouse events
-		/// \param m Yhe mouse object
-		void setMouse(OIS::Mouse* m);
-		///Engine initialization for Joystick events 
-		/// \param stick the Joystick object.
-		void setJoystick(OIS::JoyStick* stick);
-
 		///OIS Event Manager
 		OIS::InputManager *InputManager;
 		///Pointer that holds the keyboard

@@ -3,7 +3,7 @@
   <Class Name="Annwvyn::AnnEngine">
     <Position X="8.5" Y="6.75" Width="6.5" />
     <TypeIdentifier>
-      <HashCode>SgkCTWACwECSEYAgAkEIuBrACSAhBRBVgBAAAkkoA8A=</HashCode>
+      <HashCode>SgkCTWACwECSEYAgAkEIuBqACSAhBRBVgBAAAkkoA8A=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEngine.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -22,16 +22,16 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnEventManager">
-    <Position X="16.25" Y="6.25" Width="4" />
+    <Position X="16.25" Y="7.5" Width="4" />
     <TypeIdentifier>
-      <HashCode>AAgIAQAAAAAhIAAAQgAAAAAAAIQQAAAAAAAIYAAEAAA=</HashCode>
+      <HashCode>AAgAAQAAAAAhIAAAQgAAAAAAAIAAAAAAAAAIYAAEAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OgreOculusRender">
     <Position X="3.75" Y="7.5" Width="4" />
     <NestedTypes>
-      <Enum Name="OgreOculusRender::__unnamed_enum_0014_1" Collapsed="true">
+      <Enum Name="OgreOculusRender::__unnamed_enum_05e5_1" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\OgreOculusRender.hpp</NewMemberFileName>
         </TypeIdentifier>
@@ -146,7 +146,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnMap">
-    <Position X="22" Y="2" Width="3.5" />
+    <Position X="17" Y="3" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AQIGAAEBAAAAQAAABAAAAAIAgAAgAIIAAAAAAAAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnMap.hpp</FileName>
@@ -171,13 +171,6 @@
   </Class>
   <Class Name="Annwvyn::AnnJoystickController" Collapsed="true">
     <Position X="39" Y="0.5" Width="1.5" />
-    <NestedTypes>
-      <Enum Name="Annwvyn::AnnJoystickController::axisName" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnJoystickController.hpp</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-    </NestedTypes>
     <TypeIdentifier>
       <HashCode>QQAAEBAAgADgAAAAAADQAEUAAAEAAAKAACAgIBAEgBA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnJoystickController.hpp</FileName>

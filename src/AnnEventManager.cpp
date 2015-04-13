@@ -1,5 +1,5 @@
 #include "AnnEventManager.hpp"
-
+#include "AnnEngine.hpp"//to access logger static method
 using namespace Annwvyn;
 
 AnnAbstractEventListener::AnnAbstractEventListener(AnnPlayer* p)
@@ -51,7 +51,10 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
 
 	if(InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
-		Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
+	{
+			Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
+			Annwvyn::AnnEngine::log(Joystick->vendor());
+	}
 }
 
 AnnEventManager::~AnnEventManager()
@@ -71,25 +74,6 @@ void AnnEventManager::removeListener()
 {
 	listener = NULL;
 }
-
-//////////////// PRIVATE SETTERS
-
-void AnnEventManager::setKeyboard(OIS::Keyboard* k)
-{
-	Keyboard = k;
-}
-
-void AnnEventManager::setMouse(OIS::Mouse* m)
-{
-	Mouse = m;
-}
-
-void AnnEventManager::setJoystick(OIS::JoyStick* stick)
-{
-	Joystick = stick;
-}
-
-//////////////////////////////////////
 
 void AnnEventManager::update()
 {

@@ -101,13 +101,12 @@ void AnnJoystickController::updateJoystickValues()
 void AnnJoystickController::updateVirtualBodyValues()
 {
     //get a pointer to the body
-    bodyParams* virtualBody (m_engine->getBodyParams());
-
+    bodyParams* virtualBody (NULL);//(m_engine->getBodyParams());
     //calculate speed form stick values
     float forward(virtualBody->walkSpeed * walk);
     float side(virtualBody->walkSpeed * straff);
     float turn(virtualBody->turnSpeed * rotate); //angular rad/sec
-
+	
     //get the Y velocity of the body. we do not change that value
     float Yvel(virtualBody->Body->getLinearVelocity().y());
     

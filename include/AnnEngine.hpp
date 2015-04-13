@@ -191,9 +191,6 @@ namespace Annwvyn
             ///Get the AnnGameObject form the given Ogre node
             Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
 
-            ///DEPRECATED Get bodyParams
-            Annwvyn::bodyParams* getBodyParams(); 
-
             ///Get ogre camera scene node
             Ogre::SceneNode* getCamera(); //... 
         
