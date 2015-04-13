@@ -18,7 +18,6 @@ AnnEngine::AnnEngine(const char title[])
 
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
-	//log("Setup Ogre Oculus Renderer");
 	oor = new OgreOculusRender(title);
 	oor->initLibraries("Annwvyn.log");
 	oor->getOgreConfig();
@@ -31,7 +30,7 @@ AnnEngine::AnnEngine(const char title[])
 	m_Window = oor->getWindow();
 
 	readyForLoadingRessources = true;
-
+	log("OGRE Object-Oriented Graphical Rendering Engine initialized", true);
 //We use OIS to catch all user inputs
 #ifdef __gnu_linux__
 	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
@@ -99,8 +98,8 @@ AnnEngine::~AnnEngine()
 		destroyGameObject(objects[i]);
 		objects[i] = NULL;  //don't change the size of the vector while iterating throug it
 	}
-
 	objects.clear();
+
 	delete physicsEngine;
 	delete player;
 
@@ -118,6 +117,7 @@ AnnEngine::~AnnEngine()
 
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
+	delete oor;
 }
 
 AnnEventManager* AnnEngine::getEventManager()
@@ -144,7 +144,7 @@ void AnnEngine::log(std::string message, bool flag)
 
 void AnnEngine::emergency(void)
 {
-	log("FATAL : It is imposible to keep the engine running. Plese check engine and object initialization");
+	log("FATAL : It is imposible to keep the engine running. Plese check engine and object initialization", false);
 	abort();
 }
 
@@ -290,11 +290,6 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 	return returnCode;
 }
 
-void AnnEngine::renderOneFrame()
-{
-	oor->RenderOneFrame();
-}
-
 Annwvyn::AnnLightObject* AnnEngine::addLight()
 {
 	//Actualy here i'm cheating, the AnnLightObjet is a simple typdef to Ogre LightSceneNode
@@ -310,18 +305,6 @@ bool AnnEngine::requestStop()
 	if(isKeyDown(OIS::KC_ESCAPE))
 		return true;
 	return false;
-}
-
-void AnnEngine::updateCamera()
-{
-	m_Camera->setPosition(player->getPosition());
-	m_Camera->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
-}
-
-void AnnEngine::doRender()
-{
-	updateCamera(); //update camera opsition from GameLogic
-	renderOneFrame();
 }
 
 void AnnEngine::updateAudioSystemState()
@@ -356,7 +339,11 @@ void AnnEngine::refresh()
 {
 	//animations playing :
 	deltaT = updateTime();
-	playObjectsAnnimation();
+
+
+	for(size_t i = 0; i < objects.size(); i++)
+		objects[i]->addTime(oor->getUpdateTime());
+
 	physicsEngine->step(deltaT);
 	runBasicGameplay();
 	eventManager->update();
@@ -370,8 +357,13 @@ void AnnEngine::refresh()
 
 	if(VisualBodyAnimation)
 		VisualBodyAnimation->addTime(getTime());
+
 	updateAudioSystemState();
-	doRender();
+
+	//Update camera
+	m_Camera->setPosition(player->getPosition());
+	m_Camera->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
+	oor->RenderOneFrame();
 }
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
@@ -386,12 +378,6 @@ AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 	triggers.push_back(object);
 	object->postInit();
 	return object;
-}
-
-void AnnEngine::playObjectsAnnimation()
-{
-	for(size_t i = 0; i < objects.size(); i++)
-		objects[i]->addTime(oor->getUpdateTime());
 }
 
 AnnGameObject* AnnEngine::playerLookingAt()
