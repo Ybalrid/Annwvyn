@@ -42,11 +42,6 @@
 #include "AnnTools.h"
 #include "AnnAudioEngine.hpp"
 #include "AnnPhysicsEngine.hpp"
-
-#ifdef __gnu_linux__
-#include <unistd.h> //for some unix functions
-#endif
-
 namespace Annwvyn
 {
 	///Main engine class. Creating an instance of that class make the engine start.
@@ -121,9 +116,6 @@ namespace Annwvyn
             ///Add a light to the scene. return a pointer to the new light
             AnnLightObject* addLight(); //object factory
 
-            ///Calculate one frame of the game
-            void renderOneFrame(); //graphics
-
             ///Display bullet debuging drawing
 			/// \param state debug state
             void setDebugPhysicState(bool state); //engine debug
@@ -136,17 +128,6 @@ namespace Annwvyn
 			/// \param flag If true : Put the "Annwvyn -" flag before the message
             static void log(std::string message, bool flag = true); //engine
 
-            ///Update camera position/orientation from rift and virtual body
-            void updateCamera(); //graphics
-
-			///Get camera position and ask OOR to do the render
-			void doRender(); //graphics engine call 
-			
-			///Sync all audo objects
-			void updateAudioSystemState(); //audio
-			
-			///Run the base gameplay loop content (WASD + jump + mouse for yaw)
-			void runBasicGameplay(); //gameplay on user
 
             ///Refresh all for you
             void refresh(); //engine main loop
@@ -157,8 +138,7 @@ namespace Annwvyn
             ///Get elapsed time from engine startup
             float getTimeFromStartUp();//engine
 
-            ///Step Objects animation
-            void playObjectsAnnimation(); //object engine call
+
 
             ///Set the ground object
 			/// \param Ground an object that play the role of the ground.
@@ -192,7 +172,7 @@ namespace Annwvyn
             Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
 
             ///Get ogre camera scene node
-            Ogre::SceneNode* getCamera(); //... 
+            Ogre::SceneNode* getCamera();
         
 			///Reference orientation. Usefull if you are inside a vehicule for example
 			/// \param q the reference orientation for the point of view. Usefull for applying vehicle movement to the player
@@ -215,14 +195,6 @@ namespace Annwvyn
 			///Reset the Rift Orientation
             void resetOculusOrientation();///Gameplay... but engine related function. 
 
-			///Get a pose information object
-			OgrePose getPoseFromOOR()
-			{
-				if(oor)
-					return oor->returnPose;
-				OgrePose p; return p;
-			}
-		
 			///Set the distance of the near clipping plane
 			/// \param distace the distance to the clipping plane
 			void setNearClippingDistance(Ogre::Real distance); //graphics
@@ -237,12 +209,26 @@ namespace Annwvyn
 			///Get the address of the default event listener declared by "use default event listener"
 			AnnDefaultEventListener* getInEngineDefaultListener();
 
+				///Get a pose information object
+			OgrePose getPoseFromOOR()
+			{
+				if(oor)
+					return oor->returnPose;
+				OgrePose p; return p;
+			}
+
         private:
 			///Returns internal timing
             float updateTime();
             
             ///Unable to continue, we have to cleanly cut the program before creating an error
             void emergency(void);
+
+			///Sync all audo objects
+			void updateAudioSystemState(); //audio
+			
+			///Run the base gameplay loop content (WASD + jump + mouse for yaw)
+			void runBasicGameplay(); //gameplay on user
 
         private:
 			//Audio engine
