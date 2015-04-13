@@ -44,6 +44,7 @@
 #include "AnnPhysicsEngine.hpp"
 namespace Annwvyn
 {
+    class AnnPhysicsEngine;
 	///Main engine class. Creating an instance of that class make the engine start.
     class DLL AnnEngine
     {

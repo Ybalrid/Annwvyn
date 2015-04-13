@@ -69,7 +69,7 @@ test: lib/libAnnwvyn.so
 
 
 #build the DSO from the objects file
-lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o obj/AnnJoystickController.o obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o
+lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o obj/AnnJoystickController.o obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 #build each class separatly
@@ -120,4 +120,8 @@ obj/AnnEvents.o: src/AnnEvents.cpp include/AnnEventManager.hpp include/AnnKeyCod
 
 obj/AnnPlayer.o: src/AnnPlayer.cpp include/AnnPlayer.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnPlayer.cpp -o obj/AnnPlayer.o
+
+
+obj/AnnPhysicsEngine.o: src/AnnPhysicsEngine.cpp include/AnnPhysicsEngine.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnPhysicsEngine.cpp -o obj/AnnPhysicsEngine.o
 
