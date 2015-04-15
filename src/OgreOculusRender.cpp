@@ -35,8 +35,14 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 
 OgreOculusRender::~OgreOculusRender()
 {
-	//The only thig we dynamicly load is the oculus interface
+	Ogre::LogManager::getSingleton().logMessage("destructiong OgreOculusRender object");
 	delete oc;
+	 
+	//Prevent an exeption
+	Ogre::TextureManager::getSingleton().getByName("RttTexL").setNull();
+	Ogre::TextureManager::getSingleton().getByName("RttTexR").setNull();
+
+	delete root;
 }
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)

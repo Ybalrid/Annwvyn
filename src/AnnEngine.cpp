@@ -43,11 +43,6 @@ AnnEngine::AnnEngine(const char title[])
 	FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
 	char* buffer = static_cast<char *>(malloc(128*sizeof(char)));
 
-	if(!layout)
-		log("cannot get the layout");
-	if(!buffer)
-		log("cannot create a 128 byte text buffer (weird...)");
-
 	if(layout && buffer)
 	{
 		fscanf(layout, "%s", buffer);
@@ -57,7 +52,9 @@ AnnEngine::AnnEngine(const char title[])
 		log("saved layout="+x11LayoutAtStartup, false);
 	}
 	free(buffer);
+	fclose(layout);
 	buffer = NULL;
+	layout = NULL;
 	system("setxkbmap us");
 #endif
 
