@@ -5,7 +5,7 @@ using namespace Annwvyn;
 
 AnnEngine::AnnEngine(const char title[])
 {
-	m_Camera = NULL;
+	m_CameraReference = NULL;
 #ifdef __gnu_linux__
 	x11LayoutAtStartup = "unknown";
 #endif
@@ -173,7 +173,7 @@ AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
 //Convinient method to the user to call : do it and let go !
 void AnnEngine::initPlayerPhysics()
 {
-	physicsEngine->initPlayerPhysics(player, m_Camera);
+	physicsEngine->initPlayerPhysics(player, m_CameraReference);
 }
 
 //loading ressources
@@ -215,8 +215,8 @@ void AnnEngine::addDefaultResourceLocaton()
 void AnnEngine::oculusInit(bool fullscreen)
 {   
 	oor->initOculus(fullscreen);
-	m_Camera = oor->getCameraInformationNode();
-	m_Camera->setPosition(player->getPosition() + 
+	m_CameraReference = oor->getCameraInformationNode();
+	m_CameraReference->setPosition(player->getPosition() + 
 		Ogre::Vector3(0.0f, player->getEyesHeight(), 0.0f));
 }
 
@@ -307,16 +307,18 @@ bool AnnEngine::requestStop()
 	return false;
 }
 
-void AnnEngine::updateAudioSystemState()
+void AnnEngine::refresh()
 {
-	AudioEngine->updateListenerPos(oor->returnPose.position);
-	AudioEngine->updateListenerOrient(oor->returnPose.orientation);
-	for(unsigned int i = 0; i < objects.size(); i++)
-		objects[i]->updateOpenAlPos();
-}
+		//Call of refresh method
+	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
+		(*it)->atRefresh();
+	last = now;
+	now = oor->getTimer()->getMilliseconds();
+	deltaT = (now - last)/1000.0f;
 
-void AnnEngine::runBasicGameplay()
-{
+	//Physics
+	physicsEngine->step(deltaT);
+
 	//Test if there is a collision with the ground
 	physicsEngine->collisionWithGround(player);
 	player->engineUpdate();
@@ -325,44 +327,28 @@ void AnnEngine::runBasicGameplay()
 	if(!oor->IsHsDissmissed()) //If not already dissmissed
 		for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
 			if(isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
-				oor->dissmissHS();	//dissmiss the Health and Safety warning.
-}
+				{oor->dissmissHS(); break;}	//dissmiss the Health and Safety warning.
 
-float AnnEngine::updateTime()
-{
-	last = now;
-	now = oor->getTimer()->getMilliseconds();
-	return (now - last)/1000.0f;
-}
-
-void AnnEngine::refresh()
-{
-	//animations playing :
-	deltaT = updateTime();
-
-
-	for(size_t i = 0; i < objects.size(); i++)
-		objects[i]->addTime(oor->getUpdateTime());
-
-	physicsEngine->step(deltaT);
-	runBasicGameplay();
 	eventManager->update();
 
 	physicsEngine->processCollisionTesting(objects);
 	physicsEngine->processTriggersContacts(player, triggers);
 
-	//Call of refresh method
-	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
-		(*it)->atRefresh();
-
+	//Animation
 	if(VisualBodyAnimation)
 		VisualBodyAnimation->addTime(getTime());
+	for(size_t i = 0; i < objects.size(); i++)
+		objects[i]->addTime(oor->getUpdateTime());
 
-	updateAudioSystemState();
+	//Audio
+	AudioEngine->updateListenerPos(oor->returnPose.position);
+	AudioEngine->updateListenerOrient(oor->returnPose.orientation);
+	for(unsigned int i = 0; i < objects.size(); i++)
+		objects[i]->updateOpenAlPos();
 
 	//Update camera
-	m_Camera->setPosition(player->getPosition());
-	m_Camera->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
+	m_CameraReference->setPosition(player->getPosition());
+	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
 	oor->RenderOneFrame();
 }
 
@@ -370,7 +356,6 @@ bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
 	return eventManager->Keyboard->isKeyDown(key);
 }
-
 
 AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 {
@@ -427,11 +412,11 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 	log(entityName);
 
 	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
-	VisualBodyAnchor = m_Camera->createChildSceneNode();
+	VisualBodyAnchor = m_CameraReference->createChildSceneNode();
 	VisualBodyAnchor->attachObject(ent);
 
 	if(flip)
-		refVisualBody = Ogre::Quaternion(Ogre::Degree(180),Ogre::Vector3::UNIT_Y);
+		refVisualBody = Ogre::Quaternion(Ogre::Degree(180), Ogre::Vector3::UNIT_Y);
 	else
 		refVisualBody = Ogre::Quaternion::IDENTITY;
 
@@ -476,7 +461,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 ////////////////////////////////////////////////////////// GETTERS
 Ogre::SceneNode* AnnEngine::getCamera()
 {
-	return m_Camera;
+	return m_CameraReference;
 }
 
 float AnnEngine::getTime()

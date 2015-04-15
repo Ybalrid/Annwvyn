@@ -42,6 +42,7 @@
 #include "AnnTools.h"
 #include "AnnAudioEngine.hpp"
 #include "AnnPhysicsEngine.hpp"
+
 namespace Annwvyn
 {
     class AnnPhysicsEngine;
@@ -64,7 +65,6 @@ namespace Annwvyn
 			
 			///Get the player
 			AnnPlayer* getPlayer();
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 
@@ -93,7 +93,6 @@ namespace Annwvyn
 			void initAResourceGroup(std::string resourceGroup); //resource
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
-
 
             ///Init OgreOculus stuff
             void oculusInit(bool fullscreen = true); //oculus
@@ -129,7 +128,6 @@ namespace Annwvyn
 			/// \param flag If true : Put the "Annwvyn -" flag before the message
             static void log(std::string message, bool flag = true); //engine
 
-
             ///Refresh all for you
             void refresh(); //engine main loop
 
@@ -138,8 +136,6 @@ namespace Annwvyn
 
             ///Get elapsed time from engine startup
             float getTimeFromStartUp();//engine
-
-
 
             ///Set the ground object
 			/// \param Ground an object that play the role of the ground.
@@ -164,7 +160,10 @@ namespace Annwvyn
 			/// \param materialName name of a material known from the Ogre Resource group manager
 			/// \param curvature curvature of the texture
 			/// \param tilling tilling of the texture
-            void setSkyDomeMaterial(bool activate, const char materialName[], float curvature = 2.0f, float tiling = 1.0f); //scene
+            void setSkyDomeMaterial(bool activate, 
+				const char materialName[], 
+				float curvature = 2.0f, 
+				float tiling = 1.0f); //scene
 
             ///Get the AnnObject the player is looking at
             Annwvyn::AnnGameObject* playerLookingAt(); //physics
@@ -219,17 +218,8 @@ namespace Annwvyn
 			}
 
         private:
-			///Returns internal timing
-            float updateTime();
-            
             ///Unable to continue, we have to cleanly cut the program before creating an error
             void emergency(void);
-
-			///Sync all audo objects
-			void updateAudioSystemState(); //audio
-			
-			///Run the base gameplay loop content (WASD + jump + mouse for yaw)
-			void runBasicGameplay(); //gameplay on user
 
         private:
 			//Audio engine
@@ -238,13 +228,13 @@ namespace Annwvyn
 			AnnPlayer* player;
 			//Event manager
 			AnnEventManager* eventManager;
+			AnnDefaultEventListener* defaultEventListener;
 			//Physics
 			AnnPhysicsEngine* physicsEngine;
 
-            //Ogre::Root* m_Root;
             Ogre::RenderWindow* m_Window;
             Ogre::SceneManager* m_SceneManager;
-            Ogre::SceneNode* m_Camera;
+            Ogre::SceneNode* m_CameraReference;
             Ogre::SceneNode* VisualBodyAnchor;
 			Ogre::Quaternion refVisualBody;
             Ogre::Entity* VisualBody;
@@ -255,12 +245,10 @@ namespace Annwvyn
             //Oculus oculus;
             OgreOculusRender* oor;
 
-            ///Dynamic container for games objects
+            ///Dynamic container for games objects present in engine.
             std::vector<AnnGameObject*>	objects;
-			std::vector<AnnTriggerObject*> triggers;     
-#ifdef __gnu_linux__
-            std::string x11LayoutAtStartup;
-#endif
+			std::vector<AnnTriggerObject*> triggers;
+
             size_t windowHnd;
             std::ostringstream windowHndStr;
 
@@ -270,7 +258,10 @@ namespace Annwvyn
             //Elapsed time
             float deltaT; //Sec
 
-			AnnDefaultEventListener* defaultEventListener;
+#ifdef __gnu_linux__
+            std::string x11LayoutAtStartup;
+#endif
+
     };
 }
 #endif ///ANN_ENGINE

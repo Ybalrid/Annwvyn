@@ -2,6 +2,7 @@
 Todo list : 
 Critial
 - [X] Start to "ungodify" the AnnEngine class by removing everything that has something to do with bullet and collision testing from it.
+- [ ] Simplify the "timer" mess in AnnEngine
 - [ ] Need a proper object factory for class like AnnGameObject
 
 Non critial
