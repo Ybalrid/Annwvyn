@@ -1,5 +1,5 @@
 #include "AnnEventManager.hpp"
-
+#include "AnnEngine.hpp"
 using namespace Annwvyn;
 
 AnnDefaultEventListener::AnnDefaultEventListener(AnnPlayer* p) : AnnAbstractEventListener(p),
@@ -102,5 +102,10 @@ void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 {
+    //Display raw data:
+    for(int i(0); i < e.getPressed().size(); i++)
+        std::cout << "Button " << e.getPressed()[i] << " is pressed" << std::endl;
+    for(int i(0); i < e.getRelased().size(); i++)
+        std::cout << "Button " << e.getRelased()[i] << " is relased" << std::endl;
 }
 

@@ -125,3 +125,70 @@ void AnnMouseEvent::setAxisInformation(MouseAxisId id, AnnMouseAxis information)
 	if((int)id < (int)MouseAxisId::nbAxes)
 		axes[id] = information;
 }
+
+AnnStickAxis::AnnStickAxis()
+{
+    setAxis(InvalidStickAxisId);
+    setRelValue(0);
+    setAbsValue(0);
+}
+
+AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs)
+{
+    setAxis(ax);
+    setRelValue(rel);
+    setAbsValue(abs);
+}
+
+void AnnStickAxis::setRelValue(int rel)
+{
+    r = rel;
+}
+
+void AnnStickAxis::setAbsValue(int abs)
+{
+    a = abs;
+}
+
+void AnnStickAxis::setAxis(StickAxisId ax)
+{
+    id = ax;
+}
+
+float AnnStickAxis::getRelValue()
+{
+    if(noRel) return INVALID;
+    return float(r)/float(OIS::JoyStick::MAX_AXIS);
+}
+
+float AnnStickAxis::getAbsValue()
+{
+    return float(a)/float(OIS::JoyStick::MAX_AXIS);
+}
+
+AnnStickEvent::AnnStickEvent() : AnnEvent()
+{
+    
+}
+
+bool AnnStickEvent::getButtonState(ButtonId id)
+{
+    if (id >= buttons.size()) return false;
+    return buttons[id];
+}
+
+size_t AnnStickEvent::getNbButtons()
+{
+    return buttons.size();
+}
+
+
+std::vector<unsigned short> AnnStickEvent::getPressed()
+{
+    return pressed;
+}
+
+std::vector<unsigned short> AnnStickEvent::getRelased()
+{
+    return relased;
+}
