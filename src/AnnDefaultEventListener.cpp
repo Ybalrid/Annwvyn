@@ -41,57 +41,32 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	{
 		//modify linear speed vector
 		if(e.getKey() == forward)
-		{
 			player->walking[walkDirection::forward] = true;
-		}
 		if(e.getKey() == backward)
-		{
 			player->walking[walkDirection::backward] = true;
-		}
 		if(e.getKey() == straffleft)
-		{
 			player->walking[walkDirection::left] = true;
-		}
 		if(e.getKey() == straffright)
-		{
 			player->walking[walkDirection::right] = true;
-		}
         if(e.getKey() == jump)
-        {
             player->jump();
-        }
         if(e.getKey() == run)
-        {
             player->run = true;
-        }
 	}
 
 	else if(e.isRelased())
 	{
 		//modify linear speed vector
 		if(e.getKey() == forward)
-		{
 			player->walking[walkDirection::forward] = false;
-		}
 		if(e.getKey() == backward)
-		{
 			player->walking[walkDirection::backward] = false;
-		}
 		if(e.getKey() == straffleft)
-		{
 			player->walking[walkDirection::left] = false;
-		}
 		if(e.getKey() == straffright)
-		{
 			player->walking[walkDirection::right] = false;
-		}
-        if(e.getKey() == jump)
-        {
-        }
         if(e.getKey() == run)
-        {
             player->run = false;
-        }
 	}
 }
 
@@ -117,4 +92,3 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 	
 
 }
-
