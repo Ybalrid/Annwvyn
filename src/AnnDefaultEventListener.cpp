@@ -10,13 +10,13 @@ AnnDefaultEventListener::AnnDefaultEventListener(AnnPlayer* p) : AnnAbstractEven
 	jump(KeyCode::space),
 	run(KeyCode::lshift)
 {
-	//Use WASD, SPACE and LEFT_SHIFT fot the controll
-	setKeys(KeyCode::w,
-		KeyCode::s,
-		KeyCode::a,
-		KeyCode::d,
-		KeyCode::space,
-		KeyCode::lshift);
+	//Use 1st analog stick for displacement
+	axes[0] = 0;
+	axes[1] = 1;
+	//Use second analog stick for horizontal rotation
+	axes[2] = 3;
+	//Trim before 1st quarter of the stick
+	deadzone = 1.0f/3.0f;
 }
 
 void AnnDefaultEventListener::setKeys(KeyCode::code fw, 
@@ -102,10 +102,19 @@ void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 {
-    //Display raw data:
+   /* //Display raw data:
     for(int i(0); i < e.getPressed().size(); i++)
         std::cout << "Button " << e.getPressed()[i] << " is pressed" << std::endl;
     for(int i(0); i < e.getRelased().size(); i++)
         std::cout << "Button " << e.getRelased()[i] << " is relased" << std::endl;
+		*/
+	if(e.getNbAxis() >= 4) //If we have 2 analog stick available
+	{
+		player->analogWalk = trim(e.getAxis(axes[0]).getAbsValue(), deadzone);
+		player->analogStraff = trim(e.getAxis(axes[1]).getAbsValue(), deadzone);
+		player->analogRotate = trim(e.getAxis(axes[2]).getAbsValue(), deadzone);
+	}
+	
+
 }
 

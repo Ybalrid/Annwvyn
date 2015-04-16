@@ -119,11 +119,6 @@ namespace Annwvyn
 		void applyRelativeBodyYaw(Ogre::Radian angle);
 		void applyMouseRelativeRotation(int relValue);
 
-		///manual speed management
-		void setLinearSpeed(Ogre::Vector3 v);		
-		void killLinearSpeed();
-		void addLinearSpeed(Ogre::Vector3 v);
-
         void jump();
 	protected:
 
@@ -153,12 +148,18 @@ namespace Annwvyn
 
         bool contactWithGround;
 
+		Ogre::Vector3 getAnalogTranslation();
+		void applyAnalogYaw();
 
 
 	public:
 		
 		bool walking[4];
         bool run;
+
+		float analogWalk;
+		float analogStraff;
+		float analogRotate;
 	};
 
 }

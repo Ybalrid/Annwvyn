@@ -149,10 +149,12 @@ namespace Annwvyn
             AnnStickEvent();
             bool getButtonState(ButtonId id);
             size_t getNbButtons();
-            
+
             std::vector<unsigned short> getPressed();
             std::vector<unsigned short> getRelased();
 
+			AnnStickAxis getAxis(StickAxisId ax);
+			size_t getNbAxis();
 
         private:
         friend class AnnEventManager;
@@ -171,6 +173,8 @@ namespace Annwvyn
 		virtual void KeyEvent(AnnKeyEvent e) = 0;
 		virtual void MouseEvent(AnnMouseEvent e) = 0;
 		virtual void StickEvent(AnnStickEvent e) = 0;
+
+		static float trim(float value, float deadzone);
 	protected:
 		AnnPlayer* player;
 	};
@@ -198,6 +202,9 @@ namespace Annwvyn
 		KeyCode::code straffright;
 		KeyCode::code jump;
 		KeyCode::code run;
+
+		float deadzone;
+		StickAxisId axes[3];
 	};
 	
 	///The event manager
