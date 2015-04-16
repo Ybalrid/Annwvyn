@@ -12,7 +12,7 @@
 #include "AnnKeyCode.h"
 #include "AnnPlayer.hpp"
 
-//Include the Object-Oriented Input Library
+//Include the Object-Oriented Input System library
 #include <OIS.h>
 
 ///Macro for declaring a listener
@@ -117,8 +117,50 @@ namespace Annwvyn
 	};
 
 	///A joystick event
+    typedef size_t ButtonId;
+    typedef size_t StickAxisId;
+#define InvalidStickAxisId -1
+#define INVALID 42.0f
+    class DLL AnnStickAxis
+    {
+        public:
+            AnnStickAxis();
+            StickAxisId getAxisId();
+            ///Compute a float number between -1 and 1. if relative value isn't supported by the input, will return INVALID
+            float getRelValue();
+            ///Compute a float number between -1 and 1
+            float getAbsValue();
+        private:
+            int a, r; 
+            StickAxisId id; 
+            friend class AnnEventManager;
+            friend class AnnStickEvent;
+            void setAxis(StickAxisId ax);
+            void setRelValue(int rel);
+            void setAbsValue(int abs);
+            AnnStickAxis(StickAxisId ax, int rel, int abs);
+            bool noRel;
+
+    };
+
 	class DLL AnnStickEvent : public AnnEvent
 	{
+        public:
+            AnnStickEvent();
+            bool getButtonState(ButtonId id);
+            size_t getNbButtons();
+            
+            std::vector<unsigned short> getPressed();
+            std::vector<unsigned short> getRelased();
+
+
+        private:
+        friend class AnnEventManager;
+            std::vector<bool> buttons;
+            std::vector<AnnStickAxis> axes;
+            std::vector<unsigned short> pressed;
+            std::vector<unsigned short> relased;
+            std::string vendor;
 	};
 
 	///Base Event listener class
@@ -198,7 +240,9 @@ namespace Annwvyn
 		
 		///Array for remembering the button states at last update
 		bool previousMouseButtonStates[static_cast<unsigned int>(MouseButtonId::nbButtons)];
-	};
+	    ///Dinamicly sized array for remembering the joystick button state at last update
+        std::vector<bool> previousStickButtonStates;
+    };
 }
 
 #endif //ANNEVENTMANAGER

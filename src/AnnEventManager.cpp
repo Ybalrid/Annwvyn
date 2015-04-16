@@ -146,6 +146,35 @@ void AnnEventManager::update()
 
 	if(Joystick)
 	{
-		//not implemented yet
+        OIS::JoyStickState state(Joystick->getJoyStickState());
+        
+        AnnStickEvent e;
+
+        //Get all butons imediate data
+        e.buttons = state.mButtons;
+        //Get all axes imediate data
+        for(int i = 0; i < state.mAxes.size(); i++)
+        {
+            AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
+            if(state.mAxes[i].absOnly)
+                axis.noRel = true;
+
+            e.axes.push_back(axis);
+        }
+        
+        //Get push and pull events
+        for(int i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
+            if(!previousStickButtonStates[i] &&  state.mButtons[i])
+                e.pressed.push_back(i);
+            else if(previousStickButtonStates[i] && !state.mButtons[i])
+                e.relased.push_back(i);
+        //Save current buttons state for next frame
+        previousStickButtonStates = state.mButtons; 
+        e.vendor = Joystick->mVendor;  
+        e.populate();
+        e.validate();
+
+        if(listener)
+            listener->StickEvent(e);
 	}
 }

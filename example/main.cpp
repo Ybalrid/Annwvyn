@@ -160,7 +160,6 @@ AnnMain()
 
 	GameEngine->setNearClippingDistance(0.20f);
 
-	AnnJoystickController* ajc = new AnnJoystickController(GameEngine);
 	GameEngine->resetOculusOrientation();
 
 	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
