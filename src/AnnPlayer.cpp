@@ -27,6 +27,10 @@ AnnPlayer::AnnPlayer()
     walking[backward] = false;
     walking[left] = false;
     walking[right] = false;
+
+	analogWalk = 0;
+	analogStraff = 0;
+	analogRotate = 0;
 }
 
 AnnPlayer::~AnnPlayer()
@@ -155,28 +159,6 @@ void AnnPlayer::applyMouseRelativeRotation(int relValue)
 	applyRelativeBodyYaw(Ogre::Radian(-float(relValue)*getTurnSpeed()));
 }
 
-
-void AnnPlayer::setLinearSpeed(Ogre::Vector3 v)
-{
-    if(!playerBody->Body) return;
-    playerBody->Body->setLinearVelocity(btVector3(v.x, v.y, v.z));
-}
-
-void AnnPlayer::killLinearSpeed()
-{
-    if(!playerBody->Body) return;
-    playerBody->Body->setLinearVelocity(btVector3(0, 0, 0));
-}
-
-void AnnPlayer::addLinearSpeed(Ogre::Vector3 v)
-{
-    if(!playerBody->Body) return;
-    playerBody->Body->setLinearVelocity(
-            playerBody->Body->getLinearVelocity() 
-            + btVector3(v.x, v.y, v.z));
-
-}
-
 Ogre::Vector3 AnnPlayer::getTranslation()
 {
 
@@ -194,6 +176,19 @@ Ogre::Vector3 AnnPlayer::getTranslation()
     return translation;
 }
 
+Ogre::Vector3 AnnPlayer::getAnalogTranslation()
+{
+	return Ogre::Vector3 
+		(getWalkSpeed()*analogStraff,
+		0, 
+		getWalkSpeed()*analogWalk);
+}
+
+void AnnPlayer::applyAnalogYaw()
+{
+	applyRelativeBodyYaw(-Ogre::Radian(8.0f * analogRotate * getTurnSpeed()));
+}
+
 void AnnPlayer::jump()
 {
     if(!getBody()) return;
@@ -202,12 +197,14 @@ void AnnPlayer::jump()
 }
 
 
+
 void AnnPlayer::engineUpdate()
 {
     bool standing = true;
     if(getBody())
     {
-        Ogre::Vector3 translate(getTranslation());
+		applyAnalogYaw();
+		Ogre::Vector3 translate(getTranslation()+getAnalogTranslation());
         btVector3 currentVelocity = getBody()->getLinearVelocity();
 
         //Prevent the rigid body to be put asleep by the physics engine

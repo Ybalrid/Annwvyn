@@ -192,3 +192,13 @@ std::vector<unsigned short> AnnStickEvent::getRelased()
 {
     return relased;
 }
+
+AnnStickAxis AnnStickEvent::getAxis(StickAxisId ax)
+{
+	return axes[ax];
+}
+
+size_t AnnStickEvent::getNbAxis()
+{
+	return axes.size();
+}

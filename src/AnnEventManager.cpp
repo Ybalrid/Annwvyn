@@ -7,6 +7,16 @@ AnnAbstractEventListener::AnnAbstractEventListener(AnnPlayer* p)
 	player = p;
 }
 
+float AnnAbstractEventListener::trim(float v, float dz)
+{
+	float abs(v); 
+	if(v < 0) abs = -v;
+	
+	if(abs >= dz) return v; 
+	
+	return 0.0f;
+}
+
 AnnEvent::AnnEvent() :
 	accepted(false),
 	rejected(false),
@@ -33,8 +43,10 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 {
 
 	for(size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
+	for(size_t i(0); i < MouseButtonId::nbButtons; i++) previousMouseButtonStates[i] = false;
 	InputManager = NULL;
 
+	//Should be a HWND under windows, but, whatever, it's an unsigned integer...
 	size_t windowHnd;
 	std::stringstream windowHndStr;
 	w->getCustomAttribute("WINDOW", &windowHnd);
@@ -161,16 +173,17 @@ void AnnEventManager::update()
 
             e.axes.push_back(axis);
         }
-        
-        //Get push and pull events
+
+        //Get press and release event lists
         for(int i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
             if(!previousStickButtonStates[i] &&  state.mButtons[i])
                 e.pressed.push_back(i);
             else if(previousStickButtonStates[i] && !state.mButtons[i])
                 e.relased.push_back(i);
+
         //Save current buttons state for next frame
         previousStickButtonStates = state.mButtons; 
-        e.vendor = Joystick->vendor();  
+        e.vendor = Joystick->vendor();
         e.populate();
         e.validate();
 
