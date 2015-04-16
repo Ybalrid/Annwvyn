@@ -170,7 +170,7 @@ void AnnEventManager::update()
                 e.relased.push_back(i);
         //Save current buttons state for next frame
         previousStickButtonStates = state.mButtons; 
-        e.vendor = Joystick->mVendor;  
+        e.vendor = Joystick->vendor();  
         e.populate();
         e.validate();
 
