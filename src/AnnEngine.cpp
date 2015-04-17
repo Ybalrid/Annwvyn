@@ -234,7 +234,6 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 		obj->setNode(node);
 		obj->setEntity(ent);
 		obj->setAudioEngine(AudioEngine);
-		obj->setTimePtr(&deltaT);//Ok, ok, that's bad...
 
 		obj->setBulletDynamicsWorld(physicsEngine->getWorld());
 
@@ -318,7 +317,7 @@ void AnnEngine::refresh()
 
 	//Test if there is a collision with the ground
 	physicsEngine->collisionWithGround(player);
-	player->engineUpdate();
+	player->engineUpdate(deltaT);
 
 	//Dissmiss health and safety warning
 	if(!oor->IsHsDissmissed()) //If not already dissmissed

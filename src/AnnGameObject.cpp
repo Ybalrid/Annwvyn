@@ -19,7 +19,6 @@ AnnGameObject::AnnGameObject()
     animIsPlaying = false;
     animIsSetted = false;
 	visualLinearSpeed = Ogre::Vector3::ZERO;
-	time = NULL;
 	visible = true;
 }
 
@@ -399,10 +398,6 @@ void AnnGameObject::setLinearSpeed(Ogre::Vector3 v)
 		m_Body->setLinearVelocity(btVector3(v.x, v.y, v.z));
 }
 
-void AnnGameObject::setTimePtr(float* ptr)
-{
-	time = ptr;
-}
 
 void AnnGameObject::setVisible()
 {
