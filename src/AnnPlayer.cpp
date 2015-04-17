@@ -6,8 +6,8 @@ bodyParams::bodyParams()
 {
     //these parameters looks good for testing. Costumise them before initializing the physics!
     eyeHeight = 1.59f;
-    walkSpeed = 3.0f;
-    turnSpeed = 0.003f;
+    walkSpeed = 2.0f;
+    turnSpeed = 0.005f;
     mass = 80.0f;
     Position = Ogre::Vector3(0,0,10);
     HeadOrientation = Ogre::Quaternion(1,0,0,0);
@@ -164,24 +164,25 @@ Ogre::Vector3 AnnPlayer::getTranslation()
 
     Ogre::Vector3 translation (Ogre::Vector3::ZERO);
     if(walking[forward])
-        translation.z -= getWalkSpeed();
+        translation.z -= 1;
     if(walking[backward])
-        translation.z += getWalkSpeed();
+        translation.z += 1;
     if(walking[left])
-        translation.x -= getWalkSpeed();
+        translation.x -= 1;
     if(walking[right])
-        translation.x += getWalkSpeed();
+        translation.x += 1;
 
-
-    return translation;
+	return translation.normalisedCopy();
 }
 
 Ogre::Vector3 AnnPlayer::getAnalogTranslation()
 {
-	return Ogre::Vector3 
-		(getWalkSpeed()*analogStraff,
-		0, 
-		getWalkSpeed()*analogWalk);
+	Ogre::Vector3 translate(Ogre::Vector3::ZERO);
+
+	translate.x = analogStraff;
+	translate.z = analogWalk;
+
+	return translate;
 }
 
 void AnnPlayer::applyAnalogYaw()
@@ -198,13 +199,14 @@ void AnnPlayer::jump()
 
 
 
-void AnnPlayer::engineUpdate()
+void AnnPlayer::engineUpdate(float time)
 {
+	time *= 1000;
     bool standing = true;
     if(getBody())
     {
 		applyAnalogYaw();
-		Ogre::Vector3 translate(getTranslation()+getAnalogTranslation());
+		Ogre::Vector3 translate(time * (getTranslation()+getAnalogTranslation()));
         btVector3 currentVelocity = getBody()->getLinearVelocity();
 
         //Prevent the rigid body to be put asleep by the physics engine

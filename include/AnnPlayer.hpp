@@ -135,7 +135,7 @@ namespace Annwvyn
 		friend class AnnPhysicsEngine;
 
 		///Engine update call for each frame
-		void engineUpdate();
+		void engineUpdate(float time);
 
 		///Get the pointer to bodyParams (compatibility with legacy code here. Highly dangerous, do not mess with whatever is pointed by that vector. Seriously.
 		bodyParams* getLowLevelBodyParams();

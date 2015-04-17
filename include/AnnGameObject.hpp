@@ -174,9 +174,6 @@ namespace Annwvyn
             ///Make Annwvyn::AnnEngine acces these methods : 
             friend class AnnEngine;
 
-			void setTimePtr(float* timePtr);
-
-
             ///For engine : set node
             void setNode(Ogre::SceneNode* node);
 			
@@ -237,8 +234,6 @@ namespace Annwvyn
             ALuint m_Source; 
 			///OpenAL buffer
             ALuint m_Buffer; 
-
-			float* time;
 
 			Ogre::Vector3 visualLinearSpeed;
 
