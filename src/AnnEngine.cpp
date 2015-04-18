@@ -303,7 +303,7 @@ bool AnnEngine::requestStop()
 	return false;
 }
 
-void AnnEngine::refresh()
+bool AnnEngine::refresh()
 {
 		//Call of refresh method
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
@@ -346,6 +346,8 @@ void AnnEngine::refresh()
 	m_CameraReference->setPosition(player->getPosition());
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
 	oor->RenderOneFrame();
+
+	return !requestStop();
 }
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
@@ -435,15 +437,9 @@ void AnnEngine::resetOculusOrientation()
 
 Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 {
-	try 
-	{ 
-		if(!node) 
-			throw 0; 
-	} 
-	catch (int e) 
-	{ 
-		if(e==0)
-			log("Plese do not try to identify a NULL node.");
+	if(!node) 
+	{
+		log("Plese do not try to identify a NULL node.");
 		return NULL;
 	}
 

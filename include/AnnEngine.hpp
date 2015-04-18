@@ -129,7 +129,7 @@ namespace Annwvyn
             static void log(std::string message, bool flag = true); //engine
 
             ///Refresh all for you
-            void refresh(); //engine main loop
+            bool refresh(); //engine main loop
 
             ///Update program time. retur the delay between the last call of this method
             float getTime();//engine

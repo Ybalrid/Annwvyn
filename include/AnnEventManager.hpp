@@ -147,11 +147,14 @@ namespace Annwvyn
 	{
         public:
             AnnStickEvent();
-            bool getButtonState(ButtonId id);
             size_t getNbButtons();
 
             std::vector<unsigned short> getPressed();
             std::vector<unsigned short> getRelased();
+			bool isPressed(ButtonId id);
+			bool isRelased(ButtonId id);
+			bool isDown(ButtonId id);
+
 
 			AnnStickAxis getAxis(StickAxisId ax);
 			size_t getNbAxis();
@@ -204,7 +207,11 @@ namespace Annwvyn
 		KeyCode::code run;
 
 		float deadzone;
+		enum {ax_walk, ax_straff, ax_rotate};
 		StickAxisId axes[3];
+		enum {b_jump, b_run};
+		ButtonId buttons[2];
+
 	};
 	
 	///The event manager

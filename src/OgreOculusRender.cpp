@@ -30,7 +30,7 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	fullscreen = true;
 	hsDissmissed = false;
 
-	backgroundColor = Ogre::ColourValue(0.3f,0.3f,0.9f);
+	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -42,7 +42,7 @@ OgreOculusRender::~OgreOculusRender()
 	Ogre::TextureManager::getSingleton().getByName("RttTexL").setNull();
 	Ogre::TextureManager::getSingleton().getByName("RttTexR").setNull();
 
-	delete root;
+	//delete root;
 }
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
@@ -118,7 +118,6 @@ bool OgreOculusRender::IsHsDissmissed()
 	return hsDissmissed;
 }
 
-//I may move this method back to the AnnEngine class... 
 void OgreOculusRender::loadReseourceFile(const char path[])
 {
 	/*from ogre wiki : load the given resource file*/
@@ -214,9 +213,8 @@ void OgreOculusRender::createWindow()
 	window = root->initialise(false, name);
 	//Actually create the window
 #ifdef __gnu_linux__
-    //Assuming the 2nd screen is used as a "normal" display, rotated : 
+    //Assuming the 2nd screen is used as a "normal" display, rotated. Ogre fullscreen on Linux does stranges things
     fullscreen = false;
-
 #endif
     window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
 
@@ -355,8 +353,10 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 		// tell Ogre, your definition has finished
 		manual->end();
 
+		//Don't need the distortion mesh data anymore since we created the coresponding ogre object
 		ovrHmd_DestroyDistortionMesh(&meshData);
 
+		//Attach the manual object to the scene node
 		meshNode->attachObject(manual);
 	}
 
@@ -411,6 +411,7 @@ void OgreOculusRender::calculateProjectionMatrix()
 		cams[eyeIndex]->setCustomProjectionMatrix(true, OgreProj);
 	}
 }
+
 void OgreOculusRender::RenderOneFrame()
 {
 	Ogre::WindowEventUtilities::messagePump();
@@ -426,16 +427,18 @@ void OgreOculusRender::RenderOneFrame()
 	//Get the hmd orientation
 	OVR::Quatf oculusOrient = pose.Rotation;
 	OVR::Vector3f oculusPos = pose.Translation;
+	
 	ovrEyeType eye;
 	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
+		//Calculate and apply the orientation of the rift to the player (world space)
 		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
-
+		
 		cams[eye]->setPosition
 			(cameraPosition  //the "gameplay" position of player's avatar head
-			+ 
-			(cams[eye]->getOrientation() * - Ogre::Vector3( //realword camera orientation + the oposite of the 
+			
+			+ (cams[eye]->getOrientation() * - Ogre::Vector3( //realword camera orientation + the oposite of the 
 			EyeRenderDesc[eye].HmdToEyeViewOffset.x, //view adjust vector. we translate the camera, not the whole world
 			EyeRenderDesc[eye].HmdToEyeViewOffset.y, //The translations has to occur in function of the current head orientation.
 			EyeRenderDesc[eye].HmdToEyeViewOffset.z) //That's why just multiply by the quaternion we just calculated. 
@@ -450,14 +453,13 @@ void OgreOculusRender::RenderOneFrame()
 	if(updateTime == 0)
 	{
 		unsigned long timerStop = getTimer()->getMilliseconds();
-		updateTime = (timerStart - timerStop) / 1000.0f;
+		updateTime = float(timerStart - timerStop) / 1000.0f;
 	}
 	//update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
 
 	root->renderOneFrame();
-
 
 	//Timewarp is not implemented yet...
 	//ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);

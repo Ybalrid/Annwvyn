@@ -171,7 +171,7 @@ AnnStickEvent::AnnStickEvent() : AnnEvent()
     
 }
 
-bool AnnStickEvent::getButtonState(ButtonId id)
+bool AnnStickEvent::isDown(ButtonId id)
 {
     if (id >= buttons.size()) return false;
     return buttons[id];
@@ -201,4 +201,24 @@ AnnStickAxis AnnStickEvent::getAxis(StickAxisId ax)
 size_t AnnStickEvent::getNbAxis()
 {
 	return axes.size();
+}
+
+bool AnnStickEvent::isPressed(ButtonId id)
+{
+	//if id is not a valid buton
+	if (id >= buttons.size()) return false;
+
+	for(ButtonId i(0); i < pressed.size();  i++)
+		if(pressed[i] == id) return true;
+	return false;
+}
+
+bool AnnStickEvent::isRelased(ButtonId id)
+{
+	//if id is not a valid buton
+	if (id >= buttons.size()) return false;
+
+	for(ButtonId i(0); i < relased.size();  i++)
+		if(relased[i] == id) return true;
+	return false;
 }
