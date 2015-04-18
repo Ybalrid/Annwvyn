@@ -11,12 +11,15 @@ AnnDefaultEventListener::AnnDefaultEventListener(AnnPlayer* p) : AnnAbstractEven
 	run(KeyCode::lshift)
 {
 	//Use 1st analog stick for displacement
-	axes[0] = 0;
-	axes[1] = 1;
+	axes[ax_walk] = 0;
+	axes[ax_straff] = 1;
 	//Use second analog stick for horizontal rotation
-	axes[2] = 3;
+	axes[ax_rotate] = 3;
 	//Trim before 1st quarter of the stick
-	deadzone = 1.0f/3.0f;
+	deadzone = 1.0f/12.0f;
+
+	buttons[b_run] = 2;
+	buttons[b_jump] = 0;
 }
 
 void AnnDefaultEventListener::setKeys(KeyCode::code fw, 
@@ -77,18 +80,16 @@ void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 {
-   /* //Display raw data:
-    for(int i(0); i < e.getPressed().size(); i++)
-        std::cout << "Button " << e.getPressed()[i] << " is pressed" << std::endl;
-    for(int i(0); i < e.getRelased().size(); i++)
-        std::cout << "Button " << e.getRelased()[i] << " is relased" << std::endl;
-		*/
-	if(e.getNbAxis() >= 4) //If we have 2 analog stick available
+	if(e.getNbAxis() >= 4) //If we have 2 analog stick (or equivalent) available
 	{
-		player->analogWalk = trim(e.getAxis(axes[0]).getAbsValue(), deadzone);
-		player->analogStraff = trim(e.getAxis(axes[1]).getAbsValue(), deadzone);
-		player->analogRotate = trim(e.getAxis(axes[2]).getAbsValue(), deadzone);
+		player->analogWalk = trim(e.getAxis(axes[ax_walk]).getAbsValue(), deadzone);
+		player->analogStraff = trim(e.getAxis(axes[ax_straff]).getAbsValue(), deadzone);
+		player->analogRotate = trim(e.getAxis(axes[ax_rotate]).getAbsValue(), deadzone);
 	}
-	
-
+	if(e.isPressed(buttons[b_jump]))
+		player->jump();
+	if(e.isPressed(buttons[b_run]))
+		player->run = true;
+	if(e.isRelased(buttons[b_run]))
+		player->run = false;
 }
