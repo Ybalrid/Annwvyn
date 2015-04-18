@@ -53,16 +53,16 @@ namespace Annwvyn
 		///Return true if it's a key press. Key event are debounced.
 		bool isPressed();
 		///Return ture if it's a key release. Key event are debounced.
-		bool isRelased();
+		bool isReleased();
 
 	private:
 		Annwvyn::KeyCode::code key;
 		bool pressed;
-		bool relased;
+		bool released;
 		
 		friend class AnnEventManager;
 		void setPressed();
-		void setRelased();
+		void setReleased();
 		/// \param c Keycode
 		void setCode(KeyCode::code c);
 
@@ -150,9 +150,9 @@ namespace Annwvyn
             size_t getNbButtons();
 
             std::vector<unsigned short> getPressed();
-            std::vector<unsigned short> getRelased();
+            std::vector<unsigned short> getReleased();
 			bool isPressed(ButtonId id);
-			bool isRelased(ButtonId id);
+			bool isReleased(ButtonId id);
 			bool isDown(ButtonId id);
 
 
@@ -164,7 +164,7 @@ namespace Annwvyn
             std::vector<bool> buttons;
             std::vector<AnnStickAxis> axes;
             std::vector<unsigned short> pressed;
-            std::vector<unsigned short> relased;
+            std::vector<unsigned short> released;
             std::string vendor;
 	};
 
