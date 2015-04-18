@@ -37,6 +37,11 @@ void AnnDefaultEventListener::setKeys(KeyCode::code fw,
 	run = rn;
 }
 
+//Each key press an release are a separated event. in contain a state "pressed" or "relased" and the Annwvyn keycode corespondng to the key.
+//They are derivated from the OIS keycode list, see AnnKeyCode.h for the complete list.
+//All keys are regarded as their equivalent on the american QWERTY layout, independently of the operating system behaviour.
+//For compatibility purposes, it's possible that the engine has done a system call to set the current keyboard layout to the American QWERTY layout. 
+//It will normally switch the keyboard back to it's original configuration once the AnnEngine object is destroyed
 void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 {
 	//TODO having a pointer to the AnnPlayer object would be nice...
@@ -73,11 +78,16 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	}
 }
 
+//The mouse event contain all information about the mouse. Mouse mouvement are integer and are represented by 3 axis 
+// X : horizontal mouvement to the right in pixels
+// Y : Vertical mouvement, to the front in pixels
+// Z : Scroll whell mouvement, scroll up is positive, in "line" increments
 void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 {
 	player->applyMouseRelativeRotation(e.getAxis(MouseAxisId(X)).getRelValue());
 }
 
+//The stick event contain all the data for a specific joystick. In includes buttons current states, press and release events, stick relative and absolute values
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 {
 	if(e.getNbAxis() >= 4) //If we have 2 analog stick (or equivalent) available
