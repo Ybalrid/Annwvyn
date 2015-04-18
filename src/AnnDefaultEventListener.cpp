@@ -45,27 +45,22 @@ void AnnDefaultEventListener::setKeys(KeyCode::code fw,
 void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 {
 	//TODO having a pointer to the AnnPlayer object would be nice...
-	bool pressed = e.isPressed();
-
-	if(pressed || e.isRelased())
-	{
 		//modify linear speed vector
-		if(e.getKey() == forward)
-			player->walking[walkDirection::forward] = pressed;
-		if(e.getKey() == backward)
-			player->walking[walkDirection::backward] = pressed;
-		if(e.getKey() == straffleft)
-			player->walking[walkDirection::left] = pressed;
-		if(e.getKey() == straffright)
-			player->walking[walkDirection::right] = pressed;
-		if(e.getKey() == run)
-			player->run = pressed;
+	if(e.getKey() == forward)
+		player->walking[walkDirection::forward] = e.isPressed();
+	if(e.getKey() == backward)
+		player->walking[walkDirection::backward] = e.isPressed();
+	if(e.getKey() == straffleft)
+		player->walking[walkDirection::left] = e.isPressed();
+	if(e.getKey() == straffright)
+		player->walking[walkDirection::right] = e.isPressed();
+	if(e.getKey() == run)
+		player->run = e.isPressed();
 
-		//Special case
-		if(pressed && e.getKey() == jump)
-			player->jump();
-	 
-	}
+	//Special case
+	if(e.isPressed() && e.getKey() == jump)
+		player->jump();
+
 }
 
 //The mouse event contain all information about the mouse. Mouse mouvement are integer and are represented by 3 axis 
