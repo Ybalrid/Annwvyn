@@ -45,36 +45,26 @@ void AnnDefaultEventListener::setKeys(KeyCode::code fw,
 void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 {
 	//TODO having a pointer to the AnnPlayer object would be nice...
-	if(e.isPressed())
-	{
-		//modify linear speed vector
-		if(e.getKey() == forward)
-			player->walking[walkDirection::forward] = true;
-		if(e.getKey() == backward)
-			player->walking[walkDirection::backward] = true;
-		if(e.getKey() == straffleft)
-			player->walking[walkDirection::left] = true;
-		if(e.getKey() == straffright)
-			player->walking[walkDirection::right] = true;
-        if(e.getKey() == jump)
-            player->jump();
-        if(e.getKey() == run)
-            player->run = true;
-	}
+	bool pressed = e.isPressed();
 
-	else if(e.isRelased())
+	if(pressed || e.isRelased())
 	{
 		//modify linear speed vector
 		if(e.getKey() == forward)
-			player->walking[walkDirection::forward] = false;
+			player->walking[walkDirection::forward] = pressed;
 		if(e.getKey() == backward)
-			player->walking[walkDirection::backward] = false;
+			player->walking[walkDirection::backward] = pressed;
 		if(e.getKey() == straffleft)
-			player->walking[walkDirection::left] = false;
+			player->walking[walkDirection::left] = pressed;
 		if(e.getKey() == straffright)
-			player->walking[walkDirection::right] = false;
-        if(e.getKey() == run)
-            player->run = false;
+			player->walking[walkDirection::right] = pressed;
+		if(e.getKey() == run)
+			player->run = pressed;
+
+		//Special case
+		if(pressed && e.getKey() == jump)
+			player->jump();
+	 
 	}
 }
 
