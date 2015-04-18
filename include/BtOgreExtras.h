@@ -12,6 +12,9 @@
  *
  * =====================================================================================
  */
+#ifndef __gnu_linux__
+#pragma warning (disable : 4244)
+#endif
 
 #ifndef BTOGRE_EXTRA_H__
 #define BTOGRE_EXTRA_H__

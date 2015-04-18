@@ -14,8 +14,8 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 
     m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
 
-    AnnEngine::log("Gravity vector = (0,-10,0)");
-    m_DynamicsWorld->setGravity(btVector3(0,-10,0));
+    AnnEngine::log("Gravity vector = (0,-9.81f,0)");
+    m_DynamicsWorld->setGravity(btVector3(0,-9.81f,0));
     m_DynamicsWorld->getPairCache()->setInternalGhostPairCallback(m_ghostPairCallback);
 
     debugPhysics = false;//by default
@@ -34,8 +34,6 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
     delete m_CollisionConfiguration;
     delete m_Dispatcher;
     delete m_Solver;
-
-    //OIS
     delete m_debugDrawer;
 }
 
@@ -44,7 +42,6 @@ void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player)
     assert(player->getBody());
 
     float height(player->getEyesHeight());
-    //player->getBody()->translate(btVector3(0,height,0));
 
 	//TODO define name for the bullet's collision masks
     m_DynamicsWorld->addRigidBody(player->getBody(), BIT(0), BIT(1));
@@ -52,7 +49,7 @@ void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player)
 
 void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::SceneNode* node)
 {
-		//Player need to have a shape (capsule)
+	//Player need to have a shape (capsule)
     assert(player->getShape());
 
 	//Create a rigid body state through BtOgre
@@ -218,7 +215,6 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 			triggers[i]->getPosition()) <= triggers[i]->getThreshold())
 		{
 			triggers[i]->setContactInformation(true);
-			//Call overloaded 
 			triggers[i]->atContact();
 		}
 		else

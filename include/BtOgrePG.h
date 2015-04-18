@@ -6,13 +6,17 @@
  *    Description:  The part of BtOgre that handles information transfer from Bullet to
  *                  Ogre (like updating graphics object positions).
  *
- *        Version:  1.0
+ *        Version:  1.0.1
  *        Created:  27/12/2008 03:40:56 AM
  *
  *         Author:  Nikhilesh (nikki)
  *
  * =====================================================================================
  */
+
+#ifndef __gnu_linux__
+#pragma warning (disable : 4244)
+#endif 
 
 #ifndef _BtOgreGP_H_
 #define _BtOgreGP_H_

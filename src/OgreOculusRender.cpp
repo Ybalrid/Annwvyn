@@ -287,7 +287,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 	Ogre::SceneNode* meshNode = rift_smgr->getRootSceneNode()->createChildSceneNode();
 
-	for (int eyeNum(0); eyeNum < 2; eyeNum++)
+	for (char eyeNum(0); eyeNum < 2; eyeNum++)
 	{
 		ovrDistortionMesh meshData;
 
@@ -465,5 +465,4 @@ void OgreOculusRender::RenderOneFrame()
 	//ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
 
 	ovrHmd_EndFrameTiming(oc->getHmd());
-
 }

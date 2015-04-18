@@ -18,11 +18,6 @@
 #include <iostream>
 #include <sstream>
 
-
-#ifndef _WIN32 //Assuming Linux  here. Any Unix based have that header includable
-#include <unistd.h>
-#endif
-
 //Ogre
 #include <Ogre.h>
 
@@ -31,9 +26,6 @@
 
 //OS Specific build macro 
 #include "systemMacro.h"
-
-
-
 
 using namespace std;
 using namespace OVR;
@@ -95,33 +87,26 @@ class DLL OgreOculusRender
 		///Set fullscreen. Value only used at window creation
 		void setFullScreen(bool fs = true);
 
-
 		///Return true if fullscreen set.
 		bool isFullscreen();
-
 
 		///Get the scene manager.
         Ogre::SceneManager* getSceneManager();
 
-
 		///Get the RenderWindow
         Ogre::RenderWindow* getWindow();
-
 
 		///Print various informations about the cameras
         void debugPrint();
 
-
 		///Save content of 'left eye' RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
         void debugSaveToFile(const char path[]);
-
 
 		///Get a node representing the camera. NOTE: Camera isn"t attached.
         Ogre::SceneNode* getCameraInformationNode();
 
 		///Get the timer
         Ogre::Timer* getTimer();
-
 
 		///Get time between frames
         float getUpdateTime();
@@ -141,7 +126,6 @@ class DLL OgreOculusRender
 		///change main viewport background color
 		void changeViewportBackgroundColor(Ogre::ColourValue color);
 
-
     private:
         enum 
         {
@@ -157,12 +141,16 @@ class DLL OgreOculusRender
 
         ///Name of the Window
         string name;
+
         ///Ogre Root instance
         Ogre::Root* root;
+
 		///Ogre Render Window
         Ogre::RenderWindow* window;
+
 		///Ogre Scene Manager
         Ogre::SceneManager* smgr;	
+
 		///Stereoscopic camera array. Indexes are "left" and "right"
         Ogre::Camera* cams[2];
 
@@ -179,30 +167,33 @@ class DLL OgreOculusRender
 		Ogre::Viewport* mViewport;
 
 		float IPD;
-
 	
         Ogre::SceneNode* CameraNode;
 
 		///Textures used for RTT Rendering. Indexes are "left" and "right"
 		Ogre::RenderTexture* rtts[2];
+
 		///Vewports on textures. Textures are separated. One vieport for each textures
         Ogre::Viewport* vpts[2];
+
 		///The Z axis near clipping plane distance
         Ogre::Real nearClippingDistance;
+
 		///Time betwenn frames in seconds
         float updateTime;
 
         ///Object for getting informations from the Oculus Rift
         OculusInterface* oc;
+
 		///Fov descriptor for each eye. Indexes are "left" and "right"
         ovrFovPort EyeFov[2];
+
 		///Render descriptor for each eye. Indexes are "left" and "right"
         ovrEyeRenderDesc EyeRenderDesc[2];
-		///OpenGL Configuration
-
 
 		///Size of left eye texture
         ovrSizei texSizeL;
+
 		///Size of right eye texture
         ovrSizei texSizeR;
 
@@ -212,13 +203,10 @@ class DLL OgreOculusRender
         Ogre::Quaternion cameraOrientation;
 
 		bool hsDissmissed;
-	
 
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;
 		OgrePose returnPose;
 };
-
-
 #endif //OGRE_OCULUS_RENDERER
