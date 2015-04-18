@@ -124,7 +124,7 @@ void AnnEventManager::update()
 					//same thing
 					AnnKeyEvent e;
 					e.setCode((KeyCode::code)c);
-					e.setRelased();
+					e.setReleased();
 					e.populate();
 					e.validate();
 					if(listener)
@@ -179,7 +179,7 @@ void AnnEventManager::update()
             if(!previousStickButtonStates[i] &&  state.mButtons[i])
                 e.pressed.push_back(i);
             else if(previousStickButtonStates[i] && !state.mButtons[i])
-                e.relased.push_back(i);
+                e.released.push_back(i);
 
         //Save current buttons state for next frame
         previousStickButtonStates = state.mButtons; 

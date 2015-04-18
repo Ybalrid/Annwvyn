@@ -8,19 +8,19 @@ AnnKeyEvent::AnnKeyEvent() : AnnEvent()
 {
 	key = KeyCode::unassigned;
 	pressed = false;
-	relased = false;
+	released = false;
 }
 
 void AnnKeyEvent::setPressed()
 {
 	pressed = true;
-	relased = false;
+	released = false;
 }
 
-void AnnKeyEvent::setRelased()
+void AnnKeyEvent::setReleased()
 {
 	pressed = false;
-	relased = true;
+	released = true;
 }
 
 void AnnKeyEvent::setCode(KeyCode::code c)
@@ -33,9 +33,9 @@ bool AnnKeyEvent::isPressed()
 	return pressed;
 }
 
-bool AnnKeyEvent::isRelased()
+bool AnnKeyEvent::isReleased()
 {
-	return relased;
+	return released;
 }
 
 Annwvyn::KeyCode::code AnnKeyEvent::getKey()
@@ -188,9 +188,9 @@ std::vector<unsigned short> AnnStickEvent::getPressed()
     return pressed;
 }
 
-std::vector<unsigned short> AnnStickEvent::getRelased()
+std::vector<unsigned short> AnnStickEvent::getReleased()
 {
-    return relased;
+    return released;
 }
 
 AnnStickAxis AnnStickEvent::getAxis(StickAxisId ax)
@@ -213,12 +213,12 @@ bool AnnStickEvent::isPressed(ButtonId id)
 	return false;
 }
 
-bool AnnStickEvent::isRelased(ButtonId id)
+bool AnnStickEvent::isReleased(ButtonId id)
 {
 	//if id is not a valid buton
 	if (id >= buttons.size()) return false;
 
-	for(ButtonId i(0); i < relased.size();  i++)
-		if(relased[i] == id) return true;
+	for(ButtonId i(0); i < released.size();  i++)
+		if(released[i] == id) return true;
 	return false;
 }

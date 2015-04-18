@@ -44,6 +44,7 @@ void AnnDefaultEventListener::setKeys(KeyCode::code fw,
 //It will normally switch the keyboard back to it's original configuration once the AnnEngine object is destroyed
 void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 {
+	//If the coresponding key is pressed, set the direction to true.
 	if(e.getKey() == forward)
 		player->walking[walkDirection::forward] = e.isPressed();
 	if(e.getKey() == backward)
@@ -55,7 +56,7 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	if(e.getKey() == run)
 		player->run = e.isPressed();
 
-	//Special case
+	//Jumping is a function call because it's an action and not a "state" the player has. 
 	if(e.isPressed() && e.getKey() == jump)
 		player->jump();
 }
@@ -82,6 +83,6 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 		player->jump();
 	if(e.isPressed(buttons[b_run]))
 		player->run = true;
-	if(e.isRelased(buttons[b_run]))
+	if(e.isReleased(buttons[b_run]))
 		player->run = false;
 }
