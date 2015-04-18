@@ -175,8 +175,7 @@ AnnMain()
 	bool debounce;
 	bool current(false);
 
-
-	while(!GameEngine->requestStop())
+	do	
 	{   
 		debounce = current;
 		current = GameEngine->isKeyDown(OIS::KC_RETURN);
@@ -184,9 +183,8 @@ AnnMain()
 		if(current && !debounce)
 			S->playSound("media/monster.wav");
 		if(GameEngine->isKeyDown(OIS::KC_F12))
-			GameEngine->resetOculusOrientation();
-		GameEngine->refresh();
-	}
+			GameEngine->resetOculusOrientation();	
+	}while(GameEngine->refresh());
 
 	delete GameEngine;
 	return 0;
