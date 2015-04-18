@@ -60,9 +60,6 @@
     <ClInclude Include="..\..\include\AnnMap.hpp">
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnJoystickController.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\systemMacro.h">
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>

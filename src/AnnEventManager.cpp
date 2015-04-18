@@ -165,7 +165,7 @@ void AnnEventManager::update()
         //Get all butons imediate data
         e.buttons = state.mButtons;
         //Get all axes imediate data
-        for(int i = 0; i < state.mAxes.size(); i++)
+        for(size_t i = 0; i < state.mAxes.size(); i++)
         {
             AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
             if(state.mAxes[i].absOnly)
@@ -175,7 +175,7 @@ void AnnEventManager::update()
         }
 
         //Get press and release event lists
-        for(int i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
+        for(size_t i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
             if(!previousStickButtonStates[i] &&  state.mButtons[i])
                 e.pressed.push_back(i);
             else if(previousStickButtonStates[i] && !state.mButtons[i])

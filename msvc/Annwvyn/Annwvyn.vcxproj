@@ -102,7 +102,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnEngine.hpp" />
     <ClInclude Include="..\..\include\AnnEventManager.hpp" />
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
-    <ClInclude Include="..\..\include\AnnJoystickController.hpp" />
     <ClInclude Include="..\..\include\AnnKeyCode.h" />
     <ClInclude Include="..\..\include\AnnMap.hpp" />
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp" />

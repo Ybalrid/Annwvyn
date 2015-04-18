@@ -5,7 +5,7 @@
  *
  *    Description:  BtOgre implementation.
  *
- *        Version:  1.0
+ *        Version:  1.0.1
  *        Created:  27/12/2008 01:47:56 PM
  *
  *         Author:  Nikhilesh (nikki)
@@ -207,7 +207,7 @@ namespace BtOgre {
 		if (mBoundRadius == (-1))
 		{
 			getSize();
-			mBoundRadius = (std::max(mBounds.x,std::max(mBounds.y,mBounds.z)) * 0.5);
+			mBoundRadius = (std::max(mBounds.x,std::max(mBounds.y,mBounds.z)) * 0.5f);
 		}
 		return mBoundRadius;
 	}
@@ -374,13 +374,13 @@ namespace BtOgre {
 		if (height == sz.y)
 		{
 			radius = std::max(sz.x,sz.z);
-			shape = new btCapsuleShape(radius *0.5,height *0.5);
+			shape = new btCapsuleShape(radius *0.5f,height *0.5f);
 		} else if (height == sz.x ) {
 			radius = std::max(sz.y,sz.z);
-			shape = new btCapsuleShapeX(radius *0.5,height *0.5);
+			shape = new btCapsuleShapeX(radius *0.5f,height *0.5f);
 		} else {
 			radius = std::max(sz.x,sz.y);
-			shape = new btCapsuleShapeZ(radius *0.5,height *0.5);
+			shape = new btCapsuleShapeZ(radius *0.5f,height *0.5f);
 		}
 
 		shape->setLocalScaling(Convert::toBullet(mScale));
@@ -737,7 +737,7 @@ namespace BtOgre {
 			 {
 				 box_kCenter += vertices[c];
 			 }
-			 const Ogre::Real invVertexCount = 1.0 / vertex_count;
+			 const Ogre::Real invVertexCount = 1.0f / vertex_count;
 			 box_kCenter *= invVertexCount;
 		 }
 		Quaternion orient = boneOrientation;
@@ -782,11 +782,11 @@ namespace BtOgre {
 		box_afExtent.y = ((Real)0.5)*(fY1Max - fY1Min);
 		box_afExtent.z = ((Real)0.5)*(fY2Max - fY2Min);
 
-		box_kCenter += (0.5*(fY0Max+fY0Min))*box_akAxis[0] +
-			(0.5*(fY1Max+fY1Min))*box_akAxis[1] +
-			(0.5*(fY2Max+fY2Min))*box_akAxis[2];
+		box_kCenter += (0.5f*(fY0Max+fY0Min))*box_akAxis[0] +
+			(0.5f*(fY1Max+fY1Min))*box_akAxis[1] +
+			(0.5f*(fY2Max+fY2Min))*box_akAxis[2];
 
-		box_afExtent *= 2.0;
+		box_afExtent *= 2.0f;
 
 		return true;
 	}

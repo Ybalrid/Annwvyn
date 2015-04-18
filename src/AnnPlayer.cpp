@@ -177,6 +177,7 @@ Ogre::Vector3 AnnPlayer::getTranslation()
 
 Ogre::Vector3 AnnPlayer::getAnalogTranslation()
 {
+	if(analogStraff < 0 || analogStraff > 1 || analogWalk < 0 || analogWalk > 1) return Ogre::Vector3::ZERO; 
 	Ogre::Vector3 translate(Ogre::Vector3::ZERO);
 
 	translate.x = analogStraff;
@@ -187,6 +188,7 @@ Ogre::Vector3 AnnPlayer::getAnalogTranslation()
 
 void AnnPlayer::applyAnalogYaw()
 {
+	if(analogStraff < 0 || analogStraff > 1) return;
 	applyRelativeBodyYaw(-Ogre::Radian(10 * analogRotate * getTurnSpeed()));
 }
 
@@ -196,7 +198,6 @@ void AnnPlayer::jump()
 	if(contactWithGround)
 		getBody()->applyCentralImpulse(playerBody->jumpForce);
 }
-
 
 #include "AnnEngine.hpp"
 void AnnPlayer::engineUpdate(float time)
@@ -247,8 +248,5 @@ void AnnPlayer::engineUpdate(float time)
 			getBody()->getCenterOfMassPosition().y() + getEyesHeight()/2,
 			getBody()->getCenterOfMassPosition().z()
 			));
-
 	}
-
-
 }

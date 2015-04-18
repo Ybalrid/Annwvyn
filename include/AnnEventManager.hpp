@@ -50,19 +50,27 @@ namespace Annwvyn
 	public:
 		///Get the key involved in that event
 		Annwvyn::KeyCode::code getKey();
+
 		///Return true if it's a key press. Key event are debounced.
 		bool isPressed();
+
 		///Return ture if it's a key release. Key event are debounced.
 		bool isReleased();
 
 	private:
 		Annwvyn::KeyCode::code key;
+
 		bool pressed;
+
 		bool released;
 		
 		friend class AnnEventManager;
+
 		void setPressed();
+
 		void setReleased();
+
+		///Set the keycode of the key
 		/// \param c Keycode
 		void setCode(KeyCode::code c);
 
@@ -71,6 +79,7 @@ namespace Annwvyn
 
 	///Name and number of axes
 	enum MouseAxisId {X, Y, Z, nbAxes, invalidAxis};
+
 	///Name and number of mouse button
 	enum MouseButtonId {Left, Right, Middle, Button3, Button4, Button5, Button6, Button7, nbButtons, invalidButton};
 
@@ -198,7 +207,7 @@ namespace Annwvyn
 			KeyCode::code jmp, 
 			KeyCode::code rn); 
 
-	private:
+	protected:
 		KeyCode::code forward;
 		KeyCode::code backward;
 		KeyCode::code straffleft;
@@ -209,6 +218,7 @@ namespace Annwvyn
 		float deadzone;
 		enum {ax_walk, ax_straff, ax_rotate};
 		StickAxisId axes[3];
+
 		enum {b_jump, b_run};
 		ButtonId buttons[2];
 
@@ -226,7 +236,6 @@ namespace Annwvyn
 		///Set the listener object to the event manager.
 		/// \param callbackObject The instance of an event listener that will receive event informations
 		void setListener(AnnAbstractEventListener* callbackObject);
-
 
 		///Make the event manager forget about the listener
 		void removeListener();

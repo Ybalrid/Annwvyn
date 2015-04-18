@@ -6,13 +6,16 @@
  *    Description:  The part of BtOgre that handles information transfer from Ogre to
  *                  Bullet (like mesh data for making trimeshes).
  *
- *        Version:  1.0
+ *        Version:  1.0.1
  *        Created:  27/12/2008 03:29:56 AM
  *
  *         Author:  Nikhilesh (nikki)
  *
  * =====================================================================================
  */
+#ifndef __gnu_linux__
+#pragma warning (disable : 4244)
+#endif
 
 #ifndef BTOGRE_GP_H__
 #define BTOGRE_GP_H__

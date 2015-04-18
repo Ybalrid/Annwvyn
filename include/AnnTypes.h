@@ -31,11 +31,9 @@ namespace Annwvyn
 	typedef Ogre::Light AnnLightObject; //Yeah, it's a cheater thing here...
 
 	///Remove some ugliness : 
-	typedef std::vector<AnnTriggerObject * > AnnTriggerObjectVect;
-    typedef std::vector<AnnGameObject * > AnnGameObjectVect;
-    typedef std::vector<AnnLightObject * > AnnLightVect; 
-
-
+	typedef std::vector<AnnTriggerObject *> AnnTriggerObjectVect;
+    typedef std::vector<AnnGameObject *> AnnGameObjectVect;
+    typedef std::vector<AnnLightObject *> AnnLightVect; 
 
 	enum phyShapeType {
 		staticShape, 
