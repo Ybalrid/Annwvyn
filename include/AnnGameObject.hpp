@@ -187,7 +187,7 @@ namespace Annwvyn
             void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
 
             ///For engine : get elapsed time
-            void addTime(float offsetTime);
+            void addTime(double offsetTime);
 
             ///For engine : update OpenAL source position
             void updateOpenAlPos();

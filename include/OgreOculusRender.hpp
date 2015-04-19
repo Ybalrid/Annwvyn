@@ -26,6 +26,11 @@
 
 //OS Specific build macro 
 #include "systemMacro.h"
+#ifdef _WIN32
+#include <Windows.h>
+#elif __gnu_linux__ 
+#include <unistd.h>
+#endif
 
 using namespace std;
 using namespace OVR;
@@ -109,7 +114,7 @@ class DLL OgreOculusRender
         Ogre::Timer* getTimer();
 
 		///Get time between frames
-        float getUpdateTime();
+        double getUpdateTime();
 
 		///Recenter rift to default position.
 		void recenter();
@@ -154,20 +159,14 @@ class DLL OgreOculusRender
 		///Stereoscopic camera array. Indexes are "left" and "right"
         Ogre::Camera* cams[2];
 
-		///For distortion rendering
+		///For distortion rendering. The 2 distortion meshes are in a different scene manager
 		Ogre::SceneManager* rift_smgr;
+		///For rendering an orthographic projection of the textured distortion meshes
 		Ogre::Camera* rift_cam;
 
-		Ogre::MaterialPtr mMatLeft;
-		Ogre::MaterialPtr mMatRight;
-
-		Ogre::TexturePtr mLeftEyeRenderTexture;
-	    Ogre::TexturePtr mRightEyeRenderTexture;
-
+		Ogre::MaterialPtr mMatLeft, mMatRight;
+		Ogre::TexturePtr mLeftEyeRenderTexture, mRightEyeRenderTexture;
 		Ogre::Viewport* mViewport;
-
-		float IPD;
-	
         Ogre::SceneNode* CameraNode;
 
 		///Textures used for RTT Rendering. Indexes are "left" and "right"
@@ -179,9 +178,6 @@ class DLL OgreOculusRender
 		///The Z axis near clipping plane distance
         Ogre::Real nearClippingDistance;
 
-		///Time betwenn frames in seconds
-        float updateTime;
-
         ///Object for getting informations from the Oculus Rift
         OculusInterface* oc;
 
@@ -192,10 +188,7 @@ class DLL OgreOculusRender
         ovrEyeRenderDesc EyeRenderDesc[2];
 
 		///Size of left eye texture
-        ovrSizei texSizeL;
-
-		///Size of right eye texture
-        ovrSizei texSizeR;
+        ovrSizei texSizeL, texSizeR;
 
 		///Position of the camera.
         Ogre::Vector3 cameraPosition;
@@ -204,6 +197,8 @@ class DLL OgreOculusRender
 
 		bool hsDissmissed;
 
+		///Time betwenn frames in seconds
+        double updateTime;
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;

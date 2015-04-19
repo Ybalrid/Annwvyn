@@ -2,6 +2,14 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
   <Class Name="Annwvyn::AnnEngine">
     <Position X="8.5" Y="9.5" Width="6.5" />
+    <AssociationLine Name="player" Type="Annwvyn::AnnPlayer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15" Y="13.219" />
+        <Point X="15.375" Y="13.219" />
+        <Point X="15.375" Y="8.432" />
+        <Point X="16.25" Y="8.432" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>SgkCTGACwECSEQAgAkAIuBIACSAhBBBVgBAAAkkoA8A=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEngine.hpp</FileName>
@@ -24,7 +32,7 @@
   <Class Name="Annwvyn::AnnEventManager">
     <Position X="3.75" Y="13.75" Width="4" />
     <TypeIdentifier>
-      <HashCode>AAgAAQAAAAAhIAAAQgAAAAAAAIAAAAAAAABIYAAEAAA=</HashCode>
+      <HashCode>AAgAAQAAEAAhIAAAQgAAAAAAAIABAAAAAABIYAAEAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
   </Class>
@@ -54,16 +62,16 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnEvent">
-    <Position X="33" Y="9" Width="1.75" />
+    <Position X="33.25" Y="9.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAABIAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAgQAEQ=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnKeyEvent">
-    <Position X="33.75" Y="12.25" Width="2" />
+    <Position X="34" Y="12.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQCCAAAAAAAAAAABQAEAAAAAgAAACAAAABACAAAAAA=</HashCode>
+      <HashCode>AAQAGAAAAAAAAAAABQAEAAAAAQAAAAAAAABACIAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -71,7 +79,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Annwvyn::AnnMouseAxis">
-    <Position X="28" Y="8" Width="3.25" />
+    <Position X="28.25" Y="8.25" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAACEEAAQAAIAAAAAAAAAQEAAAAAAAQAAAwA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
@@ -81,7 +89,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Annwvyn::AnnMouseEvent">
-    <Position X="28.5" Y="12.25" Width="4.5" />
+    <Position X="28.75" Y="12.5" Width="4.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABBAAAEEAAAAAAAAAAAAAAABAAAAEAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
@@ -91,23 +99,35 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Annwvyn::AnnStickEvent">
-    <Position X="36.5" Y="12.25" Width="2.75" />
+    <Position X="36.75" Y="12.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAABAAAIAEgIAAAAkAAAAAAAEBAAAAAAAA=</HashCode>
+      <HashCode>AAQAAAAAAAAABAAAIAEgAAAAAUAAAAAAAEAACIABAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnAbstractEventListener">
-    <Position X="29" Y="16" Width="3" />
+    <Position X="29" Y="16.25" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAgAAAAAAAAAAAAAIAAAABAAAAAAAABAAAAAAGAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnDefaultEventListener">
-    <Position X="28.25" Y="19" Width="4.5" />
+    <Position X="28.25" Y="19.25" Width="4.5" />
+    <NestedTypes>
+      <Enum Name="Annwvyn::AnnDefaultEventListener::__unnamed_enum_0004_1" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Annwvyn::AnnDefaultEventListener::__unnamed_enum_0004_2" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>QCAiAoAAAIAAgAAAAAGAAABAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <HashCode>QCAiAoAAAIAAgAAAIAGAAABAAAAAAAAAAAAAAACAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -115,9 +135,9 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Annwvyn::AnnGameObject">
-    <Position X="21.25" Y="9" Width="5" />
+    <Position X="21.25" Y="9.25" Width="5" />
     <TypeIdentifier>
-      <HashCode>ESBhCEyEAQkQQQAhIFIABYCQIBFsFEAjIBUBCBwADAg=</HashCode>
+      <HashCode>ESBgCEyEAQkQQQAhIFIABYCQIBFsFEAjIBUBCBwADAg=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnGameObject.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -127,7 +147,7 @@
   <Class Name="Annwvyn::AnnPlayer">
     <Position X="16.25" Y="1" Width="3.75" />
     <TypeIdentifier>
-      <HashCode>AAACoggBCAESIASBgEAAAAAilAAACAgCEACBQAQASCw=</HashCode>
+      <HashCode>AAACoggBCAESIASBgEAAAAAilAAACAgCEACBQAQATCw=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnPlayer.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -166,14 +186,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnTriggerObject" Collapsed="true">
-    <Position X="40.25" Y="0.5" Width="1.5" />
+    <Position X="40.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgAgKAIACCACAAAAAAAAACACAAAIAAAAAAAAAAAAQgA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnTriggerObject.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnStickAxis">
-    <Position X="29" Y="25.25" Width="3" />
+    <Position X="36" Y="19.75" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAEEAAQAAAAAAAQAAAAQAAgAAABASgAAgA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
@@ -190,49 +210,49 @@
     </TypeIdentifier>
   </Struct>
   <Struct Name="Annwvyn::collisionTest" Collapsed="true">
-    <Position X="40.25" Y="1.75" Width="1.5" />
+    <Position X="40.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAIAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnGameObject.hpp</FileName>
     </TypeIdentifier>
   </Struct>
   <Typedef Name="Annwvyn::StickAxisId" Collapsed="true">
-    <Position X="29.75" Y="23.5" Width="1.5" />
+    <Position X="33.75" Y="21" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
   </Typedef>
   <Enum Name="Annwvyn::MouseAxisId">
-    <Position X="29" Y="4.75" Width="1.5" />
+    <Position X="29.25" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAYAE=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Annwvyn::KeyCode::code" Collapsed="true">
-    <Position X="34" Y="16.5" Width="1.5" />
+    <Position X="34.25" Y="16.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>CokQoWkKQBD7kBeq8xUFgKAACQE4DC7+//9pX4QOogE=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnKeyCode.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Annwvyn::walkDirection" Collapsed="true">
-    <Position X="40.25" Y="3.75" Width="1.5" />
+    <Position X="40.75" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAgAAAAAAgAAAAAAAAAAAAAAIAAAAAAAAAAAAgAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnPlayer.hpp</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Annwvyn::phyShapeType" Collapsed="true">
-    <Position X="42" Y="3" Width="1.5" />
+    <Position X="42.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAQIAAAAAAACEAAAAAAAgAAAEAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnTypes.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Annwvyn::MouseButtonId" Collapsed="true">
-    <Position X="40.25" Y="3" Width="1.5" />
+    <Position X="40.75" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAQAAAAAAAAAAAAAwCMAAAAAAAAACAGQAAAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>

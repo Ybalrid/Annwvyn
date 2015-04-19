@@ -1,4 +1,5 @@
 #include "AnnPlayer.hpp"
+#include "AnnEngine.hpp"
 
 using namespace Annwvyn;
 
@@ -15,6 +16,8 @@ bodyParams::bodyParams()
 	Body = NULL;
 	runFactor = 3;
 	jumpForce = btVector3(0,500,0);
+	bool YSpeedWasZero = 0;
+
 }
 
 AnnPlayer::AnnPlayer()
@@ -177,7 +180,6 @@ Ogre::Vector3 AnnPlayer::getTranslation()
 
 Ogre::Vector3 AnnPlayer::getAnalogTranslation()
 {
-	if(analogStraff < 0 || analogStraff > 1 || analogWalk < 0 || analogWalk > 1) return Ogre::Vector3::ZERO; 
 	Ogre::Vector3 translate(Ogre::Vector3::ZERO);
 
 	translate.x = analogStraff;
@@ -188,7 +190,7 @@ Ogre::Vector3 AnnPlayer::getAnalogTranslation()
 
 void AnnPlayer::applyAnalogYaw()
 {
-	if(analogStraff < 0 || analogStraff > 1) return;
+	if(analogStraff < -1 || analogStraff > 1) return;
 	applyRelativeBodyYaw(-Ogre::Radian(10 * analogRotate * getTurnSpeed()));
 }
 
@@ -199,7 +201,6 @@ void AnnPlayer::jump()
 		getBody()->applyCentralImpulse(playerBody->jumpForce);
 }
 
-#include "AnnEngine.hpp"
 void AnnPlayer::engineUpdate(float time)
 {
 	bool standing = true;
@@ -209,6 +210,21 @@ void AnnPlayer::engineUpdate(float time)
 		Ogre::Vector3 translate(getWalkSpeed() * (getTranslation()+getAnalogTranslation()));
 
 		btVector3 currentVelocity = getBody()->getLinearVelocity();
+
+
+
+		if(int(currentVelocity.y()) == 0)
+		{
+			if(YSpeedWasZero)
+				contactWithGround =  true;
+			else
+				YSpeedWasZero = true;
+		}
+		else
+		{
+			YSpeedWasZero = false;
+			contactWithGround = false;
+		}
 
 		//Prevent the rigid body to be put asleep by the physics engine
 		getBody()->activate();

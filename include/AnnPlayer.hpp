@@ -170,6 +170,8 @@ namespace Annwvyn
 		///Apply yaw from analog value
 		void applyAnalogYaw();
 
+		bool YSpeedWasZero;
+
 	public:
 		
 		///Waling state. Forward Backward Left Right
