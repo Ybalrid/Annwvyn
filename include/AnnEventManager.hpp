@@ -156,6 +156,7 @@ namespace Annwvyn
 	{
         public:
             AnnStickEvent();
+			~AnnStickEvent();
             size_t getNbButtons();
 
             std::vector<unsigned short> getPressed();
@@ -235,13 +236,15 @@ namespace Annwvyn
 
 		///Set the listener object to the event manager.
 		/// \param callbackObject The instance of an event listener that will receive event informations
-		void setListener(AnnAbstractEventListener* callbackObject);
-
+		//void setListener(AnnAbstractEventListener* callbackObject);
+		void addListener(AnnAbstractEventListener* listener);
+		void clearListenerList();
 		///Make the event manager forget about the listener
-		void removeListener();
+		void removeListener(AnnAbstractEventListener* l = NULL);
 
 	private:
-		AnnAbstractEventListener* listener;
+		std::vector<AnnAbstractEventListener*> listeners;
+
 		friend class AnnEngine;
 		///Engine call for refreshing the event system
 		void update();

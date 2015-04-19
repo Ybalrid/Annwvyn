@@ -127,7 +127,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnEventManager.cpp" />
     <ClCompile Include="..\..\src\AnnEvents.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
-    <ClCompile Include="..\..\src\AnnJoystickController.cpp" />
     <ClCompile Include="..\..\src\AnnMap.cpp" />
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp" />
     <ClCompile Include="..\..\src\AnnPlayer.cpp" />

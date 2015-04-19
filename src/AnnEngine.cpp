@@ -159,7 +159,7 @@ void AnnEngine::useDefaultEventListener()
 		defaultEventListener = new AnnDefaultEventListener(getPlayer());
 
 	//Set the default event listener to the event manager
-	eventManager->setListener(defaultEventListener);
+	eventManager->addListener(defaultEventListener);
 }
 
 AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
@@ -456,7 +456,7 @@ Ogre::SceneNode* AnnEngine::getCamera()
 	return m_CameraReference;
 }
 
-float AnnEngine::getTime()
+double AnnEngine::getTime()
 {
 	return deltaT;
 }
@@ -471,9 +471,9 @@ Ogre::SceneManager* AnnEngine::getSceneManager()
 	return m_SceneManager;
 }
 
-float AnnEngine::getTimeFromStartUp()
+double AnnEngine::getTimeFromStartUp()
 {
-	return static_cast<float>(oor->getTimer()->getMilliseconds());//Why ?? O.O 
+	return static_cast<double>(oor->getTimer()->getMilliseconds());//Why ?? O.O 
 }
 
 ////////////////////////////////////////////////////////// SETTERS

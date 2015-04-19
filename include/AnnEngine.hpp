@@ -132,10 +132,10 @@ namespace Annwvyn
             bool refresh(); //engine main loop
 
             ///Update program time. retur the delay between the last call of this method
-            float getTime();//engine
+            double getTime();//engine
 
             ///Get elapsed time from engine startup
-            float getTimeFromStartUp();//engine
+            double getTimeFromStartUp();//engine
 
             ///Set the ground object
 			/// \param Ground an object that play the role of the ground.
@@ -256,7 +256,7 @@ namespace Annwvyn
             unsigned long last, now; //Milisec
             
             //Elapsed time
-            float deltaT; //Sec
+            double deltaT; //Sec
 
 #ifdef __gnu_linux__
             std::string x11LayoutAtStartup;

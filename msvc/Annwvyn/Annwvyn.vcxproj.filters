@@ -119,9 +119,6 @@
     <ClCompile Include="..\..\src\AnnMap.cpp">
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnJoystickController.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnCharacter.cpp">
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>

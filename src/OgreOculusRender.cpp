@@ -18,18 +18,14 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	//Oc is an OculusInterface object. Communication with the Rift SDK is handeled by that class
 	oc = NULL;
 	CameraNode = NULL;
-
 	cameraPosition = Ogre::Vector3(0,0,10);
 	cameraOrientation = Ogre::Quaternion::IDENTITY;
-
-	this->nearClippingDistance = (float) 0.05;
-	this->lastOculusPosition = cameraPosition;
-	this->lastOculusOrientation = cameraOrientation;
-	this->updateTime = 0;
-
+	nearClippingDistance = (float) 0.05;
+	lastOculusPosition = cameraPosition;
+	lastOculusOrientation = cameraOrientation;
+	updateTime = 0;
 	fullscreen = true;
 	hsDissmissed = false;
-
 	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);
 }
 
@@ -103,7 +99,7 @@ Ogre::Timer* OgreOculusRender::getTimer()
 	return NULL;
 }
 
-float OgreOculusRender::getUpdateTime()
+double OgreOculusRender::getUpdateTime()
 {
 	return updateTime;
 }
@@ -205,7 +201,7 @@ void OgreOculusRender::createWindow()
 
 	//This one only works on windows : "Borderless = no decoration"
 	misc["border"]="none"; //In case the program is not running in fullscreen mode, don't put window borders
-	misc["vsync"]="true";
+	misc["vsync"]="false";
 	misc["displayFrequency"]="75";
 	misc["monitorIndex"]="1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
 
@@ -213,7 +209,7 @@ void OgreOculusRender::createWindow()
 	window = root->initialise(false, name);
 	//Actually create the window
 #ifdef __gnu_linux__
-    //Assuming the 2nd screen is used as a "normal" display, rotated. Ogre fullscreen on Linux does stranges things
+    //Assuming the 2nd screen is used as a "normal" display, rotated. Ogre fullscreen on Linux does stranges things, so I don't permit it at all
     fullscreen = false;
 #endif
     window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
@@ -376,8 +372,6 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	mViewport->setBackgroundColour(Ogre::ColourValue::Black);
 	mViewport->setOverlaysEnabled(true);
 
-	IPD = ovrHmd_GetFloat(oc->getHmd(), OVR_KEY_IPD,  0.064f);
-
 	Ogre::RenderTexture* renderTexture = mLeftEyeRenderTexture->getBuffer()->getRenderTarget();
 	vpts[0] = renderTexture->addViewport(cams[0]);
 	renderTexture->getViewport(0)->setClearEveryFrame(true);
@@ -415,15 +409,18 @@ void OgreOculusRender::calculateProjectionMatrix()
 void OgreOculusRender::RenderOneFrame()
 {
 	Ogre::WindowEventUtilities::messagePump();
-	unsigned long timerStart = getTimer()->getMilliseconds();
+
 	//get some info
-	cameraPosition = this->CameraNode->getPosition();
-	cameraOrientation = this->CameraNode->getOrientation();
+	cameraPosition = CameraNode->getPosition();
+	cameraOrientation = CameraNode->getOrientation();
+
+	unsigned long timerStart = getTimer()->getMilliseconds();
 
 	//Begin frame
 	ovrFrameTiming hmdFrameTiming = ovrHmd_BeginFrame(oc->getHmd(), 0);
 	ovrTrackingState ts = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.ScanoutMidpointSeconds);
 	Posef pose = ts.HeadPose.ThePose;
+
 	//Get the hmd orientation
 	OVR::Quatf oculusOrient = pose.Rotation;
 	OVR::Vector3f oculusPos = pose.Translation;
@@ -448,13 +445,13 @@ void OgreOculusRender::RenderOneFrame()
 			oculusPos.y,
 			oculusPos.z)));
 	}
-
-	this->updateTime = hmdFrameTiming.DeltaSeconds;
-	if(updateTime == 0)
+	unsigned long timerStop = getTimer()->getMilliseconds();
+		updateTime = double(timerStart - timerStop) / 1000.0f;
+	/*if((updateTime = hmdFrameTiming.DeltaSeconds) == 0)
 	{
-		unsigned long timerStop = getTimer()->getMilliseconds();
-		updateTime = float(timerStart - timerStop) / 1000.0f;
-	}
+		
+	}*/
+
 	//update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);

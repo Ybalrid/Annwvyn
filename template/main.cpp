@@ -17,11 +17,10 @@ AnnMain()
 
 	//Do the other initialization here
 
-	while(!GameEngine->requestStop())
+	do
 	{
 		//Put your gameplay code here
-		GameEngine->refresh();
-	}
+	}while(GameEngine->refresh());
 
 	delete GameEngine;
 	return 0;

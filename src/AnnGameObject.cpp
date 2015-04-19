@@ -374,7 +374,7 @@ void AnnGameObject::loopAnimation(bool loop)
     }
 }
 
-void AnnGameObject::addTime(float offset)
+void AnnGameObject::addTime(double offset)
 {
     if(!animIsSetted || !animIsPlaying)
         return;

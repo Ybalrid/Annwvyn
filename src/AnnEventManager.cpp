@@ -36,7 +36,6 @@ void AnnEvent::populate()
 }
 
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
-	listener(NULL),
 	Keyboard(NULL),
 	Mouse(NULL),
 	Joystick(NULL)
@@ -74,14 +73,30 @@ AnnEventManager::~AnnEventManager()
 	//delete InputManager;
 }
 
+/*
 void AnnEventManager::setListener(AnnAbstractEventListener* l)
 {
 	listener = l;
 }
+*/
 
-void AnnEventManager::removeListener()
+void AnnEventManager::addListener(AnnAbstractEventListener* l)
 {
-	listener = NULL;
+	listeners.push_back(l);
+}
+
+void AnnEventManager::clearListenerList()
+{
+	listeners.clear();
+}
+
+
+void AnnEventManager::removeListener(AnnAbstractEventListener* l)
+{
+	if(l == NULL) clearListenerList();
+	for(size_t i(0); i < listeners.size(); i++)
+		if(listeners[i] == l)
+			listeners.erase(listeners.begin() + i);
 }
 
 void AnnEventManager::update()
@@ -110,8 +125,9 @@ void AnnEventManager::update()
 					e.setPressed();
 					e.populate();
 					e.validate();
-					if(listener) //notify an eventual listener
-						listener->KeyEvent(e);
+
+					for(size_t i(0); i < listeners.size(); i++)
+						listeners[i]->KeyEvent(e);
 
 					previousKeyStates[c] = true;
 				}
@@ -127,8 +143,9 @@ void AnnEventManager::update()
 					e.setReleased();
 					e.populate();
 					e.validate();
-					if(listener)
-						listener->KeyEvent(e);
+
+					for(size_t i(0); i < listeners.size(); i++)
+						listeners[i]->KeyEvent(e);
 
 					previousKeyStates[c] = false;
 				}
@@ -152,8 +169,8 @@ void AnnEventManager::update()
 		e.populate();
 		e.validate();
 
-		if(listener)
-			listener->MouseEvent(e);
+		for(size_t i(0); i < listeners.size(); i++)
+			listeners[i]->MouseEvent(e);
 	}
 
 	if(Joystick)
@@ -187,7 +204,8 @@ void AnnEventManager::update()
         e.populate();
         e.validate();
 
-        if(listener)
-            listener->StickEvent(e);
+		for(size_t i(0); i < listeners.size(); i++)
+			listeners[i]->StickEvent(e);
+
 	}
 }

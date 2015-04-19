@@ -31,41 +31,7 @@ public:
 		playAnimation(true);
 		loopAnimation(true);
 	}
-
 };
-
-/*class CustomEventListener : LISTENER
-{
-public:
-
-	CustomEventListener(AnnPlayer* p) : constructListener(p)
-	{}
-
-	void KeyEvent(Annwvyn::AnnKeyEvent e)
-	{
-		if(e.isPressed() && e.getKey() == Annwvyn::KeyCode::enter)
-		{
-			cerr << "ENTER PRESSED" << endl;
-		}
-
-		if(e.isRelased() && e.getKey() == Annwvyn::KeyCode::enter)
-		{
-			cerr << "ENTER RELASED" << endl;
-		}
-
-	}
-
-	void MouseEvent(Annwvyn::AnnMouseEvent e)
-	{
-		bool left(e.getButtonState(Annwvyn::MouseButtonId::Left));
-		//std::cerr << left << endl;
-	}
-
-	void StickEvent(Annwvyn::AnnStickEvent e)
-	{
-	}
-};*/
-
 
 
 class MyTrigger : public Annwvyn::AnnTriggerObject
@@ -81,7 +47,6 @@ class MyTrigger : public Annwvyn::AnnTriggerObject
 		//Print "Contact" to standard error stream
 		std::cerr << "Contact" << std::endl;
 	}
-
 };
 
 AnnMain()
@@ -166,11 +131,7 @@ AnnMain()
 	S->setPos(0,5,-5);
 	S->setUpBullet(40, Annwvyn::boxShape, true);
 
-
-
     GameEngine->useDefaultEventListener();
-
-
 
 	bool debounce;
 	bool current(false);
