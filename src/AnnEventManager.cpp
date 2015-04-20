@@ -70,15 +70,7 @@ AnnEventManager::~AnnEventManager()
 	delete Keyboard;
 	delete Mouse;
 	delete Joystick;
-	//delete InputManager;
 }
-
-/*
-void AnnEventManager::setListener(AnnAbstractEventListener* l)
-{
-	listener = l;
-}
-*/
 
 void AnnEventManager::addListener(AnnAbstractEventListener* l)
 {
@@ -90,10 +82,9 @@ void AnnEventManager::clearListenerList()
 	listeners.clear();
 }
 
-
 void AnnEventManager::removeListener(AnnAbstractEventListener* l)
 {
-	if(l == NULL) clearListenerList();
+	if(l == NULL) {clearListenerList(); return;}
 	for(size_t i(0); i < listeners.size(); i++)
 		if(listeners[i] == l)
 			listeners.erase(listeners.begin() + i);
