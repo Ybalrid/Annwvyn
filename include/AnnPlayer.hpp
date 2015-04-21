@@ -170,17 +170,21 @@ namespace Annwvyn
 		///Apply yaw from analog value
 		void applyAnalogYaw();
 
+		///Boolean true if verticalspeed whas 0 at last frame
 		bool YSpeedWasZero;
 
+		///Boolean false if the player can get orientation transformation from 
+		bool standing;
+
+		double updateTime;
 	public:
-		
 		///Waling state. Forward Backward Left Right
 		bool walking[4];
 
 		///Runing state
         bool run;
 
-		//Analog values between 0 and 1
+		//Analog values between -1 and 1
 		float analogWalk;
 		float analogStraff;
 		float analogRotate;

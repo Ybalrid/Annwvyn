@@ -379,7 +379,7 @@ void AnnGameObject::addTime(double offset)
     if(!animIsSetted || !animIsPlaying)
         return;
 
-    m_anim->addTime(offset);
+    m_anim->addTime(float(offset));
 }
 
 void AnnGameObject::applyImpulse(Ogre::Vector3 force)

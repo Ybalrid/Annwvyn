@@ -9,11 +9,12 @@ AnnAbstractEventListener::AnnAbstractEventListener(AnnPlayer* p)
 
 float AnnAbstractEventListener::trim(float v, float dz)
 {
+	//Compute absolute value of v
 	float abs(v); 
 	if(v < 0) abs = -v;
 	
+	//The test is done on the abs value. Return the actuall value, or 0 if under the deadzone
 	if(abs >= dz) return v; 
-	
 	return 0.0f;
 }
 
@@ -47,8 +48,10 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 
 	//Should be a HWND under windows, but, whatever, it's an unsigned integer...
 	size_t windowHnd;
-	std::stringstream windowHndStr;
 	w->getCustomAttribute("WINDOW", &windowHnd);
+	
+	//Well, I think the best thing on the C++ standard library are the stream classes! :-D
+	std::stringstream windowHndStr;
 	windowHndStr << windowHnd;
 
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
@@ -57,11 +60,10 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 
 	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
-
 	if(InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
 	{
 			Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
-			Annwvyn::AnnEngine::log(Joystick->vendor());
+			Annwvyn::AnnEngine::log("Detected joystick : " + Joystick->vendor());
 	}
 }
 
@@ -74,6 +76,7 @@ AnnEventManager::~AnnEventManager()
 
 void AnnEventManager::addListener(AnnAbstractEventListener* l)
 {
+	if(l != NULL)
 	listeners.push_back(l);
 }
 
@@ -197,6 +200,5 @@ void AnnEventManager::update()
 
 		for(size_t i(0); i < listeners.size(); i++)
 			listeners[i]->StickEvent(e);
-
 	}
 }
