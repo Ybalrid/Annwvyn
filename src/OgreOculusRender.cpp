@@ -1,5 +1,7 @@
 #include "OgreOculusRender.hpp"
 
+using namespace OVR;
+
 OgreOculusRender::OgreOculusRender(std::string winName)
 {
 	//Initialize some variables
@@ -200,13 +202,14 @@ void OgreOculusRender::createWindow()
 	Ogre::NameValuePairList misc;
 
 	//This one only works on windows : "Borderless = no decoration"
-	misc["border"]="none"; //In case the program is not running in fullscreen mode, don't put window borders
-	misc["vsync"]="false";
-	misc["displayFrequency"]="75";
-	misc["monitorIndex"]="1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
+	misc["border"]				=	"none"; //In case the program is not running in fullscreen mode, don't put window borders
+	misc["vsync"]				=	"true";
+	misc["displayFrequency"]	=	"75";
+	misc["monitorIndex"]		=	"1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
 
 	//Initialize a window ans specify that creation is manual
 	window = root->initialise(false, name);
+
 	//Actually create the window
 #ifdef __gnu_linux__
     //Assuming the 2nd screen is used as a "normal" display, rotated. Ogre fullscreen on Linux does stranges things, so I don't permit it at all
@@ -283,7 +286,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 	Ogre::SceneNode* meshNode = rift_smgr->getRootSceneNode()->createChildSceneNode();
 
-	for (char eyeNum(0); eyeNum < 2; eyeNum++)
+	for (char eyeNum(0); eyeNum < ovrEye_Count; eyeNum++)
 	{
 		ovrDistortionMesh meshData;
 
@@ -390,7 +393,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 void OgreOculusRender::calculateProjectionMatrix()
 {
 	//The average  human has 2 eyes
-	for(size_t eyeIndex(0); eyeIndex < 2; eyeIndex++)
+	for(size_t eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Get the projection matrix
 		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, static_cast<float>(nearClippingDistance), 8000.0f, true);
@@ -422,8 +425,8 @@ void OgreOculusRender::RenderOneFrame()
 	Posef pose = ts.HeadPose.ThePose;
 
 	//Get the hmd orientation
-	OVR::Quatf oculusOrient = pose.Rotation;
-	OVR::Vector3f oculusPos = pose.Translation;
+	Quatf oculusOrient = pose.Rotation;
+	Vector3f oculusPos = pose.Translation;
 	
 	ovrEyeType eye;
 	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
@@ -445,13 +448,7 @@ void OgreOculusRender::RenderOneFrame()
 			oculusPos.y,
 			oculusPos.z)));
 	}
-	unsigned long timerStop = getTimer()->getMilliseconds();
-		updateTime = double(timerStart - timerStop) / 1000.0f;
-	/*if((updateTime = hmdFrameTiming.DeltaSeconds) == 0)
-	{
-		
-	}*/
-
+	
 	//update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
@@ -461,5 +458,8 @@ void OgreOculusRender::RenderOneFrame()
 	//Timewarp is not implemented yet...
 	//ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
 
+	unsigned long timerStop = getTimer()->getMilliseconds();
+	updateTime = double(timerStop - timerStart) / 1000.0;
+	std::stringstream ss; ss << updateTime;
 	ovrHmd_EndFrameTiming(oc->getHmd());
 }

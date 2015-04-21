@@ -8,7 +8,7 @@ bodyParams::bodyParams()
 	//these parameters looks good for testing. Costumise them before initializing the physics!
 	eyeHeight = 1.59f;
 	walkSpeed = 3;
-	turnSpeed = 0.005f;
+	turnSpeed = 0.5f;
 	mass = 80.0f;
 	Position = Ogre::Vector3(0,0,10);
 	HeadOrientation = Ogre::Quaternion(1,0,0,0);
@@ -16,8 +16,6 @@ bodyParams::bodyParams()
 	Body = NULL;
 	runFactor = 3;
 	jumpForce = btVector3(0,500,0);
-	bool YSpeedWasZero = 0;
-
 }
 
 AnnPlayer::AnnPlayer()
@@ -34,6 +32,10 @@ AnnPlayer::AnnPlayer()
 	analogWalk = 0;
 	analogStraff = 0;
 	analogRotate = 0;
+
+	YSpeedWasZero = false;
+	standing = false;
+	updateTime = 0;
 }
 
 AnnPlayer::~AnnPlayer()
@@ -159,7 +161,7 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
 {
-	applyRelativeBodyYaw(Ogre::Radian(-float(relValue)*getTurnSpeed()));
+	applyRelativeBodyYaw(Ogre::Radian(- float(relValue) *getTurnSpeed() *updateTime));
 }
 
 Ogre::Vector3 AnnPlayer::getTranslation()
@@ -190,8 +192,7 @@ Ogre::Vector3 AnnPlayer::getAnalogTranslation()
 
 void AnnPlayer::applyAnalogYaw()
 {
-	if(analogStraff < -1 || analogStraff > 1) return;
-	applyRelativeBodyYaw(-Ogre::Radian(10 * analogRotate * getTurnSpeed()));
+	applyRelativeBodyYaw(Ogre::Radian(- 7 * analogRotate * getTurnSpeed() * updateTime));
 }
 
 void AnnPlayer::jump()
@@ -203,16 +204,18 @@ void AnnPlayer::jump()
 
 void AnnPlayer::engineUpdate(float time)
 {
-	bool standing = true;
+	updateTime = time;
+	//To "emulate" falling on the ground, set this boolean to false (should
+	standing = true;
 	if(getBody())
 	{
 		applyAnalogYaw();
-		Ogre::Vector3 translate(getWalkSpeed() * (getTranslation()+getAnalogTranslation()));
+		Ogre::Vector3 translate(getWalkSpeed() * (getTranslation() + getAnalogTranslation()));
 
 		btVector3 currentVelocity = getBody()->getLinearVelocity();
 
-
-
+		//The cast to an in is for eliminating "noise" from the reading of the Y componant of the speed vector
+		//Apparently, event with the player standing on a plane, it's a really small number that is not strictly equals to zero.
 		if(int(currentVelocity.y()) == 0)
 		{
 			if(YSpeedWasZero)
