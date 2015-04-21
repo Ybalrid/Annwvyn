@@ -1,5 +1,5 @@
 #include "AnnAudioEngine.hpp"
-
+#include "AnnEngine.hpp" //for accessing the logger
 using namespace Annwvyn;
 
 AnnAudioEngine::AnnAudioEngine()
@@ -57,11 +57,21 @@ void AnnAudioEngine::shutdownOpenAL()
 
 ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 {
-	 // Open Audio file with libsndfile
+	std::stringstream ss; 
+	ss << "Loading audio file : " << Filename;
+	AnnEngine::log(ss.str());
+	ss.str("");
+
+	// Open Audio file with libsndfile
     SF_INFO FileInfos;
     SNDFILE* File = sf_open(Filename.c_str(), SFM_READ, &FileInfos);
     if (!File)
+	{
+		ss << "Error, cannot load file " << Filename << " as a recognized audio file";
+		AnnEngine::log(ss.str());
+		ss.str("");
         return 0;
+	}
 
 	// Lecture du nombre d'échantillons et du taux d'échantillonnage (nombre d'échantillons à lire par seconde)
     ALsizei NbSamples  = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
@@ -72,10 +82,11 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
     if (sf_read_short(File, &Samples[0], NbSamples) < NbSamples)
 	{
 		lastError = "Error while reading the file" + Filename + " through sndfile library";
+		AnnEngine::log(lastError);
         return 0;
 	}
 
-	  // close file
+	 // close file
     sf_close(File);
 
 	// read canal number
@@ -89,7 +100,6 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 
 	
     // create OpenAL buffer
-//    ALuint Buffer;
     alGenBuffers(1, &buffer);
 	
 	// load buffer
@@ -99,9 +109,14 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
     if (alGetError() != AL_NO_ERROR)
 	{
 		lastError = "Error : cannot create an audio buffer for : " + Filename;
+		AnnEngine::log(lastError);
         return 0;
 	}
  
+	ss.clear();
+	ss << Filename << " sucessfully loaded into audio engine";
+	AnnEngine::log(ss.str());
+	ss.str("");
     return buffer;
 }
 
@@ -109,6 +124,10 @@ void AnnAudioEngine::playBGM(const std::string path, const float volume)
 {
     loadSndFile(path);
 //	ALuint buffer = loadSndFile(path);
+
+	std::stringstream ss; 
+	ss << "Using " << path << " as BGM";
+	AnnEngine::log(ss.str());
 
 	alGenSources(1, &bgm);
 	alSourcei(bgm, AL_BUFFER, buffer);
