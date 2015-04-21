@@ -37,8 +37,6 @@ namespace Annwvyn
 		///Step the simulation
 		/// \param delta Interval in seconds that time has to be simulated
 		void step(float delta);
-		///Process collison information between ground and player
-		bool collisionWithGround(AnnPlayer* player);
 		///Process the collision querry system
 		void processCollisionTesting(AnnGameObjectVect& object);
 		///Process triggers contact event
@@ -47,8 +45,6 @@ namespace Annwvyn
 		void removeRigidBody(btRigidBody* body);
 		///Init player's body physical simulation
 		void initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node);
-		///Set the "ground" object
-		void setGround(AnnGameObject* ground);
 		///Set the debug drawer state
 		void setDebugPhysics(bool state);
 
@@ -64,8 +60,6 @@ namespace Annwvyn
 
 		bool debugPhysics;
 		BtOgre::DebugDrawer* m_debugDrawer;
-
-		AnnGameObject* m_Ground;
 	};
 }
 

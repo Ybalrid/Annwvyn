@@ -6,7 +6,7 @@ Critial
 - [ ] Need a proper object factory for class like AnnGameObject
 
 Non critial
-- [ ] Find a good name for AnnEngine::m_Camera wich is not tne camera but is used to calculate camera orientation and position
+- [X] Find a good name for AnnEngine::m_Camera wich is not tne camera but is used to calculate camera orientation and position
 - [ ] Add friction setting for bullet
 - [ ] Object parenting
 - [ ] Add debug drawing for trigger position when debug drawing is active for bullet

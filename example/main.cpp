@@ -53,13 +53,9 @@ AnnMain()
 {
 	//create Annwvyn engine
 	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
-	//CustomEventListener* el = new CustomEventListener(GameEngine->getPlayer());
-	//GameEngine->getEventManager()->setListener(el);
 
 
 	//load ressources
-	//GameEngine->loadZip("media/CORE.zip");
-	//GameEngine->loadDir("media");
 
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
@@ -77,7 +73,6 @@ AnnMain()
 	Annwvyn::AnnGameObject* Grid = GameEngine->createGameObject("Plane.mesh");
 	Grid->setPos(0,-3,0);
 	Grid->setUpBullet();
-	GameEngine->setGround(Grid); 
 
 	//Add light
 	Annwvyn::AnnLightObject* Light = GameEngine->addLight();	
@@ -121,7 +116,6 @@ AnnMain()
 	testText->colour(Ogre::ColourValue::Black);
 	testText->height(5);
 	testText->_redraw();
-	
 
 	GameEngine->setNearClippingDistance(0.20f);
 

@@ -6,6 +6,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 {    
 	AnnEngine::log("Init Bullet physics");
 
+	//Initialize the Bullet world
 	m_Broadphase = new btDbvtBroadphase();
 	m_CollisionConfiguration = new btDefaultCollisionConfiguration();
 	m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
@@ -21,9 +22,6 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 	debugPhysics = false;//by default
 	m_debugDrawer = new BtOgre::DebugDrawer(rootNode, m_DynamicsWorld);
 	m_DynamicsWorld->setDebugDrawer(m_debugDrawer);
-
-	//colision with this object will allow the player to jump
-	m_Ground = NULL;
 }
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
@@ -87,47 +85,6 @@ void AnnPhysicsEngine::step(float delta)
 		m_debugDrawer->step();
 }
 
-bool AnnPhysicsEngine::collisionWithGround(AnnPlayer* player)
-{
-	//If collision isn't computable : 
-	if(m_Ground == NULL || player->getBody() == NULL)
-		return false;
-
-	//Getting rid of differences of types. There is polymorphism we don't care of, we are just comparing memory addresses here!
-	void* pplayer = (void*) player->getBody();
-	void* ground = (void*) m_Ground->getBody();
-
-	int numManifolds = m_Dispatcher->getNumManifolds();
-
-	for (int i=0;i<numManifolds;i++)
-	{
-		btPersistentManifold* contactManifold =
-			m_DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-
-		const btCollisionObject* obA = (btCollisionObject*) contactManifold->getBody0();
-		const btCollisionObject* obB = (btCollisionObject*) contactManifold->getBody1();
-
-		void* pair1 = (void*) obA;
-		void* pair2 = (void*) obB;
-
-		if((pair1 == pplayer && pair2 == ground) || (pair2 == pplayer && pair1 == ground))
-		{
-			int numContacts = contactManifold->getNumContacts();
-			if(numContacts > 0)
-			{
-				player->contactWithGround = true;
-				return true;
-			}
-			else
-			{
-				player->contactWithGround = false;
-				return false;
-			}
-		}
-	}
-	return false;
-}
-
 void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectVect& objects)
 {
 	//TODO make a typedeff for getting off the uglyness here 
@@ -144,10 +101,9 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectVect& objects)
 	}
 
 	//process for each maniflod
-
 	int numManifolds = m_Dispatcher->getNumManifolds();
 	//m is manifold identifier
-	for (int m = 0;m <numManifolds;m++)
+	for (int m(0); m <numManifolds; m++)
 	{
 		btPersistentManifold* contactManifold =
 			m_DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(m);
@@ -155,31 +111,25 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectVect& objects)
 		const btCollisionObject* obA = (btCollisionObject*) contactManifold->getBody0();
 		const btCollisionObject* obB = (btCollisionObject*) contactManifold->getBody1();
 
-		//CAUTION HERE !
-		//
-		//we deliberatly lost track of objects types to just test THE ADDRESS of the pointer
-		//Comparaison between pointer of differents types aren't permited in C++.
-
+		//Just get the address of the collision objects
 		void* pair1 = (void*) obA;
 		void* pair2 = (void*) obB;
 
+		//for each known pair on the collision feedback system
 		for(size_t p = 0; p < pairs.size(); p++)
 		{
+			//Get the bodies from the manifold
 			void* body1 = (void*) pairs[p]->Object->getBody();
 			void* body2 = (void*) pairs[p]->Receiver->getBody();
 
-			if((pair1 == body1 && pair2 == body2) || 
+			//If there is a collision in either way
+			if((pair1 == body1 && pair2 == body2) ||
 				(pair2 == body1 && pair1 == body2))
 			{
-				int numContacts = contactManifold->getNumContacts();
-				if(numContacts > 0)
-				{
+				if(contactManifold->getNumContacts() > 0)
 					pairs[p]->collisionState = true;
-				}
 				else
-				{
 					pairs[p]->collisionState = false;
-				}
 				break;
 			}
 		}
@@ -196,11 +146,6 @@ void AnnPhysicsEngine::initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* nod
 	createVirtualBodyShape(player);
 	createPlayerPhysicalVirtualBody(player, node);
 	addPlayerPhysicalBodyToDynamicsWorld(player);
-}
-
-void AnnPhysicsEngine::setGround(AnnGameObject* Ground)
-{
-	m_Ground = Ground;
 }
 
 void AnnPhysicsEngine::setDebugPhysics(bool state)

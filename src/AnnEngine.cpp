@@ -2,7 +2,6 @@
 
 using namespace Annwvyn;
 
-
 AnnEngine::AnnEngine(const char title[])
 {
 	m_CameraReference = NULL;
@@ -60,10 +59,6 @@ AnnEngine::AnnEngine(const char title[])
 
 	log("Setup event system");
 	eventManager = new AnnEventManager(m_Window);
-
-	log("Setup time system");
-	last = oor->getTimer()->getMilliseconds();
-	now = last;
 
 	log("Setup physics engine");
 	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode());
@@ -260,15 +255,15 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 	bool returnCode(false);
 	for(size_t i(0); i < objects.size(); i++)
 	{
-		ss << "Object " << static_cast<void*>(objects[i]) << " stop collision test" << std::endl;
+		ss << "Object " << static_cast<void*>(objects[i]) << " stop collision test";
 		log(ss.str());
 
 		objects[i]->stopGettingCollisionWith(object);
 
 		if(objects[i] == object)
 		{
-			ss.clear();
-			ss << "Object found" << std::endl;
+			ss.str("");
+			ss << "Object found";
 			log(ss.str());
 
 			objects.erase(objects.begin() + i);
@@ -308,15 +303,14 @@ bool AnnEngine::refresh()
 		//Call of refresh method
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
 		(*it)->atRefresh();
-	last = now;
-	now = oor->getTimer()->getMilliseconds();
-	deltaT = (now - last)/1000.0f;
+
+	deltaT = oor->getUpdateTime();
 
 	//Physics
 	physicsEngine->step(deltaT);
 
 	//Test if there is a collision with the ground
-	physicsEngine->collisionWithGround(player);
+//	physicsEngine->collisionWithGround(player);
 	player->engineUpdate(deltaT);
 
 	//Dissmiss health and safety warning
@@ -486,11 +480,6 @@ void AnnEngine::setDebugPhysicState(bool state)
 void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
 {
 	m_SceneManager->setAmbientLight(v);
-}
-
-void AnnEngine::setGround(AnnGameObject* Ground)
-{
-	physicsEngine->setGround(Ground);
 }
 
 void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)

@@ -137,10 +137,6 @@ namespace Annwvyn
             ///Get elapsed time from engine startup
             double getTimeFromStartUp();//engine
 
-            ///Set the ground object
-			/// \param Ground an object that play the role of the ground.
-            void setGround(AnnGameObject* Ground); //scene
-
             ///Return the Annwvyn OpenAL simplified audio engine
             AnnAudioEngine* getAudioEngine(); //audio
 
@@ -248,12 +244,6 @@ namespace Annwvyn
             ///Dynamic container for games objects present in engine.
             std::vector<AnnGameObject*>	objects;
 			std::vector<AnnTriggerObject*> triggers;
-
-            size_t windowHnd;
-            std::ostringstream windowHndStr;
-
-            //Time
-            unsigned long last, now; //Milisec
             
             //Elapsed time
             double deltaT; //Sec
