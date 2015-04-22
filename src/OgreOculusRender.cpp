@@ -27,8 +27,9 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	lastOculusOrientation = cameraOrientation;
 	updateTime = 0;
 	fullscreen = true;
+	vsync = true;
 	hsDissmissed = false;
-	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);
+	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -36,10 +37,7 @@ OgreOculusRender::~OgreOculusRender()
 	Ogre::LogManager::getSingleton().logMessage("destructiong OgreOculusRender object");
 	delete oc;
 	 
-	//Prevent an exeption
-	Ogre::TextureManager::getSingleton().getByName("RttTexL").setNull();
-	Ogre::TextureManager::getSingleton().getByName("RttTexR").setNull();
-
+	//TODO clean Ogre properly. There is stuff to delete manually before being able to delete "root".
 	//delete root;
 }
 
@@ -203,7 +201,7 @@ void OgreOculusRender::createWindow()
 
 	//This one only works on windows : "Borderless = no decoration"
 	misc["border"]				=	"none"; //In case the program is not running in fullscreen mode, don't put window borders
-	misc["vsync"]				=	"true";
+	if (vsync) misc["vsync"]	=	"true";
 	misc["displayFrequency"]	=	"75";
 	misc["monitorIndex"]		=	"1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
 
