@@ -54,9 +54,7 @@ AnnMain()
 	//create Annwvyn engine
 	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
 
-
 	//load ressources
-
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
 	GameEngine->loadDir("media/plane");
@@ -64,9 +62,7 @@ AnnMain()
 	GameEngine->loadDir("media/GUI");
 	GameEngine->initResources();
 
-
 	//Create Object
-	
 	MyTrigger* T = (MyTrigger*) GameEngine->createTriggerObject(new MyTrigger);
 	T->setPosition(-0.5,-1,3);
 
@@ -79,23 +75,18 @@ AnnMain()
 	GameEngine->setAmbiantLight(Ogre::ColourValue(.1f,.1f,.1f));
 	Light->setPosition(0,3,10);
 
-
 	GameEngine->initPlayerPhysics();
 	GameEngine->setDebugPhysicState(false);
 
-
 	//setUp Oculus system
 	GameEngine->oculusInit();
-
 	GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
-
 
 	//play background music
 	//GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
 
 	//Parameters : name of resource loaded "mesh" file, Z axis offset between center and eyball center, and a boolean for aplying a 180° flip or not
 	//You have to flip the character if you modeled it whith the head facing you on your 3D software (witch is the good way to do it anyway...)
-
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1 ,true);
 	
 	//////////////////////////// INIT GUI TEST 
@@ -129,7 +120,6 @@ AnnMain()
 
 	bool debounce;
 	bool current(false);
-
 	do	
 	{   
 		debounce = current;

@@ -140,6 +140,8 @@ class DLL OgreOculusRender
 
 		///If true, window will be created in full screen mode
 		bool fullscreen;
+		///If true, window will be created with the "vsync" parameter set to true
+		bool vsync;
 
 		///background color of viewports
 		Ogre::ColourValue backgroundColor;

@@ -70,7 +70,6 @@ AnnEngine::AnnEngine(const char title[])
 	VisualBody = NULL;
 	VisualBodyAnimation = NULL;
 	VisualBodyAnchor = NULL;
-	//VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 
 	refVisualBody = Ogre::Quaternion::IDENTITY;
 	log("---------------------------------------------------", false);
@@ -300,7 +299,7 @@ bool AnnEngine::requestStop()
 
 bool AnnEngine::refresh()
 {
-		//Call of refresh method
+	//Call of refresh method
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
 		(*it)->atRefresh();
 
@@ -310,7 +309,6 @@ bool AnnEngine::refresh()
 	physicsEngine->step(deltaT);
 
 	//Test if there is a collision with the ground
-//	physicsEngine->collisionWithGround(player);
 	player->engineUpdate(deltaT);
 
 	//Dissmiss health and safety warning
@@ -333,7 +331,7 @@ bool AnnEngine::refresh()
 	//Audio
 	AudioEngine->updateListenerPos(oor->returnPose.position);
 	AudioEngine->updateListenerOrient(oor->returnPose.orientation);
-	for(unsigned int i = 0; i < objects.size(); i++)
+	for(size_t i = 0; i < objects.size(); i++)
 		objects[i]->updateOpenAlPos();
 
 	//Update camera
@@ -359,41 +357,26 @@ AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 
 AnnGameObject* AnnEngine::playerLookingAt()
 {
-	//Origin vector
-	Ogre::Vector3 Orig(oor->lastOculusPosition);
+	//Origin vector of the ray
+	Ogre::Vector3 Orig(getPoseFromOOR().position);
 
-	//Direction Vector
-	Ogre::Quaternion Orient = oor->lastOculusOrientation;
-	Ogre::Vector3 LookAt = Orient * Ogre::Vector3::NEGATIVE_UNIT_Z;
+	//Caltulate direction Vector of the ray to be the midpont camera optical axis
+	Ogre::Vector3 LookAt(getPoseFromOOR().orientation * Ogre::Vector3::NEGATIVE_UNIT_Z);
 
 	//create ray
 	Ogre::Ray ray(Orig, LookAt);
 
 	//create query
-	Ogre::RaySceneQuery* raySceneQuery = m_SceneManager->createRayQuery(ray);
+	Ogre::RaySceneQuery* raySceneQuery(m_SceneManager->createRayQuery(ray));
 	raySceneQuery->setSortByDistance(true);
 
 	//execute and get the results
-	Ogre::RaySceneQueryResult& result = raySceneQuery->execute();
+	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
 
 	//read the result list
-	Ogre::RaySceneQueryResult::iterator it;
-	bool found(false);Ogre::SceneNode* node;
-
-	for(it = result.begin(); it != result.end(); it++)
-	{
+	for(Ogre::RaySceneQueryResult::iterator it(result.begin()); it != result.end(); it++)
 		if(it->movable && it->movable->getMovableType() == "Entity")
-		{
-			node = it->movable->getParentSceneNode();
-			found = true;
-			break;
-		}	
-	}
-
-	if(found)
-		for(size_t i = 0; i < objects.size(); i++)
-			if((void*)objects[i]->node() == (void*)node)
-				return objects[i];
+			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
 
 	return NULL; //means that we don't know what the player is looking at.
 }
