@@ -52,8 +52,9 @@ class MyTrigger : public Annwvyn::AnnTriggerObject
 AnnMain()
 {
 	//create Annwvyn engine
-	Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
-
+	//Annwvyn::AnnEngine* GameEngine = new Annwvyn::AnnEngine("A Game");	
+	Annwvyn::AnnEngine::initialize("A Game");
+	Annwvyn::AnnEngine* GameEngine(Annwvyn::AnnEngine::getSingletonPtr());
 	//load ressources
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
