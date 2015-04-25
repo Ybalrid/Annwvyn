@@ -3,7 +3,7 @@
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(NULL);
-AnnEngine* AnnEngine::getSingletonPtr()
+AnnEngine* AnnEngine::Instance()
 {
 	return singleton;
 }
@@ -12,7 +12,7 @@ AnnEngine* AnnEngine::getSingletonPtr()
 AnnEngine::AnnEngine(const char title[])
 {
 	//Make the necessary singleton initialization. 
-	assert(!singleton);
+	if(singleton) abort();
 	singleton = this;
 
 	m_CameraReference = NULL;
