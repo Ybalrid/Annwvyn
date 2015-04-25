@@ -51,8 +51,7 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::
 	assert(player->getShape());
 
 	//Create a rigid body state through BtOgre
-	BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState
-		(node);
+	BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(node);
 
 	//Get inertia vector
 	btVector3 inertia;
@@ -93,8 +92,7 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectVect& objects)
 	//get all collision mask
 	for(size_t i = 0; i < objects.size(); i++)
 	{
-		std::vector<struct collisionTest*> onThisObject = 
-			objects[i]->getCollisionMask();
+		std::vector<struct collisionTest*> onThisObject = objects[i]->getCollisionMask();
 
 		for(size_t j = 0; j < onThisObject.size(); j++)
 			pairs.push_back(onThisObject[j]);

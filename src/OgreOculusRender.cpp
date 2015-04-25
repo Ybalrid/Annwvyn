@@ -458,6 +458,5 @@ void OgreOculusRender::RenderOneFrame()
 
 	unsigned long timerStop = getTimer()->getMilliseconds();
 	updateTime = double(timerStop - timerStart) / 1000.0;
-	std::stringstream ss; ss << updateTime;
 	ovrHmd_EndFrameTiming(oc->getHmd());
 }

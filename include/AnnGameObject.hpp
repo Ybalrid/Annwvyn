@@ -170,6 +170,15 @@ namespace Annwvyn
             ///SetUpPhysics
             void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true){setUpBullet(mass,type,colide);}
 
+			///Make the object visible
+			void setVisible();
+
+			///Make the object invisible
+			void setInvisible();
+
+			///Get if object visible
+			bool isVisible();
+
         private:
             ///Make Annwvyn::AnnEngine acces these methods : 
             friend class AnnEngine;
@@ -195,14 +204,6 @@ namespace Annwvyn
             ///For engine set Audio engine    
 			void setAudioEngine(AnnAudioEngine* AudioEngine);
 
-			///Make the object visible
-			void setVisible();
-
-			///Make the object invisible
-			void setInvisible();
-
-			///Get if object visible
-			bool isVisible();
 
         private:
 			/**
