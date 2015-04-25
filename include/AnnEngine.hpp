@@ -46,13 +46,18 @@
 namespace Annwvyn
 {
 	class AnnPhysicsEngine;
+
+
 	///Main engine class. Creating an instance of that class make the engine start.
+	///It's more or less a singleton, and will be the only one in the engine architecture. 
+	///You can intantiate it like a normal class and bypass the idea of a singleton complettely.
+	///This is the base class of the whole engine, the idea is more or less the one described in the 
+	///"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
 	class DLL AnnEngine
 	{
 	private:
 		static AnnEngine* singleton;
 	public:
-		static AnnEngine* initialize(const char title[] = "Annwvyn Game Engine");
 		static AnnEngine* getSingletonPtr();
 
 		///Class constructor. take the name of the window
@@ -254,8 +259,6 @@ namespace Annwvyn
 
 		//Elapsed time
 		double deltaT; //Sec
-
-
 
 
 #ifdef __gnu_linux__
