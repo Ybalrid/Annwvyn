@@ -8,21 +8,22 @@ using namespace Annwvyn; //All Annwvyn components are here
 
 AnnMain()
 {
-	AnnEngine* GameEngine = new AnnEngine("My Game");
+	//Initialize the engine
+	AnnEngine::initialize("MyGame");
 
 	//Load your ressources here
 
-	GameEngine->initResources();
-	GameEngine->oculusInit();
+	AnnEngine::getSingletonPtr()->initResources();
+	AnnEngine::getSingletonPtr()->oculusInit();
 
 	//Do the other initialization here
 
 	do
 	{
 		//Put your gameplay code here
-	}while(GameEngine->refresh());
-
-	delete GameEngine;
+	}while(AnnEngine::getSingletonPtr()->refresh());
+	//destroy the engine
+	delete AnnEngine::getSingletonPtr();
 	return 0;
 }
 
