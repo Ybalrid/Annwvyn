@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
   <Class Name="Annwvyn::AnnEngine">
-    <Position X="9.5" Y="14.75" Width="6.5" />
+    <Position X="9.5" Y="14.5" Width="6.5" />
     <TypeIdentifier>
-      <HashCode>SgkCTGACwECSEQAgAkAImBIACSAhBBBVgBAAAkkoAMA=</HashCode>
+      <HashCode>SgkCTGACwECSEQAgAkAImBIBCSAhBBBVgBAAAkkoAMA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEngine.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -12,6 +12,7 @@
       <Field Name="eventManager" />
       <Field Name="physicsEngine" />
       <Field Name="oor" />
+      <Field Name="singleton" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Annwvyn::AnnAudioEngine">
@@ -22,7 +23,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnEventManager">
-    <Position X="17.25" Y="24.5" Width="3.75" />
+    <Position X="10.25" Y="28.5" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAgAAQAAEAAhIAAAQgAAAAAAAIABAAAAAABIYAAEAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
@@ -171,7 +172,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Annwvyn::AnnPhysicsEngine">
-    <Position X="9.5" Y="27" Width="5.25" />
+    <Position X="17.5" Y="24" Width="5.25" />
     <TypeIdentifier>
       <HashCode>AQgAAAAAAQAAAAEBABAAAABAAACgBAEISAGIQgAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnPhysicsEngine.hpp</FileName>

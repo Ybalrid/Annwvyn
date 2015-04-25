@@ -1,16 +1,11 @@
 //Includes
 #include <Annwvyn.h>
-
-//Namespaces
-using namespace std;
 using namespace Annwvyn; //All Annwvyn components are here 
-
 
 AnnMain()
 {
 	//Initialize the engine
-	AnnEngine::initialize("MyGame");
-
+	new AnnEngine("Your game");
 	//Load your ressources here
 
 	AnnEngine::getSingletonPtr()->initResources();
@@ -24,6 +19,6 @@ AnnMain()
 	}while(AnnEngine::getSingletonPtr()->refresh());
 	//destroy the engine
 	delete AnnEngine::getSingletonPtr();
-	return 0;
+	return EXIT_SUCCESS;
 }
 

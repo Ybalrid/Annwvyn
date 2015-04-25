@@ -3,14 +3,6 @@
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(NULL);
-AnnEngine* AnnEngine::initialize(const char title[])
-{
-	if(!singleton)
-		return singleton = new AnnEngine(title);
-	AnnEngine::log("Tried to initialize the engine multiple time : not good, please learn to code.");
-	return NULL;
-}
-
 AnnEngine* AnnEngine::getSingletonPtr()
 {
 	return singleton;
@@ -19,6 +11,10 @@ AnnEngine* AnnEngine::getSingletonPtr()
 
 AnnEngine::AnnEngine(const char title[])
 {
+	//Make the necessary singleton initialization. 
+	assert(!singleton);
+	singleton = this;
+
 	m_CameraReference = NULL;
 #ifdef __gnu_linux__
 	x11LayoutAtStartup = "unknown";
