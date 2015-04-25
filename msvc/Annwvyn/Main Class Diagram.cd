@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
   <Class Name="Annwvyn::AnnEngine">
-    <Position X="9.5" Y="14.5" Width="6.5" />
+    <Position X="9.5" Y="14.75" Width="6.5" />
     <TypeIdentifier>
-      <HashCode>SgkCTGACwECSEQAgAkAImBIACSAhBBBVgBAAAkkoAcA=</HashCode>
+      <HashCode>SgkCTGACwECSEQAgAkAImBIACSAhBBBVgBAAAkkoAMA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEngine.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -22,7 +22,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnEventManager">
-    <Position X="10.25" Y="28.5" Width="3.75" />
+    <Position X="17.25" Y="24.5" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAgAAQAAEAAhIAAAQgAAAAAAAIABAAAAAABIYAAEAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEventManager.hpp</FileName>
@@ -38,7 +38,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>RYxIGQAIFEfAUgEBAAEhAAgAIFAMwQgI4AVCAAgBAAI=</HashCode>
+      <HashCode>RYxIGQAIFEfAUgEBAAEhAAgAIFAMwQgI4AVCAAgBAAY=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\OgreOculusRender.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -47,7 +47,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="OculusInterface">
-    <Position X="0.5" Y="17.75" Width="2.25" />
+    <Position X="0.5" Y="21.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAIAAAABAACAIBAACAAAAIIIAAACIQEAEAAAAEAAI=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\OculusInterface.hpp</FileName>
@@ -171,7 +171,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Annwvyn::AnnPhysicsEngine">
-    <Position X="17.5" Y="24" Width="5.25" />
+    <Position X="9.5" Y="27" Width="5.25" />
     <TypeIdentifier>
       <HashCode>AQgAAAAAAQAAAAEBABAAAABAAACgBAEISAGIQgAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnPhysicsEngine.hpp</FileName>
@@ -195,7 +195,7 @@
     </ShowAsAssociation>
   </Class>
   <Struct Name="OgrePose">
-    <Position X="4.75" Y="27.25" Width="2" />
+    <Position X="0.75" Y="19.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAABAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\OgreOculusRender.hpp</FileName>
