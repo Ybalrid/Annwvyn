@@ -120,6 +120,8 @@ AnnEngine::~AnnEngine()
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
 	delete oor;
+
+	singleton = NULL;
 }
 
 AnnEventManager* AnnEngine::getEventManager()
