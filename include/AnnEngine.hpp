@@ -58,7 +58,7 @@ namespace Annwvyn
 	private:
 		static AnnEngine* singleton;
 	public:
-		static AnnEngine* getSingletonPtr();
+		static AnnEngine* Instance();
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
@@ -68,9 +68,6 @@ namespace Annwvyn
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();
-
-		///Return pointer to the engine itself
-		AnnEngine* getAddress() {return this;}
 
 		///Get the event manager
 		AnnEventManager* getEventManager();

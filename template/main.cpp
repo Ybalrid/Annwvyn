@@ -8,17 +8,18 @@ AnnMain()
 	new AnnEngine("Your game");
 	//Load your ressources here
 
-	AnnEngine::getSingletonPtr()->initResources();
-	AnnEngine::getSingletonPtr()->oculusInit();
+	AnnEngine::Instance()->initResources();
+	AnnEngine::Instance()->oculusInit();
 
 	//Do the other initialization here
 
 	do
 	{
 		//Put your gameplay code here
-	}while(AnnEngine::getSingletonPtr()->refresh());
+	}while(AnnEngine::Instance()->refresh());
+
 	//destroy the engine
-	delete AnnEngine::getSingletonPtr();
+	delete AnnEngine::Instance();
 	return EXIT_SUCCESS;
 }
 
