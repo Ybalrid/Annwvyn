@@ -49,7 +49,7 @@ struct OgrePose
 class DLL OgreOculusRender
 {
     public:
-        OgreOculusRender(std::string windowName = "OgreOculusRender");
+        OgreOculusRender(std::string windowName = "OgreOculusRender", bool actVsync = true);
         ~OgreOculusRender();
 
 		///Calculate, time and present a frame on the Rift display

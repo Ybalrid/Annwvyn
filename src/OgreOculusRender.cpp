@@ -2,7 +2,7 @@
 
 using namespace OVR;
 
-OgreOculusRender::OgreOculusRender(std::string winName)
+OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 {
 	//Initialize some variables
 	name = winName;
@@ -27,7 +27,7 @@ OgreOculusRender::OgreOculusRender(std::string winName)
 	lastOculusOrientation = cameraOrientation;
 	updateTime = 0;
 	fullscreen = true;
-	vsync = true;
+	vsync = activateVsync;
 	hsDissmissed = false;
 	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);;
 }
