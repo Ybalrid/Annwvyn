@@ -130,8 +130,7 @@ void OgreOculusRender::loadReseourceFile(const char path[])
 		{
 			typeName = i->first;
 			archName = i->second;
-			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-				archName, typeName, secName);
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
 		}
 	}
 }
@@ -216,7 +215,7 @@ void OgreOculusRender::createWindow()
     window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
 
 	//Put the window at the place given by the SDK (usefull on linux system where the X server thinks multiscreen is a single big one...)
-	window->reposition(oc->getHmd()->WindowsPos.x,oc->getHmd()->WindowsPos.y);
+	window->reposition(oc->getHmd()->WindowsPos.x, oc->getHmd()->WindowsPos.y);
 }
 
 void OgreOculusRender::initCameras()
@@ -242,7 +241,7 @@ void OgreOculusRender::setCamerasNearClippingDistance(float distance)
 void OgreOculusRender::initScene()
 {
 	assert(root != NULL);
-	smgr = root->createSceneManager("OctreeSceneManager","OSM_SMGR");
+	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
 }
 
@@ -256,8 +255,17 @@ void OgreOculusRender::initRttRendering()
 
 	rift_smgr = root->createSceneManager(Ogre::ST_GENERIC);
 	rift_smgr->setAmbientLight(Ogre::ColourValue(1,1,1));
-	mLeftEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual("RttTexL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeL.w, texSizeL.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
-	mRightEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual("RttTexR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeR.w, texSizeR.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
+
+	mLeftEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual("RttTexL", 
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+		Ogre::TEX_TYPE_2D, 
+		texSizeL.w, texSizeL.h, 0, 
+		Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
+	mRightEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual("RttTexR", 
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+		Ogre::TEX_TYPE_2D, 
+		texSizeR.w, texSizeR.h, 0, 
+		Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
 }
 
 void OgreOculusRender::initOculus(bool fullscreenState)
@@ -268,7 +276,6 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	mMatLeft->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(mLeftEyeRenderTexture);
 	mMatRight = Ogre::MaterialManager::getSingleton().getByName("Oculus/RightEye");
 	mMatRight->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(mRightEyeRenderTexture);
-
 
 	EyeRenderDesc[0] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[0]);
 	EyeRenderDesc[1] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[1]);
@@ -315,6 +322,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 			Ogre::Vector2(UVScaleOffset[0].x, UVScaleOffset[0].y ));
 		params->setNamedConstant("eyeToSourceUVOffset",
 			Ogre::Vector2(UVScaleOffset[1].x, UVScaleOffset[1].y ));
+
 		Ogre::ManualObject* manual;
 		if( eyeNum == 0 )
 		{
@@ -394,7 +402,10 @@ void OgreOculusRender::calculateProjectionMatrix()
 	for(size_t eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Get the projection matrix
-		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, static_cast<float>(nearClippingDistance), 8000.0f, true);
+		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, 
+			static_cast<float>(nearClippingDistance), 
+			8000.0f, 
+			true);
 
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
@@ -453,7 +464,7 @@ void OgreOculusRender::RenderOneFrame()
 
 	root->renderOneFrame();
 
-	//Timewarp is not implemented yet...
+	//Timewarp is not implemented yet... need to recode sharders or to 
 	//ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
 
 	unsigned long timerStop = getTimer()->getMilliseconds();

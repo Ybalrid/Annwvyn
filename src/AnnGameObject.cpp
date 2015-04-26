@@ -1,6 +1,6 @@
 #include "AnnGameObject.hpp"
 #include "AnnTools.h"
-
+#include "AnnEngine.hpp"
 
 using namespace Annwvyn;
 
@@ -12,13 +12,11 @@ AnnGameObject::AnnGameObject()
     m_DynamicsWorld = NULL;
     m_Body = NULL;
     m_Shape = NULL;
-    m_AudioEngine = NULL;
     alGenSources(1,&m_Source);
     m_anim = NULL;
     animIsLooping = false;
     animIsPlaying = false;
     animIsSetted = false;
-	visualLinearSpeed = Ogre::Vector3::ZERO;
 	visible = true;
 }
 
@@ -30,17 +28,10 @@ AnnGameObject::~AnnGameObject()
     alDeleteBuffers(1,&m_Buffer);
 }
 
-
-void AnnGameObject::setAudioEngine(AnnAudioEngine* AudioEngine)
-{
-	//Get a pointer to the audio engine.
-    m_AudioEngine = AudioEngine;
-}
-
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
 {
 	//Load a sound file to the buffer (uncompress the file to the RAM)
-    m_Buffer = m_AudioEngine->loadSndFile(path);
+    m_Buffer = AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
 
 	//create a source to the buffer
     alSourcei(m_Source, AL_BUFFER, m_Buffer);
@@ -157,7 +148,6 @@ Ogre::Quaternion AnnGameObject::Orientation()
     return Ogre::Quaternion(1,0,0,0);
 }
 
-
 void AnnGameObject::setNode(Ogre::SceneNode* node)
 {
     m_node = node;
@@ -168,12 +158,10 @@ void AnnGameObject::setEntity(Ogre::Entity* entity)
     m_entity = entity;
 }
 
-
 void AnnGameObject::setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld)
 {
     m_DynamicsWorld = dynamicsWorld;
 }
-
 
 void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPlayer)
 {
