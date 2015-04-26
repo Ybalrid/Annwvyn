@@ -185,9 +185,6 @@ namespace Annwvyn
 
             ///For engine : set node
             void setNode(Ogre::SceneNode* node);
-			
-			///Set the GameEngine pointer. 
-			void setEngine(AnnEngine* e);
 
             ///For engine : set Entity
             void setEntity(Ogre::Entity* entity);
@@ -201,10 +198,6 @@ namespace Annwvyn
             ///For engine : update OpenAL source position
             void updateOpenAlPos();
 
-            ///For engine set Audio engine    
-			void setAudioEngine(AnnAudioEngine* AudioEngine);
-
-
         private:
 			/**
 			* You will certainly find strange to see that the Object does not cary a "position" vector.
@@ -214,6 +207,8 @@ namespace Annwvyn
 			*  
 			* Same is true with the Orientation. We use Ogre node
 			*/
+			std::vector<collisionTest *> collisionMask;
+
             Ogre::SceneNode* m_node;
             Ogre::Entity* m_entity;
             Ogre::AnimationState* m_anim;
@@ -227,20 +222,15 @@ namespace Annwvyn
             btRigidBody* m_Body;
             bool bulletReady;
 
-            std::vector<collisionTest * > collisionMask;
-
-			///Audio Engine 
-            AnnAudioEngine* m_AudioEngine;
 			///OpenAL audio source
             ALuint m_Source; 
 			///OpenAL buffer
             ALuint m_Buffer; 
 
-			Ogre::Vector3 visualLinearSpeed;
-
+			///Name of the object
 			std::string name;
 
-
+			///True if the object is visible
 			bool visible;
 
         public:

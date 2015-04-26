@@ -1,10 +1,10 @@
 /**
- * \file AnnEngine.hpp
- * \brief Main Annwvyn Engine class
- *        handle intialization, destruction of object at runtime
- *        handle rendering initialization, physics initialization and sound engine initialization
- * \author A. Brainville (Ybalrid)
- */
+* \file AnnEngine.hpp
+* \brief Main Annwvyn Engine class
+*        handle intialization, destruction of object at runtime
+*        handle rendering initialization, physics initialization and sound engine initialization
+* \author A. Brainville (Ybalrid)
+*/
 
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
@@ -45,213 +45,219 @@
 
 namespace Annwvyn
 {
-    class AnnPhysicsEngine;
+	class AnnPhysicsEngine;
+
+
 	///Main engine class. Creating an instance of that class make the engine start.
-    class DLL AnnEngine
-    {
-        public:
-            ///Class constructor. take the name of the window
-			/// \param title The title of the windows that will be created by the operating system
-            AnnEngine(const char title[] = "Annwvyn Game Engine");
+	///It's more or less a singleton, and will be the only one in the engine architecture. 
+	///You can intantiate it like a normal class and bypass the idea of a singleton complettely.
+	///This is the base class of the whole engine, the idea is more or less the one described in the 
+	///"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
+	class DLL AnnEngine
+	{
+	private:
+		///the singleton itsefl is stored here
+		static AnnEngine* singleton;
+	public:
+		///Get the current instance of AnnEngine. pointer
+		static AnnEngine* Instance();
 
-            ///Class destructor. Do clean up stuff.
-            ~AnnEngine();
+		///Class constructor. take the name of the window
+		/// \param title The title of the windows that will be created by the operating system
+		AnnEngine(const char title[] = "Annwvyn Game Engine");
 
-			///Return pointer to the engine itself
-			AnnEngine* getAddress() {return this;}
+		///Class destructor. Do clean up stuff.
+		~AnnEngine();
 
-			///Get the event manager
-			AnnEventManager* getEventManager();
-			
-			///Get the player
-			AnnPlayer* getPlayer();
+		///Get the event manager
+		AnnEventManager* getEventManager();
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
+		///Get the player
+		AnnPlayer* getPlayer();
 
-            ///Give a zipped archive resource location to the Ogre Resource Group Manager
-			/// \param path The path to a zip file.
-			/// \param resourceGroupName name of the resource group where the content will be added
-            void loadZip(const char path[], const char resourceGroupName[] = "ANNWVYN_DEFAULT");
+		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 
-			///Give a directory resouce location to the Ogre Resource Group Manager
-			/// \param path The path to the directory
-			/// \param resourceGroupName name of the resource group
-            void loadDir(const char path[], const char resourceGroupName[] = "ANNWVYN_DEFAULT");
+		///Give a zipped archive resource location to the Ogre Resource Group Manager
+		/// \param path The path to a zip file.
+		/// \param resourceGroupName name of the resource group where the content will be added
+		void loadZip(const char path[], const char resourceGroupName[] = "ANNWVYN_DEFAULT");
 
-			///Load a standard Ogre resource.cfg file
-			/// \param path path to the resource file
-            void loadResFile(const char path[]); //resource
+		///Give a directory resouce location to the Ogre Resource Group Manager
+		/// \param path The path to the directory
+		/// \param resourceGroupName name of the resource group
+		void loadDir(const char path[], const char resourceGroupName[] = "ANNWVYN_DEFAULT");
 
-            ///Init All ressources groups
-            void initResources(); //resource
+		///Load a standard Ogre resource.cfg file
+		/// \param path path to the resource file
+		void loadResFile(const char path[]); //resource
 
-			///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
-			void addDefaultResourceLocaton();
+		///Init All ressources groups
+		void initResources(); //resource
 
-			///Init a resource group
-			/// \param resourceGroup name of the resourceGroup
-			void initAResourceGroup(std::string resourceGroup); //resource
+		///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
+		void addDefaultResourceLocaton();
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
+		///Init a resource group
+		/// \param resourceGroup name of the resourceGroup
+		void initAResourceGroup(std::string resourceGroup); //resource
 
-            ///Init OgreOculus stuff
-            void oculusInit(bool fullscreen = true); //oculus
+		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 
-			///Init the physics model
-            void initPlayerPhysics(); //physics on player 
+		///Init OgreOculus stuff
+		void oculusInit(bool fullscreen = true); //oculus
 
-            ///Create a game object form the name of an entity.
-			/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
-			/// \param object An instance of an empty AnnGameObject. Usefull for creating object of herited class
-            AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject); //object factory
+		///Init the physics model
+		void initPlayerPhysics(); //physics on player 
 
-			///Destroy the given object
-			/// \param object the object to be destroyed
-            bool destroyGameObject(AnnGameObject* object); //object factory
+		///Create a game object form the name of an entity.
+		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
+		/// \param object An instance of an empty AnnGameObject. Usefull for creating object of herited class
+		AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject); //object factory
 
-            ///Set the ambiant light
-			/// \param v the color of the light
-            void setAmbiantLight(Ogre::ColourValue v); //scene parameter
+		///Destroy the given object
+		/// \param object the object to be destroyed
+		bool destroyGameObject(AnnGameObject* object); //object factory
 
-            ///Add a light to the scene. return a pointer to the new light
-            AnnLightObject* addLight(); //object factory
+		///Set the ambiant light
+		/// \param v the color of the light
+		void setAmbiantLight(Ogre::ColourValue v); //scene parameter
 
-            ///Display bullet debuging drawing
-			/// \param state debug state
-            void setDebugPhysicState(bool state); //engine debug
+		///Add a light to the scene. return a pointer to the new light
+		AnnLightObject* addLight(); //object factory
 
-            ///Return true if the game want to terminate the program
-            bool requestStop(); //engine
+		///Display bullet debuging drawing
+		/// \param state debug state
+		void setDebugPhysicState(bool state); //engine debug
 
-            ///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
-			/// \param message Message to be loged 
-			/// \param flag If true : Put the "Annwvyn -" flag before the message
-            static void log(std::string message, bool flag = true); //engine
+		///Return true if the game want to terminate the program
+		bool requestStop(); //engine
 
-            ///Refresh all for you
-            bool refresh(); //engine main loop
+		///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
+		/// \param message Message to be loged 
+		/// \param flag If true : Put the "Annwvyn -" flag before the message
+		static void log(std::string message, bool flag = true); //engine
 
-            ///Update program time. retur the delay between the last call of this method
-            double getTime();//engine
+		///Refresh all for you
+		bool refresh(); //engine main loop
 
-            ///Get elapsed time from engine startup
-            double getTimeFromStartUp();//engine
+		///Update program time. retur the delay between the last call of this method
+		double getTime();//engine
 
-            ///Return the Annwvyn OpenAL simplified audio engine
-            AnnAudioEngine* getAudioEngine(); //audio
+		///Get elapsed time from engine startup
+		double getTimeFromStartUp();//engine
 
-            ///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
-            /// key an OIS key code
-			bool isKeyDown(OIS::KeyCode key); //event
+		///Return the Annwvyn OpenAL simplified audio engine
+		AnnAudioEngine* getAudioEngine(); //audio
 
-            ///Create a trigger object
-            /// \param trigger an empty trigger object
-			AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject); //object factory
+		///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
+		/// key an OIS key code
+		bool isKeyDown(OIS::KeyCode key); //event
 
-            ///Get ogre scene manager
-            Ogre::SceneManager* getSceneManager(); //scene or graphics
+		///Create a trigger object
+		/// \param trigger an empty trigger object
+		AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject); //object factory
 
-            ///Set the ogre material for the skydime with params
-			/// \param activate if true put a skydome
-			/// \param materialName name of a material known from the Ogre Resource group manager
-			/// \param curvature curvature of the texture
-			/// \param tilling tilling of the texture
-            void setSkyDomeMaterial(bool activate, 
-				const char materialName[], 
-				float curvature = 2.0f, 
-				float tiling = 1.0f); //scene
+		///Get ogre scene manager
+		Ogre::SceneManager* getSceneManager(); //scene or graphics
 
-            ///Get the AnnObject the player is looking at
-            Annwvyn::AnnGameObject* playerLookingAt(); //physics
+		///Set the ogre material for the skydime with params
+		/// \param activate if true put a skydome
+		/// \param materialName name of a material known from the Ogre Resource group manager
+		/// \param curvature curvature of the texture
+		/// \param tilling tilling of the texture
+		void setSkyDomeMaterial(bool activate, 
+			const char materialName[], 
+			float curvature = 2.0f, 
+			float tiling = 1.0f); //scene
 
-            ///Get the AnnGameObject form the given Ogre node
-            Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
+		///Get the AnnObject the player is looking at
+		Annwvyn::AnnGameObject* playerLookingAt(); //physics
 
-            ///Get ogre camera scene node
-            Ogre::SceneNode* getCamera();
-        
-			///Reference orientation. Usefull if you are inside a vehicule for example
-			/// \param q the reference orientation for the point of view. Usefull for applying vehicle movement to the player
-            void setReferenceQuaternion(Ogre::Quaternion q); //engine...
+		///Get the AnnGameObject form the given Ogre node
+		Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
 
-			///Retrive the said reference quaternion
-            Ogre::Quaternion getReferenceQuaternion(); //engine 
+		///Get ogre camera scene node
+		Ogre::SceneNode* getCamera();
 
-			///Attach a 3D mesh to the camera to act as player's body.
-			/// \param entityName name of the entity that will serve as player body
-			/// \param z_offset offset betwenn camera and player center eye pont
-			/// \param flip if you need to flip the object to be correctly oriented (looking to negative Z)
-			/// \param scale The scale to be aplied to the body object
-            void attachVisualBody(const std::string entityName,  
-                    float z_offset = -0.0644f, 
-                    bool flip = false, 
-                    bool animated = false, 
-                    Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE); //I seriously have something to do about that...
+		///Reference orientation. Usefull if you are inside a vehicule for example
+		/// \param q the reference orientation for the point of view. Usefull for applying vehicle movement to the player
+		void setReferenceQuaternion(Ogre::Quaternion q); //engine...
 
-			///Reset the Rift Orientation
-            void resetOculusOrientation();///Gameplay... but engine related function. 
+		///Retrive the said reference quaternion
+		Ogre::Quaternion getReferenceQuaternion(); //engine 
 
-			///Set the distance of the near clipping plane
-			/// \param distace the distance to the clipping plane
-			void setNearClippingDistance(Ogre::Real distance); //graphics
+		///Attach a 3D mesh to the camera to act as player's body.
+		/// \param entityName name of the entity that will serve as player body
+		/// \param z_offset offset betwenn camera and player center eye pont
+		/// \param flip if you need to flip the object to be correctly oriented (looking to negative Z)
+		/// \param scale The scale to be aplied to the body object
+		void attachVisualBody(const std::string entityName,  
+			float z_offset = -0.0644f, 
+			bool flip = false, 
+			bool animated = false, 
+			Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE); //I seriously have something to do about that...
 
-			///Set the engine to use the "default" event listener.
-			///The default event listerner implement a simple "FPS-like" controll scheme 
-			/// WASD for walking
-			/// Horizontal view with mouse X relative mouvement
-			/// That event listener is designed as an example of an event listener, and for exploring the environement without having to write a custom event listene
-			void useDefaultEventListener();
-			
-			///Get the address of the default event listener declared by "use default event listener"
-			AnnDefaultEventListener* getInEngineDefaultListener();
+		///Reset the Rift Orientation
+		void resetOculusOrientation();///Gameplay... but engine related function. 
 
-				///Get a pose information object
-			OgrePose getPoseFromOOR()
-			{
-				if(oor)
-					return oor->returnPose;
-				OgrePose p; return p;
-			}
+		///Set the distance of the near clipping plane
+		/// \param distace the distance to the clipping plane
+		void setNearClippingDistance(Ogre::Real distance); //graphics
 
-        private:
-            ///Unable to continue, we have to cleanly cut the program before creating an error
-            void emergency(void);
+		///Set the engine to use the "default" event listener.
+		///The default event listerner implement a simple "FPS-like" controll scheme 
+		/// WASD for walking
+		/// Horizontal view with mouse X relative mouvement
+		/// That event listener is designed as an example of an event listener, and for exploring the environement without having to write a custom event listene
+		void useDefaultEventListener();
 
-        private:
-			//Audio engine
-            AnnAudioEngine* AudioEngine;
-			//Player
-			AnnPlayer* player;
-			//Event manager
-			AnnEventManager* eventManager;
-			AnnDefaultEventListener* defaultEventListener;
-			//Physics
-			AnnPhysicsEngine* physicsEngine;
+		///Get the address of the default event listener declared by "use default event listener"
+		AnnDefaultEventListener* getInEngineDefaultListener();
 
-            Ogre::RenderWindow* m_Window;
-            Ogre::SceneManager* m_SceneManager;
-            Ogre::SceneNode* m_CameraReference;
-            Ogre::SceneNode* VisualBodyAnchor;
-			Ogre::Quaternion refVisualBody;
-            Ogre::Entity* VisualBody;
-            Ogre::AnimationState* VisualBodyAnimation;
-			float visualBody_Zoffset;
-            bool readyForLoadingRessources;
+		///Get a pose information object
+		OgrePose getPoseFromOOR()
+		{
+			if(oor)
+				return oor->returnPose;
+			OgrePose p; return p;
+		}
 
-            //Oculus oculus;
-            OgreOculusRender* oor;
+	private:
+		//Audio engine
+		AnnAudioEngine* AudioEngine;
+		//Player
+		AnnPlayer* player;
+		//Event manager
+		AnnEventManager* eventManager;
+		AnnDefaultEventListener* defaultEventListener;
+		//Physics
+		AnnPhysicsEngine* physicsEngine;
 
-            ///Dynamic container for games objects present in engine.
-            std::vector<AnnGameObject*>	objects;
-			std::vector<AnnTriggerObject*> triggers;
-            
-            //Elapsed time
-            double deltaT; //Sec
+		Ogre::RenderWindow* m_Window;
+		Ogre::SceneManager* m_SceneManager;
+		Ogre::SceneNode* m_CameraReference;
+		Ogre::SceneNode* VisualBodyAnchor;
+		Ogre::Quaternion refVisualBody;
+		Ogre::Entity* VisualBody;
+		Ogre::AnimationState* VisualBodyAnimation;
+		float visualBody_Zoffset;
+		bool readyForLoadingRessources;
+
+		//Oculus oculus;
+		OgreOculusRender* oor;
+
+		///Dynamic container for games objects present in engine.
+		std::vector<AnnGameObject*>	objects;
+		std::vector<AnnTriggerObject*> triggers;
+
+		//Elapsed time
+		double deltaT; //Sec
+
 
 #ifdef __gnu_linux__
-            std::string x11LayoutAtStartup;
+		std::string x11LayoutAtStartup;
 #endif
 
-    };
+	};
 }
 #endif ///ANN_ENGINE

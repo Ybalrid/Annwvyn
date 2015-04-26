@@ -2,8 +2,18 @@
 
 using namespace Annwvyn;
 
+AnnEngine* AnnEngine::singleton(NULL);
+AnnEngine* AnnEngine::Instance()
+{
+	return singleton;
+}
+
 AnnEngine::AnnEngine(const char title[])
 {
+	//Make the necessary singleton initialization. 
+	if(singleton) abort();
+	singleton = this;
+
 	m_CameraReference = NULL;
 #ifdef __gnu_linux__
 	x11LayoutAtStartup = "unknown";
@@ -30,6 +40,7 @@ AnnEngine::AnnEngine(const char title[])
 
 	readyForLoadingRessources = true;
 	log("OGRE Object-Oriented Graphical Rendering Engine initialized", true);
+
 //We use OIS to catch all user inputs
 #ifdef __gnu_linux__
 	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
@@ -109,6 +120,8 @@ AnnEngine::~AnnEngine()
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
 	delete oor;
+
+	singleton = NULL;
 }
 
 AnnEventManager* AnnEngine::getEventManager()
@@ -131,12 +144,6 @@ void AnnEngine::log(std::string message, bool flag)
 
 	messageForLog += message;
 	Ogre::LogManager::getSingleton().logMessage(messageForLog);
-}
-
-void AnnEngine::emergency(void)
-{
-	log("FATAL : It is imposible to keep the engine running. Plese check engine and object initialization", false);
-	abort();
 }
 
 void AnnEngine::useDefaultEventListener()
@@ -227,7 +234,6 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 		obj->setNode(node);
 		obj->setEntity(ent);
-		obj->setAudioEngine(AudioEngine);
 
 		obj->setBulletDynamicsWorld(physicsEngine->getWorld());
 
@@ -313,7 +319,7 @@ bool AnnEngine::refresh()
 
 	//Dissmiss health and safety warning
 	if(!oor->IsHsDissmissed()) //If not already dissmissed
-		for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
+		for(unsigned char kc(0x00); kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
 			if(isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
 				{oor->dissmissHS(); break;}	//dissmiss the Health and Safety warning.
 
