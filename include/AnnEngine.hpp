@@ -253,6 +253,8 @@ namespace Annwvyn
 		//Elapsed time
 		double deltaT; //Sec
 
+		double lastFrameTimeCode;
+		double currentFrameTimeCode;
 
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
