@@ -10,6 +10,8 @@ AnnEngine* AnnEngine::Instance()
 
 AnnEngine::AnnEngine(const char title[])
 {
+	lastFrameTimeCode = 0;
+	currentFrameTimeCode =0;
 	//Make the necessary singleton initialization. 
 	if(singleton) abort();
 	singleton = this;
@@ -304,12 +306,20 @@ bool AnnEngine::requestStop()
 }
 
 bool AnnEngine::refresh()
-{
+{/*
+	lastFrameTimeCode = currentFrameTimeCode;
+	currentFrameTimeCode = oor->getTimer()->getMilliseconds();
+
+	deltaT = (currentFrameTimeCode - lastFrameTimeCode) / 1000;
+	
+	//ok, we will fix that later... 
+	deltaT = 1/75;
+	*/
+
+	deltaT = oor->getUpdateTime();
 	//Call of refresh method
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
 		(*it)->atRefresh();
-
-	deltaT = oor->getUpdateTime();
 
 	//Physics
 	physicsEngine->step(deltaT);
@@ -343,6 +353,7 @@ bool AnnEngine::refresh()
 	//Update camera
 	m_CameraReference->setPosition(player->getPosition());
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
+
 	oor->RenderOneFrame();
 
 	return !requestStop();

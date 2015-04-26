@@ -19,75 +19,78 @@
 #include <Gorilla.h>
 
 using namespace std;
+using namespace Annwvyn;
 
-class Sinbad : public Annwvyn::AnnGameObject
+class Sinbad : public AnnGameObject
 {
 public:
 	void postInit()
 	{
-		setPos(0,2,3);
+		setPos(0,0,-5);
 		setScale(0.2,0.2,0.2);
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
-	}
-};
-
-
-class MyTrigger : public Annwvyn::AnnTriggerObject
-{
-	void postInit()
-	{
-		//Radius in metter
-		setThreshold(2);
-	}
-
-	void atContact()
-	{
-		//Print "Contact" to standard error stream
-		std::cerr << "Contact" << std::endl;
+		setUpPhysics(40, phyShapeType::boxShape);
 	}
 };
 
 AnnMain()
 {
 	//create Annwvyn engine
-	Annwvyn::AnnEngine* GameEngine(new Annwvyn::AnnEngine("A Game"));
+	AnnEngine* GameEngine(new AnnEngine("A Game"));
 	//load ressources
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
 	GameEngine->loadDir("media/plane");
 	GameEngine->loadDir("media/body");
 	GameEngine->loadDir("media/GUI");
+
+	AnnEngine::Instance()->loadDir("media/environement");
+
 	GameEngine->initResources();
 
-	//Create Object
-	MyTrigger* T = (MyTrigger*) GameEngine->createTriggerObject(new MyTrigger);
-	T->setPosition(-0.5,-1,3);
+	AnnEngine::Instance()->createGameObject("Island.mesh")->setUpBullet();
+	AnnEngine::Instance()->createGameObject("Water.mesh");
+	AnnGameObject* Sign(AnnEngine::Instance()->createGameObject("Sign.mesh"));
 
-	Annwvyn::AnnGameObject* Grid = GameEngine->createGameObject("Plane.mesh");
-	Grid->setPos(0,-3,0);
-	Grid->setUpBullet();
+	Sign->setPos(0.5f,0,-2);
+	Sign->setUpPhysics(0, phyShapeType::staticShape);
 
 	//Add light
-	Annwvyn::AnnLightObject* Light = GameEngine->addLight();	
-	GameEngine->setAmbiantLight(Ogre::ColourValue(.1f,.1f,.1f));
-	Light->setPosition(0,3,10);
+	//Light->setPosition(0,3,10);
+	
+	AnnLightObject* Sun = GameEngine->addLight();
+	Sun->setType(Ogre::Light::LT_DIRECTIONAL);
+	Sun->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Y + 1.5* Ogre::Vector3::NEGATIVE_UNIT_Z);
+	GameEngine->setAmbiantLight(Ogre::ColourValue(.6f,.6f,.6f));
+	//GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(false);
+	GameEngine->setDebugPhysicState(true);
 
 	//setUp Oculus system
 	GameEngine->oculusInit();
-	GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
+	GameEngine->setNearClippingDistance(0.20f);
 
-	//play background music
-	//GameEngine->getAudioEngine()->playBGM("media/bgm/Blown_Away.ogg",0.2f); //volume 20%
-
-	//Parameters : name of resource loaded "mesh" file, Z axis offset between center and eyball center, and a boolean for aplying a 180° flip or not
-	//You have to flip the character if you modeled it whith the head facing you on your 3D software (witch is the good way to do it anyway...)
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1 ,true);
-	
+	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
+
+    GameEngine->useDefaultEventListener();
+	GameEngine->resetOculusOrientation();
+	do	
+	{ 
+		if(GameEngine->isKeyDown(OIS::KC_F12))
+			GameEngine->resetOculusOrientation();	
+	}
+	while(GameEngine->refresh());
+
+	//delete GameEngine;
+	return 0;
+}
+
+
+/*
 	//////////////////////////// INIT GUI TEST 
 	Ogre::SceneNode* camera = GameEngine->getCamera();
 	Ogre::SceneNode* GUI_root = camera->createChildSceneNode();
@@ -106,30 +109,4 @@ AnnMain()
 	testText->colour(Ogre::ColourValue::Black);
 	testText->height(5);
 	testText->_redraw();
-
-	GameEngine->setNearClippingDistance(0.20f);
-
-	GameEngine->resetOculusOrientation();
-
-	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
-	S->setPos(0,5,-5);
-	S->setUpBullet(40, Annwvyn::boxShape, true);
-
-    GameEngine->useDefaultEventListener();
-
-	bool debounce;
-	bool current(false);
-	do	
-	{   
-		debounce = current;
-		current = GameEngine->isKeyDown(OIS::KC_RETURN);
-
-		if(current && !debounce)
-			S->playSound("media/monster.wav");
-		if(GameEngine->isKeyDown(OIS::KC_F12))
-			GameEngine->resetOculusOrientation();	
-	}while(GameEngine->refresh());
-
-	delete GameEngine;
-	return 0;
-}
+*/
