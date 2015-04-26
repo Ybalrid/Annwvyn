@@ -56,15 +56,15 @@ namespace Annwvyn
 	class DLL AnnEngine
 	{
 	private:
+		///the singleton itsefl is stored here
 		static AnnEngine* singleton;
 	public:
+		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
 		AnnEngine(const char title[] = "Annwvyn Game Engine");
-
-
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();
@@ -221,10 +221,6 @@ namespace Annwvyn
 				return oor->returnPose;
 			OgrePose p; return p;
 		}
-
-	private:
-		///Unable to continue, we have to cleanly cut the program before creating an error
-		void emergency(void);
 
 	private:
 		//Audio engine
