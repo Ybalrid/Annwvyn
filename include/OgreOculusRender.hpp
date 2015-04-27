@@ -49,7 +49,7 @@ struct OgrePose
 class DLL OgreOculusRender
 {
     public:
-        OgreOculusRender(std::string windowName = "OgreOculusRender");
+        OgreOculusRender(std::string windowName = "OgreOculusRender", bool actVsync = true);
         ~OgreOculusRender();
 
 		///Calculate, time and present a frame on the Rift display
@@ -140,6 +140,8 @@ class DLL OgreOculusRender
 
 		///If true, window will be created in full screen mode
 		bool fullscreen;
+		///If true, window will be created with the "vsync" parameter set to true
+		bool vsync;
 
 		///background color of viewports
 		Ogre::ColourValue backgroundColor;

@@ -2,11 +2,11 @@
 Todo list : 
 Critial
 - [X] Start to "ungodify" the AnnEngine class by removing everything that has something to do with bullet and collision testing from it.
-- [ ] Simplify the "timer" mess in AnnEngine
-- [ ] Need a proper object factory for class like AnnGameObject
+- [X] Simplify the "timer" mess in AnnEngine
+- [ ] Need a proper object factory for classes like AnnGameObject
 
-Non critial
-- [X] Find a good name for AnnEngine::m_Camera wich is not tne camera but is used to calculate camera orientation and position
+Non critial 
+- [ ] Finish properly the implementation of the sound engine
 - [ ] Add friction setting for bullet
 - [ ] Object parenting
 - [ ] Add debug drawing for trigger position when debug drawing is active for bullet
@@ -15,5 +15,5 @@ Non critial
 - [ ] Allow playing multiple animations
 
 Will probably not be added to the engine (map system has to be redone from scratch...)
-- [ ] Add name identification for objects to be found in Map Files
+- [X] Add name identification for objects to be found in Map Files
 - [ ] Add light vector to AnnMap Class

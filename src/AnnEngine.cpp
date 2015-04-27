@@ -2,8 +2,20 @@
 
 using namespace Annwvyn;
 
+AnnEngine* AnnEngine::singleton(NULL);
+AnnEngine* AnnEngine::Instance()
+{
+	return singleton;
+}
+
 AnnEngine::AnnEngine(const char title[])
 {
+	lastFrameTimeCode = 0;
+	currentFrameTimeCode =0;
+	//Make the necessary singleton initialization. 
+	if(singleton) abort();
+	singleton = this;
+
 	m_CameraReference = NULL;
 #ifdef __gnu_linux__
 	x11LayoutAtStartup = "unknown";
@@ -30,6 +42,7 @@ AnnEngine::AnnEngine(const char title[])
 
 	readyForLoadingRessources = true;
 	log("OGRE Object-Oriented Graphical Rendering Engine initialized", true);
+
 //We use OIS to catch all user inputs
 #ifdef __gnu_linux__
 	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
@@ -70,7 +83,6 @@ AnnEngine::AnnEngine(const char title[])
 	VisualBody = NULL;
 	VisualBodyAnimation = NULL;
 	VisualBodyAnchor = NULL;
-	//VisualBodyAnchor = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 
 	refVisualBody = Ogre::Quaternion::IDENTITY;
 	log("---------------------------------------------------", false);
@@ -110,6 +122,8 @@ AnnEngine::~AnnEngine()
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
 	delete oor;
+
+	singleton = NULL;
 }
 
 AnnEventManager* AnnEngine::getEventManager()
@@ -132,12 +146,6 @@ void AnnEngine::log(std::string message, bool flag)
 
 	messageForLog += message;
 	Ogre::LogManager::getSingleton().logMessage(messageForLog);
-}
-
-void AnnEngine::emergency(void)
-{
-	log("FATAL : It is imposible to keep the engine running. Plese check engine and object initialization", false);
-	abort();
 }
 
 void AnnEngine::useDefaultEventListener()
@@ -228,7 +236,6 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 		obj->setNode(node);
 		obj->setEntity(ent);
-		obj->setAudioEngine(AudioEngine);
 
 		obj->setBulletDynamicsWorld(physicsEngine->getWorld());
 
@@ -299,23 +306,30 @@ bool AnnEngine::requestStop()
 }
 
 bool AnnEngine::refresh()
-{
-		//Call of refresh method
-	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
-		(*it)->atRefresh();
+{/*
+	lastFrameTimeCode = currentFrameTimeCode;
+	currentFrameTimeCode = oor->getTimer()->getMilliseconds();
+
+	deltaT = (currentFrameTimeCode - lastFrameTimeCode) / 1000;
+	
+	//ok, we will fix that later... 
+	deltaT = 1/75;
+	*/
 
 	deltaT = oor->getUpdateTime();
+	//Call of refresh method
+	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
+		(*it)->atRefresh();
 
 	//Physics
 	physicsEngine->step(deltaT);
 
 	//Test if there is a collision with the ground
-//	physicsEngine->collisionWithGround(player);
 	player->engineUpdate(deltaT);
 
 	//Dissmiss health and safety warning
 	if(!oor->IsHsDissmissed()) //If not already dissmissed
-		for(unsigned char kc = 0x00; kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
+		for(unsigned char kc(0x00); kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
 			if(isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
 				{oor->dissmissHS(); break;}	//dissmiss the Health and Safety warning.
 
@@ -333,12 +347,13 @@ bool AnnEngine::refresh()
 	//Audio
 	AudioEngine->updateListenerPos(oor->returnPose.position);
 	AudioEngine->updateListenerOrient(oor->returnPose.orientation);
-	for(unsigned int i = 0; i < objects.size(); i++)
+	for(size_t i = 0; i < objects.size(); i++)
 		objects[i]->updateOpenAlPos();
 
 	//Update camera
 	m_CameraReference->setPosition(player->getPosition());
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
+
 	oor->RenderOneFrame();
 
 	return !requestStop();
@@ -359,41 +374,26 @@ AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 
 AnnGameObject* AnnEngine::playerLookingAt()
 {
-	//Origin vector
-	Ogre::Vector3 Orig(oor->lastOculusPosition);
+	//Origin vector of the ray
+	Ogre::Vector3 Orig(getPoseFromOOR().position);
 
-	//Direction Vector
-	Ogre::Quaternion Orient = oor->lastOculusOrientation;
-	Ogre::Vector3 LookAt = Orient * Ogre::Vector3::NEGATIVE_UNIT_Z;
+	//Caltulate direction Vector of the ray to be the midpont camera optical axis
+	Ogre::Vector3 LookAt(getPoseFromOOR().orientation * Ogre::Vector3::NEGATIVE_UNIT_Z);
 
 	//create ray
 	Ogre::Ray ray(Orig, LookAt);
 
 	//create query
-	Ogre::RaySceneQuery* raySceneQuery = m_SceneManager->createRayQuery(ray);
+	Ogre::RaySceneQuery* raySceneQuery(m_SceneManager->createRayQuery(ray));
 	raySceneQuery->setSortByDistance(true);
 
 	//execute and get the results
-	Ogre::RaySceneQueryResult& result = raySceneQuery->execute();
+	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
 
 	//read the result list
-	Ogre::RaySceneQueryResult::iterator it;
-	bool found(false);Ogre::SceneNode* node;
-
-	for(it = result.begin(); it != result.end(); it++)
-	{
+	for(Ogre::RaySceneQueryResult::iterator it(result.begin()); it != result.end(); it++)
 		if(it->movable && it->movable->getMovableType() == "Entity")
-		{
-			node = it->movable->getParentSceneNode();
-			found = true;
-			break;
-		}	
-	}
-
-	if(found)
-		for(size_t i = 0; i < objects.size(); i++)
-			if((void*)objects[i]->node() == (void*)node)
-				return objects[i];
+			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
 
 	return NULL; //means that we don't know what the player is looking at.
 }
