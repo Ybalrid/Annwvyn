@@ -1,8 +1,8 @@
 /**
- * \file AnnKeyCode.h
- * \brief Translation of OIS keys code to Annwvyn KeyCode
- * \author A. Brainville (Ybalrid)
- */
+* \file AnnKeyCode.h
+* \brief Translation of OIS keys code to Annwvyn KeyCode
+* \author A. Brainville (Ybalrid)
+*/
 
 #ifndef ANNKEYCODE
 #define ANNKEYCODE
