@@ -12,7 +12,7 @@
 #include "euler.h"
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-
+#define JMP_BUFFER 10
 namespace Annwvyn
 {
 	class AnnEngine; //predeclaration of AnnEngine
@@ -171,7 +171,8 @@ namespace Annwvyn
 		void applyAnalogYaw();
 
 		///Boolean true if verticalspeed whas 0 at last frame
-		bool YSpeedWasZero;
+		bool YSpeedWasZero[5];
+		unsigned long int frameCount;
 
 		///Boolean false if the player can get orientation transformation from 
 		bool standing;

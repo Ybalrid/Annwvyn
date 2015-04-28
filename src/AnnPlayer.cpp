@@ -32,8 +32,9 @@ AnnPlayer::AnnPlayer()
 	analogWalk = 0;
 	analogStraff = 0;
 	analogRotate = 0;
-
-	YSpeedWasZero = false;
+	
+	for(size_t i(0); i < JMP_BUFFER; i++) YSpeedWasZero[i]=false;
+	frameCount = 0;
 	standing = false;
 	updateTime = 0;
 }
@@ -209,6 +210,7 @@ void AnnPlayer::engineUpdate(float time)
 	standing = true;
 	if(getBody())
 	{
+		frameCount++;
 		applyAnalogYaw();
 		Ogre::Vector3 translate(getWalkSpeed() * (getTranslation() + getAnalogTranslation()));
 
@@ -216,17 +218,20 @@ void AnnPlayer::engineUpdate(float time)
 
 		//The cast to an in is for eliminating "noise" from the reading of the Y componant of the speed vector
 		//Apparently, event with the player standing on a plane, it's a really small number that is not strictly equals to zero.
+		
+		contactWithGround = false;
 		if(int(currentVelocity.y()) == 0)
 		{
-			if(YSpeedWasZero)
-				contactWithGround =  true;
-			else
-				YSpeedWasZero = true;
+			bool canJump(true);
+			for(size_t i(0); i < JMP_BUFFER; i++)
+				if(!YSpeedWasZero[i]) canJump = false;
+
+			contactWithGround = canJump;
+			YSpeedWasZero[frameCount%JMP_BUFFER] = true;
 		}
 		else
 		{
-			YSpeedWasZero = false;
-			contactWithGround = false;
+			YSpeedWasZero[frameCount%JMP_BUFFER] = false;
 		}
 
 		//Prevent the rigid body to be put asleep by the physics engine
