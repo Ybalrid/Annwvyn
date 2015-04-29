@@ -48,6 +48,8 @@ namespace Annwvyn
 		///Set the debug drawer state
 		void setDebugPhysics(bool state);
 
+		void stepDebugDrawer();
+
 	private:
 		btBroadphaseInterface* m_Broadphase;
 		btDefaultCollisionConfiguration* m_CollisionConfiguration;

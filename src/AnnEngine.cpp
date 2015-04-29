@@ -340,9 +340,9 @@ bool AnnEngine::refresh()
 
 	//Animation
 	if(VisualBodyAnimation)
-		VisualBodyAnimation->addTime(getTime());
+		VisualBodyAnimation->addTime(deltaT);
 	for(size_t i = 0; i < objects.size(); i++)
-		objects[i]->addTime(oor->getUpdateTime());
+		objects[i]->addTime(deltaT);
 
 	//Audio
 	AudioEngine->updateListenerPos(oor->returnPose.position);
@@ -354,8 +354,8 @@ bool AnnEngine::refresh()
 	m_CameraReference->setPosition(player->getPosition());
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
 
+	physicsEngine->stepDebugDrawer();
 	oor->RenderOneFrame();
-
 	return !requestStop();
 }
 
@@ -448,11 +448,6 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 Ogre::SceneNode* AnnEngine::getCamera()
 {
 	return m_CameraReference;
-}
-
-double AnnEngine::getTime()
-{
-	return deltaT;
 }
 
 AnnAudioEngine* AnnEngine::getAudioEngine()
