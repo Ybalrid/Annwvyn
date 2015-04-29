@@ -140,9 +140,6 @@ namespace Annwvyn
 		///Refresh all for you
 		bool refresh(); //engine main loop
 
-		///Update program time. retur the delay between the last call of this method
-		double getTime();//engine
-
 		///Get elapsed time from engine startup
 		double getTimeFromStartUp();//engine
 

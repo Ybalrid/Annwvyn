@@ -54,7 +54,7 @@ AnnMain()
 	AnnEngine::Instance()->createGameObject("Water.mesh");
 	AnnGameObject* Sign(AnnEngine::Instance()->createGameObject("Sign.mesh"));
 
-	Sign->setPos(0.5f,0,-2);
+	Sign->setPos(0.5f,-0.3,-2);
 	Sign->setUpPhysics(0, phyShapeType::staticShape);
 
 	//Add light
