@@ -54,8 +54,9 @@ AnnMain()
 	AnnEngine::Instance()->createGameObject("Water.mesh");
 	AnnGameObject* Sign(AnnEngine::Instance()->createGameObject("Sign.mesh"));
 
-	Sign->setPos(0.5f,-0.3,-2);
+	Sign->setPos(1,-0,-2);
 	Sign->setUpPhysics(0, phyShapeType::staticShape);
+	Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
 	//Add light
 	//Light->setPosition(0,3,10);
@@ -67,7 +68,7 @@ AnnMain()
 	//GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(true);
+	GameEngine->setDebugPhysicState(false);
 
 	//setUp Oculus system
 	GameEngine->oculusInit();
