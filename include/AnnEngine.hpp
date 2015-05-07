@@ -167,6 +167,8 @@ namespace Annwvyn
 			float curvature = 2.0f, 
 			float tiling = 1.0f); //scene
 
+		void removeSkyDome();
+
 		///Get the AnnObject the player is looking at
 		Annwvyn::AnnGameObject* playerLookingAt(); //physics
 
