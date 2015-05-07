@@ -14,7 +14,8 @@
  *
  * Welcome to the Annwvyn API documentation.
  * 
- * Annwvyn is a free and Open-Soucre Virtual reality developement framework
+ * Annwvyn is a free and Open-Soucre Virtual reality developement framework.
+ *
  * <em>The project is under cosntant developement and there isn't yet any stable
  * release available. It comes without any warenty and is distributed under the
  * terms of the MIT Licence agreement. Full copy of the licence is available on the 
