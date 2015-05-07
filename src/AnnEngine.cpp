@@ -482,6 +482,11 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
 	m_SceneManager->setSkyDome(activate, materialName, curvature, tiling);
 }
 
+void AnnEngine::removeSkyDome()
+{
+	m_SceneManager->setSkyBoxEnabled(false);
+}
+
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 {
 	if(oor)
