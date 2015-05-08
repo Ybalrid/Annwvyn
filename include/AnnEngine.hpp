@@ -108,6 +108,8 @@ namespace Annwvyn
 
 		///Init the physics model
 		void initPlayerPhysics(); //physics on player 
+		
+		void resetPlayerPhysics();
 
 		///Create a game object form the name of an entity.
 		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager

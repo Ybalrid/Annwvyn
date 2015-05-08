@@ -492,3 +492,21 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 	if(oor)
 		oor->setCamerasNearClippingDistance(nearClippingDistance);
 }
+
+void AnnEngine::resetPlayerPhysics()
+{
+	if(!player->hasPhysics()) return;
+	//Remove the player's rigidbody from the world
+	btDiscreteDynamicsWorld* world = physicsEngine->getWorld();
+	world->removeRigidBody(player->getBody());
+	
+	//We don't need that body anymore...
+	delete player->getBody();
+	//prevent memory access to unallocated address
+	player->setBody(NULL);
+
+	//Put everything back in order
+	m_CameraReference->setPosition(player->getPosition());
+	physicsEngine->createPlayerPhysicalVirtualBody(player, m_CameraReference);
+	physicsEngine->addPlayerPhysicalBodyToDynamicsWorld(player);
+}

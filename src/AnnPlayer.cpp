@@ -37,6 +37,7 @@ AnnPlayer::AnnPlayer()
 	frameCount = 0;
 	standing = false;
 	updateTime = 0;
+	physics = false;	
 }
 
 AnnPlayer::~AnnPlayer()
@@ -92,12 +93,14 @@ void AnnPlayer::setShape(btCollisionShape* Shape)
 {
 	if(!isLocked())
 		playerBody->Shape = Shape;
+	physics = true;
 }
 
 void AnnPlayer::setBody(btRigidBody* Body)
 {
-	if(!isLocked())
+//	if(!isLocked())
 		playerBody->Body = Body;
+		physics = true;
 }
 
 void AnnPlayer::lockParameters()
