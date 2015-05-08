@@ -38,9 +38,6 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player)
 {
 	assert(player->getBody());
-
-	float height(player->getEyesHeight());
-
 	//TODO define name for the bullet's collision masks
 	m_DynamicsWorld->addRigidBody(player->getBody(), BIT(0), BIT(1));
 }

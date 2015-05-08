@@ -135,6 +135,8 @@ namespace Annwvyn
 		///Make the player jump
         void jump();
 
+		bool hasPhysics(){return physics;}
+
 	protected:
 
 		///Object that keep body parameters (= legacy structure)
@@ -178,6 +180,8 @@ namespace Annwvyn
 		bool standing;
 
 		double updateTime;
+
+		bool physics;
 	public:
 		///Waling state. Forward Backward Left Right
 		bool walking[4];
