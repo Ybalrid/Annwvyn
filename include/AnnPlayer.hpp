@@ -63,7 +63,7 @@ namespace Annwvyn
 		///Permit to know if parameters are locked
 		bool isLocked();
 
-		///Set the position of the player.
+		///Set the position of the player. If physics is enabled you need to call  AnnEngine::resetPlayerPhysics() to recreate player's body.
 		/// \param Position 3D vector representing the position of the player (refernced by the point between his eyes)
 		void setPosition(Ogre::Vector3 Position);
 
@@ -135,7 +135,8 @@ namespace Annwvyn
 		///Make the player jump
         void jump();
 
-		bool hasPhysics(){return physics;}
+		///Return true if physics has been initialized once
+		bool hasPhysics();
 
 	protected:
 

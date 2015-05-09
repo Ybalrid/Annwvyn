@@ -87,7 +87,7 @@ AnnEngine::AnnEngine(const char title[])
 	refVisualBody = Ogre::Quaternion::IDENTITY;
 	log("---------------------------------------------------", false);
 	log("Annwvyn Game Engine - Step into the Other World   ", false);
-	log("Desinged for Virtual Reality                      ", false);
+	log("Designed for Virtual Reality                      ", false);
 	log("---------------------------------------------------", false);
 }
 
@@ -222,6 +222,8 @@ void AnnEngine::oculusInit(bool fullscreen)
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
 {
+	log("Creatig a game object from the entity");
+	log(entityName, false);
 	try
 	{
 		if(std::string(entityName).empty())
@@ -244,8 +246,9 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 		objects.push_back(obj); //keep address in list
 
 		std::stringstream ss;
-		ss << "The object " << entityName << "has been created. Annwvyn memory address " << obj;  
+		ss << "The object " << entityName << " has been created. Annwvyn memory address " << obj;  
 		log(ss.str());
+		ss.str("");
 	}
 	catch (std::string const& e)
 	{
@@ -259,19 +262,25 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
 	std::stringstream ss;
+
+	ss << "Destroying object " << (void*)object;
+	log(ss.str());
+	ss.str("");
+
 	bool returnCode(false);
 	for(size_t i(0); i < objects.size(); i++)
 	{
 		ss << "Object " << static_cast<void*>(objects[i]) << " stop collision test";
 		log(ss.str());
+		ss.str("");
 
 		objects[i]->stopGettingCollisionWith(object);
 
 		if(objects[i] == object)
 		{
-			ss.str("");
-			ss << "Object found";
+			ss << "Object found ";
 			log(ss.str());
+			ss.str("");
 
 			objects.erase(objects.begin() + i);
 			Ogre::SceneNode* node = object->node();
@@ -290,6 +299,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 Annwvyn::AnnLightObject* AnnEngine::addLight()
 {
+	log("Creating a light");
 	//Actualy here i'm cheating, the AnnLightObjet is a simple typdef to Ogre LightSceneNode
 	//I'll add a proper class to do it later
 	AnnLightObject* Light = m_SceneManager->createLight();
@@ -367,6 +377,7 @@ bool AnnEngine::isKeyDown(OIS::KeyCode key)
 AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 {
 	assert(object);
+	log("Creating a trigger object");
 	triggers.push_back(object);
 	object->postInit();
 	return object;
@@ -400,7 +411,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 
 void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)
 {
-	log("Visual Body");
+	log("Attaching a visual body :");
 	log(entityName);
 
 	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
@@ -469,21 +480,25 @@ double AnnEngine::getTimeFromStartUp()
 void AnnEngine::setDebugPhysicState(bool state)
 {
 	assert(physicsEngine);
+	log("Activating debug drawing for physics engine");
 	physicsEngine->setDebugPhysics(state);
 }
 
 void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
 {
+	std::stringstream ss; ss << "Setting the ambiant light to color " << v; log(ss.str());
 	m_SceneManager->setAmbientLight(v);
 }
 
 void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)
 {
+	log("Setting skydome from material"); log(materialName, false);
 	m_SceneManager->setSkyDome(activate, materialName, curvature, tiling);
 }
 
 void AnnEngine::removeSkyDome()
 {
+	log("disabeling skydome");
 	m_SceneManager->setSkyBoxEnabled(false);
 }
 
@@ -496,9 +511,9 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 void AnnEngine::resetPlayerPhysics()
 {
 	if(!player->hasPhysics()) return;
+	log("player's physics is resseting");
 	//Remove the player's rigidbody from the world
-	btDiscreteDynamicsWorld* world = physicsEngine->getWorld();
-	world->removeRigidBody(player->getBody());
+	physicsEngine->getWorld()->removeRigidBody(player->getBody());
 	
 	//We don't need that body anymore...
 	delete player->getBody();
@@ -510,3 +525,9 @@ void AnnEngine::resetPlayerPhysics()
 	physicsEngine->createPlayerPhysicalVirtualBody(player, m_CameraReference);
 	physicsEngine->addPlayerPhysicalBodyToDynamicsWorld(player);
 }
+		OgrePose AnnEngine::getPoseFromOOR()
+		{
+			if(oor)
+				return oor->returnPose;
+			OgrePose p; return p;
+		}
