@@ -442,11 +442,18 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 		log("Plese do not try to identify a NULL");
 		return NULL;
 	}
+	std::stringstream ss;
+	ss << "Trying to identify object at address " << (void*)node;
+	log(ss.str());
+	ss.str("");
 
 	//This methods only test memory address
 	for(size_t i(0); i < objects.size(); i++)
 		if((void*)objects[i]->node() == (void*)node)
 			return objects[i];
+	ss << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
+
+	log(ss.str());
 	return NULL;
 }
 
