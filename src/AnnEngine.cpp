@@ -3,6 +3,7 @@
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(NULL);
+
 AnnEngine* AnnEngine::Instance()
 {
 	return singleton;
@@ -11,15 +12,14 @@ AnnEngine* AnnEngine::Instance()
 AnnEngine::AnnEngine(const char title[])
 {
 	lastFrameTimeCode = 0;
-	currentFrameTimeCode =0;
+	currentFrameTimeCode = 0;
+
 	//Make the necessary singleton initialization. 
 	if(singleton) abort();
 	singleton = this;
 
 	m_CameraReference = NULL;
-#ifdef __gnu_linux__
-	x11LayoutAtStartup = "unknown";
-#endif
+
 	//block ressources loading for now
 	readyForLoadingRessources = false;
 
@@ -41,15 +41,17 @@ AnnEngine::AnnEngine(const char title[])
 	m_Window = oor->getWindow();
 
 	readyForLoadingRessources = true;
-	log("OGRE Object-Oriented Graphical Rendering Engine initialized", true);
+	log("OGRE Object-oriented Graphical Rendering Engine initialized", true);
 
 //We use OIS to catch all user inputs
 #ifdef __gnu_linux__
+
 	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
 	//Under windows the keycode match the standard US QWERTY layout. Under linux they are converted to whatever you're using.
 	//I use a French AZERTY keyboard layout so it's not that bad. If you have a greek keyboard you're out of luck...
 	//So, assuming that the only program that has the focus is the Annwvyn powered application, we can just switch the layout to US 
 	//then switch back to the original layout.
+	x11LayoutAtStartup = "unknown";
 
 	log("we are running on linux. getting x11 keyboard layout from the system");
 	FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
@@ -63,8 +65,10 @@ AnnEngine::AnnEngine(const char title[])
 		log("Saving keyboard layout for shutdown.");
 		log("saved layout="+x11LayoutAtStartup, false);
 	}
+
 	free(buffer);
 	fclose(layout);
+
 	buffer = NULL;
 	layout = NULL;
 	system("setxkbmap us");
@@ -94,9 +98,11 @@ AnnEngine::AnnEngine(const char title[])
 
 AnnEngine::~AnnEngine()
 {
+	log("Stopping the event manager");
 	delete eventManager;
 
 	//All AnnGameObject
+	log("Destroying every objects remaining in engine");
 	for(size_t i(0); i < objects.size(); i++)
 	{
 		destroyGameObject(objects[i]);
@@ -104,10 +110,12 @@ AnnEngine::~AnnEngine()
 	}
 	objects.clear();
 
+	log("Destroying physics engine");
 	delete physicsEngine;
+	log("Destroying Player");
 	delete player;
 
-	//Audio
+	log("Destroying AudioEngine");
 	delete AudioEngine;
 
 #ifdef __gnu_linux__
@@ -122,7 +130,6 @@ AnnEngine::~AnnEngine()
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
 	delete oor;
-
 	singleton = NULL;
 }
 
@@ -195,6 +202,9 @@ void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
 
 void AnnEngine::loadResFile(const char path[])
 {
+	std::stringstream ss; 
+	ss << "Loading resource file : " << path;
+	log(ss.str());
 	oor->loadReseourceFile(path);
 }
 
@@ -207,6 +217,7 @@ void AnnEngine::initResources()
 
 void AnnEngine::addDefaultResourceLocaton()
 {
+	log("Adding Annwvyn CORE resources");
 	loadDir("media");
 	loadZip("media/CORE.zip");
 }
@@ -214,6 +225,7 @@ void AnnEngine::addDefaultResourceLocaton()
 //initalize oculus rendering
 void AnnEngine::oculusInit(bool fullscreen)
 {   
+	log("Init Oculus rendering system");
 	oor->initOculus(fullscreen);
 	m_CameraReference = oor->getCameraInformationNode();
 	m_CameraReference->setPosition(player->getPosition() + 
@@ -224,38 +236,31 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 {
 	log("Creatig a game object from the entity");
 	log(entityName, false);
-	try
+
+	if(std::string(entityName).empty())
 	{
-		if(std::string(entityName).empty())
-			throw std::string("Hey! what are you trying to do here? Please specify a non empty string for entityName !");
-
-		Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
-
-		Ogre::SceneNode* node = 
-			m_SceneManager->getRootSceneNode()->createChildSceneNode();
-
-		node->attachObject(ent);
-
-		obj->setNode(node);
-		obj->setEntity(ent);
-
-		obj->setBulletDynamicsWorld(physicsEngine->getWorld());
-
-		obj->postInit(); //Run post init directives
-
-		objects.push_back(obj); //keep address in list
-
-		std::stringstream ss;
-		ss << "The object " << entityName << " has been created. Annwvyn memory address " << obj;  
-		log(ss.str());
-		ss.str("");
-	}
-	catch (std::string const& e)
-	{
-		log(e, false);
+		log("Hey! what are you trying to do here? Please specify a non empty string for entityName !");
 		delete obj;
 		return NULL;
 	}
+
+	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
+	Ogre::SceneNode* node = 
+	m_SceneManager->getRootSceneNode()->createChildSceneNode();
+
+	node->attachObject(ent);
+	obj->setNode(node);
+	obj->setEntity(ent);
+	obj->setBulletDynamicsWorld(physicsEngine->getWorld());
+	obj->postInit(); //Run post init directives
+
+	objects.push_back(obj); //keep address in list
+
+	std::stringstream ss;
+	ss << "The object " << entityName << " has been created. Annwvyn memory address " << obj;  
+	log(ss.str());
+	ss.str("");
+
 	return obj;
 }
 
@@ -278,9 +283,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 		if(objects[i] == object)
 		{
-			ss << "Object found ";
-			log(ss.str());
-			ss.str("");
+			log("Object found");
 
 			objects.erase(objects.begin() + i);
 			Ogre::SceneNode* node = object->node();
@@ -316,16 +319,7 @@ bool AnnEngine::requestStop()
 }
 
 bool AnnEngine::refresh()
-{/*
-	lastFrameTimeCode = currentFrameTimeCode;
-	currentFrameTimeCode = oor->getTimer()->getMilliseconds();
-
-	deltaT = (currentFrameTimeCode - lastFrameTimeCode) / 1000;
-	
-	//ok, we will fix that later... 
-	deltaT = 1/75;
-	*/
-
+{
 	deltaT = oor->getUpdateTime();
 	//Call of refresh method
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
@@ -411,7 +405,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 
 void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)
 {
-	log("Attaching a visual body :");
+	log("Attaching visual body :");
 	log(entityName);
 
 	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
@@ -437,6 +431,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
 void AnnEngine::resetOculusOrientation()
 {
+	log("Reseting the base direction of player's head");
 	oor->recenter();
 }
 
@@ -444,7 +439,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 {
 	if(!node) 
 	{
-		log("Plese do not try to identify a NULL node.");
+		log("Plese do not try to identify a NULL");
 		return NULL;
 	}
 
@@ -499,7 +494,7 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
 void AnnEngine::removeSkyDome()
 {
 	log("disabeling skydome");
-	m_SceneManager->setSkyBoxEnabled(false);
+	m_SceneManager->setSkyDomeEnabled(false);
 }
 
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
@@ -525,9 +520,10 @@ void AnnEngine::resetPlayerPhysics()
 	physicsEngine->createPlayerPhysicalVirtualBody(player, m_CameraReference);
 	physicsEngine->addPlayerPhysicalBodyToDynamicsWorld(player);
 }
-		OgrePose AnnEngine::getPoseFromOOR()
-		{
-			if(oor)
-				return oor->returnPose;
-			OgrePose p; return p;
-		}
+
+OgrePose AnnEngine::getPoseFromOOR()
+{
+	if(oor)
+		return oor->returnPose;
+	OgrePose p; return p;
+}
