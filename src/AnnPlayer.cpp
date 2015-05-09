@@ -277,3 +277,8 @@ void AnnPlayer::engineUpdate(float time)
 			));
 	}
 }
+
+bool AnnPlayer::hasPhysics()
+{
+	return physics;
+}

@@ -109,6 +109,9 @@ namespace Annwvyn
 		///Init the physics model
 		void initPlayerPhysics(); //physics on player 
 		
+		///If the player is handeled throug the physics engine, this method will detach the rigidbody from the camera,
+		///remove it from the dynamics world, unalocate it from the memory and recreate it from scratch. This is usefull for
+		///"teleporting" the player, for example if you need to reset his position.
 		void resetPlayerPhysics();
 
 		///Create a game object form the name of an entity.
@@ -216,12 +219,7 @@ namespace Annwvyn
 		AnnDefaultEventListener* getInEngineDefaultListener();
 
 		///Get a pose information object
-		OgrePose getPoseFromOOR()
-		{
-			if(oor)
-				return oor->returnPose;
-			OgrePose p; return p;
-		}
+		OgrePose getPoseFromOOR();
 
 	private:
 		//Audio engine
