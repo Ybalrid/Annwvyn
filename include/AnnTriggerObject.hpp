@@ -33,6 +33,9 @@ namespace Annwvyn
             void setPosition(Ogre::Vector3 pos);
 
             ///Set position form Variables
+			/// \param x X component of the poisition vector
+			/// \param y Y component of the poisition vector
+			/// \param z Z component of the poisition vector
             void setPosition(float x, float y, float z);
             
             ///Set contact information
@@ -50,6 +53,7 @@ namespace Annwvyn
 
         private:	
             ///For engine : Set contact state 
+			/// \param contact Contact state
             void setContactInformation(bool contact);
             
             ///Make AnnEngine class friend to permit acces to setContactInformation(bool)

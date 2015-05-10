@@ -29,7 +29,9 @@ namespace Annwvyn
 	class DLL AnnEvent
 	{
 	public:
+		///Event constructor 
 		AnnEvent();
+
 	protected:
 		bool accepted;
 		bool rejected;
@@ -46,6 +48,7 @@ namespace Annwvyn
 	///A keyboard event
 	class DLL AnnKeyEvent : public AnnEvent
 	{
+		///Keyboard event constructor
 		AnnKeyEvent();
 	public:
 		///Get the key involved in that event
@@ -65,9 +68,11 @@ namespace Annwvyn
 		bool released;
 		
 		friend class AnnEventManager;
-
+		
+		///Set the event as a key relase event
 		void setPressed();
 
+		///Set the event as a key press event
 		void setReleased();
 
 		///Set the keycode of the key
@@ -83,36 +88,50 @@ namespace Annwvyn
 	///Name and number of mouse button
 	enum MouseButtonId {Left, Right, Middle, Button3, Button4, Button5, Button6, Button7, nbButtons, invalidButton};
 
-	///A mouse axis
+	///A mouse axis infomation object
 	class DLL AnnMouseAxis
 	{
 	public:
+		///Construct a mouse axis infomation object
 		AnnMouseAxis();		
+
+		///Return the id of the axis that object represent
 		MouseAxisId getMouseAxisId();
+		
+		///Relative value in arbitrary unit
 		int getRelValue();
+		///Absolute value in arbitrary unit
 		int getAbsValue();
 
 	private:
+
 		MouseAxisId id;
 		int rel;
 		int abs;
 
 		friend class AnnEventManager;
+		
 		friend class AnnMouseEvent;
+		///Set the id of the axis
 		void setAxis(MouseAxisId ax);
+		///Set the relative value of the axis
 		void setRelValue(int rel); 
+		///Set the absolute value of the axis
 		void setAbsValue(int abs);
+		///Private magic one line constructor !!!! ;-)
 		AnnMouseAxis(MouseAxisId ax, int rel, int abs);
 	};
 	
-	///A mouse event
+	///A mouse event informaiton objecct
 	class DLL AnnMouseEvent : public AnnEvent
 	{
 	public:
 		AnnMouseEvent();
 		///Returns true if given butoon is pressed
+		/// \parm id Id of the button
 		bool getButtonState(MouseButtonId id);
 		///Get given axis data
+		/// \param id Id of the axis
 		AnnMouseAxis getAxis(MouseAxisId id);
 
 	private:
@@ -121,7 +140,13 @@ namespace Annwvyn
 
 		friend class AnnEventManager;
 
+		///Set the status of a button
+		/// \param id Id of a specific button
+		/// \param value Current pressed/relased state of that button
 		void setButtonStatus(MouseButtonId id, bool value);
+		///Set the infomatio about an axis
+		/// \param id Id of a specific axis
+		/// \param information The information object of the given axis
 		void setAxisInformation(MouseAxisId id, AnnMouseAxis information);
 	};
 
@@ -234,13 +259,15 @@ namespace Annwvyn
 		///Destroy the event manager
 		~AnnEventManager();
 
-		///Set the listener object to the event manager.
-		/// \param callbackObject The instance of an event listener that will receive event informations
-		//void setListener(AnnAbstractEventListener* callbackObject);
+		///Ad a listener to the event manager
+		/// \parma listener Pointer to a listener object
 		void addListener(AnnAbstractEventListener* listener);
+		///Remove every listener known from the EventManager. 
+		///This doesn't clear any memory
 		void clearListenerList();
 		///Make the event manager forget about the listener
-		void removeListener(AnnAbstractEventListener* l = NULL);
+		/// \param listener A listener object. If NULL, it will remove every listener form the manager
+		void removeListener(AnnAbstractEventListener* listener = NULL);
 
 	private:
 		std::vector<AnnAbstractEventListener*> listeners;
@@ -259,11 +286,8 @@ namespace Annwvyn
 		OIS::JoyStick* Joystick;
 		///parameter list for OIS
 		OIS::ParamList pl;
-
-
 		///Array for remembering the key states at last update. 
 		bool previousKeyStates[static_cast<unsigned int>(KeyCode::SIZE)];
-		
 		///Array for remembering the button states at last update
 		bool previousMouseButtonStates[static_cast<unsigned int>(MouseButtonId::nbButtons)];
 	    ///Dinamicly sized array for remembering the joystick button state at last update
