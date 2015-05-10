@@ -11,7 +11,7 @@
 
 namespace Annwvyn
 {
-	namespace KeyCode
+	namespace KeyCode//maybe change that name... 
 	{
 		///Every key usable on the keyboard is described here.
 		///These keycode are layout independant on Windows, but layout dependent on Linux

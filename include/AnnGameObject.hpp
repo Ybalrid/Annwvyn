@@ -54,13 +54,19 @@ namespace Annwvyn
             virtual ~AnnGameObject();
 
             ///Set position from spatial varaibles
+			/// \param x X componant of the position vector
+			/// \param y Y componant of the position vector
+			/// \param z Z componant of the position vector
             void setPos(float x, float y, float z);
 
             ///Set position from Vector 3D
 			/// \param pos 3D position vector. Relative to scene root position
             void setPos(Ogre::Vector3 pos);
 
-            ///Translate 
+            ///Translate
+			/// \param x X componant of the translation vector
+			/// \param y Y componant of the translation vector
+			/// \param z Z componant of the translation vector
             void translate(float x, float y, float z);
 
             ///Set orientation from Quaternion components
@@ -75,6 +81,9 @@ namespace Annwvyn
             void setOrientation(Ogre::Quaternion orient);
 
             ///Set scale
+			/// \param x X componant of the scale vector
+			/// \param y Y componant of the scale vector
+			/// \param z Z componant of the scale vector
             void setScale(float x, float y, float z);
 
             ///Set scale from Vector 3D
