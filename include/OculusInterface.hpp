@@ -15,6 +15,9 @@
 
 #include "systemMacro.h"
 
+
+#include <Ogre.h>
+#define USE_OGRE
 using namespace std;
 using namespace OVR;
 

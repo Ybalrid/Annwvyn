@@ -86,7 +86,7 @@ AnnMain()
 	}
 	while(GameEngine->refresh());
 
-	//delete GameEngine;
+	delete GameEngine;
 	return 0;
 }
 
