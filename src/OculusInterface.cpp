@@ -1,4 +1,7 @@
 #include "OculusInterface.hpp"
+#define USE_OGRE
+
+
 /*Some of the commented code is commented because I'm to lazy to reimplement it, and it's not used inside of Annwvyn so... #useless*/
 
 OculusInterface::OculusInterface()
@@ -10,6 +13,9 @@ OculusInterface::OculusInterface()
 
 OculusInterface::~OculusInterface()
 {
+#ifdef USE_OGRE
+    Ogre::LogManager::getSingleton().logMessage("Shutdown OculusInterface object");
+#endif   
     shutdown();
 }
 
@@ -43,6 +49,9 @@ void OculusInterface::shutdown()
     if(initialized)
         ovrHmd_Destroy(hmd);
     ovr_Shutdown();
+#ifdef USE_OGRE
+    Ogre::LogManager::getSingleton().logMessage("LibOVR Shutdonw... No longer can comunicate with OculusService or oculusd...");
+#endif
 }
 
 void OculusInterface::customReport()

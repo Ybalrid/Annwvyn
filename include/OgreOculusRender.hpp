@@ -22,6 +22,7 @@
 #include <Ogre.h>
 
 //Accessing Oculus Rift through a class : 
+#define USE_OGRE
 #include "OculusInterface.hpp"
 
 //OS Specific build macro 

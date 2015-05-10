@@ -11,6 +11,7 @@ AnnEngine* AnnEngine::Instance()
 
 AnnEngine::AnnEngine(const char title[])
 {
+
 	lastFrameTimeCode = 0;
 	currentFrameTimeCode = 0;
 
@@ -45,13 +46,12 @@ AnnEngine::AnnEngine(const char title[])
 
 //We use OIS to catch all user inputs
 #ifdef __gnu_linux__
-
+	x11LayoutAtStartup = "unknown";
 	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
 	//Under windows the keycode match the standard US QWERTY layout. Under linux they are converted to whatever you're using.
 	//I use a French AZERTY keyboard layout so it's not that bad. If you have a greek keyboard you're out of luck...
 	//So, assuming that the only program that has the focus is the Annwvyn powered application, we can just switch the layout to US 
 	//then switch back to the original layout.
-	x11LayoutAtStartup = "unknown";
 
 	log("we are running on linux. getting x11 keyboard layout from the system");
 	FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
@@ -98,6 +98,15 @@ AnnEngine::AnnEngine(const char title[])
 
 AnnEngine::~AnnEngine()
 {
+#ifdef __gnu_linux__
+	log("setting back the keyboard to " + x11LayoutAtStartup);
+	if(x11LayoutAtStartup != "unknown")
+	{
+		system(std::string("setxkbmap " + x11LayoutAtStartup).c_str());
+		log("Done system call to setxkbmap");
+	}
+#endif
+
 	log("Stopping the event manager");
 	delete eventManager;
 
@@ -117,15 +126,6 @@ AnnEngine::~AnnEngine()
 
 	log("Destroying AudioEngine");
 	delete AudioEngine;
-
-#ifdef __gnu_linux__
-	log("setting back the keyboard to " + x11LayoutAtStartup);
-	if(x11LayoutAtStartup != "unknown")
-	{
-		system(std::string("setxkbmap " + x11LayoutAtStartup).c_str());
-		log("Done system call to setxkbmap");
-	}
-#endif
 
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
@@ -278,6 +278,12 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 		ss << "Object " << static_cast<void*>(objects[i]) << " stop collision test";
 		log(ss.str());
 		ss.str("");
+
+        if(!objects[i])
+        {
+            log("NULL found. jump to next one");
+            continue;
+        }
 
 		objects[i]->stopGettingCollisionWith(object);
 

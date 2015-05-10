@@ -34,7 +34,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 
 OgreOculusRender::~OgreOculusRender()
 {
-	Ogre::LogManager::getSingleton().logMessage("destructiong OgreOculusRender object");
+	Ogre::LogManager::getSingleton().logMessage("Destructing OgreOculus object and uninitializing Ogre...");
 	delete oc;
 	 
 	//TODO clean Ogre properly. There is stuff to delete manually before being able to delete "root".
