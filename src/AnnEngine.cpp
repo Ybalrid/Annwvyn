@@ -107,22 +107,37 @@ AnnEngine::~AnnEngine()
 	}
 #endif
 
-	log("Stopping the event manager");
+	log("Destroying the event manager");
 	delete eventManager;
 
 	//All AnnGameObject
 	log("Destroying every objects remaining in engine");
-   
-    for(AnnGameObjectVect::iterator it(objects.begin()); it != objects.end(); it++)
-        destroyGameObject(*it);
+	
+	std::stringstream ss; 
+	log(" Creating the deletion list;");
+	ss << " Will destroy " << objects.size() << " objects";
+	log(ss.str());ss.str("");
+	int nb=1;
 
+	AnnGameObject** tmpArray = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
+	for(int i(0); i < objects.size(); i++)
+		tmpArray[i] = objects[i];
+	for(int i(0); i < objects.size(); i++)
+	{
+		destroyGameObject(tmpArray[i]);
+		ss << " Destroying queue item #" << nb++; log(ss.str()); ss.str("");
+	}
+
+	ss << " Total number of destroyed objects : " << nb; log(ss.str()); ss.str("");
+	log("Destroing the deletion queue");
+	free(tmpArray);
+	log("Clearing the object list");
 	objects.clear();
 
 	log("Destroying physics engine");
 	delete physicsEngine;
 	log("Destroying Player");
 	delete player;
-
 	log("Destroying AudioEngine");
 	delete AudioEngine;
 
@@ -160,7 +175,7 @@ void AnnEngine::useDefaultEventListener()
 
 	log("Reconfiguring the engine to use the default event listener");
 
-	//Remove the current event listener (if any)
+	//Remove all event listeners
 	eventManager->removeListener();
 
 	//If the event listenre isn't allready initialized, allocate one
@@ -289,6 +304,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			log("Object found");
 
 			objects.erase(it);
+			*it = NULL;
 			Ogre::SceneNode* node = object->node();
 
 			node->getParent()->removeChild(node);
