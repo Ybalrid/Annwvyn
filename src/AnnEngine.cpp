@@ -16,7 +16,7 @@ AnnEngine::AnnEngine(const char title[])
 	currentFrameTimeCode = 0;
 
 	//Make the necessary singleton initialization. 
-	if(singleton) abort();
+    if(singleton) abort();
 	singleton = this;
 
 	m_CameraReference = NULL;
@@ -112,11 +112,10 @@ AnnEngine::~AnnEngine()
 
 	//All AnnGameObject
 	log("Destroying every objects remaining in engine");
-	for(size_t i(0); i < objects.size(); i++)
-	{
-		destroyGameObject(objects[i]);
-		objects[i] = NULL;  //don't change the size of the vector while iterating throug it
-	}
+   
+    for(AnnGameObjectVect::iterator it(objects.begin()); it != objects.end(); it++)
+        destroyGameObject(*it);
+
 	objects.clear();
 
 	log("Destroying physics engine");
@@ -268,30 +267,28 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
 	std::stringstream ss;
 
-	ss << "Destroying object " << (void*)object;
-	log(ss.str());
-	ss.str("");
+	ss << "Destroying object " << (void*)object;log(ss.str());ss.str("");
 
 	bool returnCode(false);
-	for(size_t i(0); i < objects.size(); i++)
-	{
-		ss << "Object " << static_cast<void*>(objects[i]) << " stop collision test";
-		log(ss.str());
-		ss.str("");
 
-        if(!objects[i])
+
+	for( AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); it++)
+    	{
+		ss << "Object " << static_cast<void*>(*it) << " stop collision test";log(ss.str());ss.str("");
+
+        if(!*it)
         {
             log("NULL found. jump to next one");
             continue;
         }
 
-		objects[i]->stopGettingCollisionWith(object);
+		(*it)->stopGettingCollisionWith(object);
 
-		if(objects[i] == object)
+		if(*it == object)
 		{
 			log("Object found");
 
-			objects.erase(objects.begin() + i);
+			objects.erase(it);
 			Ogre::SceneNode* node = object->node();
 
 			node->getParent()->removeChild(node);
