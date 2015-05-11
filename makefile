@@ -65,7 +65,7 @@ test: lib/libAnnwvyn.so
 	@echo 'Copying Shared object to program floder'
 	cp lib/libAnnwvyn.so example/
 	@echo 'Done. You can try to lanch the executable test from the example directory'
-	@echo "(you may need to call sudo make install tu actually run the test with the lattest Annwvyn version)"
+	@echo "(you may need to call sudo make install to actually run the test with the lattest Annwvyn version)"
 
 
 #build the DSO from the objects file
