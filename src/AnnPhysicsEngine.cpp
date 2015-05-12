@@ -139,7 +139,8 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectVect& objects)
 
 void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
 {
-	m_DynamicsWorld->removeRigidBody(body);
+	if(body)
+		m_DynamicsWorld->removeRigidBody(body);
 }
 
 void AnnPhysicsEngine::initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node)
