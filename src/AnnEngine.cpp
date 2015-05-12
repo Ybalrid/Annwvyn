@@ -120,9 +120,9 @@ AnnEngine::~AnnEngine()
 	int nb=1;
 
 	AnnGameObject** tmpArray = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
-	for(int i(0); i < objects.size(); i++)
+	for(size_t i(0); i < objects.size(); i++)
 		tmpArray[i] = objects[i];
-	for(int i(0); i < objects.size(); i++)
+	for(size_t i(0); i < objects.size(); i++)
 	{
 		destroyGameObject(tmpArray[i]);
 		ss << " Destroying queue item #" << nb++; log(ss.str()); ss.str("");
@@ -281,30 +281,25 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
 	std::stringstream ss;
-
 	ss << "Destroying object " << (void*)object;log(ss.str());ss.str("");
-
 	bool returnCode(false);
 
-
-	for( AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); it++)
-    	{
-		ss << "Object " << static_cast<void*>(*it) << " stop collision test";log(ss.str());ss.str("");
-
-        if(!*it)
-        {
-            log("NULL found. jump to next one");
-            continue;
-        }
-
-		(*it)->stopGettingCollisionWith(object);
-
-		if(*it == object)
+	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); it++)
+    {
+	ss << "Object " << static_cast<void*>(*it) << " stop collision test";log(ss.str());ss.str("");
+		if(!*it)
 		{
+			log("NULL found. jump to next one");
+			continue;
+		}
+			(*it)->stopGettingCollisionWith(object);
+			if(*it == object)
+		{
+			returnCode = true; // found
 			log("Object found");
-
-			objects.erase(it);
 			*it = NULL;
+			//objects.erase(it);
+	
 			Ogre::SceneNode* node = object->node();
 
 			node->getParent()->removeChild(node);
@@ -312,10 +307,17 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 			m_SceneManager->destroySceneNode(node);
 			delete object;
-
-			returnCode = true; // found
 		}
 	}
+
+	AnnGameObjectVect::iterator it = objects.begin();
+	while(it != objects.end())
+	if(!(*it))
+		it = objects.erase(it);
+	else
+		it++;
+
+
 	return returnCode;
 }
 
