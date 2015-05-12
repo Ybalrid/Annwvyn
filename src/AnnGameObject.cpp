@@ -319,11 +319,13 @@ void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 
 void AnnGameObject::stopGettingCollisionWith(AnnGameObject* Object)
 {
+	if(!Object) return;
     for(size_t i = 0; i < collisionMask.size(); i++)
         if(collisionMask[i]->Object == Object)
         {
             delete(collisionMask[i]);
-            collisionMask.erase(collisionMask.begin()+i);
+			collisionMask[i] = NULL;
+            //collisionMask.erase(collisionMask.begin()+i);
         }
 }
 
