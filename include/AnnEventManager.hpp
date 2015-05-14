@@ -9,11 +9,9 @@
 
 #include "systemMacro.h"
 
+//This also include OIS
 #include "AnnKeyCode.h"
 #include "AnnPlayer.hpp"
-
-//Include the Object-Oriented Input System library
-#include <OIS.h>
 
 ///Macro for declaring a listener
 #define LISTENER public Annwvyn::AnnAbstractEventListener

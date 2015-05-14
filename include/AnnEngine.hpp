@@ -11,20 +11,19 @@
 #include "systemMacro.h"
 
 //C++ STD & STL
-#include <vector>
-#include <sstream>
+//#include <vector> included by AnnTypes
+//#include <sstream> incuded by OgreOculusRended
 #include <cassert>
 
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
 
 //Annwvyn
-#include "AnnPlayer.hpp"
+//#include "AnnPlayer.hpp" included by AnnEventManager
 #include "AnnEventManager.hpp"
-#include "AnnGameObject.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnTypes.h"
-#include "AnnTools.h"
+#include "AnnTools.h" //This will include AnnGameObject. I should simply get rid of that file because it's actually pretty useless
 #include "AnnAudioEngine.hpp"
 #include "AnnPhysicsEngine.hpp"
 
