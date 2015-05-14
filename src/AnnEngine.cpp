@@ -11,12 +11,11 @@ AnnEngine* AnnEngine::Instance()
 
 AnnEngine::AnnEngine(const char title[])
 {
-
 	lastFrameTimeCode = 0;
 	currentFrameTimeCode = 0;
 
 	//Make the necessary singleton initialization. 
-    if(singleton) abort();
+	if(singleton) abort();
 	singleton = this;
 
 	m_CameraReference = NULL;
@@ -117,18 +116,13 @@ AnnEngine::~AnnEngine()
 	log(" Creating the deletion list;");
 	ss << " Will destroy " << objects.size() << " objects";
 	log(ss.str());ss.str("");
-	int nb=1;
 
 	AnnGameObject** tmpArray = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
 	for(size_t i(0); i < objects.size(); i++)
 		tmpArray[i] = objects[i];
 	for(size_t i(0); i < objects.size(); i++)
-	{
 		destroyGameObject(tmpArray[i]);
-		ss << " Destroying queue item #" << nb++; log(ss.str()); ss.str("");
-	}
 
-	ss << " Total number of destroyed objects : " << nb; log(ss.str()); ss.str("");
 	log("Destroing the deletion queue");
 	free(tmpArray);
 	log("Clearing the object list");
@@ -286,14 +280,16 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); it++)
     {
-	ss << "Object " << static_cast<void*>(*it) << " stop collision test";log(ss.str());ss.str("");
+		ss << "Object " << static_cast<void*>(*it) << " stop collision test";log(ss.str());ss.str("");
+		
 		if(!*it)
 		{
 			log("NULL found. jump to next one");
 			continue;
 		}
-			(*it)->stopGettingCollisionWith(object);
-			if(*it == object)
+		
+		(*it)->stopGettingCollisionWith(object);
+		if(*it == object)
 		{
 			returnCode = true; // found
 			log("Object found");
@@ -317,15 +313,18 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 	else
 		it++;
 
-
 	return returnCode;
 }
 
-Annwvyn::AnnLightObject* AnnEngine::addLight()
+void AnnEngine::destroyLight(AnnLightObject* object)
+{
+	if(object)
+		m_SceneManager->destroyLight(object);
+}
+
+AnnLightObject* AnnEngine::addLight()
 {
 	log("Creating a light");
-	//Actualy here i'm cheating, the AnnLightObjet is a simple typdef to Ogre LightSceneNode
-	//I'll add a proper class to do it later
 	AnnLightObject* Light = m_SceneManager->createLight();
 	Light->setType(Ogre::Light::LT_POINT);
 	return Light;
