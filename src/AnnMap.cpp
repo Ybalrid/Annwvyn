@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnMap.hpp"
 
 using namespace Annwvyn;

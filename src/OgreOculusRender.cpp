@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "OgreOculusRender.hpp"
 
 using namespace OVR;

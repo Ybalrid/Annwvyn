@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnEventManager.hpp"
 #include "AnnEngine.hpp"
 using namespace Annwvyn;

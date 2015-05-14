@@ -34,6 +34,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="precompilled headers">
+      <UniqueIdentifier>{fbc76f4b-1892-4373-958b-3df6607820a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
@@ -99,6 +102,9 @@
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp">
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\pch\stdafx.h">
+      <Filter>precompilled headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -148,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp">
       <Filter>Annwvyn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\pch\stdafx.cpp">
+      <Filter>precompilled headers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

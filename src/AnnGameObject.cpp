@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnGameObject.hpp"
 #include "AnnTools.h"
 #include "AnnEngine.hpp"

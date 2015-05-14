@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnCharacter.hpp"
 
 using namespace Annwvyn;

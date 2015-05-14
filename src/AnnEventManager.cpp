@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnEventManager.hpp"
 #include "AnnEngine.hpp"//to access logger static method
 using namespace Annwvyn;
