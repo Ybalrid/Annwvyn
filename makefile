@@ -11,10 +11,11 @@ SYSARCH       = x86_64
 endif
 
 #define flags
-CFLAGS = --std=c++0x -Wall -O2  -g
+CFLAGS = --std=c++0x -O2  -g
 LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/ -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11  -ludev -lboost_system  -lXrandr -lXxf86vm -lGL -lrt -lOVR -lm -ldl
 
 IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include -I../OculusSDK/LibOVR/Src -I../OculusSDK/LibOVRKernel/Src  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ -I./pch/ -I/usr/include/GL
+
 
 #define the installation location for the engine (should be a local system folder)
 INSTALL_PREFIX = /usr/local
@@ -69,8 +70,12 @@ test: lib/libAnnwvyn.so
 
 
 #build the DSO from the objects file
-lib/libAnnwvyn.so: obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o  obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o
+lib/libAnnwvyn.so: pch/stdafx.h.gch obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o  obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
+
+#precompile headers
+pch/stdafx.h.gch: pch/stdafx.h
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c pch/stdafx.h -o pch/stdafx.h.gch
 
 #build each class separatly
 obj/AnnEngine.o: src/AnnEngine.cpp include/AnnEngine.hpp
