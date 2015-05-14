@@ -66,3 +66,8 @@ template/Game.exe
 
 #utilities have to be manually tracked
 utils/
+
+#precompiled headers
+*.pch
+*.gch
+
