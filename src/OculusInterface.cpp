@@ -2,7 +2,6 @@
 #include "OculusInterface.hpp"
 #define USE_OGRE
 
-
 /*Some of the commented code is commented because I'm to lazy to reimplement it, and it's not used inside of Annwvyn so... #useless*/
 
 OculusInterface::OculusInterface()
@@ -22,26 +21,26 @@ OculusInterface::~OculusInterface()
 
 void OculusInterface::init()
 {
-        ovr_Initialize();
-        hmd = ovrHmd_Create(0);
+    ovr_Initialize();
+    hmd = ovrHmd_Create(0);
 
-        if(!hmd)
-		{
-			cout << "Cannot get HMD" << endl;
-			hmd = ovrHmd_CreateDebug(ovrHmd_DK2);
-		}
+    if(!hmd)
+    {
+        cout << "Cannot get HMD" << endl;
+        hmd = ovrHmd_CreateDebug(ovrHmd_DK2);
+    }
 
-		customReport();
+    customReport();
 
-        if(!ovrHmd_ConfigureTracking(hmd, //Oculus HMD
-			ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
-			ovrTrackingCap_Orientation)) //minial required 
-			{
-				std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
-				ovrHmd_Destroy(hmd);
-				ovr_Shutdown();
-				abort();
-			}
+    if(!ovrHmd_ConfigureTracking(hmd, //Oculus HMD
+                ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
+                ovrTrackingCap_Orientation)) //minial required 
+    {
+        std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
+        ovrHmd_Destroy(hmd);
+        ovr_Shutdown();
+        abort();
+    }
     initialized = true;
 }
 
@@ -51,20 +50,20 @@ void OculusInterface::shutdown()
         ovrHmd_Destroy(hmd);
     ovr_Shutdown();
 #ifdef USE_OGRE
-    Ogre::LogManager::getSingleton().logMessage("LibOVR Shutdonw... No longer can comunicate with OculusService or oculusd...");
+    Ogre::LogManager::getSingleton().logMessage("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
 #endif
 }
 
 void OculusInterface::customReport()
 {
-   /* cout << endl << "Manual Information access :" << endl;
-    cout << "Product name : " << hmdDesc.ProductName << endl
-        << "Manufacturer : " << hmdDesc.Manufacturer << endl
-        << "Sensor Capability bits : " << (hmdDesc.SensorCaps) << endl
-        << "Distortion Capability bits" << (hmdDesc.DistortionCaps) << endl   
-        << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h << endl 
-        << "Type of HMD identifier : " << hmdDesc.Type << endl
-        << "HMD 2D virtual position : " << hmdDesc.WindowsPos.x << "x" << hmdDesc.WindowsPos.y << endl;*/
+    /* cout << endl << "Manual Information access :" << endl;
+       cout << "Product name : " << hmdDesc.ProductName << endl
+       << "Manufacturer : " << hmdDesc.Manufacturer << endl
+       << "Sensor Capability bits : " << (hmdDesc.SensorCaps) << endl
+       << "Distortion Capability bits" << (hmdDesc.DistortionCaps) << endl   
+       << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h << endl 
+       << "Type of HMD identifier : " << hmdDesc.Type << endl
+       << "HMD 2D virtual position : " << hmdDesc.WindowsPos.x << "x" << hmdDesc.WindowsPos.y << endl;*/
 }
 
 void OculusInterface::update(double time)
@@ -76,19 +75,19 @@ void OculusInterface::update(double time)
 
 OVR::Vector3f OculusInterface::getPosition()
 {
-	/*
-    if(initialized && firstUpdated)
-        return OVR::Vector3f(ss.HeadPose.ThePose.Orientation);*/
-	//TODO : get real data
+    /*
+       if(initialized && firstUpdated)
+       return OVR::Vector3f(ss.HeadPose.ThePose.Orientation);*/
+    //TODO : get real data
     return OVR::Vector3f(0,0,0);
 }
 
 OVR::Quatf OculusInterface::getOrientation()
 {
-	/*
-    if(initialized && firstUpdated)
-        return OVR::Quatf(ss.Predicted.Pose.Orientation);*/
-	//TODO : get real data
+    /*
+       if(initialized && firstUpdated)
+       return OVR::Quatf(ss.Predicted.Pose.Orientation);*/
+    //TODO : get real data
     return OVR::Quatf(1,0,0,0);
 }
 
