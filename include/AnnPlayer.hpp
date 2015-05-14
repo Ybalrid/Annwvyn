@@ -93,7 +93,6 @@ namespace Annwvyn
 
 		///Bullet shape
 		/// \param Shape the Bullet collision shape used to simulate player physics
-
 		void setShape(btCollisionShape* Shape);
 
 		///Bullet RIGID body

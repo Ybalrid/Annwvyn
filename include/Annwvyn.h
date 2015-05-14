@@ -56,7 +56,6 @@
 #include "AnnTriggerObject.hpp"
 #include "AnnAudioEngine.hpp"
 #include "AnnMap.hpp"
-#include "AnnJoystickController.hpp"
 #include "AnnEventManager.hpp"
 
 //Other Annwvyn

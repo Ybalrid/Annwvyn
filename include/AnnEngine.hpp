@@ -8,10 +8,6 @@
 
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
-
-//Graphic rendering system for the rift
-#include "OgreOculusRender.hpp"
-
 #include "systemMacro.h"
 
 //C++ STD & STL
@@ -21,17 +17,9 @@
 
 //Ogre 3D
 #include <Ogre.h>
-#include <OIS.h>
 
-//Bullet
-#include <btBulletCollisionCommon.h>
-#include <BulletCollision/CollisionDispatch/btGhostObject.h>
-#include <btBulletDynamicsCommon.h>
-
-//btOgre
-#include "BtOgrePG.h"
-#include "BtOgreGP.h"
-#include "BtOgreExtras.h"
+//Graphic rendering system for the rift
+#include "OgreOculusRender.hpp"
 
 //Annwvyn
 #include "AnnPlayer.hpp"
@@ -45,8 +33,9 @@
 
 namespace Annwvyn
 {
+	//For some reason, GCC don't want to compile that class without predeclaring AnnPhysicsEngine here.
+	//even if the header of that class is included... 
 	class AnnPhysicsEngine;
-
 
 	///Main engine class. Creating an instance of that class make the engine start.
 	///It's more or less a singleton, and will be the only one in the engine architecture. 
@@ -122,7 +111,11 @@ namespace Annwvyn
 		///Destroy the given object
 		/// \param object the object to be destroyed
 		bool destroyGameObject(AnnGameObject* object); //object factory
-
+		
+		///Destroy the given light
+		/// \param light pointer to the light to destroy
+		void destroyLight(AnnLightObject* light);
+			
 		///Set the ambiant light
 		/// \param v the color of the light
 		void setAmbiantLight(Ogre::ColourValue v); //scene parameter
@@ -249,8 +242,8 @@ namespace Annwvyn
 		std::vector<AnnGameObject*>	objects;
 		std::vector<AnnTriggerObject*> triggers;
 
-		//Elapsed time
-		double deltaT; //Sec
+		///Elapsed time between 2 frames
+		double deltaT; 
 
 		double lastFrameTimeCode;
 		double currentFrameTimeCode;
