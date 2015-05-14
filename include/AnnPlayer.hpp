@@ -8,7 +8,9 @@
 #define ANN_PLAYER
 
 #include "systemMacro.h"
-#include <Ogre.h>
+#include <OgreVector3.h>
+#include <OgreQuaternion.h>
+
 #include "euler.h"
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>

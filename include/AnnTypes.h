@@ -12,14 +12,16 @@
 
 #include <vector>
 
-#include <Ogre.h>
-#include <OIS.h>
-#include "euler.h"
-#include <btBulletCollisionCommon.h>
-#include <btBulletDynamicsCommon.h>
+//#include <Ogre.h>
+//#include <OIS.h>
+//#include "euler.h"
+//#include <btBulletCollisionCommon.h>
+//#include <btBulletDynamicsCommon.h>
 
-#include "AnnGameObject.hpp"
-#include "AnnTriggerObject.hpp"
+//#include "AnnGameObject.hpp"
+//#include "AnnTriggerObject.hpp"
+
+//#include <OgreLight.h>
 
 namespace Annwvyn
 {
@@ -27,7 +29,8 @@ namespace Annwvyn
     class AnnGameObject;
 	class AnnTriggerObject;
 
-	///Harmonise names : 
+	///Harmonise names :
+	class Ogre::Light;
 	typedef Ogre::Light AnnLightObject; //Yeah, it's a cheater thing here...
 
 	///Remove some ugliness : 
