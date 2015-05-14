@@ -12,18 +12,17 @@
 
 #include <string>
 
-//Ogre3D
-#include <Ogre.h>
-//Bullet
-#include <btBulletCollisionCommon.h>
-#include <btBulletDynamicsCommon.h>
-//btOgre
-#include "BtOgrePG.h"
+#include <OgreVector3.h>
+#include <OgreQuaternion.h>
+#include <OgreSceneNode.h>
+#include <OgreEntity.h>
+
 #include "BtOgreGP.h"
-#include "BtOgreExtras.h"
+
 //Annwvyn
 #include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
+
 
 namespace Annwvyn
 {

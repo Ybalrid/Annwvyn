@@ -9,7 +9,8 @@
 
 #include "systemMacro.h"
 
-#include <Ogre.h>
+//#include <Ogre.h>
+#include <OgreVector3.h>
 
 
 namespace Annwvyn

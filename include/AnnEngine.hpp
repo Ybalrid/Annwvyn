@@ -15,9 +15,6 @@
 #include <sstream>
 #include <cassert>
 
-//Ogre 3D
-#include <Ogre.h>
-
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
 

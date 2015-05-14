@@ -9,10 +9,6 @@
 
 #include "systemMacro.h"
 
-#include <Ogre.h>
-#include <btBulletCollisionCommon.h>
-#include <btBulletDynamicsCommon.h>
-
 #include <cmath>
 
 #include "AnnGameObject.hpp"
@@ -22,7 +18,6 @@ namespace Annwvyn
 {
 	namespace Tools
 	{
-
 		namespace Geometry //for testing in gemometry
 		{
 			///Return the distance between the 2 objects centers
@@ -30,7 +25,6 @@ namespace Annwvyn
 			///Return the distance between 2 points in space
 			float DLL distance(Ogre::Vector3 a, Ogre::Vector3 b);
 		}
-
 	}
 }
 
