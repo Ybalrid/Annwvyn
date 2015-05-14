@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnAudioEngine.hpp"
 #include "AnnEngine.hpp" //for accessing the logger
 using namespace Annwvyn;

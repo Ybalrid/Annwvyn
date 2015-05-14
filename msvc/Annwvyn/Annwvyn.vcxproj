@@ -65,15 +65,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NOMINMAX;BOOST_ALL_NO_LIB;DLLDIR_EX;WIN32;NDEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\OgreSDK\boost;..\..\..\AL\openal-soft-1.15.1\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft-1.15.1\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext\GL;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OgreSDK\boost;..\..\..\AL\openal-soft-1.15.1\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft-1.15.1\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext\GL;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;..\..\pch;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/Zm300 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -118,8 +118,12 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\OculusInterface.hpp" />
     <ClInclude Include="..\..\include\OgreOculusRender.hpp" />
     <ClInclude Include="..\..\include\systemMacro.h" />
+    <ClInclude Include="..\..\pch\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\pch\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
     <ClCompile Include="..\..\src\AnnCharacter.cpp" />
     <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp" />

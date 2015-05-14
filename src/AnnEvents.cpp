@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnEventManager.hpp"
 
 using namespace Annwvyn;
@@ -168,7 +169,7 @@ float AnnStickAxis::getAbsValue()
 
 AnnStickEvent::AnnStickEvent() : AnnEvent()
 {
-    
+    //do nothing 
 }
 
 AnnStickEvent::~AnnStickEvent(){}

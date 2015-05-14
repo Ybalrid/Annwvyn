@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnPhysicsEngine.hpp"
 
 using namespace Annwvyn;

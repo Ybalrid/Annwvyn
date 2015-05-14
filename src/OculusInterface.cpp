@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "OculusInterface.hpp"
 #define USE_OGRE
 

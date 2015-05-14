@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AnnTools.h"
 
 using namespace Ogre;
