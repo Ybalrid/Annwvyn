@@ -164,10 +164,10 @@ namespace Annwvyn
 		void removeSkyDome();
 
 		///Get the AnnObject the player is looking at
-		Annwvyn::AnnGameObject* playerLookingAt(); //physics
+		AnnGameObject* playerLookingAt(); //physics
 
 		///Get the AnnGameObject form the given Ogre node
-		Annwvyn::AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
+		AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
 
 		///Get ogre camera scene node
 		Ogre::SceneNode* getCamera();
@@ -247,7 +247,6 @@ namespace Annwvyn
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
 #endif
-
 	};
 }
 #endif ///ANN_ENGINE
