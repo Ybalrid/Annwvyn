@@ -55,7 +55,7 @@ AnnEngine::AnnEngine(const char title[])
 
 	log("we are running on linux. getting x11 keyboard layout from the system");
 	FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
-	char* buffer = static_cast<char *>(malloc(128*sizeof(char)));
+	char* buffer = static_cast<char *>(malloc(64*sizeof(char)));
 
 	if(layout && buffer)
 	{
@@ -95,7 +95,6 @@ AnnEngine::AnnEngine(const char title[])
 	log("---------------------------------------------------", false);
 }
 
-
 AnnEngine::~AnnEngine()
 {
 #ifdef __gnu_linux__
@@ -114,14 +113,24 @@ AnnEngine::~AnnEngine()
 	log("Destroying every objects remaining in engine");
 	
 	std::stringstream ss; 
-	log(" Creating the deletion list;");
+	log(" Creating the destroing queue;");
 	ss << " Will destroy " << objects.size() << " objects";
 	log(ss.str());ss.str("");
 
 	AnnGameObject** tmpArray = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
 	for(size_t i(0); i < objects.size(); i++)
 		tmpArray[i] = objects[i];
+
+	log("Content of the destroing queue :");
 	for(size_t i(0); i < objects.size(); i++)
+	{
+		ss << (void*)tmpArray[i];
+		log(ss.str());
+		ss.str("");
+	}
+
+	size_t queueSize(objects.size());
+	for(size_t i(0); i < queueSize; i++)
 		destroyGameObject(tmpArray[i]);
 
 	log("Destroing the deletion queue");
@@ -186,13 +195,11 @@ AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
 	return defaultEventListener;
 }
 
-//Convinient method to the user to call : do it and let go !
 void AnnEngine::initPlayerPhysics()
 {
 	physicsEngine->initPlayerPhysics(player, m_CameraReference);
 }
 
-//loading ressources
 void AnnEngine::loadZip(const char path[], const char resourceGroupName[])
 {
 	log("Loading resources from Zip archive :");
@@ -231,7 +238,6 @@ void AnnEngine::addDefaultResourceLocaton()
 	loadZip("media/CORE.zip");
 }
 
-//initalize oculus rendering
 void AnnEngine::oculusInit(bool fullscreen)
 {   
 	log("Init Oculus rendering system");
@@ -285,7 +291,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 		
 		if(!*it)
 		{
-			log("NULL found. jump to next one");
+			log("NULL object found. jump to next one");
 			continue;
 		}
 		
@@ -295,7 +301,6 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			returnCode = true; // found
 			log("Object found");
 			*it = NULL;
-			//objects.erase(it);
 	
 			Ogre::SceneNode* node = object->node();
 
@@ -307,12 +312,16 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 		}
 	}
 
+	log("Object destroyed. Removing pointer from the objectList");
+	
 	AnnGameObjectVect::iterator it = objects.begin();
 	while(it != objects.end())
 	if(!(*it))
 		it = objects.erase(it);
 	else
 		it++;
+
+	ss << "The address " << (void*)object << " is now free"; 
 
 	return returnCode;
 }
@@ -521,12 +530,17 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
 
 void AnnEngine::removeSkyDome()
 {
-	log("disabeling skydome");
+	log("Disabeling skydome");
 	m_SceneManager->setSkyDomeEnabled(false);
 }
 
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 {
+	std::stringstream ss;
+	ss << "Setting the near clipping distance to " << nearClippingDistance;
+	log(ss.str());
+	ss.str("");
+
 	if(oor)
 		oor->setCamerasNearClippingDistance(nearClippingDistance);
 }
