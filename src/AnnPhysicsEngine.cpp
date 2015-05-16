@@ -66,7 +66,7 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::
 void AnnPhysicsEngine::createVirtualBodyShape(AnnPlayer* player)
 {
 	assert(player);
-	float radius(0.25f);
+	float radius(0.125f);
 	player->setShape(new btCapsuleShape(radius, player->getEyesHeight() - 2 * radius));
 }
 
