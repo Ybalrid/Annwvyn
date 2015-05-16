@@ -9,7 +9,8 @@ AnnDefaultEventListener::AnnDefaultEventListener(AnnPlayer* p) : AnnAbstractEven
 	straffleft(KeyCode::a),
 	straffright(KeyCode::d),
 	jump(KeyCode::space),
-	run(KeyCode::lshift)
+	run(KeyCode::lshift),
+	recenter(KeyCode::f12)
 {
 	//Use 1st analog stick for displacement
 	axes[ax_walk] = 0;
@@ -56,6 +57,8 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		player->walking[walkDirection::right] = e.isPressed();
 	if(e.getKey() == run)
 		player->run = e.isPressed();
+	if(e.getKey() == recenter)
+		AnnEngine::Instance()->resetOculusOrientation();
 
 	//Jumping is a function call because it's an action and not a "state" the player has. 
 	if(e.isPressed() && e.getKey() == jump)

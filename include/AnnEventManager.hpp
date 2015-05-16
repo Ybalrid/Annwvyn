@@ -238,6 +238,7 @@ namespace Annwvyn
 		KeyCode::code straffright;
 		KeyCode::code jump;
 		KeyCode::code run;
+		KeyCode::code recenter;
 
 		float deadzone;
 		enum {ax_walk, ax_straff, ax_rotate};
