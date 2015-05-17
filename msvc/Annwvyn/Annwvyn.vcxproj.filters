@@ -105,6 +105,9 @@
     <ClInclude Include="..\..\pch\stdafx.h">
       <Filter>precompilled headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnVect3.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="..\..\pch\stdafx.cpp">
       <Filter>precompilled headers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnVect3.cpp">
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,10 +13,14 @@
 #include <iostream>
 #include <streambuf>
 #include <fstream>
+#include <io.h>
+#include <fcntl.h>
 //Annwvyn
 #include <Annwvyn.h>
 
 #include <Gorilla.h>
+
+#include <AnnVect3.hpp>
 
 using namespace std;
 using namespace Annwvyn;
@@ -27,7 +31,7 @@ public:
 	void postInit()
 	{
 		setPos(0,0,-5);
-		setScale(0.2,0.2,0.2);
+		setScale(0.2f,0.2f,0.2f);
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
@@ -35,8 +39,38 @@ public:
 	}
 };
 
+static void OpenConsole()
+{
+    int outHandle, errHandle, inHandle;
+    FILE *outFile, *errFile, *inFile;
+    AllocConsole();
+    CONSOLE_SCREEN_BUFFER_INFO coninfo;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
+    coninfo.dwSize.Y = 9999;
+    SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coninfo.dwSize);
+
+    outHandle = _open_osfhandle((long)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT);
+    errHandle = _open_osfhandle((long)GetStdHandle(STD_ERROR_HANDLE),_O_TEXT);
+    inHandle = _open_osfhandle((long)GetStdHandle(STD_INPUT_HANDLE),_O_TEXT );
+
+    outFile = _fdopen(outHandle, "w" );
+    errFile = _fdopen(errHandle, "w");
+    inFile =  _fdopen(inHandle, "r");
+
+    *stdout = *outFile;
+    *stderr = *errFile;
+    *stdin = *inFile;
+
+    setvbuf( stdout, NULL, _IONBF, 0 );
+    setvbuf( stderr, NULL, _IONBF, 0 );
+    setvbuf( stdin, NULL, _IONBF, 0 );
+
+    std::ios::sync_with_stdio();
+
+}
 AnnMain()
 {
+	OpenConsole();
 	//create Annwvyn engine
 	AnnEngine* GameEngine(new AnnEngine("A Game"));
 	//load ressources
@@ -74,11 +108,13 @@ AnnMain()
 	GameEngine->oculusInit();
 	GameEngine->setNearClippingDistance(0.20f);
 
-	GameEngine->attachVisualBody("male_Body.mesh",-0.1 ,true);
+	GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
 	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
 
     GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
+
+
 	do	
 	{ 
 		if(GameEngine->isKeyDown(OIS::KC_F12))
@@ -111,3 +147,5 @@ AnnMain()
 	testText->height(5);
 	testText->_redraw();
 */
+
+

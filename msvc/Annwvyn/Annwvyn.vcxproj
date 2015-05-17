@@ -109,6 +109,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnTools.h" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
     <ClInclude Include="..\..\include\AnnTypes.h" />
+    <ClInclude Include="..\..\include\AnnVect3.hpp" />
     <ClInclude Include="..\..\include\Annwvyn.h" />
     <ClInclude Include="..\..\include\BtOgreExtras.h" />
     <ClInclude Include="..\..\include\BtOgreGP.h" />
@@ -136,6 +137,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnPlayer.cpp" />
     <ClCompile Include="..\..\src\AnnTools.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
+    <ClCompile Include="..\..\src\AnnVect3.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />
     <ClCompile Include="..\..\src\Gorilla.cpp" />
     <ClCompile Include="..\..\src\OculusInterface.cpp" />
