@@ -5,7 +5,7 @@ Critial
 - [X] Simplify the "timer" mess in AnnEngine
 - [ ] Need a proper object factory for classes like AnnGameObject
 
-Non critial 
+Non critial :
 - [ ] Finish properly the implementation of the sound engine
 - [ ] Add friction setting for bullet
 - [ ] Object parenting
@@ -13,6 +13,9 @@ Non critial
 - [ ] Permit to create non spherical trigger
 - [ ] Simplify the linux makefile template. Maybe make something to regenerate it from a list of files
 - [ ] Allow playing multiple animations
+
+After finals : 
+- [ ] Implement AnnLevelManager thanks to the class developed for the PST3 "Interface en Rélatié Virtuelle" during my 3rd year at ESIEA
 
 Will probably not be added to the engine (map system has to be redone from scratch...)
 - [X] Add name identification for objects to be found in Map Files

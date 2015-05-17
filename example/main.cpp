@@ -39,12 +39,10 @@ public:
 	}
 };
 
-
 AnnMain()
 {
-	//create Annwvyn engine
-	//Only usefull on windows : Open a debug console 
-	AnnEngine::openConsole();
+	AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
+	//Init game engine
 	AnnEngine* GameEngine(new AnnEngine("A Game"));
 	//load ressources
 	GameEngine->loadDir("media/dome");
@@ -64,9 +62,6 @@ AnnMain()
 	Sign->setPos(1,-0,-2);
 	Sign->setUpPhysics(0, phyShapeType::staticShape);
 	Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
-
-	//Add light
-	//Light->setPosition(0,3,10);
 	
 	AnnLightObject* Sun = GameEngine->addLight();
 	Sun->setType(Ogre::Light::LT_DIRECTIONAL);
@@ -87,11 +82,8 @@ AnnMain()
     GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
 
-
 	do	
 	{ 
-		if(GameEngine->isKeyDown(OIS::KC_F12))
-			GameEngine->resetOculusOrientation();	
 	}
 	while(GameEngine->refresh());
 
@@ -120,5 +112,3 @@ AnnMain()
 	testText->height(5);
 	testText->_redraw();
 */
-
-
