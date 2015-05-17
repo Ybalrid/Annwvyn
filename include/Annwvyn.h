@@ -62,6 +62,8 @@
 #include "AnnTypes.h"
 #include "AnnTools.h"
 
+#include "AnnVect3.hpp"
+
 //external that has to be showed to user
 #include <OIS.h>
 

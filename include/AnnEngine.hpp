@@ -19,14 +19,12 @@
 #include "OgreOculusRender.hpp"
 
 //Annwvyn
-//#include "AnnPlayer.hpp" included by AnnEventManager
 #include "AnnEventManager.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnTypes.h"
-#include "AnnTools.h" //This will include AnnGameObject. I should simply get rid of that file because it's actually pretty useless
+#include "AnnTools.h" 
 #include "AnnAudioEngine.hpp"
 #include "AnnPhysicsEngine.hpp"
-
 
 #ifdef _WIN32
 #include <io.h>
@@ -51,8 +49,6 @@ namespace Annwvyn
 	public:
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
-
-		static void openConsole();
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
@@ -216,6 +212,11 @@ namespace Annwvyn
 
 		///Get a pose information object
 		OgrePose getPoseFromOOR();
+
+		///Open a console and redirect standard output to it.
+		///This is only effective on Windows. There is no other
+		///simple way to acces the standard io on a Win32 application
+		static void openConsole();
 
 	private:
 		//Audio engine
