@@ -27,6 +27,11 @@
 #include "AnnAudioEngine.hpp"
 #include "AnnPhysicsEngine.hpp"
 
+
+#ifdef _WIN32
+#include <io.h>
+#include <fcntl.h>
+#endif
 namespace Annwvyn
 {
 	//For some reason, GCC don't want to compile that class without predeclaring AnnPhysicsEngine here.
@@ -46,6 +51,8 @@ namespace Annwvyn
 	public:
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
+
+		static void openConsole();
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
