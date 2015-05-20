@@ -10,12 +10,13 @@ namespace Annwvyn
 	{
 		public:
 			//Call of Ogre::Vector3 constructors 
-			explicit AnnVect3();
-			explicit AnnVect3(const float cx, const float cy, const float cz);
-			explicit AnnVect3(const int coord[3]);
-			explicit AnnVect3(const float coord[3]);	
-			explicit AnnVect3(float* const r);
-			explicit AnnVect3(const float s);
+			 AnnVect3();
+			 AnnVect3(const Ogre::Vector3& v);
+			 AnnVect3(const float cx, const float cy, const float cz);
+			 AnnVect3(const int coord[3]);
+			 AnnVect3(const float coord[3]);	
+			 AnnVect3(float* const r);
+			 AnnVect3(const float s);
 			
 			//Custom Annwvyn part
 			AnnVect3(btVector3& v);

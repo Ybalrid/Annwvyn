@@ -12,7 +12,7 @@
 #include "systemMacro.h"
 
 #include <OgreQuaternion.h>
-#include <OgreVector3.h>
+#include "AnnVect3.hpp"
 
 #include <iostream>
 #include <string>
@@ -60,7 +60,7 @@ namespace Annwvyn
 	private:
 		///For the engine: update the listener position to match the player's head
 		/// \param pos The position of the player
-		void updateListenerPos(Ogre::Vector3 pos);
+		void updateListenerPos(AnnVect3 pos);
 		
 		///For the engine : update the listener orientation to mach the player's head 
         /// \param orient The orientatio of the player
