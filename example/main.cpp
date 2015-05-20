@@ -17,10 +17,7 @@
 #include <fcntl.h>
 //Annwvyn
 #include <Annwvyn.h>
-
 #include <Gorilla.h>
-
-#include <AnnVect3.hpp>
 
 using namespace std;
 using namespace Annwvyn;
