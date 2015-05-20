@@ -60,7 +60,7 @@ namespace Annwvyn
 
             ///Set position from Vector 3D
 			/// \param pos 3D position vector. Relative to scene root position
-            void setPos(Ogre::Vector3 pos);
+            void setPos(AnnVect3 pos);
 
             ///Translate
 			/// \param x X componant of the translation vector
@@ -87,10 +87,10 @@ namespace Annwvyn
 
             ///Set scale from Vector 3D
 			/// \param scale Relative scaling factor
-            void setScale(Ogre::Vector3 scale);
+            void setScale(AnnVect3 scale);
 
             ///Get Position
-            Ogre::Vector3 pos();
+            AnnVect3 pos();
 
             ///Get Orientation
             Ogre::Quaternion Orientation();
@@ -160,15 +160,15 @@ namespace Annwvyn
             void loopAnimation(bool loop = true);
 
             ///Apply a physical force            
-            void applyForce(Ogre::Vector3 force);
+            void applyForce(AnnVect3 force);
 
             ///Apply a physical impultion
 			/// \param the impultion force
-            void applyImpulse(Ogre::Vector3 impulse);
+            void applyImpulse(AnnVect3 impulse);
 			
 			///Set the linear speed of the objet
 			/// \param v The linear speed
-			void setLinearSpeed(Ogre::Vector3 v);
+			void setLinearSpeed(AnnVect3 v);
 
             ///Set up Bullet 
             /// \param mass The mass of the object

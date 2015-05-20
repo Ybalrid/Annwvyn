@@ -245,7 +245,7 @@ void AnnEngine::oculusInit(bool fullscreen)
 	oor->initOculus(fullscreen);
 	m_CameraReference = oor->getCameraInformationNode();
 	m_CameraReference->setPosition(player->getPosition() + 
-		Ogre::Vector3(0.0f, player->getEyesHeight(), 0.0f));
+		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 }
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
@@ -411,10 +411,10 @@ AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
 AnnGameObject* AnnEngine::playerLookingAt()
 {
 	//Origin vector of the ray
-	Ogre::Vector3 Orig(getPoseFromOOR().position);
+	AnnVect3 Orig(getPoseFromOOR().position);
 
 	//Caltulate direction Vector of the ray to be the midpont camera optical axis
-	Ogre::Vector3 LookAt(getPoseFromOOR().orientation * Ogre::Vector3::NEGATIVE_UNIT_Z);
+	AnnVect3 LookAt(getPoseFromOOR().orientation * AnnVect3::NEGATIVE_UNIT_Z);
 
 	//create ray
 	Ogre::Ray ray(Orig, LookAt);
@@ -444,7 +444,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 	VisualBodyAnchor->attachObject(ent);
 
 	if(flip)
-		refVisualBody = Ogre::Quaternion(Ogre::Degree(180), Ogre::Vector3::UNIT_Y);
+		refVisualBody = Ogre::Quaternion(Ogre::Degree(180), AnnVect3::UNIT_Y);
 	else
 		refVisualBody = Ogre::Quaternion::IDENTITY;
 

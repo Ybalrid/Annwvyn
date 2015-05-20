@@ -51,7 +51,7 @@ bool AnnPlayer::isLocked()
 	return locked;
 }
 
-void AnnPlayer::setPosition(Ogre::Vector3 Position)
+void AnnPlayer::setPosition(AnnVect3 Position)
 {
 	playerBody->Position = Position;
 }
@@ -149,7 +149,7 @@ btCollisionShape* AnnPlayer::getShape()
 	return playerBody->Shape;
 }
 
-Ogre::Vector3 AnnPlayer::getPosition()
+AnnVect3 AnnPlayer::getPosition()
 {
 	return playerBody->Position;
 }
@@ -169,10 +169,10 @@ void AnnPlayer::applyMouseRelativeRotation(int relValue)
 	applyRelativeBodyYaw(Ogre::Radian(- float(relValue) *getTurnSpeed() *updateTime));
 }
 
-Ogre::Vector3 AnnPlayer::getTranslation()
+AnnVect3 AnnPlayer::getTranslation()
 {
 
-	Ogre::Vector3 translation (Ogre::Vector3::ZERO);
+	AnnVect3 translation (AnnVect3::ZERO);
 	if(walking[forward])
 		translation.z -= 1;
 	if(walking[backward])
@@ -185,9 +185,9 @@ Ogre::Vector3 AnnPlayer::getTranslation()
 	return translation.normalisedCopy();
 }
 
-Ogre::Vector3 AnnPlayer::getAnalogTranslation()
+AnnVect3 AnnPlayer::getAnalogTranslation()
 {
-	Ogre::Vector3 translate(Ogre::Vector3::ZERO);
+	AnnVect3 translate(AnnVect3::ZERO);
 
 	translate.x = analogStraff;
 	translate.z = analogWalk;
@@ -216,7 +216,7 @@ void AnnPlayer::engineUpdate(float time)
 	{
 		frameCount++;
 		applyAnalogYaw();
-		Ogre::Vector3 translate(getWalkSpeed() * (getTranslation() + getAnalogTranslation()));
+		AnnVect3 translate(getWalkSpeed() * (getTranslation() + getAnalogTranslation()));
 
 		btVector3 currentVelocity = getBody()->getLinearVelocity();
 
@@ -252,7 +252,7 @@ void AnnPlayer::engineUpdate(float time)
 		}
 		else
 		{
-			Ogre::Vector3 velocity(getOrientation()*translate);
+			AnnVect3 velocity(getOrientation()*translate);
 			if(run) velocity *= playerBody->runFactor;
 			getBody()->setLinearVelocity(btVector3(
 				velocity.x,
@@ -271,7 +271,7 @@ void AnnPlayer::engineUpdate(float time)
 
 		//get back position data from physics engine
 		setPosition(
-			Ogre::Vector3( 
+			AnnVect3( 
 			getBody()->getCenterOfMassPosition().x(),
 			getBody()->getCenterOfMassPosition().y() + getEyesHeight()/2,
 			getBody()->getCenterOfMassPosition().z()

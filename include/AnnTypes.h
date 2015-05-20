@@ -11,7 +11,7 @@
 #include "systemMacro.h"
 
 #include <vector>
-
+#include "AnnVect3.hpp"
 //#include <Ogre.h>
 //#include <OIS.h>
 //#include "euler.h"

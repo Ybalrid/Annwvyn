@@ -138,7 +138,7 @@ void AnnAudioEngine::playBGM(const std::string path, const float volume)
 	alSourcePlay(bgm);
 }
 
-void AnnAudioEngine::updateListenerPos(Ogre::Vector3 pos)
+void AnnAudioEngine::updateListenerPos(AnnVect3 pos)
 {
 	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
 }

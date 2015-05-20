@@ -99,7 +99,7 @@ void AnnGameObject::translate(float x, float y, float z)
 
 }
 
-void AnnGameObject::setPos(Ogre::Vector3 pos)
+void AnnGameObject::setPos(AnnVect3 pos)
 {
     setPos(pos.x,pos.y,pos.z);
 }
@@ -124,7 +124,7 @@ void AnnGameObject::setOrientation(Ogre::Quaternion orient)
     setOrientation(orient.w,orient.x,orient.y,orient.z);
 }
 
-void AnnGameObject::setScale(Ogre::Vector3 scale)
+void AnnGameObject::setScale(AnnVect3 scale)
 {
     setScale(scale.x,scale.y,scale.z);
 }
@@ -132,14 +132,14 @@ void AnnGameObject::setScale(Ogre::Vector3 scale)
 
 void AnnGameObject::setScale(float x, float y, float z)
 {
-    m_node->setScale(Ogre::Vector3(x,y,z));
+    m_node->setScale(AnnVect3(x,y,z));
 }
 
-Ogre::Vector3 AnnGameObject::pos()
+AnnVect3 AnnGameObject::pos()
 {
     if(m_node != NULL)
         return m_node->getPosition();
-    return Ogre::Vector3(0,0,0);
+    return AnnVect3(0,0,0);
 }
 
 Ogre::Quaternion AnnGameObject::Orientation()
@@ -210,8 +210,8 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPl
     if(m_Shape == NULL)
         return;
 
-    Ogre::Vector3 scale =  node()->getScale();
-    m_Shape->setLocalScaling(btVector3(scale.x,scale.y,scale.z));
+    AnnVect3 scale =  node()->getScale();
+	m_Shape->setLocalScaling(scale.getBtVector());
 
     btVector3 inertia;
 
@@ -373,20 +373,20 @@ void AnnGameObject::addTime(double offset)
     m_anim->addTime(float(offset));
 }
 
-void AnnGameObject::applyImpulse(Ogre::Vector3 force)
+void AnnGameObject::applyImpulse(AnnVect3 force)
 {
-    m_Body->applyCentralImpulse(btVector3(force.x, force.y, force.z));
+	m_Body->applyCentralImpulse(force.getBtVector());
 }
 
-void AnnGameObject::applyForce(Ogre::Vector3 force)
+void AnnGameObject::applyForce(AnnVect3 force)
 {
-   m_Body->applyCentralForce(btVector3(force.x, force.y, force.z));
+   m_Body->applyCentralForce(force.getBtVector());
 }
 
-void AnnGameObject::setLinearSpeed(Ogre::Vector3 v)
+void AnnGameObject::setLinearSpeed(AnnVect3 v)
 {
 	if(bulletReady)
-		m_Body->setLinearVelocity(btVector3(v.x, v.y, v.z));
+		m_Body->setLinearVelocity(v.getBtVector());
 }
 
 

@@ -8,7 +8,7 @@
 #define ANN_PLAYER
 
 #include "systemMacro.h"
-#include <OgreVector3.h>
+#include "AnnVect3.hpp"
 #include <OgreQuaternion.h>
 
 #include "euler.h"
@@ -67,7 +67,7 @@ namespace Annwvyn
 
 		///Set the position of the player. If physics is enabled you need to call  AnnEngine::resetPlayerPhysics() to recreate player's body.
 		/// \param Position 3D vector representing the position of the player (refernced by the point between his eyes)
-		void setPosition(Ogre::Vector3 Position);
+		void setPosition(AnnVect3 Position);
 
 		///Set body orientation
 		/// \param Orientation Euler angle that represent the orientation of the player's BODY. That orientation is used as a "zero point" for the head orientation.
@@ -114,7 +114,7 @@ namespace Annwvyn
 		float getMass();
 
 		///Get position vector
-		Ogre::Vector3 getPosition();
+		AnnVect3 getPosition();
 
 		///Get body orientation (euler vector)
 		Ogre::Euler getOrientation();
@@ -163,13 +163,13 @@ namespace Annwvyn
 		bool locked;
 
 		///Get the translation vector (normalised) from the walking state
-		Ogre::Vector3 getTranslation();
+		AnnVect3 getTranslation();
 
 		///If there is contact with ground
         bool contactWithGround;
 
 		///Get the translation from analog joystick value
-		Ogre::Vector3 getAnalogTranslation();
+		AnnVect3 getAnalogTranslation();
 
 		///Apply yaw from analog value
 		void applyAnalogYaw();
