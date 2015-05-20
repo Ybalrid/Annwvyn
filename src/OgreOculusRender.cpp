@@ -5,6 +5,7 @@ using namespace OVR;
 
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 {
+	oorc = NULL;
 	//Initialize some variables
 	name = winName;
 	root = NULL;
@@ -462,6 +463,8 @@ void OgreOculusRender::RenderOneFrame()
 	//update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
+
+	if(oorc)oorc->renderCallback();
 
 	root->renderOneFrame();
 

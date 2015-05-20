@@ -41,12 +41,15 @@ namespace Annwvyn
 	///You can intantiate it like a normal class and bypass the idea of a singleton complettely.
 	///This is the base class of the whole engine, the idea is more or less the one described in the 
 	///"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
-	class DLL AnnEngine
+	
+	class DLL AnnEngine : public OgreOculusRenderCallback
 	{
 	private:
 		///the singleton itsefl is stored here
 		static AnnEngine* singleton;
 	public:
+
+		void renderCallback();
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 

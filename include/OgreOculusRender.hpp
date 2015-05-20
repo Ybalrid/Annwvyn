@@ -36,6 +36,13 @@
 using namespace std;
 using namespace OVR;
 
+class DLL OgreOculusRenderCallback
+{
+	public :
+		OgreOculusRenderCallback(){}
+		virtual void renderCallback() = 0;
+};
+
 ///A pose refer to the combinaison of a position and an orientation. 
 ///It permit to define the placement of an object with 6DOF
 struct OgrePose
@@ -132,6 +139,9 @@ class DLL OgreOculusRender
 		///change main viewport background color
 		void changeViewportBackgroundColor(Ogre::ColourValue color);
 
+
+		void setRenderCallback(OgreOculusRenderCallback* callback){oorc = callback;}
+
     private:
         enum 
         {
@@ -202,6 +212,8 @@ class DLL OgreOculusRender
 
 		///Time betwenn frames in seconds
         double updateTime;
+
+		OgreOculusRenderCallback* oorc;
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;
