@@ -13,6 +13,7 @@
 #include "AnnKeyCode.h"
 #include "AnnPlayer.hpp"
 
+//the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
 #define LISTENER public Annwvyn::AnnAbstractEventListener
 ///Macro for declaring a listener constructor

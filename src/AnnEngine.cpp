@@ -32,6 +32,7 @@ AnnEngine::AnnEngine(const char title[])
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
 	oor = new OgreOculusRender(title);
+	oor->setRenderCallback(this);
 	oor->initLibraries("Annwvyn.log");
 	oor->getOgreConfig();
 	oor->createWindow();
@@ -349,24 +350,24 @@ bool AnnEngine::requestStop()
 	return false;
 }
 
+void AnnEngine::renderCallback()
+{
+	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
+		(*it)->atRefresh();
+}
+
 bool AnnEngine::refresh()
 {
 	deltaT = oor->getUpdateTime();
-	//Call of refresh method
-	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
-		(*it)->atRefresh();
-
-	//Physics
 	physicsEngine->step(deltaT);
-
-	//Test if there is a collision with the ground
 	player->engineUpdate(deltaT);
+	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
+	{
+		//(*it)->atRefresh();
+		(*it)->addTime(deltaT);
+		(*it)->updateOpenAlPos();
+	}
 
-	//Dissmiss health and safety warning
-	if(!oor->IsHsDissmissed()) //If not already dissmissed
-		for(unsigned char kc(0x00); kc <= 0xED; kc++) //For each keycode available (= every keyboard button)
-			if(isKeyDown(static_cast<OIS::KeyCode>(kc))) //if tte selected keycode is available
-				{oor->dissmissHS(); break;}	//dissmiss the Health and Safety warning.
 
 	eventManager->update();
 
@@ -376,14 +377,12 @@ bool AnnEngine::refresh()
 	//Animation
 	if(VisualBodyAnimation)
 		VisualBodyAnimation->addTime(deltaT);
-	for(size_t i = 0; i < objects.size(); i++)
-		objects[i]->addTime(deltaT);
+
 
 	//Audio
 	AudioEngine->updateListenerPos(oor->returnPose.position);
 	AudioEngine->updateListenerOrient(oor->returnPose.orientation);
-	for(size_t i = 0; i < objects.size(); i++)
-		objects[i]->updateOpenAlPos();
+
 
 	//Update camera
 	m_CameraReference->setPosition(player->getPosition());
@@ -391,6 +390,7 @@ bool AnnEngine::refresh()
 
 	physicsEngine->stepDebugDrawer();
 	oor->RenderOneFrame();
+
 	return !requestStop();
 }
 
