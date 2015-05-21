@@ -143,7 +143,7 @@ void AnnAudioEngine::updateListenerPos(AnnVect3 pos)
 	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
 }
 
-void AnnAudioEngine::updateListenerOrient(Ogre::Quaternion orient)
+void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 {
 	Ogre::Vector3 At = (orient * Ogre::Vector3::NEGATIVE_UNIT_Z); // Direction object facing 
 	Ogre::Vector3 Up = (orient * Ogre::Vector3::UNIT_Y); // Up Vector 

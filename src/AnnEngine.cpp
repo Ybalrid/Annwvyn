@@ -90,7 +90,7 @@ AnnEngine::AnnEngine(const char title[])
 	VisualBodyAnimation = NULL;
 	VisualBodyAnchor = NULL;
 
-	refVisualBody = Ogre::Quaternion::IDENTITY;
+	refVisualBody = AnnQuaternion::IDENTITY;
 	log("---------------------------------------------------", false);
 	log("Annwvyn Game Engine - Step into the Other World   ", false);
 	log("Designed for Virtual Reality                      ", false);
@@ -444,9 +444,9 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 	VisualBodyAnchor->attachObject(ent);
 
 	if(flip)
-		refVisualBody = Ogre::Quaternion(Ogre::Degree(180), AnnVect3::UNIT_Y);
+		refVisualBody = AnnQuaternion(Ogre::Degree(180), AnnVect3::UNIT_Y);
 	else
-		refVisualBody = Ogre::Quaternion::IDENTITY;
+		refVisualBody = AnnQuaternion::IDENTITY;
 
 	visualBody_Zoffset = z_offset;
 	VisualBody = ent;

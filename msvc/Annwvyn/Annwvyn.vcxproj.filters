@@ -106,6 +106,9 @@
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Annwvyn.h" />
+    <ClInclude Include="..\..\include\AnnQuaternion.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -160,6 +163,9 @@
       <Filter>precompilled headers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnVect3.cpp">
+      <Filter>Annwvyn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnQuaternion.cpp">
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
   </ItemGroup>

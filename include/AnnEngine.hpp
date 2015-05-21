@@ -180,10 +180,10 @@ namespace Annwvyn
 
 		///Reference orientation. Usefull if you are inside a vehicule for example
 		/// \param q the reference orientation for the point of view. Usefull for applying vehicle movement to the player
-		void setReferenceQuaternion(Ogre::Quaternion q); //engine...
+		void setReferenceQuaternion(AnnQuaternion q); //engine...
 
 		///Retrive the said reference quaternion
-		Ogre::Quaternion getReferenceQuaternion(); //engine 
+		AnnQuaternion getReferenceQuaternion(); //engine 
 
 		///Attach a 3D mesh to the camera to act as player's body.
 		/// \param entityName name of the entity that will serve as player body
@@ -236,7 +236,7 @@ namespace Annwvyn
 		Ogre::SceneManager* m_SceneManager;
 		Ogre::SceneNode* m_CameraReference;
 		Ogre::SceneNode* VisualBodyAnchor;
-		Ogre::Quaternion refVisualBody;
+		AnnQuaternion refVisualBody;
 		Ogre::Entity* VisualBody;
 		Ogre::AnimationState* VisualBodyAnimation;
 		float visualBody_Zoffset;

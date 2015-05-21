@@ -11,9 +11,8 @@
 
 #include "systemMacro.h"
 
-#include <OgreQuaternion.h>
 #include "AnnVect3.hpp"
-
+#include "AnnQuaternion.hpp"
 #include <iostream>
 #include <string>
 
@@ -64,7 +63,7 @@ namespace Annwvyn
 		
 		///For the engine : update the listener orientation to mach the player's head 
         /// \param orient The orientatio of the player
-		void updateListenerOrient(Ogre::Quaternion orient);
+		void updateListenerOrient(AnnQuaternion orient);
 
 
         ///For engine : update listener Oirentation
