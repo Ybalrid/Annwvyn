@@ -35,14 +35,14 @@ namespace Annwvyn
         float runFactor;
 		float turnSpeed;
 		float mass;
-		Ogre::Vector3 Position;
+		AnnVect3 Position;
 		Ogre::Euler Orientation;
 		Ogre::Quaternion HeadOrientation;
 
 		//bullet
 		btCollisionShape* Shape;
 		btRigidBody* Body;
-        btVector3 jumpForce;
+        AnnVect3 jumpForce;
 	};
 
 	///Correspondance between array position and walk direction for the "walking" array

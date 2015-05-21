@@ -8,10 +8,7 @@
 #define ANNTRIGGEROBJECT
 
 #include "systemMacro.h"
-
-//#include <Ogre.h>
-#include <OgreVector3.h>
-
+#include "AnnVect3.hpp"
 
 namespace Annwvyn
 {
@@ -63,7 +60,7 @@ namespace Annwvyn
 
         private:
 			///Position of the object
-            Ogre::Vector3 m_position;
+            AnnVect3 m_position;
 			///Distance where the trigger is triggered
             float m_threshold;
 			///True if trigger triggerd

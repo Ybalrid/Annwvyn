@@ -11,7 +11,7 @@ bodyParams::bodyParams()
 	walkSpeed = 3;
 	turnSpeed = 0.5f;
 	mass = 80.0f;
-	Position = Ogre::Vector3(0,0,10);
+	Position = AnnVect3(0,0,10);
 	HeadOrientation = Ogre::Quaternion(1,0,0,0);
 	Shape = NULL;
 	Body = NULL;
@@ -171,7 +171,6 @@ void AnnPlayer::applyMouseRelativeRotation(int relValue)
 
 AnnVect3 AnnPlayer::getTranslation()
 {
-
 	AnnVect3 translation (AnnVect3::ZERO);
 	if(walking[forward])
 		translation.z -= 1;
@@ -197,6 +196,7 @@ AnnVect3 AnnPlayer::getAnalogTranslation()
 
 void AnnPlayer::applyAnalogYaw()
 {
+	//7 is the value that was more or less feeling good for me. 
 	applyRelativeBodyYaw(Ogre::Radian(- 7 * analogRotate * getTurnSpeed() * updateTime));
 }
 
@@ -204,13 +204,13 @@ void AnnPlayer::jump()
 {
 	if(!getBody()) return;
 	if(contactWithGround)
-		getBody()->applyCentralImpulse(playerBody->jumpForce);
+		getBody()->applyCentralImpulse(playerBody->jumpForce.getBtVector());
 }
 
 void AnnPlayer::engineUpdate(float time)
 {
 	updateTime = time;
-	//To "emulate" falling on the ground, set this boolean to false (should
+	//To "emulate" falling on the ground, set this boolean to false
 	standing = true;
 	if(getBody())
 	{
