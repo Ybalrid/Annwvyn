@@ -5,6 +5,7 @@
 using namespace Annwvyn;
 
 AnnConsole::AnnConsole() : 
+	modified(false),
 	visibility(false),
 	consoleNode(NULL)
 {
@@ -55,8 +56,8 @@ AnnConsole::AnnConsole() :
 	consoleNode = AnnEngine::Instance()->getCamera()->createChildSceneNode();
 	//attach the quad
 	consoleNode->attachObject(displaySurface);
-	consoleNode->setPosition(0,0,-1);
-	//displaySurface->setRenderQueueGroup(Ogre::uint8(-1));//draw that object in last position
+	consoleNode->setPosition(0,0,-1.5f);
+	displaySurface->setRenderQueueGroup(Ogre::uint8(-1));//draw that object in last position
 	consoleNode->setVisible(visibility);
 
 	//create a manual texture
@@ -65,20 +66,18 @@ AnnConsole::AnnConsole() :
 
 	if(!Ogre::FontManager::getSingletonPtr())
 	{
-		std::cerr << "fontManager not usable" << std::endl;
+		std::cerr << "fontManager not usable yet. Initializing a new FontManager" << std::endl;
 		new Ogre::FontManager();
 	}
 
 	font = Ogre::FontManager::getSingleton().create("VeraMono","ANNWVYN_DEFAULT");
-	texture = TextureManager::getSingleton().createManual("Write Texture","ANNWVYN_DEFAULT",TEX_TYPE_2D, 1024, 512, MIP_UNLIMITED , PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP|Ogre::TU_RENDERTARGET);
+	texture = TextureManager::getSingleton().createManual("Write Texture","ANNWVYN_DEFAULT",TEX_TYPE_2D, 2*BASE, BASE, MIP_UNLIMITED , PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP|Ogre::TU_RENDERTARGET);
 
 	font->setType(Ogre::FontType::FT_TRUETYPE);
 	font->setSource("VeraMono.ttf");
 	font->setTrueTypeResolution(96);
-	font->setTrueTypeSize(16);
-	//background = TextureManager::getSingleton().load("Background.png","ANNWVYN_DEFAULT");
-	//Ogre::TextureUnitState* tus = pass->createTextureUnitState();
-	//tus->setTexture(background);
+	font->setTrueTypeSize(BASE/32);
+
 	background = TextureManager::getSingleton().load("background.png","ANNWVYN_DEFAULT");
 	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
 	displaySurfaceTextureUniteState->setTexture(texture);
@@ -91,7 +90,7 @@ void AnnConsole::append(std::string str)
 		buffer[i-1] = buffer[i];
 
 	buffer[CONSOLE_BUFFER-1] = str;
-	update();
+	modified = true;
 }
 
 void AnnConsole::setVisible(bool state)
@@ -107,21 +106,16 @@ void AnnConsole::toogle()
 
 void AnnConsole::update()
 {
+	modified = false;
+	OgreOculusRender::forceNextUpdate = true;
 	std::stringstream content;
 	for(size_t i(0); i < CONSOLE_BUFFER; i++)
 		content << buffer[i] << std::endl;
 
 	Ogre::String textToDisplay = content.str();
-	//redraw the texture
-	//reaply texture to floating quad
-	 
-	//texture->getBuffer()->unlock();
-	//background->getBuffer()->unlock();
-	texture->getBuffer()->blit(background->getBuffer(),Ogre::Image::Box(0,0,1024,512),Ogre::Image::Box(0,0,1024,512));
-	//texture->getBuffer()->blit(background->getBuffer());
-
-	WriteToTexture(textToDisplay,texture,Image::Box(0,0,1024,512),font.getPointer(),ColourValue(0, 1.0, 0, 1.0),'l',false);
-
+	
+	background->copyToTexture(texture);
+	WriteToTexture(textToDisplay,texture,Image::Box(0 + MARGIN,0 + MARGIN,2*BASE - MARGIN,BASE - MARGIN),font.getPointer(),ColourValue::Black,'l',false);
 }
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const ColourValue &color, char justify,  bool wordwrap)
@@ -293,4 +287,9 @@ stop:
  
         // Free the memory allocated for the buffer
    free(buffer); buffer = 0;
+}
+
+bool AnnConsole::needUpdate()
+{
+	return modified;
 }
