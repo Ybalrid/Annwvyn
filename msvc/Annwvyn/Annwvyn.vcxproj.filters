@@ -112,6 +112,9 @@
     <ClInclude Include="..\..\include\AnnQuaternion.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnConsole.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -170,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnVect3.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnConsole.cpp">
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

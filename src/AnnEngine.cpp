@@ -4,12 +4,17 @@
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(NULL);
+AnnConsole* AnnEngine::onScreenConsole(NULL);
 
 AnnEngine* AnnEngine::Instance()
 {
 	return singleton;
 }
 
+void AnnEngine::toogleOnScreenConsole()
+{
+	if(onScreenConsole) onScreenConsole->toogle();
+}
 
 AnnEngine::AnnEngine(const char title[])
 {
@@ -149,6 +154,8 @@ AnnEngine::~AnnEngine()
 
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
+	delete onScreenConsole;
+	onScreenConsole = NULL;
 	delete oor;
 	singleton = NULL;
 }
@@ -166,6 +173,7 @@ AnnPlayer* AnnEngine::getPlayer()
 ////////////////////////////////////////////////////////// UTILITY
 void AnnEngine::log(std::string message, bool flag)
 {
+
 	Ogre::String messageForLog;
 
 	if(flag)
@@ -173,6 +181,8 @@ void AnnEngine::log(std::string message, bool flag)
 
 	messageForLog += message;
 	Ogre::LogManager::getSingleton().logMessage(messageForLog);
+	if(onScreenConsole)
+		onScreenConsole->append(message);
 }
 
 void AnnEngine::useDefaultEventListener()
@@ -247,6 +257,7 @@ void AnnEngine::oculusInit(bool fullscreen)
 	m_CameraReference = oor->getCameraInformationNode();
 	m_CameraReference->setPosition(player->getPosition() + 
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
+	onScreenConsole = new AnnConsole();
 }
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)

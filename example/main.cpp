@@ -80,7 +80,8 @@ AnnMain()
 	GameEngine->resetOculusOrientation();
 
 	do	
-	{ 
+	{
+		AnnEngine::log("test");
 	}
 	while(GameEngine->refresh());
 
