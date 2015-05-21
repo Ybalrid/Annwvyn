@@ -37,6 +37,9 @@
     <Filter Include="precompilled headers">
       <UniqueIdentifier>{fbc76f4b-1892-4373-958b-3df6607820a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\MathObjects">
+      <UniqueIdentifier>{8002a392-511f-4f41-9d99-a4f6b3aac75c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
@@ -102,12 +105,12 @@
     <ClInclude Include="..\..\pch\stdafx.h">
       <Filter>precompilled headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnVect3.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\Annwvyn.h" />
+    <ClInclude Include="..\..\include\AnnVect3.hpp">
+      <Filter>Annwvyn\MathObjects</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\AnnQuaternion.hpp">
-      <Filter>Annwvyn\Header</Filter>
+      <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -162,11 +165,11 @@
     <ClCompile Include="..\..\pch\stdafx.cpp">
       <Filter>precompilled headers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnVect3.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnQuaternion.cpp">
-      <Filter>Annwvyn\Sources</Filter>
+      <Filter>Annwvyn\MathObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnVect3.cpp">
+      <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
