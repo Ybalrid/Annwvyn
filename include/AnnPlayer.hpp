@@ -9,7 +9,7 @@
 
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
-#include <OgreQuaternion.h>
+#include "AnnQuaternion.hpp"
 
 #include "euler.h"
 #include <btBulletCollisionCommon.h>
@@ -37,7 +37,7 @@ namespace Annwvyn
 		float mass;
 		AnnVect3 Position;
 		Ogre::Euler Orientation;
-		Ogre::Quaternion HeadOrientation;
+		AnnQuaternion HeadOrientation;
 
 		//bullet
 		btCollisionShape* Shape;
@@ -75,7 +75,7 @@ namespace Annwvyn
 
 		///Set the head orientation
 		/// \param HeadOrientation A quaternion representing the orientation of the head
-		void setHeadOrientation(Ogre::Quaternion HeadOrientation);
+		void setHeadOrientation(AnnQuaternion HeadOrientation);
 		
 		///distance between footplane and eyes
 		/// \param eyeHeight floating point number in metter

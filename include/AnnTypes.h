@@ -12,16 +12,7 @@
 
 #include <vector>
 #include "AnnVect3.hpp"
-//#include <Ogre.h>
-//#include <OIS.h>
-//#include "euler.h"
-//#include <btBulletCollisionCommon.h>
-//#include <btBulletDynamicsCommon.h>
-
-//#include "AnnGameObject.hpp"
-//#include "AnnTriggerObject.hpp"
-
-//#include <OgreLight.h>
+#include "AnnQuaternion.hpp"
 
 namespace Annwvyn
 {

@@ -106,27 +106,29 @@ void AnnGameObject::setPos(AnnVect3 pos)
 
 void AnnGameObject::setOrientation(float w, float x, float y, float z)
 {
+	setOrientation(AnnQuaternion(w,x,y,z));
+	
+}
+
+void AnnGameObject::setOrientation(AnnQuaternion orient)
+{
+	//setOrientation(orient.w,orient.x,orient.y,orient.z);
 	//beware : Ogre Quaternion convetion is WXYZ. Bullet use XYZW
     //Ogre3D
     if(m_node != NULL)
-        m_node->setOrientation(w,x,y,z);
+        m_node->setOrientation(orient);
     //bullet
     if(m_Body != NULL)
     {
         btTransform t = m_Body->getCenterOfMassTransform();
-        t.setRotation(btQuaternion(x,y,z,w));
+        t.setRotation(orient.getBtQuaternion());
         m_Body->setCenterOfMassTransform(t);
     }
 }
 
-void AnnGameObject::setOrientation(Ogre::Quaternion orient)
-{
-    setOrientation(orient.w,orient.x,orient.y,orient.z);
-}
-
 void AnnGameObject::setScale(AnnVect3 scale)
 {
-    setScale(scale.x,scale.y,scale.z);
+	m_node->setScale(scale);
 }
 
 
@@ -142,11 +144,11 @@ AnnVect3 AnnGameObject::pos()
     return AnnVect3(0,0,0);
 }
 
-Ogre::Quaternion AnnGameObject::Orientation()
+AnnQuaternion AnnGameObject::Orientation()
 {
     if(m_node != NULL)
         return m_node->getOrientation();
-    return Ogre::Quaternion(1,0,0,0);
+    return AnnQuaternion(1,0,0,0);
 }
 
 void AnnGameObject::setNode(Ogre::SceneNode* node)

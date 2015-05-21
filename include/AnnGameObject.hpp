@@ -77,7 +77,7 @@ namespace Annwvyn
 
             ///Set Orientation from Quaternion
 			/// \param orient Quaternion for aboslute orientation
-            void setOrientation(Ogre::Quaternion orient);
+            void setOrientation(AnnQuaternion orient);
 
             ///Set scale
 			/// \param x X componant of the scale vector
@@ -93,7 +93,7 @@ namespace Annwvyn
             AnnVect3 pos();
 
             ///Get Orientation
-            Ogre::Quaternion Orientation();
+            AnnQuaternion Orientation();
 
             ///Get Ogre Node
             Ogre::SceneNode* node();

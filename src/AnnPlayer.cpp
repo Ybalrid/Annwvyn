@@ -12,7 +12,7 @@ bodyParams::bodyParams()
 	turnSpeed = 0.5f;
 	mass = 80.0f;
 	Position = AnnVect3(0,0,10);
-	HeadOrientation = Ogre::Quaternion(1,0,0,0);
+	HeadOrientation = AnnQuaternion(1,0,0,0);
 	Shape = NULL;
 	Body = NULL;
 	runFactor = 3;
@@ -61,7 +61,7 @@ void AnnPlayer::setOrientation(Ogre::Euler Orientation)
 	playerBody->Orientation = Orientation;
 }
 
-void AnnPlayer::setHeadOrientation(Ogre::Quaternion Orientation)
+void AnnPlayer::setHeadOrientation(AnnQuaternion Orientation)
 {
 	playerBody->HeadOrientation = Orientation;
 }
@@ -265,7 +265,7 @@ void AnnPlayer::engineUpdate(float time)
 		if(standing) 
 		{
 			btTransform Transform = getBody()->getCenterOfMassTransform();
-			Transform.setRotation(btQuaternion(0,0,0,1));
+			Transform.setRotation(AnnQuaternion(0,0,0,1).getBtQuaternion());
 			getBody()->setCenterOfMassTransform(Transform);
 		}
 
