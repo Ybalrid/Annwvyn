@@ -9,7 +9,7 @@
 
 namespace Annwvyn
 {
-	class AnnQuaternion : public Ogre::Quaternion
+	class DLL AnnQuaternion : public Ogre::Quaternion
 	{
 	public:
 		AnnQuaternion();
