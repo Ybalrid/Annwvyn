@@ -3,6 +3,7 @@
 
 using namespace OVR;
 
+bool OgreOculusRender::forceNextUpdate(false);
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 {
 	oorc = NULL;
@@ -388,13 +389,15 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	renderTexture->getViewport(0)->setClearEveryFrame(true);
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
 	renderTexture->getViewport(0)->setOverlaysEnabled(false);
+	renderTexture->getViewport(0)->setAutoUpdated(true);
 
 	renderTexture = mRightEyeRenderTexture->getBuffer()->getRenderTarget();
 	vpts[1] = renderTexture->addViewport(cams[1]);
 	renderTexture->getViewport(0)->setClearEveryFrame(true);
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
 	renderTexture->getViewport(0)->setOverlaysEnabled(false);
-
+	renderTexture->getViewport(0)->setAutoUpdated(true);
+	
 	calculateProjectionMatrix();
 }
 
@@ -466,6 +469,15 @@ void OgreOculusRender::RenderOneFrame()
 
 	if(oorc)oorc->renderCallback();
 
+
+	if(forceNextUpdate)//quick&dirty fix for a texture buffer update problem : render a second time a buffer. Need to find better.
+	{
+		//vpts[0]->clear();
+		//vpts[1]->clear();
+		vpts[0]->update();
+		//vpts[1]->update();
+		forceNextUpdate = false;
+	}
 	root->renderOneFrame();
 
 	//Timewarp is not implemented yet... need to recode sharders or to 

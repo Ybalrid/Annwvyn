@@ -400,7 +400,9 @@ bool AnnEngine::refresh()
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
 
 	physicsEngine->stepDebugDrawer();
+	if(onScreenConsole->needUpdate())onScreenConsole->update();
 	oor->RenderOneFrame();
+
 
 	return !requestStop();
 }

@@ -9,7 +9,9 @@
 #include <Overlay\OgreFont.h>
 #include <Overlay\OgreFontManager.h>
 
-#define CONSOLE_BUFFER 20
+#define CONSOLE_BUFFER 19
+#define BASE 256
+#define MARGIN 4
 
 namespace Annwvyn
 {
@@ -20,10 +22,11 @@ namespace Annwvyn
 		void append(std::string string);
 		void setVisible(bool visibility);
 		void toogle();
-	private:
+		bool needUpdate();
 		void update();
+	private:
 		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l',  bool wordwrap = true);
-
+		bool modified;
 		//////////////////////////////
 
 		AnnVect3 points[4];
