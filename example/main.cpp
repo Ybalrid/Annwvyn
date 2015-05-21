@@ -79,9 +79,26 @@ AnnMain()
     GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
 
+	double now = GameEngine->getTimeFromStartUp();
+	double last(now);
+	bool afterRender(false);
 	do	
 	{
-		AnnEngine::log("test");
+		if(afterRender)
+		{
+			Ogre::TextureManager::getSingleton().getByName("Write Texture")->getBuffer()->getRenderTarget()->writeContentsToFile("console.png");
+			Ogre::TextureManager::getSingleton().getByName("RttTexL")->getBuffer()->getRenderTarget()->writeContentsToFile("rtttexl.png");
+			Ogre::TextureManager::getSingleton().getByName("RttTexR")->getBuffer()->getRenderTarget()->writeContentsToFile("rtttexr.png");
+			afterRender = false;
+		}
+		now = GameEngine->getTimeFromStartUp();
+		if(now - last > 3000)
+		{
+			last = now;
+			AnnEngine::log("This is only a test");
+			afterRender = true;
+		}
+		//AnnEngine::log("test");
 	}
 	while(GameEngine->refresh());
 
