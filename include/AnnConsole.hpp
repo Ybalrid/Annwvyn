@@ -2,14 +2,14 @@
 #define ANNCONSOLE
 
 #include "systemMacro.h"
-#include "AnnVect3.hpp"
+#include "AnnTypes.h"
 #include <string>
 #include <iostream>
 #include <Ogre.h>
 #include <Overlay\OgreFont.h>
 #include <Overlay\OgreFontManager.h>
 
-#define CONSOLE_BUFFER 10
+#define CONSOLE_BUFFER 20
 
 namespace Annwvyn
 {
@@ -27,6 +27,7 @@ namespace Annwvyn
 		//////////////////////////////
 
 		AnnVect3 points[4];
+		AnnVect2 textCoord[4];
 
 		std::string buffer[CONSOLE_BUFFER];
 		bool visibility;

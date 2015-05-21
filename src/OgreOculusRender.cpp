@@ -387,13 +387,13 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	vpts[0] = renderTexture->addViewport(cams[0]);
 	renderTexture->getViewport(0)->setClearEveryFrame(true);
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
-	renderTexture->getViewport(0)->setOverlaysEnabled(true);
+	renderTexture->getViewport(0)->setOverlaysEnabled(false);
 
 	renderTexture = mRightEyeRenderTexture->getBuffer()->getRenderTarget();
 	vpts[1] = renderTexture->addViewport(cams[1]);
 	renderTexture->getViewport(0)->setClearEveryFrame(true);
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
-	renderTexture->getViewport(0)->setOverlaysEnabled(true);
+	renderTexture->getViewport(0)->setOverlaysEnabled(false);
 
 	calculateProjectionMatrix();
 }

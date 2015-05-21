@@ -27,10 +27,15 @@ AnnConsole::AnnConsole() :
 	 * Note that the rectangle is actually wider that it's height but I'm not verry good with ASCII art so... 
 	 */
 	points[0] = AnnVect3(-1, .5, 0);
-	points[2] = AnnVect3( 1, .5, 0);
 	points[1] = AnnVect3(-1,-.5, 0);
+	points[2] = AnnVect3( 1, .5, 0);
 	points[3] = AnnVect3( 1,-.5, 0);
-	 
+	
+	textCoord[0] = AnnVect2(0,0);
+	textCoord[1] = AnnVect2(0,1);
+	textCoord[2] = AnnVect2(1,0);
+	textCoord[3] = AnnVect2(1,1);
+
 	std::cerr << "Creating on screen console " << (void*)this << std::endl;
 	for(size_t i(0); i < CONSOLE_BUFFER; i++)
 		buffer[i] = "";
@@ -39,7 +44,10 @@ AnnConsole::AnnConsole() :
 	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 
 	for(char i(0); i < 4; i++)
+	{
 		displaySurface->position(points[i]);
+		displaySurface->textureCoord(textCoord[i]);
+	}
 
 	displaySurface->end();
 	
@@ -48,7 +56,7 @@ AnnConsole::AnnConsole() :
 	//attach the quad
 	consoleNode->attachObject(displaySurface);
 	consoleNode->setPosition(0,0,-1);
-	displaySurface->setRenderQueueGroup(Ogre::uint8(-1));//draw that object in last position
+	//displaySurface->setRenderQueueGroup(Ogre::uint8(-1));//draw that object in last position
 	consoleNode->setVisible(visibility);
 
 	//create a manual texture
@@ -62,7 +70,7 @@ AnnConsole::AnnConsole() :
 	}
 
 	font = Ogre::FontManager::getSingleton().create("VeraMono","ANNWVYN_DEFAULT");
-	texture = TextureManager::getSingleton().createManual("Write Texture","ANNWVYN_DEFAULT",TEX_TYPE_2D, 512, 512, MIP_UNLIMITED , PF_X8R8G8B8, Ogre::TU_STATIC|Ogre::TU_AUTOMIPMAP);
+	texture = TextureManager::getSingleton().createManual("Write Texture","ANNWVYN_DEFAULT",TEX_TYPE_2D, 1024, 512, MIP_UNLIMITED , PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP|Ogre::TU_RENDERTARGET);
 
 	font->setType(Ogre::FontType::FT_TRUETYPE);
 	font->setSource("VeraMono.ttf");
@@ -71,7 +79,10 @@ AnnConsole::AnnConsole() :
 	//background = TextureManager::getSingleton().load("Background.png","ANNWVYN_DEFAULT");
 	//Ogre::TextureUnitState* tus = pass->createTextureUnitState();
 	//tus->setTexture(background);
-	background = TextureManager::getSingleton().load("green.png","ANNWVYN_DEFAULT");
+	background = TextureManager::getSingleton().load("background.png","ANNWVYN_DEFAULT");
+	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
+	displaySurfaceTextureUniteState->setTexture(texture);
+	
 }
 
 void AnnConsole::append(std::string str)
@@ -106,10 +117,10 @@ void AnnConsole::update()
 	 
 	//texture->getBuffer()->unlock();
 	//background->getBuffer()->unlock();
+	texture->getBuffer()->blit(background->getBuffer(),Ogre::Image::Box(0,0,1024,512),Ogre::Image::Box(0,0,1024,512));
 	//texture->getBuffer()->blit(background->getBuffer());
 
-
-	WriteToTexture("hello world",texture,Image::Box(25,275,370,500),font.getPointer(),ColourValue(0, 1.0, 0, 1.0),'c');
+	WriteToTexture(textToDisplay,texture,Image::Box(0,0,1024,512),font.getPointer(),ColourValue(0, 1.0, 0, 1.0),'l',false);
 
 }
 
