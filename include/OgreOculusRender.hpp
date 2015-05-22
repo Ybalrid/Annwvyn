@@ -57,6 +57,7 @@ struct OgrePose
 class DLL OgreOculusRender
 {
     public:
+		static bool forceNextUpdate;
         OgreOculusRender(std::string windowName = "OgreOculusRender", bool actVsync = true);
         ~OgreOculusRender();
 

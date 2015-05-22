@@ -23,6 +23,7 @@ namespace Annwvyn
 	///Harmonise names :
 	class Ogre::Light;
 	typedef Ogre::Light AnnLightObject; //Yeah, it's a cheater thing here...
+	typedef Ogre::Vector2 AnnVect2;
 
 	///Remove some ugliness : 
 	typedef std::vector<AnnTriggerObject *> AnnTriggerObjectVect;
