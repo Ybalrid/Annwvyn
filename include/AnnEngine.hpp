@@ -49,6 +49,7 @@ namespace Annwvyn
 		///the singleton itsefl is stored here
 		static AnnEngine* singleton;
 		static AnnConsole* onScreenConsole;
+		bool fullscreen;
 
 	public:
 		static void toogleOnScreenConsole();
@@ -58,7 +59,7 @@ namespace Annwvyn
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
-		AnnEngine(const char title[] = "Annwvyn Game Engine");
+		AnnEngine(const char title[] = "Annwvyn Game Engine", bool fs = true);
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();

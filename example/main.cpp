@@ -40,7 +40,7 @@ AnnMain()
 {
 	AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
 	//Init game engine
-	AnnEngine* GameEngine(new AnnEngine("A Game"));
+	AnnEngine* GameEngine(new AnnEngine("A Game", false));
 	//load ressources
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
@@ -82,9 +82,9 @@ AnnMain()
 	std::stringstream ss;
 	do	
 	{
-		 ss << AnnEngine::Instance()->getTimeFromStartUp();
+		/* ss << AnnEngine::Instance()->getTimeFromStartUp();
 		AnnEngine::log(ss.str());
-		ss.str("");
+		ss.str("");*/
 	}
 	while(GameEngine->refresh());
 
