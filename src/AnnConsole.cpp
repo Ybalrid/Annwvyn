@@ -9,7 +9,8 @@ AnnConsole::AnnConsole() :
 	visibility(false),
 	consoleNode(NULL)
 {
-
+	std::cerr << "Creating on screen console " << (void*)this << std::endl;
+	//Define the custom material
 	Ogre::MaterialPtr Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
 	Ogre::Technique* technique = Console.getPointer()->getTechnique(0);
 	Ogre::Pass* pass = technique->getPass(0);
@@ -27,6 +28,8 @@ AnnConsole::AnnConsole() :
 	 *	1 +----+ 3
 	 * Note that the rectangle is actually wider that it's height but I'm not verry good with ASCII art so... 
 	 */
+
+	//Define object data
 	points[0] = AnnVect3(-1, .5, 0);
 	points[1] = AnnVect3(-1,-.5, 0);
 	points[2] = AnnVect3( 1, .5, 0);
@@ -37,10 +40,7 @@ AnnConsole::AnnConsole() :
 	textCoord[2] = AnnVect2(1,0);
 	textCoord[3] = AnnVect2(1,1);
 
-	std::cerr << "Creating on screen console " << (void*)this << std::endl;
-	for(size_t i(0); i < CONSOLE_BUFFER; i++)
-		buffer[i] = "";
-	//creatre a quad
+	//creatre the quad itself
 	displaySurface = AnnEngine::Instance()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
 	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 
@@ -52,44 +52,62 @@ AnnConsole::AnnConsole() :
 
 	displaySurface->end();
 	
-	//create a node
+	//create a node child to the camera here : 
 	consoleNode = AnnEngine::Instance()->getCamera()->createChildSceneNode();
-	//attach the quad
+	//attach The object
 	consoleNode->attachObject(displaySurface);
+	//set the camera relative position
 	consoleNode->setPosition(0,0,-1.5f);
-	displaySurface->setRenderQueueGroup(Ogre::uint8(-1));//draw that object in last position
+	//Make sure the object is the last thing rendered (to be on top of everyting
+	displaySurface->setRenderQueueGroup(Ogre::uint8(-1));
+	//Set the visibility state
 	consoleNode->setVisible(visibility);
 
-	//create a manual texture
-	//put the texture to the quad with a material that don't care about lighting and shadows
-	//init the texture with black
-
-	if(!Ogre::FontManager::getSingletonPtr())
+	//Create a The font
+	if(!Ogre::FontManager::getSingletonPtr()) //The FontManager isn't initialized by default
 	{
+		//Create a FontManager
 		std::cerr << "fontManager not usable yet. Initializing a new FontManager" << std::endl;
 		new Ogre::FontManager();
 	}
 
+	//Create a manual font
 	font = Ogre::FontManager::getSingleton().create("VeraMono","ANNWVYN_DEFAULT");
-	texture = TextureManager::getSingleton().createManual("Write Texture","ANNWVYN_DEFAULT",TEX_TYPE_2D, 2*BASE, BASE, MIP_UNLIMITED , PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP|Ogre::TU_RENDERTARGET);
 
+	//Load the VeraMono.ttf file
 	font->setType(Ogre::FontType::FT_TRUETYPE);
 	font->setSource("VeraMono.ttf");
 	font->setTrueTypeResolution(96);
-	font->setTrueTypeSize(BASE/32);
+	font->setTrueTypeSize(BASE/32); //Size of font is relative to the size of the pixelbuffer (texture)
 
-	background = TextureManager::getSingleton().load("background.png","ANNWVYN_DEFAULT");
+
+	//Aspect ration of the console is 2:1. The actuall size of texture is 2*BASE x BASE
+	//Create an map the texture to the displaySurface
+	texture = TextureManager::getSingleton().createManual("Write Texture","ANNWVYN_DEFAULT",TEX_TYPE_2D, 2*BASE, BASE, MIP_UNLIMITED , PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP|Ogre::TU_RENDERTARGET);
 	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
 	displaySurfaceTextureUniteState->setTexture(texture);
-	
+
+	//Load background texture to a buffer
+	background = TextureManager::getSingleton().load("background.png","ANNWVYN_DEFAULT");
+
+	//Initialize the text buffer.
+	//CONSOLE_BUFFER is the number of lines to keep in memory and to load on the texture.
+	//Text is drawn from the 1st line. The number of line define how mani lines are visible on the console
+	for(size_t i(0); i < CONSOLE_BUFFER; i++)
+		buffer[i] = "";
+
 }
 
 void AnnConsole::append(std::string str)
 {
+	//Copy with an offset of 1 the buffer content
 	for(size_t i(1); i < CONSOLE_BUFFER; i++)
 		buffer[i-1] = buffer[i];
 
+	//Write the texture to the buffer
 	buffer[CONSOLE_BUFFER-1] = str;
+
+	//The console will be redrawn next frame
 	modified = true;
 }
 
@@ -106,16 +124,29 @@ void AnnConsole::toogle()
 
 void AnnConsole::update()
 {
+	//Updated
 	modified = false;
+	//Prevent srange flickering bug
 	OgreOculusRender::forceNextUpdate = true;
+	//Get the content of the buffer into a static string
 	std::stringstream content;
 	for(size_t i(0); i < CONSOLE_BUFFER; i++)
 		content << buffer[i] << std::endl;
-
 	Ogre::String textToDisplay = content.str();
 	
+	//Erase texture by filling it with the background buffer. 
+	//Not that apparently this is the origin of a bug that cause the next viewport update to be poluated with color from background buffer
 	background->copyToTexture(texture);
-	WriteToTexture(textToDisplay,texture,Image::Box(0 + MARGIN,0 + MARGIN,2*BASE - MARGIN,BASE - MARGIN),font.getPointer(),ColourValue::Black,'l',false);
+
+	//Write text to texture
+	WriteToTexture
+		(textToDisplay,														//Text
+		texture,															//Texture
+		Image::Box(0 + MARGIN,0 + MARGIN,2*BASE - MARGIN,BASE - MARGIN),		//Part of the pixel buffer to write to
+		font.getPointer(),													//Font
+		ColourValue::Black,													//Color
+		'l',																//Alignement
+		false);																//LineWarp
 }
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const ColourValue &color, char justify,  bool wordwrap)
