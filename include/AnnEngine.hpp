@@ -25,6 +25,7 @@
 #include "AnnTools.h" 
 #include "AnnAudioEngine.hpp"
 #include "AnnPhysicsEngine.hpp"
+#include "AnnConsole.hpp"
 
 #ifdef _WIN32
 #include <io.h>
@@ -47,15 +48,18 @@ namespace Annwvyn
 	private:
 		///the singleton itsefl is stored here
 		static AnnEngine* singleton;
-	public:
+		static AnnConsole* onScreenConsole;
+		bool fullscreen;
 
+	public:
+		static void toogleOnScreenConsole();
 		void renderCallback();
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
-		AnnEngine(const char title[] = "Annwvyn Game Engine");
+		AnnEngine(const char title[] = "Annwvyn Game Engine", bool fs = true);
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();
@@ -254,6 +258,7 @@ namespace Annwvyn
 
 		double lastFrameTimeCode;
 		double currentFrameTimeCode;
+
 
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;

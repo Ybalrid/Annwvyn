@@ -63,6 +63,9 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	//Jumping is a function call because it's an action and not a "state" the player has. 
 	if(e.isPressed() && e.getKey() == jump)
 		player->jump();
+
+	if(e.isPressed() && e.getKey() == KeyCode::grave)
+		AnnEngine::toogleOnScreenConsole();
 }
 
 //The mouse event contain all information about the mouse. Mouse mouvement are integer and are represented by 3 axis 
