@@ -80,8 +80,12 @@ AnnMain()
 	GameEngine->resetOculusOrientation();
 
 	std::stringstream ss;
+
+	
+
 	do	
 	{
+		AnnEngine::log("logger !!! \o/");
 		/* ss << AnnEngine::Instance()->getTimeFromStartUp();
 		AnnEngine::log(ss.str());
 		ss.str("");*/
