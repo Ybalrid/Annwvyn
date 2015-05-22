@@ -16,8 +16,9 @@ void AnnEngine::toogleOnScreenConsole()
 	if(onScreenConsole) onScreenConsole->toogle();
 }
 
-AnnEngine::AnnEngine(const char title[])
+AnnEngine::AnnEngine(const char title[], bool fs)
 {
+	fullscreen = fs;
 	lastFrameTimeCode = 0;
 	currentFrameTimeCode = 0;
 
@@ -37,6 +38,7 @@ AnnEngine::AnnEngine(const char title[])
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
 	oor = new OgreOculusRender(title);
+	oor->setFullScreen(fullscreen);
 	oor->setRenderCallback(this);
 	oor->initLibraries("Annwvyn.log");
 	oor->getOgreConfig();
