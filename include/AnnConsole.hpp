@@ -41,6 +41,8 @@ namespace Annwvyn
 		Ogre::TexturePtr texture;
 		Ogre::FontPtr font;
 		Ogre::TexturePtr background; 
+
+		AnnVect3 offset;
 	};
 }
 
