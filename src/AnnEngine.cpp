@@ -616,3 +616,10 @@ void AnnEngine::openConsole()
     std::ios::sync_with_stdio();
 #endif
 }
+
+
+void AnnEngine::openDebugWindow()
+{
+	log("Open a debug render window on the main screen");
+	oor->openDebugWindow();
+}

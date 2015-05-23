@@ -46,10 +46,11 @@ namespace Annwvyn
 	class DLL AnnEngine : public OgreOculusRenderCallback
 	{
 	private:
-		///the singleton itsefl is stored here
+		///the singleton address itself is stored here
 		static AnnEngine* singleton;
+
+		///The onScreenConsole object
 		static AnnConsole* onScreenConsole;
-		bool fullscreen;
 
 	public:
 		static void toogleOnScreenConsole();
@@ -59,6 +60,7 @@ namespace Annwvyn
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
+		/// \param fs the fullscreen state of the application. set it to false may help when developping with VS debugger on one screen
 		AnnEngine(const char title[] = "Annwvyn Game Engine", bool fs = true);
 
 		///Class destructor. Do clean up stuff.
@@ -225,6 +227,9 @@ namespace Annwvyn
 		///simple way to acces the standard io on a Win32 application
 		static void openConsole();
 
+		///See OgreOculusRender::openDebugWindow()
+		void openDebugWindow();
+	
 	private:
 		//Audio engine
 		AnnAudioEngine* AudioEngine;
@@ -259,6 +264,7 @@ namespace Annwvyn
 		double lastFrameTimeCode;
 		double currentFrameTimeCode;
 
+		bool fullscreen;
 
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
