@@ -15,15 +15,26 @@
 
 namespace Annwvyn
 {
+	///In engine - On screen floating console
 	class DLL AnnConsole
 	{
 	public:
+		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational
 		AnnConsole();
+
+		///Add text to the console buffer. The console buffer will keep CONSOLE_BUFFER lines of messages in memory only
+		/// \pram string text to append to the console
 		void append(std::string string);
+		///Set arbitrary the visibility state of the console
 		void setVisible(bool visibility);
+		///Toogle the console. 
 		void toogle();
+		///True if text has been updated on the console and the console is visible.
 		bool needUpdate();
+		///Update the console by filling it with background texture then bliting text on it. 
+		///Can take some computing time depending on the size/resolution of the textures and buffer
 		void update();
+
 	private:
 		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l',  bool wordwrap = true);
 		bool modified;
