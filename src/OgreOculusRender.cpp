@@ -18,6 +18,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 		cams[i] = NULL;
 		rtts[i] = NULL;
 		vpts[i] = NULL;
+		debugVP[i] = NULL;
 	}
 
 	//Oc is an OculusInterface object. Communication with the Rift SDK is handeled by that class
@@ -32,22 +33,29 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 	fullscreen = true;
 	vsync = activateVsync;
 	hsDissmissed = false;
-	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);;
+	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);
+	debug = NULL;
 }
 
 OgreOculusRender::~OgreOculusRender()
 {
 	Ogre::LogManager::getSingleton().logMessage("Destructing OgreOculus object and uninitializing Ogre...");
 	delete oc;
-	 
+
 	//TODO clean Ogre properly. There is stuff to delete manually before being able to delete "root".
 	//delete root;
 }
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
+	//save the color;
+	backgroundColor = color;
 	for(size_t i(0); i < 2; i++)
+	{
 		vpts[i]->setBackgroundColour(color);
+		if(debugVP[i])
+			debugVP[i]->setBackgroundColour(color);
+	}
 }
 
 void OgreOculusRender::dissmissHS()
@@ -191,9 +199,9 @@ void OgreOculusRender::getOgreConfig()
 	//Try to resore the config from an ogre.cfg file
 	if(!root->restoreConfig())
 		//Open the config dialog of Ogre (even if we're ignoring part of the parameters you can input from it)
-		if(!root->showConfigDialog())
+			if(!root->showConfigDialog())
 				//If the user clicked the "cancel" button or other bad stuff happened during the configuration (like a dragon attack)
-				abort();
+					abort();
 }
 
 void OgreOculusRender::createWindow()
@@ -208,14 +216,14 @@ void OgreOculusRender::createWindow()
 	misc["monitorIndex"]		=	"1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
 
 	//Initialize a window ans specify that creation is manual
-	window = root->initialise(false, name);
-
+	root->initialise(false);
+	//debug = root->createRenderWindow("Debug out", oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false);
 	//Actually create the window
 #ifdef __gnu_linux__
-    //Assuming the 2nd screen is used as a "normal" display, rotated. Ogre fullscreen on Linux does stranges things, so I don't permit it at all
-    fullscreen = false;
+	//Assuming the 2nd screen is used as a "normal" display, rotated. Ogre fullscreen on Linux does stranges things, so I don't permit it at all
+	fullscreen = false;
 #endif
-    window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
+	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
 
 	//Put the window at the place given by the SDK (usefull on linux system where the X server thinks multiscreen is a single big one...)
 	window->reposition(oc->getHmd()->WindowsPos.x, oc->getHmd()->WindowsPos.y);
@@ -397,7 +405,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	renderTexture->getViewport(0)->setBackgroundColour(backgroundColor);
 	renderTexture->getViewport(0)->setOverlaysEnabled(false);
 	renderTexture->getViewport(0)->setAutoUpdated(true);
-	
+
 	calculateProjectionMatrix();
 }
 
@@ -441,17 +449,17 @@ void OgreOculusRender::RenderOneFrame()
 	//Get the hmd orientation
 	Quatf oculusOrient = pose.Rotation;
 	Vector3f oculusPos = pose.Translation;
-	
+
 	ovrEyeType eye;
 	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Calculate and apply the orientation of the rift to the player (world space)
 		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
-		
+
 		cams[eye]->setPosition
 			(cameraPosition  //the "gameplay" position of player's avatar head
-			
+
 			+ (cams[eye]->getOrientation() * - Ogre::Vector3( //realword camera orientation + the oposite of the 
 			EyeRenderDesc[eye].HmdToEyeViewOffset.x, //view adjust vector. we translate the camera, not the whole world
 			EyeRenderDesc[eye].HmdToEyeViewOffset.y, //The translations has to occur in function of the current head orientation.
@@ -462,7 +470,7 @@ void OgreOculusRender::RenderOneFrame()
 			oculusPos.y,
 			oculusPos.z)));
 	}
-	
+
 	//update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
@@ -488,4 +496,34 @@ void OgreOculusRender::RenderOneFrame()
 	ovrHmd_EndFrameTiming(oc->getHmd());
 
 	updateTime = hmdFrameTiming.DeltaSeconds;
+}
+
+void OgreOculusRender::openDebugWindow()
+{
+	if(debug) 
+	{
+
+		/*if(!debug->isVisible());
+		{
+		debug->setHidden(true);
+		debug->setHidden(false);
+		window->setHidden(true);
+		window->setHidden(false);
+		}*/
+		return;
+	}
+	debug = root->createRenderWindow("Annwvyn debug window " + name,  
+		oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, //Half of Oculus resolution by default
+		false); //no fullscreen
+
+	if(!debug) return; //We need that window to exist now
+	//Attach camera
+	debugVP[left] = debug->addViewport(cams[left], 0, 0, 0, 0.5f);
+	debugVP[right] = debug->addViewport(cams[right], 1, 0.5f, 0, 0.5f);
+	//update viewports background
+	changeViewportBackgroundColor(backgroundColor);
+
+	//Bring back the focus on the real main window (hack)
+	window->setHidden(true);
+	window->setHidden(false);
 }

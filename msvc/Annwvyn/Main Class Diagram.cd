@@ -1,24 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
-  <Class Name="Annwvyn::AnnEngine">
-    <Position X="10.25" Y="7" Width="3.75" />
-    <Members>
-      <Field Name="x11LayoutAtStartup" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>SgkCTGACwFCSEQAiAkAImBMACSAhBBBVwBIAAEgoAMA=</HashCode>
-      <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnEngine.hpp</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="singleton" />
-      <Field Name="AudioEngine" />
-      <Field Name="player" />
-      <Field Name="eventManager" />
-      <Field Name="defaultEventListener" />
-      <Field Name="physicsEngine" />
-      <Field Name="oor" />
-    </ShowAsAssociation>
-  </Class>
   <Class Name="Annwvyn::AnnAudioEngine">
     <Position X="7" Y="17.25" Width="2.25" />
     <TypeIdentifier>
@@ -43,7 +24,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>RYxIGQAIFEfAUgEBAAEhAAgAIFAMwQgI4AVCAAgRAAY=</HashCode>
+      <HashCode>RYxIGYAIFEfAUgEBAAGhAAgAIFAMwQgI4AVCAAoRAQY=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\OgreOculusRender.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -177,7 +158,6 @@
       <FileName>C:\Oculus\AnnwvynSDK\Annwvyn\include\AnnMap.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="m_engine" />
       <Field Name="tmpLight" />
     </ShowAsAssociation>
   </Class>

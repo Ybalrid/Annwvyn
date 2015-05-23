@@ -8,7 +8,7 @@ AnnConsole::AnnConsole() :
 	modified(false),
 	visibility(false),
 	consoleNode(NULL),
-	offset(0,0.25f,-1.5f)
+	offset(0,0.125f, -0.75f)
 {
 	std::cerr << "Creating on screen console " << (void*)this << std::endl;
 	//Define the custom material
@@ -16,7 +16,7 @@ AnnConsole::AnnConsole() :
 	Ogre::Technique* technique = Console.getPointer()->getTechnique(0);
 	Ogre::Pass* pass = technique->getPass(0);
 	pass->setLightingEnabled(false);
-	pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
+	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
 
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons. The position in object-space are defined as folowing 
@@ -31,10 +31,10 @@ AnnConsole::AnnConsole() :
 	*/
 
 	//Define object data
-	points[0] = AnnVect3(-1, .5, 0);
-	points[1] = AnnVect3(-1,-.5, 0);
-	points[2] = AnnVect3( 1, .5, 0);
-	points[3] = AnnVect3( 1,-.5, 0);
+	points[0] = AnnVect3(-0.5, .25, 0);
+	points[1] = AnnVect3(-0.5,-.25, 0);
+	points[2] = AnnVect3( 0.5, .25, 0);
+	points[3] = AnnVect3( 0.5,-.25, 0);
 
 	textCoord[0] = AnnVect2(0,0);
 	textCoord[1] = AnnVect2(0,1);
@@ -60,7 +60,7 @@ AnnConsole::AnnConsole() :
 	//set the camera relative position
 	consoleNode->setPosition(offset);
 	//Make sure the object is the last thing rendered (to be on top of everyting
-	displaySurface->setRenderQueueGroup(Ogre::uint8(-1));
+	//displaySurface->setRenderQueueGroup(Ogre::uint8(-1));
 	//Set the visibility state
 	consoleNode->setVisible(visibility);
 

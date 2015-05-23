@@ -140,8 +140,11 @@ class DLL OgreOculusRender
 		///change main viewport background color
 		void changeViewportBackgroundColor(Ogre::ColourValue color);
 
-
+		///Register the address of an OgreOculusRenderCallback object wich get a access point to execute some code just before the rendering occurs.
 		void setRenderCallback(OgreOculusRenderCallback* callback){oorc = callback;}
+
+		///Open a window on the main screen showing what the eyes cameras are seeing
+		void openDebugWindow();
 
     private:
         enum 
@@ -166,6 +169,8 @@ class DLL OgreOculusRender
 
 		///Ogre Render Window
         Ogre::RenderWindow* window;
+		Ogre::RenderWindow* debug;
+		Ogre::Viewport* debugVP[2];
 
 		///Ogre Scene Manager
         Ogre::SceneManager* smgr;	
