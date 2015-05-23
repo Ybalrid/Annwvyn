@@ -7,7 +7,8 @@ using namespace Annwvyn;
 AnnConsole::AnnConsole() : 
 	modified(false),
 	visibility(false),
-	consoleNode(NULL)
+	consoleNode(NULL),
+	offset(0,0.25f,-1.5f)
 {
 	std::cerr << "Creating on screen console " << (void*)this << std::endl;
 	//Define the custom material
@@ -57,7 +58,7 @@ AnnConsole::AnnConsole() :
 	//attach The object
 	consoleNode->attachObject(displaySurface);
 	//set the camera relative position
-	consoleNode->setPosition(0,0,-1.5f);
+	consoleNode->setPosition(offset);
 	//Make sure the object is the last thing rendered (to be on top of everyting
 	displaySurface->setRenderQueueGroup(Ogre::uint8(-1));
 	//Set the visibility state
