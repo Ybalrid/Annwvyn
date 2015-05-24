@@ -296,6 +296,11 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
+	if(lockForCallback) 
+	{
+		clearingQueue.push_back(object); 
+		return false;
+	} 
 	std::stringstream ss;
 	ss << "Destroying object " << (void*)object;log(ss.str());ss.str("");
 	bool returnCode(false);
@@ -365,8 +370,27 @@ bool AnnEngine::requestStop()
 
 void AnnEngine::renderCallback()
 {
-	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
-		(*it)->atRefresh();
+	lockForCallback = true;
+	size_t queueSize = objects.size();
+	AnnGameObject** refreshQueue = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*queueSize));
+	for(size_t i(0); i < queueSize; i++) refreshQueue[i] = objects[i];
+	for(size_t i(0); i < queueSize; i++) refreshQueue[i]->atRefresh();
+	free(static_cast<void*>(refreshQueue));
+	lockForCallback = false;
+
+	if(clearingQueue.empty())
+		return;
+	queueSize = clearingQueue.size();
+
+	AnnGameObject** tmpArray = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*clearingQueue.size()));
+	for(size_t i(0); i < clearingQueue.size(); i++)
+		tmpArray[i] = clearingQueue[i];
+	for(size_t i(0); i < queueSize; i++)
+		destroyGameObject(tmpArray[i]);
+
+	free(tmpArray);
+	clearingQueue.clear();
+
 }
 
 bool AnnEngine::refresh()
