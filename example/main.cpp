@@ -11,13 +11,8 @@
 
 //C++ includes
 #include <iostream>
-#include <streambuf>
-#include <fstream>
-#include <io.h>
-#include <fcntl.h>
 //Annwvyn
 #include <Annwvyn.h>
-#include <Gorilla.h>
 
 using namespace std;
 using namespace Annwvyn;
@@ -95,25 +90,3 @@ AnnMain()
 	delete GameEngine;
 	return 0;
 }
-
-
-/*
-	//////////////////////////// INIT GUI TEST 
-	Ogre::SceneNode* camera = GameEngine->getCamera();
-	Ogre::SceneNode* GUI_root = camera->createChildSceneNode();
-	GUI_root->translate(-0.6,0,-2);
-	Gorilla::Silverback* svbk = new Gorilla::Silverback();
-	svbk->loadAtlas("dejavu");
-
-	Gorilla::ScreenRenderable* screen = svbk->createScreenRenderable(Ogre::Vector2(2.0f,1.0f),"dejavu");
-	GUI_root->attachObject(screen);
-
-	Gorilla::Layer* baseLayer = screen->createLayer(0);
-	Gorilla::Rectangle* background = baseLayer->createRectangle(0,0,300,200);
-	background->background_colour(Gorilla::rgb(255,0,0,0));
-
-	Gorilla::Caption* testText = baseLayer->createCaption(9,20,20,"Test");
-	testText->colour(Ogre::ColourValue::Black);
-	testText->height(5);
-	testText->_redraw();
-*/
