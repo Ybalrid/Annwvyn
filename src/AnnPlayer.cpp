@@ -16,7 +16,7 @@ bodyParams::bodyParams()
 	Shape = NULL;
 	Body = NULL;
 	runFactor = 3;
-	jumpForce = btVector3(0,500,0);
+	jumpForce = AnnVect3(0,500,0);
 }
 
 AnnPlayer::AnnPlayer()

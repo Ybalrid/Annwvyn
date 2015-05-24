@@ -12,7 +12,7 @@ endif
 
 #define flags
 CFLAGS = --std=c++0x -O2  -g
-LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/ -lOgreMain -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11  -ludev -lboost_system  -lXrandr -lXxf86vm -lGL -lrt -lOVR -lm -ldl
+LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/ -lOgreMain -lOgreOverlay -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11  -ludev -lboost_system  -lXrandr -lXxf86vm -lGL -lrt -lOVR -lm -ldl
 
 IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include -I../OculusSDK/LibOVR/Src -I../OculusSDK/LibOVRKernel/Src  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ -I./pch/ -I/usr/include/GL
 
@@ -70,7 +70,7 @@ test: lib/libAnnwvyn.so
 
 
 #build the DSO from the objects file
-lib/libAnnwvyn.so: pch/stdafx.h.gch obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o  obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o
+lib/libAnnwvyn.so: pch/stdafx.h.gch obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o  obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o obj/AnnVect3.o obj/AnnQuaternion.o obj/AnnConsole.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 #precompile headers
@@ -123,7 +123,15 @@ obj/AnnEvents.o: src/AnnEvents.cpp include/AnnEventManager.hpp include/AnnKeyCod
 obj/AnnPlayer.o: src/AnnPlayer.cpp include/AnnPlayer.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnPlayer.cpp -o obj/AnnPlayer.o
 
-
 obj/AnnPhysicsEngine.o: src/AnnPhysicsEngine.cpp include/AnnPhysicsEngine.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnPhysicsEngine.cpp -o obj/AnnPhysicsEngine.o
+
+obj/AnnVect3.o: src/AnnVect3.cpp include/AnnVect3.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnVect3.cpp -o obj/AnnVect3.o
+
+obj/AnnQuaternion.o: src/AnnQuaternion.cpp include/AnnQuaternion.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnQuaternion.cpp -o obj/AnnQuaternion.o
+
+obj/AnnConsole.o: src/AnnConsole.cpp include/AnnConsole.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnConsole.cpp -o obj/AnnConsole.o
 
