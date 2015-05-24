@@ -6,8 +6,8 @@
 #include <string>
 #include <iostream>
 #include <Ogre.h>
-#include <Overlay\OgreFont.h>
-#include <Overlay\OgreFontManager.h>
+#include <Overlay/OgreFont.h>
+#include <Overlay/OgreFontManager.h>
 
 #define CONSOLE_BUFFER 19
 #define BASE 256
