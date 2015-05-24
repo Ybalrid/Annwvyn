@@ -266,6 +266,10 @@ namespace Annwvyn
 
 		bool fullscreen;
 
+		bool lockForCallback;
+
+		AnnGameObjectVect clearingQueue;
+
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
 #endif
