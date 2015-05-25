@@ -325,8 +325,21 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			Ogre::SceneNode* node = object->node();
 
 			node->getParent()->removeChild(node);
-			physicsEngine->removeRigidBody(object->getBody());
+			size_t nbObject(node->numAttachedObjects());
+			std::vector<Ogre::MovableObject*> attachedObject;
+			for(size_t i(0); i < nbObject; i++)
+			{
+				attachedObject.push_back(node->getAttachedObject(i));
+			}
 
+			node->detachAllObjects();
+
+			std::vector<Ogre::MovableObject*>::iterator attachedIterator(attachedObject.begin());
+			while(attachedIterator!= attachedObject.end())
+				m_SceneManager->destroyMovableObject(*attachedIterator++);
+
+			physicsEngine->removeRigidBody(object->getBody());
+			//node->removeAndDestroyAllChildren();
 			m_SceneManager->destroySceneNode(node);
 			delete object;
 		}
@@ -400,7 +413,6 @@ bool AnnEngine::refresh()
 	player->engineUpdate(deltaT);
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
 	{
-		//(*it)->atRefresh();
 		(*it)->addTime(deltaT);
 		(*it)->updateOpenAlPos();
 	}
@@ -428,7 +440,6 @@ bool AnnEngine::refresh()
 	physicsEngine->stepDebugDrawer();
 	if(onScreenConsole->needUpdate())onScreenConsole->update();
 	oor->RenderOneFrame();
-
 
 	return !requestStop();
 }
