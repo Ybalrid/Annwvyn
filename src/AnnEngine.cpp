@@ -264,8 +264,7 @@ void AnnEngine::oculusInit(bool fullscreen)
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
 {
-	log("Creatig a game object from the entity");
-	log(entityName, false);
+	log("Creatig a game object from the entity " + std::string(entityName));
 
 	if(std::string(entityName).empty())
 	{
@@ -289,7 +288,6 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 	std::stringstream ss;
 	ss << "The object " << entityName << " has been created. Annwvyn memory address " << obj;  
 	log(ss.str());
-	ss.str("");
 
 	return obj;
 }
@@ -300,14 +298,13 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 	{
 		clearingQueue.push_back(object); 
 		return false;
-	} 
-	std::stringstream ss;
-	ss << "Destroying object " << (void*)object;log(ss.str());ss.str("");
+	}
+
 	bool returnCode(false);
 
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); it++)
     {
-		ss << "Object " << static_cast<void*>(*it) << " stop collision test";log(ss.str());ss.str("");
+		//ss << "Object " << static_cast<void*>(*it) << " stop collision test";log(ss.str());ss.str("");
 		
 		if(!*it)
 		{
@@ -315,11 +312,12 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			continue;
 		}
 		
+		//This system needs to be redone
 		(*it)->stopGettingCollisionWith(object);
 		if(*it == object)
 		{
 			returnCode = true; // found
-			log("Object found");
+			//log("Object found");
 			*it = NULL;
 	
 			Ogre::SceneNode* node = object->node();
@@ -342,10 +340,13 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			//node->removeAndDestroyAllChildren();
 			m_SceneManager->destroySceneNode(node);
 			delete object;
+		
+			//Sice we don't care about the collision feedback system, we can ommit to remove that object from others's collision mask
+			//break;
 		}
 	}
 
-	log("Object destroyed. Removing pointer from the objectList");
+	//log("Object destroyed. Removing pointer from the objectList ");
 	
 	AnnGameObjectVect::iterator it = objects.begin();
 	while(it != objects.end())
@@ -353,8 +354,6 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 		it = objects.erase(it);
 	else
 		it++;
-
-	ss << "The address " << (void*)object << " is now free"; 
 
 	return returnCode;
 }
@@ -381,29 +380,35 @@ bool AnnEngine::requestStop()
 	return false;
 }
 
+//This is called by the OgreOculusRender object just before updating the frame
 void AnnEngine::renderCallback()
 {
+	//This will lock the removal of object during the refresh call.
 	lockForCallback = true;
+
+	//Create a copy of the object list and call the atRefresh object from it. This will prevent using a potentially invalidated iterator
 	size_t queueSize = objects.size();
 	AnnGameObject** refreshQueue = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*queueSize));
 	for(size_t i(0); i < queueSize; i++) refreshQueue[i] = objects[i];
 	for(size_t i(0); i < queueSize; i++) refreshQueue[i]->atRefresh();
-	free(static_cast<void*>(refreshQueue));
+	
+	//Get rid of the refresh queue
+	free(static_cast<void*>(refreshQueue)); 
+	refreshQueue = NULL;
+
+	//Now it's safe to remove the objects
 	lockForCallback = false;
 
+	//If there is nothing to do, don't waist time
 	if(clearingQueue.empty())
 		return;
-	queueSize = clearingQueue.size();
 
-	AnnGameObject** tmpArray = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*clearingQueue.size()));
+	//Destroy the objects in the queue
 	for(size_t i(0); i < clearingQueue.size(); i++)
-		tmpArray[i] = clearingQueue[i];
-	for(size_t i(0); i < queueSize; i++)
-		destroyGameObject(tmpArray[i]);
+		destroyGameObject(clearingQueue[i]);
 
-	free(tmpArray);
+	//Clear the queue
 	clearingQueue.clear();
-
 }
 
 bool AnnEngine::refresh()
@@ -417,7 +422,6 @@ bool AnnEngine::refresh()
 		(*it)->updateOpenAlPos();
 	}
 
-
 	eventManager->update();
 
 	physicsEngine->processCollisionTesting(objects);
@@ -427,12 +431,10 @@ bool AnnEngine::refresh()
 	if(VisualBodyAnimation)
 		VisualBodyAnimation->addTime(deltaT);
 
-
-	//Audio
+		//Audio
 	AudioEngine->updateListenerPos(oor->returnPose.position);
 	AudioEngine->updateListenerOrient(oor->returnPose.orientation);
-
-
+	
 	//Update camera
 	m_CameraReference->setPosition(player->getPosition());
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
@@ -556,7 +558,7 @@ Ogre::SceneManager* AnnEngine::getSceneManager()
 
 double AnnEngine::getTimeFromStartUp()
 {
-	return static_cast<double>(oor->getTimer()->getMilliseconds());//Why ?? O.O 
+	return static_cast<double>(oor->getTimer()->getMilliseconds());
 }
 
 ////////////////////////////////////////////////////////// SETTERS
@@ -599,7 +601,8 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 void AnnEngine::resetPlayerPhysics()
 {
 	if(!player->hasPhysics()) return;
-	log("player's physics is resseting");
+	log("Reset player's physics");
+
 	//Remove the player's rigidbody from the world
 	physicsEngine->getWorld()->removeRigidBody(player->getBody());
 	
@@ -651,7 +654,6 @@ void AnnEngine::openConsole()
     std::ios::sync_with_stdio();
 #endif
 }
-
 
 void AnnEngine::openDebugWindow()
 {
