@@ -41,7 +41,6 @@ AnnMain()
 	GameEngine->loadZip("media/Sinbad.zip");
 	GameEngine->loadDir("media/plane");
 	GameEngine->loadDir("media/body");
-	GameEngine->loadDir("media/GUI");
 
 	AnnEngine::Instance()->loadDir("media/environement");
 
@@ -76,14 +75,11 @@ AnnMain()
 
 	std::stringstream ss;
 
-	
 	AnnEngine::Instance()->openDebugWindow();
+	AnnEngine::log("Starting the render loop");
 	do	
 	{
-		//AnnEngine::log("logger !!! \\o/");
-		/* ss << AnnEngine::Instance()->getTimeFromStartUp();
-		AnnEngine::log(ss.str());
-		ss.str("");*/
+	
 	}
 	while(GameEngine->refresh());
 

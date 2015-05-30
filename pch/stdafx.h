@@ -1,3 +1,6 @@
+//Remove some visual studio stupidity
+#pragma warning (disable : 4244)
+
 //Object-Oriented Graphical Rendering Engine
 #include <Ogre.h>
 #include <OgrePrerequisites.h>
@@ -30,6 +33,3 @@
 #define WIN32_LEAN_AND_MEAN 
 #include "windows.h"
 #endif
-
-//Remove some visual studio stupidity
-#pragma warning (disable : 4244)
