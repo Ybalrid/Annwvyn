@@ -11,7 +11,7 @@ SYSARCH       = x86_64
 endif
 
 #define flags
-CFLAGS = --std=c++0x -O2  -g
+CFLAGS = --std=c++0x -O2  -g -Wno-deprecated-declarations -Wno-multichar
 LDFLAGS =  -L../OculusSDK/LibOVR/Lib/Linux/Release/$(SYSARCH) -L/usr/local/lib -L/usr/lib/OGRE -L/usr/local/lib/OGRE/ -lOgreMain -lOgreOverlay -lOIS -lopenal -lBulletDynamics -lBulletCollision -lLinearMath -lsndfile -lX11  -ludev -lboost_system  -lXrandr -lXxf86vm -lGL -lrt -lOVR -lm -ldl
 
 IFLAGS = -I/usr/local/include/OGRE  -I/usr/include/OGRE -I../OculusSDK/LibOVR/Include -I../OculusSDK/LibOVR/Src -I../OculusSDK/LibOVRKernel/Src  -I/usr/include/AL -I/usr/include/bullet -I/usr/local/include/bullet  -I/usr/include/OIS -I/usr/include/boost -I./include/ -I./pch/ -I/usr/include/GL
@@ -105,8 +105,8 @@ obj/Gorilla.o: src/Gorilla.cpp include/Gorilla.h
 obj/OculusInterface.o: src/OculusInterface.cpp include/OculusInterface.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OculusInterface.cpp -o obj/OculusInterface.o 
 
-obj/OgreOculusRender.o: src/OgreOculusRender.cpp include/OgreOculusRender.hpp
-	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OgreOculusRender.cpp -o obj/OgreOculusRender.o
+obj/OgreOculusRender.o: src/OgreOculusRender_Linux.cpp include/OgreOculusRender.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OgreOculusRender_Linux.cpp -o obj/OgreOculusRender.o
 
 obj/AnnCharacter.o: src/AnnCharacter.cpp include/AnnCharacter.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnCharacter.cpp -o obj/AnnCharacter.o
