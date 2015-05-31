@@ -145,7 +145,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\BtOgre.cpp" />
     <ClCompile Include="..\..\src\Gorilla.cpp" />
     <ClCompile Include="..\..\src\OculusInterface.cpp" />
-    <ClCompile Include="..\..\src\OgreOculusRender.cpp" />
+    <ClCompile Include="..\..\src\OgreOculusRender_Windows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\TODO.md" />
