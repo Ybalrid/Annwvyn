@@ -159,9 +159,6 @@
     <ClCompile Include="..\..\src\OculusInterface.cpp">
       <Filter>Oculus rendering for Ogre\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\OgreOculusRender.cpp">
-      <Filter>Oculus rendering for Ogre\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp">
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
@@ -176,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnConsole.cpp">
       <Filter>Annwvyn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreOculusRender_Windows.cpp">
+      <Filter>Oculus rendering for Ogre\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
