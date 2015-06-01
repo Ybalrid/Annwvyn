@@ -45,6 +45,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 	hsDissmissed = false;
 	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);
 	debug = NULL;
+	textureSet = NULL;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -292,7 +293,6 @@ void OgreOculusRender::initRttRendering()
 		Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
 		*/	
 
-	ovrSwapTextureSet* textureSet(NULL);
 
 	if (ovrHmd_CreateSwapTextureSetGL(oc->getHmd(), GL_RGBA, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
 	{
@@ -334,6 +334,27 @@ void OgreOculusRender::initRttRendering()
 	std::cerr << "render texture GLID : "<< gltexl->getGLID() << " " << gltexr->getGLID() << std::endl
 		<< "oculus texture GLID : " << tex0id << " " << tex1id;
 
+	Ogre::RenderTexture* rttEyeLeft = rtt_textureL->getBuffer(0,0)->getRenderTarget();
+	Ogre::RenderTexture* rttEyeRight = rtt_textureR->getBuffer(0,0)->getRenderTarget();
+
+	//Create and bind a viewport to the texture
+	Ogre::Viewport* vptl = rttEyeLeft->addViewport(cams[left]);
+	vptl->setBackgroundColour(backgroundColor);
+	Ogre::Viewport* vptr = rttEyeRight->addViewport(cams[right]);
+	vptr->setBackgroundColour(backgroundColor);
+
+	//Store viewport pointer
+	vpts[left] = vptl;
+	vpts[right] = vptr;
+
+	//Pupulate textures with an initial render
+	rttEyeLeft->update();
+	rttEyeRight->update();
+
+	//Store rtt textures pointer
+	rtts[left] = rttEyeLeft;
+	rtts[right] = rttEyeRight;
+
 }
 
 void OgreOculusRender::initOculus(bool fullscreenState)
@@ -343,6 +364,19 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	EyeRenderDesc[0] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[0]);
 	EyeRenderDesc[1] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[1]);
 
+
+	layer;
+	layer.Header.Type = ovrLayerType_EyeFov;
+	layer.Header.Flags = 0;
+	layer.ColorTexture[0] = textureSet;
+	layer.ColorTexture[1] = textureSet;
+	layer.Fov[0] = EyeRenderDesc[0].Fov;
+	layer.Fov[1] = EyeRenderDesc[1].Fov;
+	Sizei bufferSize;
+	bufferSize.w = texSizeL.w + texSizeR.w;
+	bufferSize.h = max ( texSizeL.h, texSizeR.h );
+	layer.Viewport[0] = Recti(0, 0, bufferSize.w / 2, bufferSize.h);
+	layer.Viewport[1] = Recti(bufferSize.w / 2, 0, bufferSize.w / 2, bufferSize.h);
 	calculateProjectionMatrix();
 }
 
@@ -379,8 +413,8 @@ void OgreOculusRender::RenderOneFrame()
 	unsigned long timerStart = getTimer()->getMilliseconds();
 
 	//Begin frame
-	//ovrFrameTiming hmdFrameTiming = ovrHmd_BeginFrame(oc->getHmd(), 0);
-	ovrTrackingState ts; //= ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.ScanoutMidpointSeconds);
+	ovrFrameTiming hmdFrameTiming = ovrHmd_GetFrameTiming(oc->getHmd(), 0);
+	ovrTrackingState ts = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.DisplayMidpointSeconds);
 	Posef pose = ts.HeadPose.ThePose;
 
 	//Get the hmd orientation
@@ -388,10 +422,12 @@ void OgreOculusRender::RenderOneFrame()
 	Vector3f oculusPos = pose.Translation;
 
 	ovrEyeType eye;
+	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Calculate and apply the orientation of the rift to the player (world space)
 		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
+
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
 
 		cams[eye]->setPosition
@@ -423,7 +459,18 @@ void OgreOculusRender::RenderOneFrame()
 		//vpts[1]->update();
 		forceNextUpdate = false;
 	}
+
+	vpts[0]->update();
+	vpts[1]->update();
+
+	if(debugVP[0]) debugVP[0]->update();
+	if(debugVP[1]) debugVP[1]->update();
+
+
+
 	root->renderOneFrame();
+
+	//debugSaveToFile("debug.bmp");
 
 	//Timewarp is not implemented yet... need to recode sharders or to 
 	//ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
@@ -433,6 +480,9 @@ void OgreOculusRender::RenderOneFrame()
 	//ovrHmd_EndFrameTiming(oc->getHmd());
 
 	//updateTime = hmdFrameTiming.DeltaSeconds;
+
+	ovrLayerHeader* layers = &layer.Header;
+	ovrResult result = ovrHmd_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
 }
 
 void OgreOculusRender::openDebugWindow()

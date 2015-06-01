@@ -220,6 +220,12 @@ class DLL OgreOculusRender
         double updateTime;
 
 		OgreOculusRenderCallback* oorc;
+
+#ifdef WIN32
+		ovrLayerEyeFov layer;
+		ovrSwapTextureSet* textureSet;
+#endif 
+
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;
