@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#define private public 
+#include <RenderSystems/GL/OgreGLTexture.h>
+#undef private
 #include "OgreOculusRender.hpp"
 #include <glew.h>
 #include <OVR_CAPI_0_6_0.h>
@@ -314,6 +317,23 @@ void OgreOculusRender::initRttRendering()
 	std::cerr << "Texture GLID " << tex0id << " " << tex1id << std::endl;
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 
+	//Create Ogre usable textures here : 
+	Ogre::TexturePtr rtt_textureL = (textureManager->createManual("RttTexL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeL.w, texSizeL.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+	Ogre::TexturePtr rtt_textureR = (textureManager->createManual("RttTexR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeR.w, texSizeR.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+
+	Ogre::GLTexture* gltexl = (Ogre::GLTexture*) textureManager->getByName("RttTexL").getPointer();
+	Ogre::GLTexture* gltexr = (Ogre::GLTexture*) textureManager->getByName("RttTexR").getPointer();
+
+	//the new textures that I'm just abandoning here : 
+	std::cerr << "render texture GLID before texture swap : "<< gltexl->getGLID() << " " << gltexr->getGLID() << std::endl;
+
+	//This is imposible to do without breaking the header:
+	gltexl->mTextureID = tex0id;
+	gltexr->mTextureID = tex1id;
+
+	std::cerr << "render texture GLID : "<< gltexl->getGLID() << " " << gltexr->getGLID() << std::endl
+		<< "oculus texture GLID : " << tex0id << " " << tex1id;
+
 }
 
 void OgreOculusRender::initOculus(bool fullscreenState)
@@ -399,11 +419,11 @@ void OgreOculusRender::RenderOneFrame()
 	{
 		//vpts[0]->clear();
 		//vpts[1]->clear();
-		vpts[0]->update();
+		//vpts[0]->update();
 		//vpts[1]->update();
 		forceNextUpdate = false;
 	}
-	//root->renderOneFrame();
+	root->renderOneFrame();
 
 	//Timewarp is not implemented yet... need to recode sharders or to 
 	//ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
