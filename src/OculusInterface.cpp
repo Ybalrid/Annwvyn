@@ -21,7 +21,19 @@ OculusInterface::~OculusInterface()
 
 void OculusInterface::init()
 {
-    ovr_Initialize();
+#ifdef WIN32
+    ovr_Initialize(nullptr);
+    ovrResult r = ovrHmd_Create(0, &hmd);
+
+
+	if(r != ovrSuccess)
+    {
+        cout << "Cannot get HMD" << endl;
+        ovrHmd_CreateDebug(ovrHmd_DK2, &hmd);
+    }
+
+#else
+	ovr_Initialize();
     hmd = ovrHmd_Create(0);
 
     if(!hmd)
@@ -29,6 +41,7 @@ void OculusInterface::init()
         cout << "Cannot get HMD" << endl;
         hmd = ovrHmd_CreateDebug(ovrHmd_DK2);
     }
+#endif
 
     customReport();
 
