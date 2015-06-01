@@ -59,9 +59,10 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 	backgroundColor = color;
 	for(size_t i(0); i < 2; i++)
 	{
-		vpts[i]->setBackgroundColour(color);
+		if(vpts[i])
+			vpts[i]->setBackgroundColour(color);
 		if(debugVP[i])
-			debugVP[i]->setBackgroundColour(color);
+			debugVP[i]->setBackgroundColour(color); 
 	}
 }
 
@@ -309,6 +310,8 @@ void OgreOculusRender::initRttRendering()
 	//I need to open a rendering viewport attached to each camera on theses textures
 	//Doing some google seach tends to go in the "you need to patch ogre for that" way. 
 
+
+	std::cerr << "Texture GLID " << tex0id << " " << tex1id << std::endl;
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 
 }

@@ -32,6 +32,19 @@ void OculusInterface::init()
         ovrHmd_CreateDebug(ovrHmd_DK2, &hmd);
     }
 
+
+	r = ovrHmd_ConfigureTracking(hmd, //Oculus HMD
+                ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
+                ovrTrackingCap_Orientation); //minial required 
+    if(r != ovrSuccess)
+	{
+        std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
+        ovrHmd_Destroy(hmd);
+        ovr_Shutdown();
+        abort();
+    }
+
+
 #else
 	ovr_Initialize();
     hmd = ovrHmd_Create(0);
@@ -41,11 +54,8 @@ void OculusInterface::init()
         cout << "Cannot get HMD" << endl;
         hmd = ovrHmd_CreateDebug(ovrHmd_DK2);
     }
-#endif
 
-    customReport();
-
-    if(!ovrHmd_ConfigureTracking(hmd, //Oculus HMD
+	    if(!ovrHmd_ConfigureTracking(hmd, //Oculus HMD
                 ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
                 ovrTrackingCap_Orientation)) //minial required 
     {
@@ -54,6 +64,13 @@ void OculusInterface::init()
         ovr_Shutdown();
         abort();
     }
+
+#endif
+
+    customReport();
+
+
+
     initialized = true;
 }
 
