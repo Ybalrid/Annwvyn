@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#define private public 
+
 #include <RenderSystems/GL/OgreGLTexture.h>
-#undef private
+
 #include "OgreOculusRender.hpp"
-#include <glew.h>
+//#include <glew.h>
 #include <OVR_CAPI_0_6_0.h>
 #include <OVR_CAPI_GL.h>
 
+#include <RenderSystems/GL/OgreGLHardwareBufferManager.h>
 //We need to get low level access to some GL textures 
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
 #include <RenderSystems/GL/OgreGLTextureManager.h>
@@ -16,6 +17,8 @@ using namespace OVR;
 bool OgreOculusRender::forceNextUpdate(false);
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 {
+	testBuffer = NULL;
+
 	oorc = NULL;
 	//Initialize some variables
 	name = winName;
@@ -222,10 +225,10 @@ void OgreOculusRender::createWindow()
 	Ogre::NameValuePairList misc;
 
 	//This one only works on windows : "Borderless = no decoration"
-	misc["border"]				=	"none"; //In case the program is not running in fullscreen mode, don't put window borders
+	//misc["border"]				=	"none"; //In case the program is not running in fullscreen mode, don't put window borders
 	if (vsync) misc["vsync"]	=	"true";
 	misc["displayFrequency"]	=	"75";
-	misc["monitorIndex"]		=	"1"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
+	misc["monitorIndex"]		=	"0"; //Use the 2nd monitor, assuming the Oculus Rift is not the primary. Or is the only screen on the system.
 
 	//Initialize a window ans specify that creation is manual
 	root->initialise(false);
@@ -235,7 +238,8 @@ void OgreOculusRender::createWindow()
 	//Assuming the 2nd screen is used as a "normal" display, rotated. Ogre fullscreen on Linux does stranges things, so I don't permit it at all
 	fullscreen = false;
 #endif
-	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, fullscreen, &misc);
+	fullscreen = false;
+	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, fullscreen, &misc);
 
 	//Put the window at the place given by the SDK (usefull on linux system where the X server thinks multiscreen is a single big one...)
 	//window->reposition(oc->getHmd()->WindowsPos.x, oc->getHmd()->WindowsPos.y);
@@ -243,7 +247,7 @@ void OgreOculusRender::createWindow()
 
 void OgreOculusRender::initCameras()
 {
-	assert(smgr != NULL);
+	assert(smgr != NULL); 
 	cams[left] = smgr->createCamera("lcam");
 	cams[right] = smgr->createCamera("rcam");
 	for(size_t i = 0; i < 2; i++)
@@ -273,32 +277,47 @@ void OgreOculusRender::initRttRendering()
 	//get texture sice from ovr with default FOV
 	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[0], 1.0f);
 	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[1], 1.0f);
-	Sizei bufferSize;
+
+
+
+	bufferSize;
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max ( texSizeL.h, texSizeR.h );
+
+
+	testBuffer = (GLuint*) malloc(3*sizeof(GLuint)*bufferSize.w*bufferSize.h);
+	//grey
+	GLuint maxColorValue(-1);
+	GLuint mediumColorValue(maxColorValue/2);
+	for(int i(0); i < bufferSize.w*bufferSize.h*3; ++i)
+		testBuffer[i] = mediumColorValue;
+
+
 	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
 	/*
 	rift_smgr = root->createSceneManager(Ogre::ST_GENERIC);
 	rift_smgr->setAmbientLight(Ogre::ColourValue(1,1,1));
 
 	mLeftEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual("RttTexL", 
-		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		Ogre::TEX_TYPE_2D, 
-		texSizeL.w, texSizeL.h, 0, 
-		Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
+	Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+	Ogre::TEX_TYPE_2D, 
+	texSizeL.w, texSizeL.h, 0, 
+	Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
 	mRightEyeRenderTexture = Ogre::TextureManager::getSingleton().createManual("RttTexR", 
-		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		Ogre::TEX_TYPE_2D, 
-		texSizeR.w, texSizeR.h, 0, 
-		Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
-		*/	
+	Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+	Ogre::TEX_TYPE_2D, 
+	texSizeR.w, texSizeR.h, 0, 
+	Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
+	*/	
 
 
-	if (ovrHmd_CreateSwapTextureSetGL(oc->getHmd(), GL_RGBA, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
+	if (ovrHmd_CreateSwapTextureSetGL(oc->getHmd(), GL_RGB, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
 	{
 		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus swap texture");
 		abort();
 	}
+
+	std::cerr << "ovrSwapTextureSet : textureCount " << textureSet->TextureCount << std::endl;
 
 	//get the texture manager pointer 
 
@@ -309,6 +328,7 @@ void OgreOculusRender::initRttRendering()
 	GLuint tex0id = tex0->OGL.TexId;
 	GLuint tex1id = tex1->OGL.TexId;
 
+
 	//Ok... I have textures that are outsite of Ogre TextureManager.
 	//I need to open a rendering viewport attached to each camera on theses textures
 	//Doing some google seach tends to go in the "you need to patch ogre for that" way. 
@@ -317,43 +337,63 @@ void OgreOculusRender::initRttRendering()
 	std::cerr << "Texture GLID " << tex0id << " " << tex1id << std::endl;
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 
-	//Create Ogre usable textures here : 
-	Ogre::TexturePtr rtt_textureL = (textureManager->createManual("RttTexL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeL.w, texSizeL.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
-	Ogre::TexturePtr rtt_textureR = (textureManager->createManual("RttTexR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeR.w, texSizeR.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 
-	Ogre::GLTexture* gltexl = (Ogre::GLTexture*) textureManager->getByName("RttTexL").getPointer();
-	Ogre::GLTexture* gltexr = (Ogre::GLTexture*) textureManager->getByName("RttTexR").getPointer();
+	Ogre::TexturePtr rtt_texture (textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0,0)->getRenderTarget();
+
+	//Ogre::TexturePtr rtt_texture2 (textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_B8G8R8, Ogre::TU_RENDERTARGET));
+	//Ogre::RenderTexture* rttEyes2 = rtt_texture->getBuffer(0,0)->getRenderTarget();
+
+	vpts[left] = rttEyes->addViewport(cams[left],0,0,0,0.5f);
+	vpts[right] = rttEyes->addViewport(cams[right],1,0.5f,0,0.5f);
+
+	//Create Ogre usable textures here : 
+	//Ogre::TexturePtr rtt_textureL = (textureManager->createManual("RttTexL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeL.w, texSizeL.h, 0, Ogre::PF_B8G8R8, Ogre::TU_RENDERTARGET));
+	//Ogre::TexturePtr rtt_textureR = (textureManager->createManual("RttTexR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, texSizeR.w, texSizeR.h, 0, Ogre::PF_B8G8R8, Ogre::TU_RENDERTARGET));
+
+	//Ogre::GLTexture* gltexl = (Ogre::GLTexture*) textureManager->getByName("RttTexL").getPointer();
+	//Ogre::GLTexture* gltexr = (Ogre::GLTexture*) textureManager->getByName("RttTexR").getPointer();
 
 	//the new textures that I'm just abandoning here : 
-	std::cerr << "render texture GLID before texture swap : "<< gltexl->getGLID() << " " << gltexr->getGLID() << std::endl;
+	//std::cerr << "render texture GLID before texture swap : "<< gltexl->getGLID() << " " << gltexr->getGLID() << std::endl;
+
+	//GLuint textures[2];
+	//textures[0] = gltexl->getGLID();
+	//textures[1] = gltexr->getGLID();
+
+	//get rid of old GL Textures
+	//glDeleteTextures(2,textures);
 
 	//This is imposible to do without breaking the header:
-	gltexl->mTextureID = tex0id;
-	gltexr->mTextureID = tex1id;
+	//gltexl->mTextureID = tex0id;
+	//gltexr->mTextureID = tex1id;
 
-	std::cerr << "render texture GLID : "<< gltexl->getGLID() << " " << gltexr->getGLID() << std::endl
-		<< "oculus texture GLID : " << tex0id << " " << tex1id;
 
-	Ogre::RenderTexture* rttEyeLeft = rtt_textureL->getBuffer(0,0)->getRenderTarget();
-	Ogre::RenderTexture* rttEyeRight = rtt_textureR->getBuffer(0,0)->getRenderTarget();
+	//std::cerr << "render texture GLID : "<< gltexl->getGLID() << " " << gltexr->getGLID() << std::endl
+	//<< "oculus texture GLID : " << tex0id << " " << tex1id;
+
+	//Ogre::RenderTexture* rttEyeLeft = rtt_textureL->getBuffer(0,0)->getRenderTarget();
+	//Ogre::RenderTexture* rttEyeRight = rtt_textureR->getBuffer(0,0)->getRenderTarget();
 
 	//Create and bind a viewport to the texture
-	Ogre::Viewport* vptl = rttEyeLeft->addViewport(cams[left]);
-	vptl->setBackgroundColour(backgroundColor);
-	Ogre::Viewport* vptr = rttEyeRight->addViewport(cams[right]);
-	vptr->setBackgroundColour(backgroundColor);
+	//Ogre::Viewport* vptl = rttEyeLeft->addViewport(cams[left]);
+	//vptl->setBackgroundColour(backgroundColor);
+	//Ogre::Viewport* vptr = rttEyeRight->addViewport(cams[right]);
+	//vptr->setBackgroundColour(backgroundColor);
 
 	//Store viewport pointer
-	vpts[left] = vptl;
-	vpts[right] = vptr;
+	//vpts[left] = vptl;
+	//vpts[right] = vptr;
 
 	//Pupulate textures with an initial render
-	rttEyeLeft->update();
-	rttEyeRight->update();
+	//rttEyeLeft->update();
+	//rttEyeRight->update();
 
 	//Store rtt textures pointer
-	rtts[left] = rttEyeLeft;
-	rtts[right] = rttEyeRight;
+	//rtts[left] = rttEyeLeft;
+	//rtts[right] = rttEyeRight;
+
+	window->addViewport(cams[0]);
 
 }
 
@@ -377,6 +417,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	bufferSize.h = max ( texSizeL.h, texSizeR.h );
 	layer.Viewport[0] = Recti(0, 0, bufferSize.w / 2, bufferSize.h);
 	layer.Viewport[1] = Recti(bufferSize.w / 2, 0, bufferSize.w / 2, bufferSize.h);
+
 	calculateProjectionMatrix();
 }
 
@@ -415,14 +456,30 @@ void OgreOculusRender::RenderOneFrame()
 	//Begin frame
 	ovrFrameTiming hmdFrameTiming = ovrHmd_GetFrameTiming(oc->getHmd(), 0);
 	ovrTrackingState ts = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.DisplayMidpointSeconds);
+
+
 	Posef pose = ts.HeadPose.ThePose;
+	ovrVector3f offcet[2];
+	offcet[0]=EyeRenderDesc[0].HmdToEyeViewOffset;
+	offcet[1]=EyeRenderDesc[1].HmdToEyeViewOffset;
+	ovr_CalcEyePoses(pose,offcet, layer.RenderPose); 
+	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
+	Ogre::GLTexture* tex = (Ogre::GLTexture*)(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
+	//tex->setManualTextureID(((ovrGLTexture*)(&textureSet->Textures[right]))->OGL.TexId);
 
 	//Get the hmd orientation
 	Quatf oculusOrient = pose.Rotation;
 	Vector3f oculusPos = pose.Translation;
 
 	ovrEyeType eye;
-	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
+
+	std::cerr << "\tTextureSet info : " << std::endl
+		<< "Current Texture Index : " << textureSet->CurrentIndex << std::endl
+		<< "Current Texture count : " << textureSet->TextureCount << std::endl;
+	for(int i(0); i < textureSet->TextureCount; i++)
+		std::cerr << "Texture " << i << " id : " << ((ovrGLTexture*)(&textureSet->Textures[i]))->OGL.TexId << std::endl; 
+
+	//Apply pose to cameras
 	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Calculate and apply the orientation of the rift to the player (world space)
@@ -460,29 +517,32 @@ void OgreOculusRender::RenderOneFrame()
 		forceNextUpdate = false;
 	}
 
-	vpts[0]->update();
-	vpts[1]->update();
-
-	if(debugVP[0]) debugVP[0]->update();
-	if(debugVP[1]) debugVP[1]->update();
-
-
-
-	root->renderOneFrame();
-
-	//debugSaveToFile("debug.bmp");
-
-	//Timewarp is not implemented yet... need to recode sharders or to 
-	//ovr_WaitTillTime(hmdFrameTiming.TimewarpPointSeconds);
 
 	unsigned long timerStop = getTimer()->getMilliseconds();
 	updateTime = double(timerStop - timerStart) / 1000.0;
-	//ovrHmd_EndFrameTiming(oc->getHmd());
 
-	//updateTime = hmdFrameTiming.DeltaSeconds;
+	root->renderOneFrame();
 
+
+	//this is only a test
+	//glBindTexture(GL_TEXTURE_2D, ((ovrGLTexture*)(&textureSet->Textures[textureSet->CurrentIndex]))->OGL.TexId);
+	//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, bufferSize.w, bufferSize.h, GL_RGB, GL_UNSIGNED_INT, testBuffer);
+	//glBindTexture(GL_TEXTURE_2D, ((ovrGLTexture*)(&textureSet->Textures[right]))->OGL.TexId);
+	//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texSizeL.w, texSizeL.h, GL_RGB,  GL_UNSIGNED_BYTE, testBuffer);
+
+
+
+	//glBindTexture(GL_TEXTURE_2D, renderTextureID);
+	//glCopyImageSubData(renderTextureID, GL_TEXTURE_2D,0,0,0,0, 
+	//	((ovrGLTexture*)(&textureSet->Textures[textureSet->CurrentIndex]))->OGL.TexId,GL_TEXTURE_2D,0,0,0,0,bufferSize.w,bufferSize.h,1);
+
+	tex->hardCopyTo(
+		((ovrGLTexture*)(&textureSet->Textures[textureSet->CurrentIndex]))->OGL.TexId,
+		bufferSize.w,
+		bufferSize.h);
 	ovrLayerHeader* layers = &layer.Header;
 	ovrResult result = ovrHmd_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
+
 }
 
 void OgreOculusRender::openDebugWindow()

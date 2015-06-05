@@ -75,7 +75,7 @@ AnnMain()
 
 	std::stringstream ss;
 
-	AnnEngine::Instance()->openDebugWindow();
+	//AnnEngine::Instance()->openDebugWindow();
 	AnnEngine::log("Starting the render loop");
 	do	
 	{
