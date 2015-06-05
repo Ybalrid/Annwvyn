@@ -207,7 +207,7 @@ class DLL OgreOculusRender
         ovrEyeRenderDesc EyeRenderDesc[2];
 
 		///Size of left eye texture
-        ovrSizei texSizeL, texSizeR;
+        ovrSizei texSizeL, texSizeR, bufferSize;
 
 		///Position of the camera.
         Ogre::Vector3 cameraPosition;
@@ -225,7 +225,7 @@ class DLL OgreOculusRender
 		ovrLayerEyeFov layer;
 		ovrSwapTextureSet* textureSet;
 #endif 
-
+		unsigned int* testBuffer;
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;
