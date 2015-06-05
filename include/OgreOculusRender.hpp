@@ -226,6 +226,7 @@ class DLL OgreOculusRender
 		ovrSwapTextureSet* textureSet;
 #endif 
 		unsigned int* testBuffer;
+		unsigned int fbo;
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;
