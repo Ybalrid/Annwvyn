@@ -27,7 +27,7 @@ public:
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
-		//setUpPhysics(40, phyShapeType::boxShape);
+		setUpPhysics(40, phyShapeType::boxShape);
 	}
 };
 
@@ -80,7 +80,7 @@ AnnMain()
 	AnnEngine::log("Starting the render loop");
 	do	
 	{
-	
+		AnnEngine::log("fuck");
 	}
 	while(GameEngine->refresh());
 
