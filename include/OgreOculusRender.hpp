@@ -207,7 +207,7 @@ class DLL OgreOculusRender
         ovrEyeRenderDesc EyeRenderDesc[2];
 
 		///Size of left eye texture
-        ovrSizei texSizeL, texSizeR;
+        ovrSizei texSizeL, texSizeR, bufferSize;
 
 		///Position of the camera.
         Ogre::Vector3 cameraPosition;
@@ -224,6 +224,15 @@ class DLL OgreOculusRender
 #ifdef WIN32
 		ovrLayerEyeFov layer;
 		ovrSwapTextureSet* textureSet;
+		unsigned int renderTextureID;
+		ovrVector3f offset[2];
+		Posef pose;
+		ovrFrameTiming hmdFrameTiming;
+		ovrTrackingState ts;
+		ovrEyeType eye;
+		Quatf oculusOrient;
+		Vector3f oculusPos;
+		ovrLayerHeader* layers;
 #endif 
 
     public:
