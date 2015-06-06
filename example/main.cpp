@@ -80,7 +80,6 @@ AnnMain()
 	AnnEngine::log("Starting the render loop");
 	do	
 	{
-		AnnEngine::log("fuck");
 	}
 	while(GameEngine->refresh());
 
