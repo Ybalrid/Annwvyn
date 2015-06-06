@@ -399,7 +399,6 @@ void OgreOculusRender::RenderOneFrame()
 	}
 
 	updateTime = hmdFrameTiming.FrameIntervalSeconds;
-	std::cerr << "Update : " << updateTime << " seconds" << std::endl;
 	root->renderOneFrame();
 
 	//Copy the rendered image to the Oculus Swap Texture
