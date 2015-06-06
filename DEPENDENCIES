@@ -4,7 +4,7 @@ Ogre 1.9.x
 Bullet >= 2.8
 OpenAL lattest available should work
 libsndfile lattest available should work
-libOVR 0.5.0.1-beta
+libOVR 0.6.0.0-beta
 
 On Windows you can download the SDK from http://annwvyn.org/
 You'll need MSVC 2012 to build Annwvyn. The embeded boost version is build with vctoolkit 11.

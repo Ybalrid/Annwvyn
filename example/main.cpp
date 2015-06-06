@@ -9,6 +9,8 @@
 *
 */
 
+#include "stdafx.h"
+
 //C++ includes
 #include <iostream>
 //Annwvyn
@@ -33,7 +35,7 @@ public:
 
 AnnMain()
 {
-	AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
+	//AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
 	//Init game engine
 	AnnEngine* GameEngine(new AnnEngine("Test program"));
 	//load ressources
@@ -61,7 +63,7 @@ AnnMain()
 	//GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(false);
+	GameEngine->setDebugPhysicState(true);
 
 	//setUp Oculus system
 	GameEngine->oculusInit();
@@ -74,12 +76,12 @@ AnnMain()
 	GameEngine->resetOculusOrientation();
 
 	std::stringstream ss;
-
-	AnnEngine::Instance()->openDebugWindow();
+	AnnEngine::Instance()->getSceneManager()->setDisplaySceneNodes(false	);
+	Ogre::SceneManager* smgr = AnnEngine::Instance()->getSceneManager();
+	//AnnEngine::Instance()->openDebugWindow();
 	AnnEngine::log("Starting the render loop");
 	do	
 	{
-	
 	}
 	while(GameEngine->refresh());
 

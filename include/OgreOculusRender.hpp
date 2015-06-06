@@ -29,9 +29,11 @@
 #include "systemMacro.h"
 #ifdef _WIN32
 #include <Windows.h>
+#include <glew.h>
 #elif __gnu_linux__ 
 #include <unistd.h>
 #endif
+
 
 using namespace std;
 using namespace OVR;
@@ -207,7 +209,7 @@ class DLL OgreOculusRender
         ovrEyeRenderDesc EyeRenderDesc[2];
 
 		///Size of left eye texture
-        ovrSizei texSizeL, texSizeR;
+        ovrSizei texSizeL, texSizeR, bufferSize;
 
 		///Position of the camera.
         Ogre::Vector3 cameraPosition;
@@ -220,6 +222,21 @@ class DLL OgreOculusRender
         double updateTime;
 
 		OgreOculusRenderCallback* oorc;
+
+#ifdef WIN32
+		ovrLayerEyeFov layer;
+		ovrSwapTextureSet* textureSet;
+		GLuint renderTextureID;
+		ovrVector3f offset[2];
+		Posef pose;
+		ovrFrameTiming hmdFrameTiming;
+		ovrTrackingState ts;
+		ovrEyeType eye;
+		Quatf oculusOrient;
+		Vector3f oculusPos;
+		ovrLayerHeader* layers;
+#endif 
+
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;
