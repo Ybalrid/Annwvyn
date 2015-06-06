@@ -90,9 +90,6 @@
     <ClInclude Include="..\..\include\euler.h">
       <Filter>ExternalLib\Header</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Gorilla.h">
-      <Filter>ExternalLib\Header</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\OculusInterface.hpp">
       <Filter>Oculus rendering for Ogre\Header</Filter>
     </ClInclude>
@@ -151,9 +148,6 @@
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\BtOgre.cpp">
-      <Filter>ExternalLib\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Gorilla.cpp">
       <Filter>ExternalLib\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OculusInterface.cpp">
