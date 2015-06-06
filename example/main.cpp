@@ -9,6 +9,8 @@
 *
 */
 
+#include "stdafx.h"
+
 //C++ includes
 #include <iostream>
 //Annwvyn
@@ -33,7 +35,7 @@ public:
 
 AnnMain()
 {
-	AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
+	//AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
 	//Init game engine
 	AnnEngine* GameEngine(new AnnEngine("Test program"));
 	//load ressources

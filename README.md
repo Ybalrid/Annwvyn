@@ -6,11 +6,16 @@ Annwvyn Engine is a simple game engine built upon free and open source technolog
 Please read the DEPEDENCIES file to know what you need to build it.
 
 
+Requied hardware
+----------------
+
+ - A fairly recent GPU. Support for OpenGL 4.3 is mandatory
+ - Oculus VR Headset (Rift) Dev Kit 2, 1 should work also but I haven't tested it. 
 
 Building on Windows
 -------------------
 
-As stated in the DEPEDENCIES file, please download the SDK from http://annwvyn.org/
+As stated in the DEPEDENCIES file, you should download the SDK from http://annwvyn.org/
 
 
 Building on Linux (experimental)

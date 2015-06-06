@@ -215,6 +215,7 @@ void OgreOculusRender::createWindow()
 	//This one only works on windows : "Borderless = no decoration"
 	//misc["border"]				=	"none"; //In case the program is not running in fullscreen mode, don't put window borders
 	if (vsync) misc["vsync"]	=	"true";
+	//This is for DK2
 	misc["displayFrequency"]	=	"75";
 	misc["monitorIndex"]		=	"0";
 	//Initialize a window ans specify that creation is manual
@@ -254,18 +255,18 @@ void OgreOculusRender::initScene()
 
 void OgreOculusRender::initRttRendering()
 {
+	//Init GLEW here to be able to call OpenGL functions
 	GLenum err = glewInit();
 	if(GLEW_OK != err)
 		std::cerr << "Failed to glewInit()" << std::endl;
 	else
 		std::cerr << "Using GLEW version : " << glewGetString(GLEW_VERSION) << std::endl;
 
-	//get texture sice from ovr with default FOV
+	//get texture sice from ovr with the maximal FOV
 	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left], 1.0f);
 	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right], 1.0f);
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max ( texSizeL.h, texSizeR.h );
-
 	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
 
 	if (ovrHmd_CreateSwapTextureSetGL(oc->getHmd(), GL_RGB, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
@@ -273,9 +274,7 @@ void OgreOculusRender::initRttRendering()
 		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus swap texture");
 		abort();
 	}
-
 	std::cerr << "ovrSwapTextureSet : textureCount " << textureSet->TextureCount << std::endl;
-
 	//Get swap textures
 	ovrGLTexture* tex0  = (ovrGLTexture*) &textureSet->Textures[left];
 	ovrGLTexture* tex1  = (ovrGLTexture*) &textureSet->Textures[right];
@@ -302,21 +301,19 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 {
 	setFullScreen(fullscreenState);
 
+	//Populate OVR structures
 	EyeRenderDesc[left] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left]);
 	EyeRenderDesc[right] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right]);
 	offset[left]=EyeRenderDesc[left].HmdToEyeViewOffset;
 	offset[right]=EyeRenderDesc[right].HmdToEyeViewOffset;
 
-	layer;
+	//Create a layer with our single swaptexture on it. Each side is an eye.
 	layer.Header.Type = ovrLayerType_EyeFov;
 	layer.Header.Flags = left;
 	layer.ColorTexture[left] = textureSet;
 	layer.ColorTexture[right] = textureSet;
 	layer.Fov[left] = EyeRenderDesc[left].Fov;
 	layer.Fov[right] = EyeRenderDesc[right].Fov;
-	Sizei bufferSize;
-	bufferSize.w = texSizeL.w + texSizeR.w;
-	bufferSize.h = max ( texSizeL.h, texSizeR.h );
 	layer.Viewport[left] = Recti(0, 0, bufferSize.w / 2, bufferSize.h);
 	layer.Viewport[right] = Recti(bufferSize.w / 2, 0, bufferSize.w / 2, bufferSize.h);
 
@@ -392,7 +389,7 @@ void OgreOculusRender::RenderOneFrame()
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
 	
 	if(oorc)oorc->renderCallback();
-	if(forceNextUpdate)//quick&dirty fix for a texture buffer update problem : render a second time a buffer. Need to find better.
+	if(forceNextUpdate) //quick&dirty fix for a texture buffer update problem : render a second time a buffer. Need to find better.
 	{
 		vpts[left]->update();
 		forceNextUpdate = false;
