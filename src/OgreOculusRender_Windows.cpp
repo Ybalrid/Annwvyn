@@ -1,14 +1,10 @@
 #include "stdafx.h"
+#include "OgreOculusRender.hpp"
+#include <OVR_CAPI_GL.h>
+//We need to get low level access to some GL textures 
+#include <RenderSystems/GL/OgreGLTextureManager.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
 #include <RenderSystems/GL/OgreGLTexture.h>
-#include "OgreOculusRender.hpp"
-//#include <glew.h>
-#include <OVR_CAPI_0_6_0.h>
-#include <OVR_CAPI_GL.h>
-#include <RenderSystems/GL/OgreGLHardwareBufferManager.h>
-//We need to get low level access to some GL textures 
-#include <RenderSystems/GL/OgreGLRenderSystem.h>
-#include <RenderSystems/GL/OgreGLTextureManager.h>
 
 using namespace OVR;
 
