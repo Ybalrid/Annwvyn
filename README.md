@@ -46,6 +46,14 @@ If you are running the 0.4.4 version of the rift SDK, you have to know that ther
 sudo rmmod uvcvideo
 sudo modprobe ovcvideo quirks=0
 ```
+
+Using the engine
+----------------
+
+Make a copy of the "template" directory to a convinient location for you, and you are ready to go.
+
+On windows you need to have a environement variable "AnnwvynSDK" set to the SDK location. This is done automaticly by the SDK installer, but if you encounter problem, you should run again the RUNME.bat script on the SDK installation folder
+
 ______
 
 If you want more information about the project, please consult the official website (http://annwvyn.org/). It aslo contains documentation about the code.
