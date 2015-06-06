@@ -29,9 +29,11 @@
 #include "systemMacro.h"
 #ifdef _WIN32
 #include <Windows.h>
+#include <glew.h>
 #elif __gnu_linux__ 
 #include <unistd.h>
 #endif
+
 
 using namespace std;
 using namespace OVR;
@@ -224,7 +226,7 @@ class DLL OgreOculusRender
 #ifdef WIN32
 		ovrLayerEyeFov layer;
 		ovrSwapTextureSet* textureSet;
-		unsigned int renderTextureID;
+		GLuint renderTextureID;
 		ovrVector3f offset[2];
 		Posef pose;
 		ovrFrameTiming hmdFrameTiming;

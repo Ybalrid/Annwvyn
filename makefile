@@ -70,7 +70,7 @@ test: lib/libAnnwvyn.so
 
 
 #build the DSO from the objects file
-lib/libAnnwvyn.so: pch/stdafx.h.gch obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o  obj/OculusInterface.o obj/OgreOculusRender.o obj/Gorilla.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o obj/AnnVect3.o obj/AnnQuaternion.o obj/AnnConsole.o
+lib/libAnnwvyn.so: pch/stdafx.h.gch obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o  obj/OculusInterface.o obj/OgreOculusRender.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o obj/AnnVect3.o obj/AnnQuaternion.o obj/AnnConsole.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 #precompile headers
@@ -98,9 +98,6 @@ obj/BtOgre.o: src/BtOgre.cpp include/BtOgreExtras.h  include/BtOgreGP.h  include
 
 obj/AnnMap.o: src/AnnMap.cpp include/AnnMap.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnMap.cpp -o obj/AnnMap.o
-
-obj/Gorilla.o: src/Gorilla.cpp include/Gorilla.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/Gorilla.cpp -o obj/Gorilla.o
 
 obj/OculusInterface.o: src/OculusInterface.cpp include/OculusInterface.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/OculusInterface.cpp -o obj/OculusInterface.o 
