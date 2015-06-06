@@ -224,9 +224,17 @@ class DLL OgreOculusRender
 #ifdef WIN32
 		ovrLayerEyeFov layer;
 		ovrSwapTextureSet* textureSet;
+		unsigned int renderTextureID;
+		ovrVector3f offset[2];
+		Posef pose;
+		ovrFrameTiming hmdFrameTiming;
+		ovrTrackingState ts;
+		ovrEyeType eye;
+		Quatf oculusOrient;
+		Vector3f oculusPos;
+		ovrLayerHeader* layers;
 #endif 
-		unsigned int* testBuffer;
-		unsigned int fbo;
+
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;
