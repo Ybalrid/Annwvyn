@@ -1,17 +1,21 @@
 Annwvyn
 =======
-*Please note that this project is only compatible with the Oculus SDK 0.5.0.1-beta. Compatibility with newer versions of OVR will wait after the finals..*
 
 Annwvyn Engine is a simple game engine built upon free and open source technologies to easily create applications and games using the Oculus Rift Headset.
 
 Please read the DEPEDENCIES file to know what you need to build it.
 
 
+Requied hardware
+----------------
+
+ - A fairly recent GPU. Support for OpenGL 4.3 is mandatory
+ - Oculus VR Headset (Rift) Dev Kit 2, 1 should work also but I haven't tested it. 
 
 Building on Windows
 -------------------
 
-As stated in the DEPEDENCIES file, please download the SDK from http://annwvyn.org/
+As stated in the DEPEDENCIES file, you should download the SDK from http://annwvyn.org/
 
 
 Building on Linux (experimental)
@@ -42,6 +46,14 @@ If you are running the 0.4.4 version of the rift SDK, you have to know that ther
 sudo rmmod uvcvideo
 sudo modprobe ovcvideo quirks=0
 ```
+
+Using the engine
+----------------
+
+Make a copy of the "template" directory to a convinient location for you, and you are ready to go.
+
+On windows you need to have a environement variable "AnnwvynSDK" set to the SDK location. This is done automaticly by the SDK installer, but if you encounter problem, you should run again the RUNME.bat script on the SDK installation folder
+
 ______
 
 If you want more information about the project, please consult the official website (http://annwvyn.org/). It aslo contains documentation about the code.

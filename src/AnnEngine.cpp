@@ -18,6 +18,7 @@ void AnnEngine::toogleOnScreenConsole()
 
 AnnEngine::AnnEngine(const char title[], bool fs)
 {
+	eventManager = NULL;
 	fullscreen = fs;
 	lastFrameTimeCode = 0;
 	currentFrameTimeCode = 0;
@@ -189,8 +190,8 @@ void AnnEngine::log(std::string message, bool flag)
 
 void AnnEngine::useDefaultEventListener()
 {
-	assert(eventManager);
-
+	//assert(eventManager);
+	if(!eventManager) return; 
 	log("Reconfiguring the engine to use the default event listener");
 
 	//Remove all event listeners
@@ -421,8 +422,8 @@ bool AnnEngine::refresh()
 		(*it)->addTime(deltaT);
 		(*it)->updateOpenAlPos();
 	}
-
-	eventManager->update();
+	if(eventManager)
+		eventManager->update(); 
 
 	physicsEngine->processCollisionTesting(objects);
 	physicsEngine->processTriggersContacts(player, triggers);
@@ -448,6 +449,7 @@ bool AnnEngine::refresh()
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
+	if(!eventManager) return false;
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
