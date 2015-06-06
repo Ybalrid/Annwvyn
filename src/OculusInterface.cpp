@@ -35,14 +35,14 @@ void OculusInterface::init()
 
 	r = ovrHmd_ConfigureTracking(hmd, //Oculus HMD
                 ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
-                ovrTrackingCap_Orientation); //minial required 
-    if(r != ovrSuccess)
+                0); //minial required 
+    /*if(r != ovrSuccess)
 	{
         std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
         ovrHmd_Destroy(hmd);
         ovr_Shutdown();
-        abort();
-    }
+        abort(); 
+    }*/
 
 
 #else
