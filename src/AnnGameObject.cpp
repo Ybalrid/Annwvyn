@@ -141,14 +141,14 @@ AnnVect3 AnnGameObject::pos()
 {
     if(m_node != NULL)
         return m_node->getPosition();
-    return AnnVect3(0,0,0);
+	return AnnVect3::ZERO;
 }
 
 AnnQuaternion AnnGameObject::Orientation()
 {
     if(m_node != NULL)
         return m_node->getOrientation();
-    return AnnQuaternion(1,0,0,0);
+	return AnnQuaternion::IDENTITY;
 }
 
 void AnnGameObject::setNode(Ogre::SceneNode* node)
@@ -328,7 +328,6 @@ void AnnGameObject::stopGettingCollisionWith(AnnGameObject* Object)
         {
             delete(collisionMask[i]);
 			collisionMask[i] = NULL;
-            //collisionMask.erase(collisionMask.begin()+i);
         }
 }
 
