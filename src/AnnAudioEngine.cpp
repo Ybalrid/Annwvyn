@@ -150,10 +150,13 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 void AnnAudioEngine::unloadBuffer(const std::string& path)
 {
 	if(locked) return;
+	AnnEngine::log("Unloading soudfile " + path);
 	auto query = buffers.find(path);
 	if(query == buffers.end()) return;
+	AnnEngine::log("Sound file found by the Audio resource system. OpenAL buffer " + query->second);
 	ALuint buffer = query->second;
 	alDeleteBuffers(1,&buffer);
+	AnnEngine::log("Buffer deleted");
 	buffers.erase(query);
 }
 
