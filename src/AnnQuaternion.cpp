@@ -12,6 +12,16 @@ AnnQuaternion::AnnQuaternion(const AnnVect3& xAxis, const AnnVect3& yAxis, const
 AnnQuaternion::AnnQuaternion(const AnnVect3* vectorArray) : Ogre::Quaternion(vectorArray){}
 AnnQuaternion::AnnQuaternion(float* floatArray) : Ogre::Quaternion(floatArray){}
 
+AnnVect3 AnnQuaternion::getAtVector()
+{
+	return ((*this) * AnnVect3::NEGATIVE_UNIT_Z);
+}
+
+AnnVect3 AnnQuaternion::getUpVector()
+{
+	return ((*this) * AnnVect3::UNIT_Y);
+}
+
 btQuaternion AnnQuaternion::getBtQuaternion()
 {
 	return btQuaternion(x, y, z, w);

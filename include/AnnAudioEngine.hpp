@@ -15,6 +15,7 @@
 #include "AnnQuaternion.hpp"
 #include <iostream>
 #include <string>
+#include <map>
 
 //OpenAl
 #include <al.h>
@@ -74,8 +75,10 @@ namespace Annwvyn
 		ALCdevice* Device;
 		ALCcontext* Context;
 	    
-        ALuint buffer; //static buffer 
+        ALuint bgmBuffer; //static buffer 
 		ALuint bgm;//background music source
+
+		std::map<std::string, ALuint> buffers;
 	};
 }
 #endif
