@@ -9,8 +9,6 @@ AnnAudioEngine::AnnAudioEngine()
 	if(!initOpenAL())
 		lastError = "Cannot Init OpenAL";
 
-	//std::cerr << lastError << std::endl;
-
 	Ogre::LogManager::getSingleton().logMessage(lastError);
 
 	alListener3f(AL_POSITION, 0.0f, 0.0f, 10.0f);
@@ -19,29 +17,26 @@ AnnAudioEngine::AnnAudioEngine()
 							0.0f, 1.0f, 0.0f};
 
 	alListenerfv(AL_ORIENTATION, Orientation);
-
+	alGenSources(1, &bgm);
+	locked = false;
 }
 
 AnnAudioEngine::~AnnAudioEngine()
 {
+	locked = true;
 	shutdownOpenAL();
 }
 
-
 bool AnnAudioEngine::initOpenAL()
 {
-   
-   Device = alcOpenDevice(NULL);
+    Device = alcOpenDevice(NULL);
     if (!Device)
         return false;
-   
-	Context = alcCreateContext(Device, NULL);
+   	Context = alcCreateContext(Device, NULL);
     if (!Context)
         return false;
- 
-    if (!alcMakeContextCurrent(Context))
+     if (!alcMakeContextCurrent(Context))
         return false;
- 
     return true;
 }
 
@@ -49,7 +44,13 @@ void AnnAudioEngine::shutdownOpenAL()
 {
 	alSourceStop(bgm);
     alDeleteSources(1,&bgm);
-    alDeleteBuffers(1,&buffer);
+	if(alIsBuffer(bgmBuffer) == AL_TRUE)
+		alDeleteBuffers(1,&bgmBuffer);
+
+	auto iterator = buffers.begin();
+	while(iterator != buffers.end())
+		alDeleteBuffers(1,&(*iterator++).second);
+		
     alcMakeContextCurrent(NULL);
 	alcDestroyContext(Context);
 	alcCloseDevice(Device);
@@ -63,6 +64,16 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 	AnnEngine::log(ss.str());
 	ss.str("");
 
+	AnnEngine::log("checking if file allready loaded on the soundEngine");
+	auto query = buffers.find(Filename);
+	if(query != buffers.end())
+	{
+		ss << Filename << " allready loaded. Will use the coresponding buffer";
+		AnnEngine::log(ss.str());
+		return query->second;
+	}
+	AnnEngine::log("This sound resource is unkown to the engine. Loading from file...");
+
 	// Open Audio file with libsndfile
     SF_INFO FileInfos;
     SNDFILE* File = sf_open(Filename.c_str(), SFM_READ, &FileInfos);
@@ -74,64 +85,90 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
         return 0;
 	}
 
-	// Lecture du nombre d'échantillons et du taux d'échantillonnage (nombre d'échantillons à lire par seconde)
+	//get the number of sample and the samplerate (in samples by seconds)
     ALsizei NbSamples  = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
     ALsizei SampleRate = static_cast<ALsizei>(FileInfos.samplerate);
 
-	 // Lecture des échantillons audio au format entier 16 bits signé (le plus commun)
-    std::vector<ALshort> Samples(NbSamples);
-    if (sf_read_short(File, &Samples[0], NbSamples) < NbSamples)
+	ss << "Loading " << NbSamples << " samples. Playback samplerate : " << SampleRate;
+	AnnEngine::log(ss.str());
+	ss.str("");
+
+	//Read samples in 16bits signed
+	std::vector<float> SamplesFloat(NbSamples);
+    if (sf_read_float(File, &SamplesFloat[0], NbSamples) < NbSamples)
 	{
 		lastError = "Error while reading the file" + Filename + " through sndfile library";
 		AnnEngine::log(lastError);
-        return 0;
+		AnnEngine::log(sf_error_number(sf_error(File)));
+        //return 0;
 	}
 
-	 // close file
+	std::vector<ALshort> Samples(NbSamples);
+	ALshort max = 0x7FFF; //biggest 16bits siged float (positive)
+	for(size_t i(0); i < Samples.size(); i++)
+		//This will step down a bit the amplitude of the signal to prevent saturation while using some formats
+		Samples[i] = max*SamplesFloat[i]*0.88f;
+
+	//close file
     sf_close(File);
 
-	// read canal number
+	//Read the number of chanels. sound effects should be mono and background music should be stereo
     ALenum Format;
     switch (FileInfos.channels)
     {
-        case 1 :  Format = AL_FORMAT_MONO16;   break;
-        case 2 :  Format = AL_FORMAT_STEREO16; break;
+		case 1 : AnnEngine::log("Mono 16bits sound loaded");	Format = AL_FORMAT_MONO16;   break;
+		case 2 : AnnEngine::log("Stereo 16bits sound loaded");  Format = AL_FORMAT_STEREO16; break;
+		
         default : return 0;
     }
-
 	
-    // create OpenAL buffer
+    //create OpenAL buffer
+	ALuint buffer;
     alGenBuffers(1, &buffer);
-	
+	ss << "Created OpenAL buffer at index "<< buffer;
+	AnnEngine::log(ss.str());
+	ss.str("");
 	// load buffer
-    alBufferData(buffer, Format, &Samples[0], NbSamples * sizeof(ALushort), SampleRate);
+    alBufferData(buffer, Format, &Samples[0], NbSamples * sizeof(ALshort), SampleRate);
  
-    // check errors
+    //check errors
     if (alGetError() != AL_NO_ERROR)
 	{
 		lastError = "Error : cannot create an audio buffer for : " + Filename;
 		AnnEngine::log(lastError);
         return 0;
 	}
- 
-	ss.clear();
+
 	ss << Filename << " sucessfully loaded into audio engine";
 	AnnEngine::log(ss.str());
 	ss.str("");
+	AnnEngine::log("buffer added to the Audio engine");
+	buffers[Filename] = buffer;
     return buffer;
+}
+
+void AnnAudioEngine::unloadBuffer(const std::string& path)
+{
+	if(locked) return;
+	AnnEngine::log("Unloading soudfile " + path);
+	auto query = buffers.find(path);
+	if(query == buffers.end()) return;
+	AnnEngine::log("Sound file found by the Audio resource system. OpenAL buffer " + query->second);
+	ALuint buffer = query->second;
+	alDeleteBuffers(1,&buffer);
+	AnnEngine::log("Buffer deleted");
+	buffers.erase(query);
 }
 
 void AnnAudioEngine::playBGM(const std::string path, const float volume)
 {
-    loadSndFile(path);
-//	ALuint buffer = loadSndFile(path);
+    bgmBuffer = loadSndFile(path);
 
 	std::stringstream ss; 
 	ss << "Using " << path << " as BGM";
 	AnnEngine::log(ss.str());
 
-	alGenSources(1, &bgm);
-	alSourcei(bgm, AL_BUFFER, buffer);
+	alSourcei(bgm, AL_BUFFER, bgmBuffer);	
 	alSourcei(bgm, AL_LOOPING, AL_TRUE);
 	alSourcef(bgm, AL_GAIN, volume);
 
@@ -145,8 +182,8 @@ void AnnAudioEngine::updateListenerPos(AnnVect3 pos)
 
 void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 {
-	Ogre::Vector3 At = (orient * Ogre::Vector3::NEGATIVE_UNIT_Z); // Direction object facing 
-	Ogre::Vector3 Up = (orient * Ogre::Vector3::UNIT_Y); // Up Vector 
+	Ogre::Vector3 At = orient.getAtVector(); // Direction object facing 
+	Ogre::Vector3 Up = orient.getUpVector(); // Up Vector 
 
 	ALfloat Orientation[] = {At.x, At.y, At.z,
 							Up.x, Up.y, Up.z};
