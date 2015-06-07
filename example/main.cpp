@@ -19,6 +19,7 @@
 using namespace std;
 using namespace Annwvyn;
 
+
 class Sinbad : public AnnGameObject
 {
 public:
@@ -35,7 +36,7 @@ public:
 
 AnnMain()
 {
-	//AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
+	AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
 	//Init game engine
 	AnnEngine* GameEngine(new AnnEngine("Test program"));
 	//load ressources
@@ -75,9 +76,15 @@ AnnMain()
     GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
 
+	AnnEngine::Instance()->getAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg");
 	AnnEngine::log("Starting the render loop");
+	bool current(false), last(false);
 	do	
 	{
+		current = AnnEngine::Instance()->isKeyDown(OIS::KC_Q);
+		if(!current && last)
+			S->playSound("media/monster.wav");
+		last = current;
 	}
 	while(GameEngine->refresh());
 

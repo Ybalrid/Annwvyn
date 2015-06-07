@@ -6,6 +6,7 @@
 #include <OgreQuaternion.h>
 #include <OgreMatrix3.h>
 #include <LinearMath/btQuaternion.h>
+#include <al.h>
 
 namespace Annwvyn
 {
@@ -21,6 +22,9 @@ namespace Annwvyn
 		AnnQuaternion(const AnnVect3* vectorArray);
 		AnnQuaternion(float* floatArray);
 
+		AnnVect3 getUpVector();
+		AnnVect3 getAtVector();
+		
 		btQuaternion getBtQuaternion();
 	};
 }
