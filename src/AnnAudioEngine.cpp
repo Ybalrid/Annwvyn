@@ -9,8 +9,6 @@ AnnAudioEngine::AnnAudioEngine()
 	if(!initOpenAL())
 		lastError = "Cannot Init OpenAL";
 
-	//std::cerr << lastError << std::endl;
-
 	Ogre::LogManager::getSingleton().logMessage(lastError);
 
 	alListener3f(AL_POSITION, 0.0f, 0.0f, 10.0f);
@@ -20,28 +18,25 @@ AnnAudioEngine::AnnAudioEngine()
 
 	alListenerfv(AL_ORIENTATION, Orientation);
 	alGenSources(1, &bgm);
+	locked = false;
 }
 
 AnnAudioEngine::~AnnAudioEngine()
 {
+	locked = true;
 	shutdownOpenAL();
 }
 
-
 bool AnnAudioEngine::initOpenAL()
 {
-   
-   Device = alcOpenDevice(NULL);
+    Device = alcOpenDevice(NULL);
     if (!Device)
         return false;
-   
-	Context = alcCreateContext(Device, NULL);
+   	Context = alcCreateContext(Device, NULL);
     if (!Context)
         return false;
- 
-    if (!alcMakeContextCurrent(Context))
+     if (!alcMakeContextCurrent(Context))
         return false;
- 
     return true;
 }
 
@@ -126,9 +121,8 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 		
         default : return 0;
     }
-
 	
-    // create OpenAL buffer
+    //create OpenAL buffer
 	ALuint buffer;
     alGenBuffers(1, &buffer);
 	ss << "Created OpenAL buffer at index "<< buffer;
@@ -151,6 +145,16 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 	AnnEngine::log("buffer added to the Audio engine");
 	buffers[Filename] = buffer;
     return buffer;
+}
+
+void AnnAudioEngine::unloadBuffer(const std::string& path)
+{
+	if(locked) return;
+	auto query = buffers.find(path);
+	if(query == buffers.end()) return;
+	ALuint buffer = query->second;
+	alDeleteBuffers(1,&buffer);
+	buffers.erase(query);
 }
 
 void AnnAudioEngine::playBGM(const std::string path, const float volume)
