@@ -176,7 +176,6 @@ AnnPlayer* AnnEngine::getPlayer()
 ////////////////////////////////////////////////////////// UTILITY
 void AnnEngine::log(std::string message, bool flag)
 {
-
 	Ogre::String messageForLog;
 
 	if(flag)
@@ -190,7 +189,6 @@ void AnnEngine::log(std::string message, bool flag)
 
 void AnnEngine::useDefaultEventListener()
 {
-	//assert(eventManager);
 	if(!eventManager) return; 
 	log("Reconfiguring the engine to use the default event listener");
 
@@ -295,6 +293,9 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
+	//If that boolean is true, it means that we are iterating the object list during
+	//render callback. We cannot modify this list. However, we sore the querry to 
+	//destroy an object in a queue that will be cleared as soon as it's safe to do.
 	if(lockForCallback) 
 	{
 		clearingQueue.push_back(object); 
@@ -326,10 +327,9 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			node->getParent()->removeChild(node);
 			size_t nbObject(node->numAttachedObjects());
 			std::vector<Ogre::MovableObject*> attachedObject;
+
 			for(size_t i(0); i < nbObject; i++)
-			{
 				attachedObject.push_back(node->getAttachedObject(i));
-			}
 
 			node->detachAllObjects();
 
@@ -341,14 +341,9 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			//node->removeAndDestroyAllChildren();
 			m_SceneManager->destroySceneNode(node);
 			delete object;
-		
-			//Sice we don't care about the collision feedback system, we can ommit to remove that object from others's collision mask
-			//break;
 		}
 	}
 
-	//log("Object destroyed. Removing pointer from the objectList ");
-	
 	AnnGameObjectVect::iterator it = objects.begin();
 	while(it != objects.end())
 	if(!(*it))

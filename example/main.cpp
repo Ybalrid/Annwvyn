@@ -75,10 +75,6 @@ AnnMain()
     GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
 
-	std::stringstream ss;
-	AnnEngine::Instance()->getSceneManager()->setDisplaySceneNodes(false	);
-	Ogre::SceneManager* smgr = AnnEngine::Instance()->getSceneManager();
-	//AnnEngine::Instance()->openDebugWindow();
 	AnnEngine::log("Starting the render loop");
 	do	
 	{

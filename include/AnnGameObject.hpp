@@ -233,7 +233,7 @@ namespace Annwvyn
 			///OpenAL audio source
             ALuint m_Source; 
 			///OpenAL buffer
-            ALuint m_Buffer; 
+            ALuint m_Buffer;
 
 			///Name of the object
 			std::string name;
