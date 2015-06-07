@@ -45,9 +45,12 @@ namespace Annwvyn
 		///shutdown and cleanup openal
 		void shutdownOpenAL();
 		
-		///load a sound file. return a sond buffer
-		/// \param Filename name of the file to load
-		ALuint loadSndFile(const std::string& Filename);
+		///Load a sound file. return a sond buffer. Add the buffer to the buffer list.
+		///This permit to preload sound files to the engine. If want to avoid loading a
+		///Bunch of soundfile (that causes disk I/O access) you can just load the soundfile
+		///before the start of your gameplay sequence.
+		/// \param path Path of the file you want to load
+		ALuint loadSndFile(const std::string& path);
 		
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
 		/// \param path path of the audio file to use as background music

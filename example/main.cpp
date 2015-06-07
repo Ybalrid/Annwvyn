@@ -83,7 +83,7 @@ AnnMain()
 	{
 		current = AnnEngine::Instance()->isKeyDown(OIS::KC_Q);
 		if(!current && last)
-			S->playSound("media/monster.wav");
+			S->playSound("media/monster.wav",false, 1.5);
 		last = current;
 	}
 	while(GameEngine->refresh());
