@@ -52,6 +52,10 @@ namespace Annwvyn
 		/// \param path Path of the file you want to load
 		ALuint loadSndFile(const std::string& path);
 		
+		///Unload a buffer from the engine. The buffer is identified by the soud file it represent
+		/// \param path Path of the file you want to load
+		void unloadBuffer(const std::string& path);
+
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
 		/// \param path path of the audio file to use as background music
 		/// \param volume Float number between 0 and 1, Loudness of the sound 
@@ -68,8 +72,7 @@ namespace Annwvyn
 		///For the engine : update the listener orientation to mach the player's head 
         /// \param orient The orientatio of the player
 		void updateListenerOrient(AnnQuaternion orient);
-
-
+		
         ///For engine : update listener Oirentation
         friend class Annwvyn::AnnEngine;
 
@@ -82,6 +85,7 @@ namespace Annwvyn
 		ALuint bgm;//background music source
 
 		std::map<std::string, ALuint> buffers;
+		bool locked;
 	};
 }
 #endif
