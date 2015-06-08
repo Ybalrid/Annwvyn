@@ -48,7 +48,9 @@ AnnMain()
 	AnnEngine::Instance()->loadDir("media/environement");
 
 	GameEngine->initResources();
-
+	//setUp Oculus system
+	GameEngine->oculusInit();
+	GameEngine->setNearClippingDistance(0.20f);
 	AnnEngine::Instance()->createGameObject("Island.mesh")->setUpBullet();
 	AnnEngine::Instance()->createGameObject("Water.mesh");
 	AnnGameObject* Sign(AnnEngine::Instance()->createGameObject("Sign.mesh"));
@@ -66,9 +68,7 @@ AnnMain()
 	GameEngine->initPlayerPhysics();
 	GameEngine->setDebugPhysicState(true);
 
-	//setUp Oculus system
-	GameEngine->oculusInit();
-	GameEngine->setNearClippingDistance(0.20f);
+
 
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
 	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
