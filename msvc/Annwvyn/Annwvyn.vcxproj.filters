@@ -112,6 +112,9 @@
     <ClInclude Include="..\..\include\AnnConsole.hpp">
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnLogger.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -170,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\OgreOculusRender_Windows.cpp">
       <Filter>Oculus rendering for Ogre\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnLogger.cpp">
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

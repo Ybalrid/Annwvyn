@@ -78,9 +78,15 @@ AnnMain()
 
 	AnnEngine::Instance()->getAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg");
 	AnnEngine::log("Starting the render loop");
+
+	int awnser(42);
+	int* address(&awnser);
+	AnnDebug() << "This is a test " << awnser << " " << address;
+
 	bool current(false), last(false);
 	do	
 	{
+		
 		current = AnnEngine::Instance()->isKeyDown(OIS::KC_Q);
 		if(!current && last)
 			S->playSound("media/monster.wav",false, 1.5);
