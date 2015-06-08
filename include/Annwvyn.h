@@ -57,6 +57,7 @@
 #include "AnnAudioEngine.hpp"
 #include "AnnMap.hpp"
 #include "AnnEventManager.hpp"
+#include "AnnLogger.hpp"
 
 //Other Annwvyn
 #include "AnnTypes.h"
