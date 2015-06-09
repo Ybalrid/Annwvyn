@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnAudioEngine.hpp"
-#include "AnnEngine.hpp" //for accessing the logger
+#include "AnnLogger.hpp" //for accessing the logger
+
 using namespace Annwvyn;
 
 AnnAudioEngine::AnnAudioEngine()
@@ -59,17 +60,13 @@ void AnnAudioEngine::shutdownOpenAL()
 
 ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 {
-	std::stringstream ss; 
-	ss << "Loading audio file : " << Filename;
-	AnnEngine::log(ss.str());
-	ss.str("");
-
-	AnnEngine::log("checking if file allready loaded on the soundEngine");
+	AnnDebug() << "Loading audio file : " << Filename;
+	AnnDebug() << "checking if file allready loaded on the soundEngine";
+	
 	auto query = buffers.find(Filename);
 	if(query != buffers.end())
 	{
-		ss << Filename << " allready loaded. Will use the coresponding buffer";
-		AnnEngine::log(ss.str());
+		AnnDebug() << Filename << " allready loaded. Will use the coresponding buffer";
 		return query->second;
 	}
 	AnnEngine::log("This sound resource is unkown to the engine. Loading from file...");
@@ -79,9 +76,7 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
     SNDFILE* File = sf_open(Filename.c_str(), SFM_READ, &FileInfos);
     if (!File)
 	{
-		ss << "Error, cannot load file " << Filename << " as a recognized audio file";
-		AnnEngine::log(ss.str());
-		ss.str("");
+		AnnDebug() << "Error, cannot load file " << Filename << " as a recognized audio file";
         return 0;
 	}
 
@@ -89,16 +84,14 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
     ALsizei NbSamples  = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
     ALsizei SampleRate = static_cast<ALsizei>(FileInfos.samplerate);
 
-	ss << "Loading " << NbSamples << " samples. Playback samplerate : " << SampleRate;
-	AnnEngine::log(ss.str());
-	ss.str("");
-
+	AnnDebug() << "Loading " << NbSamples << " samples. Playback samplerate : " << SampleRate;
+	
 	//Read samples in 16bits signed
 	std::vector<float> SamplesFloat(NbSamples);
     if (sf_read_float(File, &SamplesFloat[0], NbSamples) < NbSamples)
 	{
 		lastError = "Error while reading the file" + Filename + " through sndfile library";
-		AnnEngine::log(lastError);
+		AnnDebug() << lastError;
 		AnnEngine::log(sf_error_number(sf_error(File)));
         //return 0;
 	}
@@ -125,9 +118,8 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
     //create OpenAL buffer
 	ALuint buffer;
     alGenBuffers(1, &buffer);
-	ss << "Created OpenAL buffer at index "<< buffer;
-	AnnEngine::log(ss.str());
-	ss.str("");
+	AnnDebug() << "Created OpenAL buffer at index "<< buffer;
+
 	// load buffer
     alBufferData(buffer, Format, &Samples[0], NbSamples * sizeof(ALshort), SampleRate);
  
@@ -139,9 +131,7 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
         return 0;
 	}
 
-	ss << Filename << " sucessfully loaded into audio engine";
-	AnnEngine::log(ss.str());
-	ss.str("");
+	AnnDebug() << Filename << " sucessfully loaded into audio engine";
 	AnnEngine::log("buffer added to the Audio engine");
 	buffers[Filename] = buffer;
     return buffer;
@@ -150,13 +140,13 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 void AnnAudioEngine::unloadBuffer(const std::string& path)
 {
 	if(locked) return;
-	AnnEngine::log("Unloading soudfile " + path);
+	AnnDebug() << "Unloading soudfile " << path;
 	auto query = buffers.find(path);
 	if(query == buffers.end()) return;
-	AnnEngine::log("Sound file found by the Audio resource system. OpenAL buffer " + query->second);
+	AnnDebug() << "Sound file found by the Audio resource system. OpenAL buffer " << query->second;
 	ALuint buffer = query->second;
 	alDeleteBuffers(1,&buffer);
-	AnnEngine::log("Buffer deleted");
+	AnnDebug() << "Buffer deleted";
 	buffers.erase(query);
 }
 
@@ -164,9 +154,7 @@ void AnnAudioEngine::playBGM(const std::string path, const float volume)
 {
     bgmBuffer = loadSndFile(path);
 
-	std::stringstream ss; 
-	ss << "Using " << path << " as BGM";
-	AnnEngine::log(ss.str());
+	AnnDebug() << "Using " << path << " as BGM";
 
 	alSourcei(bgm, AL_BUFFER, bgmBuffer);	
 	alSourcei(bgm, AL_LOOPING, AL_TRUE);

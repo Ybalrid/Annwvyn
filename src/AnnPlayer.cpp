@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnPlayer.hpp"
 #include "AnnEngine.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
@@ -21,6 +22,7 @@ bodyParams::bodyParams()
 
 AnnPlayer::AnnPlayer()
 {
+	AnnDebug() << "Creating player object";
 	playerBody = new bodyParams;
 	locked = false;
 	run = false;

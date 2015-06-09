@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AnnEngine.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
@@ -33,7 +34,6 @@ AnnEngine::AnnEngine(const char title[], bool fs)
 	readyForLoadingRessources = false;
 
 	//This structure handle player's body parameters
-	player = new AnnPlayer;
 	defaultEventListener = NULL;
 
 	//Launching initialisation routines : 
@@ -42,6 +42,7 @@ AnnEngine::AnnEngine(const char title[], bool fs)
 	oor->setFullScreen(fullscreen);
 	oor->setRenderCallback(this);
 	oor->initLibraries("Annwvyn.log");
+	player = new AnnPlayer;
 	oor->getOgreConfig();
 	oor->createWindow();
 	oor->initScene();
@@ -122,10 +123,8 @@ AnnEngine::~AnnEngine()
 	//All AnnGameObject
 	log("Destroying every objects remaining in engine");
 	
-	std::stringstream ss; 
 	log(" Creating the destroing queue;");
-	ss << " Will destroy " << objects.size() << " objects";
-	log(ss.str());ss.str("");
+	AnnDebug() << " Will destroy " << objects.size() << " objects";
 
 	AnnGameObject** tmpArray = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
 	for(size_t i(0); i < objects.size(); i++)
@@ -133,11 +132,7 @@ AnnEngine::~AnnEngine()
 
 	log("Content of the destroing queue :");
 	for(size_t i(0); i < objects.size(); i++)
-	{
-		ss << (void*)tmpArray[i];
-		log(ss.str());
-		ss.str("");
-	}
+		AnnDebug() << (void*)tmpArray[i];
 
 	size_t queueSize(objects.size());
 	for(size_t i(0); i < queueSize; i++)
@@ -231,9 +226,7 @@ void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
 
 void AnnEngine::loadResFile(const char path[])
 {
-	std::stringstream ss; 
-	ss << "Loading resource file : " << path;
-	log(ss.str());
+	AnnDebug() << "Loading resource file : " << path;
 	oor->loadReseourceFile(path);
 }
 
@@ -284,11 +277,9 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 	obj->setBulletDynamicsWorld(physicsEngine->getWorld());
 	obj->postInit(); //Run post init directives
 
-	objects.push_back(obj); //keep address in list
+	objects.push_back(obj); //keep addreAnnDebug() in list
 
-	std::stringstream ss;
-	ss << "The object " << entityName << " has been created. Annwvyn memory address " << obj;  
-	log(ss.str());
+	AnnDebug() << "The object " << entityName << " has been created. Annwvyn memory address " << obj;  
 
 	return obj;
 }
@@ -429,7 +420,7 @@ bool AnnEngine::refresh()
 	if(VisualBodyAnimation)
 		VisualBodyAnimation->addTime(deltaT);
 
-		//Audio
+	//Audio
 	AudioEngine->updateListenerPos(oor->returnPose.position);
 	AudioEngine->updateListenerOrient(oor->returnPose.orientation);
 	
@@ -519,23 +510,19 @@ void AnnEngine::resetOculusOrientation()
 
 Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 {
-	if(!node) 
+	if(!node)
 	{
 		log("Plese do not try to identify a NULL");
 		return NULL;
 	}
-	std::stringstream ss;
-	ss << "Trying to identify object at address " << (void*)node;
-	log(ss.str());
-	ss.str("");
+	AnnDebug() << "Trying to identify object at address " << (void*)node;
 
 	//This methods only test memory address
 	for(size_t i(0); i < objects.size(); i++)
 		if((void*)objects[i]->node() == (void*)node)
 			return objects[i];
-	ss << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
+	AnnDebug() << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
 
-	log(ss.str());
 	return NULL;
 }
 
@@ -570,7 +557,7 @@ void AnnEngine::setDebugPhysicState(bool state)
 
 void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
 {
-	std::stringstream ss; ss << "Setting the ambiant light to color " << v; log(ss.str());
+ AnnDebug() << "Setting the ambiant light to color " << v; 
 	m_SceneManager->setAmbientLight(v);
 }
 
@@ -588,10 +575,7 @@ void AnnEngine::removeSkyDome()
 
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 {
-	std::stringstream ss;
-	ss << "Setting the near clipping distance to " << nearClippingDistance;
-	log(ss.str());
-	ss.str("");
+	AnnDebug() << "Setting the near clipping distance to " << nearClippingDistance;
 
 	if(oor)
 		oor->setCamerasNearClippingDistance(nearClippingDistance);

@@ -21,12 +21,12 @@ AnnConsole::AnnConsole() :
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons. The position in object-space are defined as folowing 
 	* on the "points" array : 
-	*  0 +----+ 2
-	*    |   /|
-	*    |  / |
-	*    | /  |
-	*    |/   |
-	*  1 +----+ 3
+	*  0 +---------------+ 2
+	*    |           /   |
+	*    |        /      |
+	*    |     /         |
+	*    |  /            |
+	*  1 +----------------+ 3
 	* Note that the rectangle is actually wider that it's height but I'm not verry good with ASCII art so... 
 	*/
 
@@ -127,8 +127,6 @@ void AnnConsole::update()
 {
 	//Updated
 	modified = false;
-	//Prevent srange flickering bug
-	OgreOculusRender::forceNextUpdate = true;
 	//Get the content of the buffer into a static string
 	std::stringstream content;
 	for(size_t i(0); i < CONSOLE_BUFFER; i++)
@@ -138,6 +136,8 @@ void AnnConsole::update()
 	//Erase texture by filling it with the background buffer. 
 	//Not that apparently this is the origin of a bug that cause the next viewport update to be poluated with color from background buffer
 	background->copyToTexture(texture);
+	//Prevent srange flickering bug by forcing the update. Maybe I should use GL to copy the texture like in the implementation for the rift
+	OgreOculusRender::forceNextUpdate = true;
 
 	//Write text to texture
 	WriteToTexture

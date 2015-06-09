@@ -11,8 +11,6 @@
 
 #include "stdafx.h"
 
-//C++ includes
-#include <iostream>
 //Annwvyn
 #include <Annwvyn.h>
 
@@ -82,6 +80,7 @@ AnnMain()
 	int awnser(42);
 	int* address(&awnser);
 	AnnDebug() << "This is a test " << awnser << " " << address;
+	AnnDebug() << getAnnwvynVersion();
 
 	bool current(false), last(false);
 	do	
