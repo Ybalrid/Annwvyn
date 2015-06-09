@@ -4,13 +4,13 @@ Critial
 - [X] Start to "ungodify" the AnnEngine class by removing everything that has something to do with bullet and collision testing from it.
 - [X] Simplify the "timer" mess in AnnEngine
 - [ ] Need a proper object factory for classes like AnnGameObject
-- [ ] Switch to the newest version of OVR. This will break the rendering pipeline. Hopefully it will be MUCH simpler to implement this time.
+- [x] Switch to the newest version of OVR. This will break the rendering pipeline. Hopefully it will be MUCH simpler to implement this time.
 
 After finals : 
 - [ ] Implement AnnLevelManager thanks to the class developed for the PST3 "Interface en Rélatié Virtuelle" during my 3rd year at ESIEA
 
 Non critial :
-- [ ] Finish properly the implementation of the sound engine
+- [x] Finish properly the implementation of the sound engine
 - [ ] Add friction setting for bullet
 - [ ] Object parenting
 - [ ] Add debug drawing for trigger position when debug drawing is active for bullet
