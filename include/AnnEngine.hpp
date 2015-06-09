@@ -26,11 +26,13 @@
 #include "AnnAudioEngine.hpp"
 #include "AnnPhysicsEngine.hpp"
 #include "AnnConsole.hpp"
+#include "AnnLevelManager.hpp"
 
 #ifdef _WIN32
 #include <io.h>
 #include <fcntl.h>
 #endif
+
 namespace Annwvyn
 {
 	//For some reason, GCC don't want to compile that class without predeclaring AnnPhysicsEngine here.
@@ -229,6 +231,9 @@ namespace Annwvyn
 
 		///See OgreOculusRender::openDebugWindow()
 		void openDebugWindow();
+
+		///Get the current level manager
+		AnnLevelManager* getLevelManager();
 	
 	private:
 		//Audio engine
@@ -240,6 +245,8 @@ namespace Annwvyn
 		AnnDefaultEventListener* defaultEventListener;
 		//Physics
 		AnnPhysicsEngine* physicsEngine;
+		//LevelManager
+		AnnLevelManager* levelManager;
 
 		Ogre::RenderWindow* m_Window;
 		Ogre::SceneManager* m_SceneManager;

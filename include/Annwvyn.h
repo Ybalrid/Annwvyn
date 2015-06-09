@@ -62,6 +62,7 @@
 #include "AnnMap.hpp"
 #include "AnnEventManager.hpp"
 #include "AnnLogger.hpp"
+#include "AnnAbstractLevel.hpp"
 
 //Other Annwvyn
 #include "AnnTypes.h"

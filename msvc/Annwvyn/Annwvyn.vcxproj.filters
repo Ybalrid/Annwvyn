@@ -115,6 +115,12 @@
     <ClInclude Include="..\..\include\AnnLogger.hpp">
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnLevelManager.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnAbstractLevel.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -175,6 +181,12 @@
       <Filter>Oculus rendering for Ogre\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLogger.cpp">
+      <Filter>Annwvyn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnAbsractLevel.cpp">
+      <Filter>Annwvyn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnLevelManager.cpp">
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
   </ItemGroup>
