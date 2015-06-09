@@ -97,6 +97,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\AnnAbstractLevel.hpp" />
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
     <ClInclude Include="..\..\include\AnnCharacter.hpp" />
     <ClInclude Include="..\..\include\AnnConsole.hpp" />
@@ -104,6 +105,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnEventManager.hpp" />
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
     <ClInclude Include="..\..\include\AnnKeyCode.h" />
+    <ClInclude Include="..\..\include\AnnLevelManager.hpp" />
     <ClInclude Include="..\..\include\AnnLogger.hpp" />
     <ClInclude Include="..\..\include\AnnMap.hpp" />
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp" />
@@ -127,6 +129,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\pch\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\src\AnnAbsractLevel.cpp" />
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
     <ClCompile Include="..\..\src\AnnCharacter.cpp" />
     <ClCompile Include="..\..\src\AnnConsole.cpp" />
@@ -135,6 +138,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnEventManager.cpp" />
     <ClCompile Include="..\..\src\AnnEvents.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
+    <ClCompile Include="..\..\src\AnnLevelManager.cpp" />
     <ClCompile Include="..\..\src\AnnMap.cpp" />
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp" />
     <ClCompile Include="..\..\src\AnnPlayer.cpp" />

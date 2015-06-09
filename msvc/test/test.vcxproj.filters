@@ -29,5 +29,8 @@
     <ClInclude Include="stdafx.h">
       <Filter>pch</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\example\TestLevel.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

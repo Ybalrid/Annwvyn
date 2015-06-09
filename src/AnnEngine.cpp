@@ -20,6 +20,7 @@ void AnnEngine::toogleOnScreenConsole()
 AnnEngine::AnnEngine(const char title[], bool fs)
 {
 	eventManager = NULL;
+	levelManager = NULL;
 	fullscreen = fs;
 	lastFrameTimeCode = 0;
 	currentFrameTimeCode = 0;
@@ -100,6 +101,9 @@ AnnEngine::AnnEngine(const char title[], bool fs)
 	VisualBodyAnchor = NULL;
 
 	refVisualBody = AnnQuaternion::IDENTITY;
+
+	levelManager = new AnnLevelManager;
+
 	log("---------------------------------------------------", false);
 	log("Annwvyn Game Engine - Step into the Other World   ", false);
 	log("Designed for Virtual Reality                      ", false);
@@ -119,6 +123,9 @@ AnnEngine::~AnnEngine()
 
 	log("Destroying the event manager");
 	delete eventManager;
+
+	log("Destroy the levelManager");
+	delete levelManager;
 
 	//All AnnGameObject
 	log("Destroying every objects remaining in engine");
@@ -161,6 +168,11 @@ AnnEngine::~AnnEngine()
 AnnEventManager* AnnEngine::getEventManager()
 {
 	return eventManager;
+}
+
+AnnLevelManager* AnnEngine::getLevelManager()
+{
+	return levelManager;
 }
 
 AnnPlayer* AnnEngine::getPlayer()
@@ -374,7 +386,7 @@ void AnnEngine::renderCallback()
 {
 	//This will lock the removal of object during the refresh call.
 	lockForCallback = true;
-
+	levelManager->step();
 	//Create a copy of the object list and call the atRefresh object from it. This will prevent using a potentially invalidated iterator
 	size_t queueSize = objects.size();
 	AnnGameObject** refreshQueue = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*queueSize));

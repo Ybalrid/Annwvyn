@@ -26,8 +26,10 @@ namespace Annwvyn
 
 		///Add the player body to the dynamics world
 		void addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player);
+
 		///Create player's rigidbody
 		void createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::SceneNode* node);
+
 		///Create player's body shape (a capsule)
 		void createVirtualBodyShape(AnnPlayer* player);
 		
@@ -37,19 +39,25 @@ namespace Annwvyn
 		///Step the simulation
 		/// \param delta Interval in seconds that time has to be simulated
 		void step(float delta);
+
 		///Process the collision querry system
 		/// \param the objet list where to process collision querry
 		void processCollisionTesting(AnnGameObjectVect& object);
+
 		///Process triggers contact event
 		/// \param player The player object
 		/// \param triggers list where to process collision querry
 		void processTriggersContacts(AnnPlayer* player, AnnTriggerObjectVect& triggers);
+
 		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body);
+
 		///Init player's body physical simulation
 		void initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node);
+
 		///Set the debug drawer state
 		void setDebugPhysics(bool state);
+
 		///Step the debug drawing for the physical representation
 		void stepDebugDrawer();
 

@@ -8,86 +8,45 @@
 * Annwvyn test program http://annwvyn.org/
 *
 */
-
 #include "stdafx.h"
 
 //Annwvyn
 #include <Annwvyn.h>
+#include "TestLevel.hpp"
 
 using namespace std;
 using namespace Annwvyn;
 
-
-class Sinbad : public AnnGameObject
-{
-public:
-	void postInit()
-	{
-		setPos(0,0,-5);
-		setScale(0.2f,0.2f,0.2f);
-		setAnimation("Dance");
-		playAnimation(true);
-		loopAnimation(true);
-		setUpPhysics(40, phyShapeType::boxShape);
-	}
-};
-
 AnnMain()
 {
-	AnnEngine::openConsole();	//Only usefull on windows : Open a debug console 
+	//Only usefull on windows : Open a debug console to get stdout/stderr
+	AnnEngine::openConsole();	
 	//Init game engine
 	AnnEngine* GameEngine(new AnnEngine("Test program"));
-	//load ressources
-	GameEngine->loadDir("media/dome");
-	GameEngine->loadZip("media/Sinbad.zip");
-	GameEngine->loadDir("media/body");
-	AnnEngine::Instance()->loadDir("media/environement");
 
+	//load ressources
+	GameEngine->loadDir("media/environement");
 	GameEngine->initResources();
-	//setUp Oculus system
+
+	//SetUp Oculus system
 	GameEngine->oculusInit();
 	GameEngine->setNearClippingDistance(0.20f);
-	AnnEngine::Instance()->createGameObject("Island.mesh")->setUpBullet();
-	AnnEngine::Instance()->createGameObject("Water.mesh");
-	AnnGameObject* Sign(AnnEngine::Instance()->createGameObject("Sign.mesh"));
-
-	Sign->setPos(1,-0,-2);
-	Sign->setUpPhysics(0, phyShapeType::staticShape);
-	Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 	
-	AnnLightObject* Sun = GameEngine->addLight();
-	Sun->setType(Ogre::Light::LT_DIRECTIONAL);
-	Sun->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Y + 1.5* Ogre::Vector3::NEGATIVE_UNIT_Z);
-	GameEngine->setAmbiantLight(Ogre::ColourValue(.6f,.6f,.6f));
-	//GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
-
+	//Init some player body parameters
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(false);
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
-	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
-
-    GameEngine->useDefaultEventListener();
+	
+	//Register a level
+	GameEngine->getLevelManager()->addLevel(new TestLevel); //This is the first level known by the LevelManager (and the only one here)
+	GameEngine->getLevelManager()->jumpToFirstLevel(); //Jump to that level 
+	
+	GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
-
-	AnnEngine::Instance()->getAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg");
-	AnnEngine::log("Starting the render loop");
-
-	int awnser(42);
-	int* address(&awnser);
-	AnnDebug() << "This is a test " << awnser << " " << address;
-	AnnDebug() << getAnnwvynVersion();
-
-	bool current(false), last(false);
+	AnnDebug() << "Starting the render loop";
 	do	
-	{
-		
-		current = AnnEngine::Instance()->isKeyDown(OIS::KC_Q);
-		if(!current && last)
-			S->playSound("media/monster.wav",false, 1.5);
-		last = current;
-	}
+	{}
 	while(GameEngine->refresh());
 
 	delete GameEngine;
-	return 0;
+	return EXIT_SUCCESS;
 }

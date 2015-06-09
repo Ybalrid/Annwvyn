@@ -13,6 +13,7 @@ namespace Annwvyn
 	class DLL AnnQuaternion : public Ogre::Quaternion
 	{
 	public:
+		//Call of Ogre::Quaternion constructor
 		AnnQuaternion();
 		AnnQuaternion(const Ogre::Quaternion& q);
 		AnnQuaternion(float cw, float cx, float cy, float cz);
@@ -22,6 +23,7 @@ namespace Annwvyn
 		AnnQuaternion(const AnnVect3* vectorArray);
 		AnnQuaternion(float* floatArray);
 
+		//Custom Annwvyn part
 		AnnVect3 getUpVector();
 		AnnVect3 getAtVector();
 		
