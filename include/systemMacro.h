@@ -33,23 +33,3 @@
 #endif
 //--------------------------------------------------------------------//
 
-//--------------------Application Entrypoint definition--------------//
-/*Main definition :
- *
- *	For more simplicity, Program start by a "AnnMain" function at the library user
- *	side. This allow to select proper entry proint for the aplication, and maybe 
- *	add pre-starting treatements here.
- */
-#undef AnnMain
-
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN 
-#include "windows.h"
-#define AnnMain() INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
-
-#else
-//On others :
-#define AnnMain() int main(int argc, char** argv)
-#endif
-//---------------------------------------------------------------------//
-

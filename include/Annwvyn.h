@@ -1,11 +1,15 @@
 #ifndef ANNWVYN
 #define ANNWVYN
 
+#define ANN_MAJOR 0
+#define ANN_MINOR 0
+#define ANN_PATCH 9.3
+
 /*!
 * \file Annwvyn.h
 * \brief Main Annwvyn include file (to be used by client application)
 * \author Arthur Brainville
-* \version 0.0.5
+* \version 0.0.8
 */
 
 /*!
@@ -64,10 +68,40 @@
 #include "AnnTools.h"
 
 #include "AnnVect3.hpp"
-
-//external that has to be showed to user
-#include <OIS.h>
+#include "AnnQuaternion.hpp"
 
 ///Namespace containing the totality of Annwvyn components
-namespace Annwvyn{}
+#include <iostream>
+#include <sstream>
+namespace Annwvyn
+{
+	inline static std::string getAnnwvynVersion()
+	{
+		std::stringstream version;
+		version << ANN_MAJOR << "." << ANN_MINOR << "." << ANN_PATCH;
+		return version.str();
+	}
+}
+
+//--------------------Application Entrypoint definition--------------//
+/*Main definition :
+ *
+ *	For more simplicity, Program start by a "AnnMain" function at the library user
+ *	side. This allow to select proper entry proint for the aplication, and maybe 
+ *	add pre-starting treatements here.
+ */
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN 
+#include "windows.h"
+///Application entry point
+#define AnnMain() INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
+
+#else
+//On others :
+///Application entry point
+#define AnnMain() int main(int argc, char** argv)
+#endif
+//---------------------------------------------------------------------//
+
 #endif //ANNWVYN	

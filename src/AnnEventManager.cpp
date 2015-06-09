@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "AnnEventManager.hpp"
-#include "AnnEngine.hpp"//to access logger static method
+#include "AnnLogger.hpp"//to access logger static method
 using namespace Annwvyn;
 
 AnnAbstractEventListener::AnnAbstractEventListener(AnnPlayer* p)
@@ -64,7 +64,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	if(InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
 	{
 			Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
-			Annwvyn::AnnEngine::log("Detected joystick : " + Joystick->vendor());
+			AnnDebug()<< "Detected joystick : " << Joystick->vendor();
 	}
 }
 

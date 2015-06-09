@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "AnnPhysicsEngine.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 {    
-	AnnEngine::log("Init Bullet physics");
+	AnnDebug("Init Bullet physics");
 
 	//Initialize the Bullet world
 	m_Broadphase = new btDbvtBroadphase();
@@ -16,7 +17,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 
 	m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
 
-	AnnEngine::log("Gravity vector = (0,-9.81f,0)");
+	AnnDebug("Gravity vector = (0,-9.81f,0)");
 	m_DynamicsWorld->setGravity(btVector3(0,-9.81f,0));
 	m_DynamicsWorld->getPairCache()->setInternalGhostPairCallback(m_ghostPairCallback);
 
@@ -45,6 +46,7 @@ void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player)
 
 void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::SceneNode* node)
 {
+	AnnDebug() << "createPlayerPhysicalVirtualBody";
 	//Player need to have a shape (capsule)
 	assert(player->getShape());
 
@@ -140,12 +142,14 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectVect& objects)
 
 void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
 {
+	AnnDebug() << "Removing " << body << " Form physics simulation";
 	if(body)
 		m_DynamicsWorld->removeRigidBody(body);
 }
 
 void AnnPhysicsEngine::initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node)
 {
+	AnnDebug() << "Initializing player's physics " << player->getMass() << "Kg ~" << player->getEyesHeight();
 	createVirtualBodyShape(player);
 	createPlayerPhysicalVirtualBody(player, node);
 	addPlayerPhysicalBodyToDynamicsWorld(player);
