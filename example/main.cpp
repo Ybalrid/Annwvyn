@@ -40,9 +40,7 @@ AnnMain()
 	//load ressources
 	GameEngine->loadDir("media/dome");
 	GameEngine->loadZip("media/Sinbad.zip");
-	GameEngine->loadDir("media/plane");
 	GameEngine->loadDir("media/body");
-
 	AnnEngine::Instance()->loadDir("media/environement");
 
 	GameEngine->initResources();
@@ -64,10 +62,7 @@ AnnMain()
 	//GameEngine->setSkyDomeMaterial(true,"Sky/dome1");
 
 	GameEngine->initPlayerPhysics();
-	GameEngine->setDebugPhysicState(true);
-
-
-
+	GameEngine->setDebugPhysicState(false);
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
 	AnnGameObject* S = GameEngine->createGameObject("Sinbad.mesh", new Sinbad);
 
