@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnEventManager.hpp"
 #include "AnnLogger.hpp"//to access logger static method
+
 using namespace Annwvyn;
 
 AnnAbstractEventListener::AnnAbstractEventListener(AnnPlayer* p)

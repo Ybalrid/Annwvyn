@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnEventManager.hpp"
 #include "AnnEngine.hpp"
+
 using namespace Annwvyn;
 
 AnnDefaultEventListener::AnnDefaultEventListener(AnnPlayer* p) : AnnAbstractEventListener(p),

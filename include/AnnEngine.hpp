@@ -55,13 +55,11 @@ namespace Annwvyn
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
 
-		///The onScreenConsole object
-		static AnnConsole* onScreenConsole;
 
 	public:
-		inline static std::string getAnnwvynVersion();
-		static void toogleOnScreenConsole();
+		///This method is called by the OgreOculusRender object. Here is refresh code that needs to know current pose
 		void renderCallback();
+
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 
@@ -239,8 +237,17 @@ namespace Annwvyn
 
 		///Get the current level manager
 		AnnLevelManager* getLevelManager();
-	
+		
+		///Toogle the display of the in-engine console
+		static void toogleOnScreenConsole();
+		
+		///Return a string descibing the version of the engine
+		inline static std::string getAnnwvynVersion();
+
 	private:
+		///The onScreenConsole object
+		static AnnConsole* onScreenConsole;
+
 		//Audio engine
 		AnnAudioEngine* AudioEngine;
 		//Player

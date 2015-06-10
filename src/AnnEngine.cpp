@@ -12,11 +12,6 @@ AnnEngine* AnnEngine::Instance()
 	return singleton;
 }
 
-void AnnEngine::toogleOnScreenConsole()
-{
-	if(onScreenConsole) onScreenConsole->toogle();
-}
-
 std::string AnnEngine::getAnnwvynVersion()
 {
 	std::stringstream version;
@@ -272,7 +267,7 @@ void AnnEngine::oculusInit(bool fullscreen)
 	m_CameraReference->setPosition(player->getPosition() + 
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 	onScreenConsole = new AnnConsole();
-	///This will populate swap texture and turn on the rift display earlier
+	//This will populate swap texture and turn on the rift display earlier
 	oor->RenderOneFrame();
 }
 
@@ -662,4 +657,9 @@ void AnnEngine::openDebugWindow()
 {
 	log("Open a debug render window on the main screen");
 	oor->openDebugWindow();
+}
+
+void AnnEngine::toogleOnScreenConsole()
+{
+	if(onScreenConsole) onScreenConsole->toogle();
 }
