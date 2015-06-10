@@ -10,7 +10,7 @@
 
 /*!
  *
- *\mainpage Annwvyn Game Engine API Reference documentation
+ *\mainpage Annwvyn Game Engine API Reference Documentation
  *
  * Welcome to the Annwvyn API documentation.
  * 
@@ -88,10 +88,9 @@ namespace Annwvyn
 #define AnnMain() INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
 
 #else
-//On others :
 ///Application entry point
 #define AnnMain() int main(int argc, char** argv)
 #endif
-//---------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 
 #endif //ANNWVYN	

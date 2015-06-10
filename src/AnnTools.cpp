@@ -3,8 +3,6 @@
 
 using namespace Ogre;
 
-
-
 float Annwvyn::Tools::Geometry::distance(Annwvyn::AnnGameObject* a, Annwvyn::AnnGameObject* b)
 {
     return Annwvyn::Tools::Geometry::distance(a->pos(),b->pos());
