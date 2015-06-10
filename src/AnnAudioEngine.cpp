@@ -163,6 +163,12 @@ void AnnAudioEngine::playBGM(const std::string path, const float volume)
 	alSourcePlay(bgm);
 }
 
+void AnnAudioEngine::stopBGM()
+{
+	AnnDebug() << "Stop any BGM playing";
+	alSourceStop(bgm);
+}
+
 void AnnAudioEngine::updateListenerPos(AnnVect3 pos)
 {
 	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);

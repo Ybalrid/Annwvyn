@@ -37,7 +37,6 @@ class DLL OculusInterface
     ///Return a quaternion orentetion
     OVR::Quatf getOrientation();
 
-
     ovrHmdDesc getHmdDesc();
 
     ovrHmd getHmd();
@@ -58,5 +57,4 @@ class DLL OculusInterface
     ovrHmdDesc hmdDesc; 
 	ovrTrackingState ss;
 };
-
 #endif

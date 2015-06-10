@@ -8,11 +8,15 @@
 
 #ifndef ANN_ENGINE
 #define ANN_ENGINE
+
+//Keep track of engine version here
+#define ANN_MAJOR 0
+#define ANN_MINOR 0
+#define ANN_PATCH 9.3 
+
 #include "systemMacro.h"
 
 //C++ STD & STL
-//#include <vector> included by AnnTypes
-//#include <sstream> incuded by OgreOculusRended
 #include <cassert>
 
 //Graphic rendering system for the rift
@@ -55,6 +59,7 @@ namespace Annwvyn
 		static AnnConsole* onScreenConsole;
 
 	public:
+		inline static std::string getAnnwvynVersion();
 		static void toogleOnScreenConsole();
 		void renderCallback();
 		///Get the current instance of AnnEngine. pointer

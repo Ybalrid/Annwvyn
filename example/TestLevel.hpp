@@ -50,6 +50,12 @@ public:
 
 		//Put some music here
 		AnnEngine::Instance()->getAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg");
+
+		//Place the starting point 
+		AnnPlayer* player(AnnEngine::Instance()->getPlayer());
+		player->setPosition(AnnVect3::ZERO);
+		player->setOrientation(Ogre::Euler(0));
+		AnnEngine::Instance()->resetPlayerPhysics();
 	}
 
 	void runLogic()
