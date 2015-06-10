@@ -13,6 +13,7 @@
 #define ANN_MAJOR 0
 #define ANN_MINOR 0
 #define ANN_PATCH 10 
+#define ANN_EXPERIMENTAL true
 
 #include "systemMacro.h"
 
@@ -260,14 +261,24 @@ namespace Annwvyn
 		//LevelManager
 		AnnLevelManager* levelManager;
 
+		//The window created by OGRE that receive event for OIS
 		Ogre::RenderWindow* m_Window;
+		//The scene manager
 		Ogre::SceneManager* m_SceneManager;
+		//Where to put the camera
 		Ogre::SceneNode* m_CameraReference;
+		//Where the visualBody is attached
 		Ogre::SceneNode* VisualBodyAnchor;
+		//Orientation offcet between the model and the cameras
 		AnnQuaternion refVisualBody;
+		//The entity representing the player
 		Ogre::Entity* VisualBody;
+		//The animation state of the player
 		Ogre::AnimationState* VisualBodyAnimation;
+		//offset in Z axis of the visual body
 		float visualBody_Zoffset;
+	
+		//Can load resources
 		bool readyForLoadingRessources;
 
 		//Oculus oculus;
