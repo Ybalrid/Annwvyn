@@ -7,7 +7,7 @@ Critial
 - [x] Switch to the newest version of OVR. This will break the rendering pipeline. Hopefully it will be MUCH simpler to implement this time.
 
 After finals : 
-- [ ] Implement AnnLevelManager thanks to the class developed for the PST3 "Interface en Rélatié Virtuelle" during my 3rd year at ESIEA
+- [x] Implement AnnLevelManager thanks to the class developed for the PST3 "Interface en Rélatié Virtuelle" during my 3rd year at ESIEA
 
 Non critial :
 - [x] Finish properly the implementation of the sound engine
