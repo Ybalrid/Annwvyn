@@ -50,6 +50,11 @@
  *
  */
 
+//Some C++ misc utils
+#include <iostream>
+#include <string>
+#include <sstream>
+
 //Annwvyn classes
 #include "AnnEngine.hpp"
 #include "AnnGameObject.hpp"
@@ -67,8 +72,6 @@
 #include "AnnQuaternion.hpp"
 
 ///Namespace containing the totality of Annwvyn components
-#include <iostream>
-#include <sstream>
 namespace Annwvyn
 {
 }

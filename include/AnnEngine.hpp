@@ -12,7 +12,7 @@
 //Keep track of engine version here
 #define ANN_MAJOR 0
 #define ANN_MINOR 0
-#define ANN_PATCH 9.3 
+#define ANN_PATCH 10 
 
 #include "systemMacro.h"
 
@@ -132,7 +132,7 @@ namespace Annwvyn
 		///Set the ambiant light
 		/// \param v the color of the light
 		void setAmbiantLight(Ogre::ColourValue v); //scene parameter
-
+			
 		///Add a light to the scene. return a pointer to the new light
 		AnnLightObject* addLight(); //object factory
 
