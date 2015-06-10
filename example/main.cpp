@@ -37,14 +37,20 @@ AnnMain()
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
 	
 	//Register a level
-	GameEngine->getLevelManager()->addLevel(new TestLevel); //This is the first level known by the LevelManager (and the only one here)
-	GameEngine->getLevelManager()->jumpToFirstLevel(); //Jump to that level 
+	GameEngine->getLevelManager()->addLevel(new TestLevel);	//This is the first level known by the LevelManager (and the only one here)
+	GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
 	
 	GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
 	AnnDebug() << "Starting the render loop";
+	
 	do	
-	{}
+	{
+		if(GameEngine->isKeyDown(OIS::KC_Q))
+			GameEngine->getLevelManager()->unloadCurrentLevel();
+		if(GameEngine->isKeyDown(OIS::KC_E))
+			GameEngine->getLevelManager()->jumpToFirstLevel();	
+	}
 	while(GameEngine->refresh());
 
 	delete GameEngine;

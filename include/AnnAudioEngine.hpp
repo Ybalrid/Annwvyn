@@ -61,6 +61,9 @@ namespace Annwvyn
 		/// \param volume Float number between 0 and 1, Loudness of the sound 
 		void playBGM(const std::string path, const float volume = 0.5f);
 
+		///stop the current background music from playing
+		void stopBGM();
+
 		///Get the last error message that ocured in-engine
 		const std::string getLastError();
 

@@ -17,6 +17,8 @@ AnnAbstractLevel::~AnnAbstractLevel()
 
 void AnnAbstractLevel::unload()
 {
+	//Remove background music
+	AnnEngine::Instance()->getAudioEngine()->stopBGM();
 	//Remove the sky
 	AnnEngine::Instance()->removeSkyDome();
 

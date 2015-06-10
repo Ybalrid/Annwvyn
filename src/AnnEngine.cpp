@@ -17,6 +17,13 @@ void AnnEngine::toogleOnScreenConsole()
 	if(onScreenConsole) onScreenConsole->toogle();
 }
 
+std::string AnnEngine::getAnnwvynVersion()
+{
+	std::stringstream version;
+	version << ANN_MAJOR << "." << ANN_MINOR << "." << ANN_PATCH;
+	return version.str();
+}
+
 AnnEngine::AnnEngine(const char title[], bool fs)
 {
 	eventManager = NULL;
@@ -107,6 +114,7 @@ AnnEngine::AnnEngine(const char title[], bool fs)
 	log("---------------------------------------------------", false);
 	log("Annwvyn Game Engine - Step into the Other World   ", false);
 	log("Designed for Virtual Reality                      ", false);
+	log("Version : " + getAnnwvynVersion()                  , false);
 	log("---------------------------------------------------", false);
 }
 

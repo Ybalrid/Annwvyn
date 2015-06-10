@@ -1,10 +1,6 @@
 #ifndef ANNWVYN
 #define ANNWVYN
 
-#define ANN_MAJOR 0
-#define ANN_MINOR 0
-#define ANN_PATCH 9.3
-
 /*!
 * \file Annwvyn.h
 * \brief Main Annwvyn include file (to be used by client application)
@@ -67,7 +63,6 @@
 //Other Annwvyn
 #include "AnnTypes.h"
 #include "AnnTools.h"
-
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 
@@ -76,12 +71,6 @@
 #include <sstream>
 namespace Annwvyn
 {
-	inline static std::string getAnnwvynVersion()
-	{
-		std::stringstream version;
-		version << ANN_MAJOR << "." << ANN_MINOR << "." << ANN_PATCH;
-		return version.str();
-	}
 }
 
 //--------------------Application Entrypoint definition--------------//
