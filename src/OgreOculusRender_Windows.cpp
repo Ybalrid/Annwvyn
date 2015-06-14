@@ -49,7 +49,7 @@ OgreOculusRender::~OgreOculusRender()
 	delete oc;
 
 	//TODO clean Ogre properly. There is stuff to delete manually before being able to delete "root".
-	//delete root;
+	delete root;
 }
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)

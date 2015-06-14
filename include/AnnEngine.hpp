@@ -245,6 +245,9 @@ namespace Annwvyn
 		///Return a string descibing the version of the engine
 		inline static std::string getAnnwvynVersion();
 
+		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
+		inline void startGameplayLoop();
+
 	private:
 		///The onScreenConsole object
 		static AnnConsole* onScreenConsole;
