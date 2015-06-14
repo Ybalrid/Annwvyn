@@ -19,6 +19,11 @@ std::string AnnEngine::getAnnwvynVersion()
 	return version.str();
 }
 
+void AnnEngine::startGameplayLoop()
+{
+	while(refresh());
+}
+	
 AnnEngine::AnnEngine(const char title[], bool fs)
 {
 	eventManager = NULL;
@@ -663,3 +668,4 @@ void AnnEngine::toogleOnScreenConsole()
 {
 	if(onScreenConsole) onScreenConsole->toogle();
 }
+
