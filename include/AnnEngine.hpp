@@ -49,7 +49,7 @@ namespace Annwvyn
 	///You can intantiate it like a normal class and bypass the idea of a singleton complettely.
 	///This is the base class of the whole engine, the idea is more or less the one described in the 
 	///"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
-	
+
 	class DLL AnnEngine : public OgreOculusRenderCallback
 	{
 	private:
@@ -111,7 +111,7 @@ namespace Annwvyn
 
 		///Init the physics model
 		void initPlayerPhysics(); //physics on player 
-		
+
 		///If the player is handeled throug the physics engine, this method will detach the rigidbody from the camera,
 		///remove it from the dynamics world, unalocate it from the memory and recreate it from scratch. This is usefull for
 		///"teleporting" the player, for example if you need to reset his position.
@@ -125,15 +125,15 @@ namespace Annwvyn
 		///Destroy the given object
 		/// \param object the object to be destroyed
 		bool destroyGameObject(AnnGameObject* object); //object factory
-		
+
 		///Destroy the given light
 		/// \param light pointer to the light to destroy
 		void destroyLight(AnnLightObject* light);
-			
+
 		///Set the ambiant light
 		/// \param v the color of the light
 		void setAmbiantLight(Ogre::ColourValue v); //scene parameter
-			
+
 		///Add a light to the scene. return a pointer to the new light
 		AnnLightObject* addLight(); //object factory
 
@@ -238,15 +238,15 @@ namespace Annwvyn
 
 		///Get the current level manager
 		AnnLevelManager* getLevelManager();
-		
+
 		///Toogle the display of the in-engine console
 		static void toogleOnScreenConsole();
-		
+
 		///Return a string descibing the version of the engine
-		inline static std::string getAnnwvynVersion();
+		static std::string getAnnwvynVersion();
 
 		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
-		inline void startGameplayLoop();
+		void startGameplayLoop();
 
 	private:
 		///The onScreenConsole object
@@ -280,7 +280,7 @@ namespace Annwvyn
 		Ogre::AnimationState* VisualBodyAnimation;
 		//offset in Z axis of the visual body
 		float visualBody_Zoffset;
-	
+
 		//Can load resources
 		bool readyForLoadingRessources;
 
