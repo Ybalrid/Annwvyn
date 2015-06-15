@@ -319,24 +319,16 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); it++)
     {
-		//ss << "Object " << static_cast<void*>(*it) << " stop collision test";log(ss.str());ss.str("");
-		
-		if(!*it)
-		{
-			log("NULL object found. jump to next one");
-			continue;
-		}
-		
+		if(!*it) continue;
+
 		//This system needs to be redone
 		(*it)->stopGettingCollisionWith(object);
 		if(*it == object)
 		{
-			returnCode = true; // found
-			//log("Object found");
+			returnCode = true;
 			*it = NULL;
-	
-			Ogre::SceneNode* node = object->node();
 
+			Ogre::SceneNode* node = object->node();
 			node->getParent()->removeChild(node);
 			size_t nbObject(node->numAttachedObjects());
 			std::vector<Ogre::MovableObject*> attachedObject;
@@ -351,7 +343,6 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 				m_SceneManager->destroyMovableObject(*attachedIterator++);
 
 			physicsEngine->removeRigidBody(object->getBody());
-			//node->removeAndDestroyAllChildren();
 			m_SceneManager->destroySceneNode(node);
 			delete object;
 		}
@@ -402,7 +393,7 @@ void AnnEngine::renderCallback()
 	for(size_t i(0); i < queueSize; i++) refreshQueue[i]->atRefresh();
 	
 	//Get rid of the refresh queue
-	free(static_cast<void*>(refreshQueue)); 
+	free(refreshQueue); 
 	refreshQueue = NULL;
 
 	//Now it's safe to remove the objects
@@ -425,11 +416,12 @@ bool AnnEngine::refresh()
 	deltaT = oor->getUpdateTime();
 	physicsEngine->step(deltaT);
 	player->engineUpdate(deltaT);
-	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); ++it)
+	for(auto it = objects.begin(); it != objects.end(); ++it)
 	{
 		(*it)->addTime(deltaT);
 		(*it)->updateOpenAlPos();
 	}
+
 	if(eventManager)
 		eventManager->update(); 
 
@@ -476,7 +468,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	AnnVect3 Orig(getPoseFromOOR().position);
 
 	//Caltulate direction Vector of the ray to be the midpont camera optical axis
-	AnnVect3 LookAt(getPoseFromOOR().orientation * AnnVect3::NEGATIVE_UNIT_Z);
+	AnnVect3 LookAt(AnnQuaternion(getPoseFromOOR().orientation).getAtVector());
 
 	//create ray
 	Ogre::Ray ray(Orig, LookAt);
