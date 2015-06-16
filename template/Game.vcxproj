@@ -89,7 +89,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(AnnwvynSDK)\Annwvyn\include;$(AnnwvynSDK)\AL\openal-soft-1.15.1\include\AL;$(AnnwvynSDK)\libsndfile\include;$(AnnwvynSDK)\AL\openal-soft-1.15.1\OpenAL32\Include;$(AnnwvynSDK)\OculusSDK\3rdParty\glext;$(AnnwvynSDK)\OculusSDK\LibOVR\Src;$(AnnwvynSDK)\OculusSDK\LibOVRKernel\Src;$(AnnwvynSDK)\OculusSDK\LibOVR\Include;$(AnnwvynSDK)\bullet3\src;$(AnnwvynSDK)\OgreSDK\boost;$(AnnwvynSDK)\OgreSDK\include\OGRE;$(AnnwvynSDK)\OIS\include;$(AnnwvynSDK)\glew\include\GL;$(AnnwvynSDK)\glew\include;%(AdditionalIncludeDirectories);./pch</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(AnnwvynSDK64)\Annwvyn\include;$(AnnwvynSDK64)\AL\openal-soft-1.15.1\include\AL;$(AnnwvynSDK64)\libsndfile\include;$(AnnwvynSDK64)\AL\openal-soft-1.15.1\OpenAL32\Include;$(AnnwvynSDK64)\OculusSDK\3rdParty\glext;$(AnnwvynSDK64)\OculusSDK\LibOVR\Src;$(AnnwvynSDK64)\OculusSDK\LibOVRKernel\Src;$(AnnwvynSDK64)\OculusSDK\LibOVR\Include;$(AnnwvynSDK64)\bullet3\src;$(AnnwvynSDK64)\OgreSDK\boost;$(AnnwvynSDK64)\OgreSDK\include\OGRE;$(AnnwvynSDK64)\OIS\include;$(AnnwvynSDK64)\glew\include\GL;$(AnnwvynSDK64)\glew\include;%(AdditionalIncludeDirectories);./pch</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalOptions>-Zm237 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
