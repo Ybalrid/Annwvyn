@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
@@ -15,7 +23,9 @@
     <ClCompile Include="myLevel.cpp" />
     <ClCompile Include="pch\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -37,7 +47,20 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -50,7 +73,13 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -59,12 +88,37 @@
     <OutDir>..\..\example\</OutDir>
     <IntDir>.\test_obj\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>.\</OutDir>
     <IntDir>.\obj\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>./</OutDir>
+    <IntDir>./obj/</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(AnnwvynSDK)\Annwvyn\include;$(AnnwvynSDK)\AL\openal-soft-1.15.1\include\AL;$(AnnwvynSDK)\libsndfile\include;$(AnnwvynSDK)\AL\openal-soft-1.15.1\OpenAL32\Include;$(AnnwvynSDK)\OculusSDK\LibOVR\Src;$(AnnwvynSDK)\OculusSDK\LibOVR\Include;$(AnnwvynSDK)\bullet3\src;$(AnnwvynSDK)\OgreSDK\boost;$(AnnwvynSDK)\OgreSDK\include\OGRE;$(AnnwvynSDK)\OIS\include;$(AnnwvynSDK)\glew\include\GL;$(AnnwvynSDK)\glew\include;%(AdditionalIncludeDirectories);./pch</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>-Zm237 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Annwvyn.lib;OgreMain.lib;OIS.lib;libovr.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;OpenAL32.lib;libsndfile-1.lib;libboost_chrono-vc110-mt-1_55.lib;libboost_system-vc110-mt-1_55.lib;libboost_date_time-vc110-mt-1_55.lib;libboost_thread-vc110-mt-1_55.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AnnwvynSDK)\Annwvyn\lib;$(AnnwvynSDK)\AL\openal-soft-1.15.1\build\Release;$(AnnwvynSDK)\bullet3\lib;$(AnnwvynSDK)\libsndfile\lib;$(AnnwvynSDK)\OIS\lib;$(AnnwvynSDK)\OculusSDK\LibOVR\Lib\Win32\VS2012;$(AnnwvynSDK)\OgreSDK\lib\Release\opt;$(AnnwvynSDK)\OgreSDK\lib\Release;$(AnnwvynSDK)\OgreSDK\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -103,6 +157,30 @@
       </DelayLoadDLLs>
       <PreventDllBinding>false</PreventDllBinding>
       <AdditionalDependencies>Annwvyn.lib;ws2_32.lib;OgreMain.lib;OIS.lib;LibOVR.lib;Winmm.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib;OpenAL32.lib;libsndfile-1.lib;libboost_chrono-vc110-mt-1_55.lib;libboost_system-vc110-mt-1_55.lib;libboost_date_time-vc110-mt-1_55.lib;libboost_thread-vc110-mt-1_55.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(AnnwvynSDK64)\Annwvyn\include;$(AnnwvynSDK64)\AL\openal-soft-1.15.1\include\AL;$(AnnwvynSDK64)\libsndfile\include;$(AnnwvynSDK64)\AL\openal-soft-1.15.1\OpenAL32\Include;$(AnnwvynSDK64)\OculusSDK\3rdParty\glext;$(AnnwvynSDK64)\OculusSDK\LibOVR\Src;$(AnnwvynSDK64)\OculusSDK\LibOVRKernel\Src;$(AnnwvynSDK64)\OculusSDK\LibOVR\Include;$(AnnwvynSDK64)\bullet3\src;$(AnnwvynSDK64)\OgreSDK\boost;$(AnnwvynSDK64)\OgreSDK\include\OGRE;$(AnnwvynSDK64)\OIS\include;$(AnnwvynSDK64)\glew\include\GL;$(AnnwvynSDK64)\glew\include;%(AdditionalIncludeDirectories);./pch</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>-Zm237 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(AnnwvynSDK64)\Annwvyn\lib;$(AnnwvynSDK64)\AL\openal-soft-1.15.1\build\Release;$(AnnwvynSDK64)\bullet3\lib\Release;$(AnnwvynSDK64)\libsndfile\lib;$(AnnwvynSDK64)\OIS\lib;$(AnnwvynSDK64)\OculusSDK\LibOVR\Lib\Windows\x64\Release\VS2012;$(AnnwvynSDK64)\OgreSDK\lib\Release\opt;$(AnnwvynSDK64)\OgreSDK\lib\Release;$(AnnwvynSDK64)\OgreSDK\boost\lib;$(AnnwvynSDK64)\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
+      <PreventDllBinding>false</PreventDllBinding>
+      <AdditionalDependencies>Annwvyn.lib;ws2_32.lib;OgreMain.lib;OIS.lib;LibOVR.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
