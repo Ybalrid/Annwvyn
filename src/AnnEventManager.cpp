@@ -188,7 +188,7 @@ void AnnEventManager::update()
         }
 
         //Get press and release event lists
-        for(size_t i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
+        for(unsigned short i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
             if(!previousStickButtonStates[i] &&  state.mButtons[i])
                 e.pressed.push_back(i);
             else if(previousStickButtonStates[i] && !state.mButtons[i])
