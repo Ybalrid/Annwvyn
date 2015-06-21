@@ -12,13 +12,16 @@ namespace Annwvyn
 	class DLL AnnDebug : public std::ostream
 	{
 	private:
+		///Nested buffer class 
 		class AnnDebugBuff : public std::stringbuf
 		{
 		public:
 			///Construct an AnnDebug buffer
 			AnnDebugBuff(){};
+
 			///Will sync the buffer
 			~AnnDebugBuff(){pubsync();};
+
 			///Sync the buffer by performing an AnnEngine::log, clear it and return success. 
 			int sync(){AnnEngine::log(str()); str(""); return 0;};
 		};
@@ -29,9 +32,11 @@ namespace Annwvyn
 		/// example : AnnDebug() << "Player life is now " << playerLife;
 		/// where playerLife is a variable. Everything that works with a std::ostream works here.
 		AnnDebug();
+
 		///Permit to log a static string via the debug stream
 		/// \copydoc AnnEngine::AnnDebug()
 		AnnDebug(const std::string& message);
+
 		~AnnDebug();
 	};
 }
