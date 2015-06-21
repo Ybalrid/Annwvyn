@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "AnnAbstractLevel.hpp"
-#include "AnnEngine.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
 AnnAbstractLevel::AnnAbstractLevel()
 {
-	AnnEngine::Instance()->log("A level has been created");
+	AnnDebug() << "A level has been created";
 }
 
 AnnAbstractLevel::~AnnAbstractLevel()
 {
 	unload();
-	AnnEngine::Instance()->log("Destroying a level");
+	AnnDebug() << "Destroying a level";
 }
 
 void AnnAbstractLevel::unload()

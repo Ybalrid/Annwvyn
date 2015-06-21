@@ -333,7 +333,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			size_t nbObject(node->numAttachedObjects());
 			std::vector<Ogre::MovableObject*> attachedObject;
 
-			for(size_t i(0); i < nbObject; i++)
+			for(unsigned short i(0); i < nbObject; i++)
 				attachedObject.push_back(node->getAttachedObject(i));
 
 			node->detachAllObjects();
