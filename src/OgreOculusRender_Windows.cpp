@@ -29,7 +29,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 	//Oc is an OculusInterface object. Communication with the Rift SDK is handeled by that class
 	oc = NULL;
 	CameraNode = NULL;
-	cameraPosition = Ogre::Vector3(0,0,10);
+	cameraPosition = Ogre::Vector3(0, 0, 10);
 	cameraOrientation = Ogre::Quaternion::IDENTITY;
 	nearClippingDistance = (float) 0.05;
 	lastOculusPosition = cameraPosition;
@@ -38,7 +38,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 	fullscreen = true;
 	vsync = activateVsync;
 	hsDissmissed = false;
-	backgroundColor = Ogre::ColourValue(0.f,0.56f,1.f);
+	backgroundColor = Ogre::ColourValue(0.f, 0.56f, 1.f);
 	debug = NULL;
 	textureSet = NULL;
 }
@@ -162,7 +162,7 @@ void OgreOculusRender::initAllResources()
 void OgreOculusRender::initLibraries(std::string loggerName)
 {
 	//Create the ogre root with standards Ogre configuration file
-	root = new Ogre::Root("plugins.cfg","ogre.cfg",loggerName.c_str());
+	root = new Ogre::Root("plugins.cfg", "ogre.cfg", loggerName.c_str());
 
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	oc = new OculusInterface();
@@ -262,7 +262,7 @@ void OgreOculusRender::initRttRendering()
 	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left], 1.0f);
 	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right], 1.0f);
 	bufferSize.w = texSizeL.w + texSizeR.w;
-	bufferSize.h = max ( texSizeL.h, texSizeR.h );
+	bufferSize.h = max (texSizeL.h, texSizeR.h);
 	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
 
 	if (ovrHmd_CreateSwapTextureSetGL(oc->getHmd(), GL_RGB, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
@@ -280,17 +280,17 @@ void OgreOculusRender::initRttRendering()
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 
 	Ogre::TexturePtr rtt_texture (textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
-	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0,0)->getRenderTarget();
+	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0, 0)->getRenderTarget();
 	Ogre::GLTexture* gltex = (Ogre::GLTexture*)(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
 	renderTextureID = gltex->getGLID();
 
-	vpts[left] = rttEyes->addViewport(cams[left],0,0,0,0.5f);
-	vpts[right] = rttEyes->addViewport(cams[right],1,0.5f,0,0.5f);
+	vpts[left] = rttEyes->addViewport(cams[left], 0, 0, 0, 0.5f);
+	vpts[right] = rttEyes->addViewport(cams[right], 1, 0.5f, 0, 0.5f);
 
 	changeViewportBackgroundColor(backgroundColor);
 
-	window->addViewport(cams[left],0,0,0,0.5f)->setBackgroundColour(backgroundColor);
-	window->addViewport(cams[right],1,0.5f,0,0.5f)->setBackgroundColour(backgroundColor);
+	window->addViewport(cams[left], 0, 0, 0, 0.5f)->setBackgroundColour(backgroundColor);
+	window->addViewport(cams[right], 1, 0.5f, 0, 0.5f)->setBackgroundColour(backgroundColor);
 }
 
 void OgreOculusRender::initOculus(bool fullscreenState)
@@ -395,8 +395,8 @@ void OgreOculusRender::RenderOneFrame()
 	root->renderOneFrame();
 
 	//Copy the rendered image to the Oculus Swap Texture
-	glCopyImageSubData(renderTextureID, GL_TEXTURE_2D, 0,0,0,0, 
-		((ovrGLTexture*)(&textureSet->Textures[textureSet->CurrentIndex]))->OGL.TexId, GL_TEXTURE_2D, 0,0,0,0, 
+	glCopyImageSubData(renderTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
+		((ovrGLTexture*)(&textureSet->Textures[textureSet->CurrentIndex]))->OGL.TexId, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		bufferSize.w,bufferSize.h, 1);
 
 	layers = &layer.Header;
@@ -406,22 +406,6 @@ void OgreOculusRender::RenderOneFrame()
 
 void OgreOculusRender::openDebugWindow()
 {
-	//No debug window needed with this SDK, the window itself is useless and is filled with the raw rendeing of the app
+	///Deprecated
 	return;
-	if(debug) 
-		return;
-	debug = root->createRenderWindow("Annwvyn debug window " + name,  
-		oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, //Half of Oculus resolution by default
-		false); //no fullscreen
-
-	if(!debug) return; //We need that window to exist now
-	//Attach camera
-	debugVP[left] = debug->addViewport(cams[left], 0, 0, 0, 0.5f);
-	debugVP[right] = debug->addViewport(cams[right], 1, 0.5f, 0, 0.5f);
-	//update viewports background
-	changeViewportBackgroundColor(backgroundColor);
-
-	//Bring back the focus on the real main window (hack)
-	window->setHidden(true);
-	window->setHidden(false);
 }

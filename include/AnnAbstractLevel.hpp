@@ -3,6 +3,9 @@
 
 #include "AnnTypes.h"
 
+#define LEVEL public Annwvyn::AnnAbstractLevel
+#define constructLevel() AnnAbstractLevel()
+
 namespace Annwvyn
 {
 	//AnnEngine should really be a singleton class with a static method to get the instance... 

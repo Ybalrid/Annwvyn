@@ -5,7 +5,6 @@ using namespace Annwvyn;
 
 AnnCharacter::AnnCharacter() : AnnGameObject()
 {
-
 }
 
 int AnnCharacter::getCurrentLifeLevel()

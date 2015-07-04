@@ -44,13 +44,13 @@ bool AnnAudioEngine::initOpenAL()
 void AnnAudioEngine::shutdownOpenAL()
 {
 	alSourceStop(bgm);
-    alDeleteSources(1,&bgm);
+    alDeleteSources(1, &bgm);
 	if(alIsBuffer(bgmBuffer) == AL_TRUE)
 		alDeleteBuffers(1,&bgmBuffer);
 
 	auto iterator = buffers.begin();
 	while(iterator != buffers.end())
-		alDeleteBuffers(1,&(*iterator++).second);
+		alDeleteBuffers(1, &(*iterator++).second);
 		
     alcMakeContextCurrent(NULL);
 	alcDestroyContext(Context);
@@ -145,7 +145,7 @@ void AnnAudioEngine::unloadBuffer(const std::string& path)
 	if(query == buffers.end()) return;
 	AnnDebug() << "Sound file found by the Audio resource system. OpenAL buffer " << query->second;
 	ALuint buffer = query->second;
-	alDeleteBuffers(1,&buffer);
+	alDeleteBuffers(1, &buffer);
 	AnnDebug() << "Buffer deleted";
 	buffers.erase(query);
 }

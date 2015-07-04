@@ -86,8 +86,7 @@ void OculusInterface::customReport()
 		 << "Manufacturer : " << hmd->Manufacturer << endl
 		 << "Display Resolution : " << hmd->Resolution.w << "x" << hmd->Resolution.h << endl 
 		 << "Type of HMD identifier : " << hmd->Type << endl
-		 << "Firmware version : " << hmd->FirmwareMajor << "." << hmd->FirmwareMinor << endl
-	;
+		 << "Firmware version : " << hmd->FirmwareMajor << "." << hmd->FirmwareMinor << endl;
 	cout << "================================================" << endl;
 }
 
@@ -103,7 +102,7 @@ OVR::Vector3f OculusInterface::getPosition()
 	if(initialized && firstUpdated)
 		return OVR::Vector3f(ss.HeadPose.ThePose.Position);
 	//TODO : get real data
-	return OVR::Vector3f(0,0,0);
+	return OVR::Vector3f(0, 0, 0);
 }
 
 OVR::Quatf OculusInterface::getOrientation()
@@ -111,7 +110,7 @@ OVR::Quatf OculusInterface::getOrientation()
 	if(initialized && firstUpdated)
 		return OVR::Quatf(ss.HeadPose.ThePose.Orientation);
 	//TODO : get real data
-	return OVR::Quatf(1,0,0,0);
+	return OVR::Quatf(1, 0, 0, 0);
 }
 
 ovrHmdDesc OculusInterface::getHmdDesc()
@@ -131,9 +130,9 @@ void OculusInterface::debugPrint()
 	OVR::Vector3f p = this->getPosition();
 	OVR::Quatf q = this->getOrientation();
 
-	float o_y,o_p,o_r;
+	float o_y, o_p, o_r;
 
-	q.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&o_y,&o_p,&o_r);
+	q.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&o_y, &o_p, &o_r);
 
 	cout << "Rift information : " << endl
 		<< "Position : " << "(" << p.x << ", "<< p.y<< ", " << p.z<< ")" << endl

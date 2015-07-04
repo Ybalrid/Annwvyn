@@ -12,12 +12,12 @@ bodyParams::bodyParams()
 	walkSpeed = 3;
 	turnSpeed = 0.5f;
 	mass = 80.0f;
-	Position = AnnVect3(0,0,10);
-	HeadOrientation = AnnQuaternion(1,0,0,0);
+	Position = AnnVect3(0, 0, 10);
+	HeadOrientation = AnnQuaternion(1, 0, 0, 0);
 	Shape = NULL;
 	Body = NULL;
 	runFactor = 3;
-	jumpForce = AnnVect3(0,500,0);
+	jumpForce = AnnVect3(0, 500, 0);
 }
 
 AnnPlayer::AnnPlayer()
@@ -168,7 +168,7 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
 {
-	applyRelativeBodyYaw(Ogre::Radian(- float(relValue) *getTurnSpeed() *updateTime));
+	applyRelativeBodyYaw(Ogre::Radian(- float(relValue) * getTurnSpeed() * updateTime));
 }
 
 AnnVect3 AnnPlayer::getTranslation()
@@ -267,7 +267,7 @@ void AnnPlayer::engineUpdate(float time)
 		if(standing) 
 		{
 			btTransform Transform = getBody()->getCenterOfMassTransform();
-			Transform.setRotation(AnnQuaternion(0,0,0,1).getBtQuaternion());
+			Transform.setRotation(AnnQuaternion(0, 0, 0, 1).getBtQuaternion());
 			getBody()->setCenterOfMassTransform(Transform);
 		}
 

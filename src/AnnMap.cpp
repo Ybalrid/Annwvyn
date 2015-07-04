@@ -70,7 +70,7 @@ void AnnMap::process(std::string descLine)
 
     bool light(false);
 
-    float x,y,z,w,mass;
+    float x, y, z, w, mass;
     while(desc >> word)
     {
         //put to zero all buffer variables
@@ -123,7 +123,7 @@ void AnnMap::process(std::string descLine)
             float powerScale;
             desc >> powerScale;
             tmpLight->setPowerScale(powerScale);
-            tmpLight->setDiffuseColour(powerScale,powerScale,powerScale);
+            tmpLight->setDiffuseColour(powerScale, powerScale, powerScale);
         }
 
 
@@ -136,13 +136,13 @@ void AnnMap::process(std::string descLine)
             if(!light)
             {
                 if(tmpObject)
-                    tmpObject->setPos(x,y,z);
+                    tmpObject->setPos(x, y, z);
                 else continue; //syntax error here
             }
             else
             {
                 if(tmpLight)
-                    tmpLight->setPosition(x,y,z);
+                    tmpLight->setPosition(x, y, z);
                 else
                     continue;
             }
@@ -159,7 +159,7 @@ void AnnMap::process(std::string descLine)
             if(!light)
             {
                 if(tmpObject)
-                    tmpObject->setOrientation(w,x,y,z);
+                    tmpObject->setOrientation(w, x, y, z);
                 else 
                 {
                     continue; //syntax error here 
@@ -183,7 +183,7 @@ void AnnMap::process(std::string descLine)
             if(light) continue;
 
             if(tmpObject)
-                tmpObject->node()->scale(x,y,z);
+                tmpObject->node()->scale(x, y, z);
         }
 
         else if (word == "PhysicShape")
@@ -211,7 +211,7 @@ void AnnMap::process(std::string descLine)
             if(light) continue;
 
             if(tmpObject)
-                tmpObject->setUpBullet(mass,shape);
+                tmpObject->setUpBullet(mass, shape);
         }
 
         else if(word == "EndObject") //End of description of an object

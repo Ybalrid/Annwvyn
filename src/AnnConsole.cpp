@@ -31,15 +31,15 @@ AnnConsole::AnnConsole() :
 	*/
 
 	//Define object data
-	points[0] = AnnVect3(-0.5, .25, 0);
-	points[1] = AnnVect3(-0.5,-.25, 0);
-	points[2] = AnnVect3( 0.5, .25, 0);
-	points[3] = AnnVect3( 0.5,-.25, 0);
+	points[0] = AnnVect3(-0.5,  .25, 0);
+	points[1] = AnnVect3(-0.5, -.25, 0);
+	points[2] = AnnVect3( 0.5,  .25, 0);
+	points[3] = AnnVect3( 0.5, -.25, 0);
 
-	textCoord[0] = AnnVect2(0,0);
-	textCoord[1] = AnnVect2(0,1);
-	textCoord[2] = AnnVect2(1,0);
-	textCoord[3] = AnnVect2(1,1);
+	textCoord[0] = AnnVect2(0, 0);
+	textCoord[1] = AnnVect2(0, 1);
+	textCoord[2] = AnnVect2(1, 0);
+	textCoord[3] = AnnVect2(1, 1);
 
 	//creatre the quad itself
 	displaySurface = AnnEngine::Instance()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
@@ -73,7 +73,7 @@ AnnConsole::AnnConsole() :
 	}
 
 	//Create a manual font
-	font = Ogre::FontManager::getSingleton().create("VeraMono","ANNWVYN_DEFAULT");
+	font = Ogre::FontManager::getSingleton().create("VeraMono", "ANNWVYN_DEFAULT");
 
 	//Load the VeraMono.ttf file
 	font->setType(Ogre::FontType::FT_TRUETYPE);
@@ -84,12 +84,12 @@ AnnConsole::AnnConsole() :
 
 	//Aspect ration of the console is 2:1. The actuall size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
-	texture = TextureManager::getSingleton().createManual("Write Texture","ANNWVYN_DEFAULT",TEX_TYPE_2D, 2*BASE, BASE, MIP_UNLIMITED , PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP|Ogre::TU_RENDERTARGET);
+	texture = TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_DEFAULT", TEX_TYPE_2D, 2*BASE, BASE, MIP_UNLIMITED, PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
 	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
 	displaySurfaceTextureUniteState->setTexture(texture);
 
 	//Load background texture to a buffer
-	background = TextureManager::getSingleton().load("background.png","ANNWVYN_DEFAULT");
+	background = TextureManager::getSingleton().load("background.png", "ANNWVYN_DEFAULT");
 
 	//Initialize the text buffer.
 	//CONSOLE_BUFFER is the number of lines to keep in memory and to load on the texture.
@@ -141,13 +141,13 @@ void AnnConsole::update()
 
 	//Write text to texture
 	WriteToTexture
-		(textToDisplay,														//Text
-		texture,															//Texture
-		Image::Box(0 + MARGIN,0 + MARGIN,2*BASE - MARGIN,BASE - MARGIN),		//Part of the pixel buffer to write to
-		font.getPointer(),													//Font
-		ColourValue::Black,													//Color
-		'l',																//Alignement
-		false);																//LineWarp
+		(textToDisplay,																//Text
+		texture,																	//Texture
+		Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
+		font.getPointer(),															//Font
+		ColourValue::Black,															//Color
+		'l',																		//Alignement
+		false);																		//LineWarp
 }
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const ColourValue &color, char justify,  bool wordwrap)

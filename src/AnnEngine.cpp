@@ -505,7 +505,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 	visualBody_Zoffset = z_offset;
 	VisualBody = ent;
 
-	VisualBodyAnchor->setPosition(0,-player->getEyesHeight(),-visualBody_Zoffset);
+	VisualBodyAnchor->setPosition(0, -player->getEyesHeight(), -visualBody_Zoffset);
 	VisualBodyAnchor->setOrientation(refVisualBody);
 
 	if(animated)
@@ -631,8 +631,8 @@ void AnnEngine::openConsole()
     SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coninfo.dwSize);
 
     outHandle = _open_osfhandle((long)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT);
-    errHandle = _open_osfhandle((long)GetStdHandle(STD_ERROR_HANDLE),_O_TEXT);
-    inHandle = _open_osfhandle((long)GetStdHandle(STD_INPUT_HANDLE),_O_TEXT );
+    errHandle = _open_osfhandle((long)GetStdHandle(STD_ERROR_HANDLE), _O_TEXT);
+    inHandle = _open_osfhandle((long)GetStdHandle(STD_INPUT_HANDLE), _O_TEXT );
 
     outFile = _fdopen(outHandle, "w" );
     errFile = _fdopen(errHandle, "w");
@@ -642,9 +642,9 @@ void AnnEngine::openConsole()
     *stderr = *errFile;
     *stdin = *inFile;
 
-    setvbuf( stdout, NULL, _IONBF, 0 );
-    setvbuf( stderr, NULL, _IONBF, 0 );
-    setvbuf( stdin, NULL, _IONBF, 0 );
+    setvbuf(stdout, NULL, _IONBF, 0 );
+    setvbuf(stderr, NULL, _IONBF, 0 );
+    setvbuf(stdin, NULL, _IONBF, 0 );
 
     std::ios::sync_with_stdio();
 #endif
