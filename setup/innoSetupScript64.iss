@@ -22,9 +22,9 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\Oculus\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=C:\Oculus\AnnwvynSDK_64\Annwvyn\LICENSE
-InfoAfterFile=C:\Oculus\AnnwvynSDK_64\README.TXT
-OutputDir=C:\Oculus\AnnwvynSetup64
+LicenseFile=D:\Oculus\AnnwvynSDK_64\Annwvyn\LICENSE
+InfoAfterFile=D:\Oculus\AnnwvynSDK_64\README.TXT
+OutputDir=D:\Oculus\AnnwvynSetup64
 OutputBaseFilename=setupAnnwvynSDKx64
 Compression=lzma
 SolidCompression=yes
@@ -33,7 +33,7 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "C:\Oculus\AnnwvynSDK_64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Oculus\AnnwvynSDK_64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

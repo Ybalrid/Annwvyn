@@ -176,7 +176,7 @@ namespace Annwvyn
 			void setUpBullet(float mass = 0, phyShapeType type = staticShape, bool colideWithPlayer = true);
 
             ///SetUpPhysics
-            void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true){setUpBullet(mass,type,colide);}
+            void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true){setUpBullet(mass, type, colide);}
 
 			///Make the object visible
 			void setVisible();

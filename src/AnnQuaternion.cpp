@@ -7,7 +7,7 @@ AnnQuaternion::AnnQuaternion(){}
 
 AnnQuaternion::AnnQuaternion(const Ogre::Quaternion& q) : Ogre::Quaternion(q){}
 
-AnnQuaternion::AnnQuaternion(float cw, float cx, float cy, float cz) : Ogre::Quaternion(cw,cx,cy,cz){}
+AnnQuaternion::AnnQuaternion(float cw, float cx, float cy, float cz) : Ogre::Quaternion(cw, cx, cy, cz){}
 
 AnnQuaternion::AnnQuaternion(const Ogre::Matrix3& rot) : Ogre::Quaternion(rot){}
 

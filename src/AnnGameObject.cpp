@@ -75,7 +75,7 @@ void AnnGameObject::setPos(float x, float y, float z)
                     z - m_node->getPosition().z));
     }
     //change OgrePosition
-    m_node->setPosition(x,y,z);
+    m_node->setPosition(x, y, z);
 
 
     //change OpenAL Source Position
@@ -88,9 +88,9 @@ void AnnGameObject::setPos(float x, float y, float z)
 void AnnGameObject::translate(float x, float y, float z)		  
 {
     //Ogre
-    m_node->translate(x,y,z);
+    m_node->translate(x, y, z);
     //Bullet
-    m_Body->translate(btVector3(x,y,z));
+    m_Body->translate(btVector3(x, y, z));
     //OpenAL
     alSource3f(m_Source, AL_POSITION,
             m_node->getPosition().x,
@@ -101,12 +101,12 @@ void AnnGameObject::translate(float x, float y, float z)
 
 void AnnGameObject::setPos(AnnVect3 pos)
 {
-    setPos(pos.x,pos.y,pos.z);
+    setPos(pos.x, pos.y, pos.z);
 }
 
 void AnnGameObject::setOrientation(float w, float x, float y, float z)
 {
-	setOrientation(AnnQuaternion(w,x,y,z));
+	setOrientation(AnnQuaternion(w, x, y, z));
 	
 }
 
@@ -134,7 +134,7 @@ void AnnGameObject::setScale(AnnVect3 scale)
 
 void AnnGameObject::setScale(float x, float y, float z)
 {
-    m_node->setScale(AnnVect3(x,y,z));
+    m_node->setScale(AnnVect3(x, y, z));
 }
 
 AnnVect3 AnnGameObject::pos()
@@ -220,7 +220,7 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPl
     if(mass != 0)
         m_Shape->calculateLocalInertia(mass, inertia);
     else
-        inertia = btVector3(0,0,0); //No influence. But mass zero objects are static
+        inertia = btVector3(0, 0, 0); //No influence. But mass zero objects are static
 
 	
 
@@ -296,7 +296,7 @@ void AnnGameObject::cleanCollisionMask()
     for(size_t i = 0; i < collisionMask.size(); i++)
     {
         delete collisionMask[i];
-        collisionMask.erase(collisionMask.begin()+i);
+        collisionMask.erase(collisionMask.begin() + i);
     }
 }
 

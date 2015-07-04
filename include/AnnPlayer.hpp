@@ -14,7 +14,7 @@
 #include "euler.h"
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-#define JMP_BUFFER 10
+#define JMP_BUFFER 3
 namespace Annwvyn
 {
 	class AnnEngine; //predeclaration of AnnEngine

@@ -80,7 +80,7 @@ btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld()
 void AnnPhysicsEngine::step(float delta)
 {
 
-	m_DynamicsWorld->stepSimulation(delta,2);
+	m_DynamicsWorld->stepSimulation(delta, 2);
 	
 }
 
