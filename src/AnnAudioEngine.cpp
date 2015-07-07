@@ -43,15 +43,18 @@ bool AnnAudioEngine::initOpenAL()
 
 void AnnAudioEngine::shutdownOpenAL()
 {
+	//Stop and delete the bgm buffer
 	alSourceStop(bgm);
     alDeleteSources(1, &bgm);
 	if(alIsBuffer(bgmBuffer) == AL_TRUE)
 		alDeleteBuffers(1,&bgmBuffer);
 
+	//Delete all buffers created here
 	auto iterator = buffers.begin();
 	while(iterator != buffers.end())
 		alDeleteBuffers(1, &(*iterator++).second);
 		
+	//Close the AL environement 
     alcMakeContextCurrent(NULL);
 	alcDestroyContext(Context);
 	alcCloseDevice(Device);
@@ -140,11 +143,17 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 void AnnAudioEngine::unloadBuffer(const std::string& path)
 {
 	if(locked) return;
+
+	//Search for the buffer
 	AnnDebug() << "Unloading soudfile " << path;
 	auto query = buffers.find(path);
-	if(query == buffers.end()) return;
+	if(query == buffers.end()) return; //if querry is equal to iterator::end(), buffer isn't known
+
+	//Get the buffer from the iterator
 	AnnDebug() << "Sound file found by the Audio resource system. OpenAL buffer " << query->second;
 	ALuint buffer = query->second;
+
+	//Free it from memory and remove the object from the buffer list
 	alDeleteBuffers(1, &buffer);
 	AnnDebug() << "Buffer deleted";
 	buffers.erase(query);

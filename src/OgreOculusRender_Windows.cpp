@@ -9,6 +9,7 @@
 using namespace OVR;
 
 bool OgreOculusRender::forceNextUpdate(false);
+Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(NULL);
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 {
 	oorc = NULL;
@@ -26,6 +27,8 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 		debugVP[i] = NULL;
 	}
 
+	debugSmgr = NULL;
+	debugCam = NULL;
 	//Oc is an OculusInterface object. Communication with the Rift SDK is handeled by that class
 	oc = NULL;
 	CameraNode = NULL;
@@ -49,7 +52,16 @@ OgreOculusRender::~OgreOculusRender()
 	delete oc;
 
 	//TODO clean Ogre properly. There is stuff to delete manually before being able to delete "root".
+	window->removeAllViewports();
+	debugSmgr->destroyAllCameras();
+	debugSmgr->destroyAllManualObjects();
+	debugSmgr->clearScene();
+	root->destroySceneManager(debugSmgr);
+	smgr->clearScene();
+	root->destroySceneManager(smgr);
 	delete root;
+	std::cerr << "Ogre root deleted." << std::endl;
+	exit(0);
 }
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
@@ -102,7 +114,8 @@ void OgreOculusRender::debugPrint()
 
 void OgreOculusRender::debugSaveToFile(const char path[])
 {
-	if(rtts[left]) rtts[left]->writeContentsToFile(path);
+	if(Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer()) 
+		Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer()->getBuffer(0, 0)->getRenderTarget()->writeContentsToFile(path);
 }
 
 Ogre::SceneNode* OgreOculusRender::getCameraInformationNode()
@@ -247,6 +260,41 @@ void OgreOculusRender::initScene()
 	assert(root != NULL);
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
+
+	debugSmgr = root->createSceneManager(Ogre::ST_GENERIC);
+	debugSmgr->setAmbientLight(Ogre::ColourValue::White);
+	debugCam = debugSmgr->createCamera("DebugRender");
+	debugCam->setAutoAspectRatio(true);
+	debugCam->setNearClipDistance(0.001);
+	debugCam->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
+	debugCam->setOrthoWindow(16,9);
+	debugCamNode = debugSmgr->getRootSceneNode()->createChildSceneNode();
+	debugCamNode->attachObject(debugCam);
+	debugPlaneNode = debugCamNode->createChildSceneNode();
+	debugPlaneNode->setPosition(0,0,-1);
+
+	Ogre::ManualObject* debugPlane = debugSmgr->createManualObject("DebugPlane");
+	float x = 16.0f/2;
+	float y = 9.0f/2;
+
+	DebugPlaneMaterial = Ogre::MaterialManager::getSingleton().create("DebugPlaneMaterial", "General", true);
+	debugTexturePlane = DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->createTextureUnitState();
+
+	debugPlane->begin("DebugPlaneMaterial",Ogre::RenderOperation::OT_TRIANGLE_STRIP);
+
+	debugPlane->position(-x, y, 0);
+	debugPlane->textureCoord(0, 0);
+	debugPlane->position(-x, -y,0);
+	debugPlane->textureCoord(0, 1);
+	debugPlane->position(x, y,  0);
+	debugPlane->textureCoord(1, 0);
+	debugPlane->position(x, -y, 0);
+	debugPlane->textureCoord(1, 1);
+
+	debugPlane->end();
+
+	debugPlaneNode->attachObject(debugPlane);
+	debugPlaneNode->setVisible(true);
 }
 
 void OgreOculusRender::initRttRendering()
@@ -271,14 +319,8 @@ void OgreOculusRender::initRttRendering()
 		abort();
 	}
 	std::cerr << "ovrSwapTextureSet : textureCount " << textureSet->TextureCount << std::endl;
-	//Get swap textures
-	ovrGLTexture* tex0  = (ovrGLTexture*) &textureSet->Textures[left];
-	ovrGLTexture* tex1  = (ovrGLTexture*) &textureSet->Textures[right];
-	GLuint tex0id = tex0->OGL.TexId;
-	GLuint tex1id = tex1->OGL.TexId;
-	std::cerr << "Texture GLID " << tex0id << " " << tex1id << std::endl;
+	
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
-
 	Ogre::TexturePtr rtt_texture (textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0, 0)->getRenderTarget();
 	Ogre::GLTexture* gltex = (Ogre::GLTexture*)(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
@@ -288,9 +330,15 @@ void OgreOculusRender::initRttRendering()
 	vpts[right] = rttEyes->addViewport(cams[right], 1, 0.5f, 0, 0.5f);
 
 	changeViewportBackgroundColor(backgroundColor);
+	vp = window->addViewport(debugCam);
+	vp->setBackgroundColour(Ogre::ColourValue::White);
+	debugTexturePlane->setTexture(rtt_texture);
+	debugTexturePlane->setTextureFiltering(Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_NONE);
+	vp->setAutoUpdated(false);
+	
+	//window->addViewport(cams[left], 0, 0, 0, 0.5f)->setBackgroundColour(backgroundColor);
+	//window->addViewport(cams[right], 1, 0.5f, 0, 0.5f)->setBackgroundColour(backgroundColor);
 
-	window->addViewport(cams[left], 0, 0, 0, 0.5f)->setBackgroundColour(backgroundColor);
-	window->addViewport(cams[right], 1, 0.5f, 0, 0.5f)->setBackgroundColour(backgroundColor);
 }
 
 void OgreOculusRender::initOculus(bool fullscreenState)
@@ -401,11 +449,15 @@ void OgreOculusRender::RenderOneFrame()
 
 	layers = &layer.Header;
 	ovrHmd_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
+	vp->update();
+
+	//debugSaveToFile("toto.png");
 }
 
 
 void OgreOculusRender::openDebugWindow()
 {
 	///Deprecated
+
 	return;
 }

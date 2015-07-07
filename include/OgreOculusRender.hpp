@@ -175,10 +175,11 @@ class DLL OgreOculusRender
 		Ogre::Viewport* debugVP[2];
 
 		///Ogre Scene Manager
-        Ogre::SceneManager* smgr;	
+        Ogre::SceneManager* smgr, * debugSmgr;	
 
 		///Stereoscopic camera array. Indexes are "left" and "right"
-        Ogre::Camera* cams[2];
+        Ogre::Camera* cams[2], * debugCam;
+		Ogre::SceneNode* debugCamNode, * debugPlaneNode;
 
 		///For distortion rendering. The 2 distortion meshes are in a different scene manager
 		Ogre::SceneManager* rift_smgr;
@@ -194,7 +195,7 @@ class DLL OgreOculusRender
 		Ogre::RenderTexture* rtts[2];
 
 		///Vewports on textures. Textures are separated. One vieport for each textures
-        Ogre::Viewport* vpts[2];
+        Ogre::Viewport* vpts[2], *vp;
 
 		///The Z axis near clipping plane distance
         Ogre::Real nearClippingDistance;
@@ -224,6 +225,10 @@ class DLL OgreOculusRender
 		OgreOculusRenderCallback* oorc;
 
 #ifdef WIN32
+		public:
+			static Ogre::TextureUnitState* debugTexturePlane;
+
+		private:
 		ovrLayerEyeFov layer;
 		ovrSwapTextureSet* textureSet;
 		GLuint renderTextureID;
@@ -235,8 +240,10 @@ class DLL OgreOculusRender
 		Quatf oculusOrient;
 		Vector3f oculusPos;
 		ovrLayerHeader* layers;
-#endif 
+			
 
+#endif 
+		Ogre::MaterialPtr DebugPlaneMaterial;
     public:
         Ogre::Vector3 lastOculusPosition;
         Ogre::Quaternion lastOculusOrientation;

@@ -26,6 +26,7 @@ AnnMain()
 
 	//load ressources
 	GameEngine->loadDir("media/environement");
+	GameEngine->loadDir("media/debug");
 	GameEngine->initResources();
 
 	//SetUp Oculus system
