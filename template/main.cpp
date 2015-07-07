@@ -19,8 +19,7 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	AnnEngine::Instance()->oculusInit();
 	//If the player has to folow the integrated physics scheme
 	AnnEngine::Instance()->initPlayerPhysics();
-	//Do the other initialization here
-	AnnEngine::Instance()->useDefaultEventListener(); //Basic events
+	//Do the other initialization herttEventListener(); //Basic events
 
 	//Intentiate and register our basic level
 	AnnEngine::Instance()->getLevelManager()->addLevel(new MyLevel);

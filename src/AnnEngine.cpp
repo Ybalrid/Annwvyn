@@ -169,8 +169,9 @@ AnnEngine::~AnnEngine()
 	log("Good luck with the real world now! :3");
 	delete onScreenConsole;
 	onScreenConsole = NULL;
-	delete oor;
 	singleton = NULL;
+	delete oor;
+	
 }
 
 AnnEventManager* AnnEngine::getEventManager()
