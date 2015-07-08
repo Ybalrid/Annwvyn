@@ -274,7 +274,7 @@ void AnnEngine::oculusInit(bool fullscreen)
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 	onScreenConsole = new AnnConsole();
 	//This will populate swap texture and turn on the rift display earlier
-	oor->RenderOneFrame();
+	//oor->RenderOneFrame();
 }
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)

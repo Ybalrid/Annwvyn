@@ -2,7 +2,7 @@
 ifeq ($(shell uname), Linux)
 all: lib/libAnnwvyn.so
 
-CC = g++
+CC = g++ -g 
 
 #Get the operating system type.
 SYSARCH       = i386
@@ -70,7 +70,7 @@ test: lib/libAnnwvyn.so
 
 
 #build the DSO from the objects file
-lib/libAnnwvyn.so: pch/stdafx.h.gch obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o  obj/OculusInterface.o obj/OgreOculusRender.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o obj/AnnVect3.o obj/AnnQuaternion.o obj/AnnConsole.o
+lib/libAnnwvyn.so: pch/stdafx.h.gch obj/AnnAudioEngine.o obj/AnnDefaultEventListener.o obj/AnnEngine.o obj/AnnGameObject.o obj/AnnCharacter.o obj/AnnTools.o obj/AnnTriggerObject.o obj/BtOgre.o  obj/AnnMap.o  obj/OculusInterface.o obj/OgreOculusRender.o obj/AnnEventManager.o obj/AnnEvents.o obj/AnnPlayer.o obj/AnnPhysicsEngine.o obj/AnnVect3.o obj/AnnQuaternion.o obj/AnnConsole.o obj/AnnLevelManager.o obj/AnnAbstractLevel.o obj/AnnLogger.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -shared -o lib/libAnnwvyn.so obj/*.o
 
 #precompile headers
@@ -131,4 +131,13 @@ obj/AnnQuaternion.o: src/AnnQuaternion.cpp include/AnnQuaternion.hpp
 
 obj/AnnConsole.o: src/AnnConsole.cpp include/AnnConsole.hpp
 	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnConsole.cpp -o obj/AnnConsole.o
+
+obj/AnnAbstractLevel.o: src/AnnAbsractLevel.cpp include/AnnAbstractLevel.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnAbsractLevel.cpp -o obj/AnnAbstractLevel.o
+
+obj/AnnLevelManager.o: src/AnnLevelManager.cpp include/AnnLevelManager.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnLevelManager.cpp -o obj/AnnLevelManager.o
+
+obj/AnnLogger.o: src/AnnLogger.cpp include/AnnLogger.hpp
+	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) -fpic -c src/AnnLogger.cpp -o obj/AnnLogger.o
 
