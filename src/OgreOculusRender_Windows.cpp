@@ -53,12 +53,17 @@ OgreOculusRender::~OgreOculusRender()
 
 	//TODO clean Ogre properly. There is stuff to delete manually before being able to delete "root".
 	window->removeAllViewports();
+	root->getRenderSystem()->destroyRenderWindow(window->getName());
+	//root->getRenderSystem()->detachRenderTarget("RttTex");
+	Ogre::TextureManager::getSingleton().getByName("RttTex")->getBuffer(0,0)->getRenderTarget()->removeAllViewports();
+	root->getRenderSystem()->destroyRenderTexture("RttTex");
 	debugSmgr->destroyAllCameras();
-	debugSmgr->destroyAllManualObjects();
+	debugSmgr->destroyAllManualObjects(); 
 	debugSmgr->clearScene();
 	root->destroySceneManager(debugSmgr);
 	smgr->clearScene();
 	root->destroySceneManager(smgr);
+	Ogre::MaterialManager::getSingleton().remove("DebugPlaneMaterial");
 	delete root;
 	std::cerr << "Ogre root deleted." << std::endl;
 	exit(0);
@@ -265,7 +270,7 @@ void OgreOculusRender::initScene()
 	debugSmgr->setAmbientLight(Ogre::ColourValue::White);
 	debugCam = debugSmgr->createCamera("DebugRender");
 	debugCam->setAutoAspectRatio(true);
-	debugCam->setNearClipDistance(0.001);
+	debugCam->setNearClipDistance(0.001f);
 	debugCam->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
 	debugCam->setOrthoWindow(16,9);
 	debugCamNode = debugSmgr->getRootSceneNode()->createChildSceneNode();
