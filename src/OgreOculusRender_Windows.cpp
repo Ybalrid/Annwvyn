@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "OgreOculusRender.hpp"
 #include <OVR_CAPI_GL.h>
+#include <OVR_CAPI_0_6_0.h>
 //We need to get low level access to some GL textures 
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
@@ -44,6 +45,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 	backgroundColor = Ogre::ColourValue(0.f, 0.56f, 1.f);
 	debug = NULL;
 	textureSet = NULL;
+	perfHudMode = ovrPerfHud_Off;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -66,7 +68,16 @@ OgreOculusRender::~OgreOculusRender()
 	Ogre::MaterialManager::getSingleton().remove("DebugPlaneMaterial");
 	delete root;
 	std::cerr << "Ogre root deleted." << std::endl;
+
+//this is a "stop stupid crash hack" here:
+#pragma warning(disable : 4722) 
 	exit(0);
+}
+
+void OgreOculusRender::cycleOculusHUD()
+{
+	perfHudMode = (perfHudMode+1) % (ovrPerfHud_Count+1 /*the +1 is because somebody at Oculus don't understand how enum works in C/C++*/);
+	ovrHmd_SetInt(oc->getHmd(), "PerfHudMode", perfHudMode);
 }
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
@@ -228,16 +239,18 @@ void OgreOculusRender::createWindow()
 
 	//This one only works on windows : "Borderless = no decoration"
 	//misc["border"]				=	"none"; //In case the program is not running in fullscreen mode, don't put window borders
-	if (vsync) misc["vsync"]	=	"true";
+	/*if (vsync) misc["vsync"]	=	"true";
 	//This is for DK2
 	misc["displayFrequency"]	=	"75";
 	misc["monitorIndex"]		=	"0";
+	*/
 	//Initialize a window ans specify that creation is manual
 	root->initialise(false);
 	//debug = root->createRenderWindow("Debug out", oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false);
 	//Actually create the window
-	fullscreen = false;
-	window = root->createRenderWindow(name, oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, fullscreen, &misc);
+
+
+	window = root->createRenderWindow("undistorted debug rift output " + name, oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false, &misc);
 }
 
 void OgreOculusRender::initCameras()
@@ -307,10 +320,13 @@ void OgreOculusRender::initRttRendering()
 	//Init GLEW here to be able to call OpenGL functions
 	GLenum err = glewInit();
 	if(GLEW_OK != err)
+	{
 		std::cerr << "Failed to glewInit()" << std::endl;
+		Ogre::LogManager::getSingleton().logMessage("Failed to glewTnit()\nCannot call manual OpenGL\nError Code : " + (unsigned int)err);
+		abort();
+	}
 	else
 		std::cerr << "Using GLEW version : " << glewGetString(GLEW_VERSION) << std::endl;
-
 	//get texture sice from ovr with the maximal FOV
 	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left], 1.0f);
 	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right], 1.0f);
@@ -335,15 +351,12 @@ void OgreOculusRender::initRttRendering()
 	vpts[right] = rttEyes->addViewport(cams[right], 1, 0.5f, 0, 0.5f);
 
 	changeViewportBackgroundColor(backgroundColor);
-	vp = window->addViewport(debugCam);
-	vp->setBackgroundColour(Ogre::ColourValue::White);
+
+	debugViewport = window->addViewport(debugCam);
+	debugViewport->setBackgroundColour(Ogre::ColourValue::White);
 	debugTexturePlane->setTexture(rtt_texture);
 	debugTexturePlane->setTextureFiltering(Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_NONE);
-	vp->setAutoUpdated(false);
-	
-	//window->addViewport(cams[left], 0, 0, 0, 0.5f)->setBackgroundColour(backgroundColor);
-	//window->addViewport(cams[right], 1, 0.5f, 0, 0.5f)->setBackgroundColour(backgroundColor);
-
+	debugViewport->setAutoUpdated(false);
 }
 
 void OgreOculusRender::initOculus(bool fullscreenState)
@@ -454,9 +467,7 @@ void OgreOculusRender::RenderOneFrame()
 
 	layers = &layer.Header;
 	ovrHmd_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
-	vp->update();
-
-	//debugSaveToFile("toto.png");
+	debugViewport->update();
 }
 
 

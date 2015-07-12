@@ -20,23 +20,6 @@ float AnnAbstractEventListener::trim(float v, float dz)
 	return 0.0f;
 }
 
-AnnEvent::AnnEvent() :
-	accepted(false),
-	rejected(false),
-	unpopulated(true),
-	valid(false)
-{
-}
-
-void AnnEvent::validate()
-{
-	valid = true;
-}
-
-void AnnEvent::populate()
-{
-	unpopulated = false;
-}
 
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	Keyboard(NULL),
@@ -64,8 +47,8 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
 	if(InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
 	{
-			Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
-			AnnDebug()<< "Detected joystick : " << Joystick->vendor();
+		Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
+		AnnDebug()<< "Detected joystick : " << Joystick->vendor();
 	}
 }
 
@@ -96,6 +79,11 @@ void AnnEventManager::removeListener(AnnAbstractEventListener* l)
 }
 
 void AnnEventManager::update()
+{
+	processInput();
+}
+
+void AnnEventManager::processInput()
 {
 	//Capture events
 	Keyboard->capture();

@@ -414,24 +414,27 @@ void AnnEngine::renderCallback()
 
 bool AnnEngine::refresh()
 {
+	//Get the rendering delta time (should be roughly equals to 1/desiredFramerate)
 	deltaT = oor->getUpdateTime();
+	//Step the simulation
 	physicsEngine->step(deltaT);
+	//Update player logic code 
 	player->engineUpdate(deltaT);
+
+	//Run animations and update OpenAL sources position
 	for(auto it = objects.begin(); it != objects.end(); ++it)
 	{
 		(*it)->addTime(deltaT);
 		(*it)->updateOpenAlPos();
 	}
 
+	//Update the event system
 	if(eventManager)
 		eventManager->update(); 
 
+	//Process some logic to extract basic informations (theses should be done within the eventManager).
 	physicsEngine->processCollisionTesting(objects);
 	physicsEngine->processTriggersContacts(player, triggers);
-
-	//Animation
-	if(VisualBodyAnimation)
-		VisualBodyAnimation->addTime(deltaT);
 
 	//Audio
 	AudioEngine->updateListenerPos(oor->returnPose.position);
@@ -442,7 +445,9 @@ bool AnnEngine::refresh()
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
 
 	physicsEngine->stepDebugDrawer();
-	if(onScreenConsole->needUpdate())onScreenConsole->update();
+
+	if(onScreenConsole->needUpdate()) onScreenConsole->update();
+	
 	oor->RenderOneFrame();
 
 	return !requestStop();
@@ -494,6 +499,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 	log("Attaching visual body :");
 	log(entityName);
 
+	//Could actually be an AnnGameObject without the physics ? So it will be cleaned by the AnnEngine destructor
 	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
 	VisualBodyAnchor = m_CameraReference->createChildSceneNode();
 	VisualBodyAnchor->attachObject(ent);
@@ -508,11 +514,6 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
 	VisualBodyAnchor->setPosition(0, -player->getEyesHeight(), -visualBody_Zoffset);
 	VisualBodyAnchor->setOrientation(refVisualBody);
-
-	if(animated)
-	{
-		//TODO play idle animation
-	}
 }
 
 void AnnEngine::resetOculusOrientation()
@@ -660,5 +661,10 @@ void AnnEngine::openDebugWindow()
 void AnnEngine::toogleOnScreenConsole()
 {
 	if(onScreenConsole) onScreenConsole->toogle();
+}
+
+void AnnEngine::toogleOculusPerfHUD()
+{
+	if(oor) oor->cycleOculusHUD();
 }
 
