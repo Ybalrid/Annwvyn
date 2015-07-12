@@ -67,6 +67,9 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 
 	if(e.isPressed() && e.getKey() == KeyCode::grave)
 		AnnEngine::toogleOnScreenConsole();
+
+	if(e.isPressed() && e.getKey() == KeyCode::tab)
+		AnnEngine::Instance()->toogleOculusPerfHUD();
 }
 
 //The mouse event contain all information about the mouse. Mouse mouvement are integer and are represented by 3 axis 

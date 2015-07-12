@@ -60,6 +60,7 @@ namespace Annwvyn
 	public:
 		///This method is called by the OgreOculusRender object. Here is refresh code that needs to know current pose
 		void renderCallback();
+		void toogleOculusPerfHUD();
 
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();

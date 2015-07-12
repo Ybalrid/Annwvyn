@@ -3,6 +3,28 @@
 
 using namespace Annwvyn;
 
+AnnEvent::AnnEvent() :
+	accepted(false),
+	rejected(false),
+	unpopulated(true),
+	valid(false)
+{
+}
+
+void AnnEvent::validate()
+{
+	valid = true;
+}
+
+void AnnEvent::populate()
+{
+	unpopulated = false;
+}
+
+AnnEventType AnnEvent::getType()
+{
+	return type;
+}
 
 //---------------------------------------KEYBOARD
 AnnKeyEvent::AnnKeyEvent() : AnnEvent()
@@ -10,6 +32,7 @@ AnnKeyEvent::AnnKeyEvent() : AnnEvent()
 	key = KeyCode::unassigned;
 	pressed = false;
 	released = false;
+	type = USER_INPUT;
 }
 
 void AnnKeyEvent::setPressed()
@@ -89,10 +112,12 @@ int AnnMouseAxis::getAbsValue()
 	return abs;
 }
 
-AnnMouseEvent::AnnMouseEvent()
+AnnMouseEvent::AnnMouseEvent() : AnnEvent()
 {
 	for(size_t i(0); i < MouseButtonId::nbButtons; i++)
 		buttonsStatus[i] = false;
+	
+	type = USER_INPUT;
 }
 
 bool AnnMouseEvent::getButtonState(MouseButtonId id)
@@ -112,7 +137,7 @@ AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
 	if((int)id < (int)MouseAxisId::nbAxes)
 		return axes[id];
 
-	return AnnMouseAxis(MouseAxisId::invalidAxis,0,0);
+	return AnnMouseAxis(MouseAxisId::invalidAxis, 0, 0);
 }
 
 void AnnMouseEvent::setButtonStatus(MouseButtonId id, bool value)
@@ -169,7 +194,8 @@ float AnnStickAxis::getAbsValue()
 
 AnnStickEvent::AnnStickEvent() : AnnEvent()
 {
-    //do nothing 
+    //do nothing
+	type = USER_INPUT;
 }
 
 AnnStickEvent::~AnnStickEvent(){}

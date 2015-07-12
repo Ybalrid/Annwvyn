@@ -59,6 +59,7 @@ struct OgrePose
 class DLL OgreOculusRender
 {
     public:
+		void cycleOculusHUD();
 		static bool forceNextUpdate;
         OgreOculusRender(std::string windowName = "OgreOculusRender", bool actVsync = true);
         ~OgreOculusRender();
@@ -195,7 +196,7 @@ class DLL OgreOculusRender
 		Ogre::RenderTexture* rtts[2];
 
 		///Vewports on textures. Textures are separated. One vieport for each textures
-        Ogre::Viewport* vpts[2], *vp;
+        Ogre::Viewport* vpts[2], *debugViewport;
 
 		///The Z axis near clipping plane distance
         Ogre::Real nearClippingDistance;
@@ -240,6 +241,8 @@ class DLL OgreOculusRender
 		Quatf oculusOrient;
 		Vector3f oculusPos;
 		ovrLayerHeader* layers;
+
+		int perfHudMode;
 			
 
 #endif 

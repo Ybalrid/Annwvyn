@@ -23,20 +23,25 @@ namespace Annwvyn
 {
 	class AnnEngine;
 	class AnnEventManager; //predeclaration of the event manager for class friendness directives
-
+	enum AnnEventType
+	{
+		USER_INPUT,
+		TEMPO_TIMEOUT,
+	};
 	///An input event
 	class DLL AnnEvent
 	{
 	public:
 		///Event constructor 
 		AnnEvent();
+		AnnEventType getType();
 
 	protected:
 		bool accepted;
 		bool rejected;
 		bool unpopulated;
 		bool valid;
-
+		AnnEventType type;
 		friend class AnnEventManager;
 		///Class called by the event manager to tell that the event is valid (correctly constructed)
 		void validate();
@@ -202,14 +207,19 @@ namespace Annwvyn
             std::string vendor;
 	};
 
-	///Base Event listener class
+	///Base Event listener class. Technicaly not abstract since it provides a default implementation for all
+	///virtual members. But theses definitions are pointless because they acutally don't do anything.
+	///You need to subclass it to create an EventListener 
 	class DLL AnnAbstractEventListener 
 	{
+	//TODO: no need to get a pointer to the player throug a constructor argument since AnnEngine is "singleton" and
+	//provide a pointer to the player object
+
 	public:
 		AnnAbstractEventListener(AnnPlayer* p);
-		virtual void KeyEvent(AnnKeyEvent e) = 0;
-		virtual void MouseEvent(AnnMouseEvent e) = 0;
-		virtual void StickEvent(AnnStickEvent e) = 0;
+		virtual void KeyEvent(AnnKeyEvent e)		{return;}
+		virtual void MouseEvent(AnnMouseEvent e)	{return;}
+		virtual void StickEvent(AnnStickEvent e)	{return;}
 
 		static float trim(float value, float deadzone);
 	protected:
@@ -250,7 +260,13 @@ namespace Annwvyn
 
 	};
 	
-	///The event manager
+	///The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by 
+	///AnnEngine and provide the hearbeat for the event system.
+	///Events can be user inputs or mostly anything else.
+	///AnnEventManager creates AnnEvent (or subclass of AnnEvent) for each kind of event, populate that object with relevent envent data
+	///And propagate that event to any declared event listener.
+	///Listeners should subclass AnnEventListener. A listener is registred when a pointer to it is passed as argument to the addListener() method.
+	///You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
 	class DLL AnnEventManager
 	{
 	public:
@@ -275,6 +291,7 @@ namespace Annwvyn
 		friend class AnnEngine;
 		///Engine call for refreshing the event system
 		void update();
+		void processInput();
 
 		///OIS Event Manager
 		OIS::InputManager *InputManager;
