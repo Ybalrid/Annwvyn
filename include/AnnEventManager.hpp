@@ -17,7 +17,7 @@
 ///Macro for declaring a listener
 #define LISTENER public Annwvyn::AnnAbstractEventListener
 ///Macro for declaring a listener constructor
-#define constructListener(p) AnnAbstractEventListener(p) 
+#define constructListener() AnnAbstractEventListener() 
 
 namespace Annwvyn
 {
@@ -216,7 +216,7 @@ namespace Annwvyn
 	//provide a pointer to the player object
 
 	public:
-		AnnAbstractEventListener(AnnPlayer* p);
+		AnnAbstractEventListener();
 		virtual void KeyEvent(AnnKeyEvent e)		{return;}
 		virtual void MouseEvent(AnnMouseEvent e)	{return;}
 		virtual void StickEvent(AnnStickEvent e)	{return;}
@@ -230,7 +230,7 @@ namespace Annwvyn
 	class DLL AnnDefaultEventListener : public AnnAbstractEventListener
 	{
 	public:
-		AnnDefaultEventListener(AnnPlayer* p);
+		AnnDefaultEventListener();
 		void KeyEvent(AnnKeyEvent e);
 		void MouseEvent(AnnMouseEvent e);
 		void StickEvent(AnnStickEvent e);
@@ -276,7 +276,7 @@ namespace Annwvyn
 		~AnnEventManager();
 
 		///Ad a listener to the event manager
-		/// \parma listener Pointer to a listener object
+		/// \param listener Pointer to a listener object
 		void addListener(AnnAbstractEventListener* listener);
 		///Remove every listener known from the EventManager. 
 		///This doesn't clear any memory

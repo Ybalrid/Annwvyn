@@ -207,13 +207,14 @@ void AnnEngine::useDefaultEventListener()
 {
 	if(!eventManager) return; 
 	log("Reconfiguring the engine to use the default event listener");
+	log("This unregister any current listener in use!");
 
 	//Remove all event listeners
 	eventManager->removeListener();
 
 	//If the event listenre isn't allready initialized, allocate one
 	if(!defaultEventListener)
-		defaultEventListener = new AnnDefaultEventListener(getPlayer());
+		defaultEventListener = new AnnDefaultEventListener;
 
 	//Set the default event listener to the event manager
 	eventManager->addListener(defaultEventListener);

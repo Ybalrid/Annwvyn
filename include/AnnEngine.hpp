@@ -217,6 +217,8 @@ namespace Annwvyn
 		void setNearClippingDistance(Ogre::Real distance); //graphics
 
 		///Set the engine to use the "default" event listener.
+		///This will create an instance of AnnDefaultEventListener (if it doesn't allready exist inside of AnnEngine)
+		///This will also unregister all listeners known by AnnEventListener
 		///The default event listerner implement a simple "FPS-like" controll scheme 
 		/// WASD for walking
 		/// Horizontal view with mouse X relative mouvement
