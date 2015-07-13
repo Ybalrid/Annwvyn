@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "AnnEventManager.hpp"
 #include "AnnLogger.hpp"//to access logger static method
+#include "AnnEngine.hpp"
 
 using namespace Annwvyn;
 
-AnnAbstractEventListener::AnnAbstractEventListener(AnnPlayer* p)
+AnnAbstractEventListener::AnnAbstractEventListener()
 {
-	player = p;
+	player = AnnEngine::Instance()->getPlayer();
 }
 
 float AnnAbstractEventListener::trim(float v, float dz)
