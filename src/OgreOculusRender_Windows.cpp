@@ -35,7 +35,8 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 	CameraNode = NULL;
 	cameraPosition = Ogre::Vector3(0, 0, 10);
 	cameraOrientation = Ogre::Quaternion::IDENTITY;
-	nearClippingDistance = (float) 0.05;
+	nearClippingDistance = 0.05f;
+	farClippingDistance = 8000.0f;
 	lastOculusPosition = cameraPosition;
 	lastOculusOrientation = cameraOrientation;
 	updateTime = 0;
@@ -327,24 +328,27 @@ void OgreOculusRender::initRttRendering()
 	}
 	else
 		std::cerr << "Using GLEW version : " << glewGetString(GLEW_VERSION) << std::endl;
-	//get texture sice from ovr with the maximal FOV
+	//get texture size from ovr with the maximal FOV
 	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left], 1.0f);
 	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right], 1.0f);
+	//calculate the render buffer size
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max (texSizeL.h, texSizeR.h);
 	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
 
+	//Requast the creation of an OpenGL swap texture set from the Oculus Library
 	if (ovrHmd_CreateSwapTextureSetGL(oc->getHmd(), GL_RGB, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
 	{
+		//If we can't get the textures, there is no point trying more.
 		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus swap texture");
 		abort();
 	}
-	std::cerr << "ovrSwapTextureSet : textureCount " << textureSet->TextureCount << std::endl;
-	
+
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 	Ogre::TexturePtr rtt_texture (textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0, 0)->getRenderTarget();
-	Ogre::GLTexture* gltex = (Ogre::GLTexture*)(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
+	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
+	//Save the texture id for low-level GL call on the texture during render
 	renderTextureID = gltex->getGLID();
 
 	vpts[left] = rttEyes->addViewport(cams[left], 0, 0, 0, 0.5f);
@@ -390,7 +394,7 @@ void OgreOculusRender::calculateProjectionMatrix()
 		//Get the projection matrix
 		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, 
 			static_cast<float>(nearClippingDistance), 
-			8000.0f, 
+			farClippingDistance, 
 			true);
 
 		//Convert it to Ogre matrix
@@ -407,7 +411,7 @@ void OgreOculusRender::calculateProjectionMatrix()
 void OgreOculusRender::RenderOneFrame()
 {
 	Ogre::WindowEventUtilities::messagePump();
-
+	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 	//get some info
 	cameraPosition = CameraNode->getPosition();
 	cameraOrientation = CameraNode->getOrientation();
@@ -415,10 +419,8 @@ void OgreOculusRender::RenderOneFrame()
 	//Begin frame
 	hmdFrameTiming = ovrHmd_GetFrameTiming(oc->getHmd(), 0);
 	ts = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.DisplayMidpointSeconds);
-
 	pose = ts.HeadPose.ThePose;
 	ovr_CalcEyePoses(pose, offset, layer.RenderPose); 
-	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 	
 	//Get the hmd orientation
 	oculusOrient = pose.Rotation;
@@ -459,7 +461,7 @@ void OgreOculusRender::RenderOneFrame()
 
 	updateTime = hmdFrameTiming.FrameIntervalSeconds;
 	root->renderOneFrame();
-
+	
 	//Copy the rendered image to the Oculus Swap Texture
 	glCopyImageSubData(renderTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		((ovrGLTexture*)(&textureSet->Textures[textureSet->CurrentIndex]))->OGL.TexId, GL_TEXTURE_2D, 0, 0, 0, 0, 

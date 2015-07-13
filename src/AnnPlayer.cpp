@@ -38,7 +38,7 @@ AnnPlayer::AnnPlayer()
 	
 	for(size_t i(0); i < JMP_BUFFER; i++) YSpeedWasZero[i]=false;
 	frameCount = 0;
-	standing = false;
+	standing = true;
 	updateTime = 0;
 	physics = false;	
 }
@@ -213,7 +213,6 @@ void AnnPlayer::engineUpdate(float time)
 {
 	updateTime = time;
 	//To "emulate" falling on the ground, set this boolean to false
-	standing = true;
 	if(getBody())
 	{
 		frameCount++;
@@ -226,6 +225,9 @@ void AnnPlayer::engineUpdate(float time)
 		//Apparently, event with the player standing on a plane, it's a really small number that is not strictly equals to zero.
 		
 		contactWithGround = false;
+		
+		/* --- don't care about jump here
+
 		if(int(currentVelocity.y()) == 0)
 		{
 			bool canJump(true);
@@ -240,27 +242,21 @@ void AnnPlayer::engineUpdate(float time)
 			YSpeedWasZero[frameCount%JMP_BUFFER] = false;
 		}
 
+		*/
+
 		//Prevent the rigid body to be put asleep by the physics engine
 		getBody()->activate();
 
 		//if no  user input, be just pull toward the ground by gravity (not physicly realist, but usefull)
 		if(translate.isZeroLength())
 		{
-			getBody()->setLinearVelocity(btVector3(
-				0,
-				currentVelocity.y(),
-				0
-				));
+			getBody()->setLinearVelocity(btVector3(0, currentVelocity.y(), 0));
 		}
 		else
 		{
 			AnnVect3 velocity(getOrientation()*translate);
 			if(run) velocity *= playerBody->runFactor;
-			getBody()->setLinearVelocity(btVector3(
-				velocity.x,
-				currentVelocity.y(),
-				velocity.z
-				));
+			getBody()->setLinearVelocity(btVector3(velocity.x, currentVelocity.y(), velocity.z));
 		}
 
 		//if the player can stand (= not dead or something like that)

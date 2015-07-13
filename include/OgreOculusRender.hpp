@@ -199,7 +199,7 @@ class DLL OgreOculusRender
         Ogre::Viewport* vpts[2], *debugViewport;
 
 		///The Z axis near clipping plane distance
-        Ogre::Real nearClippingDistance;
+        Ogre::Real nearClippingDistance, farClippingDistance;
 
         ///Object for getting informations from the Oculus Rift
         OculusInterface* oc;
