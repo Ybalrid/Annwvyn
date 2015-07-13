@@ -1,7 +1,10 @@
 
 Todo list : 
 Critial
-- [ ] Expend event system to 
+- [ ] Expend event system
+	- [ ] Timmer events
+	- [ ] Trigger events
+	- [ ] Collision events 
 - [X] Start to "ungodify" the AnnEngine class by removing everything that has something to do with bullet and collision testing from it.
 - [X] Simplify the "timer" mess in AnnEngine
 - [ ] Need a proper object factory for classes like AnnGameObject
