@@ -71,12 +71,15 @@ void AnnEventManager::clearListenerList()
 	listeners.clear();
 }
 
+//l equals NULL by default 
 void AnnEventManager::removeListener(AnnAbstractEventListener* l)
 {
 	if(l == NULL) {clearListenerList(); return;}
-	for(size_t i(0); i < listeners.size(); i++)
-		if(listeners[i] == l)
-			listeners.erase(listeners.begin() + i);
+
+	auto iterator = listeners.begin();
+	while(iterator != listeners.end())
+		if(*iterator == l)
+			iterator = listeners.erase(iterator);
 }
 
 void AnnEventManager::update()
