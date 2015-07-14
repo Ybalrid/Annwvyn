@@ -251,7 +251,7 @@ void OgreOculusRender::createWindow()
 	//Actually create the window
 
 
-	window = root->createRenderWindow("undistorted debug rift output " + name, oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false, &misc);
+	window = root->createRenderWindow("debug rift output " + name, oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false, &misc);
 }
 
 void OgreOculusRender::initCameras()
@@ -469,7 +469,8 @@ void OgreOculusRender::RenderOneFrame()
 
 	layers = &layer.Header;
 	ovrHmd_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
-	debugViewport->update();
+	if(window->isVisible())
+		debugViewport->update();
 }
 
 
