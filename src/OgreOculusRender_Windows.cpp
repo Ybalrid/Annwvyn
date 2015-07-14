@@ -40,7 +40,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 	lastOculusPosition = cameraPosition;
 	lastOculusOrientation = cameraOrientation;
 	updateTime = 0;
-	fullscreen = true;
+	fullscreen = false;
 	vsync = activateVsync;
 	hsDissmissed = false;
 	backgroundColor = Ogre::ColourValue(0.f, 0.56f, 1.f);
@@ -83,7 +83,7 @@ void OgreOculusRender::cycleOculusHUD()
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
-	//save the color;
+	//save the color
 	backgroundColor = color;
 	for(size_t i(0); i < 2; i++)
 	{
@@ -102,6 +102,7 @@ void OgreOculusRender::dissmissHS()
 
 void OgreOculusRender::setFullScreen(bool fs)
 {
+	return;//deprecated
 	fullscreen = fs;
 }
 
@@ -249,8 +250,7 @@ void OgreOculusRender::createWindow()
 	root->initialise(false);
 	//debug = root->createRenderWindow("Debug out", oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false);
 	//Actually create the window
-
-
+	
 	window = root->createRenderWindow("debug rift output " + name, oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false, &misc);
 }
 
@@ -276,12 +276,16 @@ void OgreOculusRender::setCamerasNearClippingDistance(float distance)
 
 void OgreOculusRender::initScene()
 {
+	//Create the scene manager for the engine
 	assert(root != NULL);
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
 
+	//Create the scene manager for the debug output
 	debugSmgr = root->createSceneManager(Ogre::ST_GENERIC);
-	debugSmgr->setAmbientLight(Ogre::ColourValue::White);
+	debugSmgr->setAmbientLight(Ogre::ColourValue::White); //no shadow
+
+	//Create the camera
 	debugCam = debugSmgr->createCamera("DebugRender");
 	debugCam->setAutoAspectRatio(true);
 	debugCam->setNearClipDistance(0.001f);
@@ -289,18 +293,19 @@ void OgreOculusRender::initScene()
 	debugCam->setOrthoWindow(16,9);
 	debugCamNode = debugSmgr->getRootSceneNode()->createChildSceneNode();
 	debugCamNode->attachObject(debugCam);
+
+	//---Create the debug plane
+	//Base setup inside the scene manager
 	debugPlaneNode = debugCamNode->createChildSceneNode();
 	debugPlaneNode->setPosition(0,0,-1);
-
 	Ogre::ManualObject* debugPlane = debugSmgr->createManualObject("DebugPlane");
-	float x = 16.0f/2;
-	float y = 9.0f/2;
-
+	float x = 16.0f/2, y = 9.0f/2;
+	//Material
 	DebugPlaneMaterial = Ogre::MaterialManager::getSingleton().create("DebugPlaneMaterial", "General", true);
 	debugTexturePlane = DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->createTextureUnitState();
-
+	//The manual object itself
 	debugPlane->begin("DebugPlaneMaterial",Ogre::RenderOperation::OT_TRIANGLE_STRIP);
-
+	//4 verticies with texture coodinates
 	debugPlane->position(-x, y, 0);
 	debugPlane->textureCoord(0, 0);
 	debugPlane->position(-x, -y,0);
@@ -309,9 +314,9 @@ void OgreOculusRender::initScene()
 	debugPlane->textureCoord(1, 0);
 	debugPlane->position(x, -y, 0);
 	debugPlane->textureCoord(1, 1);
-
 	debugPlane->end();
 
+	//Add it to the scene
 	debugPlaneNode->attachObject(debugPlane);
 	debugPlaneNode->setVisible(true);
 }
@@ -320,32 +325,38 @@ void OgreOculusRender::initRttRendering()
 {
 	//Init GLEW here to be able to call OpenGL functions
 	GLenum err = glewInit();
-	if(GLEW_OK != err)
+	if(err == GLEW_OK)
 	{
-		std::cerr << "Failed to glewInit()" << std::endl;
+		std::stringstream out;
+		out << "Using GLEW version : " << glewGetString(GLEW_VERSION) << std::endl;
+		Ogre::LogManager::getSingleton().logMessage(out.str());
+	}
+	else
+	{
 		Ogre::LogManager::getSingleton().logMessage("Failed to glewTnit()\nCannot call manual OpenGL\nError Code : " + (unsigned int)err);
 		abort();
 	}
-	else
-		std::cerr << "Using GLEW version : " << glewGetString(GLEW_VERSION) << std::endl;
-	//get texture size from ovr with the maximal FOV
+
+	//Get texture size from ovr with the maximal FOV for each eye
 	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left], 1.0f);
 	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right], 1.0f);
-	//calculate the render buffer size
+	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max (texSizeL.h, texSizeR.h);
 	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
 
-	//Requast the creation of an OpenGL swap texture set from the Oculus Library
+	//Request the creation of an OpenGL swap texture set from the Oculus Library
 	if (ovrHmd_CreateSwapTextureSetGL(oc->getHmd(), GL_RGB, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
 	{
 		//If we can't get the textures, there is no point trying more.
 		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus swap texture");
 		abort();
 	}
-
+	
+	//Create the Ogre equivalent of the texture as a render target for Ogre
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
-	Ogre::TexturePtr rtt_texture (textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+	Ogre::TexturePtr rtt_texture(textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+		Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0, 0)->getRenderTarget();
 	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
 	//Save the texture id for low-level GL call on the texture during render
@@ -356,17 +367,42 @@ void OgreOculusRender::initRttRendering()
 
 	changeViewportBackgroundColor(backgroundColor);
 
+	if (ovrHmd_CreateMirrorTextureGL(oc->getHmd(), GL_RGB, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, &mirrorTexture) != ovrSuccess)
+	{
+		//If for some weird reason (stars alignment, dragons, northen gods) we can't create the mirror texture
+		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus mirror texture");
+		abort();
+	}
+	//Create the Ogre equivalent of this buffer
+	Ogre::TexturePtr mirror_texture(textureManager->createManual("MirrorTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+		Ogre::TEX_TYPE_2D, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+
+	//Save the GL texture id for updating the mirror texture
+	ogreMirrorTextureID = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("MirrorTex").getPointer())->getGLID();
+	oculusMirrorTextureID = ((ovrGLTexture*)mirrorTexture)->OGL.TexId;
+	
+	//Attach the camera of the debug render scene to a viewport on the actuall application window
 	debugViewport = window->addViewport(debugCam);
-	debugViewport->setBackgroundColour(Ogre::ColourValue::White);
-	debugTexturePlane->setTexture(rtt_texture);
+	debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
+	debugTexturePlane->setTextureName("MirrorTex");
 	debugTexturePlane->setTextureFiltering(Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_NONE);
 	debugViewport->setAutoUpdated(false);
 }
 
+void OgreOculusRender::showRawView()
+{
+	if(debugTexturePlane)
+	debugTexturePlane->setTextureName("RttTex");
+}
+
+void OgreOculusRender::showMirrorView()
+{
+	if(debugTexturePlane)
+	debugTexturePlane->setTextureName("MirrorTex");
+}
+
 void OgreOculusRender::initOculus(bool fullscreenState)
 {
-	setFullScreen(fullscreenState);
-
 	//Populate OVR structures
 	EyeRenderDesc[left] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left]);
 	EyeRenderDesc[right] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right]);
@@ -380,9 +416,10 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	layer.ColorTexture[right] = textureSet;
 	layer.Fov[left] = EyeRenderDesc[left].Fov;
 	layer.Fov[right] = EyeRenderDesc[right].Fov;
-	layer.Viewport[left] = Recti(0, 0, bufferSize.w / 2, bufferSize.h);
-	layer.Viewport[right] = Recti(bufferSize.w / 2, 0, bufferSize.w / 2, bufferSize.h);
+	layer.Viewport[left] = Recti(0, 0, bufferSize.w/2, bufferSize.h);
+	layer.Viewport[right] = Recti(bufferSize.w/2, 0, bufferSize.w/2, bufferSize.h);
 
+	//This need to be called at least once
 	calculateProjectionMatrix();
 }
 
@@ -433,7 +470,6 @@ void OgreOculusRender::RenderOneFrame()
 		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
 
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
-
 		cams[eye]->setPosition
 			(cameraPosition  //the "gameplay" position of player's avatar head
 
@@ -452,7 +488,7 @@ void OgreOculusRender::RenderOneFrame()
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
 	
-	if(oorc)oorc->renderCallback();
+	if(oorc) oorc->renderCallback();
 	if(forceNextUpdate) //quick&dirty fix for a texture buffer update problem : render a second time a buffer. Need to find better.
 	{
 		vpts[left]->update();
@@ -469,6 +505,11 @@ void OgreOculusRender::RenderOneFrame()
 
 	layers = &layer.Header;
 	ovrHmd_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
+
+	//Put the mirrored view available for OGRE
+	glCopyImageSubData(oculusMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
+		ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
+		oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, 1);
 	if(window->isVisible())
 		debugViewport->update();
 }

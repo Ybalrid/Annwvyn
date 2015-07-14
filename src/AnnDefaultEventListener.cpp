@@ -70,6 +70,11 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 
 	if(e.isPressed() && e.getKey() == KeyCode::tab)
 		AnnEngine::Instance()->toogleOculusPerfHUD();
+	if(e.isPressed() && e.getKey() == KeyCode::f1)
+		OgreOculusRender::showRawView();
+	if(e.isPressed() && e.getKey() == KeyCode::f2)
+		OgreOculusRender::showMirrorView();
+
 }
 
 //The mouse event contain all information about the mouse. Mouse mouvement are integer and are represented by 3 axis 

@@ -43,7 +43,7 @@ AnnMain()
 	GameEngine->loadDir("media/debug");
 	GameEngine->initResources();
 
-	//SetUp Oculus system
+	//SetUp Oculus system	
 	GameEngine->oculusInit();
 	GameEngine->setNearClippingDistance(0.20f);
 	
