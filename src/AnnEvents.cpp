@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AnnEventManager.hpp"
+#include "AnnEngine.hpp"
 
 using namespace Annwvyn;
 
@@ -249,5 +250,33 @@ bool AnnStickEvent::isReleased(ButtonId id)
 
 	for(ButtonId i(0); i < released.size();  i++)
 		if(released[i] == id) return true;
+	return false;
+}
+
+AnnTimeEvent::AnnTimeEvent() : AnnEvent()
+{
+	type = TIMER_TIMEOUT;
+}
+
+void AnnTimeEvent::setTimerID(timerID id)
+{
+	tID = id;
+}
+
+timerID AnnTimeEvent::getID()
+{
+	return tID;
+}
+
+AnnTimer::AnnTimer(timerID id, double delay)
+{
+	tID = id;
+	timeoutTime = delay + AnnEngine::Instance()->getTimeFromStartUp();
+}
+
+bool AnnTimer::isTimeout()
+{
+	if(AnnEngine::Instance()->getTimeFromStartUp() >= timeoutTime)
+		return true;
 	return false;
 }

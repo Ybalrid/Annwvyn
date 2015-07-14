@@ -17,6 +17,20 @@
 using namespace std;
 using namespace Annwvyn;
 
+class DebugListener : LISTENER
+{
+public:
+	DebugListener() : constructListener()
+	{
+	}
+
+	void TimeEvent(AnnTimeEvent e)
+	{
+		AnnDebug() << "TimeEvent id : " << e.getID() << " over " << SIZE_MAX ;
+		AnnEngine::Instance()->getEventManager()->fireTimer(1000);
+	}
+};
+
 AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
@@ -43,8 +57,10 @@ AnnMain()
 	
 	GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
+	GameEngine->getEventManager()->addListener(new DebugListener);
+	GameEngine->getEventManager()->fireTimer(10000);
+
 	AnnDebug() << "Starting the render loop";
-	
 	do	
 	{
 		if(GameEngine->isKeyDown(OIS::KC_Q))
