@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "AnnEventManager.hpp"
 #include "AnnLogger.hpp"//to access logger static method
+#include "AnnEngine.hpp"
 
 using namespace Annwvyn;
 
-AnnAbstractEventListener::AnnAbstractEventListener(AnnPlayer* p)
+AnnAbstractEventListener::AnnAbstractEventListener()
 {
-	player = p;
+	player = AnnEngine::Instance()->getPlayer();
 }
 
 float AnnAbstractEventListener::trim(float v, float dz)
@@ -50,6 +51,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 		Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		AnnDebug()<< "Detected joystick : " << Joystick->vendor();
 	}
+	lastTimerCreated = 0;
 }
 
 AnnEventManager::~AnnEventManager()
@@ -70,17 +72,21 @@ void AnnEventManager::clearListenerList()
 	listeners.clear();
 }
 
+//l equals NULL by default 
 void AnnEventManager::removeListener(AnnAbstractEventListener* l)
 {
 	if(l == NULL) {clearListenerList(); return;}
-	for(size_t i(0); i < listeners.size(); i++)
-		if(listeners[i] == l)
-			listeners.erase(listeners.begin() + i);
+
+	auto iterator = listeners.begin();
+	while(iterator != listeners.end())
+		if(*iterator == l)
+			iterator = listeners.erase(iterator);
 }
 
 void AnnEventManager::update()
 {
 	processInput();
+	processTimers();
 }
 
 void AnnEventManager::processInput()
@@ -192,3 +198,42 @@ void AnnEventManager::processInput()
 			listeners[i]->StickEvent(e);
 	}
 }
+
+timerID AnnEventManager::fireTimer(double delay)
+{
+	timerID newID = lastTimerCreated++;
+	futureTimers.push_back(AnnTimer(newID, delay));
+	return newID;
+}
+
+void AnnEventManager::processTimers()
+{
+	//This permit listeners to set timers without invalidating the iterator declared below
+	if(!futureTimers.empty())
+	{
+		for(size_t i(0); i < futureTimers.size(); i++)
+			activeTimers.push_back(futureTimers[i]);
+		futureTimers.clear();
+	}
+
+	auto iterator = activeTimers.begin();
+	while(iterator != activeTimers.end())
+	{
+		if(iterator.operator*().isTimeout())
+		{
+			AnnTimeEvent e;
+			e.populate();
+			e.setTimerID((*iterator).tID);
+			e.validate();
+			for(size_t i(0); i < listeners.size(); ++i)
+				listeners[i]->TimeEvent(e);
+			iterator = activeTimers.erase(iterator);
+		}
+		else
+		{
+			++iterator;
+		}
+	}
+}
+
+
