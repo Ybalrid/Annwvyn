@@ -26,7 +26,7 @@ namespace Annwvyn
 	enum AnnEventType
 	{
 		USER_INPUT,
-		TEMPO_TIMEOUT,
+		TIMER_TIMEOUT,
 	};
 	///An input event
 	class DLL AnnEvent
@@ -207,19 +207,31 @@ namespace Annwvyn
             std::string vendor;
 	};
 
+	typedef size_t timerID;
+
+	class DLL AnnTimeEvent : public AnnEvent
+	{
+	public:
+		AnnTimeEvent();
+		timerID getID();
+	private:
+		friend class AnnEventManager;
+		void setTimerID(timerID id);
+		timerID tID;
+	};
+
 	///Base Event listener class. Technicaly not abstract since it provides a default implementation for all
 	///virtual members. But theses definitions are pointless because they acutally don't do anything.
 	///You need to subclass it to create an EventListener 
 	class DLL AnnAbstractEventListener 
 	{
-	//TODO: no need to get a pointer to the player throug a constructor argument since AnnEngine is "singleton" and
-	//provide a pointer to the player object
 
 	public:
 		AnnAbstractEventListener();
 		virtual void KeyEvent(AnnKeyEvent e)		{return;}
 		virtual void MouseEvent(AnnMouseEvent e)	{return;}
 		virtual void StickEvent(AnnStickEvent e)	{return;}
+		virtual void TimeEvent(AnnTimeEvent e)		{return;}
 
 		static float trim(float value, float deadzone);
 	protected:
@@ -267,6 +279,17 @@ namespace Annwvyn
 	///And propagate that event to any declared event listener.
 	///Listeners should subclass AnnEventListener. A listener is registred when a pointer to it is passed as argument to the addListener() method.
 	///You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
+	
+	class DLL AnnTimer
+	{
+	private:
+		friend class AnnEventManager;
+		AnnTimer(timerID id, double delay);
+		bool isTimeout();
+		timerID tID; 
+		double timeoutTime;
+	};
+	
 	class DLL AnnEventManager
 	{
 	public:
@@ -285,6 +308,8 @@ namespace Annwvyn
 		/// \param listener A listener object. If NULL, it will remove every listener form the manager
 		void removeListener(AnnAbstractEventListener* listener = NULL);
 
+		timerID fireTimer(double delay);
+
 	private:
 		std::vector<AnnAbstractEventListener*> listeners;
 
@@ -292,6 +317,9 @@ namespace Annwvyn
 		///Engine call for refreshing the event system
 		void update();
 		void processInput();
+		void processTimers();
+
+		void notifyListeners(AnnEvent e);
 
 		///OIS Event Manager
 		OIS::InputManager *InputManager;
@@ -309,6 +337,9 @@ namespace Annwvyn
 		bool previousMouseButtonStates[static_cast<unsigned int>(MouseButtonId::nbButtons)];
 	    ///Dinamicly sized array for remembering the joystick button state at last update
         std::vector<bool> previousStickButtonStates;
+		timerID lastTimerCreated;
+		std::vector<AnnTimer> activeTimers;
+		std::vector<AnnTimer> futureTimers;
     };
 }
 
