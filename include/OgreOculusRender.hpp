@@ -4,7 +4,6 @@
  * \author A. Brainville (Ybalrid)
  */
 
-
 ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
 ///Shout out to Kocjack too for his post of an OgreOculus a short time after DK1 was out
 
@@ -13,6 +12,7 @@
 
 //Oculus Rift Lib
 #include <OVR.h>
+#include <OVR_CAPI_GL.h>
 
 //C++ SDL Includes
 #include <iostream>
@@ -33,7 +33,6 @@
 #elif __gnu_linux__ 
 #include <unistd.h>
 #endif
-
 
 using namespace std;
 using namespace OVR;
@@ -149,6 +148,9 @@ class DLL OgreOculusRender
 		///Open a window on the main screen showing what the eyes cameras are seeing
 		void openDebugWindow();
 
+		static void showRawView();
+		static void showMirrorView();
+
     private:
         enum 
         {
@@ -176,7 +178,7 @@ class DLL OgreOculusRender
 		Ogre::Viewport* debugVP[2];
 
 		///Ogre Scene Manager
-        Ogre::SceneManager* smgr, * debugSmgr;	
+        Ogre::SceneManager* smgr, *debugSmgr;	
 
 		///Stereoscopic camera array. Indexes are "left" and "right"
         Ogre::Camera* cams[2], * debugCam;
@@ -213,6 +215,9 @@ class DLL OgreOculusRender
 		///Size of left eye texture
         ovrSizei texSizeL, texSizeR, bufferSize;
 
+		ovrTexture* mirrorTexture;
+		GLuint oculusMirrorTextureID, ogreMirrorTextureID;
+
 		///Position of the camera.
         Ogre::Vector3 cameraPosition;
 		///Orientation of the camera.
@@ -226,10 +231,10 @@ class DLL OgreOculusRender
 		OgreOculusRenderCallback* oorc;
 
 #ifdef WIN32
-		public:
-			static Ogre::TextureUnitState* debugTexturePlane;
+	public:
+		static Ogre::TextureUnitState* debugTexturePlane;
 
-		private:
+	private:
 		ovrLayerEyeFov layer;
 		ovrSwapTextureSet* textureSet;
 		GLuint renderTextureID;
@@ -241,10 +246,7 @@ class DLL OgreOculusRender
 		Quatf oculusOrient;
 		Vector3f oculusPos;
 		ovrLayerHeader* layers;
-
 		int perfHudMode;
-			
-
 #endif 
 		Ogre::MaterialPtr DebugPlaneMaterial;
     public:
