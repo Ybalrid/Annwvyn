@@ -51,6 +51,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 		Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		AnnDebug()<< "Detected joystick : " << Joystick->vendor();
 	}
+	lastTimerCreated = 0;
 }
 
 AnnEventManager::~AnnEventManager()
@@ -85,6 +86,7 @@ void AnnEventManager::removeListener(AnnAbstractEventListener* l)
 void AnnEventManager::update()
 {
 	processInput();
+	processTimers();
 }
 
 void AnnEventManager::processInput()
@@ -196,3 +198,42 @@ void AnnEventManager::processInput()
 			listeners[i]->StickEvent(e);
 	}
 }
+
+timerID AnnEventManager::fireTimer(double delay)
+{
+	timerID newID = lastTimerCreated++;
+	futureTimers.push_back(AnnTimer(newID, delay));
+	return newID;
+}
+
+void AnnEventManager::processTimers()
+{
+	//This permit listeners to set timers without invalidating the iterator declared below
+	if(!futureTimers.empty())
+	{
+		for(size_t i(0); i < futureTimers.size(); i++)
+			activeTimers.push_back(futureTimers[i]);
+		futureTimers.clear();
+	}
+
+	auto iterator = activeTimers.begin();
+	while(iterator != activeTimers.end())
+	{
+		if(iterator.operator*().isTimeout())
+		{
+			AnnTimeEvent e;
+			e.populate();
+			e.setTimerID((*iterator).tID);
+			e.validate();
+			for(size_t i(0); i < listeners.size(); ++i)
+				listeners[i]->TimeEvent(e);
+			iterator = activeTimers.erase(iterator);
+		}
+		else
+		{
+			++iterator;
+		}
+	}
+}
+
+
