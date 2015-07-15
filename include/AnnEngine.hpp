@@ -243,7 +243,7 @@ namespace Annwvyn
 		AnnLevelManager* getLevelManager();
 
 		///Toogle the display of the in-engine console
-		static void toogleOnScreenConsole();
+		 void toogleOnScreenConsole();
 
 		///Return a string descibing the version of the engine
 		static std::string getAnnwvynVersion();

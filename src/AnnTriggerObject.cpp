@@ -33,6 +33,7 @@ Ogre::Vector3 AnnTriggerObject::getPosition()
 
 void AnnTriggerObject::setContactInformation(bool contact)
 {
+	lastFrameContactWithPlayer = m_contactWithPlayer;
 	m_contactWithPlayer = contact;
 }
 

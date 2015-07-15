@@ -58,22 +58,28 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		player->walking[walkDirection::right] = e.isPressed();
 	if(e.getKey() == run)
 		player->run = e.isPressed();
-	if(e.getKey() == recenter)
-		AnnEngine::Instance()->resetOculusOrientation();
-
+	
 	//Jumping is a function call because it's an action and not a "state" the player has. 
 	if(e.isPressed() && e.getKey() == jump)
 		player->jump();
+	if(e.isPressed() && e.getKey() == recenter)
+		AnnEngine::Instance()->resetOculusOrientation();
 
-	if(e.isPressed() && e.getKey() == KeyCode::grave)
-		AnnEngine::toogleOnScreenConsole();
-
-	if(e.isPressed() && e.getKey() == KeyCode::tab)
+	if(e.isPressed()) switch(e.getKey())
+	{
+	case KeyCode::grave:		
+		AnnEngine::Instance()->toogleOnScreenConsole();
+		break;
+	case KeyCode::tab:
 		AnnEngine::Instance()->toogleOculusPerfHUD();
-	if(e.isPressed() && e.getKey() == KeyCode::f1)
+		break;
+	case KeyCode::f1:
 		OgreOculusRender::showRawView();
-	if(e.isPressed() && e.getKey() == KeyCode::f2)
+		break;
+	case KeyCode::f2:
 		OgreOculusRender::showMirrorView();
+		break;
+	}
 
 }
 

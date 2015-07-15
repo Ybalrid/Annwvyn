@@ -162,15 +162,22 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 {
 	for(size_t i = 0; i < triggers.size(); i++)
 	{
+		AnnTriggerObject* current(triggers[i]);
 		if(Tools::Geometry::distance(player->getPosition(),
-			triggers[i]->getPosition()) <= triggers[i]->getThreshold())
+			current->getPosition()) <= current->getThreshold())
 		{
-			triggers[i]->setContactInformation(true);
-			triggers[i]->atContact();
+			current->setContactInformation(true);
+			current->atContact();
 		}
 		else
 		{
-			triggers[i]->setContactInformation(false);
+			current->setContactInformation(false);
 		}
+
+		if((!current->lastFrameContactWithPlayer && current->m_contactWithPlayer)
+			||(current->lastFrameContactWithPlayer && !current->m_contactWithPlayer))
+		AnnEngine::Instance()->getEventManager()->spatialTrigger(current);
+
+
 	}
 }

@@ -280,3 +280,18 @@ bool AnnTimer::isTimeout()
 		return true;
 	return false;
 }
+
+AnnTriggerEvent::AnnTriggerEvent() : AnnEvent()
+{
+	type = TRIGGER_CONTACT;
+}
+
+bool AnnTriggerEvent::getContactStatus()
+{
+	return contact;
+}
+
+AnnTriggerObject* AnnTriggerEvent::getSender()
+{
+	return sender;
+}

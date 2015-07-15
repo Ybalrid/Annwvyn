@@ -89,8 +89,6 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 	{
 		if(vpts[i])
 			vpts[i]->setBackgroundColour(color);
-		if(debugVP[i])
-			debugVP[i]->setBackgroundColour(color); 
 	}
 }
 
@@ -342,7 +340,7 @@ void OgreOculusRender::initRttRendering()
 	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right], 1.0f);
 	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
-	bufferSize.h = max (texSizeL.h, texSizeR.h);
+	bufferSize.h = max(texSizeL.h, texSizeR.h);
 	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
 
 	//Request the creation of an OpenGL swap texture set from the Oculus Library
@@ -357,9 +355,9 @@ void OgreOculusRender::initRttRendering()
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 	Ogre::TexturePtr rtt_texture(textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
 		Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+	//Save the texture id for low-level GL call on the texture during render
 	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0, 0)->getRenderTarget();
 	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
-	//Save the texture id for low-level GL call on the texture during render
 	renderTextureID = gltex->getGLID();
 
 	vpts[left] = rttEyes->addViewport(cams[left], 0, 0, 0, 0.5f);
