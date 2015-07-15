@@ -65,6 +65,7 @@ namespace Annwvyn
             float m_threshold;
 			///True if trigger triggerd
             bool m_contactWithPlayer;
+			bool lastFrameContactWithPlayer;
 
         public:
             ///When contact happened

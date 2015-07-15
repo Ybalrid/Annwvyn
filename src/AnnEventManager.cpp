@@ -87,6 +87,7 @@ void AnnEventManager::update()
 {
 	processInput();
 	processTimers();
+	processTriggerEvents();
 }
 
 void AnnEventManager::processInput()
@@ -234,6 +235,26 @@ void AnnEventManager::processTimers()
 			++iterator;
 		}
 	}
+}
+
+void AnnEventManager::processTriggerEvents()
+{
+	for(auto triggerIterator = triggerEventBuffer.begin(); triggerIterator != triggerEventBuffer.end(); triggerIterator++)
+		for(auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); listenerIterator++)
+			{
+				(*triggerIterator).validate();
+				(*listenerIterator)->TriggerEvent(*triggerIterator);
+			}
+	triggerEventBuffer.clear();
+}
+
+void AnnEventManager::spatialTrigger(AnnTriggerObject* sender)
+{
+	AnnTriggerEvent e;
+	e.sender = sender;
+	e.contact = sender->getContactInformation();
+	e.populate();
+	triggerEventBuffer.push_back(e);
 }
 
 

@@ -12,6 +12,7 @@
 //This also include OIS
 #include "AnnKeyCode.h"
 #include "AnnPlayer.hpp"
+#include "AnnTriggerObject.hpp"
 
 //the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
@@ -27,6 +28,7 @@ namespace Annwvyn
 	{
 		USER_INPUT,
 		TIMER_TIMEOUT,
+		TRIGGER_CONTACT
 	};
 	///An input event
 	class DLL AnnEvent
@@ -220,6 +222,18 @@ namespace Annwvyn
 		timerID tID;
 	};
 
+	class DLL AnnTriggerEvent : public AnnEvent
+	{
+	public:
+		AnnTriggerEvent();
+		bool getContactStatus();
+		AnnTriggerObject* getSender();
+	private:
+		friend class AnnEventManager;
+		bool contact;
+		AnnTriggerObject* sender;
+	};
+
 	///Base Event listener class. Technicaly not abstract since it provides a default implementation for all
 	///virtual members. But theses definitions are pointless because they acutally don't do anything.
 	///You need to subclass it to create an EventListener 
@@ -228,10 +242,11 @@ namespace Annwvyn
 
 	public:
 		AnnAbstractEventListener();
-		virtual void KeyEvent(AnnKeyEvent e)		{return;}
-		virtual void MouseEvent(AnnMouseEvent e)	{return;}
-		virtual void StickEvent(AnnStickEvent e)	{return;}
-		virtual void TimeEvent(AnnTimeEvent e)		{return;}
+		virtual void KeyEvent(AnnKeyEvent e)			{return;}
+		virtual void MouseEvent(AnnMouseEvent e)		{return;}
+		virtual void StickEvent(AnnStickEvent e)		{return;}
+		virtual void TimeEvent(AnnTimeEvent e)			{return;}
+		virtual void TriggerEvent(AnnTriggerEvent e)	{return;}
 
 		static float trim(float value, float deadzone);
 	protected:
@@ -272,13 +287,6 @@ namespace Annwvyn
 
 	};
 	
-	///The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by 
-	///AnnEngine and provide the hearbeat for the event system.
-	///Events can be user inputs or mostly anything else.
-	///AnnEventManager creates AnnEvent (or subclass of AnnEvent) for each kind of event, populate that object with relevent envent data
-	///And propagate that event to any declared event listener.
-	///Listeners should subclass AnnEventListener. A listener is registred when a pointer to it is passed as argument to the addListener() method.
-	///You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
 	
 	class DLL AnnTimer
 	{
@@ -290,6 +298,15 @@ namespace Annwvyn
 		double timeoutTime;
 	};
 	
+	
+	///The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by 
+	///AnnEngine and provide the hearbeat for the event system.
+	///Events can be user inputs or mostly anything else.
+	///AnnEventManager creates AnnEvent (or subclass of AnnEvent) for each kind of event, populate that object with relevent envent data
+	///And propagate that event to any declared event listener.
+	///Listeners should subclass AnnEventListener. A listener is registred when a pointer to it is passed as argument to the addListener() method.
+	///You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
+
 	class DLL AnnEventManager
 	{
 	public:
@@ -314,12 +331,16 @@ namespace Annwvyn
 		std::vector<AnnAbstractEventListener*> listeners;
 
 		friend class AnnEngine;
+		friend class AnnPhysicsEngine;
 		///Engine call for refreshing the event system
 		void update();
 		void processInput();
 		void processTimers();
+		void processTriggerEvents();
 
 		void notifyListeners(AnnEvent e);
+
+		void spatialTrigger(AnnTriggerObject* sender);
 
 		///OIS Event Manager
 		OIS::InputManager *InputManager;
@@ -340,6 +361,7 @@ namespace Annwvyn
 		timerID lastTimerCreated;
 		std::vector<AnnTimer> activeTimers;
 		std::vector<AnnTimer> futureTimers;
+		std::vector<AnnTriggerEvent> triggerEventBuffer;
     };
 }
 
