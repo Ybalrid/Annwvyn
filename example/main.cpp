@@ -65,8 +65,11 @@ AnnMain()
 	GameEngine->getEventManager()->addListener(new DebugListener);
 	GameEngine->getEventManager()->fireTimer(10000);
 
-	AnnTriggerObject* t(GameEngine->createTriggerObject());
-	t->setThreshold(4);
+	//AnnTriggerObject* t(GameEngine->createTriggerObject());
+	//dynamic_cast<AnnSphericalTriggerObject*>(t)->setThreshold(4);
+
+	AnnTriggerObject* t(GameEngine->createTriggerObject(new AnnAlignedBoxTriggerObject));
+	dynamic_cast<AnnAlignedBoxTriggerObject*>(t)->setBoundaries(-1,1,-1,1,-1,1);
 
 	AnnDebug() << "Starting the render loop";
 	do	

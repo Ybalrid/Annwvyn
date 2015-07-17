@@ -40,7 +40,7 @@ namespace Annwvyn
 	};
 
 
-#define BIT(x) (1<<(x))
+#define MASK(x) (1<<(x))
 
 }
 #endif

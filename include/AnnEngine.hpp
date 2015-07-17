@@ -165,7 +165,7 @@ namespace Annwvyn
 
 		///Create a trigger object
 		/// \param trigger an empty trigger object
-		AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnTriggerObject); //object factory
+		AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnSphericalTriggerObject); //object factory
 
 		///Get ogre scene manager
 		Ogre::SceneManager* getSceneManager(); //scene or graphics

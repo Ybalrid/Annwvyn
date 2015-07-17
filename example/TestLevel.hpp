@@ -49,7 +49,7 @@ public:
 		levelContent.push_back(Sign);
 
 		//Put some music here
-		AnnEngine::Instance()->getAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg");
+		//AnnEngine::Instance()->getAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg");
 
 		//Place the starting point 
 		AnnPlayer* player(AnnEngine::Instance()->getPlayer());
