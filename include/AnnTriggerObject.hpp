@@ -1,79 +1,101 @@
 /**
- * \file AnnTriggerObject.hpp
- * \brief Object for representing a volume that trigger an event
- * \author A. Brainville
- */
+* \file AnnTriggerObject.hpp
+* \brief Object for representing a volume that trigger an event
+* \author A. Brainville
+*/
 
 #ifndef ANNTRIGGEROBJECT
 #define ANNTRIGGEROBJECT
 
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
+#include "AnnPlayer.hpp"
+#include "AnnTools.h"
 
 namespace Annwvyn
 {
-    //Anticipated declaration of AnnEngine class 
-    class AnnEngine;
+	//Anticipated declaration of AnnEngine class 
+	class AnnEngine;
 	class AnnPhysicsGameEngine;
-    
+
 	///Object for representing a volume that trigger an event
-    class DLL AnnTriggerObject
-    {
-        public:
-            ///Class constructor
-            AnnTriggerObject();
+	class DLL AnnTriggerObject
+	{
+	public:
+		///Class constructor
+		AnnTriggerObject();
 
-			///Class destructor
-			virtual ~AnnTriggerObject(){}
+		///Class destructor
+		virtual ~AnnTriggerObject(){}
 
-            ///Set position form Vector 3D
-			/// \param pos 3D vector positioning the object
-            void setPosition(Ogre::Vector3 pos);
+		///Set position form Vector 3D
+		/// \param pos 3D vector positioning the object
+		void setPosition(Ogre::Vector3 pos);
 
-            ///Set position form Variables
-			/// \param x X component of the poisition vector
-			/// \param y Y component of the poisition vector
-			/// \param z Z component of the poisition vector
-            void setPosition(float x, float y, float z);
-            
-            ///Set contact information
-			/// \param threshold Radius of the "activation sphere" of the trigger"
-            void setThreshold(float threshold);
+		///Set position form Variables
+		/// \param x X component of the poisition vector
+		/// \param y Y component of the poisition vector
+		/// \param z Z component of the poisition vector
+		void setPosition(float x, float y, float z);
 
-            ///Get position
-            Ogre::Vector3 getPosition();
+		///Get position
+		Ogre::Vector3 getPosition();
 
-            ///Get contact information
-            bool getContactInformation();
+		///Get contact information
+		bool getContactInformation();
 
-            ///GetThreshold distance
-            float getThreshold();
+	private:	
+		///For engine : Set contact state 
+		/// \param contact Contact state
+		void setContactInformation(bool contact);
+		virtual bool computeVolumetricTest(AnnPlayer* player) = 0;
 
-        private:	
-            ///For engine : Set contact state 
-			/// \param contact Contact state
-            void setContactInformation(bool contact);
-            
-            ///Make AnnEngine class friend to permit acces to setContactInformation(bool)
-            friend class AnnEngine;
-			friend class AnnPhysicsEngine;
+		friend class AnnEngine;
+		friend class AnnPhysicsEngine;
 
-        private:
-			///Position of the object
-            AnnVect3 m_position;
-			///Distance where the trigger is triggered
-            float m_threshold;
-			///True if trigger triggerd
-            bool m_contactWithPlayer;
-			bool lastFrameContactWithPlayer;
+	private:
+		///Position of the object
+		AnnVect3 m_position;
 
-        public:
-            ///When contact happened
-            virtual void atContact() {return;}
-			///After initialization
-            virtual void postInit() {return;}
-    };
+		///True if trigger triggerd
+		bool m_contactWithPlayer;
+		bool lastFrameContactWithPlayer;
+
+	public:
+		///When contact happened
+		virtual void atContact() {return;}
+		///After initialization
+		virtual void postInit() {return;}
+	};
+
+	class DLL AnnSphericalTriggerObject : public AnnTriggerObject
+	{
+	public:
+		AnnSphericalTriggerObject();		
+		///GetThreshold distance
+		float getThreshold();
+
+		///Set contact information
+		/// \param threshold Radius of the "activation sphere" of the trigger"
+		void setThreshold(float threshold);
+
+	private:
+		bool computeVolumetricTest(AnnPlayer* player);
+		///Distance where the trigger is triggered
+		float m_threshold;
+	};
+
+	class DLL AnnAlignedBoxTriggerObject : public AnnTriggerObject
+	{
+	public:
+		AnnAlignedBoxTriggerObject();
+		void setBoundaries(float x1, float x2, float y1, float y2, float z1, float z2);
+	private:
+		bool computeVolumetricTest(AnnPlayer* player);
+		float xMin, xMax, yMin, yMax, zMin, zMax;
+	};
 }
+
 
 #endif
 

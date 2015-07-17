@@ -15,7 +15,7 @@ float AnnAbstractEventListener::trim(float v, float dz)
 	//Compute absolute value of v
 	float abs(v); 
 	if(v < 0) abs = -v;
-	
+
 	//The test is done on the abs value. Return the actuall value, or 0 if under the deadzone
 	if(abs >= dz) return v; 
 	return 0.0f;
@@ -35,7 +35,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	//Should be a HWND under windows, but, whatever, it's an unsigned integer...
 	size_t windowHnd;
 	w->getCustomAttribute("WINDOW", &windowHnd);
-	
+
 	//Well, I think the best thing on the C++ standard library are the stream classes! :-D
 	std::stringstream windowHndStr;
 	windowHndStr << windowHnd;
@@ -64,7 +64,7 @@ AnnEventManager::~AnnEventManager()
 void AnnEventManager::addListener(AnnAbstractEventListener* l)
 {
 	if(l != NULL)
-	listeners.push_back(l);
+		listeners.push_back(l);
 }
 
 void AnnEventManager::clearListenerList()
@@ -105,41 +105,33 @@ void AnnEventManager::processInput()
 		for(size_t c (0); c < KeyCode::SIZE; c++)
 		{
 			//if it's pressed
-			if(Keyboard->isKeyDown(static_cast<OIS::KeyCode>(c)))
+			if(Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c])
 			{
-				//and wasn't before
-				if(!previousKeyStates[c])
-				{
-					//create a coresponding key event 
-					AnnKeyEvent e;
-					e.setCode((KeyCode::code)c);
-					e.setPressed();
-					e.populate();
-					e.validate();
+				//create a coresponding key event 
+				AnnKeyEvent e;
+				e.setCode((KeyCode::code)c);
+				e.setPressed();
+				e.populate();
+				e.validate();
 
-					for(size_t i(0); i < listeners.size(); i++)
-						listeners[i]->KeyEvent(e);
+				for(size_t i(0); i < listeners.size(); i++)
+					listeners[i]->KeyEvent(e);
 
-					previousKeyStates[c] = true;
-				}
+				previousKeyStates[c] = true;
 			}
-			else //key not pressed atm
-			{
-				//but was pressed just before
-				if(previousKeyStates[c])
-				{
-					//same thing
-					AnnKeyEvent e;
-					e.setCode((KeyCode::code)c);
-					e.setReleased();
-					e.populate();
-					e.validate();
+			else if (!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c]) //key not pressed atm
+			{				
+				//same thing
+				AnnKeyEvent e;
+				e.setCode((KeyCode::code)c);
+				e.setReleased();
+				e.populate();
+				e.validate();
 
-					for(size_t i(0); i < listeners.size(); i++)
-						listeners[i]->KeyEvent(e);
+				for(size_t i(0); i < listeners.size(); i++)
+					listeners[i]->KeyEvent(e);
 
-					previousKeyStates[c] = false;
-				}
+				previousKeyStates[c] = false;
 			}
 		}
 	}
@@ -166,34 +158,32 @@ void AnnEventManager::processInput()
 
 	if(Joystick)
 	{
-        OIS::JoyStickState state(Joystick->getJoyStickState());
-        
-        AnnStickEvent e;
+		OIS::JoyStickState state(Joystick->getJoyStickState());
+		AnnStickEvent e;
 
-        //Get all butons imediate data
-        e.buttons = state.mButtons;
-        //Get all axes imediate data
-        for(size_t i = 0; i < state.mAxes.size(); i++)
-        {
-            AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
-            if(state.mAxes[i].absOnly)
-                axis.noRel = true;
+		//Get all butons imediate data
+		e.buttons = state.mButtons;
+		//Get all axes imediate data
+		for(size_t i = 0; i < state.mAxes.size(); i++)
+		{
+			AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
+			if(state.mAxes[i].absOnly)
+				axis.noRel = true;
+			e.axes.push_back(axis);
+		}
 
-            e.axes.push_back(axis);
-        }
+		//Get press and release event lists
+		for(unsigned short i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
+			if(!previousStickButtonStates[i] &&  state.mButtons[i])
+				e.pressed.push_back(i);
+			else if(previousStickButtonStates[i] && !state.mButtons[i])
+				e.released.push_back(i);
 
-        //Get press and release event lists
-        for(unsigned short i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
-            if(!previousStickButtonStates[i] &&  state.mButtons[i])
-                e.pressed.push_back(i);
-            else if(previousStickButtonStates[i] && !state.mButtons[i])
-                e.released.push_back(i);
-
-        //Save current buttons state for next frame
-        previousStickButtonStates = state.mButtons; 
-        e.vendor = Joystick->vendor();
-        e.populate();
-        e.validate();
+		//Save current buttons state for next frame
+		previousStickButtonStates = state.mButtons; 
+		e.vendor = Joystick->vendor();
+		e.populate();
+		e.validate();
 
 		for(size_t i(0); i < listeners.size(); i++)
 			listeners[i]->StickEvent(e);
@@ -220,7 +210,7 @@ void AnnEventManager::processTimers()
 	auto iterator = activeTimers.begin();
 	while(iterator != activeTimers.end())
 	{
-		if(iterator.operator*().isTimeout())
+		if((*iterator).isTimeout())
 		{
 			AnnTimeEvent e;
 			e.populate();
@@ -241,11 +231,11 @@ void AnnEventManager::processTriggerEvents()
 {
 	for(auto triggerIterator = triggerEventBuffer.begin(); triggerIterator != triggerEventBuffer.end(); triggerIterator++)
 		for(auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); listenerIterator++)
-			{
-				(*triggerIterator).validate();
-				(*listenerIterator)->TriggerEvent(*triggerIterator);
-			}
-	triggerEventBuffer.clear();
+		{
+			(*triggerIterator).validate();
+			(*listenerIterator)->TriggerEvent(*triggerIterator);
+		}
+		triggerEventBuffer.clear();
 }
 
 void AnnEventManager::spatialTrigger(AnnTriggerObject* sender)

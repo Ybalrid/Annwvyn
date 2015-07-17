@@ -17,8 +17,8 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 
 	m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
 
-	AnnDebug("Gravity vector = (0,-9.81f,0)");
-	m_DynamicsWorld->setGravity(btVector3(0,-9.81f,0));
+	AnnDebug("Gravity vector = (0, -9.81f, 0)");
+	m_DynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
 	m_DynamicsWorld->getPairCache()->setInternalGhostPairCallback(m_ghostPairCallback);
 
 	debugPhysics = false;//by default
@@ -41,7 +41,7 @@ void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player)
 {
 	assert(player->getBody());
 	//TODO define name for the bullet's collision masks
-	m_DynamicsWorld->addRigidBody(player->getBody(), BIT(0), BIT(1));
+	m_DynamicsWorld->addRigidBody(player->getBody(), MASK(0), MASK(1));
 }
 
 void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::SceneNode* node)
@@ -163,8 +163,7 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 	for(size_t i = 0; i < triggers.size(); i++)
 	{
 		AnnTriggerObject* current(triggers[i]);
-		if(Tools::Geometry::distance(player->getPosition(),
-			current->getPosition()) <= current->getThreshold())
+		if(current->computeVolumetricTest(player))
 		{
 			current->setContactInformation(true);
 			current->atContact();
