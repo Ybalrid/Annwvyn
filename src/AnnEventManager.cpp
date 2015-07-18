@@ -5,9 +5,9 @@
 
 using namespace Annwvyn;
 
-AnnAbstractEventListener::AnnAbstractEventListener()
+AnnAbstractEventListener::AnnAbstractEventListener() :
+	player(AnnEngine::Instance()->getPlayer())
 {
-	player = AnnEngine::Instance()->getPlayer();
 }
 
 float AnnAbstractEventListener::trim(float v, float dz)

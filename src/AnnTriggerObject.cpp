@@ -3,10 +3,10 @@
 
 using namespace Annwvyn;
 
-AnnTriggerObject::AnnTriggerObject()
+AnnTriggerObject::AnnTriggerObject():
+	m_contactWithPlayer(false),
+	m_position(Ogre::Vector3(0,0,0))
 {
-	m_contactWithPlayer = false;
-	m_position = Ogre::Vector3(0,0,0);
 }
 
 void AnnTriggerObject::setPosition(Ogre::Vector3 pos)
@@ -45,9 +45,9 @@ void AnnSphericalTriggerObject::setThreshold(float threshold)
 	m_threshold = threshold;
 }
 
-AnnSphericalTriggerObject::AnnSphericalTriggerObject() : AnnTriggerObject()
+AnnSphericalTriggerObject::AnnSphericalTriggerObject() : AnnTriggerObject(),
+	m_threshold(1)
 {
-	m_threshold = 1.0f;
 }
 
 bool AnnSphericalTriggerObject::computeVolumetricTest(AnnPlayer* player)

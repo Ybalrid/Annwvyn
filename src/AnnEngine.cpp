@@ -24,25 +24,22 @@ void AnnEngine::startGameplayLoop()
 	while(refresh());
 }
 	
-AnnEngine::AnnEngine(const char title[], bool fs)
+AnnEngine::AnnEngine(const char title[], bool fs) :
+	eventManager(NULL),
+	levelManager(NULL),
+	fullscreen(fs),
+	lastFrameTimeCode(0),
+	currentFrameTimeCode(0),
+	m_CameraReference(NULL),	
+	readyForLoadingRessources(false),
+	defaultEventListener(NULL),
+	VisualBody(NULL),
+	VisualBodyAnimation(NULL),
+	VisualBodyAnchor(NULL),
+	refVisualBody(AnnQuaternion::IDENTITY)
 {
-	eventManager = NULL;
-	levelManager = NULL;
-	fullscreen = fs;
-	lastFrameTimeCode = 0;
-	currentFrameTimeCode = 0;
-
-	//Make the necessary singleton initialization. 
 	if(singleton) abort();
 	singleton = this;
-
-	m_CameraReference = NULL;
-
-	//block ressources loading for now
-	readyForLoadingRessources = false;
-
-	//This structure handle player's body parameters
-	defaultEventListener = NULL;
 
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
@@ -101,13 +98,6 @@ AnnEngine::AnnEngine(const char title[], bool fs)
 		
 	log("Setup audio engine");
 	AudioEngine = new AnnAudioEngine;
-
-	//Setting up the Visual Body management 
-	VisualBody = NULL;
-	VisualBodyAnimation = NULL;
-	VisualBodyAnchor = NULL;
-
-	refVisualBody = AnnQuaternion::IDENTITY;
 
 	levelManager = new AnnLevelManager;
 
@@ -171,7 +161,6 @@ AnnEngine::~AnnEngine()
 	onScreenConsole = NULL;
 	singleton = NULL;
 	delete oor;
-	
 }
 
 AnnEventManager* AnnEngine::getEventManager()
