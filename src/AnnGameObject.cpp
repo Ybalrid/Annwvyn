@@ -5,20 +5,20 @@
 
 using namespace Annwvyn;
 
-AnnGameObject::AnnGameObject()
+AnnGameObject::AnnGameObject() :
+	m_node(NULL),
+	m_entity(NULL),
+	bulletReady(false),
+	m_DynamicsWorld(NULL),
+	m_Body(NULL),
+	m_Shape(NULL),
+	m_anim(NULL),
+	animIsLooping(false),
+	animIsPlaying(false),
+	animIsSetted(false),
+	visible(true)
 {
-	m_node = NULL;
-	m_entity = NULL;
-	bulletReady = false;
-	m_DynamicsWorld = NULL;
-	m_Body = NULL;
-	m_Shape = NULL;
-	alGenSources(1,&m_Source);
-	m_anim = NULL;
-	animIsLooping = false;
-	animIsPlaying = false;
-	animIsSetted = false;
-	visible = true;
+	alGenSources(1,&m_Source);	
 }
 
 AnnGameObject::~AnnGameObject()

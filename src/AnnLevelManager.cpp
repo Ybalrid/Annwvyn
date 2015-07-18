@@ -4,7 +4,7 @@
 
 using namespace Annwvyn;
 
-AnnLevelManager::AnnLevelManager():
+AnnLevelManager::AnnLevelManager() :
 	current(NULL)
 {
 	AnnEngine::Instance()->log("Level Manager created");

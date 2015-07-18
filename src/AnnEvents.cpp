@@ -28,11 +28,11 @@ AnnEventType AnnEvent::getType()
 }
 
 //---------------------------------------KEYBOARD
-AnnKeyEvent::AnnKeyEvent() : AnnEvent()
+AnnKeyEvent::AnnKeyEvent() : AnnEvent(),
+	key(KeyCode::unassigned),
+	pressed(false),
+	released(false)
 {
-	key = KeyCode::unassigned;
-	pressed = false;
-	released = false;
 	type = USER_INPUT;
 }
 
@@ -195,7 +195,6 @@ float AnnStickAxis::getAbsValue()
 
 AnnStickEvent::AnnStickEvent() : AnnEvent()
 {
-    //do nothing
 	type = USER_INPUT;
 }
 
