@@ -11,15 +11,28 @@ using namespace OVR;
 
 bool OgreOculusRender::forceNextUpdate(false);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(NULL);
-OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
+OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
+	oorc(NULL),
+	name(winName),
+	root(NULL),
+	smgr(NULL),
+	debugSmgr(NULL),
+	oc(NULL),
+	cameraPosition(0,0,10),
+	cameraOrientation(Ogre::Quaternion::IDENTITY),
+	nearClippingDistance(0.5f),
+	farClippingDistance(8000.0f),
+	lastOculusPosition(cameraPosition),
+	lastOculusOrientation(cameraOrientation),
+	updateTime(0),
+	fullscreen(false),
+	vsync(activateVsync),
+	hsDissmissed(false),
+	backgroundColor(0,0.56f,1),
+	debug(NULL),
+	textureSet(NULL),
+	perfHudMode(ovrPerfHud_Off)
 {
-	oorc = NULL;
-	//Initialize some variables
-	name = winName;
-	root = NULL;
-	window = NULL;
-	smgr = NULL;
-
 	for(size_t i(0); i < 2; i++)
 	{
 		cams[i] = NULL;
@@ -27,26 +40,6 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync)
 		vpts[i] = NULL;
 		debugVP[i] = NULL;
 	}
-
-	debugSmgr = NULL;
-	debugCam = NULL;
-	//Oc is an OculusInterface object. Communication with the Rift SDK is handeled by that class
-	oc = NULL;
-	CameraNode = NULL;
-	cameraPosition = Ogre::Vector3(0, 0, 10);
-	cameraOrientation = Ogre::Quaternion::IDENTITY;
-	nearClippingDistance = 0.05f;
-	farClippingDistance = 8000.0f;
-	lastOculusPosition = cameraPosition;
-	lastOculusOrientation = cameraOrientation;
-	updateTime = 0;
-	fullscreen = false;
-	vsync = activateVsync;
-	hsDissmissed = false;
-	backgroundColor = Ogre::ColourValue(0.f, 0.56f, 1.f);
-	debug = NULL;
-	textureSet = NULL;
-	perfHudMode = ovrPerfHud_Off;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -292,7 +285,7 @@ void OgreOculusRender::initScene()
 	debugCamNode = debugSmgr->getRootSceneNode()->createChildSceneNode();
 	debugCamNode->attachObject(debugCam);
 
-	//---Create the debug plane
+//--Create the debug plane
 	//Base setup inside the scene manager
 	debugPlaneNode = debugCamNode->createChildSceneNode();
 	debugPlaneNode->setPosition(0,0,-1);
@@ -302,7 +295,7 @@ void OgreOculusRender::initScene()
 	DebugPlaneMaterial = Ogre::MaterialManager::getSingleton().create("DebugPlaneMaterial", "General", true);
 	debugTexturePlane = DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->createTextureUnitState();
 	//The manual object itself
-	debugPlane->begin("DebugPlaneMaterial",Ogre::RenderOperation::OT_TRIANGLE_STRIP);
+	debugPlane->begin("DebugPlaneMaterial", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 	//4 verticies with texture coodinates
 	debugPlane->position(-x, y, 0);
 	debugPlane->textureCoord(0, 0);
@@ -323,16 +316,16 @@ void OgreOculusRender::initRttRendering()
 {
 	//Init GLEW here to be able to call OpenGL functions
 	GLenum err = glewInit();
-	if(err == GLEW_OK)
+	if(err != GLEW_OK)
+	{
+		Ogre::LogManager::getSingleton().logMessage("Failed to glewTnit()\nCannot call manual OpenGL\nError Code : " + (unsigned int)err);
+		abort();
+	}
+	else
 	{
 		std::stringstream out;
 		out << "Using GLEW version : " << glewGetString(GLEW_VERSION) << std::endl;
 		Ogre::LogManager::getSingleton().logMessage(out.str());
-	}
-	else
-	{
-		Ogre::LogManager::getSingleton().logMessage("Failed to glewTnit()\nCannot call manual OpenGL\nError Code : " + (unsigned int)err);
-		abort();
 	}
 
 	//Get texture size from ovr with the maximal FOV for each eye
