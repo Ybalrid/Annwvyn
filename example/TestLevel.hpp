@@ -48,6 +48,10 @@ public:
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 		levelContent.push_back(Sign);
 
+		AnnTriggerObject* t(AnnEngine::Instance()->createTriggerObject(new AnnAlignedBoxTriggerObject));
+		dynamic_cast<AnnAlignedBoxTriggerObject*>(t)->setBoundaries(-1,1,-1,1,-1,1);
+		levelTrigger.push_back(t);
+
 		//Put some music here
 		//AnnEngine::Instance()->getAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg");
 

@@ -2,9 +2,11 @@
 #define ANN_ABSTRACTLEVEL
 
 #include "AnnTypes.h"
-
+#include "AnnTriggerObject.hpp"
 #define LEVEL public Annwvyn::AnnAbstractLevel
 #define constructLevel() AnnAbstractLevel()
+#define noID "noID"
+#define defaultIdLen 15
 
 namespace Annwvyn
 {
@@ -30,6 +32,13 @@ namespace Annwvyn
 	protected:
 		AnnGameObjectVect levelContent;
 		AnnLightVect levelLighting;
+		AnnTriggerObjectVect levelTrigger;
+
+		AnnLightObject* addLight(std::string id = noID);
+		AnnTriggerObject* addTrggerObject(AnnTriggerObject* obj = new AnnSphericalTriggerObject, std::string id = noID);
+		AnnGameObject* addGameObject(std::string entityName, std::string id = noID);
+	private:
+		std::string generateRandomID(size_t len = defaultIdLen);
 	};
 }
 #endif

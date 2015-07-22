@@ -27,7 +27,6 @@ public:
 	void TimeEvent(AnnTimeEvent e)
 	{
 		AnnDebug() << "TimeEvent id : " << e.getID();
-		AnnEngine::Instance()->getEventManager()->fireTimer(1000);
 	}
 
 	void TriggerEvent(AnnTriggerEvent e)
@@ -67,9 +66,6 @@ AnnMain()
 
 	//AnnTriggerObject* t(GameEngine->createTriggerObject());
 	//dynamic_cast<AnnSphericalTriggerObject*>(t)->setThreshold(4);
-
-	AnnTriggerObject* t(GameEngine->createTriggerObject(new AnnAlignedBoxTriggerObject));
-	dynamic_cast<AnnAlignedBoxTriggerObject*>(t)->setBoundaries(-1,1,-1,1,-1,1);
 
 	AnnDebug() << "Starting the render loop";
 	do	

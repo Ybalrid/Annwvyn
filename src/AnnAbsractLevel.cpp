@@ -34,4 +34,25 @@ void AnnAbstractLevel::unload()
 	for(AnnGameObjectVect::iterator it = levelContent.begin(); it != levelContent.end(); ++it)
 		AnnEngine::Instance()->destroyGameObject(*it);
 	levelContent.clear();
+
+	//Remove volumetric event triggers
+	for(AnnTriggerObjectVect::iterator it = levelTrigger.begin(); it != levelTrigger.end(); ++it)
+		AnnEngine::Instance()->destroyTriggerObject(*it);
+	levelTrigger.clear();
+}
+
+AnnLightObject* AnnAbstractLevel::addLight(std::string id)
+{
+	return nullptr;
+}
+
+std::string AnnAbstractLevel::generateRandomID(size_t len)
+{
+	std::string id;
+	std::string buffer = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+
+	for(size_t i(0); i < len; i++)
+		id+= buffer.substr(rand()%buffer.size(), 1);
+
+	return id;
 }
