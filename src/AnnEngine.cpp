@@ -295,6 +295,34 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 	return obj;
 }
 
+void AnnEngine::destroyTriggerObject(AnnTriggerObject* object)
+{
+	if(lockForCallback)
+	{
+		triggerClearingQueue.push_back(object);
+		return;
+	}
+
+	auto iterator = triggers.begin();
+	while (iterator != triggers.end())
+		if(*iterator == object)
+		{
+			iterator = triggers.erase(iterator);
+			AnnDebug() << "Destroy trigger " << (void*)object;
+			delete object;
+		}
+		else
+			++iterator;
+}
+
+void AnnEngine::clearTriggers()
+{
+	if(lockForCallback)return;
+	for(auto it=triggerClearingQueue.begin(); it!=triggerClearingQueue.end();++it)
+		destroyTriggerObject(*it);
+	triggerClearingQueue.clear();
+}
+
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
 	//If that boolean is true, it means that we are iterating the object list during
@@ -389,6 +417,7 @@ void AnnEngine::renderCallback()
 
 	//Now it's safe to remove the objects
 	lockForCallback = false;
+	clearTriggers();
 
 	//If there is nothing to do, don't waist time
 	if(clearingQueue.empty())
@@ -418,13 +447,15 @@ bool AnnEngine::refresh()
 		(*it)->updateOpenAlPos();
 	}
 
-	//Update the event system
-	if(eventManager)
-		eventManager->update(); 
-
+	lockForCallback = true;
 	//Process some logic to extract basic informations (theses should be done within the eventManager).
 	physicsEngine->processCollisionTesting(objects);
 	physicsEngine->processTriggersContacts(player, triggers);
+		//Update the event system
+	if(eventManager)
+		eventManager->update(); 
+	lockForCallback = false;
+	clearTriggers();
 
 	//Audio
 	AudioEngine->updateListenerPos(oor->returnPose.position);

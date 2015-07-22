@@ -5,17 +5,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ExternalLib">
-      <UniqueIdentifier>{507eae2d-1c4a-4c92-add1-f6eb9cbe4364}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Oculus rendering for Ogre">
       <UniqueIdentifier>{80903f3b-ac93-417b-881a-c6fe14583547}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ExternalLib\Header">
-      <UniqueIdentifier>{0d9d99de-a238-4239-9f8f-936a74e088b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ExternalLib\Source">
-      <UniqueIdentifier>{de5688b0-8b30-4e04-87aa-cc1ac527ec04}</UniqueIdentifier>
     </Filter>
     <Filter Include="Oculus rendering for Ogre\Header">
       <UniqueIdentifier>{d79db725-8383-4ef2-87f5-203fb5caefca}</UniqueIdentifier>
@@ -39,6 +30,15 @@
     </Filter>
     <Filter Include="Annwvyn\MathObjects">
       <UniqueIdentifier>{8002a392-511f-4f41-9d99-a4f6b3aac75c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Internaly packaged libraries">
+      <UniqueIdentifier>{507eae2d-1c4a-4c92-add1-f6eb9cbe4364}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Internaly packaged libraries\Header">
+      <UniqueIdentifier>{0d9d99de-a238-4239-9f8f-936a74e088b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Internaly packaged libraries\Source">
+      <UniqueIdentifier>{de5688b0-8b30-4e04-87aa-cc1ac527ec04}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,16 +79,16 @@
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\BtOgreExtras.h">
-      <Filter>ExternalLib\Header</Filter>
+      <Filter>Internaly packaged libraries\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\BtOgreGP.h">
-      <Filter>ExternalLib\Header</Filter>
+      <Filter>Internaly packaged libraries\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\BtOgrePG.h">
-      <Filter>ExternalLib\Header</Filter>
+      <Filter>Internaly packaged libraries\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\euler.h">
-      <Filter>ExternalLib\Header</Filter>
+      <Filter>Internaly packaged libraries\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\OculusInterface.hpp">
       <Filter>Oculus rendering for Ogre\Header</Filter>
@@ -157,7 +157,7 @@
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\BtOgre.cpp">
-      <Filter>ExternalLib\Source</Filter>
+      <Filter>Internaly packaged libraries\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OculusInterface.cpp">
       <Filter>Oculus rendering for Ogre\Source</Filter>

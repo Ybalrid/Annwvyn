@@ -251,6 +251,9 @@ namespace Annwvyn
 		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
 
+
+		void destroyTriggerObject(AnnTriggerObject* obj);
+
 	private:
 		///The onScreenConsole object
 		static AnnConsole* onScreenConsole;
@@ -305,6 +308,8 @@ namespace Annwvyn
 		bool lockForCallback;
 
 		AnnGameObjectVect clearingQueue;
+		AnnTriggerObjectVect triggerClearingQueue;
+		void clearTriggers();
 
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
