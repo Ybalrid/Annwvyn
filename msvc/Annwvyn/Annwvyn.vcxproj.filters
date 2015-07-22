@@ -121,6 +121,9 @@
     <ClInclude Include="..\..\include\AnnAbstractLevel.hpp">
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\tinyxml2.h">
+      <Filter>Internaly packaged libraries\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -188,6 +191,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLevelManager.cpp">
       <Filter>Annwvyn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tinyxml2.cpp">
+      <Filter>Internaly packaged libraries\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
