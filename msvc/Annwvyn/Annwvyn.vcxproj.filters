@@ -122,7 +122,7 @@
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\tinyxml2.h">
-      <Filter>Annwvyn\Header</Filter>
+      <Filter>Internaly packaged libraries\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -193,7 +193,7 @@
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\tinyxml2.cpp">
-      <Filter>Annwvyn\Sources</Filter>
+      <Filter>Internaly packaged libraries\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
