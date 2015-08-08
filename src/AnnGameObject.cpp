@@ -401,3 +401,13 @@ bool AnnGameObject::isVisible()
 {
 	return visible;
 }
+
+void AnnGameObject::setID(std::string ID)
+{
+	id = ID;
+}
+
+std::string AnnGameObject::getID()
+{
+	return id;
+}

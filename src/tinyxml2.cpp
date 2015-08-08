@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#ifdef _MSC_VER 
-#pragma warning (disable : 4267)
+#ifdef _MSC_VER
+    #pragma warning (disable : 4267)
 #endif
+
 /*
 Original code by Lee Thomason (www.grinninglizard.com)
 

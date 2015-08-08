@@ -187,6 +187,10 @@ namespace Annwvyn
 			///Get if object visible
 			bool isVisible();
 
+
+			void setID(std::string ID);
+			std::string getID();
+
         private:
             ///Make Annwvyn::AnnEngine acces these methods : 
             friend class AnnEngine;
@@ -237,6 +241,7 @@ namespace Annwvyn
 
 			///Name of the object
 			std::string name;
+			std::string id;
 
 			///True if the object is visible
 			bool visible;
