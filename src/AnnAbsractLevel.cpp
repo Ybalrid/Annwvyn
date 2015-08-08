@@ -2,6 +2,7 @@
 #include "AnnAbstractLevel.hpp"
 #include "AnnLogger.hpp"
 
+
 using namespace Annwvyn;
 
 AnnAbstractLevel::AnnAbstractLevel()
@@ -43,7 +44,25 @@ void AnnAbstractLevel::unload()
 
 AnnLightObject* AnnAbstractLevel::addLight(std::string id)
 {
-	return nullptr;
+	AnnEngine* engine(AnnEngine::Instance());
+	AnnLightObject* light (engine->addLight());
+	levelLighting.push_back(light);
+	return light;
+}
+
+AnnGameObject* AnnAbstractLevel::addGameObject(std::string entityName, std::string id)
+{
+	AnnEngine* engine(AnnEngine::Instance());
+	AnnGameObject* object(engine->createGameObject(entityName.c_str()));
+	object->setID(id);
+	return object;
+}
+
+AnnTriggerObject* AnnAbstractLevel::addTrggerObject(AnnTriggerObject* obj , std::string id)
+{
+	AnnEngine* engine(AnnEngine::Instance());
+	engine->createTriggerObject(obj);
+	return obj;
 }
 
 std::string AnnAbstractLevel::generateRandomID(size_t len)

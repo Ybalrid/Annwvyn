@@ -4,6 +4,8 @@
 //#include <Annwvyn.h>
 #include <vector>
 #include "AnnAbstractLevel.hpp"
+#include "tinyxml2.h"
+
 
 namespace Annwvyn
 {
@@ -38,6 +40,8 @@ namespace Annwvyn
 
 		///Unload the level currently running
 		void unloadCurrentLevel();
+
+		void loadFromFile(std::string levelFile);
 
 	private:
 		///List of levels

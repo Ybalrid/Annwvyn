@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\thirdParty\tinyxml2\include;$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
     <IntDir>..\..\obj\</IntDir>
     <TargetName>Annwvyn</TargetName>
@@ -192,7 +192,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnKeyCode.h" />
     <ClInclude Include="..\..\include\AnnLevelManager.hpp" />
     <ClInclude Include="..\..\include\AnnLogger.hpp" />
-    <ClInclude Include="..\..\include\AnnMap.hpp" />
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp" />
     <ClInclude Include="..\..\include\AnnPlayer.hpp" />
     <ClInclude Include="..\..\include\AnnQuaternion.hpp" />
@@ -201,6 +200,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnTypes.h" />
     <ClInclude Include="..\..\include\AnnVect3.hpp" />
     <ClInclude Include="..\..\include\Annwvyn.h" />
+    <ClInclude Include="..\..\include\AnnXmlLevel.hpp" />
     <ClInclude Include="..\..\include\BtOgreExtras.h" />
     <ClInclude Include="..\..\include\BtOgreGP.h" />
     <ClInclude Include="..\..\include\BtOgrePG.h" />
@@ -226,13 +226,13 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnEvents.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
     <ClCompile Include="..\..\src\AnnLevelManager.cpp" />
-    <ClCompile Include="..\..\src\AnnMap.cpp" />
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp" />
     <ClCompile Include="..\..\src\AnnPlayer.cpp" />
     <ClCompile Include="..\..\src\AnnQuaternion.cpp" />
     <ClCompile Include="..\..\src\AnnTools.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
     <ClCompile Include="..\..\src\AnnVect3.cpp" />
+    <ClCompile Include="..\..\src\AnnXmlLevel.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />
     <ClCompile Include="..\..\src\OculusInterface.cpp" />
     <ClCompile Include="..\..\src\OgreOculusRender_Windows.cpp" />

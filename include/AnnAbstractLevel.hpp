@@ -37,6 +37,8 @@ namespace Annwvyn
 		AnnLightObject* addLight(std::string id = noID);
 		AnnTriggerObject* addTrggerObject(AnnTriggerObject* obj = new AnnSphericalTriggerObject, std::string id = noID);
 		AnnGameObject* addGameObject(std::string entityName, std::string id = noID);
+
+		std::string name;
 	private:
 		std::string generateRandomID(size_t len = defaultIdLen);
 	};
