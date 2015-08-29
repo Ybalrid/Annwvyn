@@ -16,9 +16,10 @@ Building on Windows
 -------------------
 
 As stated in the DEPEDENCIES file, you should download the SDK from http://annwvyn.org/
+If you are using windows 10, install and get running runtime 0.7 with apropriate drivers
 
 
-Building on Linux (experimental)
+Building on Linux (experimental) (unsuported by oculus. This use a fairly outdated SDK...)
 -----------------
 
 Install the libraries as stated on the DEPENDENCIES file. Download the OculusSDK and uncompress it and rename it "OculusSDK"on the parent folder of Annwvyn.
