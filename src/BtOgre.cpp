@@ -1046,7 +1046,7 @@ namespace BtOgre {
 
 	  Real *prPos = static_cast<Real*>(vbuf->lock(HardwareBuffer::HBL_DISCARD));
 	  {
-	   for(int i = 0; i < size; i++)
+	   for(size_t i = 0; i < size; i++)
 	   {
 		  *prPos++ = mPoints[i].x;
 		  *prPos++ = mPoints[i].y;
