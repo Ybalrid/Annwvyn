@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "OgreOculusRender.hpp"
 #include <OVR_CAPI_GL.h>
-#include <OVR_CAPI_0_6_0.h>
+#include <OVR_CAPI_0_7_0.h>
 //We need to get low level access to some GL textures 
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
@@ -70,8 +70,8 @@ OgreOculusRender::~OgreOculusRender()
 
 void OgreOculusRender::cycleOculusHUD()
 {
-	perfHudMode = (perfHudMode+1) % (ovrPerfHud_Count+1 /*the +1 is because somebody at Oculus don't understand how enum works in C/C++*/);
-	ovrHmd_SetInt(oc->getHmd(), "PerfHudMode", perfHudMode);
+	perfHudMode = (perfHudMode+1) % (ovrPerfHud_Count);
+	ovr_SetInt(oc->getHmd(), "PerfHudMode", perfHudMode);
 }
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
@@ -146,7 +146,7 @@ double OgreOculusRender::getUpdateTime()
 
 void OgreOculusRender::recenter()
 {
-	ovrHmd_RecenterPose(oc->getHmd());
+	ovr_RecenterPose(oc->getHmd());
 }
 
 bool OgreOculusRender::IsHsDissmissed()
@@ -239,10 +239,10 @@ void OgreOculusRender::createWindow()
 	*/
 	//Initialize a window ans specify that creation is manual
 	root->initialise(false);
-	//debug = root->createRenderWindow("Debug out", oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false);
+	//debug = root->createRenderWindow("Debug out", oc->getHmdDesc().Resolution.w/2, oc->getHmdDesc().Resolution.h/2, false);
 	//Actually create the window
-	
-	window = root->createRenderWindow("debug rift output " + name, oc->getHmd()->Resolution.w/2, oc->getHmd()->Resolution.h/2, false, &misc);
+
+	window = root->createRenderWindow("debug rift output " + name, oc->getHmdDesc().Resolution.w/2, oc->getHmdDesc().Resolution.h/2, false, &misc);
 }
 
 void OgreOculusRender::initCameras()
@@ -329,15 +329,15 @@ void OgreOculusRender::initRttRendering()
 	}
 
 	//Get texture size from ovr with the maximal FOV for each eye
-	texSizeL = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left], 1.0f);
-	texSizeR = ovrHmd_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right], 1.0f);
+	texSizeL = ovr_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmdDesc().MaxEyeFov[left], 1.0f);
+	texSizeR = ovr_GetFovTextureSize(oc->getHmd(), ovrEye_Right, oc->getHmdDesc().MaxEyeFov[right], 1.0f);
 	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max(texSizeL.h, texSizeR.h);
 	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
 
 	//Request the creation of an OpenGL swap texture set from the Oculus Library
-	if (ovrHmd_CreateSwapTextureSetGL(oc->getHmd(), GL_RGB, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
+	if (ovr_CreateSwapTextureSetGL(oc->getHmd(), GL_RGB, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
 	{
 		//If we can't get the textures, there is no point trying more.
 		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus swap texture");
@@ -358,7 +358,7 @@ void OgreOculusRender::initRttRendering()
 
 	changeViewportBackgroundColor(backgroundColor);
 
-	if (ovrHmd_CreateMirrorTextureGL(oc->getHmd(), GL_RGB, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, &mirrorTexture) != ovrSuccess)
+	if (ovr_CreateMirrorTextureGL(oc->getHmd(), GL_RGB, oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, &mirrorTexture) != ovrSuccess)
 	{
 		//If for some weird reason (stars alignment, dragons, northen gods) we can't create the mirror texture
 		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus mirror texture");
@@ -366,7 +366,7 @@ void OgreOculusRender::initRttRendering()
 	}
 	//Create the Ogre equivalent of this buffer
 	Ogre::TexturePtr mirror_texture(textureManager->createManual("MirrorTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		Ogre::TEX_TYPE_2D, oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+		Ogre::TEX_TYPE_2D, oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 
 	//Save the GL texture id for updating the mirror texture
 	ogreMirrorTextureID = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("MirrorTex").getPointer())->getGLID();
@@ -395,8 +395,8 @@ void OgreOculusRender::showMirrorView()
 void OgreOculusRender::initOculus(bool fullscreenState)
 {
 	//Populate OVR structures
-	EyeRenderDesc[left] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Left, oc->getHmd()->MaxEyeFov[left]);
-	EyeRenderDesc[right] = ovrHmd_GetRenderDesc(oc->getHmd(), ovrEye_Right, oc->getHmd()->MaxEyeFov[right]);
+	EyeRenderDesc[left] = ovr_GetRenderDesc(oc->getHmd(), ovrEye_Left, oc->getHmdDesc().MaxEyeFov[left]);
+	EyeRenderDesc[right] = ovr_GetRenderDesc(oc->getHmd(), ovrEye_Right, oc->getHmdDesc().MaxEyeFov[right]);
 	offset[left]=EyeRenderDesc[left].HmdToEyeViewOffset;
 	offset[right]=EyeRenderDesc[right].HmdToEyeViewOffset;
 
@@ -445,8 +445,8 @@ void OgreOculusRender::RenderOneFrame()
 	cameraOrientation = CameraNode->getOrientation();
 
 	//Begin frame
-	hmdFrameTiming = ovrHmd_GetFrameTiming(oc->getHmd(), 0);
-	ts = ovrHmd_GetTrackingState(oc->getHmd(), hmdFrameTiming.DisplayMidpointSeconds);
+	hmdFrameTiming = ovr_GetFrameTiming(oc->getHmd(), 0);
+	ts = ovr_GetTrackingState(oc->getHmd(), hmdFrameTiming.DisplayMidpointSeconds);
 	pose = ts.HeadPose.ThePose;
 	ovr_CalcEyePoses(pose, offset, layer.RenderPose); 
 	
@@ -457,8 +457,7 @@ void OgreOculusRender::RenderOneFrame()
 	//Apply pose to cameras
 	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
-		//Calculate and apply the orientation of the rift to the player (world space)
-		eye = oc->getHmd()->EyeRenderOrder[eyeIndex];
+		size_t eye = eyeIndex;	
 
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
 		cams[eye]->setPosition
@@ -495,12 +494,12 @@ void OgreOculusRender::RenderOneFrame()
 		bufferSize.w,bufferSize.h, 1);
 
 	layers = &layer.Header;
-	ovrHmd_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
+	ovr_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
 
 	//Put the mirrored view available for OGRE
 	glCopyImageSubData(oculusMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
-		oc->getHmd()->Resolution.w, oc->getHmd()->Resolution.h, 1);
+		oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, 1);
 	if(window->isVisible())
 		debugViewport->update();
 }

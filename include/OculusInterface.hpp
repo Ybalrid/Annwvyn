@@ -15,6 +15,7 @@
 
 #include "systemMacro.h"
 
+#define ANN_ERR_CRITIC 0xDEAD60D// Dead God
 
 #include <Ogre.h>
 #define USE_OGRE
@@ -56,5 +57,8 @@ class DLL OculusInterface
     ovrHmd hmd;
     ovrHmdDesc hmdDesc; 
 	ovrTrackingState ss;
+#ifdef _WIN32
+	ovrGraphicsLuid luid;
+#endif
 };
 #endif

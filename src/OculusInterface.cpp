@@ -21,42 +21,47 @@ void OculusInterface::init()
 {
 #ifdef WIN32
 	ovr_Initialize(nullptr);
-	ovrResult r = ovrHmd_Create(0, &hmd);
-
+	ovrResult r = ovr_Create (&hmd, &luid);
 
 	if(r != ovrSuccess)
 	{
 		cout << "Cannot get HMD" << endl;
-		ovrHmd_CreateDebug(ovrHmd_DK2, &hmd);
+		//Debug HMD is now handeled by the configuration utility and the runtime.
+		cout << "Please note that if you want to use this program without a Rift pluged in, you have to activate the \"debug hmd\" setting on the runtime configuration utility" << endl;
+#ifdef _WIN32
+		MessageBox(NULL, L"Can't find any Oculus HMD! \n \n(Please note that if you want to use this Annwvyn application without an Oculus Rift, you NEED to activate the \"debug hmd\" setting on the Oculus runtime configuration utility)", L"Error, No Rift found!",  MB_ICONERROR);
+#endif
+		exit(ANN_ERR_CRITIC);
 	}
+	hmdDesc = ovr_GetHmdDesc(hmd);
 
-	r = ovrHmd_ConfigureTracking(hmd, //Oculus HMD
+	r = ovr_ConfigureTracking(hmd, //Oculus HMD
 		ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
 		0); //minial required 
 	/*if(r != ovrSuccess)
 	{
 	std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
-	ovrHmd_Destroy(hmd);
+	ovr_Destroy(hmd);
 	ovr_Shutdown();
 	abort(); 
 	}*/
 
 #else
 	ovr_Initialize();
-	hmd = ovrHmd_Create(0);
+	hmd = ovr_Create(0);
 
 	if(!hmd)
 	{
 		cout << "Cannot get HMD" << endl;
-		hmd = ovrHmd_CreateDebug(ovrHmd_DK2);
+		hmd = ovr_CreateDebug(ovr_DK2);
 	}
 
-	if(!ovrHmd_ConfigureTracking(hmd, //Oculus HMD
+	if(!ovr_ConfigureTracking(hmd, //Oculus HMD
 		ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
 		ovrTrackingCap_Orientation)) //minial required 
 	{
 		std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
-		ovrHmd_Destroy(hmd);
+		ovr_Destroy(hmd);
 		ovr_Shutdown();
 		abort();
 	}
@@ -70,7 +75,7 @@ void OculusInterface::init()
 void OculusInterface::shutdown()
 {
 	if(initialized)
-		ovrHmd_Destroy(hmd);
+		ovr_Destroy(hmd);
 	ovr_Shutdown();
 #ifdef USE_OGRE
 	Ogre::LogManager::getSingleton().logMessage("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
@@ -81,12 +86,12 @@ void OculusInterface::customReport()
 {
 	cout << "================================================" << endl;
 	cout << endl << "Detected Oculus Rift device :" << endl;
-	cout << "Product name : " << hmd->ProductName << endl
-		 << "Serial number : " << hmd->SerialNumber << endl  
-		 << "Manufacturer : " << hmd->Manufacturer << endl
-		 << "Display Resolution : " << hmd->Resolution.w << "x" << hmd->Resolution.h << endl 
-		 << "Type of HMD identifier : " << hmd->Type << endl
-		 << "Firmware version : " << hmd->FirmwareMajor << "." << hmd->FirmwareMinor << endl;
+	cout << "Product name : " << hmdDesc.ProductName << endl
+		 << "Serial number : " << hmdDesc.SerialNumber << endl  
+		 << "Manufacturer : " << hmdDesc.Manufacturer << endl
+		 << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h << endl 
+		 << "Type of HMD identifier : " << hmdDesc.Type << endl
+		 << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor << endl;
 	cout << "================================================" << endl;
 }
 
@@ -94,7 +99,7 @@ void OculusInterface::update(double time)
 {
 	if(!initialized) return;
 	firstUpdated = true;
-	ss = ovrHmd_GetTrackingState(hmd, time);
+	ss = ovr_GetTrackingState(hmd, time);
 }
 
 OVR::Vector3f OculusInterface::getPosition()

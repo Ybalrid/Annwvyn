@@ -38,7 +38,7 @@ public:
 AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
-	AnnEngine::openConsole();	
+	//AnnEngine::openConsole();	
 	//Init game engine
 	AnnEngine* GameEngine(new AnnEngine("Test program"));
 
