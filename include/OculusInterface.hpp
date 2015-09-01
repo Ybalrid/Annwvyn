@@ -14,9 +14,7 @@
 #include <OVR_CAPI.h>
 
 #include "systemMacro.h"
-
-#define ANN_ERR_CRITIC 0xDEAD60D// Dead God
-
+#include "AnnErrorCode.hpp"
 #include <Ogre.h>
 #define USE_OGRE
 using namespace std;

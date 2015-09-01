@@ -21,7 +21,7 @@ namespace Annwvyn
 		~AnnLevelManager();
 
 		///Jump to an index referenced level
-		///\param levelId Index of the level in the order they have been declraed
+		///\param levelId Index of the level in the order they have been declared
 		void jump(level_id levelId);
 
 		///Jump to a pointer referenced level
