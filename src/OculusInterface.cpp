@@ -26,7 +26,10 @@ void OculusInterface::init()
 		//Debug HMD is now handeled by the configuration utility and the runtime.
 		cout << "Please note that if you want to use this program without a Rift pluged in, you have to activate the \"debug hmd\" setting on the runtime configuration utility" << endl;
 #ifdef _WIN32
-		MessageBox(NULL, L"Can't find any Oculus HMD! \n \n(Please note that if you want to use this Annwvyn application without an Oculus Rift, you NEED to activate the \"debug hmd\" setting on the Oculus runtime configuration utility)", L"Error, No Rift found!",  MB_ICONERROR);
+		MessageBox(NULL, 
+			L"Can't find any Oculus HMD! \n \n(Please note that if you want to use this Annwvyn application without an Oculus Rift, you NEED to activate the \"debug hmd\" setting on the Oculus runtime configuration utility)", 
+			L"Error, No Rift found!", 
+			MB_ICONERROR);
 #endif
 		ovr_Shutdown();
 		Ogre::LogManager::getSingleton().logMessage("Unable to get a valid HMD. Closing program and returning 0xDEAD60D error");

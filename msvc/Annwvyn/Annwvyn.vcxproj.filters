@@ -124,6 +124,9 @@
     <ClInclude Include="..\..\include\tinyxml2.h">
       <Filter>Internaly packaged libraries\Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnErrorCode.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
