@@ -412,6 +412,10 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 	//This need to be called at least once
 	calculateProjectionMatrix();
+
+	//Make sure that the perf hud will not show up...
+	perfHudMode = ovrPerfHud_Off;
+	ovr_SetInt(oc->getHmd(), "PerfHudMode", perfHudMode);
 }
 
 void OgreOculusRender::calculateProjectionMatrix()
