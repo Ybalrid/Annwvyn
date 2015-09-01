@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "OculusInterface.hpp"
-#define USE_OGRE
 
 OculusInterface::OculusInterface()
 {
@@ -11,15 +10,13 @@ OculusInterface::OculusInterface()
 
 OculusInterface::~OculusInterface()
 {
-#ifdef USE_OGRE
 	Ogre::LogManager::getSingleton().logMessage("Shutdown OculusInterface object");
-#endif   
 	shutdown();
 }
 
 void OculusInterface::init()
 {
-#ifdef WIN32
+#ifdef WIN32 //At the time of writing this, only windows uses "modern" version of the Oculus SDK
 	ovr_Initialize(nullptr);
 	ovrResult r = ovr_Create (&hmd, &luid);
 
@@ -31,6 +28,9 @@ void OculusInterface::init()
 #ifdef _WIN32
 		MessageBox(NULL, L"Can't find any Oculus HMD! \n \n(Please note that if you want to use this Annwvyn application without an Oculus Rift, you NEED to activate the \"debug hmd\" setting on the Oculus runtime configuration utility)", L"Error, No Rift found!",  MB_ICONERROR);
 #endif
+		ovr_Shutdown();
+		Ogre::LogManager::getSingleton().logMessage("Unable to get a valid HMD. Closing program and returning 0xDEAD60D error");
+		delete Ogre::Root::getSingletonPtr();
 		exit(ANN_ERR_CRITIC);
 	}
 	hmdDesc = ovr_GetHmdDesc(hmd);
@@ -38,36 +38,30 @@ void OculusInterface::init()
 	r = ovr_ConfigureTracking(hmd, //Oculus HMD
 		ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
 		0); //minial required 
-	/*if(r != ovrSuccess)
-	{
-	std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
-	ovr_Destroy(hmd);
-	ovr_Shutdown();
-	abort(); 
-	}*/
-
-#else
-	ovr_Initialize();
-	hmd = ovr_Create(0);
-
+#else //Linux, probably... Still using verry old Oculus...
+	ovrHmd_Initialize();
+	hmd = ovrHmd_Create(0);
+	//No hmd
 	if(!hmd)
 	{
-		cout << "Cannot get HMD" << endl;
-		hmd = ovr_CreateDebug(ovr_DK2);
+		cout << "Cannot get HMD. Create a debug HMD..." << endl;
+		//Debug DK2
+		hmd = ovrHmd_CreateDebug(ovr_DK2);
 	}
 
-	if(!ovr_ConfigureTracking(hmd, //Oculus HMD
+	if(!ovrHmd_ConfigureTracking(hmd, //Oculus HMD
 		ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
 		ovrTrackingCap_Orientation)) //minial required 
 	{
 		std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
-		ovr_Destroy(hmd);
-		ovr_Shutdown();
-		abort();
+		ovrHmd_Destroy(hmd);
+		ovrHmd_Shutdown();
+		Ogre::LogManager::getSingleton().logMessage("Unable to get a valid HMD. Closing program and returning 0xDEAD60D error");
+		delete Ogre::Root::getSingletonPtr();
+		exit(ANN_ERR_CRITIC);
 	}
 
 #endif
-
 	customReport();
 	initialized = true;
 }
@@ -77,22 +71,23 @@ void OculusInterface::shutdown()
 	if(initialized)
 		ovr_Destroy(hmd);
 	ovr_Shutdown();
-#ifdef USE_OGRE
 	Ogre::LogManager::getSingleton().logMessage("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
-#endif
 }
 
 void OculusInterface::customReport()
 {
-	cout << "================================================" << endl;
-	cout << endl << "Detected Oculus Rift device :" << endl;
-	cout << "Product name : " << hmdDesc.ProductName << endl
+	std::stringstream sout;
+	sout << endl;
+	sout << "================================================" << endl;
+	sout << "Detected Oculus Rift device :" << endl;
+	sout << "Product name : " << hmdDesc.ProductName << endl
 		 << "Serial number : " << hmdDesc.SerialNumber << endl  
 		 << "Manufacturer : " << hmdDesc.Manufacturer << endl
 		 << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h << endl 
 		 << "Type of HMD identifier : " << hmdDesc.Type << endl
-		 << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor << endl;
-	cout << "================================================" << endl;
+		 << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor << endl
+	;sout << "================================================" << endl;
+	Ogre::LogManager::getSingleton().logMessage(sout.str());
 }
 
 void OculusInterface::update(double time)
@@ -106,7 +101,6 @@ OVR::Vector3f OculusInterface::getPosition()
 {
 	if(initialized && firstUpdated)
 		return OVR::Vector3f(ss.HeadPose.ThePose.Position);
-	//TODO : get real data
 	return OVR::Vector3f(0, 0, 0);
 }
 
@@ -114,7 +108,6 @@ OVR::Quatf OculusInterface::getOrientation()
 {
 	if(initialized && firstUpdated)
 		return OVR::Quatf(ss.HeadPose.ThePose.Orientation);
-	//TODO : get real data
 	return OVR::Quatf(1, 0, 0, 0);
 }
 
