@@ -337,7 +337,7 @@ void OgreOculusRender::initRttRendering()
 	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
 
 	//Request the creation of an OpenGL swap texture set from the Oculus Library
-	if (ovr_CreateSwapTextureSetGL(oc->getHmd(), GL_RGB, bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
+	if (ovr_CreateSwapTextureSetGL(oc->getHmd(), GL_SRGB8_ALPHA8 , bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
 	{
 		//If we can't get the textures, there is no point trying more.
 		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus swap texture");
@@ -358,7 +358,7 @@ void OgreOculusRender::initRttRendering()
 
 	changeViewportBackgroundColor(backgroundColor);
 
-	if (ovr_CreateMirrorTextureGL(oc->getHmd(), GL_RGB, oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, &mirrorTexture) != ovrSuccess)
+	if (ovr_CreateMirrorTextureGL(oc->getHmd(), GL_SRGB8_ALPHA8 , oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, &mirrorTexture) != ovrSuccess)
 	{
 		//If for some weird reason (stars alignment, dragons, northen gods) we can't create the mirror texture
 		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus mirror texture");
@@ -402,7 +402,6 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 	//Create a layer with our single swaptexture on it. Each side is an eye.
 	layer.Header.Type = ovrLayerType_EyeFov;
-	layer.Header.Flags = left;
 	layer.ColorTexture[left] = textureSet;
 	layer.ColorTexture[right] = textureSet;
 	layer.Fov[left] = EyeRenderDesc[left].Fov;
@@ -490,7 +489,10 @@ void OgreOculusRender::RenderOneFrame()
 	}
 
 	updateTime = hmdFrameTiming.FrameIntervalSeconds;
-	root->renderOneFrame();
+	//root->renderOneFrame();
+	root->_fireFrameRenderingQueued();
+	vpts[left]->update();
+	vpts[right]->update();
 	
 	//Copy the rendered image to the Oculus Swap Texture
 	glCopyImageSubData(renderTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
@@ -505,7 +507,10 @@ void OgreOculusRender::RenderOneFrame()
 		ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, 1);
 	if(window->isVisible())
+	{
 		debugViewport->update();
+		window->update();
+	}
 }
 
 
