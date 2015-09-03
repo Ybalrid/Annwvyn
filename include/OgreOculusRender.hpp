@@ -22,7 +22,6 @@
 #include <Ogre.h>
 
 //Accessing Oculus Rift through a class : 
-#define USE_OGRE
 #include "OculusInterface.hpp"
 
 //OS Specific build macro 
@@ -33,6 +32,8 @@
 #elif __gnu_linux__ 
 #include <unistd.h>
 #endif
+
+#include "AnnErrorCode.hpp"
 
 using namespace std;
 using namespace OVR;

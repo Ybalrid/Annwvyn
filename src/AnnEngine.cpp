@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
-
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(NULL);
@@ -101,11 +100,11 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 
 	levelManager = new AnnLevelManager;
 
-	log("---------------------------------------------------", false);
+	log("==================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World   ", false);
 	log("Designed for Virtual Reality                      ", false);
 	log("Version : " + getAnnwvynVersion()                  , false);
-	log("---------------------------------------------------", false);
+	log("==================================================", false);
 }
 
 AnnEngine::~AnnEngine()
@@ -430,6 +429,7 @@ void AnnEngine::renderCallback()
 	//Clear the queue
 	clearingQueue.clear();
 }
+
 
 bool AnnEngine::refresh()
 {
