@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "OculusInterface.hpp"
-
+#include "AnnLogger.hpp"
 OculusInterface::OculusInterface()
 {
 	initialized = false;
@@ -22,9 +22,9 @@ void OculusInterface::init()
 
 	if(r != ovrSuccess)
 	{
-		cout << "Cannot get HMD" << endl;
+		Annwvyn::AnnDebug() << "Error: Cannot get HMD";
 		//Debug HMD is now handeled by the configuration utility and the runtime.
-		cout << "Please note that if you want to use this program without a Rift pluged in, you have to activate the \"debug hmd\" setting on the runtime configuration utility" << endl;
+		Annwvyn::AnnDebug() << "Please note that if you want to use this program without a Rift pluged in, you have to activate the \"debug hmd\" setting on the runtime configuration utility";
 #ifdef _WIN32
 		MessageBox(NULL, 
 			L"Can't find any Oculus HMD! \n \n(Please note that if you want to use this Annwvyn application without an Oculus Rift, you NEED to activate the \"debug hmd\" setting on the Oculus runtime configuration utility)", 
@@ -32,7 +32,7 @@ void OculusInterface::init()
 			MB_ICONERROR);
 #endif
 		ovr_Shutdown();
-		Ogre::LogManager::getSingleton().logMessage("Unable to get a valid HMD. Closing program and returning 0xDEAD60D error");
+		Annwvyn::AnnDebug("Unable to get a valid HMD. Closing program and returning 0xDEAD60D error");
 		delete Ogre::Root::getSingletonPtr();
 		exit(ANN_ERR_CRITIC);
 	}
@@ -41,6 +41,7 @@ void OculusInterface::init()
 	r = ovr_ConfigureTracking(hmd, //Oculus HMD
 		ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
 		0); //minial required 
+
 #else //Linux, probably... Still using verry old Oculus...
 	ovrHmd_Initialize();
 	hmd = ovrHmd_Create(0);
@@ -74,23 +75,20 @@ void OculusInterface::shutdown()
 	if(initialized)
 		ovr_Destroy(hmd);
 	ovr_Shutdown();
-	Ogre::LogManager::getSingleton().logMessage("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
+	Annwvyn::AnnDebug("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
 }
 
 void OculusInterface::customReport()
 {
-	std::stringstream sout;
-	sout << endl;
-	sout << "================================================" << endl;
-	sout << "Detected Oculus Rift device :" << endl;
-	sout << "Product name : " << hmdDesc.ProductName << endl
-		 << "Serial number : " << hmdDesc.SerialNumber << endl  
-		 << "Manufacturer : " << hmdDesc.Manufacturer << endl
-		 << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h << endl 
-		 << "Type of HMD identifier : " << hmdDesc.Type << endl
-		 << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor << endl
-	;sout << "================================================" << endl;
-	Ogre::LogManager::getSingleton().logMessage(sout.str());
+	Annwvyn::AnnDebug() << "================================================";
+	Annwvyn::AnnDebug() << "Detected Oculus Rift device :";
+	Annwvyn::AnnDebug() << "Product name : " << hmdDesc.ProductName;
+	Annwvyn::AnnDebug() << "Serial number : " << hmdDesc.SerialNumber;
+	Annwvyn::AnnDebug() << "Manufacturer : " << hmdDesc.Manufacturer;
+	Annwvyn::AnnDebug() << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h;
+	Annwvyn::AnnDebug() << "Type of HMD identifier : " << hmdDesc.Type;
+	Annwvyn::AnnDebug() << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor;
+	Annwvyn::AnnDebug() << "================================================";
 }
 
 void OculusInterface::update(double time)

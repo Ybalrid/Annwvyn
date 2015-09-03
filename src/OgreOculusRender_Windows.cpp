@@ -6,6 +6,7 @@
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
 #include <RenderSystems/GL/OgreGLTexture.h>
+#include "AnnLogger.hpp"
 
 using namespace OVR;
 
@@ -44,7 +45,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
 
 OgreOculusRender::~OgreOculusRender()
 {
-	Ogre::LogManager::getSingleton().logMessage("Destructing OgreOculus object and uninitializing Ogre...");
+	Annwvyn::AnnDebug() << "Destructing OgreOculus object and uninitializing Ogre...";
 	delete oc;
 
 	//TODO clean Ogre properly. There is stuff to delete manually before being able to delete "root".
@@ -79,10 +80,8 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 	//save the color
 	backgroundColor = color;
 	for(size_t i(0); i < 2; i++)
-	{
 		if(vpts[i])
 			vpts[i]->setBackgroundColour(color);
-	}
 }
 
 void OgreOculusRender::dissmissHS()
@@ -116,8 +115,8 @@ void OgreOculusRender::debugPrint()
 {
 	for(size_t i(0); i < 2; i++)
 	{
-		cout << "cam " << i << " " << cams[i]->getPosition() << endl;
-		cout << cams[i]->getOrientation() << endl;
+		Annwvyn::AnnDebug() << "cam " << i << " " << cams[i]->getPosition();
+		Annwvyn::AnnDebug() << cams[i]->getOrientation();
 	}
 }
 
@@ -221,8 +220,11 @@ void OgreOculusRender::getOgreConfig()
 	if(!root->restoreConfig())
 		//Open the config dialog of Ogre (even if we're ignoring part of the parameters you can input from it)
 		if(!root->showConfigDialog())
-			//If the user clicked the "cancel" button or other bad stuff happened during the configuration (like a dragon attack)
-			abort();
+		//If the user clicked the "cancel" button or other bad stuff happened during the configuration (like a dragon attack)
+		{
+			Annwvyn::AnnDebug() << "Error: Cannot get render config.";
+			exit(ANN_ERR_RENDER);
+		}
 }
 
 void OgreOculusRender::createWindow()
@@ -281,7 +283,8 @@ void OgreOculusRender::initScene()
 	debugCam->setAutoAspectRatio(true);
 	debugCam->setNearClipDistance(0.001f);
 	debugCam->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
-	debugCam->setOrthoWindow(16,9);
+	float X(16), Y(9);
+	debugCam->setOrthoWindow(X,Y);
 	debugCamNode = debugSmgr->getRootSceneNode()->createChildSceneNode();
 	debugCamNode->attachObject(debugCam);
 
@@ -290,13 +293,13 @@ void OgreOculusRender::initScene()
 	debugPlaneNode = debugCamNode->createChildSceneNode();
 	debugPlaneNode->setPosition(0,0,-1);
 	Ogre::ManualObject* debugPlane = debugSmgr->createManualObject("DebugPlane");
-	float x = 16.0f/2, y = 9.0f/2;
 	//Material
 	DebugPlaneMaterial = Ogre::MaterialManager::getSingleton().create("DebugPlaneMaterial", "General", true);
 	debugTexturePlane = DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->createTextureUnitState();
 	//The manual object itself
 	debugPlane->begin("DebugPlaneMaterial", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 	//4 verticies with texture coodinates
+	float x(X/2), y(Y/2);
 	debugPlane->position(-x, y, 0);
 	debugPlane->textureCoord(0, 0);
 	debugPlane->position(-x, -y,0);
@@ -318,15 +321,10 @@ void OgreOculusRender::initRttRendering()
 	GLenum err = glewInit();
 	if(err != GLEW_OK)
 	{
-		Ogre::LogManager::getSingleton().logMessage("Failed to glewTnit()\nCannot call manual OpenGL\nError Code : " + (unsigned int)err);
-		abort();
+		Annwvyn::AnnDebug("Failed to glewTnit()\nCannot call manual OpenGL\nError Code : " + (unsigned int)err);
+		exit(ANN_ERR_RENDER);
 	}
-	else
-	{
-		std::stringstream out;
-		out << "Using GLEW version : " << glewGetString(GLEW_VERSION) << std::endl;
-		Ogre::LogManager::getSingleton().logMessage(out.str());
-	}
+	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 
 	//Get texture size from ovr with the maximal FOV for each eye
 	texSizeL = ovr_GetFovTextureSize(oc->getHmd(), ovrEye_Left, oc->getHmdDesc().MaxEyeFov[left], 1.0f);
@@ -334,14 +332,14 @@ void OgreOculusRender::initRttRendering()
 	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max(texSizeL.h, texSizeR.h);
-	std::cerr << "Texure size to create : " << bufferSize.w << " x " <<bufferSize.h  << " px" << std::endl;
+	Annwvyn::AnnDebug() << "Buffer texture size : " << bufferSize.w << " x " <<bufferSize.h  << " px";
 
 	//Request the creation of an OpenGL swap texture set from the Oculus Library
 	if (ovr_CreateSwapTextureSetGL(oc->getHmd(), GL_SRGB8_ALPHA8 , bufferSize.w, bufferSize.h, &textureSet) != ovrSuccess)
 	{
 		//If we can't get the textures, there is no point trying more.
-		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus swap texture");
-		abort();
+		Annwvyn::AnnDebug("Cannot create Oculus swap texture");
+		exit(ANN_ERR_RENDER);
 	}
 	
 	//Create the Ogre equivalent of the texture as a render target for Ogre
@@ -361,8 +359,8 @@ void OgreOculusRender::initRttRendering()
 	if (ovr_CreateMirrorTextureGL(oc->getHmd(), GL_SRGB8_ALPHA8 , oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, &mirrorTexture) != ovrSuccess)
 	{
 		//If for some weird reason (stars alignment, dragons, northen gods) we can't create the mirror texture
-		Ogre::LogManager::getSingleton().logMessage("Cannot create Oculus mirror texture");
-		abort();
+		Annwvyn::AnnDebug("Cannot create Oculus mirror texture");
+		exit(ANN_ERR_RENDER);
 	}
 	//Create the Ogre equivalent of this buffer
 	Ogre::TexturePtr mirror_texture(textureManager->createManual("MirrorTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
@@ -424,7 +422,7 @@ void OgreOculusRender::calculateProjectionMatrix()
 	{
 		//Get the projection matrix
 		OVR::Matrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, 
-			static_cast<float>(nearClippingDistance), 
+			nearClippingDistance, 
 			farClippingDistance, 
 			true);
 
@@ -461,7 +459,7 @@ void OgreOculusRender::RenderOneFrame()
 	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		size_t eye = eyeIndex;	
-
+		//cameraOrientation and cameraPosition are the player position/orientation on the space
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
 		cams[eye]->setPosition
 			(cameraPosition  //the "gameplay" position of player's avatar head

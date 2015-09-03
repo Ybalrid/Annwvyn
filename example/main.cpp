@@ -2,8 +2,8 @@
 * * \file main.cpp
 * \brief test/demo program
 * \author Arthur Brainville 
-* \version 0.5
-* \date 06/11/14
+* \version 0.6
+* \date 09/03/15
 *
 * Annwvyn test program http://annwvyn.org/
 *
@@ -28,8 +28,7 @@ public:
 	{
 		AnnDebug() << "TimeEvent id : " << e.getID();
 	}
-
-	void TriggerEvent(AnnTriggerEvent e)
+void TriggerEvent(AnnTriggerEvent e)
 	{
 		AnnDebug() << "TriggerEvent contact status : " << e.getContactStatus() << " from " << e.getSender();
 	}
@@ -38,7 +37,7 @@ public:
 AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
-	//AnnEngine::openConsole();	
+	AnnEngine::openConsole();	
 	//Init game engine
 	AnnEngine* GameEngine(new AnnEngine("Test program"));
 
