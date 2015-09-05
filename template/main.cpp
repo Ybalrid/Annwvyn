@@ -12,6 +12,7 @@ using namespace Annwvyn;
 AnnMain() //The application entry point is "AnnMain()". return type int.
 {
 	//Initialize the engine
+	AnnEngine::openConsole();
 	new AnnEngine("A game using Annwvyn");
 	
 	//Load your ressources here
@@ -31,6 +32,7 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	AnnEngine::Instance()->resetOculusOrientation();
 	
 	//The game is rendering here now:
+	AnnEngine::Instance()->useDefaultEventListener();
 	AnnEngine::Instance()->startGameplayLoop();
 
 	//destroy the engine
