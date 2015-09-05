@@ -28,7 +28,7 @@ public:
 	{
 		AnnDebug() << "TimeEvent id : " << e.getID();
 	}
-void TriggerEvent(AnnTriggerEvent e)
+	void TriggerEvent(AnnTriggerEvent e)
 	{
 		AnnDebug() << "TriggerEvent contact status : " << e.getContactStatus() << " from " << e.getSender();
 	}

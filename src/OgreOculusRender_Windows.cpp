@@ -22,7 +22,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
 	cameraPosition(0,0,10),
 	cameraOrientation(Ogre::Quaternion::IDENTITY),
 	nearClippingDistance(0.5f),
-	farClippingDistance(8000.0f),
+	farClippingDistance(4000.0f),
 	lastOculusPosition(cameraPosition),
 	lastOculusOrientation(cameraOrientation),
 	updateTime(0),

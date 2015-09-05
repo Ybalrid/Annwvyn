@@ -76,7 +76,7 @@ namespace Annwvyn
 {
 }
 
-//--------------------Application Entrypoint definition--------------//
+//===================Application Entrypoint definition=================//
 /*Main definition :
  *
  *	For more simplicity, Program start by a "AnnMain" function at the library user
@@ -94,6 +94,7 @@ namespace Annwvyn
 ///Application entry point
 #define AnnMain() int main(int argc, char** argv)
 #endif
-//-------------------------------------------------------------------//
+//=======================================================================//
+
 
 #endif //ANNWVYN	
