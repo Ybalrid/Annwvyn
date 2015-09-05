@@ -147,7 +147,7 @@ void AnnConsole::update()
 		font.getPointer(),															//Font
 		ColourValue::Black,															//Color
 		'l',																		//Alignement
-		false);																		//LineWarp
+		false);																		//LineWrap
 }
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const ColourValue &color, char justify,  bool wordwrap)

@@ -14,8 +14,7 @@
 #include <OVR_CAPI.h>
 
 #include "systemMacro.h"
-
-
+#include "AnnErrorCode.hpp"
 #include <Ogre.h>
 #define USE_OGRE
 using namespace std;
@@ -56,5 +55,8 @@ class DLL OculusInterface
     ovrHmd hmd;
     ovrHmdDesc hmdDesc; 
 	ovrTrackingState ss;
+#ifdef _WIN32
+	ovrGraphicsLuid luid;
+#endif
 };
 #endif
