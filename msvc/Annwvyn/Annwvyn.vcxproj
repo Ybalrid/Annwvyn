@@ -159,6 +159,9 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/Zm300 %(AdditionalOptions)</AdditionalOptions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -187,6 +190,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnCharacter.hpp" />
     <ClInclude Include="..\..\include\AnnConsole.hpp" />
     <ClInclude Include="..\..\include\AnnEngine.hpp" />
+    <ClInclude Include="..\..\include\AnnErrorCode.hpp" />
     <ClInclude Include="..\..\include\AnnEventManager.hpp" />
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
     <ClInclude Include="..\..\include\AnnKeyCode.h" />
