@@ -55,7 +55,9 @@ AnnMain()
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
 	
 	//Register a level
-	GameEngine->getLevelManager()->addLevel(new TestLevel);	//This is the first level known by the LevelManager (and the only one here)
+	AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
+	GameEngine->getLevelManager()->addLevel(level);
+	//GameEngine->getLevelManager()->addLevel(new TestLevel);	//This is the first level known by the LevelManager (and the only one here)
 	GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
 	
 	GameEngine->useDefaultEventListener();
