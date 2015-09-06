@@ -14,6 +14,11 @@ AnnXmlLevel::AnnXmlLevel(std::string path) : constructLevel(),
 
 void AnnXmlLevel::load()
 {
+	std::string dirPath;
+	const size_t last_slash = xmlFilePath.rfind('/');
+	if(std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
+	AnnDebug() << "Working directory of the level file : " << dirPath;
+
 	XMLDocument xmlInFile;
 	//open the file
 	if(xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS) 
@@ -58,7 +63,7 @@ void AnnXmlLevel::load()
 			{
 				std::string type(resourceLocation->Attribute("Type")), path(resourceLocation->Attribute("Path"));
 				if(!type.empty() && !path.empty())
-					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, type, name);
+					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dirPath + "/" + path, type, name);
 			}while(resourceLocation = resourceLocation->NextSiblingElement());
 			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(name);
 		resourceLocAdded = true;
@@ -74,17 +79,22 @@ void AnnXmlLevel::load()
 		abort();
 	}
 
-	XMLElement* gameObject = level->FirstChildElement("Object");
+	XMLElement* gameObject = element->FirstChildElement("Object");
 	if(gameObject) do //Iterate through all game objects 
 	{
+		std::string entityName;
+		AnnDebug() << "Fond object to load";
 		float x, y, z, w;
 		std::string ID(gameObject->Attribute("ID"));
-		std::string entityName(gameObject->Attribute("EntityName"));
+		AnnDebug() << "Registred ID : " << ID;
+		XMLElement* gameObjectData = gameObject->FirstChildElement("Entity");
+		if(gameObjectData)
+		entityName = (gameObjectData->Attribute("EntityName"));
 		
 		AnnGameObject* constructedGameObject;
 		if(!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
 		
-		XMLElement* gameObjectData = gameObject->FirstChildElement("Position");
+		gameObjectData = gameObject->FirstChildElement("Position");
 		if(gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
@@ -94,7 +104,7 @@ void AnnXmlLevel::load()
 		}
 
 		gameObjectData = gameObject->FirstChildElement("Orientation");
-		if(!gameObjectData)
+		if(gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
@@ -104,7 +114,7 @@ void AnnXmlLevel::load()
 		}
 
 		gameObjectData = gameObject->FirstChildElement("Scale");
-		if(!gameObjectData)
+		if(gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
@@ -119,7 +129,7 @@ void AnnXmlLevel::load()
 		if(!state) continue;
 		bool phy; state->QueryBoolText(&phy); if(!phy) continue;
 		
-	} while(gameObject = level->NextSiblingElement());
+	} while(gameObject = gameObject->NextSiblingElement());
 	else AnnDebug() << "No objects declared to load.";
 
 	element = level->FirstChildElement("LevelLighting");
@@ -136,7 +146,7 @@ void AnnXmlLevel::load()
 
 			AnnLightObject* lightSource = addLight();
 			lightSource->setPosition(x, y, z);
-		}while (source = element->NextSiblingElement());
+		}while (source = source->NextSiblingElement());
 	}
 
 }
