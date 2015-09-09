@@ -4,54 +4,31 @@
         <ResourceLocation Type="Zip" Path="CORE.zip"/>
     </ResourceLocations>
     <LevelContent>
-        <Object ID="FibKf4n08AqQB5a">
-            <Entity EntityName="male_Body.mesh"/>
-            <Position X="-1.25" Y="0" Z="0"/>
-            <Orientation X="0" Y="0" Z="0" W="1"/>
-            <Scale X="1" Y="1" Z="1"/>
-            <Physics>
-                <Enabeled>0</Enabeled>
-                <Shape>unknown</Shape>
-                <Mass>-25319.656</Mass>
-            </Physics>
-        </Object>
-        <Object ID="4DZowLZoC_FzqPs">
+        <Object ID="d7UXdSgMPO">
             <Entity EntityName="Ground.mesh"/>
             <Position X="0" Y="0" Z="0"/>
             <Orientation X="0" Y="0" Z="0" W="1"/>
             <Scale X="1" Y="1" Z="1"/>
             <Physics>
-                <Enabeled>0</Enabeled>
-                <Shape>unknown</Shape>
-                <Mass>-25319.656</Mass>
+                <Enabeled>1</Enabeled>
+                <Shape>static</Shape>
+                <Mass>0</Mass>
             </Physics>
         </Object>
-        <Object ID="V9smHfHOU35pTK7">
+        <Object ID="gjyyfL7hSo">
             <Entity EntityName="male_Body.mesh"/>
-            <Position X="2" Y="0" Z="0"/>
-            <Orientation X="0" Y="0.83205032" Z="0" W="0.5547002"/>
+            <Position X="5" Y="10" Z="-0.75"/>
+            <Orientation X="0" Y="0" Z="0" W="1"/>
             <Scale X="1" Y="1" Z="1"/>
             <Physics>
-                <Enabeled>0</Enabeled>
-                <Shape>unknown</Shape>
-                <Mass>-25319.656</Mass>
-            </Physics>
-        </Object>
-        <Object ID="SRVnFuKA2xlAzf8">
-            <Entity EntityName="male_Body.mesh"/>
-            <Position X="1" Y="0" Z="2"/>
-            <Orientation X="0" Y="0.31413278" Z="0" W="-0.94937915"/>
-            <Scale X="1" Y="1" Z="1"/>
-            <Physics>
-                <Enabeled>0</Enabeled>
-                <Shape>unknown</Shape>
-                <Mass>-25319.656</Mass>
+                <Enabeled>1</Enabeled>
+                <Shape>box</Shape>
+                <Mass>80</Mass>
             </Physics>
         </Object>
     </LevelContent>
     <LevelLighting>
-        <Source X="0" Y="2.75" Z="5.25"/>
-        <Source X="-7.25" Y="3" Z="-8.75"/>
-        <Source X="9" Y="1.75" Z="-4"/>
+        <Source X="0" Y="3" Z="3.75"/>
+        <Source X="0" Y="2.25" Z="-3.5"/>
     </LevelLighting>
 </AnnLevel>
