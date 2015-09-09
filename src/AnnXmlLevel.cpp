@@ -100,6 +100,11 @@ void AnnXmlLevel::load()
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
 			gameObjectData->QueryFloatAttribute("Z", &z);
+			AnnDebug() << "Object at position : " 
+				<< "(" << x 
+				<< "," << y 
+				<< "," << z 
+				<< ")";
 			constructedGameObject->setPos(x, y, z);
 		}
 
@@ -119,15 +124,27 @@ void AnnXmlLevel::load()
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
 			gameObjectData->QueryFloatAttribute("Z", &z);
-			constructedGameObject->setPos(x, y, z);
+			constructedGameObject->setScale(x, y, z);
 		}
 	
-		continue; //Don't import physics yet...
 		XMLElement* physics = gameObject->FirstChildElement("Physics");
 		if(!physics) continue; //no physics section. not mandatory. just ignore
 		XMLElement* state = physics->FirstChildElement("Enabeled");
 		if(!state) continue;
 		bool phy; state->QueryBoolText(&phy); if(!phy) continue;
+
+		float mass(0); std::string shape;
+
+		XMLElement* phyInfo = physics->FirstChildElement("Mass");
+		if(!phyInfo) continue;
+		phyInfo->QueryFloatText(&mass);
+		phyInfo = nullptr;
+
+		phyInfo = physics->FirstChildElement("Shape");
+		if(!phyInfo) continue;
+		shape = phyInfo->GetText();
+		constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
+
 		
 	} while(gameObject = gameObject->NextSiblingElement());
 	else AnnDebug() << "No objects declared to load.";

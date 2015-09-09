@@ -67,6 +67,8 @@ AnnMain()
 
 	//AnnTriggerObject* t(GameEngine->createTriggerObject());
 	//dynamic_cast<AnnSphericalTriggerObject*>(t)->setThreshold(4);
+	
+	GameEngine->setDebugPhysicState(true);
 
 	AnnDebug() << "Starting the render loop";
 	do	
