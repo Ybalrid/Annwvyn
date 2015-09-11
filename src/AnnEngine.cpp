@@ -37,6 +37,7 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	VisualBodyAnchor(NULL),
 	refVisualBody(AnnQuaternion::IDENTITY)
 {
+	srand(time(nullptr));
 	if(singleton) abort();
 	singleton = this;
 
