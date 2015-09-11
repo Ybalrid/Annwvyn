@@ -14,19 +14,20 @@ AnnXmlLevel::AnnXmlLevel(std::string path) : constructLevel(),
 
 void AnnXmlLevel::load()
 {
+	//Get the parent directory of the file (all file path are in "unix style")
 	std::string dirPath;
 	const size_t last_slash = xmlFilePath.rfind('/');
 	if(std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
 	AnnDebug() << "Working directory of the level file : " << dirPath;
 
+	//Start reading the XML file
 	XMLDocument xmlInFile;
 	//open the file
 	if(xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS) 
 	{
 		AnnDebug() << "Cant load XML level : " << xmlFilePath;
-		abort();
+		exit(ANN_ERR_INFILE);
 	}
-	
 	AnnDebug() << "XML Level : " << xmlFilePath << " loaded on XML parser";
 
 	//get the root node of the XML DOM
@@ -34,7 +35,7 @@ void AnnXmlLevel::load()
 	if(!level)
 	{
 		AnnDebug() << "Cant get 1st XML Node from " << xmlFilePath;
-		abort();
+		exit(ANN_ERR_INFILE);
 	}
 
 	//Get the name of the level
@@ -42,12 +43,12 @@ void AnnXmlLevel::load()
 	if(!element)
 	{
 		AnnDebug() << "Cant get Level name from " << xmlFilePath;
-		abort();
+		exit(ANN_ERR_INFILE);
 	}
 	name = element->GetText();
 	AnnDebug() << "Name of level : " << name;
 	AnnDebug() << "This will be the resource group name for Level Specific resource location declaration";
-	
+
 	//Add resource location to the Ogre Resource Group Manager
 	if(!resourceLocAdded)
 	{
@@ -76,7 +77,7 @@ void AnnXmlLevel::load()
 	if(!element)
 	{
 		AnnDebug() << xmlFilePath << "Don't have a 'LevelContent' section. This mean the level can't be loaded";
-		abort();
+		exit(ANN_ERR_INFILE);
 	}
 
 	XMLElement* gameObject = element->FirstChildElement("Object");
@@ -100,11 +101,7 @@ void AnnXmlLevel::load()
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
 			gameObjectData->QueryFloatAttribute("Z", &z);
-			AnnDebug() << "Object at position : " 
-				<< "(" << x 
-				<< "," << y 
-				<< "," << z 
-				<< ")";
+			AnnDebug() << "Object at position : " << "(" << x << "," << y << "," << z << ")";
 			constructedGameObject->setPos(x, y, z);
 		}
 
@@ -145,6 +142,7 @@ void AnnXmlLevel::load()
 		shape = phyInfo->GetText();
 		constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
 
+		levelContent.push_back(constructedGameObject);
 		
 	} while(gameObject = gameObject->NextSiblingElement());
 	else AnnDebug() << "No objects declared to load.";
@@ -165,7 +163,6 @@ void AnnXmlLevel::load()
 			lightSource->setPosition(x, y, z);
 		}while (source = source->NextSiblingElement());
 	}
-
 }
 
 void AnnXmlLevel::runLogic(){}
