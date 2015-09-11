@@ -15,6 +15,8 @@
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 #define JMP_BUFFER 3
+#define DEFAULT_STARTING_POS AnnVect3(0,1,10)
+#define DEFAULT_STARTING_ORIENT Ogre::Euler(0)
 namespace Annwvyn
 {
 	class AnnEngine; //predeclaration of AnnEngine
