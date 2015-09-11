@@ -163,6 +163,37 @@ void AnnXmlLevel::load()
 			lightSource->setPosition(x, y, z);
 		}while (source = source->NextSiblingElement());
 	}
+
+	element = level->FirstChildElement("Player");
+	if(element)
+	{
+		XMLElement* playerElement = element->FirstChildElement("Position");
+		if(playerElement)
+		{
+			float x,y,z;
+			playerElement->QueryFloatAttribute("X",&x);
+			playerElement->QueryFloatAttribute("Y",&y);
+			playerElement->QueryFloatAttribute("Z",&z);
+			AnnDebug() << "Player starting position : (" << x << ", " << y << ", " << z << ")";
+
+			AnnEngine::Instance()->getPlayer()->setPosition(AnnVect3(x,y,z));
+		} else AnnEngine::Instance()->getPlayer()->setPosition(DEFAULT_STARTING_POS);
+
+		playerElement = element->FirstChildElement("Orientation");
+		if(playerElement)
+		{
+			float yaw;
+			playerElement->QueryFloatAttribute("Yaw", &yaw);
+			AnnDebug() << "Player Yaw : " << yaw;
+			AnnEngine::Instance()->getPlayer()->setOrientation(Ogre::Euler(Ogre::Degree(yaw).valueRadians()));
+		} else AnnEngine::Instance()->getPlayer()->setOrientation(DEFAULT_STARTING_ORIENT);
+	}
+	else
+	{
+		AnnEngine::Instance()->getPlayer()->setPosition(DEFAULT_STARTING_POS);
+		AnnEngine::Instance()->getPlayer()->setOrientation(DEFAULT_STARTING_ORIENT);
+	}
+	AnnEngine::Instance()->resetPlayerPhysics();
 }
 
 void AnnXmlLevel::runLogic(){}

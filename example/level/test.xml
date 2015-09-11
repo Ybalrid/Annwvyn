@@ -3,6 +3,10 @@
     <ResourceLocations>
         <ResourceLocation Type="Zip" Path="CORE.zip"/>
     </ResourceLocations>
+    <Player>
+        <Position X="0" Y="5" Z="5"/>
+        <Orientation Yaw="90"/>
+    </Player>
     <LevelContent>
         <Object ID="d7UXdSgMPO">
             <Entity EntityName="Ground.mesh"/>
