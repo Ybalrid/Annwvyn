@@ -37,8 +37,12 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	VisualBodyAnchor(NULL),
 	refVisualBody(AnnQuaternion::IDENTITY)
 {
+	if(singleton) 
+	{
+		log("Can't create 2 instances of the engine!");
+		exit(ANN_ERR_MEMORY);
+	}
 	srand(time(nullptr));
-	if(singleton) abort();
 	singleton = this;
 
 	//Launching initialisation routines : 
@@ -279,8 +283,7 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 	}
 
 	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
-	Ogre::SceneNode* node = 
-	m_SceneManager->getRootSceneNode()->createChildSceneNode();
+	Ogre::SceneNode* node = m_SceneManager->getRootSceneNode()->createChildSceneNode();
 
 	node->attachObject(ent);
 	obj->setNode(node);
@@ -312,7 +315,9 @@ void AnnEngine::destroyTriggerObject(AnnTriggerObject* object)
 			delete object;
 		}
 		else
-			++iterator;
+		{
+			iterator++;
+		}
 }
 
 void AnnEngine::clearTriggers()
@@ -336,7 +341,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 	bool returnCode(false);
 
-	for(AnnGameObjectVect::iterator it = objects.begin(); it != objects.end(); it++)
+	for(auto it = objects.begin(); it != objects.end(); it++)
     {
 		if(!*it) continue;
 
@@ -357,7 +362,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 			node->detachAllObjects();
 
-			std::vector<Ogre::MovableObject*>::iterator attachedIterator(attachedObject.begin());
+			auto attachedIterator(attachedObject.begin());
 			while(attachedIterator!= attachedObject.end())
 				m_SceneManager->destroyMovableObject(*attachedIterator++);
 
@@ -367,7 +372,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 		}
 	}
 
-	AnnGameObjectVect::iterator it = objects.begin();
+	auto it = objects.begin();
 	while(it != objects.end())
 	if(!(*it))
 		it = objects.erase(it);
@@ -509,7 +514,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
 
 	//read the result list
-	for(Ogre::RaySceneQueryResult::iterator it(result.begin()); it != result.end(); it++)
+	for(auto it(result.begin()); it != result.end(); it++)
 		if(it->movable && it->movable->getMovableType() == "Entity")
 			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
 
@@ -689,4 +694,3 @@ void AnnEngine::toogleOculusPerfHUD()
 {
 	if(oor) oor->cycleOculusHUD();
 }
-

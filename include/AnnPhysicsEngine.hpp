@@ -5,7 +5,7 @@
 
 //Bullet
 #include <btBulletCollisionCommon.h>
-#include <BulletCollision/CollisionDispatch/btGhostObject.h>
+//#include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
 
 //btOgre

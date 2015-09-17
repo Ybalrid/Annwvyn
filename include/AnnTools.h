@@ -16,7 +16,7 @@
 using namespace Ogre;
 namespace Annwvyn
 {
-	phyShapeType getShapeTypeFromString(std::string str);
+	phyShapeType DLL getShapeTypeFromString(std::string str);
 	namespace Tools
 	{
 		namespace Geometry //for testing in gemometry

@@ -36,16 +36,23 @@ class DLL OculusInterface
     ///Return a quaternion orentetion
     OVR::Quatf getOrientation();
 
+	///Return the active hmd desk object
     ovrHmdDesc getHmdDesc();
 
+	///Return the active hmd object
     ovrHmd getHmd();
     
     ///Print debuggin information to standard input;
     void debugPrint();
 
     private:
+	
+	///Print to the log all information about the headset
     void customReport();
+	///Init the oculus library
     void init();
+	
+	///Shutdown the oculus library
     void shutdown();
 
     private:
