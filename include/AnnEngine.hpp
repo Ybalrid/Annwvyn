@@ -244,7 +244,7 @@ namespace Annwvyn
 		AnnLevelManager* getLevelManager();
 
 		///Toogle the display of the in-engine console
-		 void toogleOnScreenConsole();
+		void toogleOnScreenConsole();
 
 		///Return a string descibing the version of the engine
 		static std::string getAnnwvynVersion();
@@ -287,10 +287,8 @@ namespace Annwvyn
 		Ogre::AnimationState* VisualBodyAnimation;
 		//offset in Z axis of the visual body
 		float visualBody_Zoffset;
-
 		//Can load resources
 		bool readyForLoadingRessources;
-
 		//Oculus oculus;
 		OgreOculusRender* oor;
 
@@ -300,18 +298,13 @@ namespace Annwvyn
 
 		///Elapsed time between 2 frames
 		double deltaT; 
-
 		double lastFrameTimeCode;
 		double currentFrameTimeCode;
-
 		bool fullscreen;
-
 		bool lockForCallback;
-
 		AnnGameObjectVect clearingQueue;
 		AnnTriggerObjectVect triggerClearingQueue;
 		void clearTriggers();
-
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
 #endif

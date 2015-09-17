@@ -13,13 +13,11 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 	m_CollisionConfiguration = new btDefaultCollisionConfiguration();
 	m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
 	m_Solver = new btSequentialImpulseConstraintSolver();
-	m_ghostPairCallback = new btGhostPairCallback();
 
 	m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
 
 	AnnDebug("Gravity vector = (0, -9.81f, 0)");
 	m_DynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
-	m_DynamicsWorld->getPairCache()->setInternalGhostPairCallback(m_ghostPairCallback);
 
 	debugPhysics = false;//by default
 	m_debugDrawer = new BtOgre::DebugDrawer(rootNode, m_DynamicsWorld);

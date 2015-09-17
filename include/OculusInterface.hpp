@@ -46,7 +46,6 @@ class DLL OculusInterface
     void debugPrint();
 
     private:
-	
 	///Print to the log all information about the headset
     void customReport();
 	///Init the oculus library
