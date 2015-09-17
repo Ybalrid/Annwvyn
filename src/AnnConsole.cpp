@@ -81,7 +81,6 @@ AnnConsole::AnnConsole() :
 	font->setTrueTypeResolution(96);
 	font->setTrueTypeSize(BASE/32); //Size of font is relative to the size of the pixelbuffer (texture)
 
-
 	//Aspect ration of the console is 2:1. The actuall size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
 	texture = TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_DEFAULT", TEX_TYPE_2D, 2*BASE, BASE, MIP_UNLIMITED, PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
@@ -96,7 +95,6 @@ AnnConsole::AnnConsole() :
 	//Text is drawn from the 1st line. The number of line define how mani lines are visible on the console
 	for(size_t i(0); i < CONSOLE_BUFFER; i++)
 		buffer[i] = "";
-
 }
 
 void AnnConsole::append(std::string str)

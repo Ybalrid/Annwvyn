@@ -64,9 +64,6 @@ AnnMain()
 	GameEngine->resetOculusOrientation();
 	GameEngine->getEventManager()->addListener(new DebugListener);
 	GameEngine->getEventManager()->fireTimer(10000);
-
-	//AnnTriggerObject* t(GameEngine->createTriggerObject());
-	//dynamic_cast<AnnSphericalTriggerObject*>(t)->setThreshold(4);
 	
 	GameEngine->setDebugPhysicState(true);
 
