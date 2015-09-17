@@ -1,0 +1,38 @@
+<AnnLevel>
+    <Name>Test</Name>
+    <ResourceLocations>
+        <ResourceLocation Type="Zip" Path="CORE.zip"/>
+    </ResourceLocations>
+    <Player>
+        <Position X="0" Y="5" Z="5"/>
+        <Orientation Yaw="90"/>
+    </Player>
+    <LevelContent>
+        <Object ID="d7UXdSgMPO">
+            <Entity EntityName="Ground.mesh"/>
+            <Position X="0" Y="0" Z="0"/>
+            <Orientation X="0" Y="0" Z="0" W="1"/>
+            <Scale X="1" Y="1" Z="1"/>
+            <Physics>
+                <Enabeled>1</Enabeled>
+                <Shape>static</Shape>
+                <Mass>0</Mass>
+            </Physics>
+        </Object>
+        <Object ID="gjyyfL7hSo">
+            <Entity EntityName="male_Body.mesh"/>
+            <Position X="5" Y="10" Z="-0.75"/>
+            <Orientation X="0" Y="0" Z="0" W="1"/>
+            <Scale X="1" Y="1" Z="1"/>
+            <Physics>
+                <Enabeled>1</Enabeled>
+                <Shape>box</Shape>
+                <Mass>80</Mass>
+            </Physics>
+        </Object>
+    </LevelContent>
+    <LevelLighting>
+        <Source X="0" Y="3" Z="3.75"/>
+        <Source X="0" Y="2.25" Z="-3.5"/>
+    </LevelLighting>
+</AnnLevel>

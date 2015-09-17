@@ -180,6 +180,7 @@ namespace Annwvyn
 			float curvature = 2.0f, 
 			float tiling = 1.0f); //scene
 
+		///Remove the sky dome
 		void removeSkyDome();
 
 		///Get the AnnObject the player is looking at
@@ -251,7 +252,7 @@ namespace Annwvyn
 		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
 
-
+		///Remove the object from the engine
 		void destroyTriggerObject(AnnTriggerObject* obj);
 
 	private:

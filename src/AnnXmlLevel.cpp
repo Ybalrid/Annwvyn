@@ -14,14 +14,20 @@ AnnXmlLevel::AnnXmlLevel(std::string path) : constructLevel(),
 
 void AnnXmlLevel::load()
 {
+	//Get the parent directory of the file (all file path are in "unix style")
+	std::string dirPath;
+	const size_t last_slash = xmlFilePath.rfind('/');
+	if(std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
+	AnnDebug() << "Working directory of the level file : " << dirPath;
+
+	//Start reading the XML file
 	XMLDocument xmlInFile;
 	//open the file
 	if(xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS) 
 	{
 		AnnDebug() << "Cant load XML level : " << xmlFilePath;
-		abort();
+		exit(ANN_ERR_INFILE);
 	}
-	
 	AnnDebug() << "XML Level : " << xmlFilePath << " loaded on XML parser";
 
 	//get the root node of the XML DOM
@@ -29,7 +35,7 @@ void AnnXmlLevel::load()
 	if(!level)
 	{
 		AnnDebug() << "Cant get 1st XML Node from " << xmlFilePath;
-		abort();
+		exit(ANN_ERR_INFILE);
 	}
 
 	//Get the name of the level
@@ -37,12 +43,12 @@ void AnnXmlLevel::load()
 	if(!element)
 	{
 		AnnDebug() << "Cant get Level name from " << xmlFilePath;
-		abort();
+		exit(ANN_ERR_INFILE);
 	}
 	name = element->GetText();
 	AnnDebug() << "Name of level : " << name;
 	AnnDebug() << "This will be the resource group name for Level Specific resource location declaration";
-	
+
 	//Add resource location to the Ogre Resource Group Manager
 	if(!resourceLocAdded)
 	{
@@ -58,7 +64,7 @@ void AnnXmlLevel::load()
 			{
 				std::string type(resourceLocation->Attribute("Type")), path(resourceLocation->Attribute("Path"));
 				if(!type.empty() && !path.empty())
-					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, type, name);
+					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dirPath + "/" + path, type, name);
 			}while(resourceLocation = resourceLocation->NextSiblingElement());
 			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(name);
 		resourceLocAdded = true;
@@ -71,30 +77,36 @@ void AnnXmlLevel::load()
 	if(!element)
 	{
 		AnnDebug() << xmlFilePath << "Don't have a 'LevelContent' section. This mean the level can't be loaded";
-		abort();
+		exit(ANN_ERR_INFILE);
 	}
 
-	XMLElement* gameObject = level->FirstChildElement("Object");
+	XMLElement* gameObject = element->FirstChildElement("Object");
 	if(gameObject) do //Iterate through all game objects 
 	{
+		std::string entityName;
+		AnnDebug() << "Fond object to load";
 		float x, y, z, w;
 		std::string ID(gameObject->Attribute("ID"));
-		std::string entityName(gameObject->Attribute("EntityName"));
+		AnnDebug() << "Registred ID : " << ID;
+		XMLElement* gameObjectData = gameObject->FirstChildElement("Entity");
+		if(gameObjectData)
+		entityName = (gameObjectData->Attribute("EntityName"));
 		
 		AnnGameObject* constructedGameObject;
 		if(!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
 		
-		XMLElement* gameObjectData = gameObject->FirstChildElement("Position");
+		gameObjectData = gameObject->FirstChildElement("Position");
 		if(gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
 			gameObjectData->QueryFloatAttribute("Z", &z);
+			AnnDebug() << "Object at position : " << "(" << x << "," << y << "," << z << ")";
 			constructedGameObject->setPos(x, y, z);
 		}
 
 		gameObjectData = gameObject->FirstChildElement("Orientation");
-		if(!gameObjectData)
+		if(gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
@@ -104,22 +116,35 @@ void AnnXmlLevel::load()
 		}
 
 		gameObjectData = gameObject->FirstChildElement("Scale");
-		if(!gameObjectData)
+		if(gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
 			gameObjectData->QueryFloatAttribute("Z", &z);
-			constructedGameObject->setPos(x, y, z);
+			constructedGameObject->setScale(x, y, z);
 		}
 	
-		continue; //Don't import physics yet...
 		XMLElement* physics = gameObject->FirstChildElement("Physics");
 		if(!physics) continue; //no physics section. not mandatory. just ignore
 		XMLElement* state = physics->FirstChildElement("Enabeled");
 		if(!state) continue;
 		bool phy; state->QueryBoolText(&phy); if(!phy) continue;
+
+		float mass(0); std::string shape;
+
+		XMLElement* phyInfo = physics->FirstChildElement("Mass");
+		if(!phyInfo) continue;
+		phyInfo->QueryFloatText(&mass);
+		phyInfo = nullptr;
+
+		phyInfo = physics->FirstChildElement("Shape");
+		if(!phyInfo) continue;
+		shape = phyInfo->GetText();
+		constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
+
+		levelContent.push_back(constructedGameObject);
 		
-	} while(gameObject = level->NextSiblingElement());
+	} while(gameObject = gameObject->NextSiblingElement());
 	else AnnDebug() << "No objects declared to load.";
 
 	element = level->FirstChildElement("LevelLighting");
@@ -136,9 +161,39 @@ void AnnXmlLevel::load()
 
 			AnnLightObject* lightSource = addLight();
 			lightSource->setPosition(x, y, z);
-		}while (source = element->NextSiblingElement());
+		}while (source = source->NextSiblingElement());
 	}
 
+	element = level->FirstChildElement("Player");
+	if(element)
+	{
+		XMLElement* playerElement = element->FirstChildElement("Position");
+		if(playerElement)
+		{
+			float x,y,z;
+			playerElement->QueryFloatAttribute("X",&x);
+			playerElement->QueryFloatAttribute("Y",&y);
+			playerElement->QueryFloatAttribute("Z",&z);
+			AnnDebug() << "Player starting position : (" << x << ", " << y << ", " << z << ")";
+
+			AnnEngine::Instance()->getPlayer()->setPosition(AnnVect3(x,y,z));
+		} else AnnEngine::Instance()->getPlayer()->setPosition(DEFAULT_STARTING_POS);
+
+		playerElement = element->FirstChildElement("Orientation");
+		if(playerElement)
+		{
+			float yaw;
+			playerElement->QueryFloatAttribute("Yaw", &yaw);
+			AnnDebug() << "Player Yaw : " << yaw;
+			AnnEngine::Instance()->getPlayer()->setOrientation(Ogre::Euler(Ogre::Degree(yaw).valueRadians()));
+		} else AnnEngine::Instance()->getPlayer()->setOrientation(DEFAULT_STARTING_ORIENT);
+	}
+	else
+	{
+		AnnEngine::Instance()->getPlayer()->setPosition(DEFAULT_STARTING_POS);
+		AnnEngine::Instance()->getPlayer()->setOrientation(DEFAULT_STARTING_ORIENT);
+	}
+	AnnEngine::Instance()->resetPlayerPhysics();
 }
 
 void AnnXmlLevel::runLogic(){}

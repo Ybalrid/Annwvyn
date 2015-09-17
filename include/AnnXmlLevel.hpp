@@ -1,12 +1,13 @@
 #ifndef ANN_XML_LEVEL
 #define ANN_XML_LEVEL
+#include "systemMacro.h"
 #include "AnnAbstractLevel.hpp"
 #include "tinyxml2.h"
 #include <string>
 
 namespace Annwvyn
 {
-	class AnnXmlLevel : LEVEL
+	class DLL AnnXmlLevel : LEVEL
 	{
 	public:
 		AnnXmlLevel(std::string path);
