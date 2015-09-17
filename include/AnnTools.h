@@ -12,10 +12,11 @@
 #include <cmath>
 
 #include "AnnGameObject.hpp"
-
+#include "AnnTypes.h"
 using namespace Ogre;
 namespace Annwvyn
 {
+	phyShapeType DLL getShapeTypeFromString(std::string str);
 	namespace Tools
 	{
 		namespace Geometry //for testing in gemometry

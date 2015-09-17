@@ -55,16 +55,17 @@ AnnMain()
 	GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
 	
 	//Register a level
-	GameEngine->getLevelManager()->addLevel(new TestLevel);	//This is the first level known by the LevelManager (and the only one here)
+	AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
+	GameEngine->getLevelManager()->addLevel(level);
+	//GameEngine->getLevelManager()->addLevel(new TestLevel);	//This is the first level known by the LevelManager (and the only one here)
 	GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
 	
 	GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
 	GameEngine->getEventManager()->addListener(new DebugListener);
 	GameEngine->getEventManager()->fireTimer(10000);
-
-	//AnnTriggerObject* t(GameEngine->createTriggerObject());
-	//dynamic_cast<AnnSphericalTriggerObject*>(t)->setThreshold(4);
+	
+	GameEngine->setDebugPhysicState(true);
 
 	AnnDebug() << "Starting the render loop";
 	do	

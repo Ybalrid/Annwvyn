@@ -231,19 +231,9 @@ void OgreOculusRender::createWindow()
 {
 	assert(root != NULL && oc != NULL);
 	Ogre::NameValuePairList misc;
+	misc["vsync"] = "false";
 
-	//This one only works on windows : "Borderless = no decoration"
-	//misc["border"]				=	"none"; //In case the program is not running in fullscreen mode, don't put window borders
-	/*if (vsync) misc["vsync"]	=	"true";
-	//This is for DK2
-	misc["displayFrequency"]	=	"75";
-	misc["monitorIndex"]		=	"0";
-	*/
-	//Initialize a window ans specify that creation is manual
 	root->initialise(false);
-	//debug = root->createRenderWindow("Debug out", oc->getHmdDesc().Resolution.w/2, oc->getHmdDesc().Resolution.h/2, false);
-	//Actually create the window
-
 	window = root->createRenderWindow("debug rift output " + name, oc->getHmdDesc().Resolution.w/2, oc->getHmdDesc().Resolution.h/2, false, &misc);
 }
 
@@ -480,11 +470,6 @@ void OgreOculusRender::RenderOneFrame()
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
 	
 	if(oorc) oorc->renderCallback();
-	if(forceNextUpdate) //quick&dirty fix for a texture buffer update problem : render a second time a buffer. Need to find better.
-	{
-		vpts[left]->update();
-		forceNextUpdate = false;
-	}
 
 	updateTime = hmdFrameTiming.FrameIntervalSeconds;
 	//root->renderOneFrame();
