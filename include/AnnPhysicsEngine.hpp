@@ -5,7 +5,6 @@
 
 //Bullet
 #include <btBulletCollisionCommon.h>
-//#include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
 
 //btOgre
@@ -66,7 +65,6 @@ namespace Annwvyn
 		btDefaultCollisionConfiguration* m_CollisionConfiguration;
 		btCollisionDispatcher* m_Dispatcher;
 		btSequentialImpulseConstraintSolver* m_Solver;
-		btGhostPairCallback* m_ghostPairCallback;
 
 		//Bullet Dynamics World
 		btDiscreteDynamicsWorld* m_DynamicsWorld;
