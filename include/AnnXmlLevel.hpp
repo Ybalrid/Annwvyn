@@ -14,7 +14,7 @@ namespace Annwvyn
 
 		//load the level by reading the XML file
 		void load();
-		void runLogic();
+		virtual void runLogic();
 
 	private:
 		std::string xmlFilePath;
