@@ -182,6 +182,10 @@
       <PreventDllBinding>false</PreventDllBinding>
       <AdditionalDependencies>Annwvyn.lib;ws2_32.lib;OgreMain.lib;OIS.lib;LibOVR.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>echo Getting Annwvyn Dynamic Library from the SDK...
+copy /y  %AnnwvynSDK64%\Annwvyn\lib\Annwvyn.dll Annwvyn.dll</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
