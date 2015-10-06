@@ -608,6 +608,11 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
 	m_SceneManager->setSkyDome(activate, materialName, curvature, tiling);
 }
 
+void AnnEngine::setWorldBackgroudColor(Ogre::ColourValue v)
+{
+	AnnDebug() << "Setting the backgroud world color " << v;
+	oor->changeViewportBackgroundColor(v); 
+}
 void AnnEngine::removeSkyDome()
 {
 	log("Disabeling skydome");

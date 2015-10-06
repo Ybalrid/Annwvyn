@@ -170,7 +170,7 @@ namespace Annwvyn
 		///Get ogre scene manager
 		Ogre::SceneManager* getSceneManager(); //scene or graphics
 
-		///Set the ogre material for the skydime with params
+		///Set the ogre material for the skydome with params
 		/// \param activate if true put a skydome
 		/// \param materialName name of a material known from the Ogre Resource group manager
 		/// \param curvature curvature of the texture
@@ -179,6 +179,10 @@ namespace Annwvyn
 			const char materialName[], 
 			float curvature = 2.0f, 
 			float tiling = 1.0f); //scene
+
+		///Set the viewports background color
+		/// \param v background color
+		void setWorldBackgroudColor(Ogre::ColourValue v); 
 
 		///Remove the sky dome
 		void removeSkyDome();
