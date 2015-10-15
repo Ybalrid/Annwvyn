@@ -158,6 +158,9 @@ namespace Annwvyn
 
 		///Return the Annwvyn OpenAL simplified audio engine
 		AnnAudioEngine* getAudioEngine(); //audio
+		
+		///Return the Physics Engine
+		AnnPhysicsEngine* getPhysicsEngine();
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
 		/// key an OIS key code

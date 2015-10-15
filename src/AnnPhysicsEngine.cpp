@@ -176,3 +176,8 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 		AnnEngine::Instance()->getEventManager()->spatialTrigger(current);
 	}
 }
+
+void AnnPhysicsEngine::changeGravity(AnnVect3 gravity)
+{
+	m_DynamicsWorld->setGravity(gravity.getBtVector());
+}

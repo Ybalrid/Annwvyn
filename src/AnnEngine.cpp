@@ -578,6 +578,12 @@ AnnAudioEngine* AnnEngine::getAudioEngine()
 	return AudioEngine;
 }
 
+AnnPhysicsEngine* AnnEngine::getPhysicsEngine()
+{
+	return physicsEngine;
+}
+
+
 Ogre::SceneManager* AnnEngine::getSceneManager()
 {
 	return m_SceneManager;
