@@ -198,6 +198,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnLogger.hpp" />
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp" />
     <ClInclude Include="..\..\include\AnnPlayer.hpp" />
+    <ClInclude Include="..\..\include\AnnPlayerActuator.hpp" />
     <ClInclude Include="..\..\include\AnnQuaternion.hpp" />
     <ClInclude Include="..\..\include\AnnTools.h" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
@@ -232,6 +233,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnLevelManager.cpp" />
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp" />
     <ClCompile Include="..\..\src\AnnPlayer.cpp" />
+    <ClCompile Include="..\..\src\AnnPlayerActuator.cpp" />
     <ClCompile Include="..\..\src\AnnQuaternion.cpp" />
     <ClCompile Include="..\..\src\AnnTools.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />

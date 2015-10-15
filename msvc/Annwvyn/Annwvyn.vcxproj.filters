@@ -127,6 +127,9 @@
     <ClInclude Include="..\..\include\AnnErrorCode.hpp">
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnPlayerActuator.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -197,6 +200,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\tinyxml2.cpp">
       <Filter>Internaly packaged libraries\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnPlayerActuator.cpp">
+      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
