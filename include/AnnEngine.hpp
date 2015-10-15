@@ -180,6 +180,16 @@ namespace Annwvyn
 			float curvature = 2.0f, 
 			float tiling = 1.0f); //scene
 
+		///Set the ogre material for the skybox with params
+		/// \param activate if true put the skybox on the scene
+		/// \param materialName name of a material declared on the resource manager
+		/// \param distance distance of the sky from the camera
+		/// \param renderedFirst if true, the skybox will be the first thing rendered
+		void setSkyBoxMaterial(bool activate, 
+			const char materialName[], 
+			float distance = 8000, 
+			bool renderedFirst = true);
+
 		///Set the viewports background color
 		/// \param v background color
 		void setWorldBackgroudColor(Ogre::ColourValue v); 
