@@ -578,6 +578,12 @@ AnnAudioEngine* AnnEngine::getAudioEngine()
 	return AudioEngine;
 }
 
+AnnPhysicsEngine* AnnEngine::getPhysicsEngine()
+{
+	return physicsEngine;
+}
+
+
 Ogre::SceneManager* AnnEngine::getSceneManager()
 {
 	return m_SceneManager;
@@ -606,6 +612,12 @@ void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], flo
 {
 	log("Setting skydome from material"); log(materialName, false);
 	m_SceneManager->setSkyDome(activate, materialName, curvature, tiling);
+}
+
+void AnnEngine::setSkyBoxMaterial(bool activate, const char materialName[], float distance, bool renderedFirst)
+{
+	log("Setting skybox from material"); log(materialName, false);
+	m_SceneManager->setSkyBox(activate, materialName, distance, renderedFirst);
 }
 
 void AnnEngine::setWorldBackgroudColor(Ogre::ColourValue v)

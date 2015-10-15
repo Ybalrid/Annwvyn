@@ -60,6 +60,9 @@ namespace Annwvyn
 		///Step the debug drawing for the physical representation
 		void stepDebugDrawer();
 
+		///Change the gravity vector
+		void changeGravity(AnnVect3 gravity);
+
 	private:
 		btBroadphaseInterface* m_Broadphase;
 		btDefaultCollisionConfiguration* m_CollisionConfiguration;
