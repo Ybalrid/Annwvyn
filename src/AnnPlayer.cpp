@@ -40,7 +40,23 @@ AnnPlayer::AnnPlayer()
 	frameCount = 0;
 	standing = true;
 	updateTime = 0;
-	physics = false;	
+	physics = false;
+
+	actuator = nullptr;
+	setActuator (new AnnDefaultPlayerActuator);
+
+}
+
+void AnnPlayer::setActuator(AnnPlayerActuator* act)
+{
+	if(actuator) 
+	{
+		delete actuator;
+		actuator = nullptr;
+	}
+
+	act->player = this;
+	actuator = act;
 }
 
 AnnPlayer::~AnnPlayer()
@@ -209,65 +225,26 @@ void AnnPlayer::jump()
 		getBody()->applyCentralImpulse(playerBody->jumpForce.getBtVector());
 }
 
-void AnnPlayer::engineUpdate(float time)
+float AnnPlayer::getRunFactor()
 {
-	updateTime = time;
-	//To "emulate" falling on the ground, set this boolean to false
+	return playerBody->runFactor;
+}
+
+void AnnPlayer::engineUpdate(float deltaTime)
+{
+	updateTime = deltaTime;
 	if(getBody())
 	{
-		frameCount++;
 		applyAnalogYaw();
-		AnnVect3 translate(getWalkSpeed() * (getTranslation() + getAnalogTranslation()));
-
-		btVector3 currentVelocity = getBody()->getLinearVelocity();
-
-		//The cast to an in is for eliminating "noise" from the reading of the Y componant of the speed vector
-		//Apparently, event with the player standing on a plane, it's a really small number that is not strictly equals to zero.
-		
-		contactWithGround = false;
-		
-		/* --- don't care about jump here
-
-		if(int(currentVelocity.y()) == 0)
-		{
-			bool canJump(true);
-			for(size_t i(0); i < JMP_BUFFER; i++)
-				if(!YSpeedWasZero[i]) canJump = false;
-
-			contactWithGround = canJump;
-			YSpeedWasZero[frameCount%JMP_BUFFER] = true;
-		}
-		else
-		{
-			YSpeedWasZero[frameCount%JMP_BUFFER] = false;
-		}
-
-		*/
-
-		//Prevent the rigid body to be put asleep by the physics engine
 		getBody()->activate();
+	}
 
-		//if no  user input, be just pull toward the ground by gravity (not physicly realist, but usefull)
-		if(translate.isZeroLength())
-		{
-			getBody()->setLinearVelocity(btVector3(0, currentVelocity.y(), 0));
-		}
-		else
-		{
-			AnnVect3 velocity(getOrientation()*translate);
-			if(run) velocity *= playerBody->runFactor;
-			getBody()->setLinearVelocity(btVector3(velocity.x, currentVelocity.y(), velocity.z));
-		}
-
-		//if the player can stand (= not dead or something like that)
-		if(standing) 
-		{
-			btTransform Transform = getBody()->getCenterOfMassTransform();
-			Transform.setRotation(AnnQuaternion(0, 0, 0, 1).getBtQuaternion());
-			getBody()->setCenterOfMassTransform(Transform);
-		}
-
-		//get back position data from physics engine
+	//Tell the actuator to "act" on the player
+	actuator->actuate(deltaTime);
+	
+	//get back position data from physics engine
+	if(getBody())
+	{
 		setPosition(
 			AnnVect3( 
 			getBody()->getCenterOfMassPosition().x(),

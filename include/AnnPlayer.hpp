@@ -10,6 +10,7 @@
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
+#include "AnnPlayerActuator.hpp"
 
 #include "euler.h"
 #include <btBulletCollisionCommon.h>
@@ -140,6 +141,21 @@ namespace Annwvyn
 
 		///Return true if physics has been initialized once
 		bool hasPhysics();
+		
+		///Get the translation vector (normalised) from the walking state
+		AnnVect3 getTranslation();
+
+		
+		///Get the translation from analog joystick value
+		AnnVect3 getAnalogTranslation();
+
+		void setActuator(AnnPlayerActuator* act);
+
+				///Boolean false if the player can get orientation transformation from 
+		bool standing;
+
+		float getRunFactor();
+
 
 	protected:
 
@@ -164,28 +180,24 @@ namespace Annwvyn
 		///The famous boolean that permit to prevent YOU for breaking my work! :D
 		bool locked;
 
-		///Get the translation vector (normalised) from the walking state
-		AnnVect3 getTranslation();
-
 		///If there is contact with ground
         bool contactWithGround;
 
-		///Get the translation from analog joystick value
-		AnnVect3 getAnalogTranslation();
 
 		///Apply yaw from analog value
 		void applyAnalogYaw();
 
 		///Boolean true if verticalspeed whas 0 at last frame
-		bool YSpeedWasZero[5];
+		bool YSpeedWasZero[JMP_BUFFER];
 		unsigned long int frameCount;
 
-		///Boolean false if the player can get orientation transformation from 
-		bool standing;
+
 
 		double updateTime;
 
 		bool physics;
+
+		AnnPlayerActuator* actuator;
 	public:
 		///Waling state. Forward Backward Left Right
 		bool walking[4];
