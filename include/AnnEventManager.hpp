@@ -248,6 +248,9 @@ namespace Annwvyn
 		virtual void TimeEvent(AnnTimeEvent e)			{return;}
 		virtual void TriggerEvent(AnnTriggerEvent e)	{return;}
 
+		///Called at each frame
+		virtual void tick()								{return;}
+
 		static float trim(float value, float deadzone);
 	protected:
 		AnnPlayer* player;

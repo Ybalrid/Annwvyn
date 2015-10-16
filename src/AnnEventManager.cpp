@@ -188,6 +188,9 @@ void AnnEventManager::processInput()
 		for(size_t i(0); i < listeners.size(); i++)
 			listeners[i]->StickEvent(e);
 	}
+
+	for(size_t i(0); i < listeners.size(); i++)
+		listeners[i]->tick();
 }
 
 timerID AnnEventManager::fireTimer(double delay)

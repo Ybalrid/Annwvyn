@@ -30,7 +30,7 @@ namespace Annwvyn
 		///Create an AnnDebug object that offer you a output stream to the AnnEngine logger
 		///This permit you to write messages to the log using C++ style ostream
 		/// example : AnnDebug() << "Player life is now " << playerLife;
-		/// where playerLife is a variable. Everything that works with a std::ostream works here.
+		/// where playerLife is a variable. Everything that works with an std::ostream works here.
 		AnnDebug();
 
 		///Permit to log a static string via the debug stream
