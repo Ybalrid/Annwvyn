@@ -198,3 +198,62 @@ const std::string AnnAudioEngine::getLastError()
 {
 	return lastError;
 }
+
+AnnAudioSource* AnnAudioEngine::createSource(const std::string& path)
+{
+	ALuint buffer = loadSndFile(path);
+	if(buffer == 0)
+	{
+		AnnDebug() << "Cannot create audio source " << path;
+		return nullptr;
+	}
+
+	AnnAudioSource* audioSource = new AnnAudioSource;
+	audioSource->bufferName = path;
+	alGenSources(1, &audioSource->source);
+	alSourcei(audioSource->source, AL_BUFFER, buffer);
+
+	return audioSource;
+}
+
+AnnAudioSource::AnnAudioSource()
+{
+	source = 0;
+}
+
+void AnnAudioSource::setPositon(AnnVect3 position)
+{
+	alSource3f(source, AL_POSITION, position.x, position.y, position.z);
+}
+
+void AnnAudioSource::setVolume(float gain)
+{
+	alSourcef(source, AL_GAIN, gain);
+	AnnDebug() << bufferName << ":s:" << source << " set volume to : " << gain;
+}
+
+void AnnAudioSource::rewind()
+{
+	alSourceRewind(source);
+}
+
+void AnnAudioSource::play()
+{
+	alSourcePlay(source);
+}
+
+void AnnAudioSource::pause()
+{
+	alSourcePause(source);
+}
+
+void AnnAudioSource::stop()
+{
+	alSourceStop(source);
+}
+
+void AnnAudioSource::setLooping(bool looping)
+{
+	if(looping) alSourcei(source, AL_LOOPING, AL_TRUE);
+	else 	alSourcei(source, AL_LOOPING, AL_FALSE);
+}
