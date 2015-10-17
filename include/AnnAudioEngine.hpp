@@ -28,7 +28,26 @@
 namespace Annwvyn
 {
     class AnnEngine;
+	class AnnAudioEngine;
+	class DLL AnnAudioSource
+	{
+	private:
+		AnnAudioSource();
+		friend class AnnAudioEngine;
+	public:
+		void setPositon(AnnVect3 position);
+		void setVolume(float gain);
+		void rewind();
+		void play();
+		void pause();
+		void stop();
 
+		void setLooping(bool looping = true);
+
+	private:
+		std::string bufferName;
+		ALuint source;
+	};
 
 	///Class that handle the OpenAL audio.
 	class DLL AnnAudioEngine
@@ -67,6 +86,9 @@ namespace Annwvyn
 
 		///Get the last error message that ocured in-engine
 		const std::string getLastError();
+
+		///Create an audio source
+		AnnAudioSource* createSource(const std::string& path);
 
 	private:
 		///For the engine: update the listener position to match the player's head
