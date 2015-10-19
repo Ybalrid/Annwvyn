@@ -43,10 +43,13 @@ namespace Annwvyn
 		void stop();
 
 		void setLooping(bool looping = true);
+		void setPositionRelToPlayer(bool relToPlayer = true);
 
 	private:
 		std::string bufferName;
 		ALuint source;
+		AnnVect3 pos;
+		bool posRelToPlayer;
 	};
 
 	///Class that handle the OpenAL audio.
@@ -112,6 +115,7 @@ namespace Annwvyn
 
 		std::map<std::string, ALuint> buffers;
 		bool locked;
+		std::vector<AnnAudioSource*> AudioSources;
 	};
 }
 #endif
