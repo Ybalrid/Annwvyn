@@ -93,19 +93,18 @@ void AnnPlayer::setEyesHeight(float eyeHeight)
 void AnnPlayer::setWalkSpeed(float walk)
 {
 	if(!isLocked())
-		playerBody->eyeHeight = walk;
+		playerBody->walkSpeed = walk;
 }
 
 void AnnPlayer::setTurnSpeed(float ts)
 {
 	if(!isLocked())
-		playerBody->eyeHeight = ts;
+		playerBody->turnSpeed = ts;
 }
 
 void AnnPlayer::setMass(float mass)
 {
-	if(!isLocked())
-		playerBody->eyeHeight = mass;
+	playerBody->mass = mass;
 }
 
 void AnnPlayer::setShape(btCollisionShape* Shape)
@@ -117,9 +116,8 @@ void AnnPlayer::setShape(btCollisionShape* Shape)
 
 void AnnPlayer::setBody(btRigidBody* Body)
 {
-//	if(!isLocked())
-		playerBody->Body = Body;
-		physics = true;
+	playerBody->Body = Body;
+	physics = true;
 }
 
 void AnnPlayer::lockParameters()
@@ -246,11 +244,12 @@ void AnnPlayer::engineUpdate(float deltaTime)
 	if(getBody())
 	{
 		setPosition(
-			AnnVect3( 
-			getBody()->getCenterOfMassPosition().x(),
-			getBody()->getCenterOfMassPosition().y() + getEyesHeight()/2,
-			getBody()->getCenterOfMassPosition().z()
-			));
+			AnnVect3(getBody()->getCenterOfMassPosition())
+			+
+			AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation())
+			*
+			AnnVect3(0,getEyesHeight()/2,0)
+			);
 	}
 }
 

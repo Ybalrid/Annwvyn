@@ -65,7 +65,7 @@ AnnMain()
 	GameEngine->getEventManager()->addListener(new DebugListener);
 	GameEngine->getEventManager()->fireTimer(10000);
 	
-	//GameEngine->setDebugPhysicState(true);
+	GameEngine->setDebugPhysicState(true);
 
 	AnnDebug() << "Starting the render loop";
 	do	

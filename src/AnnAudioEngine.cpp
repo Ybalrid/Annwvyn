@@ -36,7 +36,7 @@ bool AnnAudioEngine::initOpenAL()
    	Context = alcCreateContext(Device, NULL);
     if (!Context)
         return false;
-     if (!alcMakeContextCurrent(Context))
+    if (!alcMakeContextCurrent(Context))
         return false;
     return true;
 }
@@ -46,9 +46,17 @@ void AnnAudioEngine::shutdownOpenAL()
 	//Stop and delete the bgm buffer
 	alSourceStop(bgm);
     alDeleteSources(1, &bgm);
+	
+	//Stop and delete other audio sources
+	for(auto source : AudioSources)
+	{
+		delete source;
+		source = nullptr;
+	}
+	AudioSources.clear();
+	
 	if(alIsBuffer(bgmBuffer) == AL_TRUE)
 		alDeleteBuffers(1,&bgmBuffer);
-
 	//Delete all buffers created here
 	auto iterator = buffers.begin();
 	while(iterator != buffers.end())
@@ -181,6 +189,13 @@ void AnnAudioEngine::stopBGM()
 void AnnAudioEngine::updateListenerPos(AnnVect3 pos)
 {
 	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
+	//make sure that all positions are synced
+	for(auto source : AudioSources)
+		if(source->posRelToPlayer)
+		{
+			AnnVect3 absolute = pos+source->pos; 
+			alSource3f(source->source, AL_POSITION, absolute.x, absolute.y, absolute.z);
+		}
 }
 
 void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
@@ -197,4 +212,79 @@ void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 const std::string AnnAudioEngine::getLastError()
 {
 	return lastError;
+}
+
+AnnAudioSource* AnnAudioEngine::createSource(const std::string& path)
+{
+	ALuint buffer = loadSndFile(path);
+	if(buffer == 0)
+	{
+		AnnDebug() << "Cannot create audio source " << path;
+		return nullptr;
+	}
+
+	AnnAudioSource* audioSource = new AnnAudioSource;
+	audioSource->bufferName = path;
+	alGenSources(1, &audioSource->source);
+	alSourcei(audioSource->source, AL_BUFFER, buffer);
+
+	AudioSources.push_back(audioSource);
+	AnnDebug() << "OpenAL:" <<  audioSource->bufferName << ":s:" << audioSource->source << " sucessfully created";
+
+	return audioSource;
+}
+
+AnnAudioSource::AnnAudioSource()
+{
+	source = 0;
+	pos = AnnVect3::ZERO;
+}
+
+AnnAudioSource::~AnnAudioSource()
+{
+	stop();
+	alDeleteSources(1, &source);
+	source = AL_NONE;
+}
+
+void AnnAudioSource::setPositon(AnnVect3 position)
+{
+	alSource3f(source, AL_POSITION, position.x, position.y, position.z);
+	pos = position;
+}
+
+void AnnAudioSource::setVolume(float gain)
+{
+	alSourcef(source, AL_GAIN, gain);
+}
+
+void AnnAudioSource::rewind()
+{
+	alSourceRewind(source);
+}
+
+void AnnAudioSource::play()
+{
+	alSourcePlay(source);
+}
+
+void AnnAudioSource::pause()
+{
+	alSourcePause(source);
+}
+
+void AnnAudioSource::stop()
+{
+	alSourceStop(source);
+}
+
+void AnnAudioSource::setLooping(bool looping)
+{
+	if(looping) alSourcei(source, AL_LOOPING, AL_TRUE);
+	else alSourcei(source, AL_LOOPING, AL_FALSE);
+}
+
+void AnnAudioSource::setPositionRelToPlayer(bool rel)
+{
+	posRelToPlayer = rel;
 }
