@@ -24,11 +24,14 @@ void OculusInterface::init()
 	{
 		Annwvyn::AnnDebug() << "Error: Cannot get HMD";
 		//Debug HMD is now handeled by the configuration utility and the runtime.
-		Annwvyn::AnnDebug() << "Please note that if you want to use this program without a Rift pluged in, you have to activate the \"debug hmd\" setting on the runtime configuration utility";
+		Annwvyn::AnnDebug() << "Please note that if you want to use this program without a Rift pluged\
+in, you have to activate the \"debug hmd\" setting on the runtime configuration utility";
 #ifdef _WIN32
 		MessageBox(NULL, 
-			L"Can't find any Oculus HMD! \n \n(Please note that if you want to use this Annwvyn application without an Oculus Rift, you NEED to activate the \"debug hmd\" setting on the Oculus runtime configuration utility)", 
-			L"Error, No Rift found!", 
+			L"Can't find any Oculus HMD!\n\n(Please note that if you want to use this Annwvyn \
+application without an Oculus Rift, you NEED to activate the \"debug hmd\" setting \
+on the Oculus runtime configuration utility)", 
+			L"Error, No Oculus HDM found!", 
 			MB_ICONERROR);
 #endif
 		ovr_Shutdown();
@@ -66,6 +69,7 @@ void OculusInterface::init()
 	}
 
 #endif
+
 	customReport();
 	initialized = true;
 }

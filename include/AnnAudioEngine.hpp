@@ -35,6 +35,7 @@ namespace Annwvyn
 		AnnAudioSource();
 		friend class AnnAudioEngine;
 	public:
+		~AnnAudioSource();
 		void setPositon(AnnVect3 position);
 		void setVolume(float gain);
 		void rewind();
