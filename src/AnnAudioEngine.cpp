@@ -36,7 +36,7 @@ bool AnnAudioEngine::initOpenAL()
    	Context = alcCreateContext(Device, NULL);
     if (!Context)
         return false;
-     if (!alcMakeContextCurrent(Context))
+    if (!alcMakeContextCurrent(Context))
         return false;
     return true;
 }
@@ -50,8 +50,6 @@ void AnnAudioEngine::shutdownOpenAL()
 	//Stop and delete other audio sources
 	for(auto source : AudioSources)
 	{
-		alSourceStop(source->source);
-		alDeleteSources(1, &source->source);
 		delete source;
 		source = nullptr;
 	}
@@ -242,6 +240,13 @@ AnnAudioSource::AnnAudioSource()
 	pos = AnnVect3::ZERO;
 }
 
+AnnAudioSource::~AnnAudioSource()
+{
+	stop();
+	alDeleteSources(1, &source);
+	source = AL_NONE;
+}
+
 void AnnAudioSource::setPositon(AnnVect3 position)
 {
 	alSource3f(source, AL_POSITION, position.x, position.y, position.z);
@@ -251,7 +256,6 @@ void AnnAudioSource::setPositon(AnnVect3 position)
 void AnnAudioSource::setVolume(float gain)
 {
 	alSourcef(source, AL_GAIN, gain);
-	//AnnDebug() << bufferName << ":s:" << source << " set volume to : " << gain;
 }
 
 void AnnAudioSource::rewind()
@@ -277,7 +281,7 @@ void AnnAudioSource::stop()
 void AnnAudioSource::setLooping(bool looping)
 {
 	if(looping) alSourcei(source, AL_LOOPING, AL_TRUE);
-	else 	alSourcei(source, AL_LOOPING, AL_FALSE);
+	else alSourcei(source, AL_LOOPING, AL_FALSE);
 }
 
 void AnnAudioSource::setPositionRelToPlayer(bool rel)
