@@ -17,6 +17,8 @@
 using namespace std;
 using namespace Annwvyn;
 
+timerID demoTimer;
+
 class DebugListener : LISTENER
 {
 public:
@@ -27,6 +29,8 @@ public:
 	void TimeEvent(AnnTimeEvent e)
 	{
 		AnnDebug() << "TimeEvent id : " << e.getID();
+		if(e.getID() == demoTimer)
+			AnnDebug() << "This is the demoTimer that was launched on the main function !"; 
 	}
 	void TriggerEvent(AnnTriggerEvent e)
 	{
@@ -37,7 +41,7 @@ public:
 AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
-	//AnnEngine::openConsole();	
+	AnnEngine::openConsole();	
 	//Init game engine
 	AnnEngine* GameEngine(new AnnEngine("Test program"));
 
@@ -63,7 +67,7 @@ AnnMain()
 	GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
 	GameEngine->getEventManager()->addListener(new DebugListener);
-	GameEngine->getEventManager()->fireTimer(10000);
+	demoTimer = GameEngine->getEventManager()->fireTimer(10000);
 	
 	GameEngine->setDebugPhysicState(true);
 

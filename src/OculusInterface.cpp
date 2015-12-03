@@ -99,7 +99,7 @@ void OculusInterface::update(double time)
 {
 	if(!initialized) return;
 	firstUpdated = true;
-	ss = ovr_GetTrackingState(hmd, time);
+	ss = ovr_GetTrackingState(hmd, time, true);
 }
 
 OVR::Vector3f OculusInterface::getPosition()
