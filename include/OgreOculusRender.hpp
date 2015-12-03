@@ -241,7 +241,8 @@ class DLL OgreOculusRender
 		GLuint renderTextureID;
 		ovrVector3f offset[2];
 		Posef pose;
-		ovrFrameTiming hmdFrameTiming;
+		//ovrFrameTiming hmdFrameTiming;
+		double currentFrimeDisplayTime, lastFrameDisplayTime;
 		ovrTrackingState ts;
 		ovrEyeType eye;
 		Quatf oculusOrient;

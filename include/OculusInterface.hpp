@@ -54,15 +54,20 @@ class DLL OculusInterface
 	///Shutdown the oculus library
     void shutdown();
 
+#ifdef _WIN32
+	ovrSession getSession(){return (ovrSession) getHmd();}
+#endif
+
     private:
     bool initialized;
     bool firstUpdated;
-
+	
     ovrHmd hmd;
     ovrHmdDesc hmdDesc; 
 	ovrTrackingState ss;
 #ifdef _WIN32
 	ovrGraphicsLuid luid;
+	
 #endif
 };
 #endif

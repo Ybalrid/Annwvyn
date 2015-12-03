@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "OgreOculusRender.hpp"
 #include <OVR_CAPI_GL.h>
-#include <OVR_CAPI_0_7_0.h>
+#include <OVR_CAPI_0_8_0.h>
 //We need to get low level access to some GL textures 
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
@@ -9,7 +9,6 @@
 #include "AnnLogger.hpp"
 
 using namespace OVR;
-
 bool OgreOculusRender::forceNextUpdate(false);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(NULL);
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
@@ -47,26 +46,15 @@ OgreOculusRender::~OgreOculusRender()
 {
 	Annwvyn::AnnDebug() << "Destructing OgreOculus object and uninitializing Ogre...";
 	delete oc;
-
-	//TODO clean Ogre properly. There is stuff to delete manually before being able to delete "root".
-	window->removeAllViewports();
 	root->getRenderSystem()->destroyRenderWindow(window->getName());
-	//root->getRenderSystem()->detachRenderTarget("RttTex");
-	Ogre::TextureManager::getSingleton().getByName("RttTex")->getBuffer(0,0)->getRenderTarget()->removeAllViewports();
-	root->getRenderSystem()->destroyRenderTexture("RttTex");
-	debugSmgr->destroyAllCameras();
-	debugSmgr->destroyAllManualObjects(); 
-	debugSmgr->clearScene();
-	root->destroySceneManager(debugSmgr);
-	smgr->clearScene();
-	root->destroySceneManager(smgr);
-	Ogre::MaterialManager::getSingleton().remove("DebugPlaneMaterial");
-	delete root;
-	std::cerr << "Ogre root deleted." << std::endl;
+	//root->destroySceneManager(debugSmgr);
+	//root->destroySceneManager(smgr);
 
-//this is a "stop stupid crash hack" here:
-#pragma warning(disable : 4722) 
-	exit(0);
+	//Apparently manually removing the manually created texture unit state prevent ogre from crashing during cleanup... 
+	DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->removeAllTextureUnitStates();
+
+	delete root;
+
 }
 
 void OgreOculusRender::cycleOculusHUD()
@@ -183,7 +171,7 @@ void OgreOculusRender::initAllResources()
 void OgreOculusRender::initLibraries(std::string loggerName)
 {
 	//Create the ogre root with standards Ogre configuration file
-	root = new Ogre::Root("plugins.cfg", "ogre.cfg", loggerName.c_str());
+	root = new Ogre::Root("", "ogre.cfg", loggerName.c_str());
 
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	oc = new OculusInterface();
@@ -216,15 +204,10 @@ void OgreOculusRender::getOgreConfig()
 {
 	//Ogre as to be initialized
 	assert(root != NULL);
-	//Try to resore the config from an ogre.cfg file
-	if(!root->restoreConfig())
-		//Open the config dialog of Ogre (even if we're ignoring part of the parameters you can input from it)
-		if(!root->showConfigDialog())
-		//If the user clicked the "cancel" button or other bad stuff happened during the configuration (like a dragon attack)
-		{
-			Annwvyn::AnnDebug() << "Error: Cannot get render config.";
-			exit(ANN_ERR_RENDER);
-		}
+	root->loadPlugin("RenderSystem_GL");
+	root->loadPlugin("Plugin_OctreeSceneManager");
+	root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
+	root->getRenderSystem()->setFixedPipelineEnabled(true);
 }
 
 void OgreOculusRender::createWindow()
@@ -261,7 +244,7 @@ void OgreOculusRender::initScene()
 {
 	//Create the scene manager for the engine
 	assert(root != NULL);
-	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
+	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR"); 
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
 
 	//Create the scene manager for the debug output
@@ -436,8 +419,14 @@ void OgreOculusRender::RenderOneFrame()
 	cameraOrientation = CameraNode->getOrientation();
 
 	//Begin frame
-	hmdFrameTiming = ovr_GetFrameTiming(oc->getHmd(), 0);
-	ts = ovr_GetTrackingState(oc->getHmd(), hmdFrameTiming.DisplayMidpointSeconds);
+	//hmdFrameTiming = ovr_GetFrameTiming(oc->getHmd(), 0);
+
+	//getTiming:
+	lastFrameDisplayTime = currentFrimeDisplayTime;
+	ts = ovr_GetTrackingState(oc->getHmd(), currentFrimeDisplayTime = ovr_GetPredictedDisplayTime(oc->getHmd(), 0), ovrTrue);
+	updateTime = currentFrimeDisplayTime - lastFrameDisplayTime;
+
+
 	pose = ts.HeadPose.ThePose;
 	ovr_CalcEyePoses(pose, offset, layer.RenderPose); 
 	
@@ -471,7 +460,6 @@ void OgreOculusRender::RenderOneFrame()
 	
 	if(oorc) oorc->renderCallback();
 
-	updateTime = hmdFrameTiming.FrameIntervalSeconds;
 	//root->renderOneFrame();
 	root->_fireFrameRenderingQueued();
 	vpts[left]->update();
