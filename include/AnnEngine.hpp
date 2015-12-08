@@ -199,6 +199,7 @@ namespace Annwvyn
 
 		///Remove the sky dome
 		void removeSkyDome();
+		void removeSkyBox();
 
 		///Get the AnnObject the player is looking at
 		AnnGameObject* playerLookingAt(); //physics

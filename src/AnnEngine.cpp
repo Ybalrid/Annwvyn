@@ -125,9 +125,11 @@ AnnEngine::~AnnEngine()
 
 	log("Destroying the event manager");
 	delete eventManager;
+	eventManager = nullptr;
 
 	log("Destroy the levelManager");
 	delete levelManager;
+	levelManager = nullptr;
 
 	//All AnnGameObject
 	log("Destroying every objects remaining in engine");
@@ -154,10 +156,13 @@ AnnEngine::~AnnEngine()
 
 	log("Destroying physics engine");
 	delete physicsEngine;
+	physicsEngine = nullptr;
 	log("Destroying Player");
 	delete player;
+	player = nullptr;
 	log("Destroying AudioEngine");
 	delete AudioEngine;
+	AudioEngine = nullptr;
 
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
@@ -165,6 +170,7 @@ AnnEngine::~AnnEngine()
 	onScreenConsole = NULL;
 	singleton = NULL;
 	delete oor;
+	oor = nullptr;
 }
 
 AnnEventManager* AnnEngine::getEventManager()
@@ -629,6 +635,12 @@ void AnnEngine::removeSkyDome()
 {
 	log("Disabeling skydome");
 	m_SceneManager->setSkyDomeEnabled(false);
+}
+
+void AnnEngine::removeSkyBox()
+{
+	log("Disabeling skybox");
+	m_SceneManager->setSkyBoxEnabled(false);
 }
 
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
