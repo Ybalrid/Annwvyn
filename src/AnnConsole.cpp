@@ -27,7 +27,6 @@ AnnConsole::AnnConsole() :
 	*    |     /         |
 	*    |  /            |
 	*  1 +----------------+ 3
-	* Note that the rectangle is actually wider that it's height but I'm not verry good with ASCII art so... 
 	*/
 
 	//Define object data

@@ -110,7 +110,7 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 	std::vector<ALshort> Samples(NbSamples);
 	ALshort max = 0x7FFF; //biggest 16bits siged float (positive)
 	for(size_t i(0); i < Samples.size(); i++)
-		//This will step down a bit the amplitude of the signal to prevent saturation while using some formats (OGG)
+		//This will step down a bit the amplitude (88% of max) of the signal to prevent saturation while using some formats (OGG)
 		Samples[i] = max*SamplesFloat[i]*0.88f;
 
 	//close file

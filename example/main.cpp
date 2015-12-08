@@ -82,5 +82,4 @@ AnnMain()
 	while(GameEngine->refresh());
 
 	delete GameEngine;
-	return EXIT_SUCCESS;
 }

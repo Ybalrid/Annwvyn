@@ -46,7 +46,7 @@ OgreOculusRender::~OgreOculusRender()
 {
 	Annwvyn::AnnDebug() << "Destructing OgreOculus object and uninitializing Ogre...";
 	delete oc;
-	root->getRenderSystem()->destroyRenderWindow(window->getName());
+	//root->getRenderSystem()->destroyRenderWindow(window->getName());
 	//root->destroySceneManager(debugSmgr);
 	//root->destroySceneManager(smgr);
 
@@ -54,7 +54,6 @@ OgreOculusRender::~OgreOculusRender()
 	DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->removeAllTextureUnitStates();
 
 	delete root;
-
 }
 
 void OgreOculusRender::cycleOculusHUD()
@@ -324,7 +323,7 @@ void OgreOculusRender::initRttRendering()
 	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
 	renderTextureID = gltex->getGLID();
 
-	vpts[left] = rttEyes->addViewport(cams[left], 0, 0, 0, 0.5f);
+	vpts[left]  = rttEyes->addViewport(cams[left],  0, 0,    0, 0.5f);
 	vpts[right] = rttEyes->addViewport(cams[right], 1, 0.5f, 0, 0.5f);
 
 	changeViewportBackgroundColor(backgroundColor);
@@ -366,18 +365,18 @@ void OgreOculusRender::showMirrorView()
 void OgreOculusRender::initOculus(bool fullscreenState)
 {
 	//Populate OVR structures
-	EyeRenderDesc[left] = ovr_GetRenderDesc(oc->getHmd(), ovrEye_Left, oc->getHmdDesc().MaxEyeFov[left]);
+	EyeRenderDesc[left]  = ovr_GetRenderDesc(oc->getHmd(), ovrEye_Left,  oc->getHmdDesc().MaxEyeFov[left]);
 	EyeRenderDesc[right] = ovr_GetRenderDesc(oc->getHmd(), ovrEye_Right, oc->getHmdDesc().MaxEyeFov[right]);
-	offset[left]=EyeRenderDesc[left].HmdToEyeViewOffset;
+	offset[left] =EyeRenderDesc[left].HmdToEyeViewOffset;
 	offset[right]=EyeRenderDesc[right].HmdToEyeViewOffset;
 
 	//Create a layer with our single swaptexture on it. Each side is an eye.
 	layer.Header.Type = ovrLayerType_EyeFov;
-	layer.ColorTexture[left] = textureSet;
+	layer.ColorTexture[left]  = textureSet;
 	layer.ColorTexture[right] = textureSet;
-	layer.Fov[left] = EyeRenderDesc[left].Fov;
+	layer.Fov[left]  = EyeRenderDesc[left].Fov;
 	layer.Fov[right] = EyeRenderDesc[right].Fov;
-	layer.Viewport[left] = Recti(0, 0, bufferSize.w/2, bufferSize.h);
+	layer.Viewport[left]  = Recti(0, 0, bufferSize.w/2, bufferSize.h);
 	layer.Viewport[right] = Recti(bufferSize.w/2, 0, bufferSize.w/2, bufferSize.h);
 
 	//This need to be called at least once
@@ -477,6 +476,7 @@ void OgreOculusRender::RenderOneFrame()
 	glCopyImageSubData(oculusMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, 1);
+
 	if(window->isVisible())
 	{
 		debugViewport->update();
