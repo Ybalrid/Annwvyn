@@ -41,9 +41,10 @@ on the Oculus runtime configuration utility)",
 	}
 	hmdDesc = ovr_GetHmdDesc(hmd);
 
-	r = ovr_ConfigureTracking(hmd, //Oculus HMD
+	//This is useless with OVR 0.8.0.0
+	/*r = ovr_ConfigureTracking(hmd, //Oculus HMD
 		ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
-		0); //minial required 
+		0); //minial required */
 
 #else //Linux, probably... Still using verry old Oculus...
 	ovrHmd_Initialize();
@@ -77,7 +78,7 @@ on the Oculus runtime configuration utility)",
 void OculusInterface::shutdown()
 {
 	if(initialized)
-		ovr_Destroy(hmd);
+		ovr_Destroy(getSession());
 	ovr_Shutdown();
 	Annwvyn::AnnDebug("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
 }

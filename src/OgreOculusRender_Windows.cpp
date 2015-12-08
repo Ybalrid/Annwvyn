@@ -46,14 +46,18 @@ OgreOculusRender::~OgreOculusRender()
 {
 	Annwvyn::AnnDebug() << "Destructing OgreOculus object and uninitializing Ogre...";
 	delete oc;
+	oc = nullptr;
 	//root->getRenderSystem()->destroyRenderWindow(window->getName());
-	//root->destroySceneManager(debugSmgr);
-	//root->destroySceneManager(smgr);
+	root->destroySceneManager(debugSmgr);
+	root->destroySceneManager(smgr);
 
 	//Apparently manually removing the manually created texture unit state prevent ogre from crashing during cleanup... 
 	DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->removeAllTextureUnitStates();
 
+	root->unloadPlugin("Plugin_OctreeSceneManager");
+//	root->unloadPlugin("RenderSystem_GL");
 	delete root;
+	root = nullptr;
 }
 
 void OgreOculusRender::cycleOculusHUD()
@@ -287,6 +291,7 @@ void OgreOculusRender::initScene()
 	debugPlaneNode->setVisible(true);
 }
 
+///This will create the Oculus Textures and the Ogre textures for rendering and mirror display
 void OgreOculusRender::initRttRendering()
 {
 	//Init GLEW here to be able to call OpenGL functions
@@ -372,6 +377,7 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 
 	//Create a layer with our single swaptexture on it. Each side is an eye.
 	layer.Header.Type = ovrLayerType_EyeFov;
+	layer.Header.Flags = 0;
 	layer.ColorTexture[left]  = textureSet;
 	layer.ColorTexture[right] = textureSet;
 	layer.Fov[left]  = EyeRenderDesc[left].Fov;
@@ -412,20 +418,17 @@ void OgreOculusRender::calculateProjectionMatrix()
 void OgreOculusRender::RenderOneFrame()
 {
 	Ogre::WindowEventUtilities::messagePump();
-	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
-	//get some info
+
+	//Get current camera base information
 	cameraPosition = CameraNode->getPosition();
 	cameraOrientation = CameraNode->getOrientation();
 
-	//Begin frame
-	//hmdFrameTiming = ovr_GetFrameTiming(oc->getHmd(), 0);
-
-	//getTiming:
+	//Begin frame - get timing
 	lastFrameDisplayTime = currentFrimeDisplayTime;
 	ts = ovr_GetTrackingState(oc->getHmd(), currentFrimeDisplayTime = ovr_GetPredictedDisplayTime(oc->getHmd(), 0), ovrTrue);
 	updateTime = currentFrimeDisplayTime - lastFrameDisplayTime;
 
-
+	//Get the pose
 	pose = ts.HeadPose.ThePose;
 	ovr_CalcEyePoses(pose, offset, layer.RenderPose); 
 	
@@ -433,7 +436,10 @@ void OgreOculusRender::RenderOneFrame()
 	oculusOrient = pose.Rotation;
 	oculusPos = pose.Translation;
 
-	//Apply pose to cameras
+	//Select the current render texture
+	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
+
+	//Apply pose to the two cameras
 	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		size_t eye = eyeIndex;	
@@ -453,10 +459,11 @@ void OgreOculusRender::RenderOneFrame()
 			oculusPos.z)));
 	}
 
-	//update the pose for gameplay purposes
+	//Update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
 	
+	//Process operation that have to be done before rendering but after the pov in known
 	if(oorc) oorc->renderCallback();
 
 	//root->renderOneFrame();
@@ -468,8 +475,11 @@ void OgreOculusRender::RenderOneFrame()
 	glCopyImageSubData(renderTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		((ovrGLTexture*)(&textureSet->Textures[textureSet->CurrentIndex]))->OGL.TexId, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		bufferSize.w,bufferSize.h, 1);
-
+	
+	//Get the rendering layer
 	layers = &layer.Header;
+
+	//Submit the frame 
 	ovr_SubmitFrame(oc->getHmd(), 0, nullptr, &layers, 1);
 
 	//Put the mirrored view available for OGRE
@@ -477,6 +487,7 @@ void OgreOculusRender::RenderOneFrame()
 		ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, 1);
 
+	//Update the render mirrored view
 	if(window->isVisible())
 	{
 		debugViewport->update();
