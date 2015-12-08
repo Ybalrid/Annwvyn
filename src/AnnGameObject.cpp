@@ -25,8 +25,8 @@ AnnGameObject::~AnnGameObject()
 {
 	//Clean OpenAL desaloc
 	alSourceStop(m_Source);
-	alDeleteSources(1,&m_Source);
-	alDeleteBuffers(1,&m_Buffer);
+	alDeleteSources(1, &m_Source);
+	alDeleteBuffers(1, &m_Buffer);
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)

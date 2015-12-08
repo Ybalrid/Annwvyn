@@ -16,6 +16,7 @@ AnnLevelManager::~AnnLevelManager()
 	//clear the levels
 	for(auto it = levelList.begin(); it != levelList.end(); it++)
 		delete *it;
+	levelList.clear();
 }
 
 void AnnLevelManager::jump(size_t levelId)
