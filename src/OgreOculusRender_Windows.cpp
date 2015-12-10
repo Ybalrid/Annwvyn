@@ -27,7 +27,7 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
 	updateTime(0),
 	fullscreen(false),
 	vsync(activateVsync),
-	hsDissmissed(false),
+	//hsDissmissed(false),
 	backgroundColor(0,0.56f,1),
 	debug(NULL),
 	textureSet(NULL),
@@ -78,7 +78,7 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 void OgreOculusRender::dissmissHS()
 {
 	//ovrHmd_DismissHSWDisplay(oc->getHmd());
-	hsDissmissed = true;
+//	hsDissmissed = true;
 }
 
 void OgreOculusRender::setFullScreen(bool fs)
@@ -137,11 +137,6 @@ double OgreOculusRender::getUpdateTime()
 void OgreOculusRender::recenter()
 {
 	ovr_RecenterPose(oc->getHmd());
-}
-
-bool OgreOculusRender::IsHsDissmissed()
-{
-	return hsDissmissed;
 }
 
 void OgreOculusRender::loadReseourceFile(const char path[])
