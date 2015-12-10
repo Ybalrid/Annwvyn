@@ -56,8 +56,11 @@ AnnMain()
 	
 	//Init some player body parameters
 	GameEngine->initPlayerPhysics();
-	GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
-	
+
+	//This was probably a *bad* idea:
+	//GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
+
+
 	//Register a level
 	AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
 	GameEngine->getLevelManager()->addLevel(level);

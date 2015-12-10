@@ -153,6 +153,7 @@ class DLL OgreOculusRender
 		static void showMirrorView();
 
     private:
+		///Everything that is an array of 2 will use theses indexes in code. 
         enum 
         {
             left = 0,
@@ -173,26 +174,28 @@ class DLL OgreOculusRender
         ///Ogre Root instance
         Ogre::Root* root;
 
-		///Ogre Render Window
-        Ogre::RenderWindow* window;
-		Ogre::RenderWindow* debug;
+		///Ogre Render Window and debug
+        Ogre::RenderWindow* window, * debug;
+
+		///Viewports on the debug window
 		Ogre::Viewport* debugVP[2];
 
 		///Ogre Scene Manager
-        Ogre::SceneManager* smgr, *debugSmgr;	
+        Ogre::SceneManager* smgr, * debugSmgr;	
 
-		///Stereoscopic camera array. Indexes are "left" and "right"
+		///Stereoscopic camera array. Indexes are "left" and "right" + debug view cam
         Ogre::Camera* cams[2], * debugCam;
-		Ogre::SceneNode* debugCamNode, * debugPlaneNode;
-
+		
 		///For distortion rendering. The 2 distortion meshes are in a different scene manager
 		Ogre::SceneManager* rift_smgr;
+
+		///Nodes for the debug scene
+		Ogre::SceneNode* debugCamNode, * debugPlaneNode;
+
 		///For rendering an orthographic projection of the textured distortion meshes
 		Ogre::Camera* rift_cam;
 
-		Ogre::MaterialPtr mMatLeft, mMatRight;
-		Ogre::TexturePtr mLeftEyeRenderTexture, mRightEyeRenderTexture;
-		Ogre::Viewport* mViewport;
+		///Node that store camera position/orientation
         Ogre::SceneNode* CameraNode;
 
 		///Textures used for RTT Rendering. Indexes are "left" and "right"
@@ -216,19 +219,20 @@ class DLL OgreOculusRender
 		///Size of left eye texture
         ovrSizei texSizeL, texSizeR, bufferSize;
 
+		///Mirror texture 
 		ovrTexture* mirrorTexture;
 		GLuint oculusMirrorTextureID, ogreMirrorTextureID;
 
 		///Position of the camera.
         Ogre::Vector3 cameraPosition;
+
 		///Orientation of the camera.
         Ogre::Quaternion cameraOrientation;
-
-		bool hsDissmissed;
 
 		///Time betwenn frames in seconds
         double updateTime;
 
+		///Callback object. Permit to add code just before the rendering
 		OgreOculusRenderCallback* oorc;
 
 #ifdef WIN32
@@ -236,24 +240,39 @@ class DLL OgreOculusRender
 		static Ogre::TextureUnitState* debugTexturePlane;
 
 	private:
+		///Compositing layer for the rendered scene
 		ovrLayerEyeFov layer;
+		///GL texture set for the rendering
 		ovrSwapTextureSet* textureSet;
+		///GL Texture ID of the render texture
 		GLuint renderTextureID;
+		///
 		ovrVector3f offset[2];
+		///Pose (position+orientation) 
 		Posef pose;
-		//ovrFrameTiming hmdFrameTiming;
+		///Timing in seconds 
 		double currentFrimeDisplayTime, lastFrameDisplayTime;
+		///Tracking state
 		ovrTrackingState ts;
+		///Current eye getting updated
 		ovrEyeType eye;
+		///Orientation of the headset
 		Quatf oculusOrient;
+		///Position of the headset
 		Vector3f oculusPos;
+		///Pointer to the layer to be submited
 		ovrLayerHeader* layers;
+		///State of the performance HUD
 		int perfHudMode;
 #endif 
+		///Pointer to the debug plane
 		Ogre::MaterialPtr DebugPlaneMaterial;
     public:
+		///Position of the rift at the last frame
         Ogre::Vector3 lastOculusPosition;
+		///Orientation of the rift at the last frame
         Ogre::Quaternion lastOculusOrientation;
+		///Pose to be returned
 		OgrePose returnPose;
 };
 #endif //OGRE_OCULUS_RENDERER
