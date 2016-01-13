@@ -215,7 +215,12 @@ void OgreOculusRender::createWindow()
 	misc["vsync"] = "false";
 
 	root->initialise(false);
-	window = root->createRenderWindow("debug rift output " + name, oc->getHmdDesc().Resolution.w/2, oc->getHmdDesc().Resolution.h/2, false, &misc);
+
+	float w(oc->getHmdDesc().Resolution.w), h(oc->getHmdDesc().Resolution.h);
+	if(w >= 1920) w /=2;
+	if(h >= 1080) h /=2;
+
+	window = root->createRenderWindow("debug rift output " + name, w, h, false, &misc);
 }
 
 void OgreOculusRender::initCameras()
