@@ -10,13 +10,13 @@ Requied hardware
 ----------------
 
  - A fairly recent GPU. Support for OpenGL 4.3 is mandatory
- - Oculus VR Headset (Rift) Dev Kit 2, 1 should work also but I haven't tested it. 
+ - Oculus VR Headset (Rift) Dev Kit 2, DK1 will run too but you'll not have positional tracking (since it can't do it)
 
 Building on Windows
 -------------------
 
 As stated in the DEPEDENCIES file, you should download the SDK from http://annwvyn.org/
-If you are using windows 10, install and get running runtime 0.7 with apropriate drivers
+Please install Runtime 0.8 and the lattest drivers of your graphics card manufacturer.
 
 
 Building on Linux (experimental) (unsuported by oculus. This use a fairly outdated SDK...)
@@ -51,9 +51,21 @@ sudo modprobe ovcvideo quirks=0
 Using the engine
 ----------------
 
-Make a copy of the "template" directory to a convinient location for you, and you are ready to go.
+Make a copy of the "template" directory to a convinient location for you, and you are ready to go. It conains a Visual Studio project allready configured.
+
+**Make sure to put it in release/x64 mode before building it!**
 
 On windows you need to have a environement variable "AnnwvynSDK" set to the SDK location. This is done automaticly by the SDK installer, but if you encounter problem, you should run again the RUNME.bat script on the SDK installation folder
+
+
+Updating the engine
+-------------------
+
+Run "git pull" on the Annwvyn sub-directory. then open the VS solution in msvc/Annwvyn/Annwyvn.sln
+
+Clean and build the solution.
+
+If you have problems regarding the Oculus SDK, you probably need to install new runtime, then download teh newest SDK and put it in place of the older one. Check commit log to see if there is mention of SDK update.
 
 ______
 
@@ -62,4 +74,3 @@ If you want more information about the project, please consult the official webs
 This project is in it's realy early phases of developpement. If you have any question, feel free to contact me.
 
 Licence MIT.
-
