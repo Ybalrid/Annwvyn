@@ -13,6 +13,7 @@
 //Annwvyn
 #include <Annwvyn.h>
 #include "TestLevel.hpp"
+#include <AnnSplashLevel.hpp>
 
 using namespace std;
 using namespace Annwvyn;
@@ -59,12 +60,19 @@ AnnMain()
 
 	//This was probably a *bad* idea:
 	//GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
-
+	 
 
 	//Register a level
+	AnnSplashLevel* splash = new AnnSplashLevel("splash.png");
 	AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
-	GameEngine->getLevelManager()->addLevel(level);
+	splash->setNextLevel(level);
+	splash->setTimeout(10);
+	
+	//GameEngine->getLevelManager()->addLevel(level);
 	//GameEngine->getLevelManager()->addLevel(new TestLevel);	//This is the first level known by the LevelManager (and the only one here)
+	GameEngine->getLevelManager()->addLevel(splash);
+	GameEngine->getLevelManager()->addLevel(level);
+
 	GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
 	
 	GameEngine->useDefaultEventListener();
@@ -72,7 +80,7 @@ AnnMain()
 	GameEngine->getEventManager()->addListener(new DebugListener);
 	demoTimer = GameEngine->getEventManager()->fireTimer(10000);
 	
-	GameEngine->setDebugPhysicState(true);
+	GameEngine->setDebugPhysicState(false);
 
 	AnnDebug() << "Starting the render loop";
 	do	

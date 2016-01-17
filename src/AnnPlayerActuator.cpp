@@ -16,11 +16,12 @@ AnnDefaultPlayerActuator::AnnDefaultPlayerActuator() : AnnPlayerActuator()
 
 void AnnDefaultPlayerActuator::actuate(float delta)
 {
+	if(!player->getBody()) return;
 	//Get WASD or Gamepad joystick tranlation vector
 	AnnVect3 translate(player->getWalkSpeed() * (player->getTranslation() + player->getAnalogTranslation()));
 	//Get current linear velocity
 	btVector3 currentVelocity = player->getBody()->getLinearVelocity();
-
+	 
 	//if no  user input, be just pull toward the ground by gravity (not physicly realist, but usefull)
 	if(translate.isZeroLength())
 	{

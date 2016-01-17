@@ -45,6 +45,8 @@ AnnPlayer::AnnPlayer()
 	actuator = nullptr;
 	setActuator (new AnnDefaultPlayerActuator);
 
+	ignorePhysics = false;
+
 }
 
 void AnnPlayer::setActuator(AnnPlayerActuator* act)
@@ -230,6 +232,7 @@ float AnnPlayer::getRunFactor()
 
 void AnnPlayer::engineUpdate(float deltaTime)
 {
+	if(ignorePhysics) return;
 	updateTime = deltaTime;
 	if(getBody())
 	{

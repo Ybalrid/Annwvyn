@@ -65,6 +65,7 @@
 #include "AnnLogger.hpp"
 #include "AnnAbstractLevel.hpp"
 #include "AnnXmlLevel.hpp"
+#include "AnnSplashLevel.hpp"
 
 //Other Annwvyn
 #include "AnnTypes.h"

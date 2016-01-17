@@ -130,6 +130,9 @@
     <ClInclude Include="..\..\include\AnnPlayerActuator.hpp">
       <Filter>Annwvyn\Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnSplashLevel.hpp">
+      <Filter>Annwvyn\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
@@ -202,6 +205,9 @@
       <Filter>Internaly packaged libraries\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnPlayerActuator.cpp">
+      <Filter>Annwvyn\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnSplashLevel.cpp">
       <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
   </ItemGroup>

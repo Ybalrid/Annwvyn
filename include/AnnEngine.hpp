@@ -195,7 +195,7 @@ namespace Annwvyn
 
 		///Set the viewports background color
 		/// \param v background color
-		void setWorldBackgroudColor(Ogre::ColourValue v); 
+		void setWorldBackgroudColor(Ogre::ColourValue v = Ogre::ColourValue(0, 0.56f, 1)); 
 
 		///Remove the sky dome
 		void removeSkyDome();
