@@ -162,7 +162,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -201,6 +201,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnPlayer.hpp" />
     <ClInclude Include="..\..\include\AnnPlayerActuator.hpp" />
     <ClInclude Include="..\..\include\AnnQuaternion.hpp" />
+    <ClInclude Include="..\..\include\AnnSplashLevel.hpp" />
     <ClInclude Include="..\..\include\AnnTools.h" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
     <ClInclude Include="..\..\include\AnnTypes.h" />
@@ -236,6 +237,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnPlayer.cpp" />
     <ClCompile Include="..\..\src\AnnPlayerActuator.cpp" />
     <ClCompile Include="..\..\src\AnnQuaternion.cpp" />
+    <ClCompile Include="..\..\src\AnnSplashLevel.cpp" />
     <ClCompile Include="..\..\src\AnnTools.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
     <ClCompile Include="..\..\src\AnnVect3.cpp" />

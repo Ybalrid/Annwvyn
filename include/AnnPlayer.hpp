@@ -199,6 +199,7 @@ namespace Annwvyn
 
 		AnnPlayerActuator* actuator;
 	public:
+		bool ignorePhysics;
 		///Waling state. Forward Backward Left Right
 		bool walking[4];
 

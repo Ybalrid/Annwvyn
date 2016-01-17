@@ -39,7 +39,7 @@ namespace Annwvyn
 		AnnGameObject* addGameObject(std::string entityName, std::string id = noID);
 
 		std::string name;
-	private:
+
 		std::string generateRandomID(size_t len = defaultIdLen);
 	};
 }
