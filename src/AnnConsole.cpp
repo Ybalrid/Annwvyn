@@ -19,7 +19,7 @@ AnnConsole::AnnConsole() :
 	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
 
 	/*
-	* The displaySurface is a perfect rectangle drawn by 2 polygons. The position in object-space are defined as folowing 
+	* The displaySurface is a perfect rectangle drawn by 2 polygons (tiangles). The position in object-space are defined as folowing 
 	* on the "points" array : 
 	*  0 +---------------+ 2
 	*    |           /   |
@@ -27,6 +27,7 @@ AnnConsole::AnnConsole() :
 	*    |     /         |
 	*    |  /            |
 	*  1 +----------------+ 3
+	* Texture coordinates are also mapped. To display properly, the texture should respect the same aspect ratio (2:1)
 	*/
 
 	//Define object data

@@ -12,13 +12,16 @@
 
 namespace Annwvyn
 {
-	class DLL AnnSplashLevel : LEVEL
+	class DLL AnnSplashLevel : public AnnAbstractLevel
 	{
 	public:
-		AnnSplashLevel(Ogre::String splashTexture);
+		///Construct a SplashLevel.
+		///\param splashTexture Name of the resource (image) to put in front of the player
+		AnnSplashLevel(Ogre::String splashTexture, AnnAbstractLevel* nextLevel = nullptr, float timeoutTime = 10);
 		void load();
 		void runLogic();
 		void unload();
+		void setBGM(std::string path);
 
 		///Set the level to jump to after timeout
 		void setNextLevel(AnnAbstractLevel* level);
@@ -30,6 +33,8 @@ namespace Annwvyn
 		Ogre::ManualObject* CurvedPlane;
 		Ogre::SceneNode* Splash;
 		Ogre::String splashImage;
+		bool hasBGM;
+		std::string bgmPath;
 	};
 
 }

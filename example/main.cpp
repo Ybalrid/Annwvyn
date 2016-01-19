@@ -63,16 +63,12 @@ AnnMain()
 	 
 
 	//Register a level
-	AnnSplashLevel* splash = new AnnSplashLevel("splash.png");
 	AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
-	splash->setNextLevel(level);
-	splash->setTimeout(10);
-	
-	//GameEngine->getLevelManager()->addLevel(level);
-	//GameEngine->getLevelManager()->addLevel(new TestLevel);	//This is the first level known by the LevelManager (and the only one here)
+	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 5);
+
+
 	GameEngine->getLevelManager()->addLevel(splash);
 	GameEngine->getLevelManager()->addLevel(level);
-
 	GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
 	
 	GameEngine->useDefaultEventListener();
