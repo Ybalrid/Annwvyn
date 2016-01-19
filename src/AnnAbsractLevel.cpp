@@ -2,7 +2,6 @@
 #include "AnnAbstractLevel.hpp"
 #include "AnnLogger.hpp"
 
-
 using namespace Annwvyn;
 
 AnnAbstractLevel::AnnAbstractLevel()

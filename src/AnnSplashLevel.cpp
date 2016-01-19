@@ -5,12 +5,13 @@
 
 using namespace Annwvyn;
 
-AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName) : constructLevel(),
-	next(nullptr),
-	timeout(10*1000),
+AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, AnnAbstractLevel* nextLevel, float timeoutTime) : constructLevel(),
+	next(nextLevel),
+	timeout(timeoutTime*1000),
 	currentTime(0),
 	startTime(-1),
-	splashImage(resourceName)
+	splashImage(resourceName),
+	hasBGM(false)
 {
 }
 
@@ -22,7 +23,7 @@ void AnnSplashLevel::load()
 	AnnEngine::Instance()->getPlayer()->setOrientation(Ogre::Euler(0,0,0));
 
 	//Create manual material
-	AnnDebug() << "Creating a material with no culling and the wanted texture";
+	AnnDebug() << "Creating a material with no culling, now lighting, and the wanted texture";
 	Ogre::MaterialPtr Console = Ogre::MaterialManager::getSingleton().create("Splash", "General", true);
 	Ogre::Technique* technique = Console.getPointer()->getTechnique(0);
 	Ogre::Pass* pass = technique->getPass(0);
@@ -82,14 +83,24 @@ void AnnSplashLevel::load()
 
 	AnnDebug() << "Starting time at : " << AnnEngine::Instance()->getTimeFromStartUp();
 	startTime = AnnEngine::Instance()->getTimeFromStartUp();
+	if(hasBGM)
+		AnnEngine::Instance()->getAudioEngine()->playBGM(bgmPath);
+}
+
+void AnnSplashLevel::setBGM(std::string path)
+{
+	AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
+	hasBGM = true;
 }
 
 void AnnSplashLevel::runLogic()
 {
 	if(!next) return;
 	currentTime = AnnEngine::Instance()->getTimeFromStartUp();
-	if(currentTime - startTime > timeout)
+	float time;
+	if((time = currentTime - startTime)> timeout)
 		AnnEngine::Instance()->getLevelManager()->jump(next);
+	AnnDebug() << time;
 }
 
 void AnnSplashLevel::unload()
