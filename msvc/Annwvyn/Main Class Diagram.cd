@@ -19,18 +19,18 @@
     <NestedTypes>
       <Enum Name="OgreOculusRender::__unnamed_enum_0019_1" Collapsed="true">
         <TypeIdentifier>
-          <NewMemberFileName>D:\Oculus\AnnwvynSDK_64\Annwvyn\include\OgreOculusRender.hpp</NewMemberFileName>
+          <NewMemberFileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\OgreOculusRender.hpp</NewMemberFileName>
         </TypeIdentifier>
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>RYyAG4QJNUdJUgEBAGGwRAgCIFgMwQgI7gXCBgoRBQQ=</HashCode>
+      <HashCode>RYyAGwQJNUdJAgEBAGEwRAgCIFgMQQgI7gXABggRBQA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\OgreOculusRender.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Field Name="returnPose" />
       <Field Name="oc" />
       <Field Name="oorc" />
-      <Field Name="returnPose" />
     </ShowAsAssociation>
   </Class>
   <Class Name="OculusInterface">
@@ -206,7 +206,7 @@
   <Class Name="Annwvyn::AnnEngine">
     <Position X="9.75" Y="7.25" Width="3.75" />
     <TypeIdentifier>
-      <HashCode>SgkCTGACyFCSEQAiAkgKmB8ACSAhBBBVyBICIEosAME=</HashCode>
+      <HashCode>SgkCTGACyFCSEQAiAkgKmB8ACSAhBBBVyBICIEgsAME=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\AnnEngine.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -214,11 +214,11 @@
       <Field Name="onScreenConsole" />
       <Field Name="AudioEngine" />
       <Field Name="player" />
-      <Field Name="eventManager" />
       <Field Name="defaultEventListener" />
       <Field Name="physicsEngine" />
       <Field Name="levelManager" />
       <Field Name="oor" />
+      <Field Name="eventManager" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Annwvyn::AnnLevelManager">

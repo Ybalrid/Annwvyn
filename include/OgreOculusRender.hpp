@@ -5,7 +5,7 @@
  */
 
 ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
-///Shout out to Kocjack too for his post of an OgreOculus a short time after DK1 was out
+///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
 
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
@@ -98,14 +98,7 @@ class DLL OgreOculusRender
         void initRttRendering();
         
 		///Init the Rift rendering. Configure Oculus SDK to use the two RTT textures created.
-		///Overload of initOculus(); Permit to specify the Full Screen mode (or not)
-		void initOculus(bool fullscreenState = true);
-
-		///Set fullscreen. Value only used at window creation
-		void setFullScreen(bool fs = true);
-
-		///Return true if fullscreen set.
-		bool isFullscreen();
+		void initOculus();
 
 		///Get the scene manager.
         Ogre::SceneManager* getSceneManager();
@@ -115,9 +108,6 @@ class DLL OgreOculusRender
 
 		///Print various informations about the cameras
         void debugPrint();
-
-		///Save content of 'left eye' RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
-        void debugSaveToFile(const char path[]);
 
 		///Get a node representing the camera. NOTE: Camera isn"t attached.
         Ogre::SceneNode* getCameraInformationNode();
@@ -131,12 +121,6 @@ class DLL OgreOculusRender
 		///Recenter rift to default position.
 		void recenter();
 
-		///Get to know if the Health and Safety warning dissmiss has be requested
-		bool IsHsDissmissed();
-
-		///Request the dissmiss of the Health and Safety warning
-		void dissmissHS();
-
 		///Compute from OVR the correct projection matrix for the given clipping distance
 		void calculateProjectionMatrix();
 
@@ -144,12 +128,12 @@ class DLL OgreOculusRender
 		void changeViewportBackgroundColor(Ogre::ColourValue color);
 
 		///Register the address of an OgreOculusRenderCallback object wich get a access point to execute some code just before the rendering occurs.
-		void setRenderCallback(OgreOculusRenderCallback* callback){oorc = callback;}
+		void setRenderCallback(OgreOculusRenderCallback* callback);
 
-		///Open a window on the main screen showing what the eyes cameras are seeing
-		void openDebugWindow();
-
+		///Show in debug window what the camera are seeing
 		static void showRawView();
+
+		///Show in the debug window what the Oculus service send as mirrored view
 		static void showMirrorView();
 
     private:
@@ -160,10 +144,15 @@ class DLL OgreOculusRender
             right = 1
         };
 
-		///If true, window will be created in full screen mode
-		bool fullscreen;
-		///If true, window will be created with the "vsync" parameter set to true
-		bool vsync;
+		///Save content of the RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
+		///Note that this is SLOW AS HELL!
+        void debugSaveToFile(const char path[]);
+
+		///Callback object. Permit to add code just before the rendering
+		OgreOculusRenderCallback* oorc;
+		
+		///Object for getting informations from the Oculus Rift
+        OculusInterface* oc;
 
 		///background color of viewports
 		Ogre::ColourValue backgroundColor;
@@ -174,11 +163,8 @@ class DLL OgreOculusRender
         ///Ogre Root instance
         Ogre::Root* root;
 
-		///Ogre Render Window and debug
-        Ogre::RenderWindow* window, * debug;
-
-		///Viewports on the debug window
-		Ogre::Viewport* debugVP[2];
+		///Ogre Render Window for debuging out
+        Ogre::RenderWindow* window;
 
 		///Ogre Scene Manager
         Ogre::SceneManager* smgr, * debugSmgr;	
@@ -186,14 +172,8 @@ class DLL OgreOculusRender
 		///Stereoscopic camera array. Indexes are "left" and "right" + debug view cam
         Ogre::Camera* cams[2], * debugCam;
 		
-		///For distortion rendering. The 2 distortion meshes are in a different scene manager
-		Ogre::SceneManager* rift_smgr;
-
 		///Nodes for the debug scene
 		Ogre::SceneNode* debugCamNode, * debugPlaneNode;
-
-		///For rendering an orthographic projection of the textured distortion meshes
-		Ogre::Camera* rift_cam;
 
 		///Node that store camera position/orientation
         Ogre::SceneNode* CameraNode;
@@ -204,11 +184,8 @@ class DLL OgreOculusRender
 		///Vewports on textures. Textures are separated. One vieport for each textures
         Ogre::Viewport* vpts[2], *debugViewport;
 
-		///The Z axis near clipping plane distance
+		///The Z axis clipping planes distances
         Ogre::Real nearClippingDistance, farClippingDistance;
-
-        ///Object for getting informations from the Oculus Rift
-        OculusInterface* oc;
 
 		///Fov descriptor for each eye. Indexes are "left" and "right"
         ovrFovPort EyeFov[2];
@@ -221,6 +198,8 @@ class DLL OgreOculusRender
 
 		///Mirror texture 
 		ovrTexture* mirrorTexture;
+
+		///OpenGL Texture ID of the mirror texture buffers 
 		GLuint oculusMirrorTextureID, ogreMirrorTextureID;
 
 		///Position of the camera.
@@ -229,11 +208,11 @@ class DLL OgreOculusRender
 		///Orientation of the camera.
         Ogre::Quaternion cameraOrientation;
 
-		///Time betwenn frames in seconds
+		///Time between two frames in seconds
         double updateTime;
 
-		///Callback object. Permit to add code just before the rendering
-		OgreOculusRenderCallback* oorc;
+		///Pointer to the debug plane manual material
+		Ogre::MaterialPtr DebugPlaneMaterial;
 
 #ifdef WIN32
 	public:
@@ -246,7 +225,7 @@ class DLL OgreOculusRender
 		ovrSwapTextureSet* textureSet;
 		///GL Texture ID of the render texture
 		GLuint renderTextureID;
-		///
+		///offcet between render center and camera (for IPD variation)
 		ovrVector3f offset[2];
 		///Pose (position+orientation) 
 		Posef pose;
@@ -265,8 +244,7 @@ class DLL OgreOculusRender
 		///State of the performance HUD
 		int perfHudMode;
 #endif 
-		///Pointer to the debug plane
-		Ogre::MaterialPtr DebugPlaneMaterial;
+		
     public:
 		///Position of the rift at the last frame
         Ogre::Vector3 lastOculusPosition;

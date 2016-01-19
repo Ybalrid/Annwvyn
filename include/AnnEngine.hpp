@@ -108,7 +108,7 @@ namespace Annwvyn
 		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 
 		///Init OgreOculus stuff
-		void oculusInit(bool fullscreen = true); //oculus
+		void oculusInit(); //oculus
 
 		///Init the physics model
 		void initPlayerPhysics(); //physics on player 
@@ -255,9 +255,6 @@ namespace Annwvyn
 		///simple way to acces the standard io on a Win32 application
 		static void openConsole();
 
-		///See OgreOculusRender::openDebugWindow()
-		void openDebugWindow();
-
 		///Get the current level manager
 		AnnLevelManager* getLevelManager();
 
@@ -283,6 +280,7 @@ namespace Annwvyn
 		AnnPlayer* player;
 		//Event manager
 		AnnEventManager* eventManager;
+		//This event listener do WASD+mouse movement on the player
 		AnnDefaultEventListener* defaultEventListener;
 		//Physics
 		AnnPhysicsEngine* physicsEngine;

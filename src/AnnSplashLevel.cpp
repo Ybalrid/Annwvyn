@@ -98,10 +98,8 @@ void AnnSplashLevel::runLogic()
 {
 	if(!next) return;
 	currentTime = AnnEngine::Instance()->getTimeFromStartUp();
-	float time;
-	if((time = currentTime - startTime)> timeout)
+	if(currentTime - startTime> timeout)
 		AnnEngine::Instance()->getLevelManager()->jump(next);
-	AnnDebug() << time;
 }
 
 void AnnSplashLevel::unload()

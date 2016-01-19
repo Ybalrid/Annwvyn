@@ -48,7 +48,6 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
 	oor = new OgreOculusRender(title);
-	oor->setFullScreen(fullscreen);
 	oor->setRenderCallback(this);
 	oor->initLibraries("Annwvyn.log");
 	player = new AnnPlayer;
@@ -265,10 +264,10 @@ void AnnEngine::addDefaultResourceLocaton()
 	loadZip("media/CORE.zip");
 }
 
-void AnnEngine::oculusInit(bool fullscreen)
+void AnnEngine::oculusInit()
 {   
 	log("Init Oculus rendering system");
-	oor->initOculus(fullscreen);
+	oor->initOculus();
 	m_CameraReference = oor->getCameraInformationNode();
 	m_CameraReference->setPosition(player->getPosition() + 
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
@@ -706,12 +705,6 @@ void AnnEngine::openConsole()
 
     std::ios::sync_with_stdio();
 #endif
-}
-
-void AnnEngine::openDebugWindow()
-{
-	log("Open a debug render window on the main screen");
-	oor->openDebugWindow();
 }
 
 void AnnEngine::toogleOnScreenConsole()
