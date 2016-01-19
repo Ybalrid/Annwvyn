@@ -193,11 +193,16 @@ void AnnEventManager::processInput()
 		listeners[i]->tick();
 }
 
-timerID AnnEventManager::fireTimer(double delay)
+timerID AnnEventManager::fireTimerMillisec(double delay)
 {
 	timerID newID = lastTimerCreated++;
 	futureTimers.push_back(AnnTimer(newID, delay));
 	return newID;
+}
+
+timerID AnnEventManager::fireTimer(double delay)
+{
+	return fireTimerMillisec(1000*delay);
 }
 
 void AnnEventManager::processTimers()

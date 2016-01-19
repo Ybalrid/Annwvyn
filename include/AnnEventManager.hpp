@@ -328,7 +328,10 @@ namespace Annwvyn
 		/// \param listener A listener object. If NULL, it will remove every listener form the manager
 		void removeListener(AnnAbstractEventListener* listener = NULL);
 
+		///Create a timer that will timeout after "delay" seconds
 		timerID fireTimer(double delay);
+		///Create a timer that will timeout after "delay" millisconds
+		timerID fireTimerMillisec(double millisecDelay);
 
 	private:
 		std::vector<AnnAbstractEventListener*> listeners;

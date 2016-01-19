@@ -56,17 +56,12 @@ AnnMain()
 	GameEngine->setNearClippingDistance(0.20f);
 	
 	//Init some player body parameters
-	GameEngine->initPlayerPhysics();
-
-	//This was probably a *bad* idea:
-	//GameEngine->attachVisualBody("male_Body.mesh",-0.1f ,true);
-	 
+	GameEngine->initPlayerPhysics();	 
 
 	//Register a level
 	AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
 	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 7.1);
 	splash->setBGM("media/AnnSplash.ogg");
-
 
 	GameEngine->getLevelManager()->addLevel(splash);
 	GameEngine->getLevelManager()->addLevel(level);
@@ -75,7 +70,7 @@ AnnMain()
 	GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
 	GameEngine->getEventManager()->addListener(new DebugListener);
-	demoTimer = GameEngine->getEventManager()->fireTimer(10000);
+	demoTimer = GameEngine->getEventManager()->fireTimer(10);
 	
 	GameEngine->setDebugPhysicState(false);
 
