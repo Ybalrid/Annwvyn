@@ -21,7 +21,7 @@ namespace Annwvyn
 		void load();
 		void runLogic();
 		void unload();
-		void setBGM(std::string path);
+		void setBGM(std::string path, bool preload = true);
 
 		///Set the level to jump to after timeout
 		void setNextLevel(AnnAbstractLevel* level);
