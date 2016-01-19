@@ -317,7 +317,7 @@ void OgreOculusRender::initRttRendering()
 
 	if (ovr_CreateMirrorTextureGL(oc->getHmd(), GL_SRGB8_ALPHA8 , oc->getHmdDesc().Resolution.w, oc->getHmdDesc().Resolution.h, &mirrorTexture) != ovrSuccess)
 	{
-		//If for some weird reason (stars alignment, dragons, northen gods) we can't create the mirror texture
+		//If for some weird reason (stars alignment, dragons, northen gods, reaper invasion) we can't create the mirror texture
 		Annwvyn::AnnDebug("Cannot create Oculus mirror texture");
 		exit(ANN_ERR_RENDER);
 	}
