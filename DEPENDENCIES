@@ -4,13 +4,13 @@ Ogre 1.9.x
 Bullet >= 2.8
 OpenAL lattest available should work
 libsndfile lattest available should work
-libOVR 0.6.0.0-beta
+libOVR 0.8.0.0-beta (Windows only)
 
 On Windows you can download the SDK from http://annwvyn.org/
 You'll need MSVC 2012 to build Annwvyn. The embeded boost version is build with vctoolkit 11.
 The SDK is probably not up to date, but it contain a full copy of this repo. You can just "git pull" the Annwvyn repository and rebuild the msvc solution under Annwvyn/msvc/Annwvyn.sln
 
-for GNU/Linux :
+for GNU/Linux (not supported officialy):
 Use OVR 0.5.0.1-beta form http://developer.oculusvr.com/ 
 Join Ogre *.so plugins files along your executable (or just specify the place they have to be on your system in plugin.cfg)
 Make sure the Ogre shared objects directory is on your ld.so.conf, in some distrib, ld does not search on the /usr/local/lib for exemple directory.
@@ -18,7 +18,8 @@ Make sure the Ogre shared objects directory is on your ld.so.conf, in some distr
 
 Included libraries : (compiled with the source code)
 BtOgre
-Gorilla
+tinyXml2
+Ogre::Euler
 
 More information : http://annwvyn.org/
 Documentation wiki : http://wiki.annwvyn.org/

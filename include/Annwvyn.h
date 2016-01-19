@@ -54,13 +54,14 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <vector>
+#include <map>
 
 //Annwvyn classes
 #include "AnnEngine.hpp"
 #include "AnnGameObject.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnAudioEngine.hpp"
-#include "AnnMap.hpp"
 #include "AnnEventManager.hpp"
 #include "AnnLogger.hpp"
 #include "AnnAbstractLevel.hpp"
