@@ -25,21 +25,16 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
 	lastOculusPosition(cameraPosition),
 	lastOculusOrientation(cameraOrientation),
 	updateTime(0),
-	fullscreen(false),
-	vsync(activateVsync),
-	//hsDissmissed(false),
 	backgroundColor(0,0.56f,1),
-	debug(NULL),
 	textureSet(NULL),
 	perfHudMode(ovrPerfHud_Off)
 {
-	for(size_t i(0); i < 2; i++)
-	{
-		cams[i] = NULL;
-		rtts[i] = NULL;
-		vpts[i] = NULL;
-		debugVP[i] = NULL;
-	}
+		cams[left] = NULL;
+		rtts[left] = NULL;
+		vpts[left] = NULL;		
+		cams[right] = NULL;
+		rtts[right] = NULL;
+		vpts[right] = NULL;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -47,7 +42,6 @@ OgreOculusRender::~OgreOculusRender()
 	Annwvyn::AnnDebug() << "Destructing OgreOculus object and uninitializing Ogre...";
 	delete oc;
 	oc = nullptr;
-	//root->getRenderSystem()->destroyRenderWindow(window->getName());
 	root->destroySceneManager(debugSmgr);
 	root->destroySceneManager(smgr);
 
@@ -55,9 +49,13 @@ OgreOculusRender::~OgreOculusRender()
 	DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->removeAllTextureUnitStates();
 
 	root->unloadPlugin("Plugin_OctreeSceneManager");
-//	root->unloadPlugin("RenderSystem_GL");
 	delete root;
 	root = nullptr;
+}
+
+void OgreOculusRender::setRenderCallback(OgreOculusRenderCallback* callback)
+{
+	oorc = callback;
 }
 
 void OgreOculusRender::cycleOculusHUD()
@@ -68,29 +66,13 @@ void OgreOculusRender::cycleOculusHUD()
 
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
-	//save the color
+	//save the color then apply it to each viewport
 	backgroundColor = color;
 	for(size_t i(0); i < 2; i++)
 		if(vpts[i])
 			vpts[i]->setBackgroundColour(color);
 }
 
-void OgreOculusRender::dissmissHS()
-{
-	//ovrHmd_DismissHSWDisplay(oc->getHmd());
-//	hsDissmissed = true;
-}
-
-void OgreOculusRender::setFullScreen(bool fs)
-{
-	return;//deprecated
-	fullscreen = fs;
-}
-
-bool OgreOculusRender::isFullscreen()
-{
-	return fullscreen;
-}
 
 Ogre::SceneManager* OgreOculusRender::getSceneManager()
 {
@@ -220,19 +202,18 @@ void OgreOculusRender::createWindow()
 	if(w >= 1920) w /=2;
 	if(h >= 1080) h /=2;
 
-	window = root->createRenderWindow("debug rift output " + name, w, h, false, &misc);
+	window = root->createRenderWindow(name + ": Mirror output (Please put your headset)", w, h, false, &misc);
 }
 
 void OgreOculusRender::initCameras()
 {
 	assert(smgr != NULL); 
 	cams[left] = smgr->createCamera("lcam");
+	cams[left]->setPosition(cameraPosition);
+	cams[left]->setAutoAspectRatio(true);
 	cams[right] = smgr->createCamera("rcam");
-	for(size_t i = 0; i < 2; i++)
-	{
-		cams[i]->setPosition(cameraPosition);
-		cams[i]->setAutoAspectRatio(true);
-	}
+	cams[right]->setPosition(cameraPosition);
+	cams[right]->setAutoAspectRatio(true);
 
 	//do NOT attach camera to this node...
 	CameraNode = smgr->getRootSceneNode()->createChildSceneNode();
@@ -323,6 +304,7 @@ void OgreOculusRender::initRttRendering()
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 	Ogre::TexturePtr rtt_texture(textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
 		Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+
 	//Save the texture id for low-level GL call on the texture during render
 	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0, 0)->getRenderTarget();
 	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
@@ -367,7 +349,7 @@ void OgreOculusRender::showMirrorView()
 	debugTexturePlane->setTextureName("MirrorTex");
 }
 
-void OgreOculusRender::initOculus(bool fullscreenState)
+void OgreOculusRender::initOculus()
 {
 	//Populate OVR structures
 	EyeRenderDesc[left]  = ovr_GetRenderDesc(oc->getHmd(), ovrEye_Left,  oc->getHmdDesc().MaxEyeFov[left]);
@@ -385,17 +367,17 @@ void OgreOculusRender::initOculus(bool fullscreenState)
 	layer.Viewport[left]  = Recti(0, 0, bufferSize.w/2, bufferSize.h);
 	layer.Viewport[right] = Recti(bufferSize.w/2, 0, bufferSize.w/2, bufferSize.h);
 
-	//This need to be called at least once
+	//This needs to be called at least once
 	calculateProjectionMatrix();
 
-	//Make sure that the perf hud will not show up...
+	//Make sure that the perf hud will not show up by himself...
 	perfHudMode = ovrPerfHud_Off;
 	ovr_SetInt(oc->getHmd(), "PerfHudMode", perfHudMode);
 }
 
 void OgreOculusRender::calculateProjectionMatrix()
 {
-	//The average  human has 2 eyes
+	//The average human has 2 eyes, but for some reason there's an "ovrEye_Count" constant on the oculus library. 
 	for(size_t eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Get the projection matrix
@@ -440,9 +422,8 @@ void OgreOculusRender::RenderOneFrame()
 	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 
 	//Apply pose to the two cameras
-	for(size_t eyeIndex = 0; eyeIndex < ovrEye_Count; eyeIndex++)
+	for(size_t eye = 0; eye < ovrEye_Count; eye++)
 	{
-		size_t eye = eyeIndex;	
 		//cameraOrientation and cameraPosition are the player position/orientation on the space
 		cams[eye]->setOrientation(cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
 		cams[eye]->setPosition
@@ -493,12 +474,4 @@ void OgreOculusRender::RenderOneFrame()
 		debugViewport->update();
 		window->update();
 	}
-}
-
-
-void OgreOculusRender::openDebugWindow()
-{
-	///Deprecated
-
-	return;
 }
