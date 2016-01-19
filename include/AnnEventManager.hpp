@@ -343,6 +343,7 @@ namespace Annwvyn
 
 		void notifyListeners(AnnEvent e);
 
+		///Register trigger event for next triggerProcess by the engine
 		void spatialTrigger(AnnTriggerObject* sender);
 
 		///OIS Event Manager

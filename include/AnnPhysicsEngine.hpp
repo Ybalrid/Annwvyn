@@ -1,3 +1,9 @@
+/**
+ * \file AnnPhysicsEngine.hpp
+ * \brief The Physics Engine handle the Bullet "dynamics world" where the simulation occurs.
+ *		  It also handle collision feedback and triggers
+ * \author A. Brainville (Ybalrid)
+ */
 #ifndef ANN_PHYSICS_ENGINE
 #define ANN_PHYSICS_ENGINE
 

@@ -1,3 +1,10 @@
+/**
+ * \file AnnConsole.hpp
+ * \brief Represent the output console that can be shown by calling AnnEngine::toggleOnScreenConsole()
+ *		  This class create handle the texture buffer and text rendering for text display
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef	ANNCONSOLE
 #define ANNCONSOLE
 

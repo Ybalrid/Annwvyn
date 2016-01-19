@@ -1,3 +1,9 @@
+/**
+ * \file AnnPlayerActuator.hpp
+ * \brief Player Actuator permit to change the code run by the player class when updating player (position/rotation, etc)
+		  The VR point of view is relative to the player object. 
+ * \author A. Brainville (Ybalrid)
+ */
 #ifndef PLAYER_ACTUATOR
 #define PLAYER_ACTUATOR
 #include "systemMacro.h"

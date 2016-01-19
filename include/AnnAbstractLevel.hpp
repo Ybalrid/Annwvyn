@@ -1,3 +1,14 @@
+/**
+ * \file AnnAbstractLevel.hpp
+ * \brief Pure virtual class that represent a level
+ *        AnnLevelManager class only handle object that derive from this class
+		  You need to overload at least the load() and runLogic() methods to create a level.
+		  To simplify level declaration, you can use the keyword "LEVEL" to mark inheritance and
+		  constructLevel() to call the constructor of the abstract class.
+		  This class also provide a 'simple, stupid' random string generator to set IDs to object automaticaly
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANN_ABSTRACTLEVEL
 #define ANN_ABSTRACTLEVEL
 
