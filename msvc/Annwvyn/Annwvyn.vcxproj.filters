@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Oculus rendering for Ogre">
       <UniqueIdentifier>{80903f3b-ac93-417b-881a-c6fe14583547}</UniqueIdentifier>
     </Filter>
@@ -17,14 +13,6 @@
     <Filter Include="Annwvyn">
       <UniqueIdentifier>{71f4958c-4a0c-4d65-b5f2-9132994bfa62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Annwvyn\Header">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Annwvyn\Sources">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="precompilled headers">
       <UniqueIdentifier>{fbc76f4b-1892-4373-958b-3df6607820a7}</UniqueIdentifier>
     </Filter>
@@ -34,58 +22,37 @@
     <Filter Include="Internaly packaged libraries">
       <UniqueIdentifier>{507eae2d-1c4a-4c92-add1-f6eb9cbe4364}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Internaly packaged libraries\Header">
-      <UniqueIdentifier>{0d9d99de-a238-4239-9f8f-936a74e088b6}</UniqueIdentifier>
+    <Filter Include="Annwvyn\Core">
+      <UniqueIdentifier>{9c9fb862-e814-46a3-bf12-0f38f3eca234}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Internaly packaged libraries\Source">
-      <UniqueIdentifier>{de5688b0-8b30-4e04-87aa-cc1ac527ec04}</UniqueIdentifier>
+    <Filter Include="Annwvyn\LevelSystem">
+      <UniqueIdentifier>{93361f2e-9ee4-4a79-a0da-6249f40e362f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\EventSystem">
+      <UniqueIdentifier>{d4f4cafe-0ab2-4e44-9896-304a62446eca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\Physics&amp;Collision">
+      <UniqueIdentifier>{60b5c977-4cbc-480e-a19e-138c9c30522f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\Audio">
+      <UniqueIdentifier>{a2890224-c274-4cb9-956a-1690e52fda04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\GameObject">
+      <UniqueIdentifier>{c98e90b8-198c-4dd0-ac5c-f4ee64400799}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Internaly packaged libraries\tinyxml2">
+      <UniqueIdentifier>{1efbc9df-fb99-462b-b2b4-2a0d005ea938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Internaly packaged libraries\BtOgre">
+      <UniqueIdentifier>{5ebdfa49-14be-4e50-a3bd-28d4b94ec4b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Internaly packaged libraries\Ogre::Euler">
+      <UniqueIdentifier>{0d9d99de-a238-4239-9f8f-936a74e088b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnEngine.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnGameObject.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnTools.h">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnTypes.h">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\systemMacro.h">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnCharacter.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnPlayer.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnEventManager.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnKeyCode.h">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\BtOgreExtras.h">
-      <Filter>Internaly packaged libraries\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\BtOgreGP.h">
-      <Filter>Internaly packaged libraries\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\BtOgrePG.h">
-      <Filter>Internaly packaged libraries\Header</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\euler.h">
-      <Filter>Internaly packaged libraries\Header</Filter>
+      <Filter>Internaly packaged libraries\Ogre::Euler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\OculusInterface.hpp">
       <Filter>Oculus rendering for Ogre\Header</Filter>
@@ -93,86 +60,94 @@
     <ClInclude Include="..\..\include\OgreOculusRender.hpp">
       <Filter>Oculus rendering for Ogre\Header</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp">
-      <Filter>Annwvyn\Header</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\pch\stdafx.h">
       <Filter>precompilled headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Annwvyn.h" />
     <ClInclude Include="..\..\include\AnnVect3.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnQuaternion.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnConsole.hpp">
-      <Filter>Annwvyn\Header</Filter>
+    <ClInclude Include="..\..\include\AnnAbstractLevel.hpp">
+      <Filter>Annwvyn\LevelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnLogger.hpp">
-      <Filter>Annwvyn\Header</Filter>
+    <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
+      <Filter>Annwvyn\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnCharacter.hpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnConsole.hpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnEngine.hpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnEventManager.hpp">
+      <Filter>Annwvyn\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnGameObject.hpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnKeyCode.h">
+      <Filter>Annwvyn\EventSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnLevelManager.hpp">
-      <Filter>Annwvyn\Header</Filter>
+      <Filter>Annwvyn\LevelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnAbstractLevel.hpp">
-      <Filter>Annwvyn\Header</Filter>
+    <ClInclude Include="..\..\include\AnnLogger.hpp">
+      <Filter>Annwvyn\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnXmlLevel.hpp">
-      <Filter>Annwvyn\Header</Filter>
+    <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp">
+      <Filter>Annwvyn\Physics&amp;Collision</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\tinyxml2.h">
-      <Filter>Internaly packaged libraries\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnErrorCode.hpp">
-      <Filter>Annwvyn\Header</Filter>
+    <ClInclude Include="..\..\include\AnnPlayer.hpp">
+      <Filter>Annwvyn\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnPlayerActuator.hpp">
-      <Filter>Annwvyn\Header</Filter>
+      <Filter>Annwvyn\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnSplashLevel.hpp">
-      <Filter>Annwvyn\Header</Filter>
+      <Filter>Annwvyn\LevelSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnTools.h">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
+      <Filter>Annwvyn\Physics&amp;Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnXmlLevel.hpp">
+      <Filter>Annwvyn\LevelSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnTypes.h">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Annwvyn.h">
+      <Filter>Annwvyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnErrorCode.hpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\systemMacro.h">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\tinyxml2.h">
+      <Filter>Internaly packaged libraries\tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\BtOgrePG.h">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\BtOgreGP.h">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\BtOgreExtras.h">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnEngine.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnGameObject.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnTools.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnTriggerObject.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnCharacter.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnPlayer.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnEventManager.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnEvents.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\BtOgre.cpp">
-      <Filter>Internaly packaged libraries\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\OculusInterface.cpp">
       <Filter>Oculus rendering for Ogre\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp">
-      <Filter>Annwvyn\Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\pch\stdafx.cpp">
       <Filter>precompilled headers</Filter>
@@ -183,32 +158,68 @@
     <ClCompile Include="..\..\src\AnnVect3.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnConsole.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\OgreOculusRender_Windows.cpp">
       <Filter>Oculus rendering for Ogre\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnLogger.cpp">
-      <Filter>Annwvyn\Sources</Filter>
+    <ClCompile Include="..\..\src\AnnEngine.cpp">
+      <Filter>Annwvyn\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnAbsractLevel.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnLevelManager.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnXmlLevel.cpp">
-      <Filter>Annwvyn\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\tinyxml2.cpp">
-      <Filter>Internaly packaged libraries\Source</Filter>
+    <ClCompile Include="..\..\src\AnnPlayer.cpp">
+      <Filter>Annwvyn\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnPlayerActuator.cpp">
-      <Filter>Annwvyn\Sources</Filter>
+      <Filter>Annwvyn\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnLevelManager.cpp">
+      <Filter>Annwvyn\LevelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnLogger.cpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnAbsractLevel.cpp">
+      <Filter>Annwvyn\LevelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnTools.cpp">
+      <Filter>Annwvyn\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp">
-      <Filter>Annwvyn\Sources</Filter>
+      <Filter>Annwvyn\LevelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnXmlLevel.cpp">
+      <Filter>Annwvyn\LevelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnEventManager.cpp">
+      <Filter>Annwvyn\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnEvents.cpp">
+      <Filter>Annwvyn\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnConsole.cpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnTriggerObject.cpp">
+      <Filter>Annwvyn\Physics&amp;Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp">
+      <Filter>Annwvyn\Physics&amp;Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
+      <Filter>Annwvyn\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp">
+      <Filter>Annwvyn\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnCharacter.cpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnGameObject.cpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tinyxml2.cpp">
+      <Filter>Internaly packaged libraries\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\BtOgre.cpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
