@@ -87,9 +87,10 @@ void AnnSplashLevel::load()
 		AnnEngine::Instance()->getAudioEngine()->playBGM(bgmPath);
 }
 
-void AnnSplashLevel::setBGM(std::string path)
+void AnnSplashLevel::setBGM(std::string path, bool preload)
 {
-	AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
+	if(preload) AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
+	bgmPath = path;
 	hasBGM = true;
 }
 
