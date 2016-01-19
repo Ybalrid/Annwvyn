@@ -1,12 +1,12 @@
-#ifndef ANNTYPES
-#define ANNTYPES
-
 /*!
 * \file AnnTypes.h
 * \brief Data types definition for Annwvyn
 * \author Arthur Brainville
 * \version 0.0.2
 */
+
+#ifndef ANNTYPES
+#define ANNTYPES
 
 #include "systemMacro.h"
 

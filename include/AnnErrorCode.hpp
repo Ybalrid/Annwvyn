@@ -1,3 +1,8 @@
+/**
+ * \file AnnErrorCode.hpp
+ * \brief Define a serise of hex code as constant keywords to define error codes.
+ * \author A. Brainville (Ybalrid)
+ */
 #ifndef ANN_ERROR_CODE
 #define ANN_ERROR_CODE
 
