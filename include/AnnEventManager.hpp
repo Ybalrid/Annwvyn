@@ -136,6 +136,7 @@ namespace Annwvyn
 		///Returns true if given butoon is pressed
 		/// \parm id Id of the button
 		bool getButtonState(MouseButtonId id);
+
 		///Get given axis data
 		/// \param id Id of the axis
 		AnnMouseAxis getAxis(MouseAxisId id);
@@ -150,6 +151,7 @@ namespace Annwvyn
 		/// \param id Id of a specific button
 		/// \param value Current pressed/relased state of that button
 		void setButtonStatus(MouseButtonId id, bool value);
+
 		///Set the infomatio about an axis
 		/// \param id Id of a specific axis
 		/// \param information The information object of the given axis
@@ -200,6 +202,8 @@ namespace Annwvyn
 			AnnStickAxis getAxis(StickAxisId ax);
 			size_t getNbAxis();
 
+			unsigned int getStickID();
+
         private:
         friend class AnnEventManager;
             std::vector<bool> buttons;
@@ -207,6 +211,7 @@ namespace Annwvyn
             std::vector<unsigned short> pressed;
             std::vector<unsigned short> released;
             std::string vendor;
+			unsigned int stickID;
 	};
 
 	typedef size_t timerID;
@@ -301,7 +306,30 @@ namespace Annwvyn
 		double timeoutTime;
 	};
 	
-	
+	class DLL JoystickBuffer
+	{
+	private:
+		friend class AnnEventManager;
+
+		JoystickBuffer(OIS::JoyStick* joystick) : stick(joystick)
+		{id = idcounter++;}
+
+		~JoystickBuffer()
+		{delete stick;}
+
+		OIS::JoyStick* stick;
+
+		///Array of "bool" for previous buttons
+		std::vector<bool> previousStickButtonStates;
+
+		///Get the ID if this stick
+		unsigned int getID()
+		{return id;}
+
+		unsigned int id;
+		static unsigned int idcounter;
+	};
+
 	///The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by 
 	///AnnEngine and provide the hearbeat for the event system.
 	///Events can be user inputs or mostly anything else.
@@ -309,7 +337,6 @@ namespace Annwvyn
 	///And propagate that event to any declared event listener.
 	///Listeners should subclass AnnEventListener. A listener is registred when a pointer to it is passed as argument to the addListener() method.
 	///You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
-
 	class DLL AnnEventManager
 	{
 	public:
@@ -321,17 +348,23 @@ namespace Annwvyn
 		///Ad a listener to the event manager
 		/// \param listener Pointer to a listener object
 		void addListener(AnnAbstractEventListener* listener);
+
 		///Remove every listener known from the EventManager. 
 		///This doesn't clear any memory
 		void clearListenerList();
+
 		///Make the event manager forget about the listener
 		/// \param listener A listener object. If NULL, it will remove every listener form the manager
 		void removeListener(AnnAbstractEventListener* listener = NULL);
 
 		///Create a timer that will timeout after "delay" seconds
 		timerID fireTimer(double delay);
+
 		///Create a timer that will timeout after "delay" millisconds
 		timerID fireTimerMillisec(double millisecDelay);
+
+		///Get the number of available sticks
+		size_t getNbStick();
 
 	private:
 		std::vector<AnnAbstractEventListener*> listeners;
@@ -344,6 +377,7 @@ namespace Annwvyn
 		void processTimers();
 		void processTriggerEvents();
 
+		///Send event to all listeners
 		void notifyListeners(AnnEvent e);
 
 		///Register trigger event for next triggerProcess by the engine
@@ -351,21 +385,28 @@ namespace Annwvyn
 
 		///OIS Event Manager
 		OIS::InputManager *InputManager;
+
 		///Pointer that holds the keyboard
 		OIS::Keyboard* Keyboard;
+
 		///Pointer that holds the Mouse
 		OIS::Mouse* Mouse;
+
 		///Pointer that holds the stick
-		OIS::JoyStick* Joystick;
+		//OIS::JoyStick* Joystick;
 		///parameter list for OIS
+		std::vector<JoystickBuffer*> Joysticks;
+
 		OIS::ParamList pl;
 		///Array for remembering the key states at last update. 
 		bool previousKeyStates[static_cast<unsigned int>(KeyCode::SIZE)];
+
 		///Array for remembering the button states at last update
 		bool previousMouseButtonStates[static_cast<unsigned int>(MouseButtonId::nbButtons)];
+
 	    ///Dinamicly sized array for remembering the joystick button state at last update
-        std::vector<bool> previousStickButtonStates;
 		timerID lastTimerCreated;
+
 		std::vector<AnnTimer> activeTimers;
 		std::vector<AnnTimer> futureTimers;
 		std::vector<AnnTriggerEvent> triggerEventBuffer;
