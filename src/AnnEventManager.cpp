@@ -101,8 +101,6 @@ void AnnEventManager::processInput()
 	//Capture events
 	Keyboard->capture();
 	Mouse->capture();
-	//if(Joystick)
-		//Joystick->capture();
 	
 	for(auto joystick : Joysticks)
 		joystick->stick->capture();
@@ -164,6 +162,7 @@ void AnnEventManager::processInput()
 		for(size_t i(0); i < listeners.size(); i++)
 			listeners[i]->MouseEvent(e);
 	}
+
 	for(auto Joystick : Joysticks)
 	{
 		OIS::JoyStickState state(Joystick->stick->getJoyStickState());
