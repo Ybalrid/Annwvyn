@@ -24,8 +24,7 @@ float AnnAbstractEventListener::trim(float v, float dz)
 
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	Keyboard(NULL),
-	Mouse(NULL),
-	Joystick(NULL)
+	Mouse(NULL)
 {
 
 	for(size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
@@ -46,11 +45,14 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 
 	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
-	if(InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0)
+	
+	for(int nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
 	{
-		Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
+		OIS::JoyStick* Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
+		Joysticks.push_back(new JoystickBuffer(Joystick));
 		AnnDebug()<< "Detected joystick : " << Joystick->vendor();
 	}
+
 	lastTimerCreated = 0;
 }
 
@@ -58,7 +60,9 @@ AnnEventManager::~AnnEventManager()
 {
 	delete Keyboard;
 	delete Mouse;
-	delete Joystick;
+	for(auto Joystick : Joysticks)
+		delete Joystick;
+	Joysticks.clear();
 }
 
 void AnnEventManager::addListener(AnnAbstractEventListener* l)
@@ -90,13 +94,16 @@ void AnnEventManager::update()
 	processTriggerEvents();
 }
 
+unsigned int JoystickBuffer::idcounter = 0;
+
 void AnnEventManager::processInput()
 {
 	//Capture events
 	Keyboard->capture();
 	Mouse->capture();
-	if(Joystick)
-		Joystick->capture();
+	
+	for(auto joystick : Joysticks)
+		joystick->stick->capture();
 
 	//if keyboard system initialized
 	if(Keyboard)
@@ -156,9 +163,9 @@ void AnnEventManager::processInput()
 			listeners[i]->MouseEvent(e);
 	}
 
-	if(Joystick)
+	for(auto Joystick : Joysticks)
 	{
-		OIS::JoyStickState state(Joystick->getJoyStickState());
+		OIS::JoyStickState state(Joystick->stick->getJoyStickState());
 		AnnStickEvent e;
 
 		//Get all butons imediate data
@@ -173,17 +180,18 @@ void AnnEventManager::processInput()
 		}
 
 		//Get press and release event lists
-		for(unsigned short i(0); i < state.mButtons.size() && i < this->previousStickButtonStates.size(); i++)
-			if(!previousStickButtonStates[i] &&  state.mButtons[i])
+		for(unsigned short i(0); i < state.mButtons.size() && i < Joystick->previousStickButtonStates.size(); i++)
+			if(!Joystick->previousStickButtonStates[i] &&  state.mButtons[i])
 				e.pressed.push_back(i);
-			else if(previousStickButtonStates[i] && !state.mButtons[i])
+			else if(Joystick->previousStickButtonStates[i] && !state.mButtons[i])
 				e.released.push_back(i);
 
 		//Save current buttons state for next frame
-		previousStickButtonStates = state.mButtons; 
-		e.vendor = Joystick->vendor();
+		Joystick->previousStickButtonStates = state.mButtons; 
+		e.vendor = Joystick->stick->vendor();
 		e.populate();
 		e.validate();
+		e.stickID = Joystick->getID();
 
 		for(size_t i(0); i < listeners.size(); i++)
 			listeners[i]->StickEvent(e);
@@ -253,6 +261,11 @@ void AnnEventManager::spatialTrigger(AnnTriggerObject* sender)
 	e.contact = sender->getContactInformation();
 	e.populate();
 	triggerEventBuffer.push_back(e);
+}
+
+size_t AnnEventManager::getNbStick()
+{
+	return Joysticks.size();
 }
 
 
