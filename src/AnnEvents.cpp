@@ -200,6 +200,11 @@ AnnStickEvent::AnnStickEvent() : AnnEvent()
 
 AnnStickEvent::~AnnStickEvent(){}
 
+unsigned int AnnStickEvent::getStickID()
+{
+	return stickID;
+}
+
 bool AnnStickEvent::isDown(ButtonId id)
 {
     if (id >= buttons.size()) return false;
