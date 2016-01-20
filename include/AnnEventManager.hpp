@@ -349,6 +349,7 @@ namespace Annwvyn
 		timerID fireTimer(double delay);
 		///Create a timer that will timeout after "delay" millisconds
 		timerID fireTimerMillisec(double millisecDelay);
+		size_t getNbStick();
 
 	private:
 		std::vector<AnnAbstractEventListener*> listeners;

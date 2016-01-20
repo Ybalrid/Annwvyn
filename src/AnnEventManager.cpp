@@ -264,4 +264,9 @@ void AnnEventManager::spatialTrigger(AnnTriggerObject* sender)
 	triggerEventBuffer.push_back(e);
 }
 
+size_t AnnEventManager::getNbStick()
+{
+	return Joysticks.size();
+}
+
 
