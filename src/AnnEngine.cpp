@@ -63,7 +63,6 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	readyForLoadingRessources = true;
 	log("OGRE Object-oriented Graphical Rendering Engine initialized", true);
 
-//We use OIS to catch all user inputs
 #ifdef __gnu_linux__
 	x11LayoutAtStartup = "unknown";
 	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
@@ -95,13 +94,11 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 
 	log("Setup event system");
 	eventManager = new AnnEventManager(m_Window);
-
 	log("Setup physics engine");
 	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode());
-		
 	log("Setup audio engine");
 	AudioEngine = new AnnAudioEngine;
-
+	log("Setup Level system");
 	levelManager = new AnnLevelManager;
 
 	log("==================================================", false);
@@ -135,23 +132,49 @@ AnnEngine::~AnnEngine()
 	
 	log(" Creating the destroing queue;");
 	AnnDebug() << " Will destroy " << objects.size() << " objects";
+	AnnDebug() << " Will destroy " << triggers.size() << " triggers";
+	AnnDebug() << " Will destroy " << lights.size() << " lights";
 
-	AnnGameObject** tmpArray = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
-	for(size_t i(0); i < objects.size(); i++)
-		tmpArray[i] = objects[i];
+	AnnGameObject** tmpArrayObj = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
+	AnnTriggerObject** tmpArrayTrig = static_cast<AnnTriggerObject**>(malloc(sizeof(AnnTriggerObject*)*triggers.size()));
+	AnnLightObject** tmpArrayLight = static_cast<AnnLightObject**>(malloc(sizeof(AnnLightObject*)*lights.size()));
+	
+	for(size_t i(0); i < objects.size(); i++) tmpArrayObj[i] = objects[i];
+	for(size_t i(0); i < triggers.size(); i++) tmpArrayTrig[i] = triggers[i];
+	for(size_t i(0); i < lights.size(); i++) tmpArrayLight[i] = lights[i];
 
 	log("Content of the destroing queue :");
+	log("Game Object");
 	for(size_t i(0); i < objects.size(); i++)
-		AnnDebug() << (void*)tmpArray[i];
+		AnnDebug() << (void*)tmpArrayObj[i];
+	log("Trigger Object");
+	for(size_t i(0); i < triggers.size(); i++)
+		AnnDebug() << (void*)tmpArrayTrig[i];
+	log("Light object");
+	for(size_t i(0); i < lights.size(); i++)
+		AnnDebug() << (void*)tmpArrayLight[i];
 
-	size_t queueSize(objects.size());
+	size_t queueSize;
+	queueSize = objects.size();
 	for(size_t i(0); i < queueSize; i++)
-		destroyGameObject(tmpArray[i]);
+		destroyGameObject(tmpArrayObj[i]);
+	queueSize = triggers.size();
+	for(size_t i(0); i < queueSize; i++)
+		destroyTriggerObject(tmpArrayTrig[i]);
+	queueSize = lights.size();
+	for(size_t i(0); i < queueSize; i++)
+		destroyLightObject(tmpArrayLight[i]);
 
-	log("Destroing the deletion queue");
-	free(tmpArray);
-	log("Clearing the object list");
+
+	log("Destroing the deletion queues");
+	free(tmpArrayObj);
+	free(tmpArrayTrig);
+	free(tmpArrayLight);
+
+	log("Clearing object lists");
 	objects.clear();
+	triggers.clear();
+	lights.clear();
 
 	log("Destroying physics engine");
 	delete physicsEngine;
