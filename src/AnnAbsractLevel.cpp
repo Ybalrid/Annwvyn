@@ -44,7 +44,7 @@ void AnnAbstractLevel::unload()
 AnnLightObject* AnnAbstractLevel::addLight(std::string id)
 {
 	AnnEngine* engine(AnnEngine::Instance());
-	AnnLightObject* light (engine->addLight());
+	AnnLightObject* light (engine->createLightObject());
 	levelLighting.push_back(light);
 	return light;
 }

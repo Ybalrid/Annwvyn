@@ -47,18 +47,18 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
-	oor = new OgreOculusRender(title);
-	oor->setRenderCallback(this);
-	oor->initLibraries("Annwvyn.log");
+	renderer = new OgreOculusRender(title);
+	renderer->setRenderCallback(this);
+	renderer->initLibraries("Annwvyn.log");
 	player = new AnnPlayer;
-	oor->getOgreConfig();
-	oor->createWindow();
-	oor->initScene();
-	oor->initCameras();
-	oor->setCamerasNearClippingDistance(0.15f);
-	oor->initRttRendering();
-	m_SceneManager = oor->getSceneManager();
-	m_Window = oor->getWindow();
+	renderer->getOgreConfig();
+	renderer->createWindow();
+	renderer->initScene();
+	renderer->initCameras();
+	renderer->setCamerasNearClippingDistance(0.15f);
+	renderer->initRttRendering();
+	m_SceneManager = renderer->getSceneManager();
+	m_Window = renderer->getWindow();
 
 	readyForLoadingRessources = true;
 	log("OGRE Object-oriented Graphical Rendering Engine initialized", true);
@@ -168,8 +168,8 @@ AnnEngine::~AnnEngine()
 	delete onScreenConsole;
 	onScreenConsole = NULL;
 	singleton = NULL;
-	delete oor;
-	oor = nullptr;
+	delete renderer;
+	renderer = nullptr;
 }
 
 AnnEventManager* AnnEngine::getEventManager()
@@ -247,13 +247,13 @@ void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
 void AnnEngine::loadResFile(const char path[])
 {
 	AnnDebug() << "Loading resource file : " << path;
-	oor->loadReseourceFile(path);
+	renderer->loadReseourceFile(path);
 }
 
 void AnnEngine::initResources()
 {
 	addDefaultResourceLocaton();
-	oor->initAllResources();
+	renderer->initAllResources();
 	log("Resources initialized");
 }
 
@@ -267,13 +267,13 @@ void AnnEngine::addDefaultResourceLocaton()
 void AnnEngine::oculusInit()
 {   
 	log("Init Oculus rendering system");
-	oor->initOculus();
-	m_CameraReference = oor->getCameraInformationNode();
+	renderer->initOculus();
+	m_CameraReference = renderer->getCameraInformationNode();
 	m_CameraReference->setPosition(player->getPosition() + 
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 	onScreenConsole = new AnnConsole();
 	//This will populate swap texture and turn on the rift display earlier
-	oor->RenderOneFrame();
+	renderer->RenderOneFrame();
 }
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
@@ -377,6 +377,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 		}
 	}
 
+	//Clear everything equals to "NULL" on the vector
 	auto it = objects.begin();
 	while(it != objects.end())
 	if(!(*it))
@@ -387,18 +388,27 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 	return returnCode;
 }
 
-void AnnEngine::destroyLight(AnnLightObject* object)
-{
-	if(object)
-		m_SceneManager->destroyLight(object);
-}
-
-AnnLightObject* AnnEngine::addLight()
+AnnLightObject* AnnEngine::createLightObject()
 {
 	log("Creating a light");
 	AnnLightObject* Light = m_SceneManager->createLight();
 	Light->setType(Ogre::Light::LT_POINT);
+	lights.push_back(Light);
 	return Light;
+}
+
+void AnnEngine::destroyLightObject(AnnLightObject* object)
+{
+	if(object)
+		m_SceneManager->destroyLight(object);
+	
+	//Forget that this light existed
+	auto light(lights.begin());
+	while(light != lights.end())
+	if(*light == object)
+		light = lights.erase(light);
+	else
+		light++;
 }
 
 bool AnnEngine::requestStop()
@@ -445,7 +455,7 @@ void AnnEngine::renderCallback()
 bool AnnEngine::refresh()
 {
 	//Get the rendering delta time (should be roughly equals to 1/desiredFramerate)
-	deltaT = oor->getUpdateTime();
+	deltaT = renderer->getUpdateTime();
 	//Step the simulation
 	physicsEngine->step(deltaT);
 	//Update player logic code 
@@ -469,8 +479,8 @@ bool AnnEngine::refresh()
 	clearTriggers();
 
 	//Audio
-	AudioEngine->updateListenerPos(oor->returnPose.position);
-	AudioEngine->updateListenerOrient(oor->returnPose.orientation);
+	AudioEngine->updateListenerPos(renderer->returnPose.position);
+	AudioEngine->updateListenerOrient(renderer->returnPose.orientation);
 	
 	//Update camera
 	m_CameraReference->setPosition(player->getPosition());
@@ -480,7 +490,7 @@ bool AnnEngine::refresh()
 
 	if(onScreenConsole->needUpdate()) onScreenConsole->update();
 	
-	oor->RenderOneFrame();
+	renderer->RenderOneFrame();
 
 	return !requestStop();
 }
@@ -551,7 +561,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 void AnnEngine::resetOculusOrientation()
 {
 	log("Reseting the base direction of player's head");
-	oor->recenter();
+	renderer->recenter();
 }
 
 Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
@@ -596,7 +606,7 @@ Ogre::SceneManager* AnnEngine::getSceneManager()
 
 double AnnEngine::getTimeFromStartUp()
 {
-	return static_cast<double>(oor->getTimer()->getMilliseconds());
+	return static_cast<double>(renderer->getTimer()->getMilliseconds());
 }
 
 ////////////////////////////////////////////////////////// SETTERS
@@ -628,7 +638,7 @@ void AnnEngine::setSkyBoxMaterial(bool activate, const char materialName[], floa
 void AnnEngine::setWorldBackgroudColor(Ogre::ColourValue v)
 {
 	AnnDebug() << "Setting the backgroud world color " << v;
-	oor->changeViewportBackgroundColor(v); 
+	renderer->changeViewportBackgroundColor(v); 
 }
 void AnnEngine::removeSkyDome()
 {
@@ -646,8 +656,8 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 {
 	AnnDebug() << "Setting the near clipping distance to " << nearClippingDistance;
 
-	if(oor)
-		oor->setCamerasNearClippingDistance(nearClippingDistance);
+	if(renderer)
+		renderer->setCamerasNearClippingDistance(nearClippingDistance);
 }
 
 void AnnEngine::resetPlayerPhysics()
@@ -671,9 +681,9 @@ void AnnEngine::resetPlayerPhysics()
 
 OgrePose AnnEngine::getPoseFromOOR()
 {
-	if(oor)
-		return oor->returnPose;
-	OgrePose p; return p;
+	if(renderer)
+		return renderer->returnPose;
+	return OgrePose();
 }
 
 void AnnEngine::openConsole()
@@ -714,5 +724,5 @@ void AnnEngine::toogleOnScreenConsole()
 
 void AnnEngine::toogleOculusPerfHUD()
 {
-	if(oor) oor->cycleOculusHUD();
+	if(renderer) renderer->cycleOculusHUD();
 }
