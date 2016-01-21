@@ -10,14 +10,14 @@
 
 using namespace OVR;
 bool OgreOculusRender::forceNextUpdate(false);
-Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(NULL);
+Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
-	oorc(NULL),
+	oorc(nullptr),
 	name(winName),
-	root(NULL),
-	smgr(NULL),
-	debugSmgr(NULL),
-	oc(NULL),
+	root(nullptr),
+	smgr(nullptr),
+	debugSmgr(nullptr),
+	oc(nullptr),
 	cameraPosition(0,0,10),
 	cameraOrientation(Ogre::Quaternion::IDENTITY),
 	nearClippingDistance(0.5f),
@@ -26,15 +26,15 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
 	lastOculusOrientation(cameraOrientation),
 	updateTime(0),
 	backgroundColor(0,0.56f,1),
-	textureSet(NULL),
+	textureSet(nullptr),
 	perfHudMode(ovrPerfHud_Off)
 {
-		cams[left] = NULL;
-		rtts[left] = NULL;
-		vpts[left] = NULL;		
-		cams[right] = NULL;
-		rtts[right] = NULL;
-		vpts[right] = NULL;
+		cams[left] = nullptr;
+		rtts[left] = nullptr;
+		vpts[left] = nullptr;		
+		cams[right] = nullptr;
+		rtts[right] = nullptr;
+		vpts[right] = nullptr;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -108,7 +108,7 @@ Ogre::Timer* OgreOculusRender::getTimer()
 {
 	if(root)
 		return root->getTimer();
-	return NULL;
+	return nullptr;
 }
 
 double OgreOculusRender::getUpdateTime()
