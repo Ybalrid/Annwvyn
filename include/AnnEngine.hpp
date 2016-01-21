@@ -12,7 +12,7 @@
 //Keep track of engine version here
 #define ANN_MAJOR 0
 #define ANN_MINOR 0
-#define ANN_PATCH 11.2 
+#define ANN_PATCH 12 
 #define ANN_EXPERIMENTAL true
 
 #include "systemMacro.h"
@@ -126,17 +126,21 @@ namespace Annwvyn
 		///Destroy the given object
 		/// \param object the object to be destroyed
 		bool destroyGameObject(AnnGameObject* object); //object factory
-
+		
+		//TODO remove destroy light
+		void destroyLight(AnnLightObject* light){destroyLightObject(light);}
 		///Destroy the given light
 		/// \param light pointer to the light to destroy
-		void destroyLight(AnnLightObject* light);
+		void destroyLightObject(AnnLightObject* light);
 
 		///Set the ambiant light
 		/// \param v the color of the light
 		void setAmbiantLight(Ogre::ColourValue v); //scene parameter
 
-		///Add a light to the scene. return a pointer to the new light
-		AnnLightObject* addLight(); //object factory
+		//TODO remove "addlight"
+		AnnLightObject* addLight(){return createLightObject();}
+		///Add a light source to the scene. return a pointer to the new light
+		AnnLightObject* createLightObject();
 
 		///Display bullet debuging drawing
 		/// \param state debug state
@@ -306,11 +310,12 @@ namespace Annwvyn
 		//Can load resources
 		bool readyForLoadingRessources;
 		//Oculus oculus;
-		OgreOculusRender* oor;
+		OgreOculusRender* renderer;
 
 		///Dynamic container for games objects present in engine.
 		std::vector<AnnGameObject*>	objects;
 		std::vector<AnnTriggerObject*> triggers;
+		std::vector<AnnLightObject*> lights;
 
 		///Elapsed time between 2 frames
 		double deltaT; 

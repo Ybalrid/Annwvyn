@@ -74,6 +74,9 @@ AnnMain()
 	
 	GameEngine->setDebugPhysicState(false);
 
+	AnnLightObject* light = GameEngine->addLight(); 
+	GameEngine->destroyLight(light);
+
 	AnnDebug() << "Starting the render loop";
 	do	
 	{

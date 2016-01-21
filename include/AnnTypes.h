@@ -28,7 +28,6 @@ namespace Annwvyn
 	typedef std::vector<AnnTriggerObject *> AnnTriggerObjectVect;
     typedef std::vector<AnnGameObject *> AnnGameObjectVect;
     typedef std::vector<AnnLightObject *> AnnLightVect;
-	typedef std::vector<AnnTriggerObject* > AnnTriggerObjectVect;
 
 	enum phyShapeType {
 		staticShape, 
