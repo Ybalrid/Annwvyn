@@ -26,17 +26,17 @@ void AnnAbstractLevel::unload()
 	AnnEngine::Instance()->setAmbiantLight(Ogre::ColourValue::Black);
 	
 	//Remove the level lights
-	for(AnnLightVect::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)
+	for(AnnLightList::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)
 		AnnEngine::Instance()->destroyLightObject(*it);
 	levelLighting.clear();
 
 	//Remove the level objects
-	for(AnnGameObjectVect::iterator it = levelContent.begin(); it != levelContent.end(); ++it)
+	for(AnnGameObjectList::iterator it = levelContent.begin(); it != levelContent.end(); ++it)
 		AnnEngine::Instance()->destroyGameObject(*it);
 	levelContent.clear();
 
 	//Remove volumetric event triggers
-	for(AnnTriggerObjectVect::iterator it = levelTrigger.begin(); it != levelTrigger.end(); ++it)
+	for(AnnTriggerObjectList::iterator it = levelTrigger.begin(); it != levelTrigger.end(); ++it)
 		AnnEngine::Instance()->destroyTriggerObject(*it);
 	levelTrigger.clear();
 }

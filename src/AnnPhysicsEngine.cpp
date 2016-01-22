@@ -86,15 +86,16 @@ void AnnPhysicsEngine::stepDebugDrawer()
 		m_debugDrawer->step();
 }
 
-void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectVect& objects)
+void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 {
 	//TODO make a typedeff for getting off the uglyness here 
 	std::vector<struct collisionTest*> pairs;
 
 	//get all collision mask
+	auto objectIteartor(objects.begin());
 	for(size_t i = 0; i < objects.size(); i++)
 	{
-		std::vector<struct collisionTest*> onThisObject = objects[i]->getCollisionMask();
+		std::vector<struct collisionTest*> onThisObject = (*objectIteartor++)->getCollisionMask();
 
 		for(size_t j = 0; j < onThisObject.size(); j++)
 			pairs.push_back(onThisObject[j]);
@@ -156,11 +157,11 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 	debugPhysics = state;
 }
 
-void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObjectVect& triggers)
+void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObjectList& triggers)
 {
-	for(size_t i = 0; i < triggers.size(); i++)
+	for(auto trigger : triggers)
 	{
-		AnnTriggerObject* current(triggers[i]);
+		AnnTriggerObject* current(trigger);
 		if(current->computeVolumetricTest(player))
 		{
 			current->setContactInformation(true);
