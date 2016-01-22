@@ -47,12 +47,12 @@ namespace Annwvyn
 
 		///Process the collision querry system
 		/// \param the objet list where to process collision querry
-		void processCollisionTesting(AnnGameObjectVect& object);
+		void processCollisionTesting(AnnGameObjectList& object);
 
 		///Process triggers contact event
 		/// \param player The player object
 		/// \param triggers list where to process collision querry
-		void processTriggersContacts(AnnPlayer* player, AnnTriggerObjectVect& triggers);
+		void processTriggersContacts(AnnPlayer* player, AnnTriggerObjectList& triggers);
 
 		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body);

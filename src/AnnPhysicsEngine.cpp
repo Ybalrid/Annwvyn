@@ -86,7 +86,7 @@ void AnnPhysicsEngine::stepDebugDrawer()
 		m_debugDrawer->step();
 }
 
-void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectVect& objects)
+void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 {
 	//TODO make a typedeff for getting off the uglyness here 
 	std::vector<struct collisionTest*> pairs;
@@ -157,7 +157,7 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 	debugPhysics = state;
 }
 
-void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObjectVect& triggers)
+void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObjectList& triggers)
 {
 	for(auto trigger : triggers)
 	{
