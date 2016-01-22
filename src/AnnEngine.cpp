@@ -332,31 +332,23 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 void AnnEngine::destroyTriggerObject(AnnTriggerObject* object)
 {
+	//Discard destroying to end of frame processing if in the middle of the renderCallback
 	if(lockForCallback)
 	{
 		triggerClearingQueue.push_back(object);
 		return;
 	}
 
-	auto iterator = triggers.begin();
-	while (iterator != triggers.end())
-		if(*iterator == object)
-		{
-			iterator = triggers.erase(iterator);
-			AnnDebug() << "Destroy trigger " << (void*)object;
-			delete object;
-		}
-		else
-		{
-			iterator++;
-		}
+	triggers.remove(object);
+	AnnDebug() << "Destroy trigger : " << (void*)object;
+	delete object;
 }
 
 void AnnEngine::clearTriggers()
 {
 	if(lockForCallback)return;
-	for(auto it=triggerClearingQueue.begin(); it!=triggerClearingQueue.end();++it)
-		destroyTriggerObject(*it);
+	for(auto trigger : triggerClearingQueue)
+		destroyTriggerObject(trigger);
 	triggerClearingQueue.clear();
 }
 
@@ -373,12 +365,11 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 	bool returnCode(false);
 
+	//TODO: remove the need to mark objects as NULL in this array before being able to clear them.
 	for(auto it = objects.begin(); it != objects.end(); it++)
     {
 		if(!*it) continue;
-
-		//This system needs to be redone
-		(*it)->stopGettingCollisionWith(object);
+		(*it)->stopGettingCollisionWith(object); 
 		if(*it == object)
 		{
 			returnCode = true;
@@ -405,12 +396,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 	}
 
 	//Clear everything equals to "NULL" on the vector
-	auto it = objects.begin();
-	while(it != objects.end())
-	if(!(*it))
-		it = objects.erase(it);
-	else
-		it++;
+	objects.remove(NULL);
 
 	return returnCode;
 }
@@ -428,14 +414,9 @@ void AnnEngine::destroyLightObject(AnnLightObject* object)
 {
 	if(object)
 		m_SceneManager->destroyLight(object);
-	
+
 	//Forget that this light existed
-	auto light(lights.begin());
-	while(light != lights.end())
-	if(*light == object)
-		light = lights.erase(light);
-	else
-		light++;
+	lights.remove(object);
 }
 
 bool AnnEngine::requestStop()
@@ -490,10 +471,10 @@ bool AnnEngine::refresh()
 	player->engineUpdate(deltaT);
 
 	//Run animations and update OpenAL sources position
-	for(auto it = objects.begin(); it != objects.end(); ++it)
+	for(auto gameObject : objects)
 	{
-		(*it)->addTime(deltaT);
-		(*it)->updateOpenAlPos();
+		gameObject->addTime(deltaT);
+		gameObject->updateOpenAlPos();
 	}
 
 	lockForCallback = true;
