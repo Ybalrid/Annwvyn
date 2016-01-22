@@ -41,9 +41,9 @@ namespace Annwvyn
 		virtual void runLogic() =0;
 
 	protected:
-		AnnGameObjectVect levelContent;
-		AnnLightVect levelLighting;
-		AnnTriggerObjectVect levelTrigger;
+		AnnGameObjectList levelContent;
+		AnnLightList levelLighting;
+		AnnTriggerObjectList levelTrigger;
 
 		AnnLightObject* addLight(std::string id = noID);
 		AnnTriggerObject* addTrggerObject(AnnTriggerObject* obj = new AnnSphericalTriggerObject, std::string id = noID);

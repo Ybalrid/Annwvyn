@@ -19,6 +19,7 @@
 
 //C++ STD & STL
 #include <cassert>
+#include <list>
 
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
@@ -313,9 +314,9 @@ namespace Annwvyn
 		OgreOculusRender* renderer;
 
 		///Dynamic container for games objects present in engine.
-		std::vector<AnnGameObject*>	objects;
-		std::vector<AnnTriggerObject*> triggers;
-		std::vector<AnnLightObject*> lights;
+		std::list<AnnGameObject*>	objects;
+		std::list<AnnTriggerObject*> triggers;
+		std::list<AnnLightObject*> lights;
 
 		///Elapsed time between 2 frames
 		double deltaT; 
@@ -323,8 +324,8 @@ namespace Annwvyn
 		double currentFrameTimeCode;
 		bool fullscreen;
 		bool lockForCallback;
-		AnnGameObjectVect clearingQueue;
-		AnnTriggerObjectVect triggerClearingQueue;
+		std::vector<AnnGameObject*> clearingQueue;
+		std::vector<AnnTriggerObject*> triggerClearingQueue;
 		void clearTriggers();
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
