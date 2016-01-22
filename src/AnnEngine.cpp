@@ -139,9 +139,13 @@ AnnEngine::~AnnEngine()
 	AnnTriggerObject** tmpArrayTrig = static_cast<AnnTriggerObject**>(malloc(sizeof(AnnTriggerObject*)*triggers.size()));
 	AnnLightObject** tmpArrayLight = static_cast<AnnLightObject**>(malloc(sizeof(AnnLightObject*)*lights.size()));
 	
-	for(size_t i(0); i < objects.size(); i++) tmpArrayObj[i] = objects[i];
-	for(size_t i(0); i < triggers.size(); i++) tmpArrayTrig[i] = triggers[i];
-	for(size_t i(0); i < lights.size(); i++) tmpArrayLight[i] = lights[i];
+	auto objIt = objects.begin();
+	auto trigIt = triggers.begin();
+	auto lightIt = lights.begin();
+
+	for(size_t i(0); i < objects.size(); i++) tmpArrayObj[i] = *objIt++;;
+	for(size_t i(0); i < triggers.size(); i++) tmpArrayTrig[i] = *trigIt++;
+	for(size_t i(0); i < lights.size(); i++) tmpArrayLight[i] = *lightIt++;
 
 	log("Content of the destroing queue :");
 	log("Game Object");
@@ -451,7 +455,8 @@ void AnnEngine::renderCallback()
 	//Create a copy of the object list and call the atRefresh object from it. This will prevent using a potentially invalidated iterator
 	size_t queueSize = objects.size();
 	AnnGameObject** refreshQueue = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*queueSize));
-	for(size_t i(0); i < queueSize; i++) refreshQueue[i] = objects[i];
+	auto objectIterator(objects.begin());
+	for(size_t i(0); i < queueSize; i++) refreshQueue[i] = *objectIterator++;
 	for(size_t i(0); i < queueSize; i++) refreshQueue[i]->atRefresh();
 	
 	//Get rid of the refresh queue
@@ -597,9 +602,9 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 	AnnDebug() << "Trying to identify object at address " << (void*)node;
 
 	//This methods only test memory address
-	for(size_t i(0); i < objects.size(); i++)
-		if((void*)objects[i]->node() == (void*)node)
-			return objects[i];
+	for(auto object : objects)
+		if((void*)object->node() == (void*)node)
+			return object;
 	AnnDebug() << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
 
 	return NULL;
