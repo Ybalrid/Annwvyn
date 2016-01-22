@@ -27,7 +27,7 @@ void AnnAbstractLevel::unload()
 	
 	//Remove the level lights
 	for(AnnLightVect::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)
-		AnnEngine::Instance()->getSceneManager()->destroyLight(*it);
+		AnnEngine::Instance()->destroyLightObject(*it);
 	levelLighting.clear();
 
 	//Remove the level objects
