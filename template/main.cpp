@@ -15,22 +15,25 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	AnnEngine::openConsole();
 	new AnnEngine("A game using Annwvyn");
 	
-	//Load your ressources here
+	//Load your custom graphics resources here:
+	//e.g.:
+	//AnnEngine::Instance()->loadDir("relativePathToDirectory");
+	//AnnEngine::Instance()->loadZip("relativePathToZipedFile");
+	
 	AnnEngine::Instance()->initResources();
 	AnnEngine::Instance()->oculusInit();
-	//If the player has to folow the integrated physics scheme
+
+	//Call physics initialization for the player body:
 	AnnEngine::Instance()->initPlayerPhysics();
-	//Do the other initialization herttEventListener(); //Basic events
 
-	//Intentiate and register our basic level
+	//Intentiate and register our basic level and "jump" to it:
 	AnnEngine::Instance()->getLevelManager()->addLevel(new MyLevel);
-	//This will make the game load and start the 1st we have registered
 	AnnEngine::Instance()->getLevelManager()->jumpToFirstLevel();
-
+	
 	//This will recenter the facing direction of the player
+
 	//in the real world with the VR
 	AnnEngine::Instance()->resetOculusOrientation();
-	
 	//The game is rendering here now:
 	AnnEngine::Instance()->useDefaultEventListener();
 	AnnEngine::Instance()->startGameplayLoop();
