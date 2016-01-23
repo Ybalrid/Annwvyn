@@ -127,13 +127,12 @@ AnnEngine::~AnnEngine()
 	delete levelManager;
 	levelManager = nullptr;
 
-	//All AnnGameObject
 	log("Destroying every objects remaining in engine");
 	
 	log(" Creating the destroing queue;");
-	AnnDebug() << " Will destroy " << objects.size() << " objects";
-	AnnDebug() << " Will destroy " << triggers.size() << " triggers";
-	AnnDebug() << " Will destroy " << lights.size() << " lights";
+	AnnDebug() << " Will destroy " << objects.size() << " remaining objects";
+	AnnDebug() << " Will destroy " << triggers.size() << " remaining triggers";
+	AnnDebug() << " Will destroy " << lights.size() << " remaining lights";
 
 	AnnGameObject** tmpArrayObj = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
 	AnnTriggerObject** tmpArrayTrig = static_cast<AnnTriggerObject**>(malloc(sizeof(AnnTriggerObject*)*triggers.size()));
