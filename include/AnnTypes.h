@@ -20,11 +20,11 @@ namespace Annwvyn
     class AnnGameObject;
 	class AnnTriggerObject;
 
-	///Harmonise names :
+	//Harmonise names :
 	typedef Ogre::Light AnnLightObject;
 	typedef Ogre::Vector2 AnnVect2;
 
-	///Remove some ugliness : 
+	//Remove some ugliness : 
 	typedef std::list<AnnTriggerObject *> AnnTriggerObjectList;
     typedef std::list<AnnGameObject *> AnnGameObjectList;
     typedef std::list<AnnLightObject *> AnnLightList;

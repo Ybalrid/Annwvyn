@@ -67,20 +67,17 @@ namespace Annwvyn
 		bool isReleased();
 
 	private:
-		Annwvyn::KeyCode::code key;
-
-		bool pressed;
-
-		bool released;
-		
 		friend class AnnEventManager;
-		
+		///Code of the key this event relate to
+		Annwvyn::KeyCode::code key;
+		///Pressed state
+		bool pressed;
+		///Released state
+		bool released;
 		///Set the event as a key relase event
 		void setPressed();
-
 		///Set the event as a key press event
 		void setReleased();
-
 		///Set the keycode of the key
 		/// \param c Keycode
 		void setCode(KeyCode::code c);
@@ -100,24 +97,25 @@ namespace Annwvyn
 	public:
 		///Construct a mouse axis infomation object
 		AnnMouseAxis();		
-
 		///Return the id of the axis that object represent
 		MouseAxisId getMouseAxisId();
-		
 		///Relative value in arbitrary unit
 		int getRelValue();
 		///Absolute value in arbitrary unit
 		int getAbsValue();
 
 	private:
-
+		///Give access to private feilds to the EventManager
+		friend class AnnEventManager;
+		///Give acces to  private feilds to the MouseEvent class
+		friend class AnnMouseEvent;
+		///ID of the axis
 		MouseAxisId id;
+		///Relative value
 		int rel;
+		///Absolute value (if aplicable)
 		int abs;
 
-		friend class AnnEventManager;
-		
-		friend class AnnMouseEvent;
 		///Set the id of the axis
 		void setAxis(MouseAxisId ax);
 		///Set the relative value of the axis
@@ -167,8 +165,9 @@ namespace Annwvyn
     {
         public:
             AnnStickAxis();
+			///Get the ID if this axis
             StickAxisId getAxisId();
-            ///Compute a float number between -1 and 1. if relative value isn't supported by the input, will return INVALID
+            ///Compute a float number between -1 and 1. if relative value isn't supported by the input, will return INVALID (42)
             float getRelValue();
             ///Compute a float number between -1 and 1
             float getAbsValue();
@@ -190,19 +189,26 @@ namespace Annwvyn
         public:
             AnnStickEvent();
 			~AnnStickEvent();
+			///Number of buttons this controller has
             size_t getNbButtons();
 
             std::vector<unsigned short> getPressed();
             std::vector<unsigned short> getReleased();
+
+			///Return true if this button just have been pressed
 			bool isPressed(ButtonId id);
+			///Return true if this buttton just have been released
 			bool isReleased(ButtonId id);
+			///Return true if this button is currently pressed
 			bool isDown(ButtonId id);
-
-
+			///Get the axis object for this ID
 			AnnStickAxis getAxis(StickAxisId ax);
+			///Get the number of axes the controller has
 			size_t getNbAxis();
-
+			///Get the unique ID given by Annwvyn for this stick
 			unsigned int getStickID();
+			///Get the "vendor string" of this joystick (could be its name)
+			std::string getVendor();
 
         private:
         friend class AnnEventManager;
@@ -220,6 +226,7 @@ namespace Annwvyn
 	{
 	public:
 		AnnTimeEvent();
+		///Get the ID of this timer
 		timerID getID();
 	private:
 		friend class AnnEventManager;
@@ -231,7 +238,9 @@ namespace Annwvyn
 	{
 	public:
 		AnnTriggerEvent();
+		///Return true if if there's collision
 		bool getContactStatus();
+		///Pointer to the trigger that have sent this event
 		AnnTriggerObject* getSender();
 	private:
 		friend class AnnEventManager;
@@ -247,29 +256,44 @@ namespace Annwvyn
 
 	public:
 		AnnAbstractEventListener();
+		///Event from the keyboard
 		virtual void KeyEvent(AnnKeyEvent e)			{return;}
+		///Event from the mouse
 		virtual void MouseEvent(AnnMouseEvent e)		{return;}
+		///Event for a Joystick
 		virtual void StickEvent(AnnStickEvent e)		{return;}
+		///Event from a timer
 		virtual void TimeEvent(AnnTimeEvent e)			{return;}
+		///Event from a trigger
 		virtual void TriggerEvent(AnnTriggerEvent e)	{return;}
-
-		///Called at each frame
+		///This method is called at each frame. Usefull for updating player's movement command for example
 		virtual void tick()								{return;}
-
+		///Utility function for applying a deadzone on a joystick axis
 		static float trim(float value, float deadzone);
 	protected:
+		///Pointer to the player. Set by the constructor, provide easy access to the AnnPlayer
 		AnnPlayer* player;
 	};
 
 	///The default event listener that make WASD controlls move the player
+	///The mouse turns the player's body
+	///Shift to "run"
+	///F1 and F2 to switch between Debug Mode
+	///F12 to recenter the rift
+	///² or ~ or ` (depending on keyboard layout) to open the on-screen-console
+	///Xbox controller with main stick for walking and 2nd stick for turning your body
 	class DLL AnnDefaultEventListener : public AnnAbstractEventListener
 	{
 	public:
 		AnnDefaultEventListener();
+		///Get events from keyboards
 		void KeyEvent(AnnKeyEvent e);
+		///Get events from the mouse
 		void MouseEvent(AnnMouseEvent e);
+		///GEt events from the joystick
 		void StickEvent(AnnStickEvent e);
-
+		
+		///Set all the keycodes for the the controlls
 		void setKeys(KeyCode::code fw, 
 			KeyCode::code bw, 
 			KeyCode::code sl, 
@@ -278,24 +302,33 @@ namespace Annwvyn
 			KeyCode::code rn); 
 
 	protected:
+		///W
 		KeyCode::code forward;
+		///S
 		KeyCode::code backward;
+		///A
 		KeyCode::code straffleft;
+		///D
 		KeyCode::code straffright;
+		///Space
 		KeyCode::code jump;
+		///shift
 		KeyCode::code run;
+		///F12
 		KeyCode::code recenter;
 
+		///value used for trimming low joysticks value
 		float deadzone;
+		///Axes
 		enum {ax_walk, ax_straff, ax_rotate};
 		StickAxisId axes[3];
-
+		///Buttons
 		enum {b_jump, b_run};
 		ButtonId buttons[2];
 
 	};
 	
-	
+	///Internal utility class that represent a timer
 	class DLL AnnTimer
 	{
 	private:
@@ -306,27 +339,31 @@ namespace Annwvyn
 		double timeoutTime;
 	};
 	
+	///Internal utility class that store joystick information
 	class DLL JoystickBuffer
 	{
 	private:
 		friend class AnnEventManager;
-
+		///Private constructor for AnnEventManager
+		///Create a Joystick buffer object, incremetns a static counter of IDs
 		JoystickBuffer(OIS::JoyStick* joystick) : stick(joystick)
 		{id = idcounter++;}
 
+		///Delete the OIS stick at destruction time
 		~JoystickBuffer()
 		{delete stick;}
 
+		///Joystick object from OIS
 		OIS::JoyStick* stick;
-
 		///Array of "bool" for previous buttons
 		std::vector<bool> previousStickButtonStates;
-
 		///Get the ID if this stick
 		unsigned int getID()
 		{return id;}
-
+	private://mebmers
+		///The ID
 		unsigned int id;
+		///The counter
 		static unsigned int idcounter;
 	};
 
@@ -354,7 +391,7 @@ namespace Annwvyn
 		void clearListenerList();
 
 		///Make the event manager forget about the listener
-		/// \param listener A listener object. If NULL, it will remove every listener form the manager
+		/// \param listener A listener object. If NULL (default), it will remove every listener form the manager (see clearListenerList())
 		void removeListener(AnnAbstractEventListener* listener = NULL);
 
 		///Create a timer that will timeout after "delay" seconds
@@ -392,8 +429,6 @@ namespace Annwvyn
 		///Pointer that holds the Mouse
 		OIS::Mouse* Mouse;
 
-		///Pointer that holds the stick
-		//OIS::JoyStick* Joystick;
 		///parameter list for OIS
 		std::vector<JoystickBuffer*> Joysticks;
 
