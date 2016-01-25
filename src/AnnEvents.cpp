@@ -257,6 +257,11 @@ bool AnnStickEvent::isReleased(ButtonId id)
 	return false;
 }
 
+std::string AnnStickEvent::getVendor()
+{
+	return vendor;
+}
+
 AnnTimeEvent::AnnTimeEvent() : AnnEvent()
 {
 	type = TIMER_TIMEOUT;
