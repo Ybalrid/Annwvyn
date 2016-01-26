@@ -100,6 +100,9 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	AudioEngine = new AnnAudioEngine;
 	log("Setup Level system");
 	levelManager = new AnnLevelManager;
+	log("Setup Filesystem Manager");
+	filesystemManager = new AnnFilesystemManager;
+	filesystemManager->setSaveDirectoryName(title);
 
 	log("==================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World   ", false);

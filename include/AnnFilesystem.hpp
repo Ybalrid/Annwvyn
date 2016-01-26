@@ -4,7 +4,11 @@
 
 #include <string>
 #include <map>
+#include <algorithm>
+#include <vector>
+
 using namespace std;
+
 namespace Annwvyn
 {
 	class DLL AnnFilesystemManager
@@ -12,10 +16,11 @@ namespace Annwvyn
 	public:
 		AnnFilesystemManager();
 		void setSaveDirectoryName(string name);
-		void getPathForFileName(string fileName);
+		string getPathForFileName(string fileName);
 	private:
 		string saveDirectoryName;
 		string pathToUserDir;
+		std::vector<char> charToEscape;
 	};
 
 	class DLL AnnSaveFileData
@@ -24,7 +29,7 @@ namespace Annwvyn
 		AnnSaveFileData();
 	private:
 		string fileName;
-		map<string, string> storedData; 
+		std::map<string, string> storedData; 
 	};
 }
 

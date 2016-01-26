@@ -33,6 +33,7 @@
 #include "AnnPhysicsEngine.hpp"
 #include "AnnConsole.hpp"
 #include "AnnLevelManager.hpp"
+#include "AnnFilesystem.hpp"
 
 #ifdef _WIN32
 #include <io.h>
@@ -291,6 +292,8 @@ namespace Annwvyn
 		AnnPhysicsEngine* physicsEngine;
 		//LevelManager
 		AnnLevelManager* levelManager;
+		//FilesystemManager
+		AnnFilesystemManager* filesystemManager;
 
 		//The window created by OGRE that receive event for OIS
 		Ogre::RenderWindow* m_Window;
