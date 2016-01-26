@@ -26,10 +26,10 @@ namespace Annwvyn
 	class DLL AnnSaveFileData
 	{
 	public:
-		AnnSaveFileData();
+		AnnSaveFileData(string name);
 	private:
 		string fileName;
-		std::map<string, string> storedData; 
+		std::map<string, string> storedTextData; 
 	};
 }
 
