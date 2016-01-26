@@ -5,6 +5,28 @@
 using namespace Annwvyn;
 using namespace std;
 
+AnnFileWriter::AnnFileWriter()
+{
+
+}
+
+void AnnFileWriter::write(AnnSaveFileData* data)
+{
+	auto fsmanager(AnnEngine::Instance()->getFileSystemManager());
+	fsmanager->createSaveDirectory();
+	string path(fsmanager->getPathForFileName(data->fileName));
+	ofstream saveFile;
+	saveFile.open(path);
+	if(!saveFile.is_open())return;
+	for(auto storedData : data->storedTextData)
+	{
+		saveFile << storedData.first 
+			<< "=" 
+			<< storedData.second 
+			<< endl;
+	}
+}
+
 AnnFilesystemManager::AnnFilesystemManager() 
 {
 	AnnDebug() << "Filesystem manager created";
@@ -27,6 +49,13 @@ AnnFilesystemManager::AnnFilesystemManager()
 	charToEscape.push_back(':');
 	charToEscape.push_back('%');
 
+	fileWriter = new AnnFileWriter;
+
+}
+
+AnnFilesystemManager::~AnnFilesystemManager()
+{
+	delete fileWriter;
 }
 
 void AnnFilesystemManager::setSaveDirectoryName(string dirname)
@@ -42,6 +71,23 @@ string AnnFilesystemManager::getPathForFileName(string filename)
 	if(!pathToUserDir.empty())
 	return pathToUserDir + "/" + saveDirectoryName + "/" + filename;
 	return "";
+}
+
+string AnnFilesystemManager::getSaveDirectoryFullPath()
+{
+	return pathToUserDir + "/" + saveDirectoryName;
+}
+
+void AnnFilesystemManager::createDirectory(string path)
+{
+#ifdef WIN32
+	CreateDirectory(wstring(path.begin(), path.end()).c_str(), NULL);
+#endif
+}
+
+void AnnFilesystemManager::createSaveDirectory()
+{
+	createDirectory(getSaveDirectoryFullPath());
 }
 
 AnnSaveFileData::AnnSaveFileData(string name) :
