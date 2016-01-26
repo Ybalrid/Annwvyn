@@ -216,6 +216,11 @@ AnnPlayer* AnnEngine::getPlayer()
 	return player;
 }
 
+AnnFilesystemManager* AnnEngine::getFileSystemManager()
+{
+	return filesystemManager;
+}
+
 ////////////////////////////////////////////////////////// UTILITY
 void AnnEngine::log(std::string message, bool flag)
 {

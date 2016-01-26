@@ -81,6 +81,9 @@ namespace Annwvyn
 		///Get the player
 		AnnPlayer* getPlayer();
 
+		///Get the filesystem manager
+		AnnFilesystemManager* getFileSystemManager();
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 
 		///Give a zipped archive resource location to the Ogre Resource Group Manager

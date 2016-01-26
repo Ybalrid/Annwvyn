@@ -23,6 +23,10 @@ AnnFilesystemManager::AnnFilesystemManager()
 	charToEscape.push_back('|');
 	charToEscape.push_back('?');
 	charToEscape.push_back('*');
+	charToEscape.push_back('"');
+	charToEscape.push_back(':');
+	charToEscape.push_back('%');
+
 }
 
 void AnnFilesystemManager::setSaveDirectoryName(string dirname)
@@ -39,3 +43,9 @@ string AnnFilesystemManager::getPathForFileName(string filename)
 	return pathToUserDir + "/" + saveDirectoryName + "/" + filename;
 	return "";
 }
+
+AnnSaveFileData::AnnSaveFileData(string name) :
+	fileName(name)
+{
+}
+
