@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <regex>
 #ifdef WIN32
 #include <Windows.h>
 #endif
@@ -22,6 +24,15 @@ namespace Annwvyn
 		AnnFileWriter();
 		void write(AnnSaveFileData* dataToWrite);
 	};
+
+	class DLL AnnFileReader
+	{
+	public:
+		AnnFileReader();
+		AnnSaveFileData* read(string path);
+	};
+
+	class AnnSaveFileData;
 	class DLL AnnFilesystemManager
 	{
 	public:
@@ -32,11 +43,20 @@ namespace Annwvyn
 		string getSaveDirectoryFullPath();
 		static void createDirectory(string path);
 		void createSaveDirectory();
+
+		AnnSaveFileData* crateSaveFileDataObject(string filename);
+		void destroySaveFileDataObject(AnnSaveFileData* data);
+		
+		AnnFileReader* getFileReader();
+		AnnFileWriter* getFileWriter();
+
 	private:
 		string saveDirectoryName;
 		string pathToUserDir;
-		std::vector<char> charToEscape;
+		std::vector<char> charToEscape, charToStrip;
 		AnnFileWriter* fileWriter;
+		AnnFileReader* fileReader;
+		std::list<AnnSaveFileData*> cachedData;
 	};
 	
 	class DLL AnnSaveFileData

@@ -13,9 +13,9 @@ AnnFileWriter::AnnFileWriter()
 void AnnFileWriter::write(AnnSaveFileData* data)
 {
 	auto fsmanager(AnnEngine::Instance()->getFileSystemManager());
-	fsmanager->createSaveDirectory();
 	string path(fsmanager->getPathForFileName(data->fileName));
 	ofstream saveFile;
+	fsmanager->createSaveDirectory();
 	saveFile.open(path);
 	if(!saveFile.is_open())return;
 	for(auto storedData : data->storedTextData)
@@ -25,7 +25,34 @@ void AnnFileWriter::write(AnnSaveFileData* data)
 			<< storedData.second 
 			<< endl;
 	}
+	saveFile.close();
 }
+
+AnnFileReader::AnnFileReader()
+{
+
+}
+
+AnnSaveFileData* AnnFileReader::read(string fileName)
+{
+	auto fsmanager (AnnEngine::Instance()->getFileSystemManager());
+	auto fileData (fsmanager->crateSaveFileDataObject(fileName));
+	ifstream ifile;
+	string buffer, key, value;
+	ifile.open(fsmanager->getPathForFileName(fileName));
+	while(!ifile.eof())
+	{
+		getline(ifile, buffer);
+		if(buffer.empty()) continue;
+		std::stringstream readStream(buffer);
+		getline(readStream, key, '=');
+		getline(readStream, value);
+		fileData->storedTextData[key]=value;
+	}
+	ifile.close();
+	return fileData;
+}
+
 
 AnnFilesystemManager::AnnFilesystemManager() 
 {
@@ -37,6 +64,7 @@ AnnFilesystemManager::AnnFilesystemManager()
 
 	AnnDebug() << "Path got from operating system : " << pathToUserDir;
 
+	//Forbiden characters in filename
 	charToEscape.push_back(' ');
 	charToEscape.push_back('&');
 	charToEscape.push_back('<');
@@ -49,13 +77,20 @@ AnnFilesystemManager::AnnFilesystemManager()
 	charToEscape.push_back(':');
 	charToEscape.push_back('%');
 
-	fileWriter = new AnnFileWriter;
+	//Forbiden charcters in text "key=value" file
+	charToStrip.push_back('=');
+	charToStrip.push_back('\n');
 
+	fileWriter = new AnnFileWriter;
+	fileReader = new AnnFileReader;
 }
 
 AnnFilesystemManager::~AnnFilesystemManager()
 {
 	delete fileWriter;
+	delete fileReader;
+	for(auto dataObject : cachedData)
+		delete dataObject;
 }
 
 void AnnFilesystemManager::setSaveDirectoryName(string dirname)
@@ -90,8 +125,33 @@ void AnnFilesystemManager::createSaveDirectory()
 	createDirectory(getSaveDirectoryFullPath());
 }
 
+void AnnFilesystemManager::destroySaveFileDataObject(AnnSaveFileData* data)
+{
+	cachedData.remove(data);
+	delete data;
+}
+
+
+AnnSaveFileData* AnnFilesystemManager::crateSaveFileDataObject(string filename)
+{
+	AnnSaveFileData* data = new AnnSaveFileData(filename);
+	cachedData.push_back(data);
+	return data;
+}
+
+AnnFileReader* AnnFilesystemManager::getFileReader()
+{
+	return fileReader;
+}
+
+AnnFileWriter* AnnFilesystemManager::getFileWriter()
+{
+	return fileWriter;
+}
+
 AnnSaveFileData::AnnSaveFileData(string name) :
 	fileName(name)
 {
 }
+
 
