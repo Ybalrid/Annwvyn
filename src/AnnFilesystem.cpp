@@ -139,6 +139,14 @@ AnnSaveFileData* AnnFilesystemManager::crateSaveFileDataObject(string filename)
 	return data;
 }
 
+AnnSaveFileData* AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
+{
+	for(auto dataObject : cachedData)
+		if(dataObject->getFilename() == filename)
+			return dataObject;
+	return nullptr;
+}
+
 AnnFileReader* AnnFilesystemManager::getFileReader()
 {
 	return fileReader;
@@ -153,5 +161,41 @@ AnnSaveFileData::AnnSaveFileData(string name) :
 	fileName(name)
 {
 }
+
+std::string AnnSaveFileData::getFilename()
+{
+	return fileName;
+}
+
+std::string AnnSaveFileData::getValue(std::string key)
+{
+	//if key exist:
+	if(storedTextData.find(key) != storedTextData.end())
+		return storedTextData[key];
+	//else:
+	return "";
+}
+
+void AnnSaveFileData::setValue(std::string key, std::string value)
+{
+	storedTextData[key] = value;
+}
+
+AnnSaveDataInterpretor::AnnSaveDataInterpretor(AnnSaveFileData* data) :
+	dataObject(data)
+{
+}
+
+float AnnSaveDataInterpretor::stringToFloat(std::string text)
+{
+	return std::stof(text);
+}
+
+int AnnSaveDataInterpretor::stringToInt(std::string text)
+{
+	return std::stoi(text);
+}
+
+
 
 
