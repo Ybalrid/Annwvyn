@@ -181,6 +181,40 @@ void AnnSaveFileData::setValue(std::string key, std::string value)
 	storedTextData[key] = value;
 }
 
+void AnnSaveFileData::setValue(std::string key, int value)
+{
+	std::stringstream sstream;
+	sstream << value;
+	setValue(key, sstream.str());
+}
+
+void AnnSaveFileData::setValue(std::string key, float value)
+{
+	std::stringstream sstream;
+	sstream << value;
+	setValue(key, sstream.str());
+}
+
+void AnnSaveFileData::setValue(std::string key, AnnVect3 vector)
+{
+	setValue(key + ".x", vector.x);
+	setValue(key + ".y", vector.y);
+	setValue(key + ".z", vector.z);
+}
+
+void AnnSaveFileData::setValue(std::string key, AnnQuaternion quaternion)
+{
+	setValue(key + ".x", quaternion.x);
+	setValue(key + ".y", quaternion.y);
+	setValue(key + ".z", quaternion.z);
+	setValue(key + ".w", quaternion.w);
+}
+
+void AnnSaveFileData::setValue(std::string key, const char* value)
+{
+		storedTextData[key] = value;
+}
+
 AnnSaveDataInterpretor::AnnSaveDataInterpretor(AnnSaveFileData* data) :
 	dataObject(data)
 {
@@ -196,6 +230,30 @@ int AnnSaveDataInterpretor::stringToInt(std::string text)
 	return std::stoi(text);
 }
 
+AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(std::string key)
+{
+	std::string x,y,z;
+	if((x = dataObject->getValue(key + ".x")).empty()) return AnnVect3(false);
+	if((y = dataObject->getValue(key + ".y")).empty()) return AnnVect3(false);
+	if((z = dataObject->getValue(key + ".z")).empty()) return AnnVect3(false);
+	return AnnVect3(
+		stringToFloat(x),
+		stringToFloat(y),
+		stringToFloat(z));
+}
 
+AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(std::string key)
+{
+	std::string x, y, z, w;
+	if((x = dataObject->getValue(key + ".x")).empty()) return AnnQuaternion(false);
+	if((y = dataObject->getValue(key + ".y")).empty()) return AnnQuaternion(false);
+	if((z = dataObject->getValue(key + ".z")).empty()) return AnnQuaternion(false);
+	if((w = dataObject->getValue(key + ".w")).empty()) return AnnQuaternion(false);
+	return AnnQuaternion(
+		stringToFloat(w),
+		stringToFloat(x),
+		stringToFloat(y),
+		stringToFloat(z)
+		);
 
-
+}
