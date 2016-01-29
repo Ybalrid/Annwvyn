@@ -1,7 +1,6 @@
 #ifndef ANN_FILESYSTEM
 #define ANN_FILESYSTEM
 #include "systemMacro.h"
-
 #include <string>
 #include <map>
 #include <algorithm>
@@ -13,11 +12,17 @@
 #include <Windows.h>
 #endif
 
+#include "AnnTypes.h"
+#include "AnnVect3.hpp"
+#include "AnnQuaternion.hpp"
+
 using namespace std;
 
 namespace Annwvyn
 {
 	class AnnSaveFileData;
+
+	///Handle opening, writing and closing files
 	class DLL AnnFileWriter
 	{
 	public:
@@ -26,6 +31,7 @@ namespace Annwvyn
 		void write(AnnSaveFileData* dataToWrite);
 	};
 
+	///Handle opening, reading and closing files
 	class DLL AnnFileReader
 	{
 	public:
@@ -75,6 +81,7 @@ namespace Annwvyn
 		std::list<AnnSaveFileData*> cachedData;
 	};
 	
+	///Class that holds data to read or write
 	class DLL AnnSaveFileData
 	{
 	public:
@@ -84,8 +91,14 @@ namespace Annwvyn
 
 		///Get the value of this key. Return empty if key doesn't exist
 		std::string getValue(std::string key);
+
 		///Set the value for this key. Return empty if key doesn't exist 
 		void setValue(std::string key, std::string value);
+		void setValue(std::string, const char* value);
+		void setValue(std::string key, int value);
+		void setValue(std::string key, float value);
+		void setValue(std::string key, AnnVect3 vector);
+		void setValue(std::string key, AnnQuaternion quaternion);
 	private:
 		friend class AnnFileWriter;
 		friend class AnnFileReader;
@@ -97,6 +110,8 @@ namespace Annwvyn
 		std::map<std::string, std::string> storedTextData; 
 	};
 
+	///Interface class to switch from text to usefull data. 
+	///Inherit from this to use your saved data
 	class DLL AnnSaveDataInterpretor
 	{
 	public:
@@ -104,6 +119,8 @@ namespace Annwvyn
 		AnnSaveDataInterpretor(AnnSaveFileData* data);
 		float stringToFloat(std::string text);
 		int stringToInt(std::string text);
+		AnnVect3 keyStringToVect3(std::string key);
+		AnnQuaternion keyStringToQuaternion(std::string key);
 
 		///Overload this method with
 		virtual void extract() =0;
