@@ -28,6 +28,12 @@ namespace Annwvyn
 		AnnVect3 getAtVector();
 		
 		btQuaternion getBtQuaternion();
+
+		bool isValid();
+		AnnQuaternion(bool validState);
+	private:
+		void init();
+		bool valid;
 	};
 }
 

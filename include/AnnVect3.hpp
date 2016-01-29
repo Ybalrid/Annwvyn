@@ -17,10 +17,16 @@ namespace Annwvyn
 			 AnnVect3(const float coord[3]);	
 			 AnnVect3(float* const r);
 			 AnnVect3(const float s);
+			 AnnVect3(bool validState);
 			
 			//Custom Annwvyn part
 			AnnVect3(btVector3& v);
 			btVector3 getBtVector();
+			 
+			bool isValid();
+	private:
+		void init();
+		bool valid;
 	};
 }
 
