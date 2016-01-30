@@ -75,10 +75,13 @@ namespace Annwvyn
 	private:
 		string saveDirectoryName;
 		string pathToUserDir;
-		std::vector<char> charToEscape, charToStrip;
 		AnnFileWriter* fileWriter;
 		AnnFileReader* fileReader;
 		std::list<AnnSaveFileData*> cachedData;
+	public:
+		static std::vector<char> charToEscape;
+		static std::vector<char> charToStrip;
+
 	};
 	
 	///Class that holds data to read or write
@@ -92,7 +95,7 @@ namespace Annwvyn
 		///Get the value of this key. Return empty if key doesn't exist
 		std::string getValue(std::string key);
 
-		///Set the value for this key. Return empty if key doesn't exist 
+		///Set the value for this key 
 		void setValue(std::string key, std::string value);
 		void setValue(std::string, const char* value);
 		void setValue(std::string key, int value);
