@@ -37,14 +37,28 @@ public:
 		return orient;
 	}
 
+	float getPi()
+	{
+		return pi;
+	}
+
+	int getLives()
+	{
+		return lives;
+	}
+
 	virtual void extract()
 	{
 		pos = keyStringToVect3("pos");
 		orient = keyStringToQuaternion("orient");
+		pi = keyStringToFloat("PI");
+		lives = keyStringToInt("lives");
 	}
 private:
 	AnnVect3 pos;
 	AnnQuaternion orient;
+	float pi; 
+	int lives;
 };
 
 class DebugListener : LISTENER
@@ -107,6 +121,8 @@ AnnMain()
 	auto testFile = AnnEngine::Instance()->getFileSystemManager()->crateSaveFileDataObject("test");
 	testFile->setValue("KEY0", "Thing");
 	testFile->setValue("KEY1", "otherThing");
+	testFile->setValue("lives", 10);
+	testFile->setValue("PI", 3.14f);
 	testFile->setValue("pos", AnnVect3(2.5, 4.8, Ogre::Math::HALF_PI));
 	testFile->setValue("orient", AnnQuaternion(Ogre::Radian(Ogre::Math::HALF_PI), AnnVect3(.5,.5,.5)));
 
@@ -124,6 +140,8 @@ AnnMain()
 	tester.extract();
 	AnnDebug() << "stored vector value : " << tester.getPosition();
 	AnnDebug() << "stored quaternion value : " << tester.getOrientation();
+	AnnDebug() << "stored pi value : " << tester.getPi();
+	AnnDebug() << "stored lives value : " << tester.getLives();
 
 	AnnDebug() << "Starting the render loop";
 	do	

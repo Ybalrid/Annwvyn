@@ -124,9 +124,18 @@ namespace Annwvyn
 	public:
 		///FileInterpetor
 		AnnSaveDataInterpretor(AnnSaveFileData* data);
+		///Get a float from this string
 		float stringToFloat(std::string text);
+		///Get a int from this string
 		int stringToInt(std::string text);
+
+		///Extract a float from the dataobject stored at the given key
+		float keyStringToFloat(std::string key);
+		///Extract a int from the dataobject stored at the given key
+		int keyStringToInt(std::string key);
+		///Extract a Vector3 from the dataobject stored at the given key
 		AnnVect3 keyStringToVect3(std::string key);
+		///Extract a quaternion from the dataobject stored at the given key
 		AnnQuaternion keyStringToQuaternion(std::string key);
 
 		///Overload this method with

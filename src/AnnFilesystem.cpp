@@ -14,12 +14,17 @@ AnnFileWriter::AnnFileWriter()
 
 void AnnFileWriter::write(AnnSaveFileData* data)
 {
+	//Create the resources needed for the write operation
 	auto fsmanager(AnnEngine::Instance()->getFileSystemManager());
 	string path(fsmanager->getPathForFileName(data->fileName));
 	ofstream saveFile;
+
+	//Make sure the "user save" directory as been created on the user's personal folder
 	fsmanager->createSaveDirectory();
-	saveFile.open(path);
-	if(!saveFile.is_open())return;
+
+	//Open the file, abort if the file isn't openable
+	saveFile.open(path);if(!saveFile.is_open())return;
+		//push as plain text all key and data in a "key=data\n" format
 		for(auto storedData : data->storedTextData)
 		{
 			saveFile << storedData.first 
@@ -36,18 +41,33 @@ AnnFileReader::AnnFileReader()
 
 AnnSaveFileData* AnnFileReader::read(string fileName)
 {
+	//Create the resource needed to the read operation
 	auto fsmanager (AnnEngine::Instance()->getFileSystemManager());
 	auto fileData (fsmanager->crateSaveFileDataObject(fileName));
+	if(!fileData) return nullptr;
 	ifstream ifile;
 	string buffer, key, value;
+
+	//make sure the dataObject don't contain old content
+	fileData->storedTextData.clear();
+
+	//Open the file 
 	ifile.open(fsmanager->getPathForFileName(fileName));
+
+	//While we've not reach the end of the file
 	while(!ifile.eof())
 	{
+		//Read a line
 		getline(ifile, buffer);
 		if(buffer.empty()) continue;
+
+		//Create a string stream on the buffer
 		std::stringstream readStream(buffer);
+		//Getline permit you to specify the "endline" character. We use this to split the sting at the '=' in the file
 		getline(readStream, key, '=');
 		getline(readStream, value);
+
+		//Store on the file data object the given key
 		fileData->storedTextData[key]=value;
 	}
 	ifile.close();
@@ -234,6 +254,16 @@ float AnnSaveDataInterpretor::stringToFloat(std::string text)
 int AnnSaveDataInterpretor::stringToInt(std::string text)
 {
 	return std::stoi(text);
+}
+
+float AnnSaveDataInterpretor::keyStringToFloat(std::string key)
+{
+	return stringToFloat(dataObject->getValue(key));
+}
+
+int AnnSaveDataInterpretor::keyStringToInt(std::string key)
+{
+	return stringToInt(dataObject->getValue(key));
 }
 
 AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(std::string key)
