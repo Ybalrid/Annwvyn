@@ -397,10 +397,8 @@ void OgreOculusRender::calculateProjectionMatrix()
 	}
 }
 
-void OgreOculusRender::RenderOneFrame()
+void OgreOculusRender::updateTracking()
 {
-	Ogre::WindowEventUtilities::messagePump();
-
 	//Get current camera base information
 	cameraPosition = CameraNode->getPosition();
 	cameraOrientation = CameraNode->getOrientation();
@@ -417,11 +415,15 @@ void OgreOculusRender::RenderOneFrame()
 	//Get the hmd orientation
 	oculusOrient = pose.Rotation;
 	oculusPos = pose.Translation;
+}
 
+void OgreOculusRender::renderAndSubmitFrame()
+{
+	Ogre::WindowEventUtilities::messagePump();
 	//Select the current render texture
 	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 
-	//Apply pose to the two cameras
+		//Apply pose to the two cameras
 	for(size_t eye = 0; eye < ovrEye_Count; eye++)
 	{
 		//cameraOrientation and cameraPosition are the player position/orientation on the space
@@ -443,9 +445,6 @@ void OgreOculusRender::RenderOneFrame()
 	//Update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
-	
-	//Process operation that have to be done before rendering but after the pov in known
-	if(oorc) oorc->renderCallback();
 
 	//root->renderOneFrame();
 	root->_fireFrameRenderingQueued();
@@ -474,4 +473,13 @@ void OgreOculusRender::RenderOneFrame()
 		debugViewport->update();
 		window->update();
 	}
+
+}
+
+void OgreOculusRender::RenderOneFrame()
+{
+	updateTracking();
+	//Process operation that have to be done before rendering but after the pov in known
+	if(oorc) oorc->renderCallback();
+	renderAndSubmitFrame();	
 }

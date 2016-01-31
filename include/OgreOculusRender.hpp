@@ -66,6 +66,8 @@ class DLL OgreOculusRender
 
 		///Calculate, time and present a frame on the Rift display
 		void RenderOneFrame();
+		void updateTracking();
+		void renderAndSubmitFrame();
 
 		///Set the near Z clipping plane distance from the POV. Used to calculate Projections matricies
 		void setCamerasNearClippingDistance(float distance);
