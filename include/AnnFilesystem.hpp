@@ -25,8 +25,10 @@ namespace Annwvyn
 	///Handle opening, writing and closing files
 	class DLL AnnFileWriter
 	{
-	public:
+		friend class AnnFilesystemManager;
+	private:
 		AnnFileWriter();
+	public:
 		///Write the fileData to disc in the appropriate directory
 		void write(AnnSaveFileData* dataToWrite);
 	};
@@ -34,8 +36,10 @@ namespace Annwvyn
 	///Handle opening, reading and closing files
 	class DLL AnnFileReader
 	{
-	public:
+		friend class AnnFilesystemManager;
+	private:
 		AnnFileReader();
+	public:
 		///read the asked file and return a new AnnSaveFileData*
 		AnnSaveFileData* read(string filename);
 	};
