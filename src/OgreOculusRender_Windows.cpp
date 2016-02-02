@@ -415,15 +415,8 @@ void OgreOculusRender::updateTracking()
 	//Get the hmd orientation
 	oculusOrient = pose.Rotation;
 	oculusPos = pose.Translation;
-}
 
-void OgreOculusRender::renderAndSubmitFrame()
-{
-	Ogre::WindowEventUtilities::messagePump();
-	//Select the current render texture
-	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
-
-		//Apply pose to the two cameras
+	//Apply pose to the two cameras
 	for(size_t eye = 0; eye < ovrEye_Count; eye++)
 	{
 		//cameraOrientation and cameraPosition are the player position/orientation on the space
@@ -445,6 +438,13 @@ void OgreOculusRender::renderAndSubmitFrame()
 	//Update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
+}
+
+void OgreOculusRender::renderAndSubmitFrame()
+{
+	Ogre::WindowEventUtilities::messagePump();
+	//Select the current render texture
+	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 
 	//root->renderOneFrame();
 	root->_fireFrameRenderingQueued();
