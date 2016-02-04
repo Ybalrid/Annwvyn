@@ -193,6 +193,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnEngine.hpp" />
     <ClInclude Include="..\..\include\AnnErrorCode.hpp" />
     <ClInclude Include="..\..\include\AnnEventManager.hpp" />
+    <ClInclude Include="..\..\include\AnnFilesystem.hpp" />
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
     <ClInclude Include="..\..\include\AnnKeyCode.h" />
     <ClInclude Include="..\..\include\AnnLevelManager.hpp" />
@@ -231,6 +232,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnEngine.cpp" />
     <ClCompile Include="..\..\src\AnnEventManager.cpp" />
     <ClCompile Include="..\..\src\AnnEvents.cpp" />
+    <ClCompile Include="..\..\src\AnnFilesystem.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
     <ClCompile Include="..\..\src\AnnLevelManager.cpp" />
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp" />

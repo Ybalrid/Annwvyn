@@ -20,6 +20,47 @@ using namespace Annwvyn;
 
 timerID demoTimer;
 
+class MySaveTest : public AnnSaveDataInterpretor
+{
+public:
+	MySaveTest(AnnSaveFileData* data) : AnnSaveDataInterpretor(data)
+	{
+	}
+
+	AnnVect3 getPosition()
+	{
+		return pos;
+	}
+
+	AnnQuaternion getOrientation()
+	{
+		return orient;
+	}
+
+	float getPi()
+	{
+		return pi;
+	}
+
+	int getLives()
+	{
+		return lives;
+	}
+
+	virtual void extract()
+	{
+		pos = keyStringToVect3("pos");
+		orient = keyStringToQuaternion("orient");
+		pi = keyStringToFloat("PI");
+		lives = keyStringToInt("lives");
+	}
+private:
+	AnnVect3 pos;
+	AnnQuaternion orient;
+	float pi; 
+	int lives;
+};
+
 class DebugListener : LISTENER
 {
 public:
@@ -44,7 +85,7 @@ AnnMain()
 	//Only usefull on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();	
 	//Init game engine
-	AnnEngine* GameEngine(new AnnEngine("Test program"));
+	AnnEngine* GameEngine(new AnnEngine("AnnTest"));
 
 	//load ressources
 	GameEngine->loadDir("media/environement");
@@ -76,6 +117,31 @@ AnnMain()
 
 	AnnLightObject* light = GameEngine->addLight(); 
 	GameEngine->destroyLight(light);
+
+	auto testFile = AnnEngine::Instance()->getFileSystemManager()->crateSaveFileDataObject("test");
+	testFile->setValue("KEY0", "Thing");
+	testFile->setValue("KEY1", "otherThing");
+	testFile->setValue("lives", 10);
+	testFile->setValue("PI", 3.14f);
+	testFile->setValue("pos", AnnVect3(2.5, 4.8, Ogre::Math::HALF_PI));
+	testFile->setValue("orient", AnnQuaternion(Ogre::Radian(Ogre::Math::HALF_PI), AnnVect3(.5,.5,.5)));
+
+
+	AnnFileWriter* writer(AnnEngine::Instance()->getFileSystemManager()->getFileWriter());
+	writer->write(testFile);
+
+	AnnFileReader* reader(AnnEngine::Instance()->getFileSystemManager()->getFileReader());
+	auto data = reader->read("test");
+	
+	AnnDebug() << "KEY0 val : " << data->getValue("KEY0");
+	AnnDebug() << "KEY1 val : " << data->getValue("KEY1");
+
+	MySaveTest tester(data);
+	tester.extract();
+	AnnDebug() << "stored vector value : " << tester.getPosition();
+	AnnDebug() << "stored quaternion value : " << tester.getOrientation();
+	AnnDebug() << "stored pi value : " << tester.getPi();
+	AnnDebug() << "stored lives value : " << tester.getLives();
 
 	AnnDebug() << "Starting the render loop";
 	do	

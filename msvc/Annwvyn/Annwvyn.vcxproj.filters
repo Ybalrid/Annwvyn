@@ -144,6 +144,9 @@
     <ClInclude Include="..\..\include\BtOgreExtras.h">
       <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnFilesystem.hpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\OculusInterface.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\BtOgre.cpp">
       <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnFilesystem.cpp">
+      <Filter>Annwvyn\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

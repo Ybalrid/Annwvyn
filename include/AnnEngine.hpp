@@ -33,6 +33,7 @@
 #include "AnnPhysicsEngine.hpp"
 #include "AnnConsole.hpp"
 #include "AnnLevelManager.hpp"
+#include "AnnFilesystem.hpp"
 
 #ifdef _WIN32
 #include <io.h>
@@ -78,6 +79,9 @@ namespace Annwvyn
 
 		///Get the player
 		AnnPlayer* getPlayer();
+
+		///Get the filesystem manager
+		AnnFilesystemManager* getFileSystemManager();
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 
@@ -290,6 +294,8 @@ namespace Annwvyn
 		AnnPhysicsEngine* physicsEngine;
 		//LevelManager
 		AnnLevelManager* levelManager;
+		//FilesystemManager
+		AnnFilesystemManager* filesystemManager;
 
 		//The scene manager
 		Ogre::SceneManager* m_SceneManager;
