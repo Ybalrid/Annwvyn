@@ -113,8 +113,15 @@ namespace Annwvyn
 		///Set the value for this key (quaternion as 4 floating point at key.w, key.x, key.y, key.z)
 		void setValue(std::string key, AnnQuaternion quaternion);
 
+		///Remove the key and it's value from the stored data
+		void clearValue(std::string key);
+		///Vectors are stored under 3 keys because they are 3 floats
+		void clearVectorValue(std::string key);
+		///Quaternions are stored under 4 keys because they are 4 floats
+		void clearQuaternionValue(std::string key);
+
 		///Return true if keys were manipulated but changes weren't wrote to disk yet
-		bool hasUnsavedChanges();
+		bool hasUnsavedChanges();	
 
 	private:
 		friend class AnnFileWriter;
