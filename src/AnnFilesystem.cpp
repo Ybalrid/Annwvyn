@@ -33,6 +33,7 @@ void AnnFileWriter::write(AnnSaveFileData* data)
 				<< endl;
 		}
 	saveFile.close();
+	data->changed = false;
 }
 
 AnnFileReader::AnnFileReader()
@@ -71,6 +72,9 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 		fileData->storedTextData[key]=value;
 	}
 	ifile.close();
+
+	fileData->changed = false;
+
 	return fileData;
 }
 
@@ -179,8 +183,14 @@ AnnFileWriter* AnnFilesystemManager::getFileWriter()
 }
 
 AnnSaveFileData::AnnSaveFileData(string name) :
-	fileName(name)
+	fileName(name),
+	changed(false)
 {
+}
+
+bool AnnSaveFileData::hasUnsavedChanges()
+{
+	return changed;
 }
 
 std::string AnnSaveFileData::getFilename()
@@ -205,6 +215,7 @@ void AnnSaveFileData::setValue(std::string key, std::string value)
 		replace(value.begin(), value.end(), achar, '_');
 	}
 	storedTextData[key] = value;
+	changed = true;
 }
 
 void AnnSaveFileData::setValue(std::string key, int value)
