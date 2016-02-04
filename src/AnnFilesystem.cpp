@@ -252,6 +252,26 @@ void AnnSaveFileData::setValue(std::string key, const char* value)
 	setValue(key, std::string(value));
 }
 
+
+void AnnSaveFileData::clearValue(std::string key)
+{
+	storedTextData.erase(key);
+	changed = true;
+}
+
+void AnnSaveFileData::clearVectorValue(std::string key)
+{
+	clearValue(key + ".x");
+	clearValue(key + ".y");
+	clearValue(key + ".z");
+}
+
+void AnnSaveFileData::clearQuaternionValue(std::string key)
+{
+	//like vectors, quaternion have x, y, and z, compnant. they just add a 'w' one
+	clearValue(key + ".w"); clearVectorValue(key);
+}
+
 AnnSaveDataInterpretor::AnnSaveDataInterpretor(AnnSaveFileData* data) :
 	dataObject(data)
 {
