@@ -59,9 +59,10 @@ namespace Annwvyn
 		string getPathForFileName(string fileName);
 		///Get the path to the directory where save are read/written
 		string getSaveDirectoryFullPath();
+		
 		///Create the given directory (OS call)
 		static void createDirectory(string path);
-		///Create the save directory (should be done at least once
+		///Create the save directory (should be done at least once)
 		void createSaveDirectory();
 
 		///Create en empty SaveFileData Object for a specific file
@@ -99,12 +100,17 @@ namespace Annwvyn
 		///Get the value of this key. Return empty if key doesn't exist
 		std::string getValue(std::string key);
 
-		///Set the value for this key 
+		///Set the value for this key (string)
 		void setValue(std::string key, std::string value);
+		///Set the value for this key (C syle const string)
 		void setValue(std::string, const char* value);
+		///Set the value for this key (integer)
 		void setValue(std::string key, int value);
+		///Set the value for this key (floating point)
 		void setValue(std::string key, float value);
+		///Set the value for this key (vector as 3 floating point at key.x, key.y, key.z)
 		void setValue(std::string key, AnnVect3 vector);
+		///Set the value for this key (quaternion as 4 floating point at key.w, key.x, key.y, key.z)
 		void setValue(std::string key, AnnQuaternion quaternion);
 	private:
 		friend class AnnFileWriter;
