@@ -51,7 +51,7 @@ namespace Annwvyn
 	///This is the base class of the whole engine, the idea is more or less the one described in the 
 	///"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
 
-	class DLL AnnEngine : public OgreOculusRenderCallback
+	class DLL AnnEngine
 	{
 	private:
 		///the singleton address itself is stored here
@@ -60,7 +60,6 @@ namespace Annwvyn
 
 	public:
 		///This method is called by the OgreOculusRender object. Here is refresh code that needs to know current pose
-		void renderCallback();
 		void toogleOculusPerfHUD();
 
 		///Get the current instance of AnnEngine. pointer
@@ -292,8 +291,6 @@ namespace Annwvyn
 		//LevelManager
 		AnnLevelManager* levelManager;
 
-		//The window created by OGRE that receive event for OIS
-		Ogre::RenderWindow* m_Window;
 		//The scene manager
 		Ogre::SceneManager* m_SceneManager;
 		//Where to put the camera

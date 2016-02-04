@@ -12,7 +12,6 @@ using namespace OVR;
 bool OgreOculusRender::forceNextUpdate(false);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
-	oorc(nullptr),
 	name(winName),
 	root(nullptr),
 	smgr(nullptr),
@@ -51,11 +50,6 @@ OgreOculusRender::~OgreOculusRender()
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
 	root = nullptr;
-}
-
-void OgreOculusRender::setRenderCallback(OgreOculusRenderCallback* callback)
-{
-	oorc = callback;
 }
 
 void OgreOculusRender::cycleOculusHUD()
@@ -397,10 +391,8 @@ void OgreOculusRender::calculateProjectionMatrix()
 	}
 }
 
-void OgreOculusRender::RenderOneFrame()
+void OgreOculusRender::updateTracking()
 {
-	Ogre::WindowEventUtilities::messagePump();
-
 	//Get current camera base information
 	cameraPosition = CameraNode->getPosition();
 	cameraOrientation = CameraNode->getOrientation();
@@ -417,9 +409,6 @@ void OgreOculusRender::RenderOneFrame()
 	//Get the hmd orientation
 	oculusOrient = pose.Rotation;
 	oculusPos = pose.Translation;
-
-	//Select the current render texture
-	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 
 	//Apply pose to the two cameras
 	for(size_t eye = 0; eye < ovrEye_Count; eye++)
@@ -443,9 +432,13 @@ void OgreOculusRender::RenderOneFrame()
 	//Update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
-	
-	//Process operation that have to be done before rendering but after the pov in known
-	if(oorc) oorc->renderCallback();
+}
+
+void OgreOculusRender::renderAndSubmitFrame()
+{
+	Ogre::WindowEventUtilities::messagePump();
+	//Select the current render texture
+	textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 
 	//root->renderOneFrame();
 	root->_fireFrameRenderingQueued();
@@ -474,4 +467,12 @@ void OgreOculusRender::RenderOneFrame()
 		debugViewport->update();
 		window->update();
 	}
+
+}
+
+void OgreOculusRender::RenderOneFrame()
+{
+	updateTracking();
+	//Process operation that have to be done before rendering but after the pov in known
+	renderAndSubmitFrame();	
 }

@@ -38,13 +38,6 @@
 using namespace std;
 using namespace OVR;
 
-class DLL OgreOculusRenderCallback
-{
-	public :
-		OgreOculusRenderCallback(){}
-		virtual void renderCallback() = 0;
-};
-
 ///A pose refer to the combinaison of a position and an orientation. 
 ///It permit to define the placement of an object with 6DOF
 struct OgrePose
@@ -66,6 +59,8 @@ class DLL OgreOculusRender
 
 		///Calculate, time and present a frame on the Rift display
 		void RenderOneFrame();
+		void updateTracking();
+		void renderAndSubmitFrame();
 
 		///Set the near Z clipping plane distance from the POV. Used to calculate Projections matricies
 		void setCamerasNearClippingDistance(float distance);
@@ -127,9 +122,6 @@ class DLL OgreOculusRender
 		///change main viewport background color
 		void changeViewportBackgroundColor(Ogre::ColourValue color);
 
-		///Register the address of an OgreOculusRenderCallback object wich get a access point to execute some code just before the rendering occurs.
-		void setRenderCallback(OgreOculusRenderCallback* callback);
-
 		///Show in debug window what the camera are seeing
 		static void showRawView();
 
@@ -147,9 +139,6 @@ class DLL OgreOculusRender
 		///Save content of the RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
 		///Note that this is SLOW AS HELL!
         void debugSaveToFile(const char path[]);
-
-		///Callback object. Permit to add code just before the rendering
-		OgreOculusRenderCallback* oorc;
 		
 		///Object for getting informations from the Oculus Rift
         OculusInterface* oc;
