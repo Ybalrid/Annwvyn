@@ -48,7 +48,6 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
 	renderer = new OgreOculusRender(title);
-	renderer->setRenderCallback(this);
 	renderer->initLibraries("Annwvyn.log");
 	player = new AnnPlayer;
 	renderer->getOgreConfig();
@@ -426,38 +425,6 @@ bool AnnEngine::requestStop()
 	return false;
 }
 
-//This is called by the OgreOculusRender object just before updating the frame
-void AnnEngine::renderCallback()
-{
-	//This will lock the removal of object during the refresh call.
-	lockForCallback = true;
-	levelManager->step();
-	//Create a copy of the object list and call the atRefresh object from it. This will prevent using a potentially invalidated iterator
-	size_t queueSize = objects.size();
-	AnnGameObject** refreshQueue = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*queueSize));
-	auto objectIterator(objects.begin());
-	for(size_t i(0); i < queueSize; i++) refreshQueue[i] = *objectIterator++;
-	for(size_t i(0); i < queueSize; i++) refreshQueue[i]->atRefresh();
-	
-	//Get rid of the refresh queue
-	free(refreshQueue); 
-	refreshQueue = NULL;
-
-	//Now it's safe to remove the objects
-	lockForCallback = false;
-	clearTriggers();
-
-	//If there is nothing to do, don't waist time
-	if(clearingQueue.empty())
-		return;
-
-	//Destroy the objects in the queue
-	for(size_t i(0); i < clearingQueue.size(); i++)
-		destroyGameObject(clearingQueue[i]);
-
-	//Clear the queue
-	clearingQueue.clear();
-}
 
 
 bool AnnEngine::refresh()
@@ -498,7 +465,38 @@ bool AnnEngine::refresh()
 
 	if(onScreenConsole->needUpdate()) onScreenConsole->update();
 	
-	renderer->RenderOneFrame();
+	//renderer->RenderOneFrame();
+	renderer->updateTracking();
+	
+	///Start of old render callbak call
+	//This will lock the removal of object during the refresh call.
+	lockForCallback = true;
+	levelManager->step();
+	//Create a copy of the object list and call the atRefresh object from it. This will prevent using a potentially invalidated iterator
+	size_t queueSize = objects.size();
+	AnnGameObject** refreshQueue = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*queueSize));
+	auto objectIterator(objects.begin());
+	for(size_t i(0); i < queueSize; i++) refreshQueue[i] = *objectIterator++;
+	for(size_t i(0); i < queueSize; i++) refreshQueue[i]->atRefresh();
+	
+	//Get rid of the refresh queue
+	free(refreshQueue); 
+	refreshQueue = NULL;
+
+	//Now it's safe to remove the objects
+	lockForCallback = false;
+	clearTriggers();
+
+	//Destroy the objects in the queue
+	for(size_t i(0); i < clearingQueue.size(); i++)
+		destroyGameObject(clearingQueue[i]);
+
+	//Clear the queue
+	clearingQueue.clear();	
+	
+	///End of old render callback 
+
+	renderer->renderAndSubmitFrame();
 
 	return !requestStop();
 }

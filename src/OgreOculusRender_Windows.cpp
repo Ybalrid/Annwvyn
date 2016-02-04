@@ -12,7 +12,6 @@ using namespace OVR;
 bool OgreOculusRender::forceNextUpdate(false);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
-	oorc(nullptr),
 	name(winName),
 	root(nullptr),
 	smgr(nullptr),
@@ -51,11 +50,6 @@ OgreOculusRender::~OgreOculusRender()
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
 	root = nullptr;
-}
-
-void OgreOculusRender::setRenderCallback(OgreOculusRenderCallback* callback)
-{
-	oorc = callback;
 }
 
 void OgreOculusRender::cycleOculusHUD()
@@ -480,6 +474,5 @@ void OgreOculusRender::RenderOneFrame()
 {
 	updateTracking();
 	//Process operation that have to be done before rendering but after the pov in known
-	if(oorc) oorc->renderCallback();
 	renderAndSubmitFrame();	
 }
