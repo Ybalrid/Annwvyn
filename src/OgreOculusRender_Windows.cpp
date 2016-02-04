@@ -469,10 +469,3 @@ void OgreOculusRender::renderAndSubmitFrame()
 	}
 
 }
-
-void OgreOculusRender::RenderOneFrame()
-{
-	updateTracking();
-	//Process operation that have to be done before rendering but after the pov in known
-	renderAndSubmitFrame();	
-}

@@ -56,10 +56,11 @@ class DLL OgreOculusRender
 		static bool forceNextUpdate;
         OgreOculusRender(std::string windowName = "OgreOculusRender", bool actVsync = true);
         ~OgreOculusRender();
-
-		///Calculate, time and present a frame on the Rift display
-		void RenderOneFrame();
+		
+		///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
 		void updateTracking();
+
+		///Render each texture buffer, copy contne to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
 		void renderAndSubmitFrame();
 
 		///Set the near Z clipping plane distance from the POV. Used to calculate Projections matricies
