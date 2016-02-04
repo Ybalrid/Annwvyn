@@ -291,8 +291,6 @@ namespace Annwvyn
 		//LevelManager
 		AnnLevelManager* levelManager;
 
-		//The window created by OGRE that receive event for OIS
-		Ogre::RenderWindow* m_Window;
 		//The scene manager
 		Ogre::SceneManager* m_SceneManager;
 		//Where to put the camera
