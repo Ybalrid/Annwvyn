@@ -112,6 +112,10 @@ namespace Annwvyn
 		void setValue(std::string key, AnnVect3 vector);
 		///Set the value for this key (quaternion as 4 floating point at key.w, key.x, key.y, key.z)
 		void setValue(std::string key, AnnQuaternion quaternion);
+
+		///Return true if keys were manipulated but changes weren't wrote to disk yet
+		bool hasUnsavedChanges();
+
 	private:
 		friend class AnnFileWriter;
 		friend class AnnFileReader;
@@ -120,7 +124,9 @@ namespace Annwvyn
 		///Private constructor of SaveFileData class. 
 		AnnSaveFileData(std::string name);
 		std::string fileName;
-		std::map<std::string, std::string> storedTextData; 
+		std::map<std::string, std::string> storedTextData;
+
+		bool changed;
 	};
 
 	///Interface class to switch from text to usefull data. 
