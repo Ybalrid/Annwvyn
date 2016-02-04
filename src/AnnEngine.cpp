@@ -57,7 +57,6 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	renderer->setCamerasNearClippingDistance(0.15f);
 	renderer->initRttRendering();
 	m_SceneManager = renderer->getSceneManager();
-	m_Window = renderer->getWindow();
 
 	readyForLoadingRessources = true;
 	log("OGRE Object-oriented Graphical Rendering Engine initialized", true);
@@ -92,7 +91,7 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 #endif
 
 	log("Setup event system");
-	eventManager = new AnnEventManager(m_Window);
+	eventManager = new AnnEventManager(renderer->getWindow());
 	log("Setup physics engine");
 	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode());
 	log("Setup audio engine");
