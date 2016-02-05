@@ -442,22 +442,12 @@ bool AnnEngine::refresh()
 	//Update player logic code 
 	player->engineUpdate(deltaT);
 
-	//Run animations and update OpenAL sources position
-	for(auto gameObject : objects)
-	{
-		gameObject->addTime(deltaT);
-		gameObject->updateOpenAlPos();
-	}
-
 	//Update camera
 	m_CameraReference->setPosition(player->getPosition());
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
 
 	physicsEngine->stepDebugDrawer();
 
-	if(onScreenConsole->needUpdate()) 
-		onScreenConsole->update();
-	
 	lockForCallback = true;/////////////////////////////////////////////////////////
 	
 	//Process some logic to extract basic informations (theses should be done within the eventManager).
@@ -468,25 +458,18 @@ bool AnnEngine::refresh()
 	eventManager->update(); 
 	levelManager->update();
 
-	//Create a copy of the object list and call the atRefresh object from it. This will prevent using a potentially invalidated iterator
-	size_t queueSize = objects.size();
-	AnnGameObject** refreshQueue = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*queueSize));
-	auto objectIterator(objects.begin());
-	for(size_t i(0); i < queueSize; i++) 
-		refreshQueue[i] = *objectIterator++;
-	for(size_t i(0); i < queueSize; i++) 
-		refreshQueue[i]->atRefresh();
+	//Run animations and update OpenAL sources position
+	for(auto gameObject : objects)
+	{
+		gameObject->addTime(deltaT);
+		gameObject->updateOpenAlPos();
+		gameObject->atRefresh();
+	}
 
 	renderer->updateTracking();
 	//Audio
 	AudioEngine->updateListenerPos(renderer->returnPose.position);
 	AudioEngine->updateListenerOrient(renderer->returnPose.orientation);
-	
-	
-	
-	//Get rid of the refresh queue
-	free(refreshQueue); 
-	refreshQueue = nullptr;
 
 	//Now it's safe to remove the objects
 	lockForCallback = false;/////////////////////////////////////////////////////////
@@ -494,11 +477,13 @@ bool AnnEngine::refresh()
 	processTriggerClearingQueue();
 
 	//Destroy the objects in the queue
-	for(size_t i(0); i < clearingQueue.size(); i++)
-		destroyGameObject(clearingQueue[i]);
-
+	for(auto objectToClear : clearingQueue)
+		destroyGameObject(objectToClear);
 	//Clear the queue
 	clearingQueue.clear();	
+
+	if(onScreenConsole->needUpdate()) 
+		onScreenConsole->update();
 	renderer->renderAndSubmitFrame();
 
 	return !requestStop();
