@@ -43,7 +43,7 @@ namespace Annwvyn
 		void jumpToFirstLevel();
 
 		///Run level logic
-		void step();
+		void update();
 
 		///Unload the level currently running
 		void unloadCurrentLevel();
