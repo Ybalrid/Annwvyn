@@ -49,7 +49,7 @@ void AnnLevelManager::jumpToFirstLevel()
 	jump(level_id(0));
 }
 
-void AnnLevelManager::step()
+void AnnLevelManager::update()
 {
 	if(current) current->runLogic();
 }

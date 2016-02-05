@@ -27,8 +27,6 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	eventManager(NULL),
 	levelManager(NULL),
 	fullscreen(fs),
-	lastFrameTimeCode(0),
-	currentFrameTimeCode(0),
 	m_CameraReference(NULL),	
 	readyForLoadingRessources(false),
 	defaultEventListener(NULL),
@@ -350,7 +348,7 @@ void AnnEngine::destroyTriggerObject(AnnTriggerObject* object)
 	delete object;
 }
 
-void AnnEngine::clearTriggers()
+void AnnEngine::processTriggerClearingQueue()
 {
 	if(lockForCallback)return;
 	for(auto trigger : triggerClearingQueue)
@@ -451,49 +449,49 @@ bool AnnEngine::refresh()
 		gameObject->updateOpenAlPos();
 	}
 
-	lockForCallback = true;
-	//Process some logic to extract basic informations (theses should be done within the eventManager).
-	physicsEngine->processCollisionTesting(objects);
-	physicsEngine->processTriggersContacts(player, triggers);
-		//Update the event system
-	if(eventManager)
-		eventManager->update(); 
-	lockForCallback = false;
-	clearTriggers();
-
-	//Audio
-	AudioEngine->updateListenerPos(renderer->returnPose.position);
-	AudioEngine->updateListenerOrient(renderer->returnPose.orientation);
-	
 	//Update camera
 	m_CameraReference->setPosition(player->getPosition());
 	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
 
 	physicsEngine->stepDebugDrawer();
 
-	if(onScreenConsole->needUpdate()) onScreenConsole->update();
+	if(onScreenConsole->needUpdate()) 
+		onScreenConsole->update();
 	
-	//renderer->RenderOneFrame();
-	renderer->updateTracking();
+	lockForCallback = true;/////////////////////////////////////////////////////////
 	
-	///Start of old render callbak call
-	//This will lock the removal of object during the refresh call.
-	lockForCallback = true;
-	levelManager->step();
+	//Process some logic to extract basic informations (theses should be done within the eventManager).
+	physicsEngine->processCollisionTesting(objects);
+	physicsEngine->processTriggersContacts(player, triggers);
+
+	//Update the event system
+	eventManager->update(); 
+	levelManager->update();
+
 	//Create a copy of the object list and call the atRefresh object from it. This will prevent using a potentially invalidated iterator
 	size_t queueSize = objects.size();
 	AnnGameObject** refreshQueue = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*queueSize));
 	auto objectIterator(objects.begin());
-	for(size_t i(0); i < queueSize; i++) refreshQueue[i] = *objectIterator++;
-	for(size_t i(0); i < queueSize; i++) refreshQueue[i]->atRefresh();
+	for(size_t i(0); i < queueSize; i++) 
+		refreshQueue[i] = *objectIterator++;
+	for(size_t i(0); i < queueSize; i++) 
+		refreshQueue[i]->atRefresh();
+
+	renderer->updateTracking();
+	//Audio
+	AudioEngine->updateListenerPos(renderer->returnPose.position);
+	AudioEngine->updateListenerOrient(renderer->returnPose.orientation);
+	
+	
 	
 	//Get rid of the refresh queue
 	free(refreshQueue); 
-	refreshQueue = NULL;
+	refreshQueue = nullptr;
 
 	//Now it's safe to remove the objects
-	lockForCallback = false;
-	clearTriggers();
+	lockForCallback = false;/////////////////////////////////////////////////////////
+
+	processTriggerClearingQueue();
 
 	//Destroy the objects in the queue
 	for(size_t i(0); i < clearingQueue.size(); i++)
@@ -501,9 +499,6 @@ bool AnnEngine::refresh()
 
 	//Clear the queue
 	clearingQueue.clear();	
-	
-	///End of old render callback 
-
 	renderer->renderAndSubmitFrame();
 
 	return !requestStop();
@@ -547,7 +542,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 		if(it->movable && it->movable->getMovableType() == "Entity")
 			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
 
-	return NULL; //means that we don't know what the player is looking at.
+	return nullptr; //means that we don't know what the player is looking at.
 }
 
 void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)

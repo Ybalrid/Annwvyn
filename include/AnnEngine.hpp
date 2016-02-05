@@ -318,18 +318,19 @@ namespace Annwvyn
 
 		///Dynamic container for games objects present in engine.
 		std::list<AnnGameObject*>	objects;
+		///Dynamic container for games objects present in engine.
 		std::list<AnnTriggerObject*> triggers;
+		///Dynamic container for games objects present in engine.
 		std::list<AnnLightObject*> lights;
 
 		///Elapsed time between 2 frames
 		double deltaT; 
-		double lastFrameTimeCode;
-		double currentFrameTimeCode;
+
 		bool fullscreen;
 		bool lockForCallback;
 		std::vector<AnnGameObject*> clearingQueue;
 		std::vector<AnnTriggerObject*> triggerClearingQueue;
-		void clearTriggers();
+		void processTriggerClearingQueue();
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
 #endif
