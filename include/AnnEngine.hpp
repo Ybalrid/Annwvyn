@@ -311,8 +311,6 @@ namespace Annwvyn
 		Ogre::AnimationState* VisualBodyAnimation;
 		//offset in Z axis of the visual body
 		float visualBody_Zoffset;
-		//Can load resources
-		bool readyForLoadingRessources;
 		//Oculus oculus;
 		OgreOculusRender* renderer;
 
