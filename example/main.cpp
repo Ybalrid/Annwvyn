@@ -154,5 +154,5 @@ AnnMain()
 	while(GameEngine->refresh());
 
 	delete GameEngine;
-	return 0;
+	exit(0);
 }
