@@ -94,6 +94,9 @@ namespace Annwvyn
 		///Create an audio source
 		AnnAudioSource* createSource(const std::string& path);
 
+		///Write laste error text to the log
+		void logError();
+
 	private:
 		///For the engine: update the listener position to match the player's head
 		/// \param pos The position of the player
