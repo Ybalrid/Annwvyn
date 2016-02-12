@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "AnnAudioEngine.hpp"
-#include "AnnLogger.hpp" //for accessing the logger
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
@@ -9,8 +9,7 @@ AnnAudioEngine::AnnAudioEngine()
 	lastError = "Initialize OpenAL based sound system";
 	if(!initOpenAL())
 		lastError = "Cannot Init OpenAL";
-
-	Ogre::LogManager::getSingleton().logMessage(lastError);
+	logError();
 
 	alListener3f(AL_POSITION, 0.0f, 0.0f, 10.0f);
 
@@ -20,6 +19,11 @@ AnnAudioEngine::AnnAudioEngine()
 	alListenerfv(AL_ORIENTATION, Orientation);
 	alGenSources(1, &bgm);
 	locked = false;
+}
+
+void AnnAudioEngine::logError()
+{
+	AnnDebug() << lastError;
 }
 
 AnnAudioEngine::~AnnAudioEngine()
@@ -49,24 +53,19 @@ void AnnAudioEngine::shutdownOpenAL()
 	
 	//Stop and delete other audio sources
 	for(auto source : AudioSources)
-	{
 		delete source;
-		source = nullptr;
-	}
-	AudioSources.clear();
-	
+	///Delete the BGM buffer if it has been initialized
 	if(alIsBuffer(bgmBuffer) == AL_TRUE)
 		alDeleteBuffers(1,&bgmBuffer);
 	//Delete all buffers created here
-	auto iterator = buffers.begin();
-	while(iterator != buffers.end())
-		alDeleteBuffers(1, &(*iterator++).second);
-		
+	for(auto buffer : buffers)
+		alDeleteBuffers(1, &buffer.second);
+
 	//Close the AL environement 
     alcMakeContextCurrent(NULL);
 	alcDestroyContext(Context);
 	alcCloseDevice(Device);
-    alGetError();
+    alGetError();//Purge pending error.
 }
 
 ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
@@ -101,9 +100,9 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 	std::vector<float> SamplesFloat(NbSamples);
     if (sf_read_float(File, &SamplesFloat[0], NbSamples) < NbSamples)
 	{
-		lastError = "Error while reading the file" + Filename + " through sndfile library";
-		AnnDebug() << lastError;
-		AnnEngine::log(sf_error_number(sf_error(File)));
+		lastError = "Error while reading the file" + Filename + " through sndfile library\nsndfile error: ";
+		lastError +=  sf_error_number(sf_error(File));
+		logError();
         //return 0;
 	}
 
@@ -137,7 +136,7 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
     if (alGetError() != AL_NO_ERROR)
 	{
 		lastError = "Error : cannot create an audio buffer for : " + Filename;
-		AnnEngine::log(lastError);
+		logError();
         return 0;
 	}
 
@@ -154,7 +153,12 @@ void AnnAudioEngine::unloadBuffer(const std::string& path)
 	//Search for the buffer
 	AnnDebug() << "Unloading soudfile " << path;
 	auto query = buffers.find(path);
-	if(query == buffers.end()) return; //if querry is equal to iterator::end(), buffer isn't known
+	if(query == buffers.end()) 
+	{
+		lastError = "Error: cannot unload buffer " + path + " is unknown";
+		logError();
+		return; //if querry is equal to iterator::end(), buffer isn't known
+	}
 
 	//Get the buffer from the iterator
 	AnnDebug() << "Sound file found by the Audio resource system. OpenAL buffer " << query->second;
@@ -287,3 +291,5 @@ void AnnAudioSource::setPositionRelToPlayer(bool rel)
 {
 	posRelToPlayer = rel;
 }
+
+
