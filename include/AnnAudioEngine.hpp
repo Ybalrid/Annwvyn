@@ -107,13 +107,19 @@ namespace Annwvyn
         friend class Annwvyn::AnnEngine;
 
     private:
+		///The last error this class has generated
 		std::string lastError;
+		///AL Device
 		ALCdevice* Device;
+		///AL Context
 		ALCcontext* Context;
 	    
-        ALuint bgmBuffer; //static buffer 
-		ALuint bgm;//background music source
+		///Audio buffer for background music
+        ALuint bgmBuffer; 
+		///Audio source for background music
+		ALuint bgm;
 
+		///Map between audio filenames and OpenAL buffer
 		std::map<std::string, ALuint> buffers;
 		bool locked;
 		std::vector<AnnAudioSource*> AudioSources;
