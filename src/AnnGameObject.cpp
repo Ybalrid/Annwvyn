@@ -360,7 +360,7 @@ void AnnGameObject::loopAnimation(bool loop)
 	}
 }
 
-void AnnGameObject::addTime(double offset)
+void AnnGameObject::addAnimationTime(double offset)
 {
 	if(!animIsSetted || !animIsPlaying)
 		return;

@@ -4,6 +4,8 @@
 #include <Annwvyn.h>
 using namespace Annwvyn;
 
+AnnGameObject* toDestroy = nullptr;
+
 //Custom object:
 class Sinbad : public AnnGameObject
 {
@@ -16,6 +18,15 @@ public:
 		playAnimation(true);
 		loopAnimation(true);
 		setUpPhysics(40, phyShapeType::boxShape);
+	}
+
+	void atRefresh()
+	{
+		if(AnnEngine::Instance()->isKeyDown(OIS::KeyCode::KC_Z))
+		{
+			AnnEngine::Instance()->destroyGameObject(toDestroy);
+			toDestroy = nullptr;
+		}
 	}
 };
 
@@ -60,6 +71,8 @@ public:
 		player->setPosition(AnnVect3::ZERO);
 		player->setOrientation(Ogre::Euler(0));
 		AnnEngine::Instance()->resetPlayerPhysics();
+
+		toDestroy = AnnEngine::Instance()->createGameObject("Sinbad.mesh");
 	}
 
 	void runLogic()

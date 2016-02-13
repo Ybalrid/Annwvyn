@@ -100,13 +100,15 @@ AnnMain()
 	GameEngine->initPlayerPhysics();	 
 
 	//Register a level
-	AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
+	//AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
+	AnnAbstractLevel* level = new TestLevel();
 	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 7.1);
 	splash->setBGM("media/AnnSplash.ogg");
 
 	GameEngine->getLevelManager()->addLevel(splash);
 	GameEngine->getLevelManager()->addLevel(level);
 	GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
+	GameEngine->getLevelManager()->jump(level);
 	
 	GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
