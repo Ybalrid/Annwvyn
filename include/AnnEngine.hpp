@@ -328,9 +328,7 @@ namespace Annwvyn
 
 		bool fullscreen;
 		bool lockForCallback;
-		std::vector<AnnGameObject*> clearingQueue;
-		std::vector<AnnTriggerObject*> triggerClearingQueue;
-		void processTriggerClearingQueue();
+
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
 #endif

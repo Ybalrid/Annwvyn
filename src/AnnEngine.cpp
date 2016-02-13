@@ -336,39 +336,16 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 void AnnEngine::destroyTriggerObject(AnnTriggerObject* object)
 {
-	//Discard destroying to end of frame processing if in the middle of the renderCallback
-	if(lockForCallback)
-	{
-		triggerClearingQueue.push_back(object);
-		return;
-	}
-
 	triggers.remove(object);
 	AnnDebug() << "Destroy trigger : " << (void*)object;
 	delete object;
 }
 
-void AnnEngine::processTriggerClearingQueue()
-{
-	if(lockForCallback)return;
-	for(auto trigger : triggerClearingQueue)
-		destroyTriggerObject(trigger);
-	triggerClearingQueue.clear();
-}
-
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
-	//If that boolean is true, it means that we are iterating the object list during
-	//render callback. We cannot modify this list. However, we sore the querry to 
-	//destroy an object in a queue that will be cleared as soon as it's safe to do.
-	if(lockForCallback) 
-	{
-		clearingQueue.push_back(object); 
-		return false;
-	}
-
+	AnnDebug() << "Destroy call : " << object;
+	if(!object) return false;
 	bool returnCode(false);
-
 	//TODO: remove the need to mark objects as NULL in this array before being able to clear them.
 	for(auto it = objects.begin(); it != objects.end(); it++)
     {
@@ -431,25 +408,13 @@ bool AnnEngine::requestStop()
 	return false;
 }
 
-
-
 bool AnnEngine::refresh()
 {
-	//Get the rendering delta time (should be roughly equals to 1/desiredFramerate)
+	//Get the rendering delta time (should be roughly equals to 1/desiredFramerate in seconds)
 	deltaT = renderer->getUpdateTime();
-	//Step the simulation
 	physicsEngine->step(deltaT);
-	//Update player logic code 
 	player->engineUpdate(deltaT);
 
-	//Update camera
-	m_CameraReference->setPosition(player->getPosition());
-	m_CameraReference->setOrientation(/*QuatReference* */ player->getOrientation().toQuaternion());
-
-	physicsEngine->stepDebugDrawer();
-
-	lockForCallback = true;/////////////////////////////////////////////////////////
-	
 	//Process some logic to extract basic informations (theses should be done within the eventManager).
 	physicsEngine->processCollisionTesting(objects);
 	physicsEngine->processTriggersContacts(player, triggers);
@@ -461,33 +426,27 @@ bool AnnEngine::refresh()
 	//Run animations and update OpenAL sources position
 	for(auto gameObject : objects)
 	{
-		gameObject->addTime(deltaT);
+		gameObject->addAnimationTime(deltaT);
 		gameObject->updateOpenAlPos();
 		gameObject->atRefresh();
 	}
 
+	//Update camera from player
+	m_CameraReference->setPosition(player->getPosition());
+	m_CameraReference->setOrientation(player->getOrientation().toQuaternion());
 	renderer->updateTracking();
 	//Audio
 	AudioEngine->updateListenerPos(renderer->returnPose.position);
 	AudioEngine->updateListenerOrient(renderer->returnPose.orientation);
 
-	//Now it's safe to remove the objects
-	lockForCallback = false;/////////////////////////////////////////////////////////
-
-	processTriggerClearingQueue();
-
-	//Destroy the objects in the queue
-	for(auto objectToClear : clearingQueue)
-		destroyGameObject(objectToClear);
-	//Clear the queue
-	clearingQueue.clear();	
-
 	if(onScreenConsole->needUpdate()) 
 		onScreenConsole->update();
+	physicsEngine->stepDebugDrawer();
 	renderer->renderAndSubmitFrame();
 
 	return !requestStop();
 }
+
 
 bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
