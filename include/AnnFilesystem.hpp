@@ -7,7 +7,6 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <regex>
 #ifdef WIN32
 #include <Windows.h>
 #endif
