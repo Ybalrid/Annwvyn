@@ -72,9 +72,6 @@
     <ClInclude Include="..\..\include\AnnAbstractLevel.hpp">
       <Filter>Annwvyn\LevelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
-      <Filter>Annwvyn\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnCharacter.hpp">
       <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
@@ -146,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\AnnFilesystem.hpp">
       <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
+      <Filter>Annwvyn\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

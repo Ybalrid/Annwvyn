@@ -28,7 +28,6 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	levelManager(NULL),
 	fullscreen(fs),
 	m_CameraReference(NULL),	
-	readyForLoadingRessources(false),
 	defaultEventListener(NULL),
 	VisualBody(NULL),
 	VisualBodyAnimation(NULL),
@@ -56,7 +55,6 @@ AnnEngine::AnnEngine(const char title[], bool fs) :
 	renderer->initRttRendering();
 	m_SceneManager = renderer->getSceneManager();
 
-	readyForLoadingRessources = true;
 	log("OGRE Object-oriented Graphical Rendering Engine initialized", true);
 
 #ifdef __gnu_linux__
@@ -262,7 +260,6 @@ void AnnEngine::loadZip(const char path[], const char resourceGroupName[])
 {
 	log("Loading resources from Zip archive :");
 	log(path, false);
-	if(readyForLoadingRessources)
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
 }
 
@@ -270,7 +267,6 @@ void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
 {
 	log("Loading resources from Filesystem directory :");
 	log(path, false);
-	if(readyForLoadingRessources)
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
 }
 
