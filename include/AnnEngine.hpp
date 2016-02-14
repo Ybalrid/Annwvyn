@@ -58,7 +58,6 @@ namespace Annwvyn
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
 
-
 	public:
 		///This method is called by the OgreOculusRender object. Here is refresh code that needs to know current pose
 		void toogleOculusPerfHUD();
@@ -69,7 +68,7 @@ namespace Annwvyn
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
 		/// \param fs the fullscreen state of the application. set it to false may help when developping with VS debugger on one screen
-		AnnEngine(const char title[] = "Annwvyn Game Engine", bool fs = true);
+		AnnEngine(const char title[] = "Annwvyn Game Engine");
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();
@@ -133,6 +132,7 @@ namespace Annwvyn
 		
 		//TODO remove destroy light
 		void destroyLight(AnnLightObject* light){destroyLightObject(light);}
+
 		///Destroy the given light
 		/// \param light pointer to the light to destroy
 		void destroyLightObject(AnnLightObject* light);
@@ -143,6 +143,7 @@ namespace Annwvyn
 
 		//TODO remove "addlight"
 		AnnLightObject* addLight(){return createLightObject();}
+
 		///Add a light source to the scene. return a pointer to the new light
 		AnnLightObject* createLightObject();
 
@@ -160,6 +161,9 @@ namespace Annwvyn
 
 		///Refresh all for you
 		bool refresh(); //engine main loop
+
+		///Set the POV node to the AnnPlayer gameplay defined position/orientation of the player's body
+		inline void syncPov();
 
 		///Get elapsed time from engine startup
 		double getTimeFromStartUp();//engine
@@ -282,36 +286,36 @@ namespace Annwvyn
 		///The onScreenConsole object
 		static AnnConsole* onScreenConsole;
 
-		//Audio engine
+		///Audio engine
 		AnnAudioEngine* AudioEngine;
-		//Player
+		///Player
 		AnnPlayer* player;
-		//Event manager
+		///Event manager
 		AnnEventManager* eventManager;
-		//This event listener do WASD+mouse movement on the player
+		///This event listener do WASD+mouse movement on the player
 		AnnDefaultEventListener* defaultEventListener;
-		//Physics
+		///Physics
 		AnnPhysicsEngine* physicsEngine;
-		//LevelManager
+		///LevelManager
 		AnnLevelManager* levelManager;
-		//FilesystemManager
+		///FilesystemManager
 		AnnFilesystemManager* filesystemManager;
 
-		//The scene manager
+		///The scene manager
 		Ogre::SceneManager* m_SceneManager;
-		//Where to put the camera
-		Ogre::SceneNode* m_CameraReference;
-		//Where the visualBody is attached
+		///Point Of View : Node used as "root" for putting the VR "camera rig"
+		Ogre::SceneNode* povNode;
+		///Where the visualBody is attached
 		Ogre::SceneNode* VisualBodyAnchor;
-		//Orientation offcet between the model and the cameras
+		///Orientation offcet between the model and the cameras
 		AnnQuaternion refVisualBody;
-		//The entity representing the player
+		///The entity representing the player
 		Ogre::Entity* VisualBody;
-		//The animation state of the player
+		///The animation state of the player
 		Ogre::AnimationState* VisualBodyAnimation;
-		//offset in Z axis of the visual body
+		///offset in Z axis of the visual body
 		float visualBody_Zoffset;
-		//Oculus oculus;
+		///Oculus oculus;
 		OgreOculusRender* renderer;
 
 		///Dynamic container for games objects present in engine.
@@ -323,9 +327,6 @@ namespace Annwvyn
 
 		///Elapsed time between 2 frames
 		double deltaT; 
-
-		bool fullscreen;
-		bool lockForCallback;
 
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;

@@ -23,11 +23,10 @@ void AnnEngine::startGameplayLoop()
 	while(refresh());
 }
 	
-AnnEngine::AnnEngine(const char title[], bool fs) :
+AnnEngine::AnnEngine(const char title[]) :
 	eventManager(NULL),
 	levelManager(NULL),
-	fullscreen(fs),
-	m_CameraReference(NULL),	
+	povNode(NULL),	
 	defaultEventListener(NULL),
 	VisualBody(NULL),
 	VisualBodyAnimation(NULL),
@@ -253,7 +252,7 @@ AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
 
 void AnnEngine::initPlayerPhysics()
 {
-	physicsEngine->initPlayerPhysics(player, m_CameraReference);
+	physicsEngine->initPlayerPhysics(player, povNode);
 }
 
 void AnnEngine::loadZip(const char path[], const char resourceGroupName[])
@@ -294,8 +293,8 @@ void AnnEngine::oculusInit()
 {   
 	log("Init Oculus rendering system");
 	renderer->initOculus();
-	m_CameraReference = renderer->getCameraInformationNode();
-	m_CameraReference->setPosition(player->getPosition() + 
+	povNode = renderer->getCameraInformationNode();
+	povNode->setPosition(player->getPosition() + 
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 	onScreenConsole = new AnnConsole();
 	//This will populate swap texture and turn on the rift display earlier
@@ -428,8 +427,7 @@ bool AnnEngine::refresh()
 	}
 
 	//Update camera from player
-	m_CameraReference->setPosition(player->getPosition());
-	m_CameraReference->setOrientation(player->getOrientation().toQuaternion());
+	syncPov();
 	renderer->updateTracking();
 	//Audio
 	AudioEngine->updateListenerPos(renderer->returnPose.position);
@@ -441,6 +439,12 @@ bool AnnEngine::refresh()
 	renderer->renderAndSubmitFrame();
 
 	return !requestStop();
+}
+
+inline void AnnEngine::syncPov()
+{
+	povNode->setPosition(player->getPosition());
+	povNode->setOrientation(player->getOrientation().toQuaternion());
 }
 
 
@@ -492,7 +496,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
 	//Could actually be an AnnGameObject without the physics ? So it will be cleaned by the AnnEngine destructor
 	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
-	VisualBodyAnchor = m_CameraReference->createChildSceneNode();
+	VisualBodyAnchor = povNode->createChildSceneNode();
 	VisualBodyAnchor->attachObject(ent);
 
 	if(flip)
@@ -534,7 +538,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 ////////////////////////////////////////////////////////// GETTERS
 Ogre::SceneNode* AnnEngine::getCamera()
 {
-	return m_CameraReference;
+	return povNode;
 }
 
 AnnAudioEngine* AnnEngine::getAudioEngine()
@@ -623,8 +627,8 @@ void AnnEngine::resetPlayerPhysics()
 	player->setBody(NULL);
 
 	//Put everything back in order
-	m_CameraReference->setPosition(player->getPosition());
-	physicsEngine->createPlayerPhysicalVirtualBody(player, m_CameraReference);
+	povNode->setPosition(player->getPosition());
+	physicsEngine->createPlayerPhysicalVirtualBody(player, povNode);
 	physicsEngine->addPlayerPhysicalBodyToDynamicsWorld(player);
 }
 
