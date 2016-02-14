@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AnnwvynSDK64"
-#define MyAppVersion "0.0.11.6"
+#define MyAppVersion "0.1.0"
 #define MyAppPublisher "Arthur (Ybalrid) Brainville"
 #define MyAppURL "http://annwvyn.org/"
 
@@ -22,9 +22,9 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\Oculus\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=D:\Oculus\AnnwvynSDK_64\Annwvyn\LICENSE
-InfoAfterFile=D:\Oculus\AnnwvynSDK_64\README.TXT
-OutputDir=D:\Oculus\AnnwvynSetup64
+LicenseFile=C:\Oculus\AnnwvynSDK64\Annwvyn\LICENSE
+InfoAfterFile=C:\Oculus\AnnwvynSDK64\README.TXT
+OutputDir=C:\Oculus\AnnwvynSetup64
 OutputBaseFilename=setupAnnwvynSDKx64
 Compression=lzma
 SolidCompression=yes
@@ -33,7 +33,7 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "D:\Oculus\AnnwvynSDK_64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Oculus\AnnwvynSDK64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs ; Excludes: "*.sdf,*.ipch,*.pch"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
