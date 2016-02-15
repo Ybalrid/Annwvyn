@@ -1,6 +1,6 @@
 /**
  * \file systemMacro.h
- * \brief file that permit to handle differencies between operating systemps
+ * \brief file that permit to handle differencies between operating systems
  *        (Windows and GNU/Linux)
  * \author A. Brainville
  */
@@ -11,7 +11,6 @@
 * parsed by precompiler on each file.
 */
 
-//-------------------------DLL EXPORT -------------------------------//
 //DLL management for visual studio compiller.
 #undef DLL
 #ifdef DLLDIR_EX //Defined in Annwvyn MSVC project file only
@@ -23,7 +22,7 @@
 #endif
 
 //DO NOT FORGET TO CALL THE DLL MACRO AT ANY CLASS AND GLOBAL FUNCTION DECLARATION!
-//e.g. class DLL someClass {};
+//e.g. class DLL SomeClass {};
 
 //Bypass on GNU/Linux : 
 #ifdef __gnu_linux__ //All that stuff is handeled by the makefile and the way g++ is called. DLL macros have to be empty but declared.
@@ -31,7 +30,7 @@
 	#define DLL
 #endif
 
-
+//Thanks to http://stackoverflow.com/a/21265197 for this convinient macro
 #ifdef __GNUC__
 #define DEPRECATED __attribute__((deprecated))
 #elif defined(_MSC_VER)
@@ -41,5 +40,4 @@
 #define DEPRECATED
 #endif
 
-//--------------------------------------------------------------------//
 

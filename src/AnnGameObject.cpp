@@ -58,7 +58,7 @@ void AnnGameObject::updateOpenAlPos()
 		pos().z);
 }
 
-void AnnGameObject::setPos(float x, float y, float z)
+void AnnGameObject::setPosition(float x, float y, float z)
 {
 	if(m_node == NULL)
 		return;
@@ -98,9 +98,19 @@ void AnnGameObject::translate(float x, float y, float z)
 
 }
 
+void AnnGameObject::setPosition(AnnVect3 pos)
+{
+	setPosition(pos.x, pos.y, pos.z);
+}
+
 void AnnGameObject::setPos(AnnVect3 pos)
 {
-	setPos(pos.x, pos.y, pos.z);
+	setPosition(pos);
+}
+
+void AnnGameObject::setPos(float x, float y, float z)
+{
+	setPosition(x,y,z);
 }
 
 void AnnGameObject::setOrientation(float w, float x, float y, float z)
@@ -138,12 +148,22 @@ void AnnGameObject::setScale(float x, float y, float z)
 
 AnnVect3 AnnGameObject::pos()
 {
+	return getPosition();
+}
+
+AnnVect3 AnnGameObject::getPosition()
+{
 	if(m_node != NULL)
 		return m_node->getPosition();
 	return AnnVect3::ZERO;
 }
 
 AnnQuaternion AnnGameObject::Orientation()
+{
+	return getOrientation();
+}
+
+AnnQuaternion AnnGameObject::getOrientation()
 {
 	if(m_node != NULL)
 		return m_node->getOrientation();
