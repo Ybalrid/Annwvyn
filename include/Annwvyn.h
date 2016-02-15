@@ -56,7 +56,7 @@
 #include <sstream>
 #include <vector>
 #include <list>
-#include <map>
+#include <unordered_map>
 
 //Annwvyn classes
 #include "AnnEngine.hpp"
