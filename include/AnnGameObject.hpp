@@ -22,7 +22,7 @@
 //Annwvyn
 #include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
-
+#pragma warning(default:4996)
 
 namespace Annwvyn
 {
@@ -56,11 +56,14 @@ namespace Annwvyn
 			/// \param x X componant of the position vector
 			/// \param y Y componant of the position vector
 			/// \param z Z componant of the position vector
-            void setPos(float x, float y, float z);
+            void setPosition(float x, float y, float z);
 
             ///Set position from Vector 3D
 			/// \param pos 3D position vector. Relative to scene root position
-            void setPos(AnnVect3 pos);
+            void setPosition(AnnVect3 pos);
+
+			DEPRECATED void setPos(AnnVect3 pos);
+			DEPRECATED void setPos(float x, float y, float z);
 
             ///Translate
 			/// \param x X componant of the translation vector
@@ -89,11 +92,19 @@ namespace Annwvyn
 			/// \param scale Relative scaling factor
             void setScale(AnnVect3 scale);
 
-            ///Get Position
-            AnnVect3 pos();
+			///DEPRECATED: please use getPosition
+			/// \copydoc getPosition()
+            DEPRECATED AnnVect3 pos();
 
-            ///Get Orientation
-            AnnQuaternion Orientation();
+			///Get Position
+			AnnVect3 getPosition();
+
+			///DEPRECATED: please use getOrientation
+			/// \copydoc getOrientation()
+            DEPRECATED AnnQuaternion Orientation();
+			
+			///Get Orientation
+			AnnQuaternion getOrientation();
 
             ///Get Ogre Node
             Ogre::SceneNode* node();
@@ -102,7 +113,7 @@ namespace Annwvyn
             Ogre::Entity* Entity();
 
             ///Get Physic Body
-            btRigidBody* RigidBody();
+            DEPRECATED btRigidBody* RigidBody();
 
             ///Get Rigid Body
             btRigidBody* getBody();
