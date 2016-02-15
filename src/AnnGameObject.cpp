@@ -2,6 +2,7 @@
 #include "AnnGameObject.hpp"
 #include "AnnTools.h"
 #include "AnnEngine.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
@@ -31,12 +32,12 @@ AnnGameObject::~AnnGameObject()
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
 {
-	//Load a sound file to the buffer (uncompress the file to the RAM)
+	auto engine(AnnEngine::Instance());
+	
+	//Get sound buffer from file (will not load if allready loaded)
 	m_Buffer = AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
-
-	//create a source to the buffer
+	
 	alSourcei(m_Source, AL_BUFFER, m_Buffer);
-
 	if(loop)
 		alSourcei(m_Source, AL_LOOPING, AL_TRUE);
 
@@ -46,8 +47,6 @@ void AnnGameObject::playSound(std::string path, bool loop, float volume)
 		m_node->getPosition().x,
 		m_node->getPosition().y,
 		m_node->getPosition().z);
-
-
 	alSourcePlay(m_Source);
 }
 

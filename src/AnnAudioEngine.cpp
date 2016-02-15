@@ -70,16 +70,12 @@ void AnnAudioEngine::shutdownOpenAL()
 
 ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 {
-	AnnDebug() << "Loading audio file : " << Filename;
-	AnnDebug() << "checking if file allready loaded on the soundEngine";
-	
+	//If sound allready loaded
 	auto query = buffers.find(Filename);
 	if(query != buffers.end())
-	{
-		AnnDebug() << Filename << " allready loaded. Will use the coresponding buffer";
 		return query->second;
-	}
-	AnnEngine::log("This sound resource is unkown to the engine. Loading from file...");
+	
+	AnnDebug() << Filename << " is unkown to the engine. Loading from file...";
 
 	// Open Audio file with libsndfile
     SF_INFO FileInfos;

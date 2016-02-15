@@ -15,7 +15,7 @@
 #include "AnnQuaternion.hpp"
 #include <iostream>
 #include <string>
-#include <map>
+#include <unordered_map>
 
 //OpenAl
 #include <al.h>
@@ -123,7 +123,7 @@ namespace Annwvyn
 		ALuint bgm;
 
 		///Map between audio filenames and OpenAL buffer
-		std::map<std::string, ALuint> buffers;
+		std::unordered_map<std::string, ALuint> buffers;
 		bool locked;
 		std::vector<AnnAudioSource*> AudioSources;
 	};
