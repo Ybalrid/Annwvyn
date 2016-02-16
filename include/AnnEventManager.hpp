@@ -367,6 +367,23 @@ namespace Annwvyn
 		static unsigned int idcounter;
 	};
 
+	//This class permit to get text input from the keyboard
+	class DLL AnnTextInputer : public OIS::KeyListener
+	{
+	public:
+		AnnTextInputer();
+		virtual bool keyPressed(const OIS::KeyEvent &arg);
+		virtual bool keyReleased(const OIS::KeyEvent &arg);
+		std::string getInput();
+		void setInput(std::string content);
+		void clearInput();
+		void startListening();
+		void stopListening();
+	private:
+		std::string input;
+		bool listen;
+	};
+
 	///The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by 
 	///AnnEngine and provide the hearbeat for the event system.
 	///Events can be user inputs or mostly anything else.
@@ -402,6 +419,8 @@ namespace Annwvyn
 
 		///Get the number of available sticks
 		size_t getNbStick();
+
+		AnnTextInputer* getTextInputer();
 
 	private:
 		std::vector<AnnAbstractEventListener*> listeners;
@@ -445,6 +464,8 @@ namespace Annwvyn
 		std::vector<AnnTimer> activeTimers;
 		std::vector<AnnTimer> futureTimers;
 		std::vector<AnnTriggerEvent> triggerEventBuffer;
+
+		AnnTextInputer* textInputer;
     };
 }
 
