@@ -22,6 +22,53 @@ float AnnAbstractEventListener::trim(float v, float dz)
 }
 
 
+AnnTextInputer::AnnTextInputer():
+	listen(false)
+{
+}
+
+bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
+{
+	if(!listen) return true;
+	if(arg.key == OIS::KC_BACK && !input.empty())
+		input.pop_back();
+	else
+		input.push_back((char)arg.text);
+	return true;
+}
+
+bool AnnTextInputer::keyReleased(const OIS::KeyEvent &arg)
+{
+	return true;
+}
+
+std::string AnnTextInputer::getInput()
+{
+	return input;
+}
+
+void AnnTextInputer::clearInput()
+{
+	input.clear();
+}
+
+void AnnTextInputer::startListening()
+{
+	clearInput();
+	listen = true;
+}
+
+void AnnTextInputer::stopListening()
+{
+	listen = false;
+}
+
+void AnnTextInputer::setInput(std::string content)
+{
+	input=content;
+}
+
+
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	Keyboard(NULL),
 	Mouse(NULL)
@@ -54,10 +101,20 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	}
 
 	lastTimerCreated = 0;
+
+	textInputer = new AnnTextInputer;
+	Keyboard->setEventCallback(textInputer);
+}
+
+AnnTextInputer* AnnEventManager::getTextInputer()
+{
+	return textInputer;
 }
 
 AnnEventManager::~AnnEventManager()
 {
+	Keyboard->setEventCallback(nullptr);
+	delete textInputer;
 	delete Keyboard;
 	delete Mouse;
 	for(auto Joystick : Joysticks)
