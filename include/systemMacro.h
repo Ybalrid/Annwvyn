@@ -32,7 +32,7 @@
 
 //Thanks to http://stackoverflow.com/a/21265197 for this convinient macro
 #ifdef __GNUC__
-#define DEPRECATED __attribute__((deprecated))
+#define DEPRECATED __attribute__((deprecated("This method as been flagged as DEPRECATED. Please check Annwvyn's class header for replacement")))
 #elif defined(_MSC_VER)
 #define DEPRECATED __declspec(deprecated("This method as been flagged as DEPRECATED. Please check Annwvyn's class header for replacement"))
 #else

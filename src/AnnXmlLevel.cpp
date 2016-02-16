@@ -102,7 +102,7 @@ void AnnXmlLevel::load()
 			gameObjectData->QueryFloatAttribute("Y", &y);
 			gameObjectData->QueryFloatAttribute("Z", &z);
 			AnnDebug() << "Object at position : " << "(" << x << "," << y << "," << z << ")";
-			constructedGameObject->setPos(x, y, z);
+			constructedGameObject->setPosition(x, y, z);
 		}
 
 		gameObjectData = gameObject->FirstChildElement("Orientation");

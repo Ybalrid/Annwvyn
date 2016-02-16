@@ -52,16 +52,18 @@ void AnnGameObject::playSound(std::string path, bool loop, float volume)
 
 void AnnGameObject::updateOpenAlPos()
 {
+	AnnVect3 pos(getPosition());
 	alSource3f(m_Source, AL_POSITION,
-		pos().x,
-		pos().y,
-		pos().z);
+		pos.x,
+		pos.y,
+		pos.z);
 }
 
 void AnnGameObject::setPosition(float x, float y, float z)
 {
 	if(m_node == NULL)
 		return;
+
 	/*
 	*Position of object have to be the same in each part of the engine
 	*(graphics, physics, audio)
