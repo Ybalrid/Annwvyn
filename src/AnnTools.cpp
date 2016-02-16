@@ -5,7 +5,7 @@ using namespace Ogre;
 
 float Annwvyn::Tools::Geometry::distance(Annwvyn::AnnGameObject* a, Annwvyn::AnnGameObject* b)
 {
-    return Annwvyn::Tools::Geometry::distance(a->pos(), b->pos());
+	return Annwvyn::Tools::Geometry::distance(a->getPosition(), b->getPosition());
 }
 
 float Annwvyn::Tools::Geometry::distance(Ogre::Vector3 a, Ogre::Vector3 b)
