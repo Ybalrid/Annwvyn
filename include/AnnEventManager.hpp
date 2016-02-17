@@ -367,20 +367,29 @@ namespace Annwvyn
 		static unsigned int idcounter;
 	};
 
-	//This class permit to get text input from the keyboard
+	///This class permit to get text input from the keyboard
 	class DLL AnnTextInputer : public OIS::KeyListener
 	{
 	public:
 		AnnTextInputer();
+		///Callback key press method
 		virtual bool keyPressed(const OIS::KeyEvent &arg);
+		///Callback key released method
 		virtual bool keyReleased(const OIS::KeyEvent &arg);
+		///Return the "input" string object
 		std::string getInput();
+		///Permit you to change the content of the input method
 		void setInput(std::string content);
+		///Clear the input string : remove all characters hanging there
 		void clearInput();
+		///Clear input THEN record typed text
 		void startListening();
+		///Stop recording typed text
 		void stopListening();
 	private:
+		///String that holds typed text. Characters are push/poped at the back of this string
 		std::string input;
+		///If set false, this class does nothing.
 		bool listen;
 	};
 
