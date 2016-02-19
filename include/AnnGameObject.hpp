@@ -62,7 +62,12 @@ namespace Annwvyn
 			/// \param pos 3D position vector. Relative to scene root position
             void setPosition(AnnVect3 pos);
 
+			///DEPRECATED: plase use setPosition
+			/// \copydoc setPosition()
 			DEPRECATED void setPos(AnnVect3 pos);
+
+			///DEPRECATED: plase use setPosition
+			/// \copydoc setPosition()
 			DEPRECATED void setPos(float x, float y, float z);
 
             ///Translate
@@ -106,14 +111,20 @@ namespace Annwvyn
 			///Get Orientation
 			AnnQuaternion getOrientation();
 
+			///DEPRECATED: please use getNode
+			/// \copydoc getNode()
             DEPRECATED Ogre::SceneNode* node();
             ///Get Ogre Node
 			Ogre::SceneNode* getNode();
 
-            ///Get Ogre Entity
+			///DEPRECATED: please use getEntity
+			/// \copydoc getEntity()
             DEPRECATED Ogre::Entity* Entity();
+            ///Get Ogre Entity
 			Ogre::Entity* getEntity();
-
+			
+			///DEPRECATED: please use getBody
+			/// \copydoc getBody()
             DEPRECATED btRigidBody* RigidBody();
             ///Get Rigid Body
             btRigidBody* getBody();

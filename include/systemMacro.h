@@ -14,10 +14,10 @@
 //DLL management for visual studio compiller.
 #undef DLL
 #ifdef DLLDIR_EX //Defined in Annwvyn MSVC project file only
-//To contruct a DLL, The macro __declspec(dllexport) have to be called in front of the exported symbol
+	///To contruct a DLL, The macro __declspec(dllexport) have to be called in front of the exported symbol
    #define DLL  __declspec(dllexport)   // export DLL information
 #else
-//To reference symbols from a DLL the macro __declspec(dllimport) have to be called the same way
+	///Macro to reference symbols from a DLL the macro __declspec(dllimport) have to be called the same way
    #define DLL  __declspec(dllimport)   // import DLL information
 #endif
 
@@ -32,8 +32,10 @@
 
 //Thanks to http://stackoverflow.com/a/21265197 for this convinient macro
 #ifdef __GNUC__
+///Mark the symbol as Deprecated. The comments on it should help you use the correct mehtod
 #define DEPRECATED __attribute__((deprecated("This method as been flagged as DEPRECATED. Please check Annwvyn's class header for replacement")))
 #elif defined(_MSC_VER)
+///Mark the symbol as Deprecated. The comments on it should help you use the correct mehtod
 #define DEPRECATED __declspec(deprecated("This method as been flagged as DEPRECATED. Please check Annwvyn's class header for replacement"))
 #else
 #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
