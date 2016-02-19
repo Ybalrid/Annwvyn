@@ -9,37 +9,37 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 	AnnDebug("Init Bullet physics");
 
 	//Initialize the Bullet world
-	m_Broadphase = new btDbvtBroadphase();
-	m_CollisionConfiguration = new btDefaultCollisionConfiguration();
-	m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
-	m_Solver = new btSequentialImpulseConstraintSolver();
+	Broadphase = new btDbvtBroadphase();
+	CollisionConfiguration = new btDefaultCollisionConfiguration();
+	Dispatcher = new btCollisionDispatcher(CollisionConfiguration);
+	Solver = new btSequentialImpulseConstraintSolver();
 
-	m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
+	DynamicsWorld = new btDiscreteDynamicsWorld(Dispatcher, Broadphase, Solver, CollisionConfiguration);
 
 	AnnDebug("Gravity vector = (0, -9.81f, 0)");
-	m_DynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+	DynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
 
 	debugPhysics = false;//by default
-	m_debugDrawer = new BtOgre::DebugDrawer(rootNode, m_DynamicsWorld);
-	m_DynamicsWorld->setDebugDrawer(m_debugDrawer);
+	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld);
+	DynamicsWorld->setDebugDrawer(debugDrawer);
 }
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
 {
 	//Bullet
-	delete m_DynamicsWorld;
-	delete m_Broadphase;
-	delete m_CollisionConfiguration;
-	delete m_Dispatcher;
-	delete m_Solver;
-	delete m_debugDrawer;
+	delete DynamicsWorld;
+	delete Broadphase;
+	delete CollisionConfiguration;
+	delete Dispatcher;
+	delete Solver;
+	delete debugDrawer;
 }
 
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player)
 {
 	assert(player->getBody());
 	//TODO define name for the bullet's collision masks
-	m_DynamicsWorld->addRigidBody(player->getBody(), MASK(0), MASK(1));
+	DynamicsWorld->addRigidBody(player->getBody(), MASK(0), MASK(1));
 }
 
 void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::SceneNode* node)
@@ -72,18 +72,18 @@ void AnnPhysicsEngine::createVirtualBodyShape(AnnPlayer* player)
 
 btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld()
 {
-	return m_DynamicsWorld;
+	return DynamicsWorld;
 }
 
 void AnnPhysicsEngine::step(float delta)
 {
-	m_DynamicsWorld->stepSimulation(delta, 3, 1.0f/90.0f);
+	DynamicsWorld->stepSimulation(delta, 3, 1.0f/90.0f);
 }
 
 void AnnPhysicsEngine::stepDebugDrawer()
 {	
 	if(debugPhysics)
-		m_debugDrawer->step();
+		debugDrawer->step();
 }
 
 void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
@@ -102,12 +102,12 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 	}
 
 	//process for each maniflod
-	int numManifolds = m_Dispatcher->getNumManifolds();
+	int numManifolds = Dispatcher->getNumManifolds();
 	//m is manifold identifier
 	for (int m(0); m <numManifolds; m++)
 	{
 		btPersistentManifold* contactManifold =
-			m_DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(m);
+			DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(m);
 
 		const btCollisionObject* obA = (btCollisionObject*) contactManifold->getBody0();
 		const btCollisionObject* obB = (btCollisionObject*) contactManifold->getBody1();
@@ -141,7 +141,7 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
 {
 	AnnDebug() << "Removing " << body << " Form physics simulation";
 	if(body)
-		m_DynamicsWorld->removeRigidBody(body);
+		DynamicsWorld->removeRigidBody(body);
 }
 
 void AnnPhysicsEngine::initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node)
@@ -172,13 +172,13 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 			current->setContactInformation(false);
 		}
 
-		if((!current->lastFrameContactWithPlayer && current->m_contactWithPlayer)
-			||(current->lastFrameContactWithPlayer && !current->m_contactWithPlayer))
+		if((!current->lastFrameContactWithPlayer && current->contactWithPlayer)
+			||(current->lastFrameContactWithPlayer && !current->contactWithPlayer))
 		AnnEngine::Instance()->getEventManager()->spatialTrigger(current);
 	}
 }
 
 void AnnPhysicsEngine::changeGravity(AnnVect3 gravity)
 {
-	m_DynamicsWorld->setGravity(gravity.getBtVector());
+	DynamicsWorld->setGravity(gravity.getBtVector());
 }

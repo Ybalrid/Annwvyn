@@ -52,7 +52,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	renderer->initCameras();
 	renderer->setCamerasNearClippingDistance(0.15f);
 	renderer->initRttRendering();
-	m_SceneManager = renderer->getSceneManager();
+	SceneManager = renderer->getSceneManager();
 
 	log("OGRE Object-oriented Graphical Rendering Engine initialized", true);
 
@@ -313,8 +313,8 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 		return NULL;
 	}
 
-	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
-	Ogre::SceneNode* node = m_SceneManager->getRootSceneNode()->createChildSceneNode();
+	Ogre::Entity* ent = SceneManager->createEntity(entityName);
+	Ogre::SceneNode* node = SceneManager->getRootSceneNode()->createChildSceneNode();
 
 	node->attachObject(ent);
 	obj->setNode(node);
@@ -363,10 +363,10 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 
 			auto attachedIterator(attachedObject.begin());
 			while(attachedIterator!= attachedObject.end())
-				m_SceneManager->destroyMovableObject(*attachedIterator++);
+				SceneManager->destroyMovableObject(*attachedIterator++);
 
 			physicsEngine->removeRigidBody(object->getBody());
-			m_SceneManager->destroySceneNode(node);
+			SceneManager->destroySceneNode(node);
 			delete object;
 		}
 	}
@@ -380,7 +380,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 AnnLightObject* AnnEngine::createLightObject()
 {
 	log("Creating a light");
-	AnnLightObject* Light = m_SceneManager->createLight();
+	AnnLightObject* Light = SceneManager->createLight();
 	Light->setType(Ogre::Light::LT_POINT);
 	lights.push_back(Light);
 	return Light;
@@ -389,7 +389,7 @@ AnnLightObject* AnnEngine::createLightObject()
 void AnnEngine::destroyLightObject(AnnLightObject* object)
 {
 	if(object)
-		m_SceneManager->destroyLight(object);
+		SceneManager->destroyLight(object);
 
 	//Forget that this light existed
 	lights.remove(object);
@@ -475,7 +475,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	Ogre::Ray ray(Orig, LookAt);
 
 	//create query
-	Ogre::RaySceneQuery* raySceneQuery(m_SceneManager->createRayQuery(ray));
+	Ogre::RaySceneQuery* raySceneQuery(SceneManager->createRayQuery(ray));
 	raySceneQuery->setSortByDistance(true);
 
 	//execute and get the results
@@ -495,7 +495,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 	log(entityName);
 
 	//Could actually be an AnnGameObject without the physics ? So it will be cleaned by the AnnEngine destructor
-	Ogre::Entity* ent = m_SceneManager->createEntity(entityName);
+	Ogre::Entity* ent = SceneManager->createEntity(entityName);
 	VisualBodyAnchor = povNode->createChildSceneNode();
 	VisualBodyAnchor->attachObject(ent);
 
@@ -554,7 +554,7 @@ AnnPhysicsEngine* AnnEngine::getPhysicsEngine()
 
 Ogre::SceneManager* AnnEngine::getSceneManager()
 {
-	return m_SceneManager;
+	return SceneManager;
 }
 
 double AnnEngine::getTimeFromStartUp()
@@ -573,19 +573,19 @@ void AnnEngine::setDebugPhysicState(bool state)
 void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
 {
  AnnDebug() << "Setting the ambiant light to color " << v; 
-	m_SceneManager->setAmbientLight(v);
+	SceneManager->setAmbientLight(v);
 }
 
 void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)
 {
 	log("Setting skydome from material"); log(materialName, false);
-	m_SceneManager->setSkyDome(activate, materialName, curvature, tiling);
+	SceneManager->setSkyDome(activate, materialName, curvature, tiling);
 }
 
 void AnnEngine::setSkyBoxMaterial(bool activate, const char materialName[], float distance, bool renderedFirst)
 {
 	log("Setting skybox from material"); log(materialName, false);
-	m_SceneManager->setSkyBox(activate, materialName, distance, renderedFirst);
+	SceneManager->setSkyBox(activate, materialName, distance, renderedFirst);
 }
 
 void AnnEngine::setWorldBackgroudColor(Ogre::ColourValue v)
@@ -596,13 +596,13 @@ void AnnEngine::setWorldBackgroudColor(Ogre::ColourValue v)
 void AnnEngine::removeSkyDome()
 {
 	log("Disabeling skydome");
-	m_SceneManager->setSkyDomeEnabled(false);
+	SceneManager->setSkyDomeEnabled(false);
 }
 
 void AnnEngine::removeSkyBox()
 {
 	log("Disabeling skybox");
-	m_SceneManager->setSkyBoxEnabled(false);
+	SceneManager->setSkyBoxEnabled(false);
 }
 
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)

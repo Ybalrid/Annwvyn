@@ -57,10 +57,10 @@ namespace Annwvyn
 
 	private:
 		///Position of the object
-		AnnVect3 m_position;
+		AnnVect3 position;
 
 		///True if trigger triggerd
-		bool m_contactWithPlayer;
+		bool contactWithPlayer;
 		bool lastFrameContactWithPlayer;
 
 	public:
@@ -84,7 +84,7 @@ namespace Annwvyn
 	private:
 		bool computeVolumetricTest(AnnPlayer* player);
 		///Distance where the trigger is triggered
-		float m_threshold;
+		float threshold;
 	};
 
 	///Create a trigger volume that is aligned with the scene referential.

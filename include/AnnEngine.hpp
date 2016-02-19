@@ -303,7 +303,7 @@ namespace Annwvyn
 		AnnFilesystemManager* filesystemManager;
 
 		///The scene manager
-		Ogre::SceneManager* m_SceneManager;
+		Ogre::SceneManager* SceneManager;
 		///Point Of View : Node used as "root" for putting the VR "camera rig"
 		Ogre::SceneNode* povNode;
 		///Where the visualBody is attached
