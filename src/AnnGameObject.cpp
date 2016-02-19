@@ -229,7 +229,7 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPl
 	if(m_Shape == NULL)
 		return;
 
-	AnnVect3 scale =  node()->getScale();
+	AnnVect3 scale =  getNode()->getScale();
 	m_Shape->setLocalScaling(scale.getBtVector());
 
 	btVector3 inertia;
@@ -261,19 +261,30 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPl
 	bulletReady = true;
 }
 
+
 Ogre::SceneNode* AnnGameObject::node()
+{
+	return getNode();
+}
+
+Ogre::SceneNode* AnnGameObject::getNode()
 {
 	return m_node;
 }
 
-Ogre::Entity* AnnGameObject::Entity()
+Ogre::Entity* AnnGameObject::getEntity()
 {
 	return m_entity;
 }
 
+Ogre::Entity* AnnGameObject::Entity()
+{
+	return getEntity();
+}
+
 btRigidBody* AnnGameObject::RigidBody()
 {
-	return m_Body;
+	return getBody();
 }
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject)
@@ -409,13 +420,13 @@ void AnnGameObject::setLinearSpeed(AnnVect3 v)
 void AnnGameObject::setVisible()
 {
 	visible = true;
-	node()->setVisible(true);
+	getNode()->setVisible(true);
 }
 
 void AnnGameObject::setInvisible()
 {
 	visible = false;
-	node()->setVisible(false);
+	getNode()->setVisible(false);
 }
 
 bool AnnGameObject::isVisible()

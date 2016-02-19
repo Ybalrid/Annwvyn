@@ -84,7 +84,9 @@ AnnFilesystemManager::AnnFilesystemManager()
 	AnnDebug() << "Filesystem manager created";
 	//get from the OS the user's personal directory
 #ifdef WIN32
+#pragma warning (disable : 4996)
 	pathToUserDir = getenv("USERPROFILE");
+#pragma warning (default : 4996)
 #endif
 
 	AnnDebug() << "Path got from operating system : " << pathToUserDir;

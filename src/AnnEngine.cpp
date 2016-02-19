@@ -351,7 +351,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			returnCode = true;
 			*it = NULL;
 
-			Ogre::SceneNode* node = object->node();
+			Ogre::SceneNode* node = object->getNode();
 			node->getParent()->removeChild(node);
 			size_t nbObject(node->numAttachedObjects());
 			std::vector<Ogre::MovableObject*> attachedObject;
@@ -482,7 +482,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
 
 	//read the result list
-	for(auto it(result.begin()); it != result.end(); it++)
+		for(auto it(result.begin()); it != result.end(); it++)
 		if(it->movable && it->movable->getMovableType() == "Entity")
 			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
 
@@ -528,7 +528,7 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 
 	//This methods only test memory address
 	for(auto object : objects)
-		if((void*)object->node() == (void*)node)
+		if((void*)object->getNode() == (void*)node)
 			return object;
 	AnnDebug() << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
 
