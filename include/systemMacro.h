@@ -39,6 +39,7 @@
 #define DEPRECATED __declspec(deprecated("This method as been flagged as DEPRECATED. Please check Annwvyn's class header for replacement"))
 #else
 #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+///Mark the symbol as Deprecated. The comments on it should help you use the correct mehtod
 #define DEPRECATED
 #endif
 

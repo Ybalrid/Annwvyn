@@ -16,6 +16,7 @@
 using namespace Ogre;
 namespace Annwvyn
 {
+	///Return the identifier of a shape form it's name in text
 	phyShapeType DLL getShapeTypeFromString(std::string str);
 	namespace Tools
 	{

@@ -29,6 +29,8 @@ namespace Annwvyn
     typedef std::list<AnnGameObject *> AnnGameObjectList;
     typedef std::list<AnnLightObject *> AnnLightList;
 
+	///Name of the objects physical shapes
+	///Theses shapes are available to create objects's rigid body for the physics
 	enum phyShapeType {
 		staticShape, 
 		convexShape, 
@@ -38,7 +40,7 @@ namespace Annwvyn
 		sphereShape
 	};
 
-
+///Macro used 
 #define MASK(x) (1<<(x))
 
 }

@@ -117,10 +117,7 @@ namespace Annwvyn
             ///Get Ogre Node
 			Ogre::SceneNode* getNode();
 
-			///DEPRECATED: please use getEntity
-			/// \copydoc getEntity()
-            DEPRECATED Ogre::Entity* Entity();
-            ///Get Ogre Entity
+			///Get Ogre Entity
 			Ogre::Entity* getEntity();
 			
 			///DEPRECATED: please use getBody
@@ -243,23 +240,23 @@ namespace Annwvyn
 			*/
 			std::vector<collisionTest *> collisionMask;
 
-            Ogre::SceneNode* m_node;
-            Ogre::Entity* m_entity;
-            Ogre::AnimationState* m_anim;
+            Ogre::SceneNode* Node;
+            Ogre::Entity* Entity;
+            Ogre::AnimationState* anim;
 
             bool animIsSetted;
             bool animIsPlaying;
             bool animIsLooping;
 
-            btDiscreteDynamicsWorld* m_DynamicsWorld;
-            btCollisionShape* m_Shape;
-            btRigidBody* m_Body;
+            btDiscreteDynamicsWorld* DynamicsWorld;
+            btCollisionShape* Shape;
+            btRigidBody* Body;
             bool bulletReady;
 
 			///OpenAL audio source
-            ALuint m_Source; 
+            ALuint source; 
 			///OpenAL buffer
-            ALuint m_Buffer;
+            ALuint buffer;
 
 			///Name of the object
 			std::string name;
