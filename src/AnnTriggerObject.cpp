@@ -4,8 +4,8 @@
 using namespace Annwvyn;
 
 AnnTriggerObject::AnnTriggerObject():
-	m_contactWithPlayer(false),
-	m_position(Ogre::Vector3(0,0,0))
+	contactWithPlayer(false),
+	position(Ogre::Vector3(0,0,0))
 {
 }
 
@@ -16,37 +16,37 @@ void AnnTriggerObject::setPosition(Ogre::Vector3 pos)
 
 void AnnTriggerObject::setPosition(float x, float y, float z)
 {
-	m_position = Ogre::Vector3(x,y,z);
+	position = Ogre::Vector3(x,y,z);
 }
 
 bool AnnTriggerObject::getContactInformation()
 {
-	return m_contactWithPlayer;
+	return contactWithPlayer;
 }
 
 Ogre::Vector3 AnnTriggerObject::getPosition()
 {
-	return m_position;
+	return position;
 }
 
 void AnnTriggerObject::setContactInformation(bool contact)
 {
-	lastFrameContactWithPlayer = m_contactWithPlayer;
-	m_contactWithPlayer = contact;
+	lastFrameContactWithPlayer = contactWithPlayer;
+	contactWithPlayer = contact;
 }
 
 float AnnSphericalTriggerObject::getThreshold()
 {
-	return m_threshold;
+	return threshold;
 }
 
 void AnnSphericalTriggerObject::setThreshold(float threshold)
 {
-	m_threshold = threshold;
+	threshold = threshold;
 }
 
 AnnSphericalTriggerObject::AnnSphericalTriggerObject() : AnnTriggerObject(),
-	m_threshold(1)
+	threshold(1)
 {
 }
 

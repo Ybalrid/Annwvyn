@@ -70,16 +70,16 @@ namespace Annwvyn
 		void changeGravity(AnnVect3 gravity);
 
 	private:
-		btBroadphaseInterface* m_Broadphase;
-		btDefaultCollisionConfiguration* m_CollisionConfiguration;
-		btCollisionDispatcher* m_Dispatcher;
-		btSequentialImpulseConstraintSolver* m_Solver;
+		btBroadphaseInterface* Broadphase;
+		btDefaultCollisionConfiguration* CollisionConfiguration;
+		btCollisionDispatcher* Dispatcher;
+		btSequentialImpulseConstraintSolver* Solver;
 
 		//Bullet Dynamics World
-		btDiscreteDynamicsWorld* m_DynamicsWorld;
+		btDiscreteDynamicsWorld* DynamicsWorld;
 
 		bool debugPhysics;
-		BtOgre::DebugDrawer* m_debugDrawer;
+		BtOgre::DebugDrawer* debugDrawer;
 	};
 }
 
