@@ -106,15 +106,15 @@ namespace Annwvyn
 			///Get Orientation
 			AnnQuaternion getOrientation();
 
+            DEPRECATED Ogre::SceneNode* node();
             ///Get Ogre Node
-            Ogre::SceneNode* node();
+			Ogre::SceneNode* getNode();
 
             ///Get Ogre Entity
-            Ogre::Entity* Entity();
+            DEPRECATED Ogre::Entity* Entity();
+			Ogre::Entity* getEntity();
 
-            ///Get Physic Body
             DEPRECATED btRigidBody* RigidBody();
-
             ///Get Rigid Body
             btRigidBody* getBody();
 
