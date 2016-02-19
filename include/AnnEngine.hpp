@@ -52,6 +52,7 @@ namespace Annwvyn
 	///This is the base class of the whole engine, the idea is more or less the one described in the 
 	///"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
 
+	///Main engine class
 	class DLL AnnEngine
 	{
 	private:

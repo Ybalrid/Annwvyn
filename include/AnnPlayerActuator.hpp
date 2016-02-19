@@ -12,6 +12,7 @@ namespace Annwvyn
 {
 	class AnnPlayer;
 
+	///Callback class that permit you to define how physics is appliyed to the player.
 	class DLL AnnPlayerActuator
 	{
 	public:
@@ -22,11 +23,12 @@ namespace Annwvyn
 		friend class AnnPlayer;
 	};
 
+	///Class that overload the "actuate" method of the abstract actuator.
 	class DLL AnnDefaultPlayerActuator : public AnnPlayerActuator
 	{
 	public:
 		AnnDefaultPlayerActuator();
-		///Allow gravity to pull the player to the ground while permiting the player to move on the (XZ) plane
+		///Allow gravity to pull the player to the ground while permiting the user to controll mouvement on the (XZ) plane
 		void actuate(float deltaTime);
 	};
 }

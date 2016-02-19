@@ -7,27 +7,27 @@
 using namespace Annwvyn;
 
 AnnGameObject::AnnGameObject() :
-	m_node(NULL),
-	m_entity(NULL),
+	Node(NULL),
+	Entity(NULL),
 	bulletReady(false),
-	m_DynamicsWorld(NULL),
-	m_Body(NULL),
-	m_Shape(NULL),
-	m_anim(NULL),
+	DynamicsWorld(NULL),
+	Body(NULL),
+	Shape(NULL),
+	anim(NULL),
 	animIsLooping(false),
 	animIsPlaying(false),
 	animIsSetted(false),
 	visible(true)
 {
-	alGenSources(1,&m_Source);	
+	alGenSources(1,&source);	
 }
 
 AnnGameObject::~AnnGameObject()
 {
 	//Clean OpenAL desaloc
-	alSourceStop(m_Source);
-	alDeleteSources(1, &m_Source);
-	alDeleteBuffers(1, &m_Buffer);
+	alSourceStop(source);
+	alDeleteSources(1, &source);
+	alDeleteBuffers(1, &buffer);
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
@@ -35,25 +35,26 @@ void AnnGameObject::playSound(std::string path, bool loop, float volume)
 	auto engine(AnnEngine::Instance());
 	
 	//Get sound buffer from file (will not load if allready loaded)
-	m_Buffer = AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
+	buffer = AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
 	
-	alSourcei(m_Source, AL_BUFFER, m_Buffer);
+	alSourcei(source, AL_BUFFER, buffer);
 	if(loop)
-		alSourcei(m_Source, AL_LOOPING, AL_TRUE);
+		alSourcei(source, AL_LOOPING, AL_TRUE);
 
-	alSourcef(m_Source, AL_GAIN, volume);
+	alSourcef(source, AL_GAIN, volume);
 
-	alSource3f(m_Source, AL_POSITION,
-		m_node->getPosition().x,
-		m_node->getPosition().y,
-		m_node->getPosition().z);
-	alSourcePlay(m_Source);
+	auto currentPosition = Node->getPosition();
+	alSource3f(source, AL_POSITION,
+		currentPosition.x,
+		currentPosition.y,
+		currentPosition.z);
+	alSourcePlay(source);
 }
 
 void AnnGameObject::updateOpenAlPos()
 {
 	AnnVect3 pos(getPosition());
-	alSource3f(m_Source, AL_POSITION,
+	alSource3f(source, AL_POSITION,
 		pos.x,
 		pos.y,
 		pos.z);
@@ -61,8 +62,10 @@ void AnnGameObject::updateOpenAlPos()
 
 void AnnGameObject::setPosition(float x, float y, float z)
 {
-	if(m_node == NULL)
+	if(Node == NULL)
 		return;
+
+	AnnVect3 newPosition(x,y,z);
 
 	/*
 	*Position of object have to be the same in each part of the engine
@@ -71,32 +74,34 @@ void AnnGameObject::setPosition(float x, float y, float z)
 	//change BulletPosition
 	if(bulletReady)
 	{
-		m_Body->translate(btVector3(x - m_node->getPosition().x,
-			y - m_node->getPosition().y,
-			z - m_node->getPosition().z));
+		auto currentPosition = Node->getPosition();
+		Body->translate(btVector3(x - currentPosition.x,
+			y - currentPosition.y,
+			z - currentPosition.z));
 	}
 	//change OgrePosition
-	m_node->setPosition(x, y, z);
-
+	Node->setPosition(x, y, z);
 
 	//change OpenAL Source Position
-	alSource3f(m_Source, AL_POSITION,
-		m_node->getPosition().x,
-		m_node->getPosition().y,
-		m_node->getPosition().z);
+	alSource3f(source, AL_POSITION,
+		newPosition.x,
+		newPosition.y,
+		newPosition.z);
 }
 
 void AnnGameObject::translate(float x, float y, float z)		  
 {
 	//Ogre
-	m_node->translate(x, y, z);
+	Node->translate(x, y, z);
 	//Bullet
-	m_Body->translate(btVector3(x, y, z));
+	if(Body)
+	Body->translate(btVector3(x, y, z));
 	//OpenAL
-	alSource3f(m_Source, AL_POSITION,
-		m_node->getPosition().x,
-		m_node->getPosition().y,
-		m_node->getPosition().z);
+	auto currentPosition = Node->getPosition();
+	alSource3f(source, AL_POSITION,
+		currentPosition.x,
+		currentPosition.y,
+		currentPosition.z);
 
 }
 
@@ -126,26 +131,26 @@ void AnnGameObject::setOrientation(AnnQuaternion orient)
 	//setOrientation(orient.w,orient.x,orient.y,orient.z);
 	//beware : Ogre Quaternion convetion is WXYZ. Bullet use XYZW
 	//Ogre3D
-	if(m_node != NULL)
-		m_node->setOrientation(orient);
+	if(Node != NULL)
+		Node->setOrientation(orient);
 	//bullet
-	if(m_Body != NULL)
+	if(Body != NULL)
 	{
-		btTransform t = m_Body->getCenterOfMassTransform();
+		btTransform t = Body->getCenterOfMassTransform();
 		t.setRotation(orient.getBtQuaternion());
-		m_Body->setCenterOfMassTransform(t);
+		Body->setCenterOfMassTransform(t);
 	}
 }
 
 void AnnGameObject::setScale(AnnVect3 scale)
 {
-	m_node->setScale(scale);
+	Node->setScale(scale);
 }
 
 
 void AnnGameObject::setScale(float x, float y, float z)
 {
-	m_node->setScale(AnnVect3(x, y, z));
+	Node->setScale(AnnVect3(x, y, z));
 }
 
 AnnVect3 AnnGameObject::pos()
@@ -155,8 +160,8 @@ AnnVect3 AnnGameObject::pos()
 
 AnnVect3 AnnGameObject::getPosition()
 {
-	if(m_node != NULL)
-		return m_node->getPosition();
+	if(Node != NULL)
+		return Node->getPosition();
 	return AnnVect3::ZERO;
 }
 
@@ -167,93 +172,94 @@ AnnQuaternion AnnGameObject::Orientation()
 
 AnnQuaternion AnnGameObject::getOrientation()
 {
-	if(m_node != NULL)
-		return m_node->getOrientation();
+	if(Node != NULL)
+		return Node->getOrientation();
 	return AnnQuaternion::IDENTITY;
 }
 
-void AnnGameObject::setNode(Ogre::SceneNode* node)
+void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 {
-	m_node = node;
+	Node = newNode;
 }
 
-void AnnGameObject::setEntity(Ogre::Entity* entity)
+void AnnGameObject::setEntity(Ogre::Entity* newEntity)
 {
-	m_entity = entity;
+	Entity = newEntity;
 }
 
 void AnnGameObject::setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld)
 {
-	m_DynamicsWorld = dynamicsWorld;
+	DynamicsWorld = dynamicsWorld;
 }
 
 void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPlayer)
 {
 	//check if everything is OK
-	if(m_DynamicsWorld == NULL)
+	if(DynamicsWorld == NULL)
 		return;
-	if(m_node == NULL)
+	if(Node == NULL)
 		return;
-	if(m_entity == NULL)
+	if(Entity == NULL)
 		return;
 
 	//init shape converter
-	BtOgre::StaticMeshToShapeConverter converter(m_entity);
+	BtOgre::StaticMeshToShapeConverter converter(Entity);
 
 	//create the correct shape
 	switch(type)
 	{
 	case boxShape:
-		m_Shape = converter.createBox();
+		Shape = converter.createBox();
 		break;
 	case cylinderShape:
-		m_Shape = converter.createCylinder();
+		Shape = converter.createCylinder();
 		break;
 	case capsuleShape:
-		m_Shape = converter.createCapsule();
+		Shape = converter.createCapsule();
 		break;
 	case convexShape:
-		m_Shape = converter.createConvex();
+		Shape = converter.createConvex();
 		break;
 	case staticShape:
-		m_Shape = converter.createTrimesh();
+		Shape = converter.createTrimesh();
 		break;
 	case sphereShape:
-		m_Shape = converter.createSphere();
+		Shape = converter.createSphere();
 		break;
 	default:
 		//non valid;
 		return;
 	}
 
-	if(m_Shape == NULL)
+	if(Shape == NULL)
 		return;
 
 	AnnVect3 scale =  getNode()->getScale();
-	m_Shape->setLocalScaling(scale.getBtVector());
+	Shape->setLocalScaling(scale.getBtVector());
 
 	btVector3 inertia;
 
 	if(mass != 0)
-		m_Shape->calculateLocalInertia(mass, inertia);
+		Shape->calculateLocalInertia(mass, inertia);
 	else
 		inertia = btVector3(0, 0, 0); //No influence. But mass zero objects are static
 
 	//create rigidBody from shape
-	if(!m_Body)
+	if(!Body)
 	{
-		BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(m_node);
-		m_Body = new btRigidBody(mass, state, m_Shape, inertia);
+		BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(Node);
+		Body = new btRigidBody(mass, state, Shape, inertia);
 	}
 
-	if(m_Body != NULL)
+
+	if(Body)
 		if(colideWithPlayer)
 		{
-			m_DynamicsWorld->addRigidBody(m_Body, MASK(1), MASK(0) | MASK(1));
+			DynamicsWorld->addRigidBody(Body, MASK(1), MASK(0) | MASK(1));
 		}
 		else
 		{
-			m_DynamicsWorld->addRigidBody(m_Body, MASK(1), MASK(1));
+			DynamicsWorld->addRigidBody(Body, MASK(1), MASK(1));
 		}
 	else
 		return; //Unable to create the physical representation
@@ -269,18 +275,14 @@ Ogre::SceneNode* AnnGameObject::node()
 
 Ogre::SceneNode* AnnGameObject::getNode()
 {
-	return m_node;
+	return Node;
 }
 
 Ogre::Entity* AnnGameObject::getEntity()
 {
-	return m_entity;
+	return Entity;
 }
 
-Ogre::Entity* AnnGameObject::Entity()
-{
-	return getEntity();
-}
 
 btRigidBody* AnnGameObject::RigidBody()
 {
@@ -294,7 +296,7 @@ float AnnGameObject::getDistance(AnnGameObject *otherObject)
 
 btRigidBody* AnnGameObject::getBody()
 {
-	return m_Body;
+	return Body;
 }
 
 std::vector<struct collisionTest*> AnnGameObject::getCollisionMask()
@@ -361,16 +363,16 @@ void AnnGameObject::setAnimation(const char name[])
 {
 	if(animIsSetted)
 	{
-		m_anim->setEnabled(false);
-		m_anim->setLoop(false);
+		anim->setEnabled(false);
+		anim->setLoop(false);
 		animIsSetted = false;
 		animIsLooping = false;
 		animIsPlaying = false;
-		m_anim = NULL;
+		anim = NULL;
 	}
 
-	m_anim = m_entity->getAnimationState(name);
-	if (m_anim != NULL)
+	anim = Entity->getAnimationState(name);
+	if (anim != NULL)
 		animIsSetted = true;
 }
 
@@ -378,7 +380,7 @@ void AnnGameObject::playAnimation(bool play)
 {
 	if(animIsSetted)
 	{
-		m_anim->setEnabled(play);
+		anim->setEnabled(play);
 		animIsPlaying = play;
 	}
 }
@@ -387,7 +389,7 @@ void AnnGameObject::loopAnimation(bool loop)
 {
 	if(animIsSetted)
 	{
-		m_anim->setLoop(loop);
+		anim->setLoop(loop);
 		animIsLooping = loop;
 	}
 }
@@ -397,23 +399,23 @@ void AnnGameObject::addAnimationTime(double offset)
 	if(!animIsSetted || !animIsPlaying)
 		return;
 
-	m_anim->addTime(float(offset));
+	anim->addTime(float(offset));
 }
 
 void AnnGameObject::applyImpulse(AnnVect3 force)
 {
-	m_Body->applyCentralImpulse(force.getBtVector());
+	Body->applyCentralImpulse(force.getBtVector());
 }
 
 void AnnGameObject::applyForce(AnnVect3 force)
 {
-	m_Body->applyCentralForce(force.getBtVector());
+	Body->applyCentralForce(force.getBtVector());
 }
 
 void AnnGameObject::setLinearSpeed(AnnVect3 v)
 {
 	if(bulletReady)
-		m_Body->setLinearVelocity(v.getBtVector());
+		Body->setLinearVelocity(v.getBtVector());
 }
 
 

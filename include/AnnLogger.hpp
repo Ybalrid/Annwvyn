@@ -16,10 +16,11 @@
 #include <iostream>
 namespace Annwvyn
 {
+	///Open an output stream to the engine log
 	class DLL AnnDebug : public std::ostream
 	{
 	private:
-		///Nested buffer class 
+		///Nested buffer class. Write the stings to the engine log.
 		class AnnDebugBuff : public std::stringbuf
 		{
 		public:

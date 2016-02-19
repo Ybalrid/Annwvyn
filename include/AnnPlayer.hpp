@@ -22,7 +22,7 @@ namespace Annwvyn
 {
 	class AnnEngine; //predeclaration of AnnEngine
 
-	///Parameters of the VirtualBody		
+	///Parameters of the user's VirtualBody		
 	class DLL bodyParams
 	{
 		/**
@@ -52,7 +52,7 @@ namespace Annwvyn
 	enum walkDirection{forward, backward, left, right};
 
 
-	///class that represent the player
+	///class that represent the player. This is the user's "Virtual body" in the world. It's the object that you have to move and turn to explore the space.
 	class DLL AnnPlayer
 	{
 	public:
