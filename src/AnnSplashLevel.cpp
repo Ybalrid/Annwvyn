@@ -60,19 +60,19 @@ void AnnSplashLevel::load()
 	CurvedPlane->textureCoord(.5 , 1);
 	//6
 	CurvedPlane->position(0, 2, 0);
-	CurvedPlane->textureCoord(.5 ,0 );
+	CurvedPlane->textureCoord(.5 ,0);
 	//7
-	CurvedPlane->position(1, -2, CurveB );
-	CurvedPlane->textureCoord(.75, 1 );
+	CurvedPlane->position(1, -2, CurveB);
+	CurvedPlane->textureCoord(.75, 1);
 	//8
-	CurvedPlane->position(1, 2, CurveB );
-	CurvedPlane->textureCoord(.75, 0 );
+	CurvedPlane->position(1, 2, CurveB);
+	CurvedPlane->textureCoord(.75, 0);
 	//9
-	CurvedPlane->position(2, -2, CurveC );
-	CurvedPlane->textureCoord(1, 1 );
+	CurvedPlane->position(2, -2, CurveC);
+	CurvedPlane->textureCoord(1, 1);
 	//10
 	CurvedPlane->position(2, 2, CurveC);
-	CurvedPlane->textureCoord(1, 0 );
+	CurvedPlane->textureCoord(1, 0);
 
 	CurvedPlane->end();
 	
@@ -89,7 +89,7 @@ void AnnSplashLevel::load()
 
 void AnnSplashLevel::setBGM(std::string path, bool preload)
 {
-	if(preload) AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
+	if(preload) AnnEngine::Instance()->getAudioEngine()->preLoadBuffer(path);
 	bgmPath = path;
 	hasBGM = true;
 }

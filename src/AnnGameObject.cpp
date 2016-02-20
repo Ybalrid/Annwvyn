@@ -33,7 +33,7 @@ AnnGameObject::~AnnGameObject()
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
 {
 	//Get sound buffer from file (will not load if allready loaded)
-	buffer = AnnEngine::Instance()->getAudioEngine()->loadSndFile(path);
+	buffer = AnnEngine::Instance()->getAudioEngine()->loadBuffer(path);
 	
 	alSourcei(source, AL_BUFFER, buffer);
 	if(loop)

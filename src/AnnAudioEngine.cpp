@@ -68,21 +68,37 @@ void AnnAudioEngine::shutdownOpenAL()
     alGetError();//Purge pending error.
 }
 
-ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
+ALuint AnnAudioEngine::loadSndFile(const std::string& path)
 {
-	//If sound allready loaded
-	auto query = buffers.find(Filename);
+	return loadBuffer(path);
+}
+
+void AnnAudioEngine::preLoadBuffer(const std::string& filepath)
+{
+	loadBuffer(filepath);
+}
+
+ALuint AnnAudioEngine::isBufferLoader(const std::string& filepath)
+{
+	auto query = buffers.find(filepath);
 	if(query != buffers.end())
 		return query->second;
+	return false;
+}
+
+ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
+{
+	if(ALuint buffer = isBufferLoader(filepath))
+		return buffer;
 	
-	AnnDebug() << Filename << " is unkown to the engine. Loading from file...";
+	AnnDebug() << filepath << " is unkown to the engine. Loading from file...";
 
 	// Open Audio file with libsndfile
     SF_INFO FileInfos;
-    SNDFILE* File = sf_open(Filename.c_str(), SFM_READ, &FileInfos);
+    SNDFILE* File = sf_open(filepath.c_str(), SFM_READ, &FileInfos);
     if (!File)
 	{
-		AnnDebug() << "Error, cannot load file " << Filename << " as a recognized audio file";
+		AnnDebug() << "Error, cannot load file " << filepath << " as a recognized audio file";
         return 0;
 	}
 
@@ -96,7 +112,7 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
 	std::vector<float> SamplesFloat(NbSamples);
     if (sf_read_float(File, &SamplesFloat[0], NbSamples) < NbSamples)
 	{
-		lastError = "Error while reading the file" + Filename + " through sndfile library\nsndfile error: ";
+		lastError = "Error while reading the file" + filepath + " through sndfile library\nsndfile error: ";
 		lastError +=  sf_error_number(sf_error(File));
 		logError();
         //return 0;
@@ -131,14 +147,14 @@ ALuint AnnAudioEngine::loadSndFile(const std::string& Filename)
     //check errors
     if (alGetError() != AL_NO_ERROR)
 	{
-		lastError = "Error : cannot create an audio buffer for : " + Filename;
+		lastError = "Error : cannot create an audio buffer for : " + filepath;
 		logError();
         return 0;
 	}
 
-	AnnDebug() << Filename << " sucessfully loaded into audio engine";
+	AnnDebug() << filepath << " sucessfully loaded into audio engine";
 	AnnEngine::log("buffer added to the Audio engine");
-	buffers[Filename] = buffer;
+	buffers[filepath] = buffer;
     return buffer;
 }
 
@@ -168,7 +184,7 @@ void AnnAudioEngine::unloadBuffer(const std::string& path)
 
 void AnnAudioEngine::playBGM(const std::string path, const float volume)
 {
-    bgmBuffer = loadSndFile(path);
+	bgmBuffer = loadBuffer(path);
 
 	AnnDebug() << "Using " << path << " as BGM";
 
@@ -215,7 +231,7 @@ const std::string AnnAudioEngine::getLastError()
 
 AnnAudioSource* AnnAudioEngine::createSource(const std::string& path)
 {
-	ALuint buffer = loadSndFile(path);
+	ALuint buffer = loadBuffer(path);
 	if(buffer == 0)
 	{
 		AnnDebug() << "Cannot create audio source " << path;

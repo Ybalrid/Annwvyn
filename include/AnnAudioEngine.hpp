@@ -73,8 +73,13 @@ namespace Annwvyn
 		///This permit to preload sound files to the engine. If want to avoid loading a
 		///Bunch of soundfile (that causes disk I/O access) you can just load the soundfile
 		///before the start of your gameplay sequence.
-		/// \param path Path of the file you want to load
-		ALuint loadSndFile(const std::string& path);
+		/// \param filePath Path of the file you want to load
+		ALuint loadBuffer(const std::string& filePath);
+		///DEPRECATED: use loadBuffer
+		DEPRECATED ALuint loadSndFile(const std::string& path);
+
+		void preLoadBuffer(const std::string& filePath);
+		ALuint isBufferLoader(const std::string& filePath);
 		
 		///Unload a buffer from the engine. The buffer is identified by the soud file it represent
 		/// \param path Path of the file you want to load
