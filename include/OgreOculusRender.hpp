@@ -142,7 +142,7 @@ class DLL OgreOculusRender
         void debugSaveToFile(const char path[]);
 		
 		///Object for getting informations from the Oculus Rift
-        OculusInterface* oc;
+        OculusInterface* Oculus;
 
 		///background color of viewports
 		Ogre::ColourValue backgroundColor;
