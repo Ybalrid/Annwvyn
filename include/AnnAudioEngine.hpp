@@ -29,27 +29,44 @@ namespace Annwvyn
 {
     class AnnEngine;
 	class AnnAudioEngine;
+
+	///Represent an audio source in the engine
 	class DLL AnnAudioSource
 	{
 	private:
+		///Private contructor. You have to call AnnAudioEngine::createAudioSource() to get an AnnAudioSource object
 		AnnAudioSource();
 		friend class AnnAudioEngine;
 	public:
 		~AnnAudioSource();
+
+		///Put the audio source at this position in space
 		void setPositon(AnnVect3 position);
+		///Set the volume at the given gain (betwenn 0 & 1)
+		/// \param gain value between 0 and 1 
 		void setVolume(float gain);
+		///Put the audio read position at the origin
 		void rewind();
+		///Play the sound
 		void play();
+		///Pause the sound
 		void pause();
+		///Stop playing the sound
 		void stop();
 
+		///If looping is activated, the sound will replay when finished
 		void setLooping(bool looping = true);
+		///If true, the sound position will use (and update) the player's current position as origin
 		void setPositionRelToPlayer(bool relToPlayer = true);
 
 	private:
+		///Name of the buffer (filename)
 		std::string bufferName;
+		///OpenAL source object
 		ALuint source;
+		///Position of this source
 		AnnVect3 pos;
+		///Relative to player, or not
 		bool posRelToPlayer;
 	};
 
@@ -78,7 +95,15 @@ namespace Annwvyn
 		///DEPRECATED: use loadBuffer
 		DEPRECATED ALuint loadSndFile(const std::string& path);
 
+		///This method is intended to be used in moments like loading levels
+		///If a buffer is allready loaded, getting it with loadBuffer is equivalent at
+		///getting something from an unordered map.
+		///If loadBuffer is called with a "new" sound file, the engine will load it in memory
+		///before doing anything else, delaying stuff because of disk I/O
+		/// \copydoc loadBuffer()
 		void preLoadBuffer(const std::string& filePath);
+
+		///Return "false" if buffer not loaded. Return buffer index if buffer is loaded.
 		ALuint isBufferLoader(const std::string& filePath);
 		
 		///Unload a buffer from the engine. The buffer is identified by the soud file it represent
@@ -130,7 +155,8 @@ namespace Annwvyn
 		///Map between audio filenames and OpenAL buffer
 		std::unordered_map<std::string, ALuint> buffers;
 		bool locked;
-		std::vector<AnnAudioSource*> AudioSources;
+		///Lis of the audio sources object present in the audio engine
+		std::list<AnnAudioSource*> AudioSources;
 	};
 }
 #endif
