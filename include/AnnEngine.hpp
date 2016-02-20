@@ -40,6 +40,8 @@
 #include <fcntl.h>
 #endif
 
+#pragma warning(default:4996)
+
 namespace Annwvyn
 {
 	//For some reason, GCC don't want to compile that class without predeclaring AnnPhysicsEngine here.
@@ -132,7 +134,7 @@ namespace Annwvyn
 		bool destroyGameObject(AnnGameObject* object); //object factory
 		
 		//TODO remove destroy light
-		void destroyLight(AnnLightObject* light){destroyLightObject(light);}
+		DEPRECATED void destroyLight(AnnLightObject* light){destroyLightObject(light);}
 
 		///Destroy the given light
 		/// \param light pointer to the light to destroy
@@ -143,7 +145,7 @@ namespace Annwvyn
 		void setAmbiantLight(Ogre::ColourValue v); //scene parameter
 
 		//TODO remove "addlight"
-		AnnLightObject* addLight(){return createLightObject();}
+		DEPRECATED AnnLightObject* addLight(){return createLightObject();}
 
 		///Add a light source to the scene. return a pointer to the new light
 		AnnLightObject* createLightObject();
@@ -166,8 +168,14 @@ namespace Annwvyn
 		///Set the POV node to the AnnPlayer gameplay defined position/orientation of the player's body
 		inline void syncPov();
 
-		///Get elapsed time from engine startup
-		double getTimeFromStartUp();//engine
+		///Get elapsed time from engine startup in millisec
+		unsigned long getTimeFromStartUp();//engine
+
+		///Get elapsed time from engine startup in seconds
+		double getTimeFromStartupSeconds();
+
+		///Get elapsed time between two frames in seconds
+		double getFrameTime();
 
 		///Return the Annwvyn OpenAL simplified audio engine
 		AnnAudioEngine* getAudioEngine(); //audio
@@ -177,7 +185,7 @@ namespace Annwvyn
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
 		/// key an OIS key code
-		bool isKeyDown(OIS::KeyCode key); //event
+		inline bool isKeyDown(OIS::KeyCode key); //event
 
 		///Create a trigger object
 		/// \param trigger an empty trigger object
@@ -212,6 +220,8 @@ namespace Annwvyn
 
 		///Remove the sky dome
 		void removeSkyDome();
+
+		///Remove the sky box
 		void removeSkyBox();
 
 		///Get the AnnObject the player is looking at
@@ -225,7 +235,7 @@ namespace Annwvyn
 
 		///Reference orientation. Usefull if you are inside a vehicule for example
 		/// \param q the reference orientation for the point of view. Usefull for applying vehicle movement to the player
-		void setReferenceQuaternion(AnnQuaternion q); //engine...
+		DEPRECATED void setReferenceQuaternion(AnnQuaternion q); //engine...
 
 		///Retrive the said reference quaternion
 		AnnQuaternion getReferenceQuaternion(); //engine 
@@ -235,7 +245,7 @@ namespace Annwvyn
 		/// \param z_offset offset betwenn camera and player center eye pont
 		/// \param flip if you need to flip the object to be correctly oriented (looking to negative Z)
 		/// \param scale The scale to be aplied to the body object
-		void attachVisualBody(const std::string entityName,  
+		DEPRECATED void attachVisualBody(const std::string entityName,  
 			float z_offset = -0.0644f, 
 			bool flip = false, 
 			bool animated = false, 
