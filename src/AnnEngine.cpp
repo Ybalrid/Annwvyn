@@ -448,7 +448,7 @@ inline void AnnEngine::syncPov()
 }
 
 
-bool AnnEngine::isKeyDown(OIS::KeyCode key)
+inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
 	if(!eventManager) return false;
 	return eventManager->Keyboard->isKeyDown(key);
@@ -557,9 +557,19 @@ Ogre::SceneManager* AnnEngine::getSceneManager()
 	return SceneManager;
 }
 
-double AnnEngine::getTimeFromStartUp()
+unsigned long AnnEngine::getTimeFromStartUp()
 {
-	return static_cast<double>(renderer->getTimer()->getMilliseconds());
+	return renderer->getTimer()->getMilliseconds();
+}
+
+double AnnEngine::getTimeFromStartupSeconds()
+{
+	return static_cast<double>(getTimeFromStartUp())/1000.0;
+}
+
+double AnnEngine::getFrameTime()
+{
+	return deltaT;
 }
 
 ////////////////////////////////////////////////////////// SETTERS
