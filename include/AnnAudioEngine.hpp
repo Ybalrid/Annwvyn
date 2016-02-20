@@ -92,6 +92,8 @@ namespace Annwvyn
 		///before the start of your gameplay sequence.
 		/// \param filePath Path of the file you want to load
 		ALuint loadBuffer(const std::string& filePath);
+
+
 		///DEPRECATED: use loadBuffer
 		DEPRECATED ALuint loadSndFile(const std::string& path);
 
