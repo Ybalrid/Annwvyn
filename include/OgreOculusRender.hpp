@@ -129,12 +129,17 @@ class DLL OgreOculusRender
 		///Show in the debug window what the Oculus service send as mirrored view
 		static void showMirrorView();
 
+		///
+		static void showMonscopicView();
+
     private:
+		static OgreOculusRender* self;
 		///Everything that is an array of 2 will use theses indexes in code. 
         enum 
         {
             left = 0,
-            right = 1
+            right = 1,
+			mono = 3,
         };
 
 		///Save content of the RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
@@ -160,7 +165,7 @@ class DLL OgreOculusRender
         Ogre::SceneManager* smgr, * debugSmgr;	
 
 		///Stereoscopic camera array. Indexes are "left" and "right" + debug view cam
-        Ogre::Camera* cams[2], * debugCam;
+        Ogre::Camera* cams[2], * debugCam, * monoCam;
 		
 		///Nodes for the debug scene
 		Ogre::SceneNode* debugCamNode, * debugPlaneNode;
@@ -203,6 +208,8 @@ class DLL OgreOculusRender
 
 		///Pointer to the debug plane manual material
 		Ogre::MaterialPtr DebugPlaneMaterial;
+		static bool mirror;
+
 
 #ifdef WIN32
 	public:

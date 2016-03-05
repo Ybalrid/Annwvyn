@@ -9,7 +9,10 @@
 #include "AnnLogger.hpp"
 
 using namespace OVR;
+
+bool OgreOculusRender::mirror(true);
 bool OgreOculusRender::forceNextUpdate(false);
+OgreOculusRender* OgreOculusRender::self(nullptr);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
 OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
 	name(winName),
@@ -28,12 +31,19 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
 	textureSet(nullptr),
 	perfHudMode(ovrPerfHud_Off)
 {
+	if(self)
+	{
+		MessageBox(NULL, L"Fatal error with renderer initialisation. OgreOculusRender object allready created.", L"Fatal Error", MB_ICONERROR);
+		exit(ANN_ERR_RENDER);
+	}
+	self=this;
 		cams[left] = nullptr;
 		rtts[left] = nullptr;
 		vpts[left] = nullptr;		
 		cams[right] = nullptr;
 		rtts[right] = nullptr;
 		vpts[right] = nullptr;
+		monoCam = nullptr;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -201,12 +211,23 @@ void OgreOculusRender::createWindow()
 void OgreOculusRender::initCameras()
 {
 	assert(smgr != NULL); 
+	monoCam = 
+	smgr->createCamera("jkfldsqmjfdsklqj");
+	monoCam->setAspectRatio(16.0/9.0);
+	monoCam->setAutoAspectRatio(false);
+	monoCam->setPosition(cameraPosition);
+	monoCam->setNearClipDistance(0.1);
+	monoCam->setFarClipDistance(4000);
+	monoCam->setFOVy(Ogre::Degree(60));
+	
+
 	cams[left] = smgr->createCamera("lcam");
 	cams[left]->setPosition(cameraPosition);
 	cams[left]->setAutoAspectRatio(true);
 	cams[right] = smgr->createCamera("rcam");
 	cams[right]->setPosition(cameraPosition);
 	cams[right]->setAutoAspectRatio(true);
+
 
 	//do NOT attach camera to this node...
 	CameraNode = smgr->getRootSceneNode()->createChildSceneNode();
@@ -332,14 +353,28 @@ void OgreOculusRender::initRttRendering()
 
 void OgreOculusRender::showRawView()
 {
-	if(debugTexturePlane)
+	mirror = false;
+	if(!debugTexturePlane)return;
+	self->debugViewport->setCamera(self->debugCam);
 	debugTexturePlane->setTextureName("RttTex");
+	Annwvyn::AnnDebug() << "Switched to Raw view";
 }
-
 void OgreOculusRender::showMirrorView()
 {
-	if(debugTexturePlane)
+	mirror = true;
+	if(!debugTexturePlane)return;
+	self->debugViewport->setCamera(self->debugCam);
 	debugTexturePlane->setTextureName("MirrorTex");
+	Annwvyn::AnnDebug() << "Switched to Oculus Compositor view";
+}
+
+void OgreOculusRender::showMonscopicView()
+{
+	mirror = false;
+	if(!self) return;
+	self->debugViewport->setCamera(self->monoCam);
+	self->debugViewport->setBackgroundColour(self->backgroundColor);
+	Annwvyn::AnnDebug() << "Switched to Monoscopic view";
 }
 
 void OgreOculusRender::initOculus()
@@ -431,6 +466,8 @@ void OgreOculusRender::updateTracking()
 	//Update the pose for gameplay purposes
 	returnPose.position = cameraPosition + cameraOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
 	returnPose.orientation = cameraOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
+	monoCam->setPosition(returnPose.position);
+	monoCam->setOrientation(returnPose.orientation);
 }
 
 void OgreOculusRender::renderAndSubmitFrame()
@@ -455,14 +492,16 @@ void OgreOculusRender::renderAndSubmitFrame()
 	//Submit the frame 
 	ovr_SubmitFrame(Oculus->getHmd(), 0, nullptr, &layers, 1);
 
-	//Put the mirrored view available for OGRE
-	glCopyImageSubData(oculusMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
-		ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
-		Oculus->getHmdDesc().Resolution.w, Oculus->getHmdDesc().Resolution.h, 1);
 
 	//Update the render mirrored view
 	if(window->isVisible())
 	{
+		//Put the mirrored view available for OGRE
+		if(mirror)
+		glCopyImageSubData(oculusMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
+		ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
+		Oculus->getHmdDesc().Resolution.w, Oculus->getHmdDesc().Resolution.h, 1);
+		
 		debugViewport->update();
 		window->update();
 	}

@@ -406,9 +406,9 @@ bool AnnEngine::requestStop()
 bool AnnEngine::refresh()
 {
 	//Get the rendering delta time (should be roughly equals to 1/desiredFramerate in seconds)
-	deltaT = renderer->getUpdateTime();
-	physicsEngine->step(deltaT);
-	player->engineUpdate(deltaT);
+	updateTime = renderer->getUpdateTime();
+	physicsEngine->step(updateTime);
+	player->engineUpdate(updateTime);
 
 	//Process some logic to extract basic informations (theses should be done within the eventManager).
 	physicsEngine->processCollisionTesting(objects);
@@ -421,7 +421,7 @@ bool AnnEngine::refresh()
 	//Run animations and update OpenAL sources position
 	for(auto gameObject : objects)
 	{
-		gameObject->addAnimationTime(deltaT);
+		gameObject->addAnimationTime(updateTime);
 		gameObject->updateOpenAlPos();
 		gameObject->atRefresh();
 	}
@@ -569,7 +569,7 @@ double AnnEngine::getTimeFromStartupSeconds()
 
 double AnnEngine::getFrameTime()
 {
-	return deltaT;
+	return updateTime;
 }
 
 ////////////////////////////////////////////////////////// SETTERS

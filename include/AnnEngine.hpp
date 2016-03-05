@@ -337,7 +337,7 @@ namespace Annwvyn
 		std::list<AnnLightObject*> lights;
 
 		///Elapsed time between 2 frames
-		double deltaT; 
+		double updateTime; 
 
 #ifdef __gnu_linux__
 		std::string x11LayoutAtStartup;
