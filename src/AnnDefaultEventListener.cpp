@@ -79,6 +79,9 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	case KeyCode::f2:
 		OgreOculusRender::showMirrorView();
 		break;
+	case KeyCode::f3:
+		OgreOculusRender::showMonscopicView();
+		break;
 	}
 
 }

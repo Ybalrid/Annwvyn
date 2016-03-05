@@ -1,6 +1,6 @@
 #ifndef TESTLEVEL
 #define TESTLEVEL
-
+ 
 #include <Annwvyn.h>
 using namespace Annwvyn;
 
@@ -46,7 +46,7 @@ public:
 		levelContent.push_back(S);
 
 		//Add water
-		auto Water = addGameObject("Water.mesh");
+		auto Water = addGameObject("Water.mesh");	
 
 		//Add the island
 		auto Island = addGameObject("Island.mesh");
