@@ -5,6 +5,7 @@
  */
 
 ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
+///(even if now I'm not using code from him anymore)
 ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
 
 #ifndef OGRE_OCULUS_RENDERER
@@ -227,7 +228,7 @@ class DLL OgreOculusRender
 		///Pose (position+orientation) 
 		Posef pose;
 		///Timing in seconds 
-		double currentFrimeDisplayTime, lastFrameDisplayTime;
+		double currentFrameDisplayTime, lastFrameDisplayTime;
 		///Tracking state
 		ovrTrackingState ts;
 		///Current eye getting updated
