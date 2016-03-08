@@ -432,9 +432,9 @@ void OgreOculusRender::updateTracking()
 	cameraOrientation = CameraNode->getOrientation();
 
 	//Begin frame - get timing
-	lastFrameDisplayTime = currentFrimeDisplayTime;
-	ts = ovr_GetTrackingState(Oculus->getHmd(), currentFrimeDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getHmd(), 0), ovrTrue);
-	updateTime = currentFrimeDisplayTime - lastFrameDisplayTime;
+	lastFrameDisplayTime = currentFrameDisplayTime;
+	ts = ovr_GetTrackingState(Oculus->getHmd(), currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getHmd(), 0), ovrTrue);
+	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
 
 	//Get the pose
 	pose = ts.HeadPose.ThePose;
