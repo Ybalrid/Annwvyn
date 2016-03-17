@@ -241,6 +241,8 @@ class DLL OgreOculusRender
 		ovrLayerHeader* layers;
 		///State of the performance HUD
 		int perfHudMode;
+
+		void setMonoFov(float degreeFov);
 #endif 
 		
     public:
