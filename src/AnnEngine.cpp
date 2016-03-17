@@ -56,6 +56,8 @@ AnnEngine::AnnEngine(const char title[]) :
 
 	log("OGRE Object-oriented Graphical Rendering Engine initialized", true);
 
+	renderer->showMonscopicView();
+
 #ifdef __gnu_linux__
 	x11LayoutAtStartup = "unknown";
 	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
@@ -582,7 +584,7 @@ void AnnEngine::setDebugPhysicState(bool state)
 
 void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
 {
- AnnDebug() << "Setting the ambiant light to color " << v; 
+	AnnDebug() << "Setting the ambiant light to color " << v; 
 	SceneManager->setAmbientLight(v);
 }
 

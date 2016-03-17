@@ -212,13 +212,13 @@ void OgreOculusRender::initCameras()
 {
 	assert(smgr != NULL); 
 	monoCam = 
-	smgr->createCamera("jkfldsqmjfdsklqj");
+	smgr->createCamera("monocam");
 	monoCam->setAspectRatio(16.0/9.0);
 	monoCam->setAutoAspectRatio(false);
 	monoCam->setPosition(cameraPosition);
 	monoCam->setNearClipDistance(0.1);
 	monoCam->setFarClipDistance(4000);
-	monoCam->setFOVy(Ogre::Degree(60));
+	monoCam->setFOVy(Ogre::Degree(90));
 	
 
 	cams[left] = smgr->createCamera("lcam");
@@ -231,6 +231,11 @@ void OgreOculusRender::initCameras()
 
 	//do NOT attach camera to this node...
 	CameraNode = smgr->getRootSceneNode()->createChildSceneNode();
+}
+
+void OgreOculusRender::setMonoFov(float degreeFov)
+{
+	if(monoCam) monoCam->setFOVy(Ogre::Degree(degreeFov));
 }
 
 void OgreOculusRender::setCamerasNearClippingDistance(float distance)
