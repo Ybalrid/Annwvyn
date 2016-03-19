@@ -13,6 +13,7 @@
 #include <vector>
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
+#include "AnnLightObject.hpp"
 
 namespace Annwvyn
 {
@@ -21,7 +22,6 @@ namespace Annwvyn
 	class AnnTriggerObject;
 
 	//Harmonise names :
-	typedef Ogre::Light AnnLightObject;
 	typedef Ogre::Vector2 AnnVect2;
 
 	//Remove some ugliness : 

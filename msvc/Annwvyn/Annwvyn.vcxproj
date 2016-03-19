@@ -189,6 +189,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnAbstractLevel.hpp" />
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
     <ClInclude Include="..\..\include\AnnCharacter.hpp" />
+    <ClInclude Include="..\..\include\AnnColor.hpp" />
     <ClInclude Include="..\..\include\AnnConsole.hpp" />
     <ClInclude Include="..\..\include\AnnEngine.hpp" />
     <ClInclude Include="..\..\include\AnnErrorCode.hpp" />
@@ -197,6 +198,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnGameObject.hpp" />
     <ClInclude Include="..\..\include\AnnKeyCode.h" />
     <ClInclude Include="..\..\include\AnnLevelManager.hpp" />
+    <ClInclude Include="..\..\include\AnnLightObject.hpp" />
     <ClInclude Include="..\..\include\AnnLogger.hpp" />
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp" />
     <ClInclude Include="..\..\include\AnnPlayer.hpp" />
@@ -227,6 +229,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnAbsractLevel.cpp" />
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
     <ClCompile Include="..\..\src\AnnCharacter.cpp" />
+    <ClCompile Include="..\..\src\AnnColor.cpp" />
     <ClCompile Include="..\..\src\AnnConsole.cpp" />
     <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp" />
     <ClCompile Include="..\..\src\AnnEngine.cpp" />
@@ -235,6 +238,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnFilesystem.cpp" />
     <ClCompile Include="..\..\src\AnnGameObject.cpp" />
     <ClCompile Include="..\..\src\AnnLevelManager.cpp" />
+    <ClCompile Include="..\..\src\AnnLightObject.cpp" />
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp" />
     <ClCompile Include="..\..\src\AnnPlayer.cpp" />
     <ClCompile Include="..\..\src\AnnPlayerActuator.cpp" />

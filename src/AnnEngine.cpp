@@ -382,8 +382,8 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 AnnLightObject* AnnEngine::createLightObject()
 {
 	log("Creating a light");
-	AnnLightObject* Light = SceneManager->createLight();
-	Light->setType(Ogre::Light::LT_POINT);
+	AnnLightObject* Light = new AnnLightObject(SceneManager->createLight());
+	Light->light->setType(Ogre::Light::LT_POINT);
 	lights.push_back(Light);
 	return Light;
 }
@@ -391,10 +391,11 @@ AnnLightObject* AnnEngine::createLightObject()
 void AnnEngine::destroyLightObject(AnnLightObject* object)
 {
 	if(object)
-		SceneManager->destroyLight(object);
+		SceneManager->destroyLight(object->light);
 
 	//Forget that this light existed
 	lights.remove(object);
+	delete object;
 }
 
 bool AnnEngine::requestStop()
