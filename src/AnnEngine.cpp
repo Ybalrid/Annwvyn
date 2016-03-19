@@ -585,8 +585,13 @@ void AnnEngine::setDebugPhysicState(bool state)
 
 void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
 {
-	AnnDebug() << "Setting the ambiant light to color " << v; 
-	SceneManager->setAmbientLight(v);
+	setAmbiantLight(AnnColor(v));
+}
+
+void AnnEngine::setAmbiantLight(AnnColor color)
+{
+	AnnDebug() << "Setting the ambiant light to color " << color; 
+	SceneManager->setAmbientLight(color.getOgreColor());
 }
 
 void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)
@@ -601,11 +606,17 @@ void AnnEngine::setSkyBoxMaterial(bool activate, const char materialName[], floa
 	SceneManager->setSkyBox(activate, materialName, distance, renderedFirst);
 }
 
-void AnnEngine::setWorldBackgroudColor(Ogre::ColourValue v)
+void AnnEngine::setWorldBackgroundColor(Ogre::ColourValue v)
 {
-	AnnDebug() << "Setting the backgroud world color " << v;
-	renderer->changeViewportBackgroundColor(v); 
+	setWorldBackgroundColor(AnnColor(v)); 
 }
+
+void AnnEngine::setWorldBackgroundColor(AnnColor v)
+{
+		AnnDebug() << "Setting the backgroud world color " << v;
+		renderer->changeViewportBackgroundColor(v.getOgreColor()); 
+}
+
 void AnnEngine::removeSkyDome()
 {
 	log("Disabeling skydome");

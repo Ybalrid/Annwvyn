@@ -23,7 +23,7 @@ void AnnAbstractLevel::unload()
 	AnnEngine::Instance()->removeSkyDome();
 
 	//Remove the ambiant lighting
-	AnnEngine::Instance()->setAmbiantLight(Ogre::ColourValue::Black);
+	AnnEngine::Instance()->setAmbiantLight(AnnColor(0,0,0));
 	
 	//Remove the level lights
 	for(AnnLightList::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)
