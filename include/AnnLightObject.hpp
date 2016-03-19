@@ -11,12 +11,11 @@ namespace Annwvyn
 	class DLL AnnLightObject 
 	{
 	public:
-		AnnLightObject();
-		AnnLightObject(Ogre::Light* light);
 		void setPosition(AnnVect3 position);
 		void setDirection(AnnVect3 direction);
 		void setType(Ogre::Light::LightTypes type);
 	private:
+		AnnLightObject(Ogre::Light* light);
 		friend class AnnEngine;
 		Ogre::Light* light;
 	};
