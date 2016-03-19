@@ -142,7 +142,8 @@ namespace Annwvyn
 
 		///Set the ambiant light
 		/// \param v the color of the light
-		void setAmbiantLight(Ogre::ColourValue v); //scene parameter
+		DEPRECATED void setAmbiantLight(Ogre::ColourValue v); //scene parameter
+		void setAmbiantLight(AnnColor color);
 
 		//TODO remove "addlight"
 		DEPRECATED AnnLightObject* addLight(){return createLightObject();}
@@ -216,8 +217,8 @@ namespace Annwvyn
 
 		///Set the viewports background color
 		/// \param v background color
-		void setWorldBackgroudColor(Ogre::ColourValue v = Ogre::ColourValue(0, 0.56f, 1)); 
-
+		DEPRECATED void setWorldBackgroundColor(Ogre::ColourValue v); 
+		void setWorldBackgroundColor(AnnColor color = AnnColor(0,0.56,1));
 		///Remove the sky dome
 		void removeSkyDome();
 

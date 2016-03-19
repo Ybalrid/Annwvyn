@@ -14,6 +14,7 @@
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 #include "AnnLightObject.hpp"
+#include "AnnColor.hpp"
 
 namespace Annwvyn
 {

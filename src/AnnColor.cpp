@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnColor.hpp"
 
+
 using namespace Annwvyn;
 
 AnnColor::AnnColor(float red, float green, float blue, float alpha) : 
@@ -8,6 +9,15 @@ AnnColor::AnnColor(float red, float green, float blue, float alpha) :
 	g(green),
 	b(blue),
 	a(alpha),
+	MAX8BIT(255)
+{
+}
+
+AnnColor::AnnColor(Ogre::ColourValue color) :
+	r(color.r),
+	g(color.g),
+	b(color.b),
+	a(color.a),
 	MAX8BIT(255)
 {
 }
@@ -40,7 +50,6 @@ float AnnColor::getAlpha()
 unsigned char AnnColor::f2i(float f)
 {
 	return static_cast<unsigned char>(f * MAX8BIT); 
-
 }
 
 unsigned char AnnColor::getRedI()
@@ -91,4 +100,3 @@ void AnnColor::setAlpha(float alpha)
 	if(isInFloatRange(alpha))
 		a = alpha;
 }
-
