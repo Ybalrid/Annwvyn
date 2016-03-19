@@ -147,6 +147,12 @@
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
       <Filter>Annwvyn\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnColor.hpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnLightObject.hpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\OculusInterface.cpp">
@@ -225,6 +231,12 @@
       <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnFilesystem.cpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnColor.cpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnLightObject.cpp">
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
   </ItemGroup>
