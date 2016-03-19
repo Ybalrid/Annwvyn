@@ -3,10 +3,6 @@
 
 using namespace Annwvyn;
 
-AnnLightObject::AnnLightObject()
-{
-}
-
 AnnLightObject::AnnLightObject( Ogre::Light* light):
 	light(light)
 {
