@@ -25,7 +25,7 @@ void MyLevel::load()
 
 	//Create a light source
 	auto light(engine->addLight());
-	light->setPosition(0,1,3);
+	light->setPosition(AnnVect3(0,1,3));
 	//Add it to the level lst
 	levelLighting.push_back(light);
 
