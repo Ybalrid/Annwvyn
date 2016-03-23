@@ -49,5 +49,6 @@ namespace Annwvyn
 		bool isInFloatRange(float f);
 	};
 
+
 }
 #endif //ANNCOLOR

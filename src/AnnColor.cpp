@@ -100,3 +100,5 @@ void AnnColor::setAlpha(float alpha)
 	if(isInFloatRange(alpha))
 		a = alpha;
 }
+
+
