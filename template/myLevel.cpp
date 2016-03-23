@@ -11,26 +11,19 @@ void MyLevel::load()
 	auto engine(AnnEngine::Instance());
 	
 	//Load Sinbad:
-	auto Sinbad (engine->createGameObject("Sinbad.mesh"));
+	auto Sinbad (addGameObject("Sinbad.mesh"));
 	Sinbad->setUpPhysics(100, phyShapeType::boxShape);
-	//Add it to the level list
-	levelContent.push_back(Sinbad);
 
 	//Load Ground:
-	auto Ground (engine->createGameObject("Ground.mesh"));
-	Ground->setPos(0,-2,0);
+	auto Ground (addGameObject("Ground.mesh"));
+	Ground->setPosition(0,-2,0);
 	Ground->setUpPhysics();
-	//Add it to the level list
-	levelContent.push_back(Ground);
 
 	//Create a light source
-	auto light(engine->addLight());
+	auto light(addLight());
 	light->setPosition(AnnVect3(0,1,3));
-	//Add it to the level lst
-	levelLighting.push_back(light);
 
-	engine->setAmbiantLight(Ogre::ColourValue::White/2);
-
+	engine->setAmbiantLight(AnnColor(.5,.5,.5));
 }
 
 void MyLevel::runLogic()
