@@ -361,7 +361,7 @@ void OgreOculusRender::initRttRendering()
 
 	//Save the GL texture id for updating the mirror texture
 	ogreMirrorTextureID = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("MirrorTex").getPointer())->getGLID();
-	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusMirrorTextureID);
+	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusRenderTextureID);
 	
 	//Attach the camera of the debug render scene to a viewport on the actuall application window
 	debugViewport = window->addViewport(debugCam);
@@ -508,7 +508,8 @@ void OgreOculusRender::renderAndSubmitFrame()
 	//Select the current render texture
 	//textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 	ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureSwapChain, &currentIndex);
-	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, currentIndex, &oculusMirrorTextureID);
+	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, currentIndex, &oculusRenderTextureID);
+	ovr_GetMirrorTextureBufferGL(Oculus->getSession(), mirrorTexture, &oculusMirrorTextureID);
 
 
 	//root->renderOneFrame();
@@ -518,7 +519,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 	
 	//Copy the rendered image to the Oculus Swap Texture
 	glCopyImageSubData(renderTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
-		oculusMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
+		oculusRenderTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 		bufferSize.w,bufferSize.h, 1);
 	
 	//Get the rendering layer
