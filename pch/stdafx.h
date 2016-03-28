@@ -54,7 +54,7 @@
 #include <sndfile.h>
 
 //Oculus VR API
-#include <OVR.h>
+//#include <OVR.h>
 #include <OVR_CAPI.h>
 #include <OVR_CAPI_GL.h>
 
