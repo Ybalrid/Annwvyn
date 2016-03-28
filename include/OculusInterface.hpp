@@ -10,7 +10,7 @@
 #include <iostream>
 
 //Oculus VR API
-#include <OVR.h>
+//#include <OVR.h>
 #include <OVR_CAPI.h>
 
 #include "systemMacro.h"
@@ -18,7 +18,7 @@
 #include <Ogre.h>
 #define USE_OGRE
 using namespace std;
-using namespace OVR;
+//using namespace OVR;
 
 ///Comunicate with the Rift (initialize OVR and get the info)
 class DLL OculusInterface
@@ -31,19 +31,19 @@ class DLL OculusInterface
     void update(double time = ovr_GetTimeInSeconds());
     
     ///Return a position vector
-    OVR::Vector3f getPosition();
+    //OVR::Vector3f getPosition();
     
     ///Return a quaternion orentetion
-    OVR::Quatf getOrientation();
+    //OVR::Quatf getOrientation();
 
 	///Return the active hmd desk object
     ovrHmdDesc getHmdDesc();
 
 	///Return the active hmd object
-    ovrHmd getHmd();
+    //ovrHmd getHmd();
     
     ///Print debuggin information to standard input;
-    void debugPrint();
+    //void debugPrint();
 
     private:
 	///Print to the log all information about the headset
@@ -54,15 +54,15 @@ class DLL OculusInterface
 	///Shutdown the oculus library
     void shutdown();
 
-#ifdef _WIN32
-	ovrSession getSession(){return (ovrSession) getHmd();}
-#endif
+
+	ovrSession getSession();
+
 
     private:
     bool initialized;
     bool firstUpdated;
 	
-    ovrHmd hmd;
+    ovrSession hmd;
     ovrHmdDesc hmdDesc; 
 	ovrTrackingState ss;
 #ifdef _WIN32
