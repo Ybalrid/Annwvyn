@@ -44,6 +44,7 @@ class DLL OculusInterface
     
     ///Print debuggin information to standard input;
     //void debugPrint();
+	ovrSession getSession();
 
     private:
 	///Print to the log all information about the headset
@@ -55,7 +56,6 @@ class DLL OculusInterface
     void shutdown();
 
 
-	ovrSession getSession();
 
 
     private:
