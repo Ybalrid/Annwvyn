@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\include;..\..\thirdParty\tinyxml2\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\include;..\..\thirdParty\tinyxml2\include;..\..\..\OgreSDK\boost;..\..\..\AL\openal-soft-1.15.1\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft-1.15.1\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext\GL;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;..\..\pch;%(AdditionalIncludeDirectories);$(IncludePath)</IncludePath>
     <OutDir>..\..\lib\</OutDir>
     <IntDir>..\..\obj\</IntDir>
     <TargetName>Annwvyn</TargetName>

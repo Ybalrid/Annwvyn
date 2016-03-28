@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "OculusInterface.hpp"
 #include "AnnLogger.hpp"
+
 OculusInterface::OculusInterface()
 {
 	initialized = false;
@@ -102,7 +103,7 @@ void OculusInterface::update(double time)
 	firstUpdated = true;
 	ss = ovr_GetTrackingState(hmd, time, true);
 }
-
+/*
 OVR::Vector3f OculusInterface::getPosition()
 {
 	if(initialized && firstUpdated)
@@ -116,17 +117,18 @@ OVR::Quatf OculusInterface::getOrientation()
 		return OVR::Quatf(ss.HeadPose.ThePose.Orientation);
 	return OVR::Quatf(1, 0, 0, 0);
 }
-
+*/
 ovrHmdDesc OculusInterface::getHmdDesc()
 {
 	return hmdDesc;
 }
 
-ovrHmd OculusInterface::getHmd()
+ovrSession OculusInterface::getSession()
 {
 	return hmd;
 }
 
+/*
 void OculusInterface::debugPrint()
 {
 	if(!(initialized && firstUpdated)) return;
@@ -144,3 +146,4 @@ void OculusInterface::debugPrint()
 		<< "Euler Orientation angle (yaw, pitch, roll) "<< "(" << o_y << ", " << o_p << ", " << o_r << ")" << endl
 		<< endl;
 }
+*/
