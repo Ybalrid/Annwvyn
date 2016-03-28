@@ -444,7 +444,7 @@ void OgreOculusRender::calculateProjectionMatrix()
 		ovrMatrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, 
 			nearClippingDistance, 
 			farClippingDistance, 
-			true);
+			0);
 
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
@@ -525,6 +525,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 	layers = &layer.Header;
 
 	//Submit the frame 
+	ovr_CommitTextureSwapChain(Oculus->getSession(), textureSwapChain);
 	ovr_SubmitFrame(Oculus->getSession(), 0, nullptr, &layers, 1);
 
 
