@@ -12,7 +12,7 @@
 #define OGRE_OCULUS_RENDERER
 
 //Oculus Rift Lib
-#include <OVR.h>
+//#include <OVR.h>
 #include <OVR_CAPI_GL.h>
 
 //C++ SDL Includes
@@ -37,7 +37,7 @@
 #include "AnnErrorCode.hpp"
 
 using namespace std;
-using namespace OVR;
+//using namespace OVR;
 
 ///A pose refer to the combinaison of a position and an orientation. 
 ///It permit to define the placement of an object with 6DOF
@@ -193,7 +193,7 @@ class DLL OgreOculusRender
         ovrSizei texSizeL, texSizeR, bufferSize;
 
 		///Mirror texture 
-		ovrTexture* mirrorTexture;
+		ovrMirrorTexture mirrorTexture;
 
 		///OpenGL Texture ID of the mirror texture buffers 
 		GLuint oculusMirrorTextureID, ogreMirrorTextureID;
@@ -212,7 +212,6 @@ class DLL OgreOculusRender
 		static bool mirror;
 
 
-#ifdef WIN32
 	public:
 		static Ogre::TextureUnitState* debugTexturePlane;
 
@@ -220,13 +219,16 @@ class DLL OgreOculusRender
 		///Compositing layer for the rendered scene
 		ovrLayerEyeFov layer;
 		///GL texture set for the rendering
-		ovrSwapTextureSet* textureSet;
+		//ovrSwapTextureSet* textureSet;
+		ovrTextureSwapChain textureSwapChain; 
+
+
 		///GL Texture ID of the render texture
 		GLuint renderTextureID;
 		///offcet between render center and camera (for IPD variation)
 		ovrVector3f offset[2];
 		///Pose (position+orientation) 
-		Posef pose;
+		ovrPosef pose;
 		///Timing in seconds 
 		double currentFrameDisplayTime, lastFrameDisplayTime;
 		///Tracking state
@@ -234,17 +236,16 @@ class DLL OgreOculusRender
 		///Current eye getting updated
 		ovrEyeType eye;
 		///Orientation of the headset
-		Quatf oculusOrient;
+		ovrQuatf oculusOrient;
 		///Position of the headset
-		Vector3f oculusPos;
+		ovrVector3f oculusPos;
 		///Pointer to the layer to be submited
 		ovrLayerHeader* layers;
 		///State of the performance HUD
 		int perfHudMode;
 
 		void setMonoFov(float degreeFov);
-#endif 
-		
+		int currentIndex;
     public:
 		///Position of the rift at the last frame
         Ogre::Vector3 lastOculusPosition;
