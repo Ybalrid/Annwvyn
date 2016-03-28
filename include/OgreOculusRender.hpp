@@ -224,7 +224,7 @@ class DLL OgreOculusRender
 
 
 		///GL Texture ID of the render texture
-		GLuint renderTextureID;
+		GLuint oculusRenderTextureID, renderTextureID;
 		///offcet between render center and camera (for IPD variation)
 		ovrVector3f offset[2];
 		///Pose (position+orientation) 
