@@ -54,6 +54,7 @@ AnnGameObject* AnnAbstractLevel::addGameObject(std::string entityName, std::stri
 	AnnEngine* engine(AnnEngine::Instance());
 	AnnGameObject* object(engine->createGameObject(entityName.c_str()));
 	object->setID(id);
+	levelContent.push_back(object);
 	return object;
 }
 
@@ -61,6 +62,7 @@ AnnTriggerObject* AnnAbstractLevel::addTrggerObject(AnnTriggerObject* obj , std:
 {
 	AnnEngine* engine(AnnEngine::Instance());
 	engine->createTriggerObject(obj);
+	levelTrigger.push_back(obj);
 	return obj;
 }
 
