@@ -55,7 +55,7 @@ class DLL OgreOculusRender
     public:
 		void cycleOculusHUD();
 		static bool forceNextUpdate;
-        OgreOculusRender(std::string windowName = "OgreOculusRender", bool actVsync = true);
+        OgreOculusRender(std::string windowName = "OgreOculusRender");
         ~OgreOculusRender();
 		
 		///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
@@ -130,7 +130,7 @@ class DLL OgreOculusRender
 		///Show in the debug window what the Oculus service send as mirrored view
 		static void showMirrorView();
 
-		///
+		///Show in the debug window a monoscopic view with a default Fov of 90°
 		static void showMonscopicView();
 
     private:
