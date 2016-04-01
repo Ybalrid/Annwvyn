@@ -14,7 +14,7 @@ bool OgreOculusRender::mirror(true);
 bool OgreOculusRender::forceNextUpdate(false);
 OgreOculusRender* OgreOculusRender::self(nullptr);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
-OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
+OgreOculusRender::OgreOculusRender(std::string winName) :
 	name(winName),
 	root(nullptr),
 	smgr(nullptr),
@@ -37,13 +37,13 @@ OgreOculusRender::OgreOculusRender(std::string winName, bool activateVsync) :
 		exit(ANN_ERR_RENDER);
 	}
 	self=this;
-		cams[left] = nullptr;
-		rtts[left] = nullptr;
-		vpts[left] = nullptr;		
-		cams[right] = nullptr;
-		rtts[right] = nullptr;
-		vpts[right] = nullptr;
-		monoCam = nullptr;
+	cams[left] = nullptr;
+	rtts[left] = nullptr;
+	vpts[left] = nullptr;		
+	cams[right] = nullptr;
+	rtts[right] = nullptr;
+	vpts[right] = nullptr;
+	monoCam = nullptr;
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -76,7 +76,6 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 		if(vpts[i])
 			vpts[i]->setBackgroundColour(color);
 }
-
 
 Ogre::SceneManager* OgreOculusRender::getSceneManager()
 {
@@ -220,7 +219,6 @@ void OgreOculusRender::initCameras()
 	monoCam->setNearClipDistance(0.1);
 	monoCam->setFarClipDistance(4000);
 	monoCam->setFOVy(Ogre::Degree(90));
-	
 
 	cams[left] = smgr->createCamera("lcam");
 	cams[left]->setPosition(cameraPosition);
@@ -228,7 +226,6 @@ void OgreOculusRender::initCameras()
 	cams[right] = smgr->createCamera("rcam");
 	cams[right]->setPosition(cameraPosition);
 	cams[right]->setAutoAspectRatio(true);
-
 
 	//do NOT attach camera to this node...
 	CameraNode = smgr->getRootSceneNode()->createChildSceneNode();
@@ -374,7 +371,7 @@ void OgreOculusRender::initRttRendering()
 void OgreOculusRender::showRawView()
 {
 	mirror = false;
-	if(!debugTexturePlane)return;
+	if(!debugTexturePlane) return;
 	self->debugViewport->setCamera(self->debugCam);
 	debugTexturePlane->setTextureName("RttTex");
 	Annwvyn::AnnDebug() << "Switched to Raw view";
@@ -382,7 +379,7 @@ void OgreOculusRender::showRawView()
 void OgreOculusRender::showMirrorView()
 {
 	mirror = true;
-	if(!debugTexturePlane)return;
+	if(!debugTexturePlane) return;
 	self->debugViewport->setCamera(self->debugCam);
 	debugTexturePlane->setTextureName("MirrorTex");
 	Annwvyn::AnnDebug() << "Switched to Oculus Compositor view";
@@ -440,7 +437,6 @@ void OgreOculusRender::calculateProjectionMatrix()
 	for(size_t eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Get the projection matrix
-		
 		ovrMatrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, 
 			nearClippingDistance, 
 			farClippingDistance, 
@@ -465,7 +461,13 @@ void OgreOculusRender::updateTracking()
 
 	//Begin frame - get timing
 	lastFrameDisplayTime = currentFrameDisplayTime;
-	ts = ovr_GetTrackingState(Oculus->getSession(), currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), 0), ovrTrue);
+
+	//Get the tracking state 
+	ts = ovr_GetTrackingState(Oculus->getSession(), 
+		currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), 0), 
+		ovrTrue);
+	
+	//Calculate delta between last and this frame
 	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
 
 	//Get the pose
@@ -505,14 +507,15 @@ void OgreOculusRender::updateTracking()
 void OgreOculusRender::renderAndSubmitFrame()
 {
 	Ogre::WindowEventUtilities::messagePump();
+
 	//Select the current render texture
-	//textureSet->CurrentIndex = (textureSet->CurrentIndex + 1) % textureSet->TextureCount;
 	ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureSwapChain, &currentIndex);
+	
+	//Update the relevent OpenGL IDs
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, currentIndex, &oculusRenderTextureID);
 	ovr_GetMirrorTextureBufferGL(Oculus->getSession(), mirrorTexture, &oculusMirrorTextureID);
 
-
-	//root->renderOneFrame();
+	//Render
 	root->_fireFrameRenderingQueued();
 	vpts[left]->update();
 	vpts[right]->update();
@@ -529,15 +532,14 @@ void OgreOculusRender::renderAndSubmitFrame()
 	ovr_CommitTextureSwapChain(Oculus->getSession(), textureSwapChain);
 	ovr_SubmitFrame(Oculus->getSession(), 0, nullptr, &layers, 1);
 
-
 	//Update the render mirrored view
 	if(window->isVisible())
 	{
 		//Put the mirrored view available for OGRE
 		if(mirror)
-		glCopyImageSubData(oculusMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
-		ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
-		Oculus->getHmdDesc().Resolution.w, Oculus->getHmdDesc().Resolution.h, 1);
+			glCopyImageSubData(oculusMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
+			ogreMirrorTextureID, GL_TEXTURE_2D, 0, 0, 0, 0, 
+			Oculus->getHmdDesc().Resolution.w, Oculus->getHmdDesc().Resolution.h, 1);
 		
 		debugViewport->update();
 		window->update();
