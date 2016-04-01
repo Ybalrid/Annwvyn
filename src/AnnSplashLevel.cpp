@@ -18,7 +18,7 @@ AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, AnnAbstractLevel* next
 void AnnSplashLevel::load()
 {
 	AnnDebug() << "Ignore physics";
-	AnnEngine::Instance()->setWorldBackgroundColor(Ogre::ColourValue::Black);
+	AnnEngine::Instance()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
 	AnnEngine::Instance()->getPlayer()->ignorePhysics = true;
 	AnnEngine::Instance()->getPlayer()->setOrientation(Ogre::Euler(0,0,0));
 

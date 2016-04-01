@@ -2,6 +2,9 @@
 #include "OculusInterface.hpp"
 #include "AnnLogger.hpp"
 
+using namespace std;
+using namespace OVR;
+
 OculusInterface::OculusInterface()
 {
 	initialized = false;
@@ -17,9 +20,8 @@ OculusInterface::~OculusInterface()
 
 void OculusInterface::init()
 {
-#ifdef WIN32 //At the time of writing this, only windows uses "modern" version of the Oculus SDK
 	ovr_Initialize(nullptr);
-	ovrResult r = ovr_Create (&hmd, &luid);
+	ovrResult r = ovr_Create (&session, &luid);
 
 	if(r != ovrSuccess)
 	{
@@ -40,37 +42,7 @@ on the Oculus runtime configuration utility)",
 		delete Ogre::Root::getSingletonPtr();
 		exit(ANN_ERR_CRITIC);
 	}
-	hmdDesc = ovr_GetHmdDesc(hmd);
-
-	//This is useless with OVR 0.8.0.0
-	/*r = ovr_ConfigureTracking(hmd, //Oculus HMD
-		ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
-		0); //minial required */
-
-#else //Linux, probably... Still using verry old Oculus...
-	ovrHmd_Initialize();
-	hmd = ovrHmd_Create(0);
-	//No hmd
-	if(!hmd)
-	{
-		cout << "Cannot get HMD. Create a debug HMD..." << endl;
-		//Debug DK2
-		hmd = ovrHmd_CreateDebug(ovr_DK2);
-	}
-
-	if(!ovrHmd_ConfigureTracking(hmd, //Oculus HMD
-		ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, //Wanted capacities 
-		ovrTrackingCap_Orientation)) //minial required 
-	{
-		std::cerr << "Unable to start sensor! The detected device by OVR is not capable to get sensor state. We cannot do anything with that..." << std::endl;
-		ovrHmd_Destroy(hmd);
-		ovrHmd_Shutdown();
-		Ogre::LogManager::getSingleton().logMessage("Unable to get a valid HMD. Closing program and returning 0xDEAD60D error");
-		delete Ogre::Root::getSingletonPtr();
-		exit(ANN_ERR_CRITIC);
-	}
-
-#endif
+	hmdDesc = ovr_GetHmdDesc(session);
 
 	customReport();
 	initialized = true;
@@ -101,9 +73,9 @@ void OculusInterface::update(double time)
 {
 	if(!initialized) return;
 	firstUpdated = true;
-	ss = ovr_GetTrackingState(hmd, time, true);
+	ss = ovr_GetTrackingState(session, time, true);
 }
-/*
+
 OVR::Vector3f OculusInterface::getPosition()
 {
 	if(initialized && firstUpdated)
@@ -117,7 +89,7 @@ OVR::Quatf OculusInterface::getOrientation()
 		return OVR::Quatf(ss.HeadPose.ThePose.Orientation);
 	return OVR::Quatf(1, 0, 0, 0);
 }
-*/
+
 ovrHmdDesc OculusInterface::getHmdDesc()
 {
 	return hmdDesc;
@@ -125,10 +97,9 @@ ovrHmdDesc OculusInterface::getHmdDesc()
 
 ovrSession OculusInterface::getSession()
 {
-	return hmd;
+	return session;
 }
 
-/*
 void OculusInterface::debugPrint()
 {
 	if(!(initialized && firstUpdated)) return;
@@ -146,4 +117,3 @@ void OculusInterface::debugPrint()
 		<< "Euler Orientation angle (yaw, pitch, roll) "<< "(" << o_y << ", " << o_p << ", " << o_r << ")" << endl
 		<< endl;
 }
-*/

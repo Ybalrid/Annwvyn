@@ -107,8 +107,8 @@ AnnMain()
 
 	GameEngine->getLevelManager()->addLevel(splash);
 	GameEngine->getLevelManager()->addLevel(level);
-	GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
-	GameEngine->getLevelManager()->jump(level);
+	//GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
+	GameEngine->getLevelManager()->jump(splash);
 	
 	GameEngine->useDefaultEventListener();
 	GameEngine->resetOculusOrientation();
