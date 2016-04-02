@@ -58,35 +58,6 @@ AnnEngine::AnnEngine(const char title[]) :
 
 	renderer->showMonscopicView();
 
-#ifdef __gnu_linux__
-	x11LayoutAtStartup = "unknown";
-	//Here's a little hack to save the X11 keyboard layout on Linux, then set it to a standard QWERTY
-	//Under windows the keycode match the standard US QWERTY layout. Under linux they are converted to whatever you're using.
-	//I use a French AZERTY keyboard layout so it's not that bad. If you have a greek keyboard you're out of luck...
-	//So, assuming that the only program that has the focus is the Annwvyn powered application, we can just switch the layout to US 
-	//then switch back to the original layout.
-
-	log("we are running on linux. getting x11 keyboard layout from the system");
-	FILE* layout = popen("echo $(setxkbmap -query | grep layout | cut -d : -f 2 )","r");
-	char* buffer = static_cast<char *>(malloc(64*sizeof(char)));
-
-	if(layout && buffer)
-	{
-		fscanf(layout, "%s", buffer);
-		x11LayoutAtStartup = std::string(buffer);
-
-		log("Saving keyboard layout for shutdown.");
-		log("saved layout="+x11LayoutAtStartup, false);
-	}
-
-	free(buffer);
-	fclose(layout);
-
-	buffer = NULL;
-	layout = NULL;
-	system("setxkbmap us");
-#endif
-
 	log("Setup event system");
 	eventManager = new AnnEventManager(renderer->getWindow());
 	log("Setup physics engine");
@@ -108,14 +79,6 @@ AnnEngine::AnnEngine(const char title[]) :
 
 AnnEngine::~AnnEngine()
 {
-#ifdef __gnu_linux__
-	log("setting back the keyboard to " + x11LayoutAtStartup);
-	if(x11LayoutAtStartup != "unknown")
-	{
-		system(std::string("setxkbmap " + x11LayoutAtStartup).c_str());
-		log("Done system call to setxkbmap");
-	}
-#endif
 
 	log("Destroying the event manager");
 	delete eventManager;
