@@ -339,10 +339,6 @@ namespace Annwvyn
 
 		///Elapsed time between 2 frames
 		double updateTime; 
-
-#ifdef __gnu_linux__
-		std::string x11LayoutAtStartup;
-#endif
 	};
 }
 #endif ///ANN_ENGINE

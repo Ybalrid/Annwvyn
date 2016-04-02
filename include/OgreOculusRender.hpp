@@ -219,9 +219,7 @@ class DLL OgreOculusRender
 		///Compositing layer for the rendered scene
 		ovrLayerEyeFov layer;
 		///GL texture set for the rendering
-		//ovrSwapTextureSet* textureSet;
 		ovrTextureSwapChain textureSwapChain; 
-
 
 		///GL Texture ID of the render texture
 		GLuint oculusRenderTextureID, renderTextureID;
