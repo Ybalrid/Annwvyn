@@ -39,4 +39,10 @@ Indicate that the engine is unable to understand an Annwvyn file you tried to lo
 See log. Something gone wrong and don't have a specific error code.
 */
 
+#define ANN_ERR_NOTINIT 0x207760D
+/*
+See log. Something that should have been initialized beforehand isn't here. 
+If there isn't a log, you tried to use something relating ogre before Ogre initialization
+*/
+
 #endif

@@ -57,16 +57,16 @@ void OculusInterface::shutdown()
 
 void OculusInterface::customReport()
 {
-	Annwvyn::AnnDebug() << "================================================";
+	Annwvyn::AnnDebug() << "===================================";
 	Annwvyn::AnnDebug() << "Detected Oculus Rift device :";
 	Annwvyn::AnnDebug() << "Product name : " << hmdDesc.ProductName;
 	Annwvyn::AnnDebug() << "Serial number : " << hmdDesc.SerialNumber;
 	Annwvyn::AnnDebug() << "Manufacturer : " << hmdDesc.Manufacturer;
 	Annwvyn::AnnDebug() << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h;
-	Annwvyn::AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate;
+	Annwvyn::AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate <<"Hz";
 	Annwvyn::AnnDebug() << "Type of HMD identifier : " << hmdDesc.Type;
 	Annwvyn::AnnDebug() << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor;
-	Annwvyn::AnnDebug() << "================================================";
+	Annwvyn::AnnDebug() << "===================================";
 }
 
 void OculusInterface::update(double time)
