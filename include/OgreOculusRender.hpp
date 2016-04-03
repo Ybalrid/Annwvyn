@@ -53,10 +53,15 @@ struct OgrePose
 class DLL OgreOculusRender
 {
     public:
-		void cycleOculusHUD();
-		static bool forceNextUpdate;
+		
+		///Construct the OgreOculusRender. Can only be called once
         OgreOculusRender(std::string windowName = "OgreOculusRender");
+
+		///Class destructor
         ~OgreOculusRender();
+
+		///Cycle through all Oculus Performance HUD available
+		void cycleOculusHUD();
 		
 		///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
 		void updateTracking();
@@ -133,14 +138,19 @@ class DLL OgreOculusRender
 		///Show in the debug window a monoscopic view with a default Fov of 90°
 		static void showMonscopicView();
 
-    private:
+    private://Methods
+		///Set the Fov for the monoscopic view
+		void setMonoFov(float degreeFov);
+
+	private://Attributes
+		///Instance for the private singleton
 		static OgreOculusRender* self;
+
 		///Everything that is an array of 2 will use theses indexes in code. 
         enum 
         {
             left = 0,
             right = 1,
-			mono = 3,
         };
 
 		///Save content of the RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
@@ -148,34 +158,31 @@ class DLL OgreOculusRender
         void debugSaveToFile(const char path[]);
 		
 		///Object for getting informations from the Oculus Rift
-        OculusInterface* Oculus;
+        OculusInterface* Oculus; 
 
 		///background color of viewports
 		Ogre::ColourValue backgroundColor;
 
         ///Name of the Window
-        string name;
+        string name; 
 
         ///Ogre Root instance
-        Ogre::Root* root;
+        Ogre::Root* root; 
 
 		///Ogre Render Window for debuging out
-        Ogre::RenderWindow* window;
+        Ogre::RenderWindow* window; 
 
 		///Ogre Scene Manager
         Ogre::SceneManager* smgr, * debugSmgr;	
 
 		///Stereoscopic camera array. Indexes are "left" and "right" + debug view cam
-        Ogre::Camera* cams[2], * debugCam, * monoCam;
+        Ogre::Camera* cams[2], * debugCam, * monoCam; 
 		
 		///Nodes for the debug scene
-		Ogre::SceneNode* debugCamNode, * debugPlaneNode;
+		Ogre::SceneNode* debugCamNode, * debugPlaneNode; 
 
 		///Node that store camera position/orientation
-        Ogre::SceneNode* CameraNode;
-
-		///Textures used for RTT Rendering. Indexes are "left" and "right"
-		Ogre::RenderTexture* rtts[2];
+        Ogre::SceneNode* CameraNode; 
 
 		///Vewports on textures. Textures are separated. One vieport for each textures
         Ogre::Viewport* vpts[2], *debugViewport;
@@ -183,73 +190,77 @@ class DLL OgreOculusRender
 		///The Z axis clipping planes distances
         Ogre::Real nearClippingDistance, farClippingDistance;
 
-		///Fov descriptor for each eye. Indexes are "left" and "right"
-        ovrFovPort EyeFov[2];
-
-		///Render descriptor for each eye. Indexes are "left" and "right"
-        ovrEyeRenderDesc EyeRenderDesc[2];
-
-		///Size of left eye texture
-        ovrSizei texSizeL, texSizeR, bufferSize;
-
-		///Mirror texture 
-		ovrMirrorTexture mirrorTexture;
-
-		///OpenGL Texture ID of the mirror texture buffers 
-		GLuint oculusMirrorTextureID, ogreMirrorTextureID;
-
 		///Position of the camera.
         Ogre::Vector3 cameraPosition;
 
 		///Orientation of the camera.
         Ogre::Quaternion cameraOrientation;
 
+		///Timing in seconds 
+		double currentFrameDisplayTime, lastFrameDisplayTime;
+
+		///Render descriptor for each eye. Indexes are "left" and "right"
+        ovrEyeRenderDesc EyeRenderDesc[2];
+
+		///Size of left eye texture
+        ovrSizei bufferSize;
+
+		///Mirror texture 
+		ovrMirrorTexture mirrorTexture;
+
+		///OpenGL Texture ID of the render buffers
+		GLuint oculusMirrorTextureID, ogreMirrorTextureID, oculusRenderTextureID, renderTextureID;
+
 		///Time between two frames in seconds
         double updateTime;
 
 		///Pointer to the debug plane manual material
 		Ogre::MaterialPtr DebugPlaneMaterial;
+
+		///If true, need to copy the mirrored buffer from Oculus to Ogre
 		static bool mirror;
 
-
-	public:
-		static Ogre::TextureUnitState* debugTexturePlane;
-
-	private:
 		///Compositing layer for the rendered scene
 		ovrLayerEyeFov layer;
+
 		///GL texture set for the rendering
 		ovrTextureSwapChain textureSwapChain; 
 
-		///GL Texture ID of the render texture
-		GLuint oculusRenderTextureID, renderTextureID;
-		///offcet between render center and camera (for IPD variation)
+		///offset between render center and camera (for IPD variation)
 		ovrVector3f offset[2];
+
 		///Pose (position+orientation) 
 		ovrPosef pose;
-		///Timing in seconds 
-		double currentFrameDisplayTime, lastFrameDisplayTime;
+
 		///Tracking state
 		ovrTrackingState ts;
-		///Current eye getting updated
-		ovrEyeType eye;
+
 		///Orientation of the headset
 		ovrQuatf oculusOrient;
+
 		///Position of the headset
 		ovrVector3f oculusPos;
+
 		///Pointer to the layer to be submited
 		ovrLayerHeader* layers;
+
 		///State of the performance HUD
 		int perfHudMode;
 
-		void setMonoFov(float degreeFov);
+		///Index of the current texture in the textureSwapChain
 		int currentIndex;
+
     public:
 		///Position of the rift at the last frame
         Ogre::Vector3 lastOculusPosition;
+
 		///Orientation of the rift at the last frame
         Ogre::Quaternion lastOculusOrientation;
+
 		///Pose to be returned
 		OgrePose returnPose;
+
+		static Ogre::TextureUnitState* debugTexturePlane;
+
 };
 #endif //OGRE_OCULUS_RENDERER
