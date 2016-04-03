@@ -257,6 +257,7 @@ class DLL OgreOculusRender
 		///Pose to be returned
 		OgrePose returnPose;
 
+		///Texture unit state of the debug plane
 		static Ogre::TextureUnitState* debugTexturePlane;
 
 };

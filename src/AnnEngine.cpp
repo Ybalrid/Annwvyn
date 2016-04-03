@@ -448,7 +448,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
 
 	//read the result list
-		for(auto it(result.begin()); it != result.end(); it++)
+	for(auto it(result.begin()); it != result.end(); it++)
 		if(it->movable && it->movable->getMovableType() == "Entity")
 			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
 
