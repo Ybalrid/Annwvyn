@@ -33,10 +33,10 @@ public:
 	void load()
 	{
 		//Set some ambiant light
-		AnnEngine::Instance()->setAmbiantLight(Ogre::ColourValue(.6f,.6f,.6f));
+		AnnEngine::Instance()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
 		
 		//Add other source of light
-		auto Sun = AnnEngine::Instance()->addLight();
+		auto Sun = AnnEngine::Instance()->createLightObject();
 		Sun->setType(Ogre::Light::LT_DIRECTIONAL);
 		Sun->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Y + 1.5* Ogre::Vector3::NEGATIVE_UNIT_Z);
 		levelLighting.push_back(Sun);

@@ -117,8 +117,8 @@ AnnMain()
 	
 	GameEngine->setDebugPhysicState(false);
 
-	AnnLightObject* light = GameEngine->addLight(); 
-	GameEngine->destroyLight(light);
+	AnnLightObject* light = GameEngine->createLightObject(); 
+	GameEngine->destroyLightObject(light);
 
 	auto testFile = AnnEngine::Instance()->getFileSystemManager()->crateSaveFileDataObject("test");
 	testFile->setValue("KEY0", "Thing");

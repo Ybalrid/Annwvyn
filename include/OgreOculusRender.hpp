@@ -1,12 +1,14 @@
 /**
  * \file OgreOculusRenderer.hpp
- * \brief Initialize rendering for the rift with SDK post traitement (OpenGL ONLY)
+ * \brief Initialize the Oculus Rendering pipeline, then render the main scene and submit it to Oculus Compositor
  * \author A. Brainville (Ybalrid)
  */
+
 
 ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
 ///(even if now I'm not using code from him anymore)
 ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
+///The website http://learnopengl.com/ for improving my (verry little at the time) understanding of OpenGL 
 
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
@@ -35,9 +37,6 @@
 #endif
 
 #include "AnnErrorCode.hpp"
-
-using namespace std;
-//using namespace OVR;
 
 ///A pose refer to the combinaison of a position and an orientation. 
 ///It permit to define the placement of an object with 6DOF
@@ -164,7 +163,7 @@ class DLL OgreOculusRender
 		Ogre::ColourValue backgroundColor;
 
         ///Name of the Window
-        string name; 
+        std::string name; 
 
         ///Ogre Root instance
         Ogre::Root* root; 
