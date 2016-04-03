@@ -30,6 +30,7 @@ OgreOculusRender::OgreOculusRender(std::string winName) :
 	textureSwapChain(0),
 	perfHudMode(ovrPerfHud_Off)
 {
+	//Handle singleton thing.
 	if(self)
 	{
 		MessageBox(NULL, L"Fatal error with renderer initialisation. OgreOculusRender object allready created.", L"Fatal Error", MB_ICONERROR);
@@ -37,8 +38,8 @@ OgreOculusRender::OgreOculusRender(std::string winName) :
 	}
 	self=this;
 	eyeCameras[left] = nullptr;
-	vpts[left] = nullptr;		
 	eyeCameras[right] = nullptr;
+	vpts[left] = nullptr;		
 	vpts[right] = nullptr;
 	monoCam = nullptr;
 }
@@ -46,8 +47,14 @@ OgreOculusRender::OgreOculusRender(std::string winName) :
 OgreOculusRender::~OgreOculusRender()
 {
 	Annwvyn::AnnDebug() << "Destructing OgreOculus object and uninitializing Ogre...";
+
+	//Destroy any Oculus SDK related objects
+	ovr_DestroyTextureSwapChain(Oculus->getSession(), textureSwapChain);
+	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
 	delete Oculus;
 	Oculus = nullptr;
+
+	//Clean the Ogre environement
 	root->destroySceneManager(debugSmgr);
 	root->destroySceneManager(smgr);
 
@@ -69,7 +76,7 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	//save the color then apply it to each viewport
 	backgroundColor = color;
-	for(size_t i(0); i < 2; i++)
+	for(char i(0); i < 2; i++)
 		if(vpts[i])
 			vpts[i]->setBackgroundColour(color);
 	if(debugViewport && !mirrorHMDView)
@@ -88,9 +95,9 @@ Ogre::RenderWindow* OgreOculusRender::getWindow()
 
 void OgreOculusRender::debugPrint()
 {
-	for(size_t i(0); i < 2; i++)
+	for(char i(0); i < 2; i++)
 	{
-		Annwvyn::AnnDebug() << "cam " << i << " " << eyeCameras[i]->getPosition();
+		Annwvyn::AnnDebug() << "eyeCamera " << i << " " << eyeCameras[i]->getPosition();
 		Annwvyn::AnnDebug() << eyeCameras[i]->getOrientation();
 	}
 }
@@ -315,6 +322,7 @@ void OgreOculusRender::initRttRendering()
 	//Get texture size from ovr with the maximal FOV for each eye
 	ovrSizei texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().MaxEyeFov[left], 1.0f);
 	ovrSizei texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().MaxEyeFov[right], 1.0f);
+	
 	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max(texSizeL.h, texSizeR.h);

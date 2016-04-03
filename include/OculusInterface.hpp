@@ -57,9 +57,16 @@ class DLL OculusInterface
     bool initialized;
     bool firstUpdated;
 	
+	///Oculus session for the application
     ovrSession session;
+
+	///Description of the HMD
     ovrHmdDesc hmdDesc; 
-	ovrTrackingState ss;
+
+	///Tracked state of the HMD
+	ovrTrackingState ts;
+
+	///Graphics device identifier (internal for the Rift SDK)
 	ovrGraphicsLuid luid;
 };
 #endif

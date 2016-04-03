@@ -73,20 +73,20 @@ void OculusInterface::update(double time)
 {
 	if(!initialized) return;
 	firstUpdated = true;
-	ss = ovr_GetTrackingState(session, time, true);
+	ts = ovr_GetTrackingState(session, time, true);
 }
 
 OVR::Vector3f OculusInterface::getPosition()
 {
 	if(initialized && firstUpdated)
-		return OVR::Vector3f(ss.HeadPose.ThePose.Position);
+		return OVR::Vector3f(ts.HeadPose.ThePose.Position);
 	return OVR::Vector3f(0, 0, 0);
 }
 
 OVR::Quatf OculusInterface::getOrientation()
 {
 	if(initialized && firstUpdated)
-		return OVR::Quatf(ss.HeadPose.ThePose.Orientation);
+		return OVR::Quatf(ts.HeadPose.ThePose.Orientation);
 	return OVR::Quatf(1, 0, 0, 0);
 }
 
