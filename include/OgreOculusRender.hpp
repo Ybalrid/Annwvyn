@@ -32,8 +32,6 @@
 #ifdef _WIN32
 #include <Windows.h>
 #include <glew.h>
-#elif __gnu_linux__ 
-#include <unistd.h>
 #endif
 
 #include "AnnErrorCode.hpp"
