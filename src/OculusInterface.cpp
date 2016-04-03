@@ -25,20 +25,19 @@ void OculusInterface::init()
 
 	if(r != ovrSuccess)
 	{
-		Annwvyn::AnnDebug() << "Error: Cannot get HMD";
+		Annwvyn::AnnDebug() << "Error: Cannot create Oculus Session";
 		//Debug HMD is now handeled by the configuration utility and the runtime.
-		Annwvyn::AnnDebug() << "Please note that if you want to use this program without a Rift pluged\
-in, you have to activate the \"debug hmd\" setting on the runtime configuration utility";
+		Annwvyn::AnnDebug() << "Please make sure Oculus Home is installed on your system and "
+			" please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
 #ifdef _WIN32
 		MessageBox(NULL, 
-			L"Can't find any Oculus HMD!\n\n(Please note that if you want to use this Annwvyn \
-application without an Oculus Rift, you NEED to activate the \"debug hmd\" setting \
-on the Oculus runtime configuration utility)", 
-			L"Error, No Oculus HDM found!", 
+			L"Please make sure Oculus Home is installed on your system\n"
+			L"and check HDMI and USB connection to your Rift and Tracker", 
+			L"Error: Cannot create Oculus Session!", 
 			MB_ICONERROR);
 #endif
 		ovr_Shutdown();
-		Annwvyn::AnnDebug("Unable to get a valid HMD. Closing program and returning 0xDEAD60D error");
+		Annwvyn::AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
 		delete Ogre::Root::getSingletonPtr();
 		exit(ANN_ERR_CRITIC);
 	}
@@ -64,6 +63,7 @@ void OculusInterface::customReport()
 	Annwvyn::AnnDebug() << "Serial number : " << hmdDesc.SerialNumber;
 	Annwvyn::AnnDebug() << "Manufacturer : " << hmdDesc.Manufacturer;
 	Annwvyn::AnnDebug() << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h;
+	Annwvyn::AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate;
 	Annwvyn::AnnDebug() << "Type of HMD identifier : " << hmdDesc.Type;
 	Annwvyn::AnnDebug() << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor;
 	Annwvyn::AnnDebug() << "================================================";
