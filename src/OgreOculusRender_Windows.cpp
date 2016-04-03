@@ -47,6 +47,7 @@ OgreOculusRender::OgreOculusRender(std::string winName) :
 OgreOculusRender::~OgreOculusRender()
 {
 	Annwvyn::AnnDebug() << "Destructing OgreOculus object and uninitializing Ogre...";
+	ovr_SetInt(Oculus->getSession(), "PerfHudMode", ovrPerfHud_Off);
 
 	//Destroy any Oculus SDK related objects
 	ovr_DestroyTextureSwapChain(Oculus->getSession(), textureSwapChain);
@@ -221,7 +222,7 @@ void OgreOculusRender::createWindow()
 	if(w >= 1920) w /=2;
 	if(h >= 1080) h /=2;
 
-	window = root->createRenderWindow(name + ": mirrorHMDView output (Please put your headset)", w, h, false, &misc);
+	window = root->createRenderWindow(name + " : mirror Rift view output (Please put your headset)", w, h, false, &misc);
 }
 
 void OgreOculusRender::initCameras()
