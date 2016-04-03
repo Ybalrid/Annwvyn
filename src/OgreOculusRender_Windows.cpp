@@ -11,7 +11,6 @@
 //using namespace OVR;
 
 bool OgreOculusRender::mirror(true);
-bool OgreOculusRender::forceNextUpdate(false);
 OgreOculusRender* OgreOculusRender::self(nullptr);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
 OgreOculusRender::OgreOculusRender(std::string winName) :
@@ -38,10 +37,8 @@ OgreOculusRender::OgreOculusRender(std::string winName) :
 	}
 	self=this;
 	cams[left] = nullptr;
-	rtts[left] = nullptr;
 	vpts[left] = nullptr;		
 	cams[right] = nullptr;
-	rtts[right] = nullptr;
 	vpts[right] = nullptr;
 	monoCam = nullptr;
 }
@@ -302,8 +299,8 @@ void OgreOculusRender::initRttRendering()
 	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 
 	//Get texture size from ovr with the maximal FOV for each eye
-	texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().MaxEyeFov[left], 1.0f);
-	texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().MaxEyeFov[right], 1.0f);
+	ovrSizei texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().MaxEyeFov[left], 1.0f);
+	ovrSizei texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().MaxEyeFov[right], 1.0f);
 	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max(texSizeL.h, texSizeR.h);

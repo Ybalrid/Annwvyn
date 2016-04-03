@@ -134,8 +134,6 @@ void AnnConsole::update()
 	//Erase texture by filling it with the background buffer. 
 	//Not that apparently this is the origin of a bug that cause the next viewport update to be poluated with color from background buffer
 	background->copyToTexture(texture);
-	//Prevent srange flickering bug by forcing the update. Maybe I should use GL to copy the texture like in the implementation for the rift
-	OgreOculusRender::forceNextUpdate = true;
 
 	//Write text to texture
 	WriteToTexture
