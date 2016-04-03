@@ -70,7 +70,7 @@ class DLL OgreOculusRender
 		void setCamerasNearClippingDistance(float distance);
 
 		///Automatic initialization of the renderer.
-        void initialize();
+        void initialize(std::string resourceFile = "resources.cfg");
 
 		///Start Oculus and Ogre libraries.
         void initLibraries(std::string = "Ogre.log");

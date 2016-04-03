@@ -167,18 +167,18 @@ void OgreOculusRender::initLibraries(std::string loggerName)
 	hmdSize = Oculus->getHmdDesc().Resolution;
 }
 
-void OgreOculusRender::initialize()
+void OgreOculusRender::initialize(std::string resourceFile)
 {
 	//init libraries;
 	initLibraries();
 	//Mandatory. If thouse pointers are unitilalized, program have to stop here.
 	assert(root != NULL && Oculus != NULL);
-	//Get configuration via ogre.cfg OR via the config dialog.
+	//get Ogre Configuration
 	getOgreConfig();
 	//Create the render window with the given sice from the Oculus
 	createWindow();
 	//Load resources from the resources.cfg file
-	loadReseourceFile("resources.cfg");
+	loadReseourceFile(resourceFile.c_str());
 	initAllResources();
 	//Create scene manager
 	initScene();
@@ -193,7 +193,10 @@ void OgreOculusRender::initialize()
 void OgreOculusRender::getOgreConfig()
 {
 	//Ogre as to be initialized
-	assert(root != NULL);
+	if(!root)
+	{
+		exit(ANN_ERR_NOTINIT);
+	}
 	root->loadPlugin("RenderSystem_GL");
 	root->loadPlugin("Plugin_OctreeSceneManager");
 	root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
@@ -202,9 +205,15 @@ void OgreOculusRender::getOgreConfig()
 
 void OgreOculusRender::createWindow()
 {
-	assert(root != NULL && oc != NULL);
+	if(!root) exit(ANN_ERR_NOTINIT);
+	if(!Oculus) 
+	{
+		Annwvyn::AnnDebug() << "Please initialize the OculusInterface before creating window";
+		exit(ANN_ERR_NOTINIT);
+	}
+
 	Ogre::NameValuePairList misc;
-	misc["vsync"] = "false";
+	misc["vsync"] = "false"; //This vsync parameter has no scence in VR. The display is done by the Compositor
 
 	root->initialise(false);
 
@@ -217,7 +226,12 @@ void OgreOculusRender::createWindow()
 
 void OgreOculusRender::initCameras()
 {
-	assert(smgr != NULL); 
+	if(!smgr)
+	{
+		Annwvyn::AnnDebug() << "Cannot init cameras before having the scene(s) manager(s) in place";
+		exit(ANN_ERR_NOTINIT);
+	}
+	//Mono view camera
 	monoCam = 
 	smgr->createCamera("monocam");
 	monoCam->setAspectRatio(16.0/9.0);
@@ -227,6 +241,7 @@ void OgreOculusRender::initCameras()
 	monoCam->setFarClipDistance(4000);
 	monoCam->setFOVy(Ogre::Degree(90));
 
+	//VR Eye cameras
 	eyeCameras[left] = smgr->createCamera("lcam");
 	eyeCameras[left]->setPosition(headPosition);
 	eyeCameras[left]->setAutoAspectRatio(true);
@@ -251,7 +266,7 @@ void OgreOculusRender::setCamerasNearClippingDistance(float distance)
 void OgreOculusRender::initScene()
 {
 	//Create the scene manager for the engine
-	assert(root != NULL);
+	if(!root) exit(ANN_ERR_NOTINIT);
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR"); 
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
 
@@ -267,6 +282,7 @@ void OgreOculusRender::initScene()
 	float X(16), Y(9);
 	float x(X/2), y(Y/2);
 	debugCam->setOrthoWindow(X,Y);
+
 	//Attach the camera to a node
 	debugCamNode = debugSmgr->getRootSceneNode()->createChildSceneNode();
 	debugCamNode->attachObject(debugCam);
@@ -357,6 +373,7 @@ void OgreOculusRender::initRttRendering()
 	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
 	renderTextureGLID = gltex->getGLID();
 
+	//Create viewports on the texture to render the eyeCameras
 	vpts[left]  = rttEyes->addViewport(eyeCameras[left],  0, 0,    0, 0.5f);
 	vpts[right] = rttEyes->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f);
 
