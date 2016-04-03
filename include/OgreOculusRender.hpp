@@ -176,13 +176,13 @@ class DLL OgreOculusRender
         Ogre::SceneManager* smgr, * debugSmgr;	
 
 		///Stereoscopic camera array. Indexes are "left" and "right" + debug view cam
-        Ogre::Camera* cams[2], * debugCam, * monoCam; 
+        Ogre::Camera* eyeCameras[2], * debugCam, * monoCam; 
 		
 		///Nodes for the debug scene
 		Ogre::SceneNode* debugCamNode, * debugPlaneNode; 
 
 		///Node that store camera position/orientation
-        Ogre::SceneNode* CameraNode; 
+        Ogre::SceneNode* headNode; 
 
 		///Vewports on textures. Textures are separated. One vieport for each textures
         Ogre::Viewport* vpts[2], *debugViewport;
@@ -191,10 +191,10 @@ class DLL OgreOculusRender
         Ogre::Real nearClippingDistance, farClippingDistance;
 
 		///Position of the camera.
-        Ogre::Vector3 cameraPosition;
+        Ogre::Vector3 headPosition;
 
 		///Orientation of the camera.
-        Ogre::Quaternion cameraOrientation;
+        Ogre::Quaternion headOrientation;
 
 		///Timing in seconds 
 		double currentFrameDisplayTime, lastFrameDisplayTime;
@@ -203,13 +203,13 @@ class DLL OgreOculusRender
         ovrEyeRenderDesc EyeRenderDesc[2];
 
 		///Size of left eye texture
-        ovrSizei bufferSize;
+        ovrSizei bufferSize, hmdSize;
 
 		///Mirror texture 
 		ovrMirrorTexture mirrorTexture;
 
 		///OpenGL Texture ID of the render buffers
-		GLuint oculusMirrorTextureID, ogreMirrorTextureID, oculusRenderTextureID, renderTextureID;
+		GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureGLID, renderTextureGLID;
 
 		///Time between two frames in seconds
         double updateTime;
@@ -218,7 +218,7 @@ class DLL OgreOculusRender
 		Ogre::MaterialPtr DebugPlaneMaterial;
 
 		///If true, need to copy the mirrored buffer from Oculus to Ogre
-		static bool mirror;
+		static bool mirrorHMDView;
 
 		///Compositing layer for the rendered scene
 		ovrLayerEyeFov layer;
