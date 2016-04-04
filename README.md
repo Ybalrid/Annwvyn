@@ -10,7 +10,7 @@ System requirement
 ----------------
 
  - A fairly recent GPU. Support for OpenGL 4.3 is mandatory
- - Oculus VR Headset (Rift) Dev Kit 2, DK1 will run too but you'll not have positional tracking (since it can't do it)
+ - Oculus VR Headset (Rift) CV1 or Dev Kit 2 
  - 64bit Operating system
  - Oculus Runtime 
 
@@ -18,37 +18,8 @@ Building on Windows
 -------------------
 
 As stated in the DEPEDENCIES file, you should download the SDK from http://annwvyn.org/
-Please install Runtime 0.8 and the lattest drivers of your graphics card manufacturer.
+Please install Oculus Home and the lattest drivers of your graphics card manufacturer.
 
-
-Building on Linux (experimental) (unsuported by oculus. This use a fairly outdated SDK...)
------------------
-
-Install the libraries as stated on the DEPENDENCIES file. Download the OculusSDK and uncompress it and rename it "OculusSDK"on the parent folder of Annwvyn.
-
-Install the udev rules before plugin the headset.
-
-Configure the rift as a rotated 2nd screen. You can use xrandr like so:
-
-```
-xrandr --output DVI-I-1 --pos 1920x0 --mode 1080x1920 --rate 75 --rotate left
-```
-
-You may need to change the output name to mach your config. (See xrandr man page)
-
-Then just run the following commands:
-```
-make
-make test
-sudo make install
-```
-
-If you are running the 0.4.4 version of the rift SDK, you have to know that there is a bug crashin the dk at initialization of the IR camera. The quick fix is to restart the ovcvideo module with the parameter quirks=0
-
-```
-sudo rmmod uvcvideo
-sudo modprobe ovcvideo quirks=0
-```
 
 Using the engine
 ----------------
@@ -67,7 +38,7 @@ Run "git pull" on the Annwvyn sub-directory. then open the VS solution in msvc/A
 
 Clean and build the solution.
 
-If you have problems regarding the Oculus SDK, you probably need to install new runtime, then download teh newest SDK and put it in place of the older one. Check commit log to see if there is mention of SDK update.
+If you have problems regarding the Oculus SDK, you probably need to install new runtime, then download the newest SDK and put it in place of the older one. Check commit log to see if there is mention of SDK update.
 
 ______
 
