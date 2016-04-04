@@ -1,13 +1,8 @@
 #include "stdafx.h"
 #include "OgreOculusRender.hpp"
-#include <OVR_CAPI_GL.h>
 
-//We need to get low level access to Ogre's RenderSystem_GL 
-#include <RenderSystems/GL/OgreGLTextureManager.h>
-#include <RenderSystems/GL/OgreGLRenderSystem.h>
-#include <RenderSystems/GL/OgreGLTexture.h>
+
 #include "AnnLogger.hpp"
-
 //Static class members
 bool OgreOculusRender::mirrorHMDView(true);
 OgreOculusRender* OgreOculusRender::self(nullptr);

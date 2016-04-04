@@ -34,6 +34,11 @@
 #include <glew.h>
 #endif
 
+//We need to get low level access to Ogre's RenderSystem_GL 
+#include <RenderSystems/GL/OgreGLTextureManager.h>
+#include <RenderSystems/GL/OgreGLRenderSystem.h>
+#include <RenderSystems/GL/OgreGLTexture.h>
+
 #include "AnnErrorCode.hpp"
 
 ///A pose refer to the combinaison of a position and an orientation. 

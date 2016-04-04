@@ -34,6 +34,11 @@
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 
+#include <RenderSystems/GL/OgreGLTextureManager.h>
+#include <RenderSystems/GL/OgreGLRenderSystem.h>
+#include <RenderSystems/GL/OgreGLTexture.h>
+
+
 
 //Object-Oriented Input System
 #include <OIS.h>
@@ -54,9 +59,9 @@
 #include <sndfile.h>
 
 //Oculus VR API
-//#include <OVR.h>
 #include <OVR_CAPI.h>
 #include <OVR_CAPI_GL.h>
+#include <Extras/OVR_Math.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN 
