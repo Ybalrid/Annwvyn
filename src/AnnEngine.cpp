@@ -487,7 +487,6 @@ AnnPhysicsEngine* AnnEngine::getPhysicsEngine()
 	return physicsEngine;
 }
 
-
 Ogre::SceneManager* AnnEngine::getSceneManager()
 {
 	return SceneManager;
