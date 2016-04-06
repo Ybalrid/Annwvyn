@@ -220,9 +220,6 @@ namespace Annwvyn
 		///Get ogre camera scene node
 		Ogre::SceneNode* getCamera();
 
-		///Retrive the said reference quaternion
-		AnnQuaternion getReferenceQuaternion(); //engine 
-
 		///Reset the Rift Orientation
 		void resetOculusOrientation();///Gameplay... but engine related function. 
 
