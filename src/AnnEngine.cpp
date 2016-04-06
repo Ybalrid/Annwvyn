@@ -58,23 +58,19 @@ AnnEngine::AnnEngine(const char title[]) :
 
 	renderer->showMonscopicView();
 
-	log("Setup event system");
+	log("Setup Annwvyn's subsystems");
 	eventManager = new AnnEventManager(renderer->getWindow());
-	log("Setup physics engine");
 	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode());
-	log("Setup audio engine");
 	AudioEngine = new AnnAudioEngine;
-	log("Setup Level system");
 	levelManager = new AnnLevelManager;
-	log("Setup Filesystem Manager");
 	filesystemManager = new AnnFilesystemManager;
 	filesystemManager->setSaveDirectoryName(title);
 
-	log("==================================================", false);
-	log("Annwvyn Game Engine - Step into the Other World   ", false);
-	log("Designed for Virtual Reality                      ", false);
-	log("Version : " + getAnnwvynVersion()                  , false);
-	log("==================================================", false);
+	log("===================================================", false);
+	log("Annwvyn Game Engine - Step into the Other World    ", false);
+	log("Free/Libre Game Engine designed for Virtual Reality", false);
+	log("Version : " + getAnnwvynVersion()                   , false);
+	log("===================================================" , false);
 }
 
 AnnEngine::~AnnEngine()
@@ -454,28 +450,6 @@ AnnGameObject* AnnEngine::playerLookingAt()
 
 	return nullptr; //means that we don't know what the player is looking at.
 }
-
-/*void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)
-{
-	log("Attaching visual body :");
-	log(entityName);
-
-	//Could actually be an AnnGameObject without the physics ? So it will be cleaned by the AnnEngine destructor
-	Ogre::Entity* ent = SceneManager->createEntity(entityName);
-	VisualBodyAnchor = povNode->createChildSceneNode();
-	VisualBodyAnchor->attachObject(ent);
-
-	if(flip)
-		refVisualBody = AnnQuaternion(Ogre::Degree(180), AnnVect3::UNIT_Y);
-	else
-		refVisualBody = AnnQuaternion::IDENTITY;
-
-	visualBody_Zoffset = z_offset;
-	VisualBody = ent;
-
-	VisualBodyAnchor->setPosition(0, -player->getEyesHeight(), -visualBody_Zoffset);
-	VisualBodyAnchor->setOrientation(refVisualBody);
-}*/
 
 void AnnEngine::resetOculusOrientation()
 {

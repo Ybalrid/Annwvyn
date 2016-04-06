@@ -6,7 +6,7 @@ using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 {    
-	AnnDebug("Init Bullet physics");
+	AnnDebug("Starting Physics subsystem");
 
 	//Initialize the Bullet world
 	Broadphase = new btDbvtBroadphase();
@@ -14,6 +14,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 	Dispatcher = new btCollisionDispatcher(CollisionConfiguration);
 	Solver = new btSequentialImpulseConstraintSolver();
 
+	AnnDebug() << "btDiscreteDynamicsWorld instantiated";
 	DynamicsWorld = new btDiscreteDynamicsWorld(Dispatcher, Broadphase, Solver, CollisionConfiguration);
 
 	AnnDebug("Gravity vector = (0, -9.81f, 0)");
