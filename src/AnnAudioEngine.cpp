@@ -6,6 +6,7 @@ using namespace Annwvyn;
 
 AnnAudioEngine::AnnAudioEngine()
 {
+	AnnDebug() << "Starting Audio subsystem";
 	lastError = "Initialize OpenAL based sound system";
 	if(!initOpenAL())
 		lastError = "Cannot Init OpenAL";

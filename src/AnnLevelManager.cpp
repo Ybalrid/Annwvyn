@@ -1,13 +1,14 @@
 #include "stdafx.h"
 #include "AnnLevelManager.hpp"
 #include "AnnEngine.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
 AnnLevelManager::AnnLevelManager() :
 	current(NULL)
 {
-	AnnEngine::Instance()->log("Level Manager created");
+	AnnDebug() << "Starting Level Subsystem";
 }
 
 AnnLevelManager::~AnnLevelManager()

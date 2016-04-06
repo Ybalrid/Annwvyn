@@ -10,6 +10,7 @@ std::vector<char> AnnFilesystemManager::charToStrip;
 
 AnnFileWriter::AnnFileWriter()
 {
+	AnnDebug() << "FileWriter instantiated";
 }
 
 void AnnFileWriter::write(AnnSaveFileData* data)
@@ -38,10 +39,13 @@ void AnnFileWriter::write(AnnSaveFileData* data)
 
 AnnFileReader::AnnFileReader()
 {
+		AnnDebug() << "FileReader instantiated";
 }
 
 AnnSaveFileData* AnnFileReader::read(string fileName)
 {
+	AnnDebug() << "Reading file " << fileName << " to memory";
+
 	//Create the resource needed to the read operation
 	auto fsmanager (AnnEngine::Instance()->getFileSystemManager());
 	auto fileData (fsmanager->crateSaveFileDataObject(fileName));
@@ -81,7 +85,7 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 
 AnnFilesystemManager::AnnFilesystemManager() 
 {
-	AnnDebug() << "Filesystem manager created";
+	AnnDebug() << "Starting Filesystem Subsystem";
 	//get from the OS the user's personal directory
 #ifdef WIN32
 #pragma warning (disable : 4996)
@@ -125,7 +129,9 @@ void AnnFilesystemManager::setSaveDirectoryName(string dirname)
 	for(auto achar : charToEscape)
 		replace(dirname.begin(), dirname.end(), achar, '_');
 	saveDirectoryName = dirname;
-	AnnDebug() << "Path example : " << getPathForFileName("example");
+	//AnnDebug() << "Path example : " << getPathForFileName("example");
+	AnnDebug() << "Save directory : " << saveDirectoryName;
+	AnnDebug() << "Save directory location : " << getSaveDirectoryFullPath();
 }
 
 string AnnFilesystemManager::getPathForFileName(string filename)
@@ -188,6 +194,7 @@ AnnSaveFileData::AnnSaveFileData(string name) :
 	fileName(name),
 	changed(false)
 {
+	AnnDebug() << "SaveFileData object for file " << name << " created";
 }
 
 bool AnnSaveFileData::hasUnsavedChanges()
