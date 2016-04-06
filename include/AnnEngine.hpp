@@ -11,8 +11,8 @@
 
 //Keep track of engine version here
 #define ANN_MAJOR 0
-#define ANN_MINOR 1
-#define ANN_PATCH 2 
+#define ANN_MINOR 2
+#define ANN_PATCH 0 
 #define ANN_EXPERIMENTAL true
 
 #include "systemMacro.h"
@@ -133,20 +133,13 @@ namespace Annwvyn
 		/// \param object the object to be destroyed
 		bool destroyGameObject(AnnGameObject* object); //object factory
 		
-		//TODO remove destroy light
-		DEPRECATED void destroyLight(AnnLightObject* light){destroyLightObject(light);}
-
 		///Destroy the given light
 		/// \param light pointer to the light to destroy
 		void destroyLightObject(AnnLightObject* light);
 
 		///Set the ambiant light
 		/// \param v the color of the light
-		DEPRECATED void setAmbiantLight(Ogre::ColourValue v); //scene parameter
 		void setAmbiantLight(AnnColor color);
-
-		//TODO remove "addlight"
-		DEPRECATED AnnLightObject* addLight(){return createLightObject();}
 
 		///Add a light source to the scene. return a pointer to the new light
 		AnnLightObject* createLightObject();
@@ -217,7 +210,6 @@ namespace Annwvyn
 
 		///Set the viewports background color
 		/// \param v background color
-		DEPRECATED void setWorldBackgroundColor(Ogre::ColourValue v); 
 		void setWorldBackgroundColor(AnnColor color = AnnColor(0,0.56,1));
 		///Remove the sky dome
 		void removeSkyDome();
@@ -236,7 +228,7 @@ namespace Annwvyn
 
 		///Reference orientation. Usefull if you are inside a vehicule for example
 		/// \param q the reference orientation for the point of view. Usefull for applying vehicle movement to the player
-		DEPRECATED void setReferenceQuaternion(AnnQuaternion q); //engine...
+		//DEPRECATED void setReferenceQuaternion(AnnQuaternion q); //engine...
 
 		///Retrive the said reference quaternion
 		AnnQuaternion getReferenceQuaternion(); //engine 
@@ -246,11 +238,12 @@ namespace Annwvyn
 		/// \param z_offset offset betwenn camera and player center eye pont
 		/// \param flip if you need to flip the object to be correctly oriented (looking to negative Z)
 		/// \param scale The scale to be aplied to the body object
-		DEPRECATED void attachVisualBody(const std::string entityName,  
+		/*DEPRECATED void attachVisualBody(const std::string entityName,  
 			float z_offset = -0.0644f, 
 			bool flip = false, 
 			bool animated = false, 
 			Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE); //I seriously have something to do about that...
+		*/
 
 		///Reset the Rift Orientation
 		void resetOculusOrientation();///Gameplay... but engine related function. 
