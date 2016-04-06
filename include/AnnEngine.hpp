@@ -44,23 +44,17 @@
 
 namespace Annwvyn
 {
-	//For some reason, GCC don't want to compile that class without predeclaring AnnPhysicsEngine here.
-	//even if the header of that class is included... 
-	class AnnPhysicsEngine;
-
 	///Main engine class. Creating an instance of that class make the engine start.
-	///It's more or less a singleton, and will be the only one in the engine architecture. 
-	///You can intantiate it like a normal class and bypass the idea of a singleton complettely.
-	///This is the base class of the whole engine, the idea is more or less the one described in the 
-	///"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
-
-	///Main engine class
 	class DLL AnnEngine
 	{
 	private:
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
 
+		//It's more or less a singleton, and will be the only one in the engine architecture. 
+		//You can intantiate it like a normal class and bypass the idea of a singleton complettely.
+		//This is the base class of the whole engine, the idea is more or less the one described in the 
+		//"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
 	public:
 		///This method is called by the OgreOculusRender object. Here is refresh code that needs to know current pose
 		void toogleOculusPerfHUD();
@@ -226,24 +220,8 @@ namespace Annwvyn
 		///Get ogre camera scene node
 		Ogre::SceneNode* getCamera();
 
-		///Reference orientation. Usefull if you are inside a vehicule for example
-		/// \param q the reference orientation for the point of view. Usefull for applying vehicle movement to the player
-		//DEPRECATED void setReferenceQuaternion(AnnQuaternion q); //engine...
-
 		///Retrive the said reference quaternion
 		AnnQuaternion getReferenceQuaternion(); //engine 
-
-		///Attach a 3D mesh to the camera to act as player's body.
-		/// \param entityName name of the entity that will serve as player body
-		/// \param z_offset offset betwenn camera and player center eye pont
-		/// \param flip if you need to flip the object to be correctly oriented (looking to negative Z)
-		/// \param scale The scale to be aplied to the body object
-		/*DEPRECATED void attachVisualBody(const std::string entityName,  
-			float z_offset = -0.0644f, 
-			bool flip = false, 
-			bool animated = false, 
-			Ogre::Vector3 scale = Ogre::Vector3::UNIT_SCALE); //I seriously have something to do about that...
-		*/
 
 		///Reset the Rift Orientation
 		void resetOculusOrientation();///Gameplay... but engine related function. 
@@ -310,24 +288,15 @@ namespace Annwvyn
 		Ogre::SceneManager* SceneManager;
 		///Point Of View : Node used as "root" for putting the VR "camera rig"
 		Ogre::SceneNode* povNode;
-		///Where the visualBody is attached
-		Ogre::SceneNode* VisualBodyAnchor;
-		///Orientation offcet between the model and the cameras
-		AnnQuaternion refVisualBody;
-		///The entity representing the player
-		Ogre::Entity* VisualBody;
-		///The animation state of the player
-		Ogre::AnimationState* VisualBodyAnimation;
-		///offset in Z axis of the visual body
-		float visualBody_Zoffset;
+ 
 		///Oculus oculus;
 		OgreOculusRender* renderer;
 
 		///Dynamic container for games objects present in engine.
 		std::list<AnnGameObject*>	objects;
-		///Dynamic container for games objects present in engine.
+		///Dynamic container for triggers objects present in engine.
 		std::list<AnnTriggerObject*> triggers;
-		///Dynamic container for games objects present in engine.
+		///Dynamic container for lights objects present in engine.
 		std::list<AnnLightObject*> lights;
 
 		///Elapsed time between 2 frames
