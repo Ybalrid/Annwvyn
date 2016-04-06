@@ -27,11 +27,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	eventManager(NULL),
 	levelManager(NULL),
 	povNode(NULL),	
-	defaultEventListener(NULL),
-	VisualBody(NULL),
-	VisualBodyAnimation(NULL),
-	VisualBodyAnchor(NULL),
-	refVisualBody(AnnQuaternion::IDENTITY)
+	defaultEventListener(NULL)
 {
 	if(singleton) 
 	{
