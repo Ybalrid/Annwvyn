@@ -455,7 +455,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	return nullptr; //means that we don't know what the player is looking at.
 }
 
-void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)
+/*void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)
 {
 	log("Attaching visual body :");
 	log(entityName);
@@ -475,7 +475,7 @@ void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, b
 
 	VisualBodyAnchor->setPosition(0, -player->getEyesHeight(), -visualBody_Zoffset);
 	VisualBodyAnchor->setOrientation(refVisualBody);
-}
+}*/
 
 void AnnEngine::resetOculusOrientation()
 {
@@ -546,11 +546,6 @@ void AnnEngine::setDebugPhysicState(bool state)
 	physicsEngine->setDebugPhysics(state);
 }
 
-void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
-{
-	setAmbiantLight(AnnColor(v));
-}
-
 void AnnEngine::setAmbiantLight(AnnColor color)
 {
 	AnnDebug() << "Setting the ambiant light to color " << color; 
@@ -567,11 +562,6 @@ void AnnEngine::setSkyBoxMaterial(bool activate, const char materialName[], floa
 {
 	log("Setting skybox from material"); log(materialName, false);
 	SceneManager->setSkyBox(activate, materialName, distance, renderedFirst);
-}
-
-void AnnEngine::setWorldBackgroundColor(Ogre::ColourValue v)
-{
-	setWorldBackgroundColor(AnnColor(v)); 
 }
 
 void AnnEngine::setWorldBackgroundColor(AnnColor v)
