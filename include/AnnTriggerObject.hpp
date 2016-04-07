@@ -63,6 +63,8 @@ namespace Annwvyn
 
 		///True if trigger triggerd
 		bool contactWithPlayer;
+
+		///State of the last frame
 		bool lastFrameContactWithPlayer;
 
 	public:
