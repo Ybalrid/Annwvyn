@@ -1,3 +1,8 @@
+/**
+* \file AnnLightObject.hpp
+* \brief Object that represent a light source
+* \author A. Brainville (Ybalrid)
+*/
 #ifndef ANN_LIGHT_OBJECT
 #define ANN_LIGHT_OBJECT
 
@@ -8,6 +13,8 @@
 namespace Annwvyn
 {
 	class AnnEngine;
+
+	///Light Object : Represent a light source
 	class DLL AnnLightObject 
 	{
 	public:
