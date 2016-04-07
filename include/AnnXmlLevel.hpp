@@ -17,9 +17,11 @@ namespace Annwvyn
 	class DLL AnnXmlLevel : public AnnAbstractLevel
 	{
 	public:
+		///Construct an AnnXmlLevel 
+		/// \param path
 		AnnXmlLevel(std::string path);
 
-		//load the level by reading the XML file
+		///load the level by reading the XML file
 		void load();
 		virtual void runLogic();
 

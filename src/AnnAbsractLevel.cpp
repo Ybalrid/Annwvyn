@@ -41,7 +41,7 @@ void AnnAbstractLevel::unload()
 	levelTrigger.clear();
 }
 
-AnnLightObject* AnnAbstractLevel::addLight(std::string id)
+AnnLightObject* AnnAbstractLevel::addLightObject(std::string id)
 {
 	AnnEngine* engine(AnnEngine::Instance());
 	AnnLightObject* light (engine->createLightObject());

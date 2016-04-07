@@ -45,7 +45,7 @@ namespace Annwvyn
 		AnnLightList levelLighting;
 		AnnTriggerObjectList levelTrigger;
 
-		AnnLightObject* addLight(std::string id = noID);
+		AnnLightObject* addLightObject(std::string id = noID);
 		AnnTriggerObject* addTrggerObject(AnnTriggerObject* obj = new AnnSphericalTriggerObject, std::string id = noID);
 		AnnGameObject* addGameObject(std::string entityName, std::string id = noID);
 
