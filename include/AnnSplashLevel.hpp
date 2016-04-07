@@ -12,6 +12,7 @@
 
 namespace Annwvyn
 {
+	///"Level" that display an image on a giant plane, then jump to another level after a timeout
 	class DLL AnnSplashLevel : public AnnAbstractLevel
 	{
 	public:

@@ -161,6 +161,8 @@ namespace Annwvyn
     typedef size_t StickAxisId;
 #define InvalidStickAxisId -1
 #define INVALID 42.0f
+
+	///A joystick axis
     class DLL AnnStickAxis
     {
         public:
@@ -184,6 +186,7 @@ namespace Annwvyn
 
     };
 
+	///A joystick event
 	class DLL AnnStickEvent : public AnnEvent
 	{
         public:
@@ -222,6 +225,7 @@ namespace Annwvyn
 
 	typedef size_t timerID;
 
+	///A timer timeout event
 	class DLL AnnTimeEvent : public AnnEvent
 	{
 	public:
@@ -234,6 +238,8 @@ namespace Annwvyn
 		timerID tID;
 	};
 
+
+	///Trigger in/out event
 	class DLL AnnTriggerEvent : public AnnEvent
 	{
 	public:
@@ -248,11 +254,15 @@ namespace Annwvyn
 		AnnTriggerObject* sender;
 	};
 
-	///Base Event listener class. Technicaly not abstract since it provides a default implementation for all
-	///virtual members. But theses definitions are pointless because they acutally don't do anything.
-	///You need to subclass it to create an EventListener 
+
+
+	///Base class for all event listener
 	class DLL AnnAbstractEventListener 
 	{
+
+	//Base Event listener class. Technicaly not abstract since it provides a default implementation for all
+	//virtual members. But theses definitions are pointless because they acutally don't do anything.
+	//You need to subclass it to create an EventListener 
 
 	public:
 		AnnAbstractEventListener();
@@ -275,15 +285,19 @@ namespace Annwvyn
 		AnnPlayer* player;
 	};
 
-	///The default event listener that make WASD controlls move the player
-	///The mouse turns the player's body
-	///Shift to "run"
-	///F1 and F2 to switch between Debug Mode
-	///F12 to recenter the rift
-	///² or ~ or ` (depending on keyboard layout) to open the on-screen-console
-	///Xbox controller with main stick for walking and 2nd stick for turning your body
+	
+	///Default event listener
 	class DLL AnnDefaultEventListener : public AnnAbstractEventListener
 	{
+
+	//The default event listener that make WASD controlls move the player
+	//The mouse turns the player's body
+	//Shift to "run"
+	//F1 and F2 to switch between Debug Mode
+	//F12 to recenter the rift
+	//² or ~ or ` (depending on keyboard layout) to open the on-screen-console
+	//Xbox controller with main stick for walking and 2nd stick for turning your body
+
 	public:
 		AnnDefaultEventListener();
 		///Get events from keyboards
@@ -393,18 +407,21 @@ namespace Annwvyn
 		bool listen;
 	};
 
-	///The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by 
-	///AnnEngine and provide the hearbeat for the event system.
-	///Events can be user inputs or mostly anything else.
-	///AnnEventManager creates AnnEvent (or subclass of AnnEvent) for each kind of event, populate that object with relevent envent data
-	///And propagate that event to any declared event listener.
-	///Listeners should subclass AnnEventListener. A listener is registred when a pointer to it is passed as argument to the addListener() method.
-	///You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
+	//The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by 
+	//AnnEngine and provide the hearbeat for the event system.
+	//Events can be user inputs or mostly anything else.
+	//AnnEventManager creates AnnEvent (or subclass of AnnEvent) for each kind of event, populate that object with relevent envent data
+	//And propagate that event to any declared event listener.
+	//Listeners should subclass AnnEventListener. A listener is registred when a pointer to it is passed as argument to the addListener() method.
+	//You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
+	
+	///Event Manager : Object that handle the event system 
 	class DLL AnnEventManager
 	{
 	public:
 		///Construct the event manager
 		AnnEventManager(Ogre::RenderWindow* w);
+
 		///Destroy the event manager
 		~AnnEventManager();
 

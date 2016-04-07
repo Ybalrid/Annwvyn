@@ -1,3 +1,9 @@
+/**
+ * \file AnnColor.hpp
+ * \brief Represent an RGBA color. Each chanel is stored as a float between 0 and 1
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANNCOLOR
 #define ANNCOLOR
 #include "systemMacro.h"

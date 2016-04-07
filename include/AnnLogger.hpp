@@ -1,8 +1,6 @@
 /**
- * \file AnnAudioEngine.hpp
- * \brief OpenAL audio handeling for Annwvvyn
- *        handle the OpenAL context creation and the loading of sound files
- *        handle the position/orientation of the listener
+ * \file AnnLogger.hpp
+ * \brief Create a ostream to the Ogre logger
  * \author A. Brainville (Ybalrid)
  */
 #ifndef ANN_LOGGER

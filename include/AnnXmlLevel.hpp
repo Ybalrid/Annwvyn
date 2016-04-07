@@ -1,8 +1,7 @@
 /*!
-* \file AnnTypes.h
-* \brief Data types definition for Annwvyn
-* \author Arthur Brainville
-* \version 0.0.2
+* \file AnnXmlLevel.hpp
+* \brief Load a level from an XML file
+* \author A. Brainville (Ybalrid)
 */
 
 #ifndef ANN_XML_LEVEL
@@ -14,6 +13,7 @@
 
 namespace Annwvyn
 {
+	///A level loaded from an XML file
 	class DLL AnnXmlLevel : public AnnAbstractLevel
 	{
 	public:

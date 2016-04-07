@@ -1,3 +1,9 @@
+/**
+* \file AnnVect3.hpp
+* \brief A 3D Vector
+* \author A. Brainville (Ybalrid) 
+*/
+
 #ifndef ANNVECT3
 #define ANNVECT3
 #include "systemMacro.h"
@@ -6,6 +12,7 @@
 
 namespace Annwvyn
 {
+	///A 3D Vector
 	class DLL AnnVect3 : public Ogre::Vector3
 	{
 		public:

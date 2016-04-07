@@ -1,3 +1,9 @@
+/**
+* \file AnnFilesystem.hpp
+* \brief Implement file I/O for saving game data
+* \author A. Brainville (Ybalrid)
+*/
+
 #ifndef ANN_FILESYSTEM
 #define ANN_FILESYSTEM
 #include "systemMacro.h"
@@ -136,17 +142,19 @@ namespace Annwvyn
 	};
 
 	///Interface class to switch from text to usefull data. 
-	///Inherit from this to use your saved data
 	class DLL AnnSaveDataInterpretor
 	{
+
+	//Inherit from this to use your saved data
+
 	public:
 		///FileInterpetor
 		AnnSaveDataInterpretor(AnnSaveFileData* data);
+		
 		///Get a float from this string
-		float stringToFloat(std::string text);
+		float stringToFloat(std::string text);	
 		///Get a int from this string
 		int stringToInt(std::string text);
-
 		///Extract a float from the dataobject stored at the given key
 		float keyStringToFloat(std::string key);
 		///Extract a int from the dataobject stored at the given key
@@ -158,6 +166,7 @@ namespace Annwvyn
 
 		///Overload this method with
 		virtual void extract() =0;
+	
 	protected:
 		AnnSaveFileData* dataObject;
 	};

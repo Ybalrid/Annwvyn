@@ -1,3 +1,9 @@
+/**
+* \file AnnQuaternion.hpp
+* \brief A Quaternion
+* \author A. Brainville (Ybalrid)
+*/
+
 #ifndef ANNQUAT
 #define ANNQUAT
 
@@ -10,6 +16,7 @@
 
 namespace Annwvyn
 {
+	///Represent a Quaternion
 	class DLL AnnQuaternion : public Ogre::Quaternion
 	{
 	public:
