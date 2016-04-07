@@ -32,11 +32,14 @@
  * to get a more comprehensible help to start using the engine, 
  * there is a quick-start tutorial you can check-out and more contend will be added 
  * regulary
+ *
  * The engine is based on Ogre and take for reference Ogre's resource management, 
- * file format, datastructures and geometric classes. Everything 3D related on
- * Annwvyn is handeled by Ogre and is only intended to be used with the GL render
- * system. The oculus integration is partially written in GLSL wich is OpenGL shading
- * language.
+ * file format, datastructures and geometric classes. Although, the user of the engine
+ * is not intended to have to know Ogre, some part of the public API still rely directly 
+ * On Ogre componants, notably the Resource management and the materials.<br>
+ * Everything 3D related on Annwvyn is handeled by Ogre and is only intended to be used 
+ * with the GL render system, as it will force the call of RenderSystem_GL classes, instead
+ * of the parents.
  *
  * The aim of the project is to making an high-level (yet really fast) framework 
  * to create Oculus Rift compatible content. 
