@@ -30,12 +30,13 @@ AnnConsole::AnnConsole() :
 	* Texture coordinates are also mapped. To display properly, the texture should respect the same aspect ratio (2:1)
 	*/
 
-	//Define object data
+	//Define vertex data
 	points[0] = AnnVect3(-0.5,  .25, 0);
 	points[1] = AnnVect3(-0.5, -.25, 0);
 	points[2] = AnnVect3( 0.5,  .25, 0);
 	points[3] = AnnVect3( 0.5, -.25, 0);
 
+	//Define texture coordinates
 	textCoord[0] = AnnVect2(0, 0);
 	textCoord[1] = AnnVect2(0, 1);
 	textCoord[2] = AnnVect2(1, 0);
@@ -43,22 +44,27 @@ AnnConsole::AnnConsole() :
 
 	//creatre the quad itself
 	displaySurface = AnnEngine::Instance()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
-	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
+	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);//Srip of triangle : Define a triangle then add them by points
 
+	//Add the four vertices. This will directly describe two Triangles
 	for(char i(0); i < 4; i++)
 	{
 		displaySurface->position(points[i]);
 		displaySurface->textureCoord(textCoord[i]);
 	}
 
+	//Object compleate
 	displaySurface->end();
 
 	//create a node child to the camera here : 
 	consoleNode = AnnEngine::Instance()->getCamera()->createChildSceneNode();
+
 	//attach The object
 	consoleNode->attachObject(displaySurface);
+
 	//set the camera relative position
 	consoleNode->setPosition(offset);
+
 	//Make sure the object is the last thing rendered (to be on top of everyting
 	//displaySurface->setRenderQueueGroup(Ogre::uint8(-1));
 	//Set the visibility state
@@ -68,7 +74,7 @@ AnnConsole::AnnConsole() :
 	if(!Ogre::FontManager::getSingletonPtr()) //The FontManager isn't initialized by default
 	{
 		//Create a FontManager
-		std::cerr << "fontManager not usable yet. Initializing a new FontManager" << std::endl;
+		std::cerr << "FontManager not usable yet. Initializing a new FontManager" << std::endl;
 		new Ogre::FontManager();
 	}
 

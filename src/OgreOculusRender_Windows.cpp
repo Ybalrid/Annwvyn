@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "OgreOculusRender.hpp"
 
-
 #include "AnnLogger.hpp"
+
 //Static class members
 bool OgreOculusRender::mirrorHMDView(true);
 OgreOculusRender* OgreOculusRender::self(nullptr);
@@ -41,14 +41,13 @@ OgreOculusRender::OgreOculusRender(std::string winName) :
 
 OgreOculusRender::~OgreOculusRender()
 {
-	Annwvyn::AnnDebug() << "Destructing OgreOculus object and uninitializing Ogre...";
+	//Set the performance hud to Off
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", ovrPerfHud_Off);
 
 	//Destroy any Oculus SDK related objects
 	ovr_DestroyTextureSwapChain(Oculus->getSession(), textureSwapChain);
 	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
 	delete Oculus;
-	Oculus = nullptr;
 
 	//Clean the Ogre environement
 	root->destroySceneManager(debugSmgr);
@@ -59,12 +58,13 @@ OgreOculusRender::~OgreOculusRender()
 
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
-	root = nullptr;
 }
 
 void OgreOculusRender::cycleOculusHUD()
 {
+	//Loop through the perf HUD mode available
 	perfHudMode = (perfHudMode+1) % (ovrPerfHud_Count);
+	//Set the current perf hud mode
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
 }
 
@@ -72,9 +72,13 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	//save the color then apply it to each viewport
 	backgroundColor = color;
+
+	//Render buffers
 	for(char i(0); i < 2; i++)
 		if(vpts[i])
 			vpts[i]->setBackgroundColour(color);
+
+	//Debug window
 	if(debugViewport && !mirrorHMDView)
 		debugViewport->setBackgroundColour(color);
 }
@@ -100,7 +104,9 @@ void OgreOculusRender::debugPrint()
 
 void OgreOculusRender::debugSaveToFile(const char path[])
 {
+	//Check if texture exist
 	if(Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer()) 
+		//Write buffer to specified file. This is really slow and should only be used to debug the renderer
 		Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer()->getBuffer(0, 0)->getRenderTarget()->writeContentsToFile(path);
 }
 
@@ -193,8 +199,11 @@ void OgreOculusRender::getOgreConfig()
 	{
 		exit(ANN_ERR_NOTINIT);
 	}
+
+	//Load OgrePlugins
 	root->loadPlugin("RenderSystem_GL");
 	root->loadPlugin("Plugin_OctreeSceneManager");
+	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
 	root->getRenderSystem()->setFixedPipelineEnabled(true);
 }
@@ -214,8 +223,8 @@ void OgreOculusRender::createWindow()
 	root->initialise(false);
 
 	float w(hmdSize.w), h(hmdSize.h);
-	if(w >= 1920) w /=2;
-	if(h >= 1080) h /=2;
+	if(w >= 1920) w /=1.5;
+	if(h >= 1080) h /=1.5;
 
 	window = root->createRenderWindow(name + " : mirror Rift view output (Please put your headset)", w, h, false, &misc);
 }
@@ -374,17 +383,21 @@ void OgreOculusRender::initRttRendering()
 	vpts[right] = rttEyes->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f);
 
 	changeViewportBackgroundColor(backgroundColor);
+	
+	//Fill in MirrorTexture parameters
 	ovrMirrorTextureDesc mirrorTextureDesc = {};
 	mirrorTextureDesc.Width = hmdSize.w;
 	mirrorTextureDesc.Height = hmdSize.h;
 	mirrorTextureDesc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;	
 
+	//Create the Oculus Mirror Texture
 	if (ovr_CreateMirrorTextureGL(Oculus->getSession(), &mirrorTextureDesc, &mirrorTexture) != ovrSuccess)
 	{
 		//If for some weird reason (stars alignment, dragons, northen gods, reaper invasion) we can't create the mirror texture
 		Annwvyn::AnnDebug("Cannot create Oculus mirror texture");
 		exit(ANN_ERR_RENDER);
 	}
+
 	//Create the Ogre equivalent of this buffer
 	Ogre::TexturePtr mirror_texture(textureManager->createManual("MirrorTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
 		Ogre::TEX_TYPE_2D, hmdSize.w, hmdSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
@@ -410,6 +423,7 @@ void OgreOculusRender::showRawView()
 	self->debugViewport->setBackgroundColour(self->backgroundColor);
 	Annwvyn::AnnDebug() << "Switched to Raw view";
 }
+
 void OgreOculusRender::showMirrorView()
 {
 	mirrorHMDView = true;
@@ -575,12 +589,13 @@ void OgreOculusRender::renderAndSubmitFrame()
 	//Update the render mirrored view
 	if(window->isVisible())
 	{
-		//Put the mirrored view available for OGRE
+		//Put the mirrored view available for Ogre if asked for
 		if(mirrorHMDView)
 			glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 			ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0, 
 			hmdSize.w, hmdSize.h, 1);
 		
+		//Update the window
 		debugViewport->update();
 		window->update();
 	}
