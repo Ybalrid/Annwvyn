@@ -30,9 +30,11 @@ AnnTextInputer::AnnTextInputer():
 bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 {
 	if(!listen) return true;
+	//If backspace, pop last char if possible
 	if(arg.key == OIS::KC_BACK && !input.empty())
 		input.pop_back();
 	else
+		//Put typed char into the application 
 		input.push_back((char)arg.text);
 	return true;
 }

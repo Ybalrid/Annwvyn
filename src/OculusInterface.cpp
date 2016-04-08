@@ -14,17 +14,22 @@ OculusInterface::OculusInterface()
 
 OculusInterface::~OculusInterface()
 {
-	Ogre::LogManager::getSingleton().logMessage("Shutdown OculusInterface object");
+	Annwvyn::AnnDebug() << "Shutdown OculusInterface object";
 	shutdown();
 }
 
 void OculusInterface::init()
 {
+	//Init Oculus Virtual Reality library
 	ovr_Initialize(nullptr);
+
+	//Attempt to create an Oculus Session
 	ovrResult r = ovr_Create (&session, &luid);
 
+	//If session creation failed
 	if(r != ovrSuccess)
 	{
+		//Notify user
 		Annwvyn::AnnDebug() << "Error: Cannot create Oculus Session";
 		//Debug HMD is now handeled by the configuration utility and the runtime.
 		Annwvyn::AnnDebug() << "Please make sure Oculus Home is installed on your system and "
@@ -36,14 +41,21 @@ void OculusInterface::init()
 			L"Error: Cannot create Oculus Session!", 
 			MB_ICONERROR);
 #endif
+		//Cleanup
 		ovr_Shutdown();
-		Annwvyn::AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
 		delete Ogre::Root::getSingletonPtr();
+		
+		//Return an error
+		Annwvyn::AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
 		exit(ANN_ERR_CRITIC);
 	}
+
+	//Fill the hmdDesc structure
 	hmdDesc = ovr_GetHmdDesc(session);
 
+	//Print to log all known information about the headset
 	customReport();
+
 	initialized = true;
 }
 
@@ -57,8 +69,9 @@ void OculusInterface::shutdown()
 
 void OculusInterface::customReport()
 {
+	//Print to the logger a bunch of information 
 	Annwvyn::AnnDebug() << "===================================";
-	Annwvyn::AnnDebug() << "Detected Oculus Rift device :";
+	Annwvyn::AnnDebug() << "Detected Oculus Rift VR Headset :";
 	Annwvyn::AnnDebug() << "Product name : " << hmdDesc.ProductName;
 	Annwvyn::AnnDebug() << "Serial number : " << hmdDesc.SerialNumber;
 	Annwvyn::AnnDebug() << "Manufacturer : " << hmdDesc.Manufacturer;
@@ -104,14 +117,15 @@ void OculusInterface::debugPrint()
 {
 	if(!(initialized && firstUpdated)) return;
 
+	//Get position and orientation
 	OVR::Vector3f p = this->getPosition();
 	OVR::Quatf q = this->getOrientation();
 
-	float o_y, o_p, o_r;
+	//Convert quatternion to (yaw,pitch,roll) euler vector
+	float o_y, o_p, o_r; q.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&o_y, &o_p, &o_r);
 
-	q.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&o_y, &o_p, &o_r);
-
-	cout << "Rift information : " << endl
+	//Print out inforamtion 
+	cout << "Rift tracking state at last update : " << endl
 		<< "Position : " << "(" << p.x << ", "<< p.y<< ", " << p.z<< ")" << endl
 		<< "Orientation : " << "(" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << ")"<< endl
 		<< "Euler Orientation angle (yaw, pitch, roll) "<< "(" << o_y << ", " << o_p << ", " << o_r << ")" << endl
