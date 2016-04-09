@@ -102,11 +102,13 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 			pairs.push_back(onThisObject[j]);
 	}
 
+	//Reset the value before extracting data 
 	for(auto pair : pairs)
 		pair->collisionState=false;
 
 	//process for each maniflod
 	int numManifolds = Dispatcher->getNumManifolds();
+
 	//m is manifold identifier
 	for (int m(0); m <numManifolds; m++)
 	{
