@@ -81,6 +81,7 @@ namespace Annwvyn
 	{
 	public:
 		
+		///Construc a spherical trigger. The radius is set wiht setThreshold
 		AnnSphericalTriggerObject();
 
 		///GetThreshold distance
@@ -92,6 +93,7 @@ namespace Annwvyn
 
 	private:
 		
+		///implement the test on player position
 		bool computeVolumetricTest(AnnPlayer* player);
 		
 		///Distance where the trigger is triggered
@@ -107,6 +109,7 @@ namespace Annwvyn
 
 	public:
 		
+		///Create an aligned box trigger on the XYZ referencies
 		AnnAlignedBoxTriggerObject();
 
 		///Set the volume dimentions
@@ -119,7 +122,8 @@ namespace Annwvyn
 		void setBoundaries(float x1, float x2, float y1, float y2, float z1, float z2);
 	
 	private:
-	
+		
+		///implement the test on player position
 		bool computeVolumetricTest(AnnPlayer* player);
 		
 		///Boundaries values. All defaults to 0

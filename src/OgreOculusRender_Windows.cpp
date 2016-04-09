@@ -3,6 +3,8 @@
 
 #include "AnnLogger.hpp"
 
+using namespace Annwvyn;
+
 //Static class members
 bool OgreOculusRender::mirrorHMDView(true);
 OgreOculusRender* OgreOculusRender::self(nullptr);
@@ -75,7 +77,7 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 	backgroundColor = color;
 
 	//Render buffers
-	for(char i(0); i < 2; i++)
+	for(byte i(0); i < 2; i++)
 		if(vpts[i])
 			vpts[i]->setBackgroundColour(color);
 
@@ -96,10 +98,10 @@ Ogre::RenderWindow* OgreOculusRender::getWindow()
 
 void OgreOculusRender::debugPrint()
 {
-	for(char i(0); i < 2; i++)
+	for(byte i(0); i < 2; i++)
 	{
-		Annwvyn::AnnDebug() << "eyeCamera " << i << " " << eyeCameras[i]->getPosition();
-		Annwvyn::AnnDebug() << eyeCameras[i]->getOrientation();
+		AnnDebug() << "eyeCamera " << i << " " << eyeCameras[i]->getPosition();
+		AnnDebug() << eyeCameras[i]->getOrientation();
 	}
 }
 
@@ -205,6 +207,7 @@ void OgreOculusRender::getOgreConfig()
 	//Load OgrePlugins
 	root->loadPlugin("RenderSystem_GL");
 	root->loadPlugin("Plugin_OctreeSceneManager");
+	
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
 	root->getRenderSystem()->setFixedPipelineEnabled(true);
@@ -215,7 +218,7 @@ void OgreOculusRender::createWindow()
 	if(!root) exit(ANN_ERR_NOTINIT);
 	if(!Oculus) 
 	{
-		Annwvyn::AnnDebug() << "Please initialize the OculusInterface before creating window";
+		AnnDebug() << "Please initialize the OculusInterface before creating window";
 		exit(ANN_ERR_NOTINIT);
 	}
 
@@ -235,7 +238,7 @@ void OgreOculusRender::initCameras()
 {
 	if(!smgr)
 	{
-		Annwvyn::AnnDebug() << "Cannot init cameras before having the scene(s) manager(s) in place";
+		AnnDebug() << "Cannot init cameras before having the scene(s) manager(s) in place";
 		exit(ANN_ERR_NOTINIT);
 	}
 	//Mono view camera
@@ -331,16 +334,16 @@ void OgreOculusRender::initScene()
 void OgreOculusRender::initRttRendering()
 {
 	//Init GLEW here to be able to call OpenGL functions
-	Annwvyn::AnnDebug() << "Init GL Extension Wrangler";
+	AnnDebug() << "Init GL Extension Wrangler";
 	GLenum err = glewInit();
 	if(err != GLEW_OK)
 	{
-		Annwvyn::AnnDebug("Failed to glewTnit()\n\
+		AnnDebug("Failed to glewTnit()\n\
 						  Cannot call manual OpenGL\n\
 						  Error Code : " + (unsigned int)err);
 		exit(ANN_ERR_RENDER);
 	}
-	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
+	AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 
 	//Get texture size from ovr with the maximal FOV for each eye
 	ovrSizei texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().MaxEyeFov[left], 1.0f);
@@ -349,7 +352,7 @@ void OgreOculusRender::initRttRendering()
 	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max(texSizeL.h, texSizeR.h);
-	Annwvyn::AnnDebug() << "Buffer texture size : " << bufferSize.w << " x " <<bufferSize.h  << " px";
+	AnnDebug() << "Buffer texture size : " << bufferSize.w << " x " <<bufferSize.h  << " px";
 
 	//Define the creation option of the texture swap chain
 	ovrTextureSwapChainDesc textureSwapChainDesc = {};
@@ -366,7 +369,7 @@ void OgreOculusRender::initRttRendering()
 	if (ovr_CreateTextureSwapChainGL(Oculus->getSession(), &textureSwapChainDesc, &textureSwapChain) != ovrSuccess)
 	{
 		//If we can't get the textures, there is no point trying more.
-		Annwvyn::AnnDebug("Cannot create Oculus OpenGL SwapChain");
+		AnnDebug("Cannot create Oculus OpenGL SwapChain");
 		exit(ANN_ERR_RENDER);
 	}
 	
@@ -396,7 +399,7 @@ void OgreOculusRender::initRttRendering()
 	if (ovr_CreateMirrorTextureGL(Oculus->getSession(), &mirrorTextureDesc, &mirrorTexture) != ovrSuccess)
 	{
 		//If for some weird reason (stars alignment, dragons, northen gods, reaper invasion) we can't create the mirror texture
-		Annwvyn::AnnDebug("Cannot create Oculus mirror texture");
+		AnnDebug("Cannot create Oculus mirror texture");
 		exit(ANN_ERR_RENDER);
 	}
 
@@ -423,7 +426,7 @@ void OgreOculusRender::showRawView()
 	self->debugViewport->setCamera(self->debugCam);
 	debugTexturePlane->setTextureName("RttTex");
 	self->debugViewport->setBackgroundColour(self->backgroundColor);
-	Annwvyn::AnnDebug() << "Switched to Raw view";
+	AnnDebug() << "Switched to Raw view";
 }
 
 void OgreOculusRender::showMirrorView()
@@ -433,7 +436,7 @@ void OgreOculusRender::showMirrorView()
 	self->debugViewport->setCamera(self->debugCam);
 	debugTexturePlane->setTextureName("MirrorTex");
 	self->debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
-	Annwvyn::AnnDebug() << "Switched to Oculus Compositor view";
+	AnnDebug() << "Switched to Oculus Compositor view";
 }
 
 void OgreOculusRender::showMonscopicView()
@@ -442,7 +445,7 @@ void OgreOculusRender::showMonscopicView()
 	if(!self) return;
 	self->debugViewport->setCamera(self->monoCam);
 	self->debugViewport->setBackgroundColour(self->backgroundColor);
-	Annwvyn::AnnDebug() << "Switched to Monoscopic view";
+	AnnDebug() << "Switched to Monoscopic view";
 }
 
 void OgreOculusRender::initOculus()
@@ -489,7 +492,7 @@ void OgreOculusRender::initOculus()
 void OgreOculusRender::calculateProjectionMatrix()
 {
 	//The average human has 2 eyes, but for some reason there's an "ovrEye_Count" constant on the oculus library. 
-	for(size_t eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
+	for(byte eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Get the projection matrix
 		ovrMatrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, 
@@ -499,8 +502,8 @@ void OgreOculusRender::calculateProjectionMatrix()
 
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
-		for(size_t x(0); x < 4; x++)
-			for(size_t y(0); y < 4; y++)
+		for(byte x(0); x < 4; x++)
+			for(byte y(0); y < 4; y++)
 				OgreProj[x][y] = proj.M[x][y];
 
 		//Set the matrix
@@ -543,7 +546,7 @@ void OgreOculusRender::updateTracking()
 	oculusPos = pose.Position;
 
 	//Apply pose to the two cameras
-	for(char eye = 0; eye < ovrEye_Count; eye++)
+	for(byte eye = 0; eye < ovrEye_Count; eye++)
 	{
 		//headOrientation and headPosition are the player position/orientation on the space
 		eyeCameras[eye]->setOrientation(headOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
@@ -572,8 +575,6 @@ void OgreOculusRender::renderAndSubmitFrame()
 {
 	//Ogre's documentation ask for this function to be called once per frame
 	Ogre::WindowEventUtilities::messagePump();
-
-
 
 	//Select the current render texture
 	ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureSwapChain, &currentIndex);

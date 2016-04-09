@@ -1,10 +1,10 @@
 /**
- * \file AnnAudioEngine.hpp
- * \brief OpenAL audio handeling for Annwvvyn
- *        handle the OpenAL context creation and the loading of sound files
- *        handle the position/orientation of the listener
- * \author A. Brainville (Ybalrid)
- */
+* \file AnnAudioEngine.hpp
+* \brief OpenAL audio handeling for Annwvvyn
+*        handle the OpenAL context creation and the loading of sound files
+*        handle the position/orientation of the listener
+* \author A. Brainville (Ybalrid)
+*/
 
 #ifndef ANN_AUDIO
 #define ANN_AUDIO
@@ -27,7 +27,7 @@
 
 namespace Annwvyn
 {
-    class AnnEngine;
+	class AnnEngine;
 	class AnnAudioEngine;
 
 	///Represent an audio source in the engine
@@ -38,6 +38,7 @@ namespace Annwvyn
 		AnnAudioSource();
 		friend class AnnAudioEngine;
 	public:
+		///Destroy audio source
 		~AnnAudioSource();
 
 		///Put the audio source at this position in space
@@ -85,7 +86,7 @@ namespace Annwvyn
 
 		///shutdown and cleanup openal
 		void shutdownOpenAL();
-		
+
 		///Load a sound file. return a sond buffer. Add the buffer to the buffer list.
 		///This permit to preload sound files to the engine. If want to avoid loading a
 		///Bunch of soundfile (that causes disk I/O access) you can just load the soundfile
@@ -107,7 +108,7 @@ namespace Annwvyn
 
 		///Return "false" if buffer not loaded. Return buffer index if buffer is loaded.
 		ALuint isBufferLoader(const std::string& filePath);
-		
+
 		///Unload a buffer from the engine. The buffer is identified by the soud file it represent
 		/// \param path Path of the file you want to load
 		void unloadBuffer(const std::string& path);
@@ -133,24 +134,24 @@ namespace Annwvyn
 		///For the engine: update the listener position to match the player's head
 		/// \param pos The position of the player
 		void updateListenerPos(AnnVect3 pos);
-		
-		///For the engine : update the listener orientation to mach the player's head 
-        /// \param orient The orientatio of the player
-		void updateListenerOrient(AnnQuaternion orient);
-		
-        ///For engine : update listener Oirentation
-        friend class Annwvyn::AnnEngine;
 
-    private:
+		///For the engine : update the listener orientation to mach the player's head 
+		/// \param orient The orientatio of the player
+		void updateListenerOrient(AnnQuaternion orient);
+
+		///For engine : update listener Oirentation
+		friend class Annwvyn::AnnEngine;
+
+	private:
 		///The last error this class has generated
 		std::string lastError;
 		///AL Device
 		ALCdevice* Device;
 		///AL Context
 		ALCcontext* Context;
-	    
+
 		///Audio buffer for background music
-        ALuint bgmBuffer; 
+		ALuint bgmBuffer; 
 		///Audio source for background music
 		ALuint bgm;
 

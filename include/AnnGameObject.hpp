@@ -184,8 +184,10 @@ namespace Annwvyn
 			///Get if object visible
 			bool isVisible();
 
-
+			///Set the ID of the GameObject
 			void setID(std::string ID);
+
+			///Get the ID of the Object
 			std::string getID();
 
         private:

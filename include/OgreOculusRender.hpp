@@ -40,6 +40,7 @@
 #include <RenderSystems/GL/OgreGLTexture.h>
 
 #include "AnnErrorCode.hpp"
+#include "AnnTypes.h"
 
 ///A pose refer to the combinaison of a position and an orientation. 
 ///It permit to define the placement of an object with 6DOF
@@ -55,7 +56,6 @@ struct OgrePose
 class DLL OgreOculusRender
 {
     public:
-		
 		///Construct the OgreOculusRender. Can only be called once
         OgreOculusRender(std::string windowName = "OgreOculusRender");
 
@@ -158,8 +158,8 @@ class DLL OgreOculusRender
             right = 1,
         };
 
-		///Save content of the RenderTexture to the specified file. Please use a valid extentsion of a format handeled by FreeImage
-		///Note that this is SLOW AS HELL!
+
+		///Save content of the RenderTexture to the specified file. This verry slow operation is only usefull for debuging the renderer itself
         void debugSaveToFile(const char path[]);
 		
 		///Object for getting informations from the Oculus Rift

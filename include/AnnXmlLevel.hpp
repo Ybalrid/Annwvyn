@@ -23,10 +23,15 @@ namespace Annwvyn
 
 		///load the level by reading the XML file
 		void load();
+
+		///Run the logic on this level. You can overload this at will ! *\o/*
 		virtual void runLogic();
 
 	private:
+		///Path of the xml file
 		std::string xmlFilePath;
+
+		///Resource location allready added to the resource group manager
 		bool resourceLocAdded;
 	};
 }
