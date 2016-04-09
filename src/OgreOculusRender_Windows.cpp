@@ -523,6 +523,9 @@ void OgreOculusRender::updateTracking()
 	//Begin frame - get timing
 	lastFrameDisplayTime = currentFrameDisplayTime;
 
+	//Reorient the headset if the runtime flags for it
+	if(getSessionStatus().ShouldRecenter) recenter();
+
 	//Get the tracking state 
 	ts = ovr_GetTrackingState(Oculus->getSession(), 
 		currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), 0), 
@@ -570,8 +573,6 @@ void OgreOculusRender::renderAndSubmitFrame()
 	//Ogre's documentation ask for this function to be called once per frame
 	Ogre::WindowEventUtilities::messagePump();
 
-	//update the session status;
-	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 
 
 	//Select the current render texture
