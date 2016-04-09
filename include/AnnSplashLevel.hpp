@@ -28,6 +28,9 @@ namespace Annwvyn
 		void setNextLevel(AnnAbstractLevel* level);
 		///Set timeout time in seconds
 		void setTimeout(float time);
+
+		//Set timeout time in milliseconds
+		void setTimeoutMillisec(unsigned time);
 	private:
 		float timeout, currentTime, startTime;
 		AnnAbstractLevel* next;

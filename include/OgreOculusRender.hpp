@@ -140,6 +140,9 @@ class DLL OgreOculusRender
 		///Show in the debug window a monoscopic view with a default Fov of 90°
 		static void showMonscopicView();
 
+		///Get the status of the session
+		ovrSessionStatus getSessionStatus();
+
     private://Methods
 		///Set the Fov for the monoscopic view
 		void setMonoFov(float degreeFov);
@@ -245,6 +248,9 @@ class DLL OgreOculusRender
 
 		///Pointer to the layer to be submited
 		ovrLayerHeader* layers;
+
+		///Staus of the current session
+		ovrSessionStatus sessionStatus;
 
 		///State of the performance HUD
 		int perfHudMode;

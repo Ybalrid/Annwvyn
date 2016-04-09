@@ -262,6 +262,9 @@ namespace Annwvyn
 		///Remove the object from the engine
 		void destroyTriggerObject(AnnTriggerObject* obj);
 
+		///Return true if the app is visible inside the head mounted display
+		bool appVisibleInHMD();
+
 	private:
 		///The onScreenConsole object
 		static AnnConsole* onScreenConsole;

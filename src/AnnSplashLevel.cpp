@@ -75,16 +75,13 @@ void AnnSplashLevel::load()
 	CurvedPlane->textureCoord(1, 0);
 
 	CurvedPlane->end();
-	
+
 	AnnDebug() << "Add plane to scene";
 	Splash = smgr->getRootSceneNode()->createChildSceneNode();
 	Splash->attachObject(CurvedPlane);
 	Splash->setScale(10,10,10);
 
-	AnnDebug() << "Starting time at : " << AnnEngine::Instance()->getTimeFromStartUp();
-	startTime = AnnEngine::Instance()->getTimeFromStartUp();
-	if(hasBGM)
-		AnnEngine::Instance()->getAudioEngine()->playBGM(bgmPath);
+
 }
 
 void AnnSplashLevel::setBGM(std::string path, bool preload)
@@ -96,10 +93,33 @@ void AnnSplashLevel::setBGM(std::string path, bool preload)
 
 void AnnSplashLevel::runLogic()
 {
-	if(!next) return;
-	currentTime = AnnEngine::Instance()->getTimeFromStartUp();
-	if(currentTime - startTime> timeout)
-		AnnEngine::Instance()->getLevelManager()->jump(next);
+
+	//If start time not set yet
+	if(startTime == -1)
+	{
+		//The app is "not visible" before the Health and Safety warning is displayed, or when you're inside the Oculus Home menu
+		if(AnnEngine::Instance()->appVisibleInHMD())
+		{
+			AnnDebug() << "visible";
+			//This set the "startTime" variable, preventing this peice of code to be ran twice
+			AnnDebug() << "Starting time at : " << AnnEngine::Instance()->getTimeFromStartUp();
+			startTime = AnnEngine::Instance()->getTimeFromStartUp();
+			//If you put some background music or sound for the splashscreen, we start it
+			if(hasBGM)
+				AnnEngine::Instance()->getAudioEngine()->playBGM(bgmPath);
+		}
+		else return;
+	}
+
+	//Run the following only if you set a "next" level to jump to
+	if(next)
+	{
+		//test if the splash has timed out
+		currentTime = AnnEngine::Instance()->getTimeFromStartUp();
+		if(currentTime - startTime> timeout)
+			//Jump to the next
+			AnnEngine::Instance()->getLevelManager()->jump(next);
+	}
 }
 
 void AnnSplashLevel::unload()
@@ -129,4 +149,9 @@ void AnnSplashLevel::setTimeout(float time)
 {
 	if(time > 0)
 		timeout = 1000*time;
+}
+
+void AnnSplashLevel::setTimeoutMillisec(unsigned time)
+{
+	timeout = time;
 }

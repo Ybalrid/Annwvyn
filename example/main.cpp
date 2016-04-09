@@ -115,8 +115,6 @@ AnnMain()
 	GameEngine->getEventManager()->addListener(new DebugListener);
 	demoTimer = GameEngine->getEventManager()->fireTimer(10);
 	
-	GameEngine->setDebugPhysicState(false);
-
 	AnnLightObject* light = GameEngine->createLightObject(); 
 	GameEngine->destroyLightObject(light);
 

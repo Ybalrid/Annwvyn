@@ -64,6 +64,7 @@ void OgreOculusRender::cycleOculusHUD()
 {
 	//Loop through the perf HUD mode available
 	perfHudMode = (perfHudMode+1) % (ovrPerfHud_Count);
+
 	//Set the current perf hud mode
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
 }
@@ -167,6 +168,7 @@ void OgreOculusRender::initLibraries(std::string loggerName)
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
+	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 }
 
 void OgreOculusRender::initialize(std::string resourceFile)
@@ -506,6 +508,12 @@ void OgreOculusRender::calculateProjectionMatrix()
 	}
 }
 
+ovrSessionStatus OgreOculusRender::getSessionStatus()
+{
+	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
+	return sessionStatus;
+}
+
 void OgreOculusRender::updateTracking()
 {
 	//Get current camera base information
@@ -561,6 +569,10 @@ void OgreOculusRender::renderAndSubmitFrame()
 {
 	//Ogre's documentation ask for this function to be called once per frame
 	Ogre::WindowEventUtilities::messagePump();
+
+	//update the session status;
+	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
+
 
 	//Select the current render texture
 	ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureSwapChain, &currentIndex);
