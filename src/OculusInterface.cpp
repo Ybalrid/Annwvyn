@@ -42,11 +42,12 @@ void OculusInterface::init()
 			MB_ICONERROR);
 #endif
 		//Cleanup
-		ovr_Shutdown();
-		delete Ogre::Root::getSingletonPtr();
-		
+		ovr_Shutdown();		
 		//Return an error
 		Annwvyn::AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
+
+		delete Ogre::Root::getSingletonPtr();
+		
 		exit(ANN_ERR_CRITIC);
 	}
 
