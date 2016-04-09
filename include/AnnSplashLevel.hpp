@@ -19,25 +19,47 @@ namespace Annwvyn
 		///Construct a SplashLevel.
 		///\param splashTexture Name of the resource (image) to put in front of the player
 		AnnSplashLevel(Ogre::String splashTexture, AnnAbstractLevel* nextLevel = nullptr, float timeoutTime = 10);
+		
+		///Load the level. This create a manual material and a manual object to present the splash image
 		void load();
+
+		///Run the logic of the splash screen. This will check for the time and jump to next level if timeout
 		void runLogic();
+
+		///Clean up the manually allocated object 
 		void unload();
+
+		///Set the background music
 		void setBGM(std::string path, bool preload = true);
 
 		///Set the level to jump to after timeout
 		void setNextLevel(AnnAbstractLevel* level);
+
 		///Set timeout time in seconds
 		void setTimeout(float time);
 
 		//Set timeout time in milliseconds
 		void setTimeoutMillisec(unsigned time);
 	private:
+		///Time values
 		float timeout, currentTime, startTime;
+
+		///Pointer to the next level to load
 		AnnAbstractLevel* next;
+
+		///The plane that present the object
 		Ogre::ManualObject* CurvedPlane;
+		
+		///Node where the splash screen is attached
 		Ogre::SceneNode* Splash;
+
+		///Name of the image of the splashscreen
 		Ogre::String splashImage;
+
+		///True if music is set
 		bool hasBGM;
+
+		///Path to the file that is loaded as an audio buffer
 		std::string bgmPath;
 	};
 

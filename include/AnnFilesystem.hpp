@@ -32,6 +32,7 @@ namespace Annwvyn
 	{
 		friend class AnnFilesystemManager;
 	private:
+		///Construct file writer object
 		AnnFileWriter();
 	public:
 		///Write the fileData to disc in the appropriate directory
@@ -43,6 +44,7 @@ namespace Annwvyn
 	{
 		friend class AnnFilesystemManager;
 	private:
+		///Construct file reader object
 		AnnFileReader();
 	public:
 		///read the asked file and return a new AnnSaveFileData*
@@ -55,7 +57,11 @@ namespace Annwvyn
 	class DLL AnnFilesystemManager
 	{
 	public:
+		
+		///Construct FileSystem manager
 		AnnFilesystemManager();
+
+		///Destroy FileSystem manager
 		~AnnFilesystemManager();
 
 		///Set the name of the app directory

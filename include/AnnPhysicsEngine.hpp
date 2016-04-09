@@ -26,7 +26,11 @@ namespace Annwvyn
 	class DLL AnnPhysicsEngine
 	{
 	public:
+
+		///Create the physics engine
 		AnnPhysicsEngine(Ogre::SceneNode* rootNode);
+
+		///Destroy the physics engine
 		~AnnPhysicsEngine();
 
 		///Add the player body to the dynamics world
@@ -78,7 +82,10 @@ namespace Annwvyn
 		//Bullet Dynamics World
 		btDiscreteDynamicsWorld* DynamicsWorld;
 
+		///Should use the debug drawer
 		bool debugPhysics;
+
+		///Debug drawer object from BtOgre
 		BtOgre::DebugDrawer* debugDrawer;
 	};
 }

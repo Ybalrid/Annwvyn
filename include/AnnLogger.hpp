@@ -1,8 +1,8 @@
 /**
- * \file AnnLogger.hpp
- * \brief Create a ostream to the Ogre logger
- * \author A. Brainville (Ybalrid)
- */
+* \file AnnLogger.hpp
+* \brief Create a ostream to the Ogre logger
+* \author A. Brainville (Ybalrid)
+*/
 #ifndef ANN_LOGGER
 #define ANN_LOGGER
 
@@ -43,6 +43,7 @@ namespace Annwvyn
 		/// \copydoc AnnEngine::AnnDebug()
 		AnnDebug(const std::string& message);
 
+		///Destroy the debug outputer object
 		~AnnDebug();
 	};
 }

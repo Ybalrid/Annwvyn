@@ -18,10 +18,14 @@ namespace Annwvyn
 	class DLL AnnLightObject 
 	{
 	public:
+		///Set the position of the light (if relevent)
 		void setPosition(AnnVect3 position);
+		///Set the direction of the light (if relevent)
 		void setDirection(AnnVect3 direction);
+		///Set the type of the light
 		void setType(Ogre::Light::LightTypes type);
 	private:
+		///Create a light object. We use an Ogre Light becaus we just need to talk to Ogre...
 		AnnLightObject(Ogre::Light* light);
 		friend class AnnEngine;
 		Ogre::Light* light;
