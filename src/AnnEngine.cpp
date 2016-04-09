@@ -625,3 +625,10 @@ void AnnEngine::toogleOculusPerfHUD()
 {
 	if(renderer) renderer->cycleOculusHUD();
 }
+
+bool AnnEngine::appVisibleInHMD()
+{
+	if(renderer->getSessionStatus().IsVisible == ovrTrue)
+		return true;
+	return false;
+}
