@@ -81,10 +81,10 @@ namespace Annwvyn
 		///class destructor
 		~AnnAudioEngine();
 
-		///init openal
+		///init OpenAL
 		bool initOpenAL();
 
-		///shutdown and cleanup openal
+		///shutdown and cleanup OpenAL
 		void shutdownOpenAL();
 
 		///Load a sound file. return a sond buffer. Add the buffer to the buffer list.
@@ -93,10 +93,6 @@ namespace Annwvyn
 		///before the start of your gameplay sequence.
 		/// \param filePath Path of the file you want to load
 		ALuint loadBuffer(const std::string& filePath);
-
-
-		///DEPRECATED: use loadBuffer
-		DEPRECATED ALuint loadSndFile(const std::string& path);
 
 		///This method is intended to be used in moments like loading levels
 		///If a buffer is allready loaded, getting it with loadBuffer is equivalent at
