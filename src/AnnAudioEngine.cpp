@@ -50,6 +50,10 @@ bool AnnAudioEngine::initOpenAL()
         return false;
     if (!alcMakeContextCurrent(Context))
         return false;
+
+	AnnDebug() << "OpenAL version : " << alGetString(AL_VERSION);
+	AnnDebug() << "OpenAL vendor  : " << alGetString(AL_VENDOR);
+
     return true;
 }
 
