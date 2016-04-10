@@ -76,11 +76,6 @@ void AnnAudioEngine::shutdownOpenAL()
     alGetError();//Purge pending error.
 }
 
-ALuint AnnAudioEngine::loadSndFile(const std::string& path)
-{
-	return loadBuffer(path);
-}
-
 void AnnAudioEngine::preLoadBuffer(const std::string& filepath)
 {
 	loadBuffer(filepath);

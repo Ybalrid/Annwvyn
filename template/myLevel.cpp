@@ -20,7 +20,7 @@ void MyLevel::load()
 	Ground->setUpPhysics();
 
 	//Create a light source
-	auto light(addLight());
+	auto light(addLightObject());
 	light->setPosition(AnnVect3(0,1,3));
 
 	engine->setAmbiantLight(AnnColor(.5,.5,.5));
