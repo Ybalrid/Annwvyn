@@ -171,6 +171,7 @@ void OgreOculusRender::initLibraries(std::string loggerName)
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
+	updateTime = 1.0 / static_cast<double>(Oculus->getHmdDesc().DisplayRefreshRate);
 }
 
 void OgreOculusRender::initialize(std::string resourceFile)
@@ -516,7 +517,6 @@ ovrSessionStatus OgreOculusRender::getSessionStatus()
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 	return sessionStatus;
 }
-
 void OgreOculusRender::updateTracking()
 {
 	//Get current camera base information
@@ -531,7 +531,7 @@ void OgreOculusRender::updateTracking()
 
 	//Get the tracking state 
 	ts = ovr_GetTrackingState(Oculus->getSession(), 
-		currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), 0), 
+		currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), 0),
 		ovrTrue);
 	
 	//Calculate delta between last and this frame
