@@ -588,6 +588,9 @@ OgrePose AnnEngine::getPoseFromOOR()
 void AnnEngine::openConsole()
 {
 #ifdef _WIN32
+#if _MSC_VER == 1900
+	return;
+#else
 	int outHandle, errHandle, inHandle;
     FILE *outFile, *errFile, *inFile;
     AllocConsole();
@@ -613,6 +616,7 @@ void AnnEngine::openConsole()
     setvbuf(stdin, NULL, _IONBF, 0 );
 
     std::ios::sync_with_stdio();
+#endif
 #endif
 }
 
