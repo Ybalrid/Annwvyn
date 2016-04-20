@@ -23,11 +23,8 @@ void OculusInterface::init()
 	//Init Oculus Virtual Reality library
 	ovr_Initialize(nullptr);
 
-	//Attempt to create an Oculus Session
-	ovrResult r = ovr_Create (&session, &luid);
-
-	//If session creation failed
-	if(r != ovrSuccess)
+	//Attempt to create OVR session
+	if(ovr_Create(&session, &luid) != ovrSuccess)
 	{
 		//Notify user
 		Annwvyn::AnnDebug() << "Error: Cannot create Oculus Session";
