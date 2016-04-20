@@ -56,7 +56,6 @@ OgreOculusRender::~OgreOculusRender()
 	root->destroySceneManager(smgr);
 
 	//Apparently manually removing the manually created texture unit state prevent ogre from crashing during cleanup... 
-	DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->removeAllTextureUnitStates();
 
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
@@ -167,6 +166,7 @@ void OgreOculusRender::initLibraries(std::string loggerName)
 	//Create the ogre root with standards Ogre configuration file
 	root = new Ogre::Root("", "ogre.cfg", loggerName.c_str());
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LoggingLevel::LL_BOREME);
+	
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
@@ -225,7 +225,8 @@ void OgreOculusRender::createWindow()
 
 	Ogre::NameValuePairList misc;
 	misc["vsync"] = "false"; //This vsync parameter has no scence in VR. The display is done by the Compositor
-
+	misc["top"] = "0";
+	misc["left"] = "0";
 	root->initialise(false);
 
 	float w(hmdSize.w), h(hmdSize.h);
@@ -517,6 +518,7 @@ ovrSessionStatus OgreOculusRender::getSessionStatus()
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 	return sessionStatus;
 }
+
 void OgreOculusRender::updateTracking()
 {
 	//Get current camera base information
