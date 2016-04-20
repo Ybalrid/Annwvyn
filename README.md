@@ -12,7 +12,7 @@ System requirement
  - A fairly recent GPU. Support for OpenGL 4.3 is mandatory
  - Oculus VR Headset (Rift) CV1 or Dev Kit 2 
  - 64bit Operating system
- - Oculus Runtime 
+ - Oculus Runtime 1.3.2 (4/20/16)
 
 Building on Windows
 -------------------
