@@ -159,7 +159,7 @@ void AnnXmlLevel::load()
 			source->QueryFloatAttribute("Y", &y);
 			source->QueryFloatAttribute("Z", &z);
 
-			AnnLightObject* lightSource = addLight();
+			AnnLightObject* lightSource = addLightObject();
 			lightSource->setPosition(AnnVect3(x, y, z));
 		}while (source = source->NextSiblingElement());
 	}

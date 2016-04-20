@@ -6,18 +6,19 @@ using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
 {    
-	AnnDebug("Init Bullet physics");
+	AnnDebug("Starting Physics subsystem");
 
 	//Initialize the Bullet world
 	Broadphase = new btDbvtBroadphase();
 	CollisionConfiguration = new btDefaultCollisionConfiguration();
 	Dispatcher = new btCollisionDispatcher(CollisionConfiguration);
 	Solver = new btSequentialImpulseConstraintSolver();
-
 	DynamicsWorld = new btDiscreteDynamicsWorld(Dispatcher, Broadphase, Solver, CollisionConfiguration);
+	AnnDebug() << "btDiscreteDynamicsWorld instantiated";
 
-	AnnDebug("Gravity vector = (0, -9.81f, 0)");
+	//Set gravity vector
 	DynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+	AnnDebug("Gravity vector = (0, -9.81f, 0)");
 
 	debugPhysics = false;//by default
 	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld);
@@ -101,8 +102,13 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 			pairs.push_back(onThisObject[j]);
 	}
 
+	//Reset the value before extracting data 
+	for(auto pair : pairs)
+		pair->collisionState=false;
+
 	//process for each maniflod
 	int numManifolds = Dispatcher->getNumManifolds();
+
 	//m is manifold identifier
 	for (int m(0); m <numManifolds; m++)
 	{

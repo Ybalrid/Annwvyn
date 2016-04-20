@@ -1,8 +1,8 @@
 /**
- * \file AnnPlayer.hpp
- * \brief class that represent the player
- * \author A. Brainville (Ybalrid)
- */
+* \file AnnPlayer.hpp
+* \brief class that represent the player
+* \author A. Brainville (Ybalrid)
+*/
 
 #ifndef ANN_PLAYER
 #define ANN_PLAYER
@@ -15,7 +15,7 @@
 #include "euler.h"
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-#define JMP_BUFFER 3
+
 #define DEFAULT_STARTING_POS AnnVect3(0,1,10)
 #define DEFAULT_STARTING_ORIENT Ogre::Euler(0)
 namespace Annwvyn
@@ -31,11 +31,10 @@ namespace Annwvyn
 	public:
 		///Constructor that handle the default body parameters. 
 		bodyParams();
-        
-        float jumpInterval;
+
 		float eyeHeight;
 		float walkSpeed;
-        float runFactor;
+		float runFactor;
 		float turnSpeed;
 		float mass;
 		AnnVect3 Position;
@@ -45,7 +44,6 @@ namespace Annwvyn
 		//bullet
 		btCollisionShape* Shape;
 		btRigidBody* Body;
-        AnnVect3 jumpForce;
 	};
 
 	///Correspondance between array position and walk direction for the "walking" array
@@ -58,7 +56,7 @@ namespace Annwvyn
 	public:
 		///Construct the player object
 		AnnPlayer();
-		
+
 		///Destroy the player object
 		~AnnPlayer();
 
@@ -79,7 +77,7 @@ namespace Annwvyn
 		///Set the head orientation
 		/// \param HeadOrientation A quaternion representing the orientation of the head
 		void setHeadOrientation(AnnQuaternion HeadOrientation);
-		
+
 		///distance between footplane and eyes
 		/// \param eyeHeight floating point number in metter
 		void setEyesHeight(float eyeHeight);
@@ -131,31 +129,28 @@ namespace Annwvyn
 		///Apply a relative yaw transform to the player. Usefull to bind it to the mouse X axis for FPS-like gameplay.
 		/// \param angle Radian angle of the transformaton.
 		void applyRelativeBodyYaw(Ogre::Radian angle);
-		
+
 		///Apply the rotation from the mouse relative value
 		/// \param relValue Relative value in pixels of the mouse linear mouvement
 		void applyMouseRelativeRotation(int relValue);
 
-		///Make the player jump
-        void jump();
-
 		///Return true if physics has been initialized once
 		bool hasPhysics();
-		
+
 		///Get the translation vector (normalised) from the walking state
 		AnnVect3 getTranslation();
 
-		
 		///Get the translation from analog joystick value
 		AnnVect3 getAnalogTranslation();
 
+		///Set the player actuator object
 		void setActuator(AnnPlayerActuator* act);
 
-				///Boolean false if the player can get orientation transformation from 
+		///Boolean false if the player can get orientation transformation from 
 		bool standing;
 
+		///Get the ratio between walking and running speed
 		float getRunFactor();
-
 
 	protected:
 
@@ -181,17 +176,12 @@ namespace Annwvyn
 		bool locked;
 
 		///If there is contact with ground
-        bool contactWithGround;
-
+		bool contactWithGround;
 
 		///Apply yaw from analog value
 		void applyAnalogYaw();
 
-		///Boolean true if verticalspeed whas 0 at last frame
-		bool YSpeedWasZero[JMP_BUFFER];
 		unsigned long int frameCount;
-
-
 
 		double updateTime;
 
@@ -204,7 +194,7 @@ namespace Annwvyn
 		bool walking[4];
 
 		///Runing state
-        bool run;
+		bool run;
 
 		//Analog values between -1 and 1
 		float analogWalk;

@@ -14,8 +14,8 @@ System requirement
  - A fairly recent GPU. Support for OpenGL 4.3 is mandatory
  - Graphics driver with "direct driver" for VR implemented. The lattest Nvidia/AMD driver available will do
  - Oculus VR Headset (Rift) CV1 or Dev Kit 2 
- - 64bit Operating system, Windows 7 SP1 or latter
- - Oculus Runtime installed from http://oculus.com/setup
+ - 64bit Operating system
+ - Oculus Runtime 1.3.2 (4/20/16) installed from http://oculus.com/setup
 
 Building on Windows
 -------------------

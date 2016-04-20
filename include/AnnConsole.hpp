@@ -47,6 +47,7 @@ namespace Annwvyn
 		void update();
 
 	private:
+		///This peice of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs 
 		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l',  bool wordwrap = true);
 		bool modified;
 		//////////////////////////////

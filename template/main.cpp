@@ -12,7 +12,7 @@ using namespace Annwvyn;
 AnnMain() //The application entry point is "AnnMain()". return type int.
 {
 	//Initialize the engine
-	AnnEngine::openConsole();
+	//AnnEngine::openConsole();//optional : open console
 	new AnnEngine("A game using Annwvyn");
 	
 	//Load your custom graphics resources here:

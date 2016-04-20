@@ -19,16 +19,20 @@
 namespace Annwvyn
 {
 	//Predefinition of Annwvyn classes : 
-    class AnnGameObject;
+	class AnnGameObject;
 	class AnnTriggerObject;
 
-	//Harmonise names :
+	///Harmonise names :
 	typedef Ogre::Vector2 AnnVect2;
 
 	//Remove some ugliness : 
 	typedef std::list<AnnTriggerObject *> AnnTriggerObjectList;
-    typedef std::list<AnnGameObject *> AnnGameObjectList;
-    typedef std::list<AnnLightObject *> AnnLightList;
+	typedef std::list<AnnGameObject *> AnnGameObjectList;
+	typedef std::list<AnnLightObject *> AnnLightList;
+
+	///Because sometimes, after one byte you're full...
+	typedef unsigned char byte;
+
 
 	///Name of the objects physical shapes
 	///Theses shapes are available to create objects's rigid body for the physics
@@ -41,7 +45,7 @@ namespace Annwvyn
 		sphereShape
 	};
 
-///Macro used 
+	///Macro used 
 #define MASK(x) (1<<(x))
 
 }
