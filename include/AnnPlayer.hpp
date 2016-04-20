@@ -15,7 +15,7 @@
 #include "euler.h"
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-#define JMP_BUFFER 3
+
 #define DEFAULT_STARTING_POS AnnVect3(0,1,10)
 #define DEFAULT_STARTING_ORIENT Ogre::Euler(0)
 namespace Annwvyn
@@ -32,7 +32,6 @@ namespace Annwvyn
 		///Constructor that handle the default body parameters. 
 		bodyParams();
 
-		float jumpInterval;
 		float eyeHeight;
 		float walkSpeed;
 		float runFactor;
@@ -45,7 +44,6 @@ namespace Annwvyn
 		//bullet
 		btCollisionShape* Shape;
 		btRigidBody* Body;
-		AnnVect3 jumpForce;
 	};
 
 	///Correspondance between array position and walk direction for the "walking" array
@@ -136,9 +134,6 @@ namespace Annwvyn
 		/// \param relValue Relative value in pixels of the mouse linear mouvement
 		void applyMouseRelativeRotation(int relValue);
 
-		///Make the player jump
-		void jump();
-
 		///Return true if physics has been initialized once
 		bool hasPhysics();
 
@@ -186,8 +181,6 @@ namespace Annwvyn
 		///Apply yaw from analog value
 		void applyAnalogYaw();
 
-		///Boolean true if verticalspeed whas 0 at last frame
-		bool YSpeedWasZero[JMP_BUFFER];
 		unsigned long int frameCount;
 
 		double updateTime;

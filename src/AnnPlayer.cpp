@@ -17,7 +17,6 @@ bodyParams::bodyParams()
 	Shape = NULL;
 	Body = NULL;
 	runFactor = 3;
-	jumpForce = AnnVect3(0, 500, 0);
 }
 
 AnnPlayer::AnnPlayer()
@@ -36,7 +35,6 @@ AnnPlayer::AnnPlayer()
 	analogStraff = 0;
 	analogRotate = 0;
 	
-	for(size_t i(0); i < JMP_BUFFER; i++) YSpeedWasZero[i]=false;
 	frameCount = 0;
 	standing = true;
 	updateTime = 0;
@@ -216,13 +214,6 @@ void AnnPlayer::applyAnalogYaw()
 {
 	//7 is the value that was more or less feeling good for me. 
 	applyRelativeBodyYaw(Ogre::Radian(- 7 * analogRotate * getTurnSpeed() * updateTime));
-}
-
-void AnnPlayer::jump()
-{
-	if(!getBody()) return;
-	if(contactWithGround)
-		getBody()->applyCentralImpulse(playerBody->jumpForce.getBtVector());
 }
 
 float AnnPlayer::getRunFactor()

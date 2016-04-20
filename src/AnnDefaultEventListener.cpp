@@ -60,8 +60,8 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		player->run = e.isPressed();
 	
 	//Jumping is a function call because it's an action and not a "state" the player has. 
-	if(e.isPressed() && e.getKey() == jump)
-		player->jump();
+	//if(e.isPressed() && e.getKey() == jump)
+	//	player->jump();
 	if(e.isPressed() && e.getKey() == recenter)
 		AnnEngine::Instance()->resetOculusOrientation();
 
@@ -105,8 +105,8 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 		player->analogStraff = trim(e.getAxis(axes[ax_straff]).getAbsValue(), deadzone);
 		player->analogRotate = trim(e.getAxis(axes[ax_rotate]).getAbsValue(), deadzone);
 	}
-	if(e.isPressed(buttons[b_jump]))
-		player->jump();
+	//if(e.isPressed(buttons[b_jump]))
+	//	player->jump();
 	if(e.isPressed(buttons[b_run]))
 		player->run = true;
 	if(e.isReleased(buttons[b_run]))
