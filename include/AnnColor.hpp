@@ -1,3 +1,9 @@
+/**
+ * \file AnnColor.hpp
+ * \brief Represent an RGBA color. Each chanel is stored as a float between 0 and 1
+ * \author A. Brainville (Ybalrid)
+ */
+
 #ifndef ANNCOLOR
 #define ANNCOLOR
 #include "systemMacro.h"
@@ -19,13 +25,13 @@ namespace Annwvyn
 		///Return a Ogre::ColourValue from the internal color value
 		Ogre::ColourValue getOgreColor();
 		
-		///Return the red channel as an integer betwenn 0 and 255
+		///Return the red channel as an integer between 0 and 255
 		unsigned char getRedI();
-		///Return the blue channel as an integer betwenn 0 and 255
+		///Return the blue channel as an integer between 0 and 255
 		unsigned char getBlueI();
-		///Return the green channel as an integer betwenn 0 and 255
+		///Return the green channel as an integer between 0 and 255
 		unsigned char getGreenI();
-		///Return the alpha channel as an integer betwenn 0 and 255
+		///Return the alpha channel as an integer between 0 and 255
 		unsigned char getAlphaI();
 
 		///Get the red value as float 

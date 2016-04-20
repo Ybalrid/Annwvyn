@@ -22,7 +22,11 @@
 class DLL OculusInterface
 {
     public:
+
+	///Construct an OculusInterface object. This create an Oculus Session for comunication with the Oculus Runtime
     OculusInterface();
+
+	///Destructor of Oculus Interface
     ~OculusInterface();
 
     ///Update. We use the predicted values from the rift. Therefore, we want the timecode of the "pose". Default : exact current time
@@ -47,6 +51,7 @@ class DLL OculusInterface
 
 	///Print to the log all information about the headset
     void customReport();
+
 	///Init the oculus library
     void init();
 	
@@ -54,7 +59,11 @@ class DLL OculusInterface
     void shutdown();
 
     private:
+
+	///set to true when it's safe to call ovr_ function on the ovrSession
     bool initialized;
+
+	///This object know a trackingstate from the Oculus Service
     bool firstUpdated;
 	
 	///Oculus session for the application

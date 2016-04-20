@@ -6,17 +6,25 @@ using namespace Annwvyn;
 
 AnnAudioEngine::AnnAudioEngine()
 {
+	AnnDebug() << "Starting Audio subsystem";
 	lastError = "Initialize OpenAL based sound system";
+
+	//Try to init OpenAL
 	if(!initOpenAL())
 		lastError = "Cannot Init OpenAL";
 	logError();
 
+	//Set the listener to base position
 	alListener3f(AL_POSITION, 0.0f, 0.0f, 10.0f);
 
-	ALfloat Orientation[] = {0.0f, 0.0f, 1.0f,
-							0.0f, 1.0f, 0.0f};
+	//Define the default orientation 
+	ALfloat Orientation[] = {0.0f, 0.0f, 1.0f, //LookAt vector
+							0.0f, 1.0f, 0.0f}; //Up vector
 
+	//Apply the orientation
 	alListenerfv(AL_ORIENTATION, Orientation);
+	
+	//Create a soruce for the BGM
 	alGenSources(1, &bgm);
 	locked = false;
 }
@@ -42,6 +50,10 @@ bool AnnAudioEngine::initOpenAL()
         return false;
     if (!alcMakeContextCurrent(Context))
         return false;
+
+	AnnDebug() << "OpenAL version : " << alGetString(AL_VERSION);
+	AnnDebug() << "OpenAL vendor  : " << alGetString(AL_VENDOR);
+
     return true;
 }
 
@@ -66,11 +78,6 @@ void AnnAudioEngine::shutdownOpenAL()
 	alcDestroyContext(Context);
 	alcCloseDevice(Device);
     alGetError();//Purge pending error.
-}
-
-ALuint AnnAudioEngine::loadSndFile(const std::string& path)
-{
-	return loadBuffer(path);
 }
 
 void AnnAudioEngine::preLoadBuffer(const std::string& filepath)
@@ -184,14 +191,17 @@ void AnnAudioEngine::unloadBuffer(const std::string& path)
 
 void AnnAudioEngine::playBGM(const std::string path, const float volume)
 {
+	AnnDebug() << "Using " << path << " as BGM";
+	
+	//Load buffer from disk or cache
 	bgmBuffer = loadBuffer(path);
 
-	AnnDebug() << "Using " << path << " as BGM";
-
+	//Set parameters to the source
 	alSourcei(bgm, AL_BUFFER, bgmBuffer);	
 	alSourcei(bgm, AL_LOOPING, AL_TRUE);
 	alSourcef(bgm, AL_GAIN, volume);
 
+	//Put the source in play mode
 	alSourcePlay(bgm);
 }
 
@@ -231,6 +241,7 @@ const std::string AnnAudioEngine::getLastError()
 
 AnnAudioSource* AnnAudioEngine::createSource(const std::string& path)
 {
+	//Get buffer from disk or cache
 	ALuint buffer = loadBuffer(path);
 	if(buffer == 0)
 	{
@@ -238,14 +249,17 @@ AnnAudioSource* AnnAudioEngine::createSource(const std::string& path)
 		return nullptr;
 	}
 
+	//Create and populate the source object
 	AnnAudioSource* audioSource = new AnnAudioSource;
 	audioSource->bufferName = path;
 	alGenSources(1, &audioSource->source);
 	alSourcei(audioSource->source, AL_BUFFER, buffer);
 
+	//Store it's address to memory
 	AudioSources.push_back(audioSource);
 	AnnDebug() << "OpenAL:" <<  audioSource->bufferName << ":s:" << audioSource->source << " sucessfully created";
 
+	//Return it to the caller
 	return audioSource;
 }
 

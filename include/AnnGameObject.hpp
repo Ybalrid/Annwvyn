@@ -62,14 +62,6 @@ namespace Annwvyn
 			/// \param pos 3D position vector. Relative to scene root position
             void setPosition(AnnVect3 pos);
 
-			///DEPRECATED: plase use setPosition
-			/// \copydoc setPosition()
-			DEPRECATED void setPos(AnnVect3 pos);
-
-			///DEPRECATED: plase use setPosition
-			/// \copydoc setPosition()
-			DEPRECATED void setPos(float x, float y, float z);
-
             ///Translate
 			/// \param x X componant of the translation vector
 			/// \param y Y componant of the translation vector
@@ -97,32 +89,18 @@ namespace Annwvyn
 			/// \param scale Relative scaling factor
             void setScale(AnnVect3 scale);
 
-			///DEPRECATED: please use getPosition
-			/// \copydoc getPosition()
-            DEPRECATED AnnVect3 pos();
-
 			///Get Position
 			AnnVect3 getPosition();
-
-			///DEPRECATED: please use getOrientation
-			/// \copydoc getOrientation()
-            DEPRECATED AnnQuaternion Orientation();
 			
 			///Get Orientation
 			AnnQuaternion getOrientation();
 
-			///DEPRECATED: please use getNode
-			/// \copydoc getNode()
-            DEPRECATED Ogre::SceneNode* node();
             ///Get Ogre Node
 			Ogre::SceneNode* getNode();
 
 			///Get Ogre Entity
 			Ogre::Entity* getEntity();
 			
-			///DEPRECATED: please use getBody
-			/// \copydoc getBody()
-            DEPRECATED btRigidBody* RigidBody();
             ///Get Rigid Body
             btRigidBody* getBody();
 
@@ -206,8 +184,10 @@ namespace Annwvyn
 			///Get if object visible
 			bool isVisible();
 
-
+			///Set the ID of the GameObject
 			void setID(std::string ID);
+
+			///Get the ID of the Object
 			std::string getID();
 
         private:

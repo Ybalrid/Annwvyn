@@ -1,8 +1,7 @@
 /*!
-* \file AnnTypes.h
-* \brief Data types definition for Annwvyn
-* \author Arthur Brainville
-* \version 0.0.2
+* \file AnnXmlLevel.hpp
+* \brief Load a level from an XML file
+* \author A. Brainville (Ybalrid)
 */
 
 #ifndef ANN_XML_LEVEL
@@ -14,17 +13,25 @@
 
 namespace Annwvyn
 {
+	///A level loaded from an XML file
 	class DLL AnnXmlLevel : public AnnAbstractLevel
 	{
 	public:
+		///Construct an AnnXmlLevel 
+		/// \param path
 		AnnXmlLevel(std::string path);
 
-		//load the level by reading the XML file
+		///load the level by reading the XML file
 		void load();
+
+		///Run the logic on this level. You can overload this at will ! *\o/*
 		virtual void runLogic();
 
 	private:
+		///Path of the xml file
 		std::string xmlFilePath;
+
+		///Resource location allready added to the resource group manager
 		bool resourceLocAdded;
 	};
 }

@@ -17,6 +17,7 @@
 namespace Annwvyn
 {
 	typedef size_t level_id;
+
 	///Class that take care of switching between differents levels dynamicly and clearing the memory afterwards
 	class DLL AnnLevelManager
 	{
@@ -47,8 +48,6 @@ namespace Annwvyn
 
 		///Unload the level currently running
 		void unloadCurrentLevel();
-
-		void loadFromFile(std::string levelFile);
 
 	private:
 		///List of levels

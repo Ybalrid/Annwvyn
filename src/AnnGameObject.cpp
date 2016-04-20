@@ -108,16 +108,6 @@ void AnnGameObject::setPosition(AnnVect3 pos)
 	setPosition(pos.x, pos.y, pos.z);
 }
 
-void AnnGameObject::setPos(AnnVect3 pos)
-{
-	setPosition(pos);
-}
-
-void AnnGameObject::setPos(float x, float y, float z)
-{
-	setPosition(x,y,z);
-}
-
 void AnnGameObject::setOrientation(float w, float x, float y, float z)
 {
 	setOrientation(AnnQuaternion(w, x, y, z));
@@ -126,11 +116,10 @@ void AnnGameObject::setOrientation(float w, float x, float y, float z)
 
 void AnnGameObject::setOrientation(AnnQuaternion orient)
 {
-	//setOrientation(orient.w,orient.x,orient.y,orient.z);
-	//beware : Ogre Quaternion convetion is WXYZ. Bullet use XYZW
 	//Ogre3D
 	if(Node != NULL)
 		Node->setOrientation(orient);
+	
 	//bullet
 	if(Body != NULL)
 	{
@@ -151,21 +140,11 @@ void AnnGameObject::setScale(float x, float y, float z)
 	Node->setScale(AnnVect3(x, y, z));
 }
 
-AnnVect3 AnnGameObject::pos()
-{
-	return getPosition();
-}
-
 AnnVect3 AnnGameObject::getPosition()
 {
 	if(Node != NULL)
 		return Node->getPosition();
 	return AnnVect3::ZERO;
-}
-
-AnnQuaternion AnnGameObject::Orientation()
-{
-	return getOrientation();
 }
 
 AnnQuaternion AnnGameObject::getOrientation()
@@ -226,11 +205,15 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPl
 		break;
 	default:
 		//non valid;
+		AnnDebug() << "Error: Requested shape is invalid";
 		return;
 	}
 
 	if(Shape == NULL)
+	{
+		AnnDebug() << "Error: The shape hasn't been created";
 		return;
+	}
 
 	AnnVect3 scale =  getNode()->getScale();
 	Shape->setLocalScaling(scale.getBtVector());
@@ -251,6 +234,7 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPl
 
 
 	if(Body)
+	{
 		if(colideWithPlayer)
 		{
 			DynamicsWorld->addRigidBody(Body, MASK(1), MASK(0) | MASK(1));
@@ -259,17 +243,16 @@ void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPl
 		{
 			DynamicsWorld->addRigidBody(Body, MASK(1), MASK(1));
 		}
+	}
 	else
+	{
+		AnnDebug() << "Error: RigidBody hasn't been created";
 		return; //Unable to create the physical representation
+	}
 
 	bulletReady = true;
 }
 
-
-Ogre::SceneNode* AnnGameObject::node()
-{
-	return getNode();
-}
 
 Ogre::SceneNode* AnnGameObject::getNode()
 {
@@ -279,12 +262,6 @@ Ogre::SceneNode* AnnGameObject::getNode()
 Ogre::Entity* AnnGameObject::getEntity()
 {
 	return Entity;
-}
-
-
-btRigidBody* AnnGameObject::RigidBody()
-{
-	return getBody();
 }
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject)

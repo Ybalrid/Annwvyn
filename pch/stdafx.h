@@ -13,13 +13,16 @@
 
 //C++ STL and STDLIB
 #include <iostream>
+#include <ostream>
 #include <vector>
 #include <list>
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include <cassert>
 
 //Object-Oriented Graphical Rendering Engine
 #include <Ogre.h>
@@ -30,15 +33,13 @@
 #include <OgreEntity.h>
 #include <OgreLight.h>
 #include <OgreMatrix3.h>
-
+//For the consosole, we use the font system of the Overlay
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
-
+//We need to get access to the guts of the OpenGL RenderSystem
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
 #include <RenderSystems/GL/OgreGLTexture.h>
-
-
 
 //Object-Oriented Input System
 #include <OIS.h>
@@ -49,7 +50,6 @@
 #include <btBulletDynamicsCommon.h>
 #include <LinearMath/btQuaternion.h>
 #include <LinearMath/btVector3.h>
-
 
 //OpenAl
 #include <al.h>

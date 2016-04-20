@@ -27,11 +27,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	eventManager(NULL),
 	levelManager(NULL),
 	povNode(NULL),	
-	defaultEventListener(NULL),
-	VisualBody(NULL),
-	VisualBodyAnimation(NULL),
-	VisualBodyAnchor(NULL),
-	refVisualBody(AnnQuaternion::IDENTITY)
+	defaultEventListener(NULL)
 {
 	if(singleton) 
 	{
@@ -58,23 +54,19 @@ AnnEngine::AnnEngine(const char title[]) :
 
 	renderer->showMonscopicView();
 
-	log("Setup event system");
+	log("Setup Annwvyn's subsystems");
 	eventManager = new AnnEventManager(renderer->getWindow());
-	log("Setup physics engine");
 	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode());
-	log("Setup audio engine");
 	AudioEngine = new AnnAudioEngine;
-	log("Setup Level system");
 	levelManager = new AnnLevelManager;
-	log("Setup Filesystem Manager");
 	filesystemManager = new AnnFilesystemManager;
 	filesystemManager->setSaveDirectoryName(title);
 
-	log("==================================================", false);
-	log("Annwvyn Game Engine - Step into the Other World   ", false);
-	log("Designed for Virtual Reality                      ", false);
-	log("Version : " + getAnnwvynVersion()                  , false);
-	log("==================================================", false);
+	log("===================================================", false);
+	log("Annwvyn Game Engine - Step into the Other World    ", false);
+	log("Free/Libre Game Engine designed for Virtual Reality", false);
+	log("Version : " + getAnnwvynVersion()                   , false);
+	log("===================================================" , false);
 }
 
 AnnEngine::~AnnEngine()
@@ -455,28 +447,6 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	return nullptr; //means that we don't know what the player is looking at.
 }
 
-void AnnEngine::attachVisualBody(const std::string entityName, float z_offset, bool flip, bool animated , Ogre::Vector3 scale)
-{
-	log("Attaching visual body :");
-	log(entityName);
-
-	//Could actually be an AnnGameObject without the physics ? So it will be cleaned by the AnnEngine destructor
-	Ogre::Entity* ent = SceneManager->createEntity(entityName);
-	VisualBodyAnchor = povNode->createChildSceneNode();
-	VisualBodyAnchor->attachObject(ent);
-
-	if(flip)
-		refVisualBody = AnnQuaternion(Ogre::Degree(180), AnnVect3::UNIT_Y);
-	else
-		refVisualBody = AnnQuaternion::IDENTITY;
-
-	visualBody_Zoffset = z_offset;
-	VisualBody = ent;
-
-	VisualBodyAnchor->setPosition(0, -player->getEyesHeight(), -visualBody_Zoffset);
-	VisualBodyAnchor->setOrientation(refVisualBody);
-}
-
 void AnnEngine::resetOculusOrientation()
 {
 	log("Reseting the base direction of player's head");
@@ -517,7 +487,6 @@ AnnPhysicsEngine* AnnEngine::getPhysicsEngine()
 	return physicsEngine;
 }
 
-
 Ogre::SceneManager* AnnEngine::getSceneManager()
 {
 	return SceneManager;
@@ -546,11 +515,6 @@ void AnnEngine::setDebugPhysicState(bool state)
 	physicsEngine->setDebugPhysics(state);
 }
 
-void AnnEngine::setAmbiantLight(Ogre::ColourValue v)
-{
-	setAmbiantLight(AnnColor(v));
-}
-
 void AnnEngine::setAmbiantLight(AnnColor color)
 {
 	AnnDebug() << "Setting the ambiant light to color " << color; 
@@ -567,11 +531,6 @@ void AnnEngine::setSkyBoxMaterial(bool activate, const char materialName[], floa
 {
 	log("Setting skybox from material"); log(materialName, false);
 	SceneManager->setSkyBox(activate, materialName, distance, renderedFirst);
-}
-
-void AnnEngine::setWorldBackgroundColor(Ogre::ColourValue v)
-{
-	setWorldBackgroundColor(AnnColor(v)); 
 }
 
 void AnnEngine::setWorldBackgroundColor(AnnColor v)
@@ -629,6 +588,9 @@ OgrePose AnnEngine::getPoseFromOOR()
 void AnnEngine::openConsole()
 {
 #ifdef _WIN32
+#if _MSC_VER == 1900
+	return;
+#else
 	int outHandle, errHandle, inHandle;
     FILE *outFile, *errFile, *inFile;
     AllocConsole();
@@ -655,6 +617,7 @@ void AnnEngine::openConsole()
 
     std::ios::sync_with_stdio();
 #endif
+#endif
 }
 
 void AnnEngine::toogleOnScreenConsole()
@@ -665,4 +628,11 @@ void AnnEngine::toogleOnScreenConsole()
 void AnnEngine::toogleOculusPerfHUD()
 {
 	if(renderer) renderer->cycleOculusHUD();
+}
+
+bool AnnEngine::appVisibleInHMD()
+{
+	if(renderer->getSessionStatus().IsVisible == ovrTrue)
+		return true;
+	return false;
 }
