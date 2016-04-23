@@ -70,7 +70,6 @@ public:
 		player->setPosition(AnnVect3::ZERO);
 		player->setOrientation(Ogre::Euler(0));
 		AnnEngine::Instance()->resetPlayerPhysics();
-
 	}
 
 	void runLogic()

@@ -3,9 +3,9 @@
 
 using namespace Annwvyn;
 
-AnnTriggerObject::AnnTriggerObject():
+AnnTriggerObject::AnnTriggerObject() :
 	contactWithPlayer(false),
-	position(Ogre::Vector3(0,0,0))
+	position(Ogre::Vector3(0, 0, 0))
 {
 }
 
@@ -43,17 +43,18 @@ float AnnSphericalTriggerObject::getThreshold()
 void AnnSphericalTriggerObject::setThreshold(float threshold)
 {
 	threshold = threshold;
+	squaredThreshold = threshold*threshold;
 }
 
 AnnSphericalTriggerObject::AnnSphericalTriggerObject() : AnnTriggerObject(),
-	threshold(1)
+	threshold(1),
+	squaredThreshold()
 {
 }
 
 bool AnnSphericalTriggerObject::computeVolumetricTest(AnnPlayer* player)
 {
-	return Tools::Geometry::distance(player->getPosition(),
-		getPosition()) <= getThreshold();
+	return getPosition().squaredDistance(player->getPosition()) <= squaredThreshold;
 }
 
 AnnAlignedBoxTriggerObject::AnnAlignedBoxTriggerObject() : AnnTriggerObject(),

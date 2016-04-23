@@ -266,7 +266,7 @@ Ogre::Entity* AnnGameObject::getEntity()
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject)
 {
-	return Tools::Geometry::distance(this, otherObject);
+	return getPosition().distance(otherObject->getPosition());
 }
 
 btRigidBody* AnnGameObject::getBody()

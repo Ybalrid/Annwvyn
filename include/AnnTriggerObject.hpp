@@ -98,6 +98,7 @@ namespace Annwvyn
 		
 		///Distance where the trigger is triggered
 		float threshold;
+		float squaredThreshold;
 	};
 
 	///Create a trigger volume that is aligned with the scene referential.
