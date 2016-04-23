@@ -30,24 +30,6 @@ AnnGameObject::~AnnGameObject()
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
 {
-	//Get sound buffer from file (will not load if allready loaded)
-	/*
-	buffer = AnnEngine::Instance()->getAudioEngine()->loadBuffer(path);
-	
-	alSourcei(source, AL_BUFFER, buffer);
-	if(loop)
-		alSourcei(source, AL_LOOPING, AL_TRUE);
-
-	alSourcef(source, AL_GAIN, volume);
-
-	auto currentPosition = Node->getPosition();
-	alSource3f(source, AL_POSITION,
-		currentPosition.x,
-		currentPosition.y,
-		currentPosition.z);
-	alSourcePlay(source);
-	*/
-
 	audioSource->changeSound(path);
 	audioSource->setLooping(loop);
 	audioSource->setVolume(volume);
