@@ -55,7 +55,7 @@ OgreOculusRender::~OgreOculusRender()
 	root->destroySceneManager(debugSmgr);
 	root->destroySceneManager(smgr);
 
-	//Apparently manually removing the manually created texture unit state prevent ogre from crashing during cleanup... 
+	DebugPlaneMaterial.setNull();
 
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
