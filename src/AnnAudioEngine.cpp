@@ -247,27 +247,18 @@ AnnAudioSource* AnnAudioEngine::createSource(std::string path)
 
 void Annwvyn::AnnAudioEngine::destroySource(AnnAudioSource * source)
 {
+	if (!source) return;
 	AudioSources.remove(source);
 	delete source;
 }
 
 AnnAudioSource* AnnAudioEngine::createSource()
 {
-	//Get buffer from disk or cache
-	/*ALuint buffer = loadBuffer(path);
-	if(buffer == 0)
-	{
-		AnnDebug() << "Cannot create audio source " << path;
-		return nullptr;
-	}*/
-
-	//Create and populate the source object
+	
 	AnnAudioSource* audioSource = new AnnAudioSource;
-	/*audioSource->bufferName = path;
-	alSourcei(audioSource->source, AL_BUFFER, buffer);*/
+	audioSource->bufferName = "Nothing";
 	alGenSources(1, &audioSource->source);
-
-	//Store it's address to memory
+	
 	AudioSources.push_back(audioSource);
 	AnnDebug() << "OpenAL:source:" << audioSource->source << " sucessfully created";
 
