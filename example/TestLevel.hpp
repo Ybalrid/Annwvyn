@@ -36,14 +36,14 @@ public:
 		AnnEngine::Instance()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
 		
 		//Add other source of light
-		auto Sun = AnnEngine::Instance()->createLightObject();
+		auto Sun = addLightObject();
 		Sun->setType(Ogre::Light::LT_DIRECTIONAL);
 		Sun->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Y + 1.5* Ogre::Vector3::NEGATIVE_UNIT_Z);
-		levelLighting.push_back(Sun);
 
 		//Create objects and register them as content of the level
 		auto S = AnnEngine::Instance()->createGameObject("Sinbad.mesh", new Sinbad);
 		levelContent.push_back(S);
+		S->playSound("media/monster.wav", true, 1);
 
 		//Add water
 		auto Water = addGameObject("Water.mesh");	
@@ -70,6 +70,8 @@ public:
 		player->setPosition(AnnVect3::ZERO);
 		player->setOrientation(Ogre::Euler(0));
 		AnnEngine::Instance()->resetPlayerPhysics();
+
+		
 	}
 
 	void runLogic()
