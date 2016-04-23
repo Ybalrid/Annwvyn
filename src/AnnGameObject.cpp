@@ -19,20 +19,19 @@ AnnGameObject::AnnGameObject() :
 	animIsSetted(false),
 	visible(true)
 {
-	alGenSources(1,&source);	
+	audioSource = AnnEngine::Instance()->getAudioEngine()->createSource();
 }
 
 AnnGameObject::~AnnGameObject()
 {
 	//Clean OpenAL desaloc
-	alSourceStop(source);
-	alDeleteSources(1, &source);
-	alDeleteBuffers(1, &buffer);
+	AnnEngine::Instance()->getAudioEngine()->destroySource(audioSource);
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
 {
 	//Get sound buffer from file (will not load if allready loaded)
+	/*
 	buffer = AnnEngine::Instance()->getAudioEngine()->loadBuffer(path);
 	
 	alSourcei(source, AL_BUFFER, buffer);
@@ -47,15 +46,18 @@ void AnnGameObject::playSound(std::string path, bool loop, float volume)
 		currentPosition.y,
 		currentPosition.z);
 	alSourcePlay(source);
+	*/
+
+	audioSource->changeSound(path);
+	audioSource->setLooping(loop);
+	audioSource->setVolume(volume);
+	audioSource->setPositon(getPosition());
+	audioSource->play();
 }
 
 void AnnGameObject::updateOpenAlPos()
 {
-	AnnVect3 pos(getPosition());
-	alSource3f(source, AL_POSITION,
-		pos.x,
-		pos.y,
-		pos.z);
+	audioSource->setPositon(getPosition());
 }
 
 void AnnGameObject::setPosition(float x, float y, float z)
@@ -81,10 +83,7 @@ void AnnGameObject::setPosition(float x, float y, float z)
 	Node->setPosition(x, y, z);
 
 	//change OpenAL Source Position
-	alSource3f(source, AL_POSITION,
-		newPosition.x,
-		newPosition.y,
-		newPosition.z);
+	audioSource->setPositon(newPosition);
 }
 
 void AnnGameObject::translate(float x, float y, float z)		  
@@ -96,11 +95,7 @@ void AnnGameObject::translate(float x, float y, float z)
 	Body->translate(btVector3(x, y, z));
 	//OpenAL
 	auto currentPosition = Node->getPosition();
-	alSource3f(source, AL_POSITION,
-		currentPosition.x,
-		currentPosition.y,
-		currentPosition.z);
-
+	updateOpenAlPos();
 }
 
 void AnnGameObject::setPosition(AnnVect3 pos)
@@ -169,7 +164,7 @@ void AnnGameObject::setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorl
 	DynamicsWorld = dynamicsWorld;
 }
 
-void AnnGameObject::setUpBullet(float mass, phyShapeType type, bool colideWithPlayer)
+void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
 	//check if everything is OK
 	if(DynamicsWorld == NULL)

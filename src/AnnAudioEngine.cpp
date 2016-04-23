@@ -66,7 +66,7 @@ void AnnAudioEngine::shutdownOpenAL()
 	//Stop and delete other audio sources
 	for(auto source : AudioSources)
 		delete source;
-	///Delete the BGM buffer if it has been initialized
+	//Delete the BGM buffer if it has been initialized
 	if(alIsBuffer(bgmBuffer) == AL_TRUE)
 		alDeleteBuffers(1,&bgmBuffer);
 	//Delete all buffers created here
@@ -238,26 +238,38 @@ const std::string AnnAudioEngine::getLastError()
 {
 	return lastError;
 }
+AnnAudioSource* AnnAudioEngine::createSource(std::string path)
+{
+	auto source = createSource();
+	source->changeSound(path);
+	return source;
+}
 
-AnnAudioSource* AnnAudioEngine::createSource(const std::string& path)
+void Annwvyn::AnnAudioEngine::destroySource(AnnAudioSource * source)
+{
+	AudioSources.remove(source);
+	delete source;
+}
+
+AnnAudioSource* AnnAudioEngine::createSource()
 {
 	//Get buffer from disk or cache
-	ALuint buffer = loadBuffer(path);
+	/*ALuint buffer = loadBuffer(path);
 	if(buffer == 0)
 	{
 		AnnDebug() << "Cannot create audio source " << path;
 		return nullptr;
-	}
+	}*/
 
 	//Create and populate the source object
 	AnnAudioSource* audioSource = new AnnAudioSource;
-	audioSource->bufferName = path;
+	/*audioSource->bufferName = path;
+	alSourcei(audioSource->source, AL_BUFFER, buffer);*/
 	alGenSources(1, &audioSource->source);
-	alSourcei(audioSource->source, AL_BUFFER, buffer);
 
 	//Store it's address to memory
 	AudioSources.push_back(audioSource);
-	AnnDebug() << "OpenAL:" <<  audioSource->bufferName << ":s:" << audioSource->source << " sucessfully created";
+	AnnDebug() << "OpenAL:source:" << audioSource->source << " sucessfully created";
 
 	//Return it to the caller
 	return audioSource;
@@ -305,6 +317,15 @@ void AnnAudioSource::pause()
 void AnnAudioSource::stop()
 {
 	alSourceStop(source);
+}
+
+void Annwvyn::AnnAudioSource::changeSound(std::string path)
+{
+	if (!path.empty());
+	bufferName = path;
+	
+	ALuint buffer = AnnEngine::Instance()->getAudioEngine()->loadBuffer(bufferName);
+	if (buffer) alSourcei(source, AL_BUFFER, buffer);
 }
 
 void AnnAudioSource::setLooping(bool looping)

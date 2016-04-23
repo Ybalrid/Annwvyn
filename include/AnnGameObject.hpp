@@ -104,9 +104,6 @@ namespace Annwvyn
             ///Get Rigid Body
             btRigidBody* getBody();
 
-            ///Get shape
-            btCollisionShape* getShape();
-
             ///Get distance from another object 
 			/// \param otherObject The object we're counting the distance from
             float getDistance(AnnGameObject* otherObject);
@@ -170,10 +167,10 @@ namespace Annwvyn
             ///Set up Bullet 
             /// \param mass The mass of the object
 			/// \param type The type of shape you want to define for the object
-			void setUpBullet(float mass = 0, phyShapeType type = staticShape, bool colideWithPlayer = true);
+			DEPRECATED void setUpBullet(float mass = 0, phyShapeType type = staticShape, bool colideWithPlayer = true) { setUpPhysics(mass, type, colideWithPlayer); }
 
             ///SetUpPhysics
-            void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true){setUpBullet(mass, type, colide);}
+			void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true);
 
 			///Make the object visible
 			void setVisible();
@@ -233,10 +230,8 @@ namespace Annwvyn
             btRigidBody* Body;
             bool bulletReady;
 
-			///OpenAL audio source
-            ALuint source; 
-			///OpenAL buffer
-            ALuint buffer;
+			///AnnAudioEngine audioSource;
+			AnnAudioSource* audioSource;
 
 			///Name of the object
 			std::string name;
