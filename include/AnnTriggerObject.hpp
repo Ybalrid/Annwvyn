@@ -67,7 +67,7 @@ namespace Annwvyn
 		///State of the last frame
 		bool lastFrameContactWithPlayer;
 
-	public:
+	private:
 		
 		///When contact happened
 		virtual void atContact() {return;}

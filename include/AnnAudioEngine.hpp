@@ -54,6 +54,8 @@ namespace Annwvyn
 		void pause();
 		///Stop playing the sound
 		void stop();
+		///Change the sound buffer this source plays
+		void changeSound(std::string path);
 
 		///If looping is activated, the sound will replay when finished
 		void setLooping(bool looping = true);
@@ -121,7 +123,10 @@ namespace Annwvyn
 		const std::string getLastError();
 
 		///Create an audio source
-		AnnAudioSource* createSource(const std::string& path);
+		AnnAudioSource* createSource();
+		AnnAudioSource* createSource(std::string path);
+
+		void destroySource(AnnAudioSource* source);
 
 		///Write laste error text to the log
 		void logError();
