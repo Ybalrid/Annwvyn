@@ -3,6 +3,16 @@
 *.lo
 *.o
 *.obj
+*.iobj
+
+# Deployed game
+deploy/
+*.bat
+
+# Compilled code
+*_obj/
+debug/
+release/
 
 # Compiled Dynamic libraries
 *.so
@@ -33,6 +43,10 @@
 *.exp
 *.psess
 *.vspx
+*.user
+*.opendb
+*.db
+*.ipdb
 
 #Windows text file
 *.txt
@@ -70,4 +84,4 @@ utils/
 #precompiled headers
 *.pch
 *.gch
-
+ipch/

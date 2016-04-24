@@ -1,10 +1,26 @@
 #include "stdafx.h"
 #include "AnnXmlLevel.hpp"
-#include "tinyxml2.h"
 #include "AnnLogger.hpp"
 
 using namespace tinyxml2;
 using namespace Annwvyn;
+
+inline phyShapeType AnnXmlLevel::getShapeTypeFromString(std::string str)
+{
+	if (str == "static")
+		return staticShape;
+	if (str == "convex")
+		return convexShape;
+	if (str == "box")
+		return boxShape;
+	if (str == "cylinder")
+		return cylinderShape;
+	if (str == "capsule")
+		return capsuleShape;
+	if (str == "sphere")
+		return sphereShape;
+	return phyShapeType(0);
+}
 
 AnnXmlLevel::AnnXmlLevel(std::string path) : constructLevel(),
 	xmlFilePath(path),
