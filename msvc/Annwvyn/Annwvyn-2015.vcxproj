@@ -245,7 +245,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnPlayerActuator.cpp" />
     <ClCompile Include="..\..\src\AnnQuaternion.cpp" />
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp" />
-    <ClCompile Include="..\..\src\AnnTypes.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
     <ClCompile Include="..\..\src\AnnVect3.cpp" />
     <ClCompile Include="..\..\src\AnnXmlLevel.cpp" />

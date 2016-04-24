@@ -3,7 +3,7 @@
 #include "AnnLogger.hpp"
 using namespace Annwvyn;
 
-AnnEngine* AnnEngine::singleton(NULL);
+AnnEngine* AnnEngine::singleton(NULL); 
 AnnConsole* AnnEngine::onScreenConsole(NULL);
 
 AnnEngine* AnnEngine::Instance()
@@ -276,6 +276,7 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 	node->attachObject(ent);
 	obj->setNode(node);
 	obj->setEntity(ent);
+	obj->audioSource = AudioEngine->createSource();
 	obj->setBulletDynamicsWorld(physicsEngine->getWorld());
 	obj->postInit(); //Run post init directives
 

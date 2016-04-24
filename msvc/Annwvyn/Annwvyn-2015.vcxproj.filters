@@ -233,9 +233,6 @@
     <ClCompile Include="..\..\src\AnnLightObject.cpp">
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnTypes.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />
