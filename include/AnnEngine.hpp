@@ -40,7 +40,24 @@
 #include <fcntl.h>
 #endif
 
+//Get the deprecated warnings
 #pragma warning(default:4996)
+
+///Easy acces to AnnEnigine instance
+#define AnnGetEngine() AnnEngine::Instance()
+///Get audio
+#define AnnGetAudioEngine() AnnGetEngine()->getAudioEngine()
+///Get physics
+#define AnnGetPhysicsEngine() AnnGetEngine()->getPhysicsEngine()
+///Get FileManager
+#define AnnGetFileSystemManager() AnnGetEngine()->getFileSystemManager()
+///Get LevelManager
+#define AnnGetLevelManager() AnnGetEngine()->getLevelManager()
+///Get EventManager
+#define AnnGetEventManager() AnnGetEngine()->getEventManager()
+///Get PlayerObject
+#define AnnGetPlayer() AnnGetEngine()->getPlayer()
+
 
 namespace Annwvyn
 {
@@ -100,10 +117,6 @@ namespace Annwvyn
 
 		///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
 		void addDefaultResourceLocaton();
-
-		///Init a resource group
-		/// \param resourceGroup name of the resourceGroup
-		void initAResourceGroup(std::string resourceGroup); //resource
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 

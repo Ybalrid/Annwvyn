@@ -85,19 +85,20 @@ AnnMain()
 	//Only usefull on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();	
 	//Init game engine
-	AnnEngine* GameEngine(new AnnEngine("AnnTest"));
+	AnnInit("AnnTest");
+	AnnGetEngine()->log("test");
 
 	//load ressources
-	GameEngine->loadDir("media/environement");
-	GameEngine->loadDir("media/debug");
-	GameEngine->initResources();
+	AnnGetEngine()->loadDir("media/environement");
+	AnnGetEngine()->loadDir("media/debug");
+	AnnGetEngine()->initResources();
 
 	//SetUp Oculus system	
-	GameEngine->oculusInit();
-	GameEngine->setNearClippingDistance(0.20f);
+	AnnGetEngine()->oculusInit();
+	AnnGetEngine()->setNearClippingDistance(0.20f);
 	
 	//Init some player body parameters
-	GameEngine->initPlayerPhysics();	 
+	AnnGetEngine()->initPlayerPhysics();	 
 
 	//Register a level
 	//AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
@@ -105,19 +106,19 @@ AnnMain()
 	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 7.1);
 	splash->setBGM("media/AnnSplash.ogg");
 
-	GameEngine->getLevelManager()->addLevel(splash);
-	GameEngine->getLevelManager()->addLevel(level);
-	//GameEngine->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
-	//GameEngine->getLevelManager()->jump(splash);
-	GameEngine->getLevelManager()->jump(level);
+	AnnGetEngine()->getLevelManager()->addLevel(splash);
+	AnnGetEngine()->getLevelManager()->addLevel(level);
+	//AnnGetEngine()->getLevelManager()->jumpToFirstLevel();		//Jump to that level 
+	//AnnGetEngine()->getLevelManager()->jump(splash);
+	AnnGetEngine()->getLevelManager()->jump(level);
 	
-	GameEngine->useDefaultEventListener();
-	GameEngine->resetOculusOrientation();
-	GameEngine->getEventManager()->addListener(new DebugListener);
-	demoTimer = GameEngine->getEventManager()->fireTimer(10);
+	AnnGetEngine()->useDefaultEventListener();
+	AnnGetEngine()->resetOculusOrientation();
+	AnnGetEngine()->getEventManager()->addListener(new DebugListener);
+	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
 	
-	AnnLightObject* light = GameEngine->createLightObject(); 
-	GameEngine->destroyLightObject(light);
+	AnnLightObject* light = AnnGetEngine()->createLightObject(); 
+	AnnGetEngine()->destroyLightObject(light);
 
 	auto testFile = AnnEngine::Instance()->getFileSystemManager()->crateSaveFileDataObject("test");
 	testFile->setValue("KEY0", "Thing");
@@ -147,13 +148,13 @@ AnnMain()
 	AnnDebug() << "Starting the render loop";
 	do	
 	{
-		if(GameEngine->isKeyDown(OIS::KC_Q))
-			GameEngine->getLevelManager()->unloadCurrentLevel();
-		if(GameEngine->isKeyDown(OIS::KC_E))
-			GameEngine->getLevelManager()->jumpToFirstLevel();	
+		if(AnnGetEngine()->isKeyDown(OIS::KC_Q))
+			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
+		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
+			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	
 	}
-	while(GameEngine->refresh());
+	while(AnnGetEngine()->refresh());
 
-	delete GameEngine;
+	delete AnnGetEngine();
 	exit(0);
 }
