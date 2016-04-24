@@ -370,6 +370,9 @@ bool AnnEngine::requestStop()
 	//pres ESC to quit. Stupid but efficient. I like that.
 	if(isKeyDown(OIS::KC_ESCAPE))
 		return true;
+	//If the user quit the App from the Oculus Home
+	if (renderer->getSessionStatus().ShouldQuit)
+		return true;
 	return false;
 }
 
@@ -606,15 +609,16 @@ void AnnEngine::openConsole()
 	if (AllocConsole())
 	{
 		//put stdout on this console;
+#pragma warning(disable:4996)
 		freopen("CONOUT$", "w", stdout);
+#pragma warning(default:4996)
+		
 		SetConsoleTitle(L"Annwyn Debug Console");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 	}
 	//Redirect cerr to cout
 	std::cerr.rdbuf(std::cout.rdbuf());
 
-
-	return;
 #else
 	int outHandle, errHandle, inHandle;
     FILE *outFile, *errFile, *inFile;
