@@ -225,8 +225,8 @@ void OgreOculusRender::createWindow()
 
 	Ogre::NameValuePairList misc;
 	misc["vsync"] = "false"; //This vsync parameter has no scence in VR. The display is done by the Compositor
-	misc["top"] = "0";
-	misc["left"] = "0";
+	misc["top"] = "100";
+	misc["left"] = "100";
 	root->initialise(false);
 
 	float w(hmdSize.w), h(hmdSize.h);
