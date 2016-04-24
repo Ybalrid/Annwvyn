@@ -5,7 +5,7 @@
 * \file Annwvyn.h
 * \brief Main Annwvyn include file (to be used by client application)
 * \author Arthur Brainville
-* \version 0.0.8
+* \version 0.2.0
 */
 
 /*!
@@ -78,10 +78,7 @@
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 
-///Namespace containing the totality of Annwvyn components
-namespace Annwvyn
-{
-}
+#define AnnInit(AppName) new AnnEngine(AppName)
 
 //===================Application Entrypoint definition=================//
 /*Main definition :
@@ -103,5 +100,12 @@ namespace Annwvyn
 #endif
 //=======================================================================//
 
-
 #endif //ANNWVYN	
+
+#ifndef ANN_NAMESPACE
+#define ANN_NAMESPACE
+///Namespace containing the totality of Annwvyn components
+namespace Annwvyn
+{
+}
+#endif

@@ -69,6 +69,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	log("===================================================" , false);
 }
 
+//TODO: make THIS less ugly
 AnnEngine::~AnnEngine()
 {
 
@@ -245,6 +246,7 @@ void AnnEngine::addDefaultResourceLocaton()
 	loadDir("media");
 	loadZip("media/CORE.zip");
 }
+
 
 void AnnEngine::oculusInit()
 {   
