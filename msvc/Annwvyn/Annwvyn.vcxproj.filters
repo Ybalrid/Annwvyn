@@ -108,9 +108,6 @@
     <ClInclude Include="..\..\include\AnnSplashLevel.hpp">
       <Filter>Annwvyn\LevelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnTools.h">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
       <Filter>Annwvyn\Physics&amp;Collision</Filter>
     </ClInclude>
@@ -187,9 +184,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnAbsractLevel.cpp">
       <Filter>Annwvyn\LevelSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnTools.cpp">
-      <Filter>Annwvyn\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp">
       <Filter>Annwvyn\LevelSystem</Filter>
