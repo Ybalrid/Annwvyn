@@ -5,6 +5,8 @@ using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(NULL); 
 AnnConsole* AnnEngine::onScreenConsole(NULL);
+std::stringstream oss;
+std::streambuf* old = nullptr;
 
 AnnEngine* AnnEngine::Instance()
 {
@@ -61,7 +63,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	levelManager = new AnnLevelManager;
 	filesystemManager = new AnnFilesystemManager;
 	filesystemManager->setSaveDirectoryName(title);
-
+	
 	log("===================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World    ", false);
 	log("Free/Libre Game Engine designed for Virtual Reality", false);
@@ -177,13 +179,20 @@ void AnnEngine::log(std::string message, bool flag)
 {
 	Ogre::String messageForLog;
 
-	if(flag)
+	if (flag)
+	{
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),  FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 		messageForLog += "Annwvyn - ";
+	}
+	else		
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 
 	messageForLog += message;
 	Ogre::LogManager::getSingleton().logMessage(messageForLog);
 	if(onScreenConsole)
 		onScreenConsole->append(message);
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 }
 
 void AnnEngine::useDefaultEventListener()
@@ -592,6 +601,19 @@ void AnnEngine::openConsole()
 {
 #ifdef _WIN32
 #if _MSC_VER == 1900
+
+	//Allocate a console for this app
+	if (AllocConsole())
+	{
+		//put stdout on this console;
+		freopen("CONOUT$", "w", stdout);
+		SetConsoleTitle(L"Annwyn Debug Console");
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+	}
+	//Redirect cerr to cout
+	std::cerr.rdbuf(std::cout.rdbuf());
+
+
 	return;
 #else
 	int outHandle, errHandle, inHandle;
