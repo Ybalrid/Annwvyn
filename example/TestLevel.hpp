@@ -37,8 +37,8 @@ public:
 		
 		//Add other source of light
 		auto Sun = addLightObject();
-		Sun->setType(Ogre::Light::LT_DIRECTIONAL);
-		Sun->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Y + 1.5* Ogre::Vector3::NEGATIVE_UNIT_Z);
+		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
+		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5* AnnVect3::NEGATIVE_UNIT_Z);
 
 		//Create objects and register them as content of the level
 		auto S = AnnEngine::Instance()->createGameObject("Sinbad.mesh", new Sinbad);
@@ -50,7 +50,7 @@ public:
 
 		//Add the island
 		auto Island = addGameObject("Island.mesh");
-		Island->setUpBullet();
+		Island->setUpPhysics();
 
 		//Add the sign
 		auto Sign(addGameObject("Sign.mesh"));
