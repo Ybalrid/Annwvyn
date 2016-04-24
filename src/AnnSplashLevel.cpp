@@ -30,7 +30,7 @@ void AnnSplashLevel::load()
 	pass->setLightingEnabled(false);
 	pass->setCullingMode(Ogre::CullingMode::CULL_NONE);
 	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
-	Ogre::TexturePtr texture =  TextureManager::getSingleton().load(splashImage, "General");
+	Ogre::TexturePtr texture =  Ogre::TextureManager::getSingleton().load(splashImage, "General");
 	displaySurfaceTextureUniteState->setTexture(texture);
 
 	//Create manual object

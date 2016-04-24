@@ -89,12 +89,12 @@ AnnConsole::AnnConsole() :
 
 	//Aspect ration of the console is 2:1. The actuall size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
-	texture = TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_DEFAULT", TEX_TYPE_2D, 2*BASE, BASE, MIP_UNLIMITED, PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
+	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_DEFAULT", Ogre::TEX_TYPE_2D, 2 * BASE, BASE, Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
 	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
 	displaySurfaceTextureUniteState->setTexture(texture);
 
 	//Load background texture to a buffer
-	background = TextureManager::getSingleton().load("background.png", "ANNWVYN_DEFAULT");
+	background = Ogre::TextureManager::getSingleton().load("background.png", "ANNWVYN_DEFAULT");
 
 	//Initialize the text buffer.
 	//CONSOLE_BUFFER is the number of lines to keep in memory and to load on the texture.
@@ -145,14 +145,14 @@ void AnnConsole::update()
 	WriteToTexture
 		(textToDisplay,																//Text
 		texture,																	//Texture
-		Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
+		Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
 		font.getPointer(),															//Font
-		ColourValue::Black,															//Color
+		Ogre::ColourValue::Black,															//Color
 		'l',																		//Alignement
 		false);																		//LineWrap
 }
 
-void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const ColourValue &color, char justify,  bool wordwrap)
+void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify,  bool wordwrap)
 {
 	using namespace Ogre;
 

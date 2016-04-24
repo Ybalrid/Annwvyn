@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "AnnGameObject.hpp"
-#include "AnnTools.h"
-#include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
 
 using namespace Annwvyn;
@@ -17,9 +15,9 @@ AnnGameObject::AnnGameObject() :
 	animIsLooping(false),
 	animIsPlaying(false),
 	animIsSetted(false),
-	visible(true)
+	visible(true),
+	audioSource(nullptr)
 {
-	audioSource = AnnEngine::Instance()->getAudioEngine()->createSource();
 }
 
 AnnGameObject::~AnnGameObject()

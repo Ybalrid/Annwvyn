@@ -28,12 +28,12 @@
 #include "AnnEventManager.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnTypes.h"
-#include "AnnTools.h" 
 #include "AnnAudioEngine.hpp"
 #include "AnnPhysicsEngine.hpp"
 #include "AnnConsole.hpp"
 #include "AnnLevelManager.hpp"
 #include "AnnFilesystem.hpp"
+#include "AnnGameObject.hpp"
 
 #ifdef _WIN32
 #include <io.h>
@@ -121,7 +121,7 @@ namespace Annwvyn
 		///Create a game object form the name of an entity.
 		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
 		/// \param object An instance of an empty AnnGameObject. Usefull for creating object of herited class
-		AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject); //object factory
+		AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject()); //object factory
 
 		///Destroy the given object
 		/// \param object the object to be destroyed
