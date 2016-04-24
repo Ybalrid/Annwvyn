@@ -312,7 +312,7 @@ void AnnAudioSource::stop()
 
 void Annwvyn::AnnAudioSource::changeSound(std::string path)
 {
-	if (!path.empty());
+	if (path.empty()) return;
 	bufferName = path;
 	
 	ALuint buffer = AnnEngine::Instance()->getAudioEngine()->loadBuffer(bufferName);
