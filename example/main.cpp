@@ -83,10 +83,9 @@ public:
 AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
-	AnnEngine::openConsole();	
+	AnnEngine::openConsole();
 	//Init game engine
 	AnnInit("AnnTest");
-	AnnGetEngine()->log("test");
 
 	//load ressources
 	AnnGetEngine()->loadDir("media/environement");
@@ -156,5 +155,5 @@ AnnMain()
 	while(AnnGetEngine()->refresh());
 
 	delete AnnGetEngine();
-	exit(0);
+	return EXIT_SUCCESS;
 }
