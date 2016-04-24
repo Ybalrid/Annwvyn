@@ -47,6 +47,5 @@ namespace Annwvyn
 
 	///Macro used 
 #define MASK(x) (1<<(x))
-
 }
 #endif

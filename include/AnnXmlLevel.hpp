@@ -9,6 +9,7 @@
 #include "systemMacro.h"
 #include "AnnAbstractLevel.hpp"
 #include "tinyxml2.h"
+#include "AnnTypes.h"
 #include <string>
 
 namespace Annwvyn
@@ -17,6 +18,7 @@ namespace Annwvyn
 	class DLL AnnXmlLevel : public AnnAbstractLevel
 	{
 	public:
+		static phyShapeType getShapeTypeFromString(std::string str);
 		///Construct an AnnXmlLevel 
 		/// \param path
 		AnnXmlLevel(std::string path);

@@ -4,8 +4,6 @@
 #include <Annwvyn.h>
 using namespace Annwvyn;
 
-AnnGameObject* toDestroy = nullptr;
-
 //Custom object:
 class Sinbad : public AnnGameObject
 {
