@@ -43,7 +43,7 @@ AnnConsole::AnnConsole() :
 	textCoord[3] = AnnVect2(1, 1);
 
 	//creatre the quad itself
-	displaySurface = AnnEngine::Instance()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
+	displaySurface = AnnGetEngine()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
 	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);//Srip of triangle : Define a triangle then add them by points
 
 	//Add the four vertices. This will directly describe two Triangles

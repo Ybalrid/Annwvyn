@@ -16,7 +16,7 @@ AnnFileWriter::AnnFileWriter()
 void AnnFileWriter::write(AnnSaveFileData* data)
 {
 	//Create the resources needed for the write operation
-	auto fsmanager(AnnEngine::Instance()->getFileSystemManager());
+	auto fsmanager(AnnGetFileSystemManager());
 	string path(fsmanager->getPathForFileName(data->fileName));
 	ofstream saveFile;
 
@@ -47,7 +47,7 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 	AnnDebug() << "Reading file " << fileName << " to memory";
 
 	//Create the resource needed to the read operation
-	auto fsmanager (AnnEngine::Instance()->getFileSystemManager());
+	auto fsmanager (AnnGetFileSystemManager());
 	auto fileData (fsmanager->crateSaveFileDataObject(fileName));
 	if(!fileData) return nullptr;
 	ifstream ifile;

@@ -18,9 +18,9 @@ AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, AnnAbstractLevel* next
 void AnnSplashLevel::load()
 {
 	AnnDebug() << "Ignore physics";
-	AnnEngine::Instance()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
-	AnnEngine::Instance()->getPlayer()->ignorePhysics = true;
-	AnnEngine::Instance()->getPlayer()->setOrientation(Ogre::Euler(0,0,0));
+	AnnGetEngine()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
+	AnnGetPlayer()->ignorePhysics = true;
+	AnnGetPlayer()->setOrientation(Ogre::Euler(0,0,0));
 
 	//Create manual material
 	AnnDebug() << "Creating a material with no culling, now lighting, and the wanted texture";
@@ -35,7 +35,7 @@ void AnnSplashLevel::load()
 
 	//Create manual object
 	AnnDebug() << "Creating the diplay \"plane\" for the splash";
-	auto smgr(AnnEngine::Instance()->getSceneManager());
+	auto smgr(AnnGetEngine()->getSceneManager());
 	CurvedPlane = smgr->createManualObject(generateRandomID());
 
 	CurvedPlane->begin("Splash", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
@@ -86,7 +86,7 @@ void AnnSplashLevel::load()
 
 void AnnSplashLevel::setBGM(std::string path, bool preload)
 {
-	if(preload) AnnEngine::Instance()->getAudioEngine()->preLoadBuffer(path);
+	if(preload) AnnGetAudioEngine()->preLoadBuffer(path);
 	bgmPath = path;
 	hasBGM = true;
 }
@@ -98,15 +98,15 @@ void AnnSplashLevel::runLogic()
 	if(startTime == -1)
 	{
 		//The app is "not visible" before the Health and Safety warning is displayed, or when you're inside the Oculus Home menu
-		if(AnnEngine::Instance()->appVisibleInHMD())
+		if(AnnGetEngine()->appVisibleInHMD())
 		{
 			AnnDebug() << "visible";
 			//This set the "startTime" variable, preventing this peice of code to be ran twice
-			AnnDebug() << "Starting time at : " << AnnEngine::Instance()->getTimeFromStartUp();
-			startTime = AnnEngine::Instance()->getTimeFromStartUp();
+			AnnDebug() << "Starting time at : " << AnnGetEngine()->getTimeFromStartUp();
+			startTime = AnnGetEngine()->getTimeFromStartUp();
 			//If you put some background music or sound for the splashscreen, we start it
 			if(hasBGM)
-				AnnEngine::Instance()->getAudioEngine()->playBGM(bgmPath);
+				AnnGetAudioEngine()->playBGM(bgmPath);
 		}
 		else return;
 	}
@@ -115,10 +115,10 @@ void AnnSplashLevel::runLogic()
 	if(next)
 	{
 		//test if the splash has timed out
-		currentTime = AnnEngine::Instance()->getTimeFromStartUp();
+		currentTime = AnnGetEngine()->getTimeFromStartUp();
 		if(currentTime - startTime> timeout)
 			//Jump to the next
-			AnnEngine::Instance()->getLevelManager()->jump(next);
+			AnnGetEngine()->getLevelManager()->jump(next);
 	}
 }
 
@@ -128,16 +128,15 @@ void AnnSplashLevel::unload()
 	AnnAbstractLevel::unload();
 
 	AnnDebug() << "Removing object from scene" ;
-	auto smgr(AnnEngine::Instance()->getSceneManager());
+	auto smgr(AnnGetEngine()->getSceneManager());
 	smgr->destroySceneNode(Splash);
 	Ogre::MaterialManager::getSingleton().remove("Splash");
 
 	AnnDebug() << "Restore Player's normal state : ";
-	auto player (AnnEngine::Instance()->getPlayer());
-	player->ignorePhysics = false;
-	player->setPosition(AnnVect3(0,0,10));
-	AnnEngine::Instance()->resetPlayerPhysics();
-	AnnEngine::Instance()->setWorldBackgroundColor();
+	AnnGetPlayer()->ignorePhysics = false;
+	AnnGetPlayer()->setPosition(AnnVect3(0,0,10));
+	AnnGetEngine()->resetPlayerPhysics();
+	AnnGetEngine()->setWorldBackgroundColor();
 }
 
 void AnnSplashLevel::setNextLevel(AnnAbstractLevel* level)

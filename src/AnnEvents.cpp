@@ -280,12 +280,12 @@ timerID AnnTimeEvent::getID()
 AnnTimer::AnnTimer(timerID id, double delay)
 {
 	tID = id;
-	timeoutTime = delay + AnnEngine::Instance()->getTimeFromStartUp();
+	timeoutTime = delay + AnnGetEngine()->getTimeFromStartUp();
 }
 
 bool AnnTimer::isTimeout()
 {
-	if(AnnEngine::Instance()->getTimeFromStartUp() >= timeoutTime)
+	if(AnnGetEngine()->getTimeFromStartUp() >= timeoutTime)
 		return true;
 	return false;
 }
