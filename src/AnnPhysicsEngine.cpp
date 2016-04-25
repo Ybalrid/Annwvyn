@@ -180,7 +180,7 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 
 		if((!current->lastFrameContactWithPlayer && current->contactWithPlayer)
 			||(current->lastFrameContactWithPlayer && !current->contactWithPlayer))
-		AnnEngine::Instance()->getEventManager()->spatialTrigger(current);
+		AnnGetEventManager()->spatialTrigger(current);
 	}
 }
 

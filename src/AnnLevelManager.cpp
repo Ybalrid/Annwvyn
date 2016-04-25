@@ -13,7 +13,7 @@ AnnLevelManager::AnnLevelManager() :
 
 AnnLevelManager::~AnnLevelManager()
 {
-	AnnEngine::Instance()->log("Deleting the Level Manager. Destroing every level known by the Level Manager before.");
+	AnnGetEngine()->log("Deleting the Level Manager. Destroing every level known by the Level Manager before.");
 	//clear the levels
 	for(auto it = levelList.begin(); it != levelList.end(); it++)
 		delete *it;

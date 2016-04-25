@@ -315,7 +315,7 @@ void Annwvyn::AnnAudioSource::changeSound(std::string path)
 	if (path.empty()) return;
 	bufferName = path;
 	
-	ALuint buffer = AnnEngine::Instance()->getAudioEngine()->loadBuffer(bufferName);
+	ALuint buffer = AnnGetAudioEngine()->loadBuffer(bufferName);
 	if (buffer) alSourcei(source, AL_BUFFER, buffer);
 }
 

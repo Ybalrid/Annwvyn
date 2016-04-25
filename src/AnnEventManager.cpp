@@ -6,7 +6,7 @@
 using namespace Annwvyn;
 
 AnnAbstractEventListener::AnnAbstractEventListener() :
-	player(AnnEngine::Instance()->getPlayer())
+	player(AnnGetPlayer())
 {
 }
 

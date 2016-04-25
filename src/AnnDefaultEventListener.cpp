@@ -63,15 +63,15 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	//if(e.isPressed() && e.getKey() == jump)
 	//	player->jump();
 	if(e.isPressed() && e.getKey() == recenter)
-		AnnEngine::Instance()->resetOculusOrientation();
+		AnnGetEngine()->resetOculusOrientation();
 
 	if(e.isPressed()) switch(e.getKey())
 	{
 	case KeyCode::grave:		
-		AnnEngine::Instance()->toogleOnScreenConsole();
+		AnnGetEngine()->toogleOnScreenConsole();
 		break;
 	case KeyCode::tab:
-		AnnEngine::Instance()->toogleOculusPerfHUD();
+		AnnGetEngine()->toogleOculusPerfHUD();
 		break;
 	case KeyCode::f1:
 		OgreOculusRender::showRawView();
