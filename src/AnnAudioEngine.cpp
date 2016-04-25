@@ -113,16 +113,27 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
     ALsizei NbSamples  = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
     ALsizei SampleRate = static_cast<ALsizei>(FileInfos.samplerate);
 
-	AnnDebug() << "Loading " << NbSamples << " samples. Playback samplerate : " << SampleRate;
+	AnnDebug() << "Loading " << NbSamples << " samples. Playback samplerate : " << SampleRate << "Hz";
 	
 	//Read samples in 16bits signed
 	std::vector<float> SamplesFloat(NbSamples);
-    if (sf_read_float(File, &SamplesFloat[0], NbSamples) < NbSamples)
+	sf_count_t readSamples = sf_read_float(File, &SamplesFloat[0], NbSamples);
+	AnnDebug() << "Read " << readSamples << " samples from a " << NbSamples << " samples file";
+	
+	//This sometimes happen with OGG files, but it seems tu run fine anyway.
+	if (readSamples < NbSamples)
 	{
-		lastError = "Error while reading the file" + filepath + " through sndfile library\nsndfile error: ";
+		lastError = "Warning: It looks like the " + (NbSamples - readSamples);
+		lastError +=  " last samples of the file have been omited";
+		logError();
+	}
+
+    if (sf_error(File) != SF_ERR_NO_ERROR)
+	{
+		lastError = "Error while reading the file " + filepath + " through sndfile library: error: ";
 		lastError +=  sf_error_number(sf_error(File));
 		logError();
-        //return 0;
+        return 0;
 	}
 
 	std::vector<ALshort> Samples(NbSamples);
