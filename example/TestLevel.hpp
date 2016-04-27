@@ -31,7 +31,7 @@ public:
 	void load()
 	{
 		//Set some ambiant light
-		AnnEngine::Instance()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
+		AnnGetEngine()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
 		
 		//Add other source of light
 		auto Sun = addLightObject();
@@ -39,7 +39,7 @@ public:
 		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5* AnnVect3::NEGATIVE_UNIT_Z);
 
 		//Create objects and register them as content of the level
-		auto S = AnnEngine::Instance()->createGameObject("Sinbad.mesh", new Sinbad);
+		auto S = AnnGetEngine()->createGameObject("Sinbad.mesh", new Sinbad);
 		levelContent.push_back(S);
 		S->playSound("media/monster.wav", true, 1);
 
@@ -56,20 +56,17 @@ public:
 		Sign->setUpPhysics(0, phyShapeType::staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
-		AnnTriggerObject* t(AnnEngine::Instance()->createTriggerObject(new AnnAlignedBoxTriggerObject));
+		AnnTriggerObject* t(AnnGetEngine()->createTriggerObject(new AnnAlignedBoxTriggerObject));
 		dynamic_cast<AnnAlignedBoxTriggerObject*>(t)->setBoundaries(-1,1,-1,1,-1,1);
 		levelTrigger.push_back(t);
 
 		//Put some music here
-		AnnEngine::Instance()->getAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg", 0.4);
+		AnnGetAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg", 0.4);
 
 		//Place the starting point 
-		AnnPlayer* player(AnnEngine::Instance()->getPlayer());
-		player->setPosition(AnnVect3::ZERO);
-		player->setOrientation(Ogre::Euler(0));
-		AnnEngine::Instance()->resetPlayerPhysics();
-
-		
+		AnnGetPlayer()->setPosition(AnnVect3::ZERO);
+		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
+		AnnGetEngine()->resetPlayerPhysics();
 	}
 
 	void runLogic()
