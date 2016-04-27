@@ -71,12 +71,10 @@ void AnnTextInputer::setInput(std::string content)
 }
 
 
-AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
+AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) : AnnSubSystem("EventManager"),
 	Keyboard(NULL),
 	Mouse(NULL)
 {
-	AnnDebug() << "Starting Event Subsystem";
-
 	for(size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
 	for(size_t i(0); i < MouseButtonId::nbButtons; i++) previousMouseButtonStates[i] = false;
 	InputManager = NULL;

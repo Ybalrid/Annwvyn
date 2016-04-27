@@ -83,9 +83,8 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 }
 
 
-AnnFilesystemManager::AnnFilesystemManager() 
+AnnFilesystemManager::AnnFilesystemManager() : AnnSubSystem("FilesystemManager")
 {
-	AnnDebug() << "Starting Filesystem Subsystem";
 	//get from the OS the user's personal directory
 #ifdef WIN32
 #pragma warning (disable : 4996)

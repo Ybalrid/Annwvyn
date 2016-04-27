@@ -24,6 +24,8 @@
 //libsndfile
 #include <sndfile.h>
 
+#include "AnnSubsystem.hpp"
+
 
 namespace Annwvyn
 {
@@ -31,7 +33,7 @@ namespace Annwvyn
 	class AnnAudioEngine;
 
 	///Represent an audio source in the engine
-	class DLL AnnAudioSource
+	class DLL AnnAudioSource 
 	{
 	private:
 		///Private contructor. You have to call AnnAudioEngine::createAudioSource() to get an AnnAudioSource object
@@ -74,7 +76,7 @@ namespace Annwvyn
 	};
 
 	///Class that handle the OpenAL audio.
-	class DLL AnnAudioEngine
+	class DLL AnnAudioEngine : public AnnSubSystem
 	{
 	public:
 		///class constuctor
@@ -142,6 +144,8 @@ namespace Annwvyn
 
 		///For engine : update listener Oirentation
 		friend class Annwvyn::AnnEngine;
+
+		void update();
 
 	private:
 		///The last error this class has generated

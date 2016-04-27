@@ -13,6 +13,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <list>
 #ifdef WIN32
 #include <Windows.h>
 #endif
@@ -20,6 +21,8 @@
 #include "AnnTypes.h"
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
+
+#include "AnnSubsystem.hpp"
 
 using namespace std;
 
@@ -54,7 +57,7 @@ namespace Annwvyn
 	class AnnSaveFileData;
 
 	///Manage where and how files will be wrote and read from the OS filesystem
-	class DLL AnnFilesystemManager
+	class DLL AnnFilesystemManager : public AnnSubSystem
 	{
 	public:
 		

@@ -4,10 +4,8 @@
 
 using namespace Annwvyn;
 
-AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode)
+AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode) : AnnSubSystem("PhysicsEngie")
 {    
-	AnnDebug("Starting Physics subsystem");
-
 	//Initialize the Bullet world
 	Broadphase = new btDbvtBroadphase();
 	CollisionConfiguration = new btDefaultCollisionConfiguration();
@@ -187,4 +185,8 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 void AnnPhysicsEngine::changeGravity(AnnVect3 gravity)
 {
 	DynamicsWorld->setGravity(gravity.getBtVector());
+}
+
+void AnnPhysicsEngine::update()
+{
 }

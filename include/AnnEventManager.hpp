@@ -14,6 +14,8 @@
 #include "AnnPlayer.hpp"
 #include "AnnTriggerObject.hpp"
 
+#include "AnnSubsystem.hpp"
+
 //the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
 #define LISTENER public Annwvyn::AnnAbstractEventListener
@@ -436,7 +438,7 @@ namespace Annwvyn
 	//You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
 
 	///Event Manager : Object that handle the event system 
-	class DLL AnnEventManager
+	class DLL AnnEventManager : public AnnSubSystem
 	{
 	public:
 		///Construct the event manager

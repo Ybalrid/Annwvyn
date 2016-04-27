@@ -4,9 +4,8 @@
 
 using namespace Annwvyn;
 
-AnnAudioEngine::AnnAudioEngine()
+AnnAudioEngine::AnnAudioEngine() : AnnSubSystem("AudioEngine")
 {
-	AnnDebug() << "Starting Audio subsystem";
 	lastError = "Initialize OpenAL based sound system";
 
 	//Try to init OpenAL
@@ -243,6 +242,10 @@ void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 							Up.x, Up.y, Up.z};
 
 	alListenerfv(AL_ORIENTATION, Orientation);
+}
+
+void Annwvyn::AnnAudioEngine::update()
+{
 }
 
 const std::string AnnAudioEngine::getLastError()
