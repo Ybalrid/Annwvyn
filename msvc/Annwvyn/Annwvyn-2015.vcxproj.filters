@@ -150,6 +150,9 @@
     <ClInclude Include="..\..\include\AnnLightObject.hpp">
       <Filter>Annwvyn\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnSubsystem.hpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\OculusInterface.cpp">
@@ -231,6 +234,9 @@
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLightObject.cpp">
+      <Filter>Annwvyn\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnSubSystem.cpp">
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
   </ItemGroup>

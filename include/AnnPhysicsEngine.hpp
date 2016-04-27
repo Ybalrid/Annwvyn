@@ -19,11 +19,12 @@
 #include "BtOgreExtras.h"
 
 #include "AnnEngine.hpp"
+//#include "AnnSubsytem.hpp"
 
 namespace Annwvyn
 {
 	///Class that abstract the physics engine initialisation and collision information querries for Annwvyn.
-	class DLL AnnPhysicsEngine
+	class DLL AnnPhysicsEngine : public AnnSubSystem
 	{
 	public:
 
@@ -74,6 +75,8 @@ namespace Annwvyn
 		void changeGravity(AnnVect3 gravity);
 
 	private:
+
+		void update();
 		btBroadphaseInterface* Broadphase;
 		btDefaultCollisionConfiguration* CollisionConfiguration;
 		btCollisionDispatcher* Dispatcher;

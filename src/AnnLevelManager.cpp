@@ -5,10 +5,9 @@
 
 using namespace Annwvyn;
 
-AnnLevelManager::AnnLevelManager() :
+AnnLevelManager::AnnLevelManager() : AnnSubSystem("LevelManager"),
 	current(NULL)
 {
-	AnnDebug() << "Starting Level Subsystem";
 }
 
 AnnLevelManager::~AnnLevelManager()

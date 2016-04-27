@@ -12,14 +12,14 @@
 #include <vector>
 #include "AnnAbstractLevel.hpp"
 #include "tinyxml2.h"
-
+#include "AnnSubsystem.hpp"
 
 namespace Annwvyn
 {
 	typedef size_t level_id;
 
 	///Class that take care of switching between differents levels dynamicly and clearing the memory afterwards
-	class DLL AnnLevelManager
+	class DLL AnnLevelManager : public AnnSubSystem
 	{
 	public:
 		///Construct LevelManager
