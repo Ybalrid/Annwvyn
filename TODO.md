@@ -5,7 +5,7 @@ Todo list :
 - [ ] Object parenting
 - [x] Permit to create non spherical trigger
 - [ ] Rework the animation system. Animation state should run in a *state machine automata* with proper transition programming 
-- [ ] Fix "openConsole" with VS2015
+- [x] Fix "openConsole" with VS2015
 - [ ] Rework the collision feedback system. 
 - [ ] Re-implement trigger system with Bullet
-- [ ] Get rid of AnnTools. 
+- [x] Get rid of AnnTools. 
