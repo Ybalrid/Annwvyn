@@ -57,11 +57,11 @@ AnnEngine::AnnEngine(const char title[]) :
 	renderer->showMonscopicView();
 
 	log("Setup Annwvyn's subsystems");
-	eventManager = new AnnEventManager(renderer->getWindow());
-	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, objects, triggers);
-	AudioEngine = new AnnAudioEngine;
-	levelManager = new AnnLevelManager;
-	filesystemManager = new AnnFilesystemManager(title);
+	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, objects, triggers));
+	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
+	SubSystemList.push_back(levelManager = new AnnLevelManager);
+	SubSystemList.push_back(AudioEngine = new AnnAudioEngine);
+	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
 
 	log("===================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World    ", false);
@@ -263,7 +263,7 @@ void AnnEngine::oculusInit()
 	povNode = renderer->getCameraInformationNode();
 	povNode->setPosition(player->getPosition() +
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
-	onScreenConsole = new AnnConsole();
+	SubSystemList.push_back(onScreenConsole = new AnnConsole());
 }
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
@@ -378,21 +378,9 @@ bool AnnEngine::refresh()
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(getFrameTime());
 
-	if (physicsEngine->needUpdate())
-		physicsEngine->update();
-
-	//Update the event system
-	if (eventManager->needUpdate())
-		eventManager->update();
-
-	if (levelManager->needUpdate())
-		levelManager->update();
-
-	if (onScreenConsole->needUpdate())
-		onScreenConsole->update();
-
-	if (AudioEngine->needUpdate())
-		AudioEngine->update();
+	for (auto SubSystem : SubSystemList) 
+		if (!SubSystem->needUpdate()) continue; 
+		else SubSystem->update();
 
 	//Update camera from player
 	syncPov();

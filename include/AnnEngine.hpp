@@ -314,6 +314,8 @@ namespace Annwvyn
 
 		///Elapsed time between 2 frames
 		double updateTime; 
+
+		std::list<AnnSubSystem*> SubSystemList;
 	};
 }
 #endif ///ANN_ENGINE
