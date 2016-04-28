@@ -145,8 +145,6 @@ namespace Annwvyn
 		///For engine : update listener Oirentation
 		friend class Annwvyn::AnnEngine;
 
-		void update();
-
 	private:
 		///The last error this class has generated
 		std::string lastError;
