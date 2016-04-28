@@ -3,7 +3,7 @@
 #include "AnnLogger.hpp"
 using namespace Annwvyn;
 
-AnnEngine* AnnEngine::singleton(NULL); 
+AnnEngine* AnnEngine::singleton(NULL);
 AnnConsole* AnnEngine::onScreenConsole(NULL);
 std::stringstream oss;
 std::streambuf* old = nullptr;
@@ -22,16 +22,16 @@ std::string AnnEngine::getAnnwvynVersion()
 
 void AnnEngine::startGameplayLoop()
 {
-	while(refresh());
+	while (refresh());
 }
-	
+
 AnnEngine::AnnEngine(const char title[]) :
 	eventManager(NULL),
 	levelManager(NULL),
-	povNode(NULL),	
+	povNode(NULL),
 	defaultEventListener(NULL)
 {
-	if(singleton) 
+	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
 		exit(ANN_ERR_MEMORY);
@@ -58,17 +58,16 @@ AnnEngine::AnnEngine(const char title[]) :
 
 	log("Setup Annwvyn's subsystems");
 	eventManager = new AnnEventManager(renderer->getWindow());
-	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode());
+	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, objects, triggers);
 	AudioEngine = new AnnAudioEngine;
 	levelManager = new AnnLevelManager;
-	filesystemManager = new AnnFilesystemManager;
-	filesystemManager->setSaveDirectoryName(title);
-	
+	filesystemManager = new AnnFilesystemManager(title);
+
 	log("===================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World    ", false);
 	log("Free/Libre Game Engine designed for Virtual Reality", false);
-	log("Version : " + getAnnwvynVersion()                   , false);
-	log("===================================================" , false);
+	log("Version : " + getAnnwvynVersion(), false);
+	log("===================================================", false);
 }
 
 //TODO: make THIS less ugly
@@ -84,7 +83,7 @@ AnnEngine::~AnnEngine()
 	levelManager = nullptr;
 
 	log("Destroying every objects remaining in engine");
-	
+
 	log(" Creating the destroing queue;");
 	AnnDebug() << " Will destroy " << objects.size() << " remaining objects";
 	AnnDebug() << " Will destroy " << triggers.size() << " remaining triggers";
@@ -93,35 +92,35 @@ AnnEngine::~AnnEngine()
 	AnnGameObject** tmpArrayObj = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
 	AnnTriggerObject** tmpArrayTrig = static_cast<AnnTriggerObject**>(malloc(sizeof(AnnTriggerObject*)*triggers.size()));
 	AnnLightObject** tmpArrayLight = static_cast<AnnLightObject**>(malloc(sizeof(AnnLightObject*)*lights.size()));
-	
+
 	auto objIt = objects.begin();
 	auto trigIt = triggers.begin();
 	auto lightIt = lights.begin();
 
-	for(size_t i(0); i < objects.size(); i++) tmpArrayObj[i] = *objIt++;;
-	for(size_t i(0); i < triggers.size(); i++) tmpArrayTrig[i] = *trigIt++;
-	for(size_t i(0); i < lights.size(); i++) tmpArrayLight[i] = *lightIt++;
+	for (size_t i(0); i < objects.size(); i++) tmpArrayObj[i] = *objIt++;;
+	for (size_t i(0); i < triggers.size(); i++) tmpArrayTrig[i] = *trigIt++;
+	for (size_t i(0); i < lights.size(); i++) tmpArrayLight[i] = *lightIt++;
 
 	log("Content of the destroing queue :");
 	log("Game Object");
-	for(size_t i(0); i < objects.size(); i++)
+	for (size_t i(0); i < objects.size(); i++)
 		AnnDebug() << (void*)tmpArrayObj[i];
 	log("Trigger Object");
-	for(size_t i(0); i < triggers.size(); i++)
+	for (size_t i(0); i < triggers.size(); i++)
 		AnnDebug() << (void*)tmpArrayTrig[i];
 	log("Light object");
-	for(size_t i(0); i < lights.size(); i++)
+	for (size_t i(0); i < lights.size(); i++)
 		AnnDebug() << (void*)tmpArrayLight[i];
 
 	size_t queueSize;
 	queueSize = objects.size();
-	for(size_t i(0); i < queueSize; i++)
+	for (size_t i(0); i < queueSize; i++)
 		destroyGameObject(tmpArrayObj[i]);
 	queueSize = triggers.size();
-	for(size_t i(0); i < queueSize; i++)
+	for (size_t i(0); i < queueSize; i++)
 		destroyTriggerObject(tmpArrayTrig[i]);
 	queueSize = lights.size();
-	for(size_t i(0); i < queueSize; i++)
+	for (size_t i(0); i < queueSize; i++)
 		destroyLightObject(tmpArrayLight[i]);
 
 
@@ -181,15 +180,15 @@ void AnnEngine::log(std::string message, bool flag)
 
 	if (flag)
 	{
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),  FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 		messageForLog += "Annwvyn - ";
 	}
-	else		
+	else
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 
 	messageForLog += message;
 	Ogre::LogManager::getSingleton().logMessage(messageForLog);
-	if(onScreenConsole)
+	if (onScreenConsole)
 		onScreenConsole->append(message);
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
@@ -197,7 +196,7 @@ void AnnEngine::log(std::string message, bool flag)
 
 void AnnEngine::useDefaultEventListener()
 {
-	if(!eventManager) return; 
+	if (!eventManager) return;
 	log("Reconfiguring the engine to use the default event listener");
 	log("This unregister any current listener in use!");
 
@@ -205,7 +204,7 @@ void AnnEngine::useDefaultEventListener()
 	eventManager->removeListener();
 
 	//If the event listenre isn't allready initialized, allocate one
-	if(!defaultEventListener)
+	if (!defaultEventListener)
 		defaultEventListener = new AnnDefaultEventListener;
 
 	//Set the default event listener to the event manager
@@ -226,14 +225,14 @@ void AnnEngine::loadZip(const char path[], const char resourceGroupName[])
 {
 	log("Loading resources from Zip archive :");
 	log(path, false);
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
 }
 
 void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
 {
 	log("Loading resources from Filesystem directory :");
 	log(path, false);
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
 }
 
 void AnnEngine::loadResFile(const char path[])
@@ -258,23 +257,20 @@ void AnnEngine::addDefaultResourceLocaton()
 
 
 void AnnEngine::oculusInit()
-{   
+{
 	log("Init Oculus rendering system");
 	renderer->initOculus();
 	povNode = renderer->getCameraInformationNode();
-	povNode->setPosition(player->getPosition() + 
+	povNode->setPosition(player->getPosition() +
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 	onScreenConsole = new AnnConsole();
-	//This will populate swap texture and turn on the rift display earlier
-	renderer->updateTracking();
-	renderer->renderAndSubmitFrame();
 }
 
 AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObject* obj)
 {
 	log("Creatig a game object from the entity " + std::string(entityName));
 
-	if(std::string(entityName).empty())
+	if (std::string(entityName).empty())
 	{
 		log("Hey! what are you trying to do here? Please specify a non empty string for entityName !");
 		delete obj;
@@ -293,7 +289,7 @@ AnnGameObject* AnnEngine::createGameObject(const char entityName[], AnnGameObjec
 
 	objects.push_back(obj); //keep addreAnnDebug() in list
 
-	AnnDebug() << "The object " << entityName << " has been created. Annwvyn memory address " << obj;  
+	AnnDebug() << "The object " << entityName << " has been created. Annwvyn memory address " << obj;
 
 	return obj;
 }
@@ -308,14 +304,14 @@ void AnnEngine::destroyTriggerObject(AnnTriggerObject* object)
 bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 {
 	AnnDebug() << "Destroy call : " << object;
-	if(!object) return false;
+	if (!object) return false;
 	bool returnCode(false);
 	//TODO: remove the need to mark objects as NULL in this array before being able to clear them.
-	for(auto it = objects.begin(); it != objects.end(); it++)
-    {
-		if(!*it) continue;
-		(*it)->stopGettingCollisionWith(object); 
-		if(*it == object)
+	for (auto it = objects.begin(); it != objects.end(); it++)
+	{
+		if (!*it) continue;
+		(*it)->stopGettingCollisionWith(object);
+		if (*it == object)
 		{
 			returnCode = true;
 			*it = NULL;
@@ -325,13 +321,13 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			size_t nbObject(node->numAttachedObjects());
 			std::vector<Ogre::MovableObject*> attachedObject;
 
-			for(unsigned short i(0); i < nbObject; i++)
+			for (unsigned short i(0); i < nbObject; i++)
 				attachedObject.push_back(node->getAttachedObject(i));
 
 			node->detachAllObjects();
 
 			auto attachedIterator(attachedObject.begin());
-			while(attachedIterator!= attachedObject.end())
+			while (attachedIterator != attachedObject.end())
 				SceneManager->destroyMovableObject(*attachedIterator++);
 
 			physicsEngine->removeRigidBody(object->getBody());
@@ -357,7 +353,7 @@ AnnLightObject* AnnEngine::createLightObject()
 
 void AnnEngine::destroyLightObject(AnnLightObject* object)
 {
-	if(object)
+	if (object)
 		SceneManager->destroyLight(object->light);
 
 	//Forget that this light existed
@@ -368,7 +364,7 @@ void AnnEngine::destroyLightObject(AnnLightObject* object)
 bool AnnEngine::requestStop()
 {
 	//pres ESC to quit. Stupid but efficient. I like that.
-	if(isKeyDown(OIS::KC_ESCAPE))
+	if (isKeyDown(OIS::KC_ESCAPE))
 		return true;
 	//If the user quit the App from the Oculus Home
 	if (renderer->getSessionStatus().ShouldQuit)
@@ -380,35 +376,38 @@ bool AnnEngine::refresh()
 {
 	//Get the rendering delta time (should be roughly equals to 1/desiredFramerate in seconds)
 	updateTime = renderer->getUpdateTime();
-	physicsEngine->step(updateTime);
-	player->engineUpdate(updateTime);
+	player->engineUpdate(getFrameTime());
 
-	//Process some logic to extract basic informations (theses should be done within the eventManager).
-	physicsEngine->processCollisionTesting(objects);
-	physicsEngine->processTriggersContacts(player, triggers);
+	if (physicsEngine->needUpdate())
+		physicsEngine->update();
 
 	//Update the event system
-	eventManager->update(); 
-	levelManager->update();
+	if (eventManager->needUpdate())
+		eventManager->update();
+
+	if (levelManager->needUpdate())
+		levelManager->update();
+
+	if (onScreenConsole->needUpdate())
+		onScreenConsole->update();
+
+	if (AudioEngine->needUpdate())
+		AudioEngine->update();
+
+	//Update camera from player
+	syncPov();
+
+	//Update VR form real world
+	renderer->updateTracking();
 
 	//Run animations and update OpenAL sources position
-	for(auto gameObject : objects)
+	for (auto gameObject : objects)
 	{
-		gameObject->addAnimationTime(updateTime);
+		gameObject->addAnimationTime(getFrameTime());
 		gameObject->updateOpenAlPos();
 		gameObject->atRefresh();
 	}
 
-	//Update camera from player
-	syncPov();
-	renderer->updateTracking();
-	//Audio
-	AudioEngine->updateListenerPos(renderer->returnPose.position);
-	AudioEngine->updateListenerOrient(renderer->returnPose.orientation);
-
-	if(onScreenConsole->needUpdate()) 
-		onScreenConsole->update();
-	physicsEngine->stepDebugDrawer();
 	renderer->renderAndSubmitFrame();
 
 	return !requestStop();
@@ -423,7 +422,7 @@ inline void AnnEngine::syncPov()
 
 inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
-	if(!eventManager) return false;
+	if (!eventManager) return false;
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
@@ -455,8 +454,8 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
 
 	//read the result list
-	for(auto it(result.begin()); it != result.end(); it++)
-		if(it->movable && it->movable->getMovableType() == "Entity")
+	for (auto it(result.begin()); it != result.end(); it++)
+		if (it->movable && it->movable->getMovableType() == "Entity")
 			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
 
 	return nullptr; //means that we don't know what the player is looking at.
@@ -470,7 +469,7 @@ void AnnEngine::resetOculusOrientation()
 
 Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 {
-	if(!node)
+	if (!node)
 	{
 		log("Plese do not try to identify a NULL");
 		return NULL;
@@ -478,8 +477,8 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 	AnnDebug() << "Trying to identify object at address " << (void*)node;
 
 	//This methods only test memory address
-	for(auto object : objects)
-		if((void*)object->getNode() == (void*)node)
+	for (auto object : objects)
+		if ((void*)object->getNode() == (void*)node)
 			return object;
 	AnnDebug() << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
 
@@ -514,7 +513,7 @@ unsigned long AnnEngine::getTimeFromStartUp()
 
 double AnnEngine::getTimeFromStartupSeconds()
 {
-	return static_cast<double>(getTimeFromStartUp())/1000.0;
+	return static_cast<double>(getTimeFromStartUp()) / 1000.0;
 }
 
 double AnnEngine::getFrameTime()
@@ -532,7 +531,7 @@ void AnnEngine::setDebugPhysicState(bool state)
 
 void AnnEngine::setAmbiantLight(AnnColor color)
 {
-	AnnDebug() << "Setting the ambiant light to color " << color; 
+	AnnDebug() << "Setting the ambiant light to color " << color;
 	SceneManager->setAmbientLight(color.getOgreColor());
 }
 
@@ -550,8 +549,8 @@ void AnnEngine::setSkyBoxMaterial(bool activate, const char materialName[], floa
 
 void AnnEngine::setWorldBackgroundColor(AnnColor v)
 {
-		AnnDebug() << "Setting the backgroud world color " << v;
-		renderer->changeViewportBackgroundColor(v.getOgreColor()); 
+	AnnDebug() << "Setting the backgroud world color " << v;
+	renderer->changeViewportBackgroundColor(v.getOgreColor());
 }
 
 void AnnEngine::removeSkyDome()
@@ -570,18 +569,18 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 {
 	AnnDebug() << "Setting the near clipping distance to " << nearClippingDistance;
 
-	if(renderer)
+	if (renderer)
 		renderer->setCamerasNearClippingDistance(nearClippingDistance);
 }
 
 void AnnEngine::resetPlayerPhysics()
 {
-	if(!player->hasPhysics()) return;
+	if (!player->hasPhysics()) return;
 	log("Reset player's physics");
 
 	//Remove the player's rigidbody from the world
 	physicsEngine->getWorld()->removeRigidBody(player->getBody());
-	
+
 	//We don't need that body anymore...
 	delete player->getBody();
 	//prevent memory access to unallocated address
@@ -595,7 +594,7 @@ void AnnEngine::resetPlayerPhysics()
 
 OgrePose AnnEngine::getPoseFromOOR()
 {
-	if(renderer)
+	if (renderer)
 		return renderer->returnPose;
 	return OgrePose();
 }
@@ -612,7 +611,7 @@ void AnnEngine::openConsole()
 #pragma warning(disable:4996)
 		freopen("CONOUT$", "w", stdout);
 #pragma warning(default:4996)
-		
+
 		SetConsoleTitle(L"Annwyn Debug Console");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 	}
@@ -621,47 +620,47 @@ void AnnEngine::openConsole()
 
 #else
 	int outHandle, errHandle, inHandle;
-    FILE *outFile, *errFile, *inFile;
-    AllocConsole();
-    CONSOLE_SCREEN_BUFFER_INFO coninfo;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
-    coninfo.dwSize.Y = 9999;
-    SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coninfo.dwSize);
+	FILE *outFile, *errFile, *inFile;
+	AllocConsole();
+	CONSOLE_SCREEN_BUFFER_INFO coninfo;
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
+	coninfo.dwSize.Y = 9999;
+	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coninfo.dwSize);
 
-    outHandle = _open_osfhandle((long)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT);
-    errHandle = _open_osfhandle((long)GetStdHandle(STD_ERROR_HANDLE), _O_TEXT);
-    inHandle = _open_osfhandle((long)GetStdHandle(STD_INPUT_HANDLE), _O_TEXT );
+	outHandle = _open_osfhandle((long)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT);
+	errHandle = _open_osfhandle((long)GetStdHandle(STD_ERROR_HANDLE), _O_TEXT);
+	inHandle = _open_osfhandle((long)GetStdHandle(STD_INPUT_HANDLE), _O_TEXT);
 
-    outFile = _fdopen(outHandle, "w" );
-    errFile = _fdopen(errHandle, "w");
-    inFile =  _fdopen(inHandle, "r");
+	outFile = _fdopen(outHandle, "w");
+	errFile = _fdopen(errHandle, "w");
+	inFile = _fdopen(inHandle, "r");
 
-    *stdout = *outFile;
-    *stderr = *errFile;
-    *stdin = *inFile;
+	*stdout = *outFile;
+	*stderr = *errFile;
+	*stdin = *inFile;
 
-    setvbuf(stdout, NULL, _IONBF, 0 );
-    setvbuf(stderr, NULL, _IONBF, 0 );
-    setvbuf(stdin, NULL, _IONBF, 0 );
+	setvbuf(stdout, NULL, _IONBF, 0);
+	setvbuf(stderr, NULL, _IONBF, 0);
+	setvbuf(stdin, NULL, _IONBF, 0);
 
-    std::ios::sync_with_stdio();
+	std::ios::sync_with_stdio();
 #endif
 #endif
 }
 
 void AnnEngine::toogleOnScreenConsole()
 {
-	if(onScreenConsole) onScreenConsole->toogle();
+	if (onScreenConsole) onScreenConsole->toogle();
 }
 
 void AnnEngine::toogleOculusPerfHUD()
 {
-	if(renderer) renderer->cycleOculusHUD();
+	if (renderer) renderer->cycleOculusHUD();
 }
 
 bool AnnEngine::appVisibleInHMD()
 {
-	if(renderer->getSessionStatus().IsVisible == ovrTrue)
+	if (renderer->getSessionStatus().IsVisible == ovrTrue)
 		return true;
 	return false;
 }

@@ -4,8 +4,16 @@
 
 using namespace Annwvyn;
 
-AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode) : AnnSubSystem("PhysicsEngie")
-{    
+AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode, AnnPlayer * player, AnnGameObjectList & objects, AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+playerObject(player),
+gameObjects(objects),
+triggerObjects(triggers),
+Broadphase(nullptr),
+CollisionConfiguration(nullptr),
+Solver(nullptr),
+DynamicsWorld(nullptr),
+debugDrawer(nullptr)
+{
 	//Initialize the Bullet world
 	Broadphase = new btDbvtBroadphase();
 	CollisionConfiguration = new btDefaultCollisionConfiguration();
@@ -56,10 +64,10 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::
 
 	//Set the body to the player
 	player->setBody(new btRigidBody(
-		player->getMass(), 
+		player->getMass(),
 		state,
-		player->getShape(), 
-		inertia));	
+		player->getShape(),
+		inertia));
 }
 
 void AnnPhysicsEngine::createVirtualBodyShape(AnnPlayer* player)
@@ -76,12 +84,12 @@ btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld()
 
 void AnnPhysicsEngine::step(float delta)
 {
-	DynamicsWorld->stepSimulation(delta, 3, 1.0f/90.0f);
+	DynamicsWorld->stepSimulation(delta, 3, 1.0f / 90.0f);
 }
 
 void AnnPhysicsEngine::stepDebugDrawer()
-{	
-	if(debugPhysics)
+{
+	if (debugPhysics)
 		debugDrawer->step();
 }
 
@@ -92,46 +100,46 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 
 	//get all collision mask
 	auto objectIteartor(objects.begin());
-	for(size_t i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
 		std::vector<struct collisionTest*> onThisObject = (*objectIteartor++)->getCollisionMask();
 
-		for(size_t j = 0; j < onThisObject.size(); j++)
+		for (size_t j = 0; j < onThisObject.size(); j++)
 			pairs.push_back(onThisObject[j]);
 	}
 
 	//Reset the value before extracting data 
-	for(auto pair : pairs)
-		pair->collisionState=false;
+	for (auto pair : pairs)
+		pair->collisionState = false;
 
 	//process for each maniflod
 	int numManifolds = Dispatcher->getNumManifolds();
 
 	//m is manifold identifier
-	for (int m(0); m <numManifolds; m++)
+	for (int m(0); m < numManifolds; m++)
 	{
 		btPersistentManifold* contactManifold =
 			DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(m);
 
-		const btCollisionObject* obA = (btCollisionObject*) contactManifold->getBody0();
-		const btCollisionObject* obB = (btCollisionObject*) contactManifold->getBody1();
+		const btCollisionObject* obA = (btCollisionObject*)contactManifold->getBody0();
+		const btCollisionObject* obB = (btCollisionObject*)contactManifold->getBody1();
 
 		//Just get the address of the collision objects
-		void* pair1 = (void*) obA;
-		void* pair2 = (void*) obB;
+		void* pair1 = (void*)obA;
+		void* pair2 = (void*)obB;
 
 		//for each known pair on the collision feedback system
-		for(size_t p = 0; p < pairs.size(); p++)
+		for (size_t p = 0; p < pairs.size(); p++)
 		{
 			//Get the bodies from the manifold
-			void* body1 = (void*) pairs[p]->Object->getBody();
-			void* body2 = (void*) pairs[p]->Receiver->getBody();
+			void* body1 = (void*)pairs[p]->Object->getBody();
+			void* body2 = (void*)pairs[p]->Receiver->getBody();
 
 			//If there is a collision in either way
-			if((pair1 == body1 && pair2 == body2) ||
+			if ((pair1 == body1 && pair2 == body2) ||
 				(pair2 == body1 && pair1 == body2))
 			{
-				if(contactManifold->getNumContacts() > 0)
+				if (contactManifold->getNumContacts() > 0)
 					pairs[p]->collisionState = true;
 				else
 					pairs[p]->collisionState = false;
@@ -144,7 +152,7 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
 {
 	AnnDebug() << "Removing " << body << " Form physics simulation";
-	if(body)
+	if (body)
 		DynamicsWorld->removeRigidBody(body);
 }
 
@@ -163,10 +171,10 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 
 void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObjectList& triggers)
 {
-	for(auto trigger : triggers)
+	for (auto trigger : triggers)
 	{
 		AnnTriggerObject* current(trigger);
-		if(current->computeVolumetricTest(player))
+		if (current->computeVolumetricTest(player))
 		{
 			current->setContactInformation(true);
 			current->atContact();
@@ -176,9 +184,9 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 			current->setContactInformation(false);
 		}
 
-		if((!current->lastFrameContactWithPlayer && current->contactWithPlayer)
-			||(current->lastFrameContactWithPlayer && !current->contactWithPlayer))
-		AnnGetEventManager()->spatialTrigger(current);
+		if ((!current->lastFrameContactWithPlayer && current->contactWithPlayer)
+			|| (current->lastFrameContactWithPlayer && !current->contactWithPlayer))
+			AnnGetEventManager()->spatialTrigger(current);
 	}
 }
 
@@ -189,4 +197,7 @@ void AnnPhysicsEngine::changeGravity(AnnVect3 gravity)
 
 void AnnPhysicsEngine::update()
 {
+	processCollisionTesting(gameObjects);
+	processTriggersContacts(playerObject, triggerObjects);
+	step(AnnGetEngine()->getFrameTime());
 }

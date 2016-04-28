@@ -16,6 +16,8 @@
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 
+#include "AnnSubsystem.hpp"
+
 #define CONSOLE_BUFFER 19
 #define BASE 256
 #define MARGIN 4
@@ -23,7 +25,7 @@
 namespace Annwvyn
 {
 	///In engine - On screen floating console
-	class DLL AnnConsole
+	class DLL AnnConsole : public AnnSubSystem
 	{
 	public:
 		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational

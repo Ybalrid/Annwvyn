@@ -12,7 +12,8 @@ namespace Annwvyn
 
 	protected:
 		friend class AnnEngine;
-		virtual void update() {};
+		virtual void update();
+		virtual bool needUpdate();
 
 	};
 }

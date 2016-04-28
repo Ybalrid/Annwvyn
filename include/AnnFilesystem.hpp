@@ -62,7 +62,7 @@ namespace Annwvyn
 	public:
 		
 		///Construct FileSystem manager
-		AnnFilesystemManager();
+		AnnFilesystemManager(std::string title);
 
 		///Destroy FileSystem manager
 		~AnnFilesystemManager();
