@@ -65,9 +65,11 @@ void AnnAudioEngine::shutdownOpenAL()
 	//Stop and delete other audio sources
 	for(auto source : AudioSources)
 		delete source;
+
 	//Delete the BGM buffer if it has been initialized
 	if(alIsBuffer(bgmBuffer) == AL_TRUE)
 		alDeleteBuffers(1,&bgmBuffer);
+
 	//Delete all buffers created here
 	for(auto buffer : buffers)
 		alDeleteBuffers(1, &buffer.second);
@@ -242,10 +244,6 @@ void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 							Up.x, Up.y, Up.z};
 
 	alListenerfv(AL_ORIENTATION, Orientation);
-}
-
-void Annwvyn::AnnAudioEngine::update()
-{
 }
 
 const std::string AnnAudioEngine::getLastError()
