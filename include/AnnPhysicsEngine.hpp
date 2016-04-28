@@ -29,7 +29,7 @@ namespace Annwvyn
 	public:
 
 		///Create the physics engine
-		AnnPhysicsEngine(Ogre::SceneNode* rootNode);
+		AnnPhysicsEngine(Ogre::SceneNode* rootNode, AnnPlayer* player, AnnGameObjectList& objects, AnnTriggerObjectList& triggers);
 
 		///Destroy the physics engine
 		~AnnPhysicsEngine();
@@ -76,7 +76,10 @@ namespace Annwvyn
 
 	private:
 
+		friend class AnnEngine;
+		///Update by steping simulation by one frame time. Should be called only once, and only by AnnEngine
 		void update();
+
 		btBroadphaseInterface* Broadphase;
 		btDefaultCollisionConfiguration* CollisionConfiguration;
 		btCollisionDispatcher* Dispatcher;
@@ -90,6 +93,10 @@ namespace Annwvyn
 
 		///Debug drawer object from BtOgre
 		BtOgre::DebugDrawer* debugDrawer;
+
+		AnnGameObjectList& gameObjects;
+		AnnTriggerObjectList& triggerObjects;
+		AnnPlayer* playerObject;
 	};
 }
 

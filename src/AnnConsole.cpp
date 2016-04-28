@@ -4,13 +4,12 @@
 
 using namespace Annwvyn;
 
-AnnConsole::AnnConsole() : 
+AnnConsole::AnnConsole() : AnnSubSystem("OnScreenConsole"),
 	modified(false),
 	visibility(false),
 	consoleNode(NULL),
 	offset(0,0.125f, -0.75f)
 {
-	std::cerr << "Creating on screen console " << (void*)this << std::endl;
 	//Define the custom material
 	Ogre::MaterialPtr Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
 	Ogre::Technique* technique = Console.getPointer()->getTechnique(0);

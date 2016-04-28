@@ -246,6 +246,13 @@ void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 	alListenerfv(AL_ORIENTATION, Orientation);
 }
 
+void AnnAudioEngine::update()
+{
+	OgrePose pose = AnnGetEngine()->getPoseFromOOR();
+	updateListenerPos(pose.position);
+	updateListenerOrient(pose.orientation);
+}
+
 const std::string AnnAudioEngine::getLastError()
 {
 	return lastError;

@@ -83,7 +83,7 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 }
 
 
-AnnFilesystemManager::AnnFilesystemManager() : AnnSubSystem("FilesystemManager")
+AnnFilesystemManager::AnnFilesystemManager(std::string title) : AnnSubSystem("FilesystemManager")
 {
 	//get from the OS the user's personal directory
 #ifdef WIN32
@@ -113,6 +113,8 @@ AnnFilesystemManager::AnnFilesystemManager() : AnnSubSystem("FilesystemManager")
 
 	fileWriter = new AnnFileWriter;
 	fileReader = new AnnFileReader;
+
+	setSaveDirectoryName(title);
 }
 
 AnnFilesystemManager::~AnnFilesystemManager()
