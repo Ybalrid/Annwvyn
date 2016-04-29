@@ -13,6 +13,9 @@ namespace Annwvyn
 		///Construct a SubSystem
 		AnnSubSystem(std::string systemName);
 
+		///Destruct a SubSystem
+		virtual ~AnnSubSystem();
+
 	protected:
 		friend class AnnEngine;
 		///To be called by AnnEngine : update the subsystem for the next frame

@@ -23,7 +23,8 @@ AnnGameObject::AnnGameObject() :
 AnnGameObject::~AnnGameObject()
 {
 	//Clean OpenAL desaloc
-	AnnGetAudioEngine()->destroySource(audioSource);
+	if(AnnGetAudioEngine())
+		AnnGetAudioEngine()->destroySource(audioSource);
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
