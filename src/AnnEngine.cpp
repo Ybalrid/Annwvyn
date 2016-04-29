@@ -58,8 +58,8 @@ AnnEngine::AnnEngine(const char title[]) :
 	renderer->showMonscopicView();
 
 	log("Setup Annwvyn's subsystems");
-	SubSystemList.push_back(gameObjectManager = new AnnGameObjectManager);
 	SubSystemList.push_back(levelManager = new AnnLevelManager);
+	SubSystemList.push_back(gameObjectManager = new AnnGameObjectManager);
 	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, triggers));
 	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
 	SubSystemList.push_back(audioEngine = new AnnAudioEngine);
