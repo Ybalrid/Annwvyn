@@ -55,6 +55,9 @@
     <Filter Include="Annwvyn\MathObjects">
       <UniqueIdentifier>{8002a392-511f-4f41-9d99-a4f6b3aac75c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\Resource">
+      <UniqueIdentifier>{dc4a24bb-ed55-40f2-b82a-1cfbc40d2736}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\..\include\OgreOculusRender.hpp">
       <Filter>Oculus rendering for Ogre</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnResourceManager.hpp">
+      <Filter>Annwvyn\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -244,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\OgreOculusRender.cpp">
       <Filter>Oculus rendering for Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnResourceManager.cpp">
+      <Filter>Annwvyn\Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

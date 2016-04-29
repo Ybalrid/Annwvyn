@@ -72,6 +72,7 @@
 #include "AnnXmlLevel.hpp"
 #include "AnnSplashLevel.hpp"
 #include "AnnFilesystem.hpp"
+#include "AnnResourceManager.hpp"
 
 //Other Annwvyn
 #include "AnnTypes.h"

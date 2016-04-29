@@ -88,9 +88,9 @@ AnnMain()
 	AnnInit("AnnTest");
 
 	//load ressources
-	AnnGetEngine()->loadDir("media/environement");
-	AnnGetEngine()->loadDir("media/debug");
-	AnnGetEngine()->initResources();
+	AnnGetResourceManager()->loadDir("media/environement");
+	AnnGetResourceManager()->loadDir("media/debug");
+	AnnGetResourceManager()->initResources();
 
 	//SetUp Oculus system	
 	AnnGetEngine()->oculusInit();

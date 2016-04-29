@@ -63,6 +63,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
 	SubSystemList.push_back(AudioEngine = new AnnAudioEngine);
 	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
+	SubSystemList.push_back(resourceManager = new AnnResourceManager);
 
 	log("===================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World    ", false);
@@ -100,6 +101,13 @@ AnnEventManager* AnnEngine::getEventManager()
 {
 	if (!canAccessSubSystems) return nullptr;
 	return eventManager;
+}
+
+
+AnnResourceManager* AnnEngine::getResourceManager()
+{
+	if (!canAccessSubSystems) return nullptr;
+	return resourceManager;
 }
 
 AnnLevelManager* AnnEngine::getLevelManager()
@@ -166,29 +174,6 @@ void AnnEngine::initPlayerPhysics()
 {
 	physicsEngine->initPlayerPhysics(player, povNode);
 }
-
-void AnnEngine::loadZip(const char path[], const char resourceGroupName[])
-{
-	log("Loading resources from Zip archive :");
-	log(path, false);
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
-}
-
-void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
-{
-	log("Loading resources from Filesystem directory :");
-	log(path, false);
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
-}
-
-
-void AnnEngine::addDefaultResourceLocaton()
-{
-	log("Adding Annwvyn CORE resources");
-	loadDir("media");
-	loadZip("media/CORE.zip");
-}
-
 
 void AnnEngine::oculusInit()
 {
@@ -587,32 +572,3 @@ bool AnnEngine::appVisibleInHMD()
 	return false;
 }
 
-
-
-void AnnEngine::loadReseourceFile(const char path[])
-{
-	/*from ogre wiki : load the given resource file*/
-	Ogre::ConfigFile configFile;
-	configFile.load(path);
-	Ogre::ConfigFile::SectionIterator seci = configFile.getSectionIterator();
-	Ogre::String secName, typeName, archName;
-	while (seci.hasMoreElements())
-	{
-		secName = seci.peekNextKey();
-		Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
-		Ogre::ConfigFile::SettingsMultiMap::iterator i;
-		for (i = settings->begin(); i != settings->end(); ++i)
-		{
-			typeName = i->first;
-			archName = i->second;
-			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
-		}
-	}
-}
-
-void AnnEngine::initResources()
-{
-	addDefaultResourceLocaton();
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-	log("Resources initialized");
-}
