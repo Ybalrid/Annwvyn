@@ -33,6 +33,7 @@
 #include "AnnConsole.hpp"
 #include "AnnLevelManager.hpp"
 #include "AnnFilesystem.hpp"
+#include "AnnResourceManager.hpp"
 #include "AnnGameObject.hpp"
 
 #ifdef _WIN32
@@ -57,6 +58,8 @@
 #define AnnGetEventManager() AnnGetEngine()->getEventManager()
 ///Get PlayerObject
 #define AnnGetPlayer() AnnGetEngine()->getPlayer()
+///Get ResourceManager
+#define AnnGetResourceManager() AnnGetEngine()->getResourceManager()
 
 
 namespace Annwvyn
@@ -102,10 +105,7 @@ namespace Annwvyn
 		/// key an OIS key code
 		inline bool isKeyDown(OIS::KeyCode key); //event
 
-												 ///Get ogre scene manager
-		Ogre::SceneManager* getSceneManager(); //scene or graphics
-
-											   ///Get ogre camera scene node
+		///Get ogre camera scene node
 		Ogre::SceneNode* getCamera();
 
 		///Open a console and redirect standard output to it.
@@ -129,6 +129,9 @@ namespace Annwvyn
 
 		///Get the current level manager
 		AnnLevelManager* getLevelManager();
+
+		///Get the ResourceManager
+		AnnResourceManager* getResourceManager();
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
 		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
@@ -140,27 +143,6 @@ namespace Annwvyn
 		void initPlayerPhysics(); //physics on player
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
-		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
-		///Give a zipped archive resource location to the Ogre Resource Group Manager
-		/// \param path The path to a zip file.
-		/// \param resourceGroupName name of the resource group where the content will be added
-		void loadZip(const char path[], const char resourceGroupName[] = "ANNWVYN_DEFAULT");
-
-		///Give a directory resouce location to the Ogre Resource Group Manager
-		/// \param path The path to the directory
-		/// \param resourceGroupName name of the resource group
-		void loadDir(const char path[], const char resourceGroupName[] = "ANNWVYN_DEFAULT");
-
-		///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
-		void addDefaultResourceLocaton();
-
-		///Load resource.cfg like file
-		void loadReseourceFile(const char path[]);
-
-		///InitAllResources
-		void initResources();
-		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 		////////////////////////////////////////////////////////////////////////////////////////////////////////SCENERY
 		
 		///Set the ogre material for the skydome with params
@@ -200,6 +182,9 @@ namespace Annwvyn
 		///Set the distance of the near clipping plane
 		/// \param distace the distance to the clipping plane
 		void setNearClippingDistance(Ogre::Real distance); //graphics
+
+		///Get ogre scene manager
+		Ogre::SceneManager* getSceneManager(); //scene or graphics
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////SCENERY
 		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
@@ -244,6 +229,7 @@ namespace Annwvyn
 
 		///Get the AnnObject the player is looking at
 		AnnGameObject* playerLookingAt(); //physics
+
 		//////////////////////////////////////////////////////////////////////////////////////////////PLAYER MANAGEMENT
 		//////////////////////////////////////////////////////////////////////////////////////////////////GAMEPLAY LOOP
 
@@ -314,6 +300,8 @@ namespace Annwvyn
 		AnnLevelManager* levelManager;
 		///FilesystemManager
 		AnnFilesystemManager* filesystemManager;
+		///ResourceManager
+		AnnResourceManager* resourceManager;
 
 		///The scene manager
 		Ogre::SceneManager* SceneManager;
