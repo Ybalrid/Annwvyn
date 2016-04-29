@@ -179,9 +179,6 @@
     <ClCompile Include="..\..\src\AnnVect3.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\OgreOculusRender_Windows.cpp">
-      <Filter>Oculus rendering for Ogre\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnEngine.cpp">
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
@@ -250,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLightObject.cpp">
       <Filter>Annwvyn\LightObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreOculusRender.cpp">
+      <Filter>Oculus rendering for Ogre\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

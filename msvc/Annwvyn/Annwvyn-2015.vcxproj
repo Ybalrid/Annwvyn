@@ -252,7 +252,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnXmlLevel.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />
     <ClCompile Include="..\..\src\OculusInterface.cpp" />
-    <ClCompile Include="..\..\src\OgreOculusRender_Windows.cpp" />
+    <ClCompile Include="..\..\src\OgreOculusRender.cpp" />
     <ClCompile Include="..\..\src\AnnLogger.cpp" />
     <ClCompile Include="..\..\src\tinyxml2.cpp" />
   </ItemGroup>

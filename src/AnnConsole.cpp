@@ -56,7 +56,7 @@ AnnConsole::AnnConsole() : AnnSubSystem("OnScreenConsole"),
 	displaySurface->end();
 
 	//create a node child to the camera here : 
-	consoleNode = AnnEngine::Instance()->getCamera()->createChildSceneNode();
+	consoleNode = AnnGetEngine()->getCamera()->createChildSceneNode();
 
 	//attach The object
 	consoleNode->attachObject(displaySurface);

@@ -315,7 +315,18 @@ void OgreOculusRender::initScene()
 	/*
 	 *  This is a 4 vertices quad with a size of 16x9 units with it's origin in the center
 	 *  The quad got mapped square texture coordinates at each corner, covering the whole UV map
+	 *
+	 * The debugPlane is a perfect rectangle drawn by 2 polygons (tiangles). The position in object-space are defined as folowing
+	 * on the "points" array :
+	 *  0 +---------------+ 2
+	 *    |           /   |
+	 *    |        /      |
+	 *    |     /         |
+	 *    |  /            |
+	 *  1 +----------------+ 3
+	 * Texture coordinates are also mapped. To display properly, the texture should respect the same aspect ratio (2:1)
 	 */
+
 	debugPlane->begin("DebugPlaneMaterial", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 	debugPlane->position(-x, y, 0);
 	debugPlane->textureCoord(0, 0);
