@@ -7,7 +7,12 @@ using namespace Annwvyn;
 AnnSubSystem::AnnSubSystem(std::string systemName) :
 	name(systemName)
 {
-	AnnDebug() << "*-*-*-* Starting " << name << " subsystem";
+	AnnDebug() << "*-*-*-* Starting " << name << " SubSystem";
+}
+
+AnnSubSystem::~AnnSubSystem()
+{
+	AnnDebug() << "*-*-*-* Stoping " << name << " SubSystem";
 }
 
 bool AnnSubSystem::needUpdate()

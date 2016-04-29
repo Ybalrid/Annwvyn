@@ -316,6 +316,7 @@ namespace Annwvyn
 		double updateTime; 
 
 		std::list<AnnSubSystem*> SubSystemList;
+		bool canAccessSubSystems;
 	};
 }
 #endif ///ANN_ENGINE

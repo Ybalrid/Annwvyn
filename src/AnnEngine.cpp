@@ -29,7 +29,8 @@ AnnEngine::AnnEngine(const char title[]) :
 	eventManager(NULL),
 	levelManager(NULL),
 	povNode(NULL),
-	defaultEventListener(NULL)
+	defaultEventListener(NULL),
+	canAccessSubSystems(true)
 {
 	if (singleton)
 	{
@@ -57,9 +58,9 @@ AnnEngine::AnnEngine(const char title[]) :
 	renderer->showMonscopicView();
 
 	log("Setup Annwvyn's subsystems");
+	SubSystemList.push_back(levelManager = new AnnLevelManager);
 	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, objects, triggers));
 	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
-	SubSystemList.push_back(levelManager = new AnnLevelManager);
 	SubSystemList.push_back(AudioEngine = new AnnAudioEngine);
 	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
 
@@ -70,96 +71,40 @@ AnnEngine::AnnEngine(const char title[]) :
 	log("===================================================", false);
 }
 
-//TODO: make THIS less ugly
 AnnEngine::~AnnEngine()
 {
+	//Destroy all SubSystems
+	for (auto SubSystem : SubSystemList) delete SubSystem;
+	canAccessSubSystems = false;
 
-	log("Destroying the event manager");
-	delete eventManager;
-	eventManager = nullptr;
-
-	log("Destroy the levelManager");
-	delete levelManager;
-	levelManager = nullptr;
-
-	log("Destroying every objects remaining in engine");
-
-	log(" Creating the destroing queue;");
-	AnnDebug() << " Will destroy " << objects.size() << " remaining objects";
-	AnnDebug() << " Will destroy " << triggers.size() << " remaining triggers";
-	AnnDebug() << " Will destroy " << lights.size() << " remaining lights";
-
-	AnnGameObject** tmpArrayObj = static_cast<AnnGameObject**>(malloc(sizeof(AnnGameObject*)*objects.size()));
-	AnnTriggerObject** tmpArrayTrig = static_cast<AnnTriggerObject**>(malloc(sizeof(AnnTriggerObject*)*triggers.size()));
-	AnnLightObject** tmpArrayLight = static_cast<AnnLightObject**>(malloc(sizeof(AnnLightObject*)*lights.size()));
-
-	auto objIt = objects.begin();
-	auto trigIt = triggers.begin();
-	auto lightIt = lights.begin();
-
-	for (size_t i(0); i < objects.size(); i++) tmpArrayObj[i] = *objIt++;;
-	for (size_t i(0); i < triggers.size(); i++) tmpArrayTrig[i] = *trigIt++;
-	for (size_t i(0); i < lights.size(); i++) tmpArrayLight[i] = *lightIt++;
-
-	log("Content of the destroing queue :");
-	log("Game Object");
-	for (size_t i(0); i < objects.size(); i++)
-		AnnDebug() << (void*)tmpArrayObj[i];
-	log("Trigger Object");
-	for (size_t i(0); i < triggers.size(); i++)
-		AnnDebug() << (void*)tmpArrayTrig[i];
-	log("Light object");
-	for (size_t i(0); i < lights.size(); i++)
-		AnnDebug() << (void*)tmpArrayLight[i];
-
-	size_t queueSize;
-	queueSize = objects.size();
-	for (size_t i(0); i < queueSize; i++)
-		destroyGameObject(tmpArrayObj[i]);
-	queueSize = triggers.size();
-	for (size_t i(0); i < queueSize; i++)
-		destroyTriggerObject(tmpArrayTrig[i]);
-	queueSize = lights.size();
-	for (size_t i(0); i < queueSize; i++)
-		destroyLightObject(tmpArrayLight[i]);
-
-
-	log("Destroing the deletion queues");
-	free(tmpArrayObj);
-	free(tmpArrayTrig);
-	free(tmpArrayLight);
-
-	log("Clearing object lists");
-	objects.clear();
-	triggers.clear();
-	lights.clear();
-
-	log("Destroying physics engine");
-	delete physicsEngine;
-	physicsEngine = nullptr;
-	log("Destroying Player");
-	delete player;
-	player = nullptr;
-	log("Destroying AudioEngine");
-	delete AudioEngine;
-	AudioEngine = nullptr;
+	//In case of orphan objects, do their cleanup here. 
+	log("Destroying every objects remaining orphan object in engine");
+	if(objects.size() > 0) for (auto object : objects) destroyGameObject(object);
+	else log("Object list allready clean");
+	if (triggers.size() > 0) for (auto object : triggers) destroyTriggerObject(object);
+	else log("Trigger list allready clean");
+	if (lights.size() > 0) for (auto object : lights) destroyLightObject(object);
+	else log("Light list allready clean");
 
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
-	delete onScreenConsole;
-	onScreenConsole = NULL;
-	singleton = NULL;
+	
+	//Destroy the VR renderer
 	delete renderer;
-	renderer = nullptr;
+
+	//Forget AnnEngine static address
+	singleton = nullptr;
 }
 
 AnnEventManager* AnnEngine::getEventManager()
 {
+	if (!canAccessSubSystems) return nullptr;
 	return eventManager;
 }
 
 AnnLevelManager* AnnEngine::getLevelManager()
 {
+	if (!canAccessSubSystems) return nullptr;
 	return levelManager;
 }
 
@@ -170,6 +115,7 @@ AnnPlayer* AnnEngine::getPlayer()
 
 AnnFilesystemManager* AnnEngine::getFileSystemManager()
 {
+	if (!canAccessSubSystems) return nullptr;
 	return filesystemManager;
 }
 
@@ -329,8 +275,7 @@ bool AnnEngine::destroyGameObject(Annwvyn::AnnGameObject* object)
 			auto attachedIterator(attachedObject.begin());
 			while (attachedIterator != attachedObject.end())
 				SceneManager->destroyMovableObject(*attachedIterator++);
-
-			physicsEngine->removeRigidBody(object->getBody());
+			if(canAccessSubSystems) physicsEngine->removeRigidBody(object->getBody()); 
 			SceneManager->destroySceneNode(node);
 			delete object;
 		}
@@ -481,11 +426,13 @@ Ogre::SceneNode* AnnEngine::getCamera()
 
 AnnAudioEngine* AnnEngine::getAudioEngine()
 {
+	if (!canAccessSubSystems) return nullptr;
 	return AudioEngine;
 }
 
 AnnPhysicsEngine* AnnEngine::getPhysicsEngine()
 {
+	if (!canAccessSubSystems) return nullptr;
 	return physicsEngine;
 }
 
@@ -512,7 +459,6 @@ double AnnEngine::getFrameTime()
 ////////////////////////////////////////////////////////// SETTERS
 void AnnEngine::setDebugPhysicState(bool state)
 {
-	assert(physicsEngine);
 	log("Activating debug drawing for physics engine");
 	physicsEngine->setDebugPhysics(state);
 }
