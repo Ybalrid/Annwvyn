@@ -6,7 +6,8 @@
 #include "AnnTypes.h"
 
 namespace Annwvyn
-{
+{	
+	class AnnEngine;
 	class DLL AnnGameObjectManager : public AnnSubSystem
 	{
 	public:
@@ -23,7 +24,10 @@ namespace Annwvyn
 		/// \param object the object to be destroyed
 		bool destroyGameObject(AnnGameObject* object); //object factory
 
+		Annwvyn::AnnGameObject * getFromNode(Ogre::SceneNode * node);
+
 	private:
+		friend class AnnEngine;
 		AnnGameObjectList Objects;
 	};
 }
