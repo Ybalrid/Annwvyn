@@ -32,7 +32,7 @@ void AnnAbstractLevel::unload()
 
 	//Remove the level objects
 	for(AnnGameObjectList::iterator it = levelContent.begin(); it != levelContent.end(); ++it)
-		AnnGetEngine()->destroyGameObject(*it);
+		AnnGetGameObjectManager()->destroyGameObject(*it);
 	levelContent.clear();
 
 	//Remove volumetric event triggers
@@ -50,7 +50,7 @@ AnnLightObject* AnnAbstractLevel::addLightObject(std::string id)
 
 AnnGameObject* AnnAbstractLevel::addGameObject(std::string entityName, std::string id)
 {
-	AnnGameObject* object(AnnGetEngine()->createGameObject(entityName.c_str()));
+	AnnGameObject* object(AnnGetGameObjectManager()->createGameObject(entityName.c_str()));
 	object->setID(id);
 	levelContent.push_back(object);
 	return object;

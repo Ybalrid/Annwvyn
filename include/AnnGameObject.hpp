@@ -26,7 +26,8 @@
 
 namespace Annwvyn
 {
-    class DLL AnnGameObject; 
+    class DLL AnnGameObject;
+	class DLL AnnGameObjectManager;
 
 	//TODO get rid of 
 	///Simple collision state representation (pointer between 2 objects and a boolean)
@@ -191,6 +192,7 @@ namespace Annwvyn
         private:
             ///Make Annwvyn::AnnEngine acces these methods : 
             friend class AnnEngine;
+			friend class AnnGameObjectManager;
 
             ///For engine : set node
             void setNode(Ogre::SceneNode* node);
