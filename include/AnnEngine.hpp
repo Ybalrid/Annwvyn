@@ -289,7 +289,7 @@ namespace Annwvyn
 		static AnnConsole* onScreenConsole;
 
 		///Audio engine
-		AnnAudioEngine* AudioEngine;
+		AnnAudioEngine* audioEngine;
 		///Player
 		AnnPlayer* player;
 		///Event manager
