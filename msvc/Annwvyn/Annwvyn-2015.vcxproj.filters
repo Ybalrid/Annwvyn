@@ -55,8 +55,11 @@
     <Filter Include="Annwvyn\MathObjects">
       <UniqueIdentifier>{8002a392-511f-4f41-9d99-a4f6b3aac75c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Annwvyn\Resource">
+    <Filter Include="Annwvyn\SubSystems\Resource">
       <UniqueIdentifier>{dc4a24bb-ed55-40f2-b82a-1cfbc40d2736}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\PlayerObject">
+      <UniqueIdentifier>{fef73889-f986-4d0a-8943-ff5549a9070a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,12 +101,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp">
       <Filter>Annwvyn\SubSystems\Physics&amp;Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnPlayer.hpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnPlayerActuator.hpp">
-      <Filter>Annwvyn\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnSplashLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
@@ -163,7 +160,16 @@
       <Filter>Oculus rendering for Ogre</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnResourceManager.hpp">
-      <Filter>Annwvyn\Resource</Filter>
+      <Filter>Annwvyn\SubSystems\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnPlayer.hpp">
+      <Filter>Annwvyn\PlayerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnPlayerActuator.hpp">
+      <Filter>Annwvyn\PlayerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
+      <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -177,12 +183,6 @@
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnEngine.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnPlayer.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnPlayerActuator.cpp">
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLevelManager.cpp">
@@ -252,7 +252,16 @@
       <Filter>Oculus rendering for Ogre</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnResourceManager.cpp">
-      <Filter>Annwvyn\Resource</Filter>
+      <Filter>Annwvyn\SubSystems\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnPlayer.cpp">
+      <Filter>Annwvyn\PlayerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnPlayerActuator.cpp">
+      <Filter>Annwvyn\PlayerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
+      <Filter>Annwvyn\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

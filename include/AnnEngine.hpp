@@ -35,6 +35,7 @@
 #include "AnnFilesystem.hpp"
 #include "AnnResourceManager.hpp"
 #include "AnnGameObject.hpp"
+#include "AnnGameObjectManager.hpp"
 
 #ifdef _WIN32
 #include <io.h>
@@ -60,6 +61,8 @@
 #define AnnGetPlayer() AnnGetEngine()->getPlayer()
 ///Get ResourceManager
 #define AnnGetResourceManager() AnnGetEngine()->getResourceManager()
+///GEt GameObjectManager
+#define AnnGetGameObjectManager() AnnGetEngine()->getGameObjectManager()
 
 
 namespace Annwvyn
@@ -132,6 +135,10 @@ namespace Annwvyn
 
 		///Get the ResourceManager
 		AnnResourceManager* getResourceManager();
+
+		///Get the GameObjectManager
+		AnnGameObjectManager* getGameObjectManager();
+
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
 		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
@@ -189,14 +196,7 @@ namespace Annwvyn
 		////////////////////////////////////////////////////////////////////////////////////////////////////////SCENERY
 		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
 
-		///Create a game object form the name of an entity.
-		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
-		/// \param object An instance of an empty AnnGameObject. Usefull for creating object of herited class
-		AnnGameObject* createGameObject(const char entityName[], AnnGameObject* object = new AnnGameObject()); //object factory
-
-		///Destroy the given object
-		/// \param object the object to be destroyed
-		bool destroyGameObject(AnnGameObject* object); //object factory
+		
 
 		///Destroy the given light
 		/// \param light pointer to the light to destroy
@@ -283,6 +283,8 @@ namespace Annwvyn
 		///////////////////////////////////////////////////////////////////////////////////////////////TIMER MANAGEMENT
 
 	private:
+		void destroyAllSubSystem();
+
 		///The onScreenConsole object
 		static AnnConsole* onScreenConsole;
 
@@ -302,6 +304,8 @@ namespace Annwvyn
 		AnnFilesystemManager* filesystemManager;
 		///ResourceManager
 		AnnResourceManager* resourceManager;
+		///
+		AnnGameObjectManager* gameObjectManager;
 
 		///The scene manager
 		Ogre::SceneManager* SceneManager;

@@ -39,7 +39,7 @@ public:
 		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5* AnnVect3::NEGATIVE_UNIT_Z);
 
 		//Create objects and register them as content of the level
-		auto S = AnnGetEngine()->createGameObject("Sinbad.mesh", new Sinbad);
+		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", new Sinbad);
 		levelContent.push_back(S);
 		S->playSound("media/monster.wav", true, 1);
 

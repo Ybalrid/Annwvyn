@@ -145,12 +145,12 @@ AnnMain()
 	AnnDebug() << "stored lives value : " << tester.getLives();
 
 	AnnDebug() << "Starting the render loop";
-	/*
-	auto sinbad(AnnGetEngine()->createGameObject("Sinbad.mesh"));
+	
+	auto sinbad(AnnGetGameObjectManager()->createGameObject("Sinbad.mesh"));
 	sinbad->setPosition(100, 100, 100);
 	sinbad->setUpPhysics();
 	AnnGetEngine()->createLightObject()->setPosition(AnnVect3(100, 100, 100));
-	AnnGetEngine()->createTriggerObject()->setPosition(100, 100, 100);*/
+	AnnGetEngine()->createTriggerObject()->setPosition(100, 100, 100);
 
 	do	
 	{
