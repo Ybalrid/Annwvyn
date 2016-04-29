@@ -181,18 +181,6 @@ void AnnEngine::loadDir(const char path[], const char resourceGroupName[])
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
 }
 
-void AnnEngine::loadResFile(const char path[])
-{
-	AnnDebug() << "Loading resource file : " << path;
-	renderer->loadReseourceFile(path);
-}
-
-void AnnEngine::initResources()
-{
-	addDefaultResourceLocaton();
-	renderer->initAllResources();
-	log("Resources initialized");
-}
 
 void AnnEngine::addDefaultResourceLocaton()
 {
@@ -597,4 +585,34 @@ bool AnnEngine::appVisibleInHMD()
 	if (renderer->getSessionStatus().IsVisible == ovrTrue)
 		return true;
 	return false;
+}
+
+
+
+void AnnEngine::loadReseourceFile(const char path[])
+{
+	/*from ogre wiki : load the given resource file*/
+	Ogre::ConfigFile configFile;
+	configFile.load(path);
+	Ogre::ConfigFile::SectionIterator seci = configFile.getSectionIterator();
+	Ogre::String secName, typeName, archName;
+	while (seci.hasMoreElements())
+	{
+		secName = seci.peekNextKey();
+		Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
+		Ogre::ConfigFile::SettingsMultiMap::iterator i;
+		for (i = settings->begin(); i != settings->end(); ++i)
+		{
+			typeName = i->first;
+			archName = i->second;
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
+		}
+	}
+}
+
+void AnnEngine::initResources()
+{
+	addDefaultResourceLocaton();
+	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	log("Resources initialized");
 }

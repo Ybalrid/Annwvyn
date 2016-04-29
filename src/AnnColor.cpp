@@ -24,7 +24,7 @@ AnnColor::AnnColor(Ogre::ColourValue color) :
 
 Ogre::ColourValue AnnColor::getOgreColor()
 {
-	return Ogre::ColourValue(r,g,b,a);
+	return Ogre::ColourValue(r, g, b, a);
 }
 
 float AnnColor::getRed()

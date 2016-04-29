@@ -134,32 +134,7 @@ void OgreOculusRender::recenter()
 	ovr_RecenterTrackingOrigin(Oculus->getSession());
 }
 
-void OgreOculusRender::loadReseourceFile(const char path[])
-{
-	/*from ogre wiki : load the given resource file*/
-	Ogre::ConfigFile configFile;
-	configFile.load(path);
-	Ogre::ConfigFile::SectionIterator seci = configFile.getSectionIterator();
-	Ogre::String secName, typeName, archName;
-	while (seci.hasMoreElements())
-	{
-		secName = seci.peekNextKey();
-		Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
-		Ogre::ConfigFile::SettingsMultiMap::iterator i;
-		for (i = settings->begin(); i != settings->end(); ++i)
-		{
-			typeName = i->first;
-			archName = i->second;
-			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
-		}
-	}
-}
-
 //See commant of the loadResourceFile method
-void OgreOculusRender::initAllResources()
-{
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-}
 
 void OgreOculusRender::initLibraries(std::string loggerName)
 {
@@ -172,29 +147,6 @@ void OgreOculusRender::initLibraries(std::string loggerName)
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 	updateTime = 1.0 / static_cast<double>(Oculus->getHmdDesc().DisplayRefreshRate);
-}
-
-void OgreOculusRender::initialize(std::string resourceFile)
-{
-	//init libraries;
-	initLibraries();
-	//Mandatory. If thouse pointers are unitilalized, program have to stop here.
-	assert(root != NULL && Oculus != NULL);
-	//get Ogre Configuration
-	getOgreConfig();
-	//Create the render window with the given sice from the Oculus
-	createWindow();
-	//Load resources from the resources.cfg file
-	loadReseourceFile(resourceFile.c_str());
-	initAllResources();
-	//Create scene manager
-	initScene();
-	//Create cameras and handeling nodes
-	initCameras();
-	//Create rtts and viewports on them
-	initRttRendering();
-	//Init the oculus rendering
-	initOculus();
 }
 
 void OgreOculusRender::getOgreConfig()
