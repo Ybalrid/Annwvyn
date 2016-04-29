@@ -61,7 +61,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	SubSystemList.push_back(levelManager = new AnnLevelManager);
 	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, objects, triggers));
 	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
-	SubSystemList.push_back(AudioEngine = new AnnAudioEngine);
+	SubSystemList.push_back(audioEngine = new AnnAudioEngine);
 	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
 	SubSystemList.push_back(resourceManager = new AnnResourceManager);
 	SubSystemList.push_back(gameObjectManager = new AnnGameObjectManager);
@@ -79,7 +79,7 @@ void Annwvyn::AnnEngine::destroyAllSubSystem()
 	for (auto SubSystem : SubSystemList)
 	{
 		if (SubSystem == physicsEngine) physicsEngine = nullptr;
-		if (SubSystem == AudioEngine) AudioEngine = nullptr;
+		if (SubSystem == audioEngine) audioEngine = nullptr;
 		delete SubSystem;
 	}
 	canAccessSubSystems = false;
@@ -214,7 +214,7 @@ AnnLightObject* AnnEngine::createLightObject()
 {
 	log("Creating a light");
 	AnnLightObject* Light = new AnnLightObject(SceneManager->createLight());
-	Light->light->setType(Ogre::Light::LT_POINT);
+	Light->setType(AnnLightObject::LightTypes::ANN_LIGHT_POINT);
 	lights.push_back(Light);
 	return Light;
 }
@@ -334,7 +334,6 @@ Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
 	return NULL;
 }
 
-////////////////////////////////////////////////////////// GETTERS
 Ogre::SceneNode* AnnEngine::getCamera()
 {
 	return povNode;
@@ -343,7 +342,7 @@ Ogre::SceneNode* AnnEngine::getCamera()
 AnnAudioEngine* AnnEngine::getAudioEngine()
 {
 	if (!canAccessSubSystems) return nullptr;
-	return AudioEngine;
+	return audioEngine;
 }
 
 AnnPhysicsEngine* AnnEngine::getPhysicsEngine()
@@ -372,7 +371,6 @@ double AnnEngine::getFrameTime()
 	return updateTime;
 }
 
-////////////////////////////////////////////////////////// SETTERS
 void AnnEngine::setDebugPhysicState(bool state)
 {
 	log("Activating debug drawing for physics engine");
