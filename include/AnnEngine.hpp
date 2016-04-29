@@ -212,9 +212,6 @@ namespace Annwvyn
 		///Remove the object from the engine
 		void destroyTriggerObject(AnnTriggerObject* obj);
 
-		///Get the AnnGameObject form the given Ogre node
-		AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
-		
 		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
 		//////////////////////////////////////////////////////////////////////////////////////////////PLAYER MANAGEMENT
 		
@@ -315,8 +312,6 @@ namespace Annwvyn
 		///Oculus oculus;
 		OgreOculusRender* renderer;
 
-		///Dynamic container for games objects present in engine.
-		std::list<AnnGameObject*>	objects;
 		///Dynamic container for triggers objects present in engine.
 		std::list<AnnTriggerObject*> triggers;
 		///Dynamic container for lights objects present in engine.

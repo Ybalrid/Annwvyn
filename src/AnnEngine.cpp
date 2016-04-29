@@ -58,13 +58,13 @@ AnnEngine::AnnEngine(const char title[]) :
 	renderer->showMonscopicView();
 
 	log("Setup Annwvyn's subsystems");
+	SubSystemList.push_back(gameObjectManager = new AnnGameObjectManager);
 	SubSystemList.push_back(levelManager = new AnnLevelManager);
-	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, objects, triggers));
+	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, triggers));
 	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
 	SubSystemList.push_back(audioEngine = new AnnAudioEngine);
 	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
 	SubSystemList.push_back(resourceManager = new AnnResourceManager);
-	SubSystemList.push_back(gameObjectManager = new AnnGameObjectManager);
 
 	log("===================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World    ", false);
@@ -305,7 +305,7 @@ AnnGameObject* AnnEngine::playerLookingAt()
 	//read the result list
 	for (auto it(result.begin()); it != result.end(); it++)
 		if (it->movable && it->movable->getMovableType() == "Entity")
-			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
+			return AnnGetGameObjectManager()->getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
 
 	return nullptr; //means that we don't know what the player is looking at.
 }
@@ -316,23 +316,7 @@ void AnnEngine::resetOculusOrientation()
 	renderer->recenter();
 }
 
-Annwvyn::AnnGameObject* AnnEngine::getFromNode(Ogre::SceneNode* node)
-{
-	if (!node)
-	{
-		log("Plese do not try to identify a NULL");
-		return NULL;
-	}
-	AnnDebug() << "Trying to identify object at address " << (void*)node;
 
-	//This methods only test memory address
-	for (auto object : objects)
-		if ((void*)object->getNode() == (void*)node)
-			return object;
-	AnnDebug() << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
-
-	return NULL;
-}
 
 Ogre::SceneNode* AnnEngine::getCamera()
 {

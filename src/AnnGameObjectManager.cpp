@@ -99,3 +99,21 @@ bool AnnGameObjectManager::destroyGameObject(AnnGameObject * object)
 	return returnCode;
 }
 
+Annwvyn::AnnGameObject* AnnGameObjectManager::getFromNode(Ogre::SceneNode* node)
+{
+	if (!node)
+	{
+		AnnDebug("Plese do not try to identify a NULL");
+		return NULL;
+	}
+	AnnDebug() << "Trying to identify object at address " << (void*)node;
+
+	//This methods only test memory address
+	for (auto object : Objects)
+		if ((void*)object->getNode() == (void*)node)
+			return object;
+	AnnDebug() << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
+
+	return NULL;
+}
+
