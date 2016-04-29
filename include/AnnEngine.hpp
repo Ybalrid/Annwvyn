@@ -79,6 +79,9 @@ namespace Annwvyn
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 
+		///Return a string descibing the version of the engine
+		static std::string getAnnwvynVersion();
+
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
 		/// \param fs the fullscreen state of the application. set it to false may help when developping with VS debugger on one screen
@@ -87,17 +90,57 @@ namespace Annwvyn
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();
 
-		///Get the event manager
-		AnnEventManager* getEventManager();
+		///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
+		/// \param message Message to be loged 
+		/// \param flag If true : Put the "Annwvyn -" flag before the message
+		static void log(std::string message, bool flag = true); //engine
 
 		///Get the player
 		AnnPlayer* getPlayer();
 
+		///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
+		/// key an OIS key code
+		inline bool isKeyDown(OIS::KeyCode key); //event
+
+												 ///Get ogre scene manager
+		Ogre::SceneManager* getSceneManager(); //scene or graphics
+
+											   ///Get ogre camera scene node
+		Ogre::SceneNode* getCamera();
+
+		///Open a console and redirect standard output to it.
+		///This is only effective on Windows. There is no other
+		///simple way to acces the standard io on a Win32 application
+		static void openConsole();
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
+		
+		///Get the event manager
+		AnnEventManager* getEventManager();
+
 		///Get the filesystem manager
 		AnnFilesystemManager* getFileSystemManager();
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
+		///Return the Annwvyn OpenAL simplified audio engine
+		AnnAudioEngine* getAudioEngine(); //audio
 
+										  ///Return the Physics Engine
+		AnnPhysicsEngine* getPhysicsEngine();
+
+		///Get the current level manager
+		AnnLevelManager* getLevelManager();
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
+		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
+		
+		///Init OgreOculus stuff
+		void oculusInit(); //oculus
+
+	    ///Init the physics model
+		void initPlayerPhysics(); //physics on player
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
+		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
 		///Give a zipped archive resource location to the Ogre Resource Group Manager
 		/// \param path The path to a zip file.
 		/// \param resourceGroupName name of the resource group where the content will be added
@@ -108,28 +151,58 @@ namespace Annwvyn
 		/// \param resourceGroupName name of the resource group
 		void loadDir(const char path[], const char resourceGroupName[] = "ANNWVYN_DEFAULT");
 
-		///Load a standard Ogre resource.cfg file
-		/// \param path path to the resource file
-		void loadResFile(const char path[]); //resource
-
-		///Init All ressources groups
-		void initResources(); //resource
-
 		///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
 		void addDefaultResourceLocaton();
 
+		///Load resource.cfg like file
+		void loadReseourceFile(const char path[]);
+
+		///InitAllResources
+		void initResources();
+		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////RESOURCE
+		////////////////////////////////////////////////////////////////////////////////////////////////////////SCENERY
+		
+		///Set the ogre material for the skydome with params
+		/// \param activate if true put a skydome
+		/// \param materialName name of a material known from the Ogre Resource group manager
+		/// \param curvature curvature of the texture
+		/// \param tilling tilling of the texture
+		void setSkyDomeMaterial(bool activate,
+			const char materialName[],
+			float curvature = 2.0f,
+			float tiling = 1.0f); //scene
 
-		///Init OgreOculus stuff
-		void oculusInit(); //oculus
+		///Set the ogre material for the skybox with params
+		/// \param activate if true put the skybox on the scene
+		/// \param materialName name of a material declared on the resource manager
+		/// \param distance distance of the sky from the camera
+		/// \param renderedFirst if true, the skybox will be the first thing rendered
+		void setSkyBoxMaterial(bool activate,
+			const char materialName[],
+			float distance = 8000,
+			bool renderedFirst = true);
 
-		///Init the physics model
-		void initPlayerPhysics(); //physics on player 
+		///Set the viewports background color
+		/// \param v background color
+		void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56, 1));
 
-		///If the player is handeled throug the physics engine, this method will detach the rigidbody from the camera,
-		///remove it from the dynamics world, unalocate it from the memory and recreate it from scratch. This is usefull for
-		///"teleporting" the player, for example if you need to reset his position.
-		void resetPlayerPhysics();
+		///Remove the sky dome
+		void removeSkyDome();
+
+		///Remove the sky box
+		void removeSkyBox();
+
+		///Set the ambiant light
+		/// \param v the color of the light
+		void setAmbiantLight(AnnColor color);
+
+		///Set the distance of the near clipping plane
+		/// \param distace the distance to the clipping plane
+		void setNearClippingDistance(Ogre::Real distance); //graphics
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////SCENERY
+		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
 
 		///Create a game object form the name of an entity.
 		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
@@ -139,29 +212,43 @@ namespace Annwvyn
 		///Destroy the given object
 		/// \param object the object to be destroyed
 		bool destroyGameObject(AnnGameObject* object); //object factory
-		
+
 		///Destroy the given light
 		/// \param light pointer to the light to destroy
 		void destroyLightObject(AnnLightObject* light);
 
-		///Set the ambiant light
-		/// \param v the color of the light
-		void setAmbiantLight(AnnColor color);
-
 		///Add a light source to the scene. return a pointer to the new light
 		AnnLightObject* createLightObject();
+
+		///Create a trigger object
+		/// \param trigger an empty trigger object
+		AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnSphericalTriggerObject); //object factory
+
+		///Remove the object from the engine
+		void destroyTriggerObject(AnnTriggerObject* obj);
+
+		///Get the AnnGameObject form the given Ogre node
+		AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
+		//////////////////////////////////////////////////////////////////////////////////////////////PLAYER MANAGEMENT
+		
+		///If the player is handeled throug the physics engine, this method will detach the rigidbody from the camera,
+		///remove it from the dynamics world, unalocate it from the memory and recreate it from scratch. This is usefull for
+		///"teleporting" the player, for example if you need to reset his position.
+		void resetPlayerPhysics();
 
 		///Display bullet debuging drawing
 		/// \param state debug state
 		void setDebugPhysicState(bool state); //engine debug
 
+		///Get the AnnObject the player is looking at
+		AnnGameObject* playerLookingAt(); //physics
+		//////////////////////////////////////////////////////////////////////////////////////////////PLAYER MANAGEMENT
+		//////////////////////////////////////////////////////////////////////////////////////////////////GAMEPLAY LOOP
+
 		///Return true if the game want to terminate the program
 		bool requestStop(); //engine
-
-		///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
-		/// \param message Message to be loged 
-		/// \param flag If true : Put the "Annwvyn -" flag before the message
-		static void log(std::string message, bool flag = true); //engine
 
 		///Refresh all for you
 		bool refresh(); //engine main loop
@@ -169,76 +256,8 @@ namespace Annwvyn
 		///Set the POV node to the AnnPlayer gameplay defined position/orientation of the player's body
 		inline void syncPov();
 
-		///Get elapsed time from engine startup in millisec
-		unsigned long getTimeFromStartUp();//engine
-
-		///Get elapsed time from engine startup in seconds
-		double getTimeFromStartupSeconds();
-
-		///Get elapsed time between two frames in seconds
-		double getFrameTime();
-
-		///Return the Annwvyn OpenAL simplified audio engine
-		AnnAudioEngine* getAudioEngine(); //audio
-		
-		///Return the Physics Engine
-		AnnPhysicsEngine* getPhysicsEngine();
-
-		///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
-		/// key an OIS key code
-		inline bool isKeyDown(OIS::KeyCode key); //event
-
-		///Create a trigger object
-		/// \param trigger an empty trigger object
-		AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnSphericalTriggerObject); //object factory
-
-		///Get ogre scene manager
-		Ogre::SceneManager* getSceneManager(); //scene or graphics
-
-		///Set the ogre material for the skydome with params
-		/// \param activate if true put a skydome
-		/// \param materialName name of a material known from the Ogre Resource group manager
-		/// \param curvature curvature of the texture
-		/// \param tilling tilling of the texture
-		void setSkyDomeMaterial(bool activate, 
-			const char materialName[], 
-			float curvature = 2.0f, 
-			float tiling = 1.0f); //scene
-
-		///Set the ogre material for the skybox with params
-		/// \param activate if true put the skybox on the scene
-		/// \param materialName name of a material declared on the resource manager
-		/// \param distance distance of the sky from the camera
-		/// \param renderedFirst if true, the skybox will be the first thing rendered
-		void setSkyBoxMaterial(bool activate, 
-			const char materialName[], 
-			float distance = 8000, 
-			bool renderedFirst = true);
-
-		///Set the viewports background color
-		/// \param v background color
-		void setWorldBackgroundColor(AnnColor color = AnnColor(0,0.56,1));
-		///Remove the sky dome
-		void removeSkyDome();
-
-		///Remove the sky box
-		void removeSkyBox();
-
-		///Get the AnnObject the player is looking at
-		AnnGameObject* playerLookingAt(); //physics
-
-		///Get the AnnGameObject form the given Ogre node
-		AnnGameObject* getFromNode(Ogre::SceneNode* node); //engine
-
-		///Get ogre camera scene node
-		Ogre::SceneNode* getCamera();
-
-		///Reset the Rift Orientation
-		void resetOculusOrientation();///Gameplay... but engine related function. 
-
-		///Set the distance of the near clipping plane
-		/// \param distace the distance to the clipping plane
-		void setNearClippingDistance(Ogre::Real distance); //graphics
+		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
+		void startGameplayLoop();
 
 		///Set the engine to use the "default" event listener.
 		///This will create an instance of AnnDefaultEventListener (if it doesn't allready exist inside of AnnEngine)
@@ -255,28 +274,27 @@ namespace Annwvyn
 		///Get a pose information object
 		OgrePose getPoseFromOOR();
 
-		///Open a console and redirect standard output to it.
-		///This is only effective on Windows. There is no other
-		///simple way to acces the standard io on a Win32 application
-		static void openConsole();
-
-		///Get the current level manager
-		AnnLevelManager* getLevelManager();
+		///Reset the Rift Orientation
+		void resetOculusOrientation();///Gameplay... but engine related function. 
 
 		///Toogle the display of the in-engine console
 		void toogleOnScreenConsole();
 
-		///Return a string descibing the version of the engine
-		static std::string getAnnwvynVersion();
-
-		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
-		void startGameplayLoop();
-
-		///Remove the object from the engine
-		void destroyTriggerObject(AnnTriggerObject* obj);
-
 		///Return true if the app is visible inside the head mounted display
 		bool appVisibleInHMD();
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////GAMEPLAY LOOP
+		///////////////////////////////////////////////////////////////////////////////////////////////TIMER MANAGEMENT
+
+		///Get elapsed time from engine startup in millisec
+		unsigned long getTimeFromStartUp();//engine
+
+		///Get elapsed time from engine startup in seconds
+		double getTimeFromStartupSeconds();
+
+		///Get elapsed time between two frames in seconds
+		double getFrameTime();
+		///////////////////////////////////////////////////////////////////////////////////////////////TIMER MANAGEMENT
 
 	private:
 		///The onScreenConsole object
@@ -301,7 +319,7 @@ namespace Annwvyn
 		Ogre::SceneManager* SceneManager;
 		///Point Of View : Node used as "root" for putting the VR "camera rig"
 		Ogre::SceneNode* povNode;
- 
+
 		///Oculus oculus;
 		OgreOculusRender* renderer;
 
@@ -313,9 +331,12 @@ namespace Annwvyn
 		std::list<AnnLightObject*> lights;
 
 		///Elapsed time between 2 frames
-		double updateTime; 
+		double updateTime;
 
+		///Container for all the subsystem. Populated in the update/delete order 
 		std::list<AnnSubSystem*> SubSystemList;
+
+		///If false, all getStuff will return nullptr
 		bool canAccessSubSystems;
 	};
 }

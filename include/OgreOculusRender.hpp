@@ -4,7 +4,6 @@
  * \author A. Brainville (Ybalrid)
  */
 
-
 ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
 ///(even if now I'm not using code from him anymore)
 ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
@@ -74,17 +73,8 @@ class DLL OgreOculusRender
 		///Set the near Z clipping plane distance from the POV. Used to calculate Projections matricies
 		void setCamerasNearClippingDistance(float distance);
 
-		///Automatic initialization of the renderer.
-        void initialize(std::string resourceFile = "resources.cfg");
-
 		///Start Oculus and Ogre libraries.
         void initLibraries(std::string = "Ogre.log");
-
-		///Load the given 'resource.cfg' file. See Ogre Help for referene here.
-        void loadReseourceFile(const char path[]);
-
-		//Init all resource groups loaded on resource group manager. 
-        void initAllResources();
         
 		///Get Configuration from ogre.cfg or display a Dialog. The Resolution and FullScreen settings will be ignored. 
 		void getOgreConfig();
