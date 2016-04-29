@@ -168,12 +168,9 @@ namespace Annwvyn
 			/// \param v The linear speed
 			void setLinearSpeed(AnnVect3 v);
 
-            ///Set up Bullet 
+            ///Set up Physics 
             /// \param mass The mass of the object
 			/// \param type The type of shape you want to define for the object
-			DEPRECATED void setUpBullet(float mass = 0, phyShapeType type = staticShape, bool colideWithPlayer = true) { setUpPhysics(mass, type, colideWithPlayer); }
-
-            ///SetUpPhysics
 			void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true);
 
 			///Make the object visible
