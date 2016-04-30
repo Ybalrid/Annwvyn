@@ -12,6 +12,8 @@ AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
 
 AnnGameObjectManager::~AnnGameObjectManager()
 {
+	//In case of orphan objects, do their cleanup here. 
+	AnnDebug("Destroying every objects remaining orphan object in engine");
 	if (Objects.size() > 0)
 		for (auto object : Objects)
 			destroyGameObject(object);

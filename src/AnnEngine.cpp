@@ -89,12 +89,6 @@ AnnEngine::~AnnEngine()
 {
 	destroyAllSubSystem();
 
-	//In case of orphan objects, do their cleanup here. 
-	log("Destroying every objects remaining orphan object in engine");
-
-
-
-
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
 	
@@ -123,8 +117,6 @@ AnnGameObjectManager * AnnEngine::getGameObjectManager()
 	if (!canAccessSubSystems) return nullptr;
 	return gameObjectManager;
 }
-
-
 
 AnnLevelManager* AnnEngine::getLevelManager()
 {
