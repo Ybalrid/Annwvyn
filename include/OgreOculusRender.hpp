@@ -119,7 +119,7 @@ class DLL OgreOculusRender
 		void calculateProjectionMatrix();
 
 		///change main viewport background color
-		void changeViewportBackgroundColor(Ogre::ColourValue color);
+		void changeViewportBackgroundColor(Annwvyn::AnnColor color);
 
 		///Show in debug window what the camera are seeing
 		static void showRawView();
@@ -156,7 +156,7 @@ class DLL OgreOculusRender
         OculusInterface* Oculus; 
 
 		///background color of viewports
-		Ogre::ColourValue backgroundColor;
+		Annwvyn::AnnColor backgroundColor;
 
         ///Name of the Window
         std::string name; 

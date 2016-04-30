@@ -21,6 +21,8 @@ namespace Annwvyn
 		AnnColor(float red, float green, float blue, float alpha = 1.0f);
 		///Create a color object from a Ogre::ColourValue
 		AnnColor(const Ogre::ColourValue color);
+		///Create a color object form a referece to another color object
+		AnnColor(const AnnColor& color);
 
 		///Return a Ogre::ColourValue from the internal color value
 		Ogre::ColourValue getOgreColor();

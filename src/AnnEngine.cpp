@@ -266,14 +266,6 @@ double AnnEngine::getFrameTime()
 	return updateTime;
 }
 
-void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
-{
-	AnnDebug() << "Setting the near clipping distance to " << nearClippingDistance;
-
-	if (renderer)
-		renderer->setCamerasNearClippingDistance(nearClippingDistance);
-}
-
 OgrePose AnnEngine::getPoseFromOOR()
 {
 	if (renderer)
