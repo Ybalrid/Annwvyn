@@ -4,7 +4,7 @@
 #include "AnnGameObject.hpp"
 #include "AnnSubsystem.hpp"
 #include "AnnTypes.h"
-
+#include "AnnTriggerObject.hpp"
 namespace Annwvyn
 {	
 	class AnnEngine;
@@ -26,8 +26,28 @@ namespace Annwvyn
 
 		Annwvyn::AnnGameObject * getFromNode(Ogre::SceneNode * node);
 
+		///Destroy the given light
+		/// \param light pointer to the light to destroy
+		void destroyLightObject(AnnLightObject* light);
+
+		///Add a light source to the scene. return a pointer to the new light
+		AnnLightObject* createLightObject();
+
+		///Create a trigger object
+		/// \param trigger an empty trigger object
+		AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnSphericalTriggerObject); //object factory
+
+		///Remove the object from the engine
+		void destroyTriggerObject(AnnTriggerObject* obj);
+
 	private:
 		friend class AnnEngine;
 		AnnGameObjectList Objects;
+
+		///Dynamic container for triggers objects present in engine.
+		std::list<AnnTriggerObject*> Triggers;
+		///Dynamic container for lights objects present in engine.
+		std::list<AnnLightObject*> Lights;
+
 	};
 }

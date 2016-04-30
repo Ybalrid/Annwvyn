@@ -116,8 +116,8 @@ AnnMain()
 	AnnGetEngine()->getEventManager()->addListener(new DebugListener);
 	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
 	
-	AnnLightObject* light = AnnGetEngine()->createLightObject(); 
-	AnnGetEngine()->destroyLightObject(light);
+	AnnLightObject* light = AnnGetGameObjectManager()->createLightObject(); 
+	AnnGetGameObjectManager()->destroyLightObject(light);
 
 	auto testFile = AnnEngine::Instance()->getFileSystemManager()->crateSaveFileDataObject("test");
 	testFile->setValue("KEY0", "Thing");
@@ -149,8 +149,8 @@ AnnMain()
 	auto sinbad(AnnGetGameObjectManager()->createGameObject("Sinbad.mesh"));
 	sinbad->setPosition(100, 100, 100);
 	sinbad->setUpPhysics();
-	AnnGetEngine()->createLightObject()->setPosition(AnnVect3(50, 50, 50));
-	AnnGetEngine()->createTriggerObject()->setPosition(100, 100, 100);
+	AnnGetGameObjectManager()->createLightObject()->setPosition(AnnVect3(50, 50, 50));
+	AnnGetGameObjectManager()->createTriggerObject()->setPosition(100, 100, 100);
 
 	do	
 	{

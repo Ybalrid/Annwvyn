@@ -52,6 +52,7 @@ namespace Annwvyn
 		///Create a light object. We use an Ogre Light becaus we just need to talk to Ogre...
 		AnnLightObject(Ogre::Light* light);
 		friend class AnnEngine;
+		friend class AnnGameObjectManager;
 		Ogre::Light* light;
 	};
 }
