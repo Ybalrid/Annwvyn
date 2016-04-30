@@ -66,7 +66,7 @@ public:
 		//Place the starting point 
 		AnnGetPlayer()->setPosition(AnnVect3::ZERO);
 		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
-		AnnGetEngine()->resetPlayerPhysics();
+		AnnGetPlayer()->resetPlayerPhysics();
 	}
 
 	void runLogic()

@@ -12,7 +12,8 @@ Broadphase(nullptr),
 CollisionConfiguration(nullptr),
 Solver(nullptr),
 DynamicsWorld(nullptr),
-debugDrawer(nullptr)
+debugDrawer(nullptr),
+playerRigidBodyState(nullptr)
 {
 	//Initialize the Bullet world
 	Broadphase = new btDbvtBroadphase();
@@ -56,7 +57,8 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::
 	assert(player->getShape());
 
 	//Create a rigid body state through BtOgre
-	BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(node);
+	if (playerRigidBodyState) delete playerRigidBodyState;
+	playerRigidBodyState = new BtOgre::RigidBodyState(node);
 
 	//Get inertia vector
 	btVector3 inertia;
@@ -65,7 +67,7 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::
 	//Set the body to the player
 	player->setBody(new btRigidBody(
 		player->getMass(),
-		state,
+		playerRigidBodyState,
 		player->getShape(),
 		inertia));
 }
@@ -199,5 +201,6 @@ void AnnPhysicsEngine::update()
 {
 	processCollisionTesting(gameObjects);
 	processTriggersContacts(playerObject, triggerObjects);
+	stepDebugDrawer();
 	step(AnnGetEngine()->getFrameTime());
 }

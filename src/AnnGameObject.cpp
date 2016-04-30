@@ -16,7 +16,8 @@ AnnGameObject::AnnGameObject() :
 	animIsPlaying(false),
 	animIsSetted(false),
 	visible(true),
-	audioSource(nullptr)
+	audioSource(nullptr),
+	state(nullptr)
 {
 }
 
@@ -25,6 +26,28 @@ AnnGameObject::~AnnGameObject()
 	//Clean OpenAL desaloc
 	if(AnnGetAudioEngine())
 		AnnGetAudioEngine()->destroySource(audioSource);
+	AnnDebug() << "Tidy my physics !";
+
+	if (Body)
+	{
+		AnnDebug() << "I'm deleting my RigidBody";
+		delete Body;
+	} 
+	if (Shape)
+	{
+		if (Shape->getShapeType() == BroadphaseNativeTypes::TRIANGLE_MESH_SHAPE_PROXYTYPE)
+			delete static_cast<btBvhTriangleMeshShape*>(Shape)->getMeshInterface();
+
+		AnnDebug() << "I'm deleting my Shape";
+		delete Shape;
+	}
+
+	if (state)
+	{
+		AnnDebug() << "I'm deleting my RigidBodyState";
+		delete state;
+	}
+
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
@@ -163,7 +186,7 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	{
 	case boxShape:
 		Shape = converter.createBox();
-		break;
+		break; 
 	case cylinderShape:
 		Shape = converter.createCylinder();
 		break;
@@ -204,7 +227,7 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	//create rigidBody from shape
 	if(!Body)
 	{
-		BtOgre::RigidBodyState *state = new BtOgre::RigidBodyState(Node);
+		state = new BtOgre::RigidBodyState(Node);
 		Body = new btRigidBody(mass, state, Shape, inertia);
 	}
 
