@@ -447,6 +447,17 @@ namespace Annwvyn
 		///Destroy the event manager
 		~AnnEventManager();
 
+		///Set the engine to use the "default" event listener.
+		///This will create an instance of AnnDefaultEventListener (if it doesn't allready exist inside of AnnEngine)
+		///This will also unregister all listeners known by AnnEventListener
+		///The default event listerner implement a simple "FPS-like" controll scheme 
+		/// WASD for walking
+		/// Horizontal view with mouse X relative mouvement
+		/// That event listener is designed as an example of an event listener, and for exploring the environement without having to write a custom event listene
+		void useDefaultEventListener();
+
+		AnnAbstractEventListener* getDefaultEventListener();
+
 		///Ad a listener to the event manager
 		/// \param listener Pointer to a listener object
 		void addListener(AnnAbstractEventListener* listener);
@@ -521,6 +532,9 @@ namespace Annwvyn
 		std::vector<AnnTriggerEvent> triggerEventBuffer;
 		///The text inputer object itself
 		AnnTextInputer* textInputer;
+
+		///Default event listener
+		AnnDefaultEventListener* defaultEventListener;
 	};
 }
 

@@ -26,10 +26,9 @@ void AnnEngine::startGameplayLoop()
 }
 
 AnnEngine::AnnEngine(const char title[]) :
-	eventManager(NULL),
-	levelManager(NULL),
-	povNode(NULL),
-	defaultEventListener(NULL),
+	eventManager(nullptr),
+	levelManager(nullptr),
+	povNode(nullptr),
 	canAccessSubSystems(true)
 {
 	if (singleton)
@@ -156,27 +155,6 @@ void AnnEngine::log(std::string message, bool flag)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 }
 
-void AnnEngine::useDefaultEventListener()
-{
-	if (!eventManager) return;
-	log("Reconfiguring the engine to use the default event listener");
-	log("This unregister any current listener in use!");
-
-	//Remove all event listeners
-	eventManager->removeListener();
-
-	//If the event listenre isn't allready initialized, allocate one
-	if (!defaultEventListener)
-		defaultEventListener = new AnnDefaultEventListener;
-
-	//Set the default event listener to the event manager
-	eventManager->addListener(defaultEventListener);
-}
-
-AnnDefaultEventListener* AnnEngine::getInEngineDefaultListener()
-{
-	return defaultEventListener;
-}
 
 void AnnEngine::initPlayerPhysics()
 {

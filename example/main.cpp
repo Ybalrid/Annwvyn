@@ -111,7 +111,7 @@ AnnMain()
 	//AnnGetEngine()->getLevelManager()->jump(splash);
 	AnnGetEngine()->getLevelManager()->jump(level);
 	
-	AnnGetEngine()->useDefaultEventListener();
+	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetEngine()->resetOculusOrientation();
 	AnnGetEngine()->getEventManager()->addListener(new DebugListener);
 	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
