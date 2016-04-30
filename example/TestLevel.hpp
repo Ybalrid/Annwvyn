@@ -56,7 +56,7 @@ public:
 		Sign->setUpPhysics(0, phyShapeType::staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
-		AnnTriggerObject* t(AnnGetEngine()->createTriggerObject(new AnnAlignedBoxTriggerObject));
+		AnnTriggerObject* t(AnnGetGameObjectManager()->createTriggerObject(new AnnAlignedBoxTriggerObject));
 		dynamic_cast<AnnAlignedBoxTriggerObject*>(t)->setBoundaries(-1,1,-1,1,-1,1);
 		levelTrigger.push_back(t);
 

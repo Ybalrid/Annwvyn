@@ -49,9 +49,6 @@
     <Filter Include="Annwvyn\GameObject">
       <UniqueIdentifier>{c98e90b8-198c-4dd0-ac5c-f4ee64400799}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Annwvyn\LightObject">
-      <UniqueIdentifier>{92cd8a07-7a53-4488-b4db-a8f6ba91ce4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Annwvyn\MathObjects">
       <UniqueIdentifier>{8002a392-511f-4f41-9d99-a4f6b3aac75c}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,9 @@
     </Filter>
     <Filter Include="Annwvyn\PlayerObject">
       <UniqueIdentifier>{fef73889-f986-4d0a-8943-ff5549a9070a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\GameObject\LightObject">
+      <UniqueIdentifier>{92cd8a07-7a53-4488-b4db-a8f6ba91ce4b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +105,6 @@
     <ClInclude Include="..\..\include\AnnSplashLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
-      <Filter>Annwvyn\SubSystems\Physics&amp;Collision</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnXmlLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
@@ -148,7 +145,7 @@
       <Filter>Annwvyn\SubSystems\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnLightObject.hpp">
-      <Filter>Annwvyn\LightObject</Filter>
+      <Filter>Annwvyn\GameObject\LightObject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Annwvyn.h">
       <Filter>Annwvyn</Filter>
@@ -169,6 +166,9 @@
       <Filter>Annwvyn\PlayerObject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
       <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
@@ -206,9 +206,6 @@
     <ClCompile Include="..\..\src\AnnEvents.cpp">
       <Filter>Annwvyn\SubSystems\EventSystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnTriggerObject.cpp">
-      <Filter>Annwvyn\SubSystems\Physics&amp;Collision</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp">
       <Filter>Annwvyn\SubSystems\Physics&amp;Collision</Filter>
     </ClCompile>
@@ -243,7 +240,7 @@
       <Filter>Annwvyn\SubSystems\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLightObject.cpp">
-      <Filter>Annwvyn\LightObject</Filter>
+      <Filter>Annwvyn\GameObject\LightObject</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OculusInterface.cpp">
       <Filter>Oculus rendering for Ogre</Filter>
@@ -261,6 +258,9 @@
       <Filter>Annwvyn\PlayerObject</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnTriggerObject.cpp">
       <Filter>Annwvyn\GameObject</Filter>
     </ClCompile>
   </ItemGroup>

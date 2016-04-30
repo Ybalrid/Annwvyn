@@ -12,11 +12,23 @@ AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
 
 AnnGameObjectManager::~AnnGameObjectManager()
 {
-	if (Objects.size() > 0) 
-		for (auto object : Objects) 
+	if (Objects.size() > 0)
+		for (auto object : Objects)
 			destroyGameObject(object);
-	else 
+	else
 		AnnDebug("Object list allready clean");
+
+	if (Lights.size() > 0)
+		for (auto object : Lights)
+			destroyLightObject(object);
+	else
+		AnnDebug("Light list allready clean");
+
+	if (Triggers.size() > 0) 
+		for (auto object : Triggers) 
+			destroyTriggerObject(object);
+	else 
+		AnnDebug("Trigger list allready clean");
 }
 
 void AnnGameObjectManager::update()
@@ -117,3 +129,36 @@ Annwvyn::AnnGameObject* AnnGameObjectManager::getFromNode(Ogre::SceneNode* node)
 	return NULL;
 }
 
+void Annwvyn::AnnGameObjectManager::destroyLightObject(AnnLightObject * light)
+{
+	if (light)
+		AnnGetEngine()->getSceneManager()->destroyLight(light->light);
+
+	//Forget that this light existed
+	Lights.remove(light);
+	delete light;
+}
+
+AnnLightObject * Annwvyn::AnnGameObjectManager::createLightObject()
+{
+	AnnDebug("Creating a light");
+	AnnLightObject* Light = new AnnLightObject(AnnGetEngine()->getSceneManager()->createLight());
+	Light->setType(AnnLightObject::LightTypes::ANN_LIGHT_POINT);
+	Lights.push_back(Light);
+	return Light;
+}
+
+AnnTriggerObject * Annwvyn::AnnGameObjectManager::createTriggerObject(AnnTriggerObject * trigger)
+{
+	AnnDebug("Creating a trigger object");
+	Triggers.push_back(trigger);
+	trigger->postInit();
+	return trigger;
+}
+
+void Annwvyn::AnnGameObjectManager::destroyTriggerObject(AnnTriggerObject * trigger)
+{
+	Triggers.remove(trigger);
+	AnnDebug() << "Destroy trigger : " << (void*)trigger;
+	delete trigger;
+}

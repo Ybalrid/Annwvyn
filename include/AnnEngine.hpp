@@ -195,23 +195,6 @@ namespace Annwvyn
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////SCENERY
 		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
-
-		
-
-		///Destroy the given light
-		/// \param light pointer to the light to destroy
-		void destroyLightObject(AnnLightObject* light);
-
-		///Add a light source to the scene. return a pointer to the new light
-		AnnLightObject* createLightObject();
-
-		///Create a trigger object
-		/// \param trigger an empty trigger object
-		AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnSphericalTriggerObject); //object factory
-
-		///Remove the object from the engine
-		void destroyTriggerObject(AnnTriggerObject* obj);
-
 		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
 		//////////////////////////////////////////////////////////////////////////////////////////////PLAYER MANAGEMENT
 		
@@ -311,11 +294,6 @@ namespace Annwvyn
 
 		///Oculus oculus;
 		OgreOculusRender* renderer;
-
-		///Dynamic container for triggers objects present in engine.
-		std::list<AnnTriggerObject*> triggers;
-		///Dynamic container for lights objects present in engine.
-		std::list<AnnLightObject*> lights;
 
 		///Elapsed time between 2 frames
 		double updateTime;

@@ -53,6 +53,7 @@ namespace Annwvyn
 		virtual bool computeVolumetricTest(AnnPlayer* player) = 0;
 
 		friend class AnnEngine;
+		friend class AnnGameObjectManager;
 		friend class AnnPhysicsEngine;
 
 	private:

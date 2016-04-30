@@ -60,7 +60,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	log("Setup Annwvyn's subsystems");
 	SubSystemList.push_back(levelManager = new AnnLevelManager);
 	SubSystemList.push_back(gameObjectManager = new AnnGameObjectManager);
-	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, triggers));
+	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers));
 	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
 	SubSystemList.push_back(audioEngine = new AnnAudioEngine);
 	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
@@ -92,10 +92,8 @@ AnnEngine::~AnnEngine()
 	//In case of orphan objects, do their cleanup here. 
 	log("Destroying every objects remaining orphan object in engine");
 
-	if (triggers.size() > 0) for (auto object : triggers) destroyTriggerObject(object);
-	else log("Trigger list allready clean");
-	if (lights.size() > 0) for (auto object : lights) destroyLightObject(object);
-	else log("Light list allready clean");
+
+
 
 	log("Game engine sucessfully destroyed.");
 	log("Good luck with the real world now! :3");
@@ -203,32 +201,6 @@ void AnnEngine::oculusInit()
 	SubSystemList.push_back(onScreenConsole = new AnnConsole());
 }
 
-void AnnEngine::destroyTriggerObject(AnnTriggerObject* object)
-{
-	triggers.remove(object);
-	AnnDebug() << "Destroy trigger : " << (void*)object;
-	delete object;
-}
-
-AnnLightObject* AnnEngine::createLightObject()
-{
-	log("Creating a light");
-	AnnLightObject* Light = new AnnLightObject(SceneManager->createLight());
-	Light->setType(AnnLightObject::LightTypes::ANN_LIGHT_POINT);
-	lights.push_back(Light);
-	return Light;
-}
-
-void AnnEngine::destroyLightObject(AnnLightObject* object)
-{
-	if (object)
-		SceneManager->destroyLight(object->light);
-
-	//Forget that this light existed
-	lights.remove(object);
-	delete object;
-}
-
 bool AnnEngine::requestStop()
 {
 	//pres ESC to quit. Stupid but efficient. I like that.
@@ -275,14 +247,6 @@ inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
-AnnTriggerObject* AnnEngine::createTriggerObject(AnnTriggerObject* object)
-{
-	assert(object);
-	log("Creating a trigger object");
-	triggers.push_back(object);
-	object->postInit();
-	return object;
-}
 
 AnnGameObject* AnnEngine::playerLookingAt()
 {
