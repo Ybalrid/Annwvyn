@@ -45,3 +45,9 @@ void AnnSceneryManager::removeSkyBox()
 	AnnDebug("Disabeling skybox");
 	smgr->setSkyBoxEnabled(false);
 }
+
+void AnnSceneryManager::setNearClippingDistance(float distance)
+{
+	AnnDebug() << "Setting the near clipping distance to " << distance;
+	renderer->setCamerasNearClippingDistance(distance);
+}

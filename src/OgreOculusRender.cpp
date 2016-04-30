@@ -70,19 +70,22 @@ void OgreOculusRender::cycleOculusHUD()
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
 }
 
-void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
+void OgreOculusRender::changeViewportBackgroundColor(Annwvyn::AnnColor color)
 {
 	//save the color then apply it to each viewport
-	backgroundColor = color;
+	backgroundColor.setRed(color.getRed());
+	backgroundColor.setGreen(color.getGreen());
+	backgroundColor.setBlue(color.getBlue());
+	backgroundColor.setAlpha(color.getAlpha());
 
 	//Render buffers
 	for(byte i(0); i < 2; i++)
 		if(vpts[i])
-			vpts[i]->setBackgroundColour(color);
+			vpts[i]->setBackgroundColour(color.getOgreColor());
 
 	//Debug window
 	if(debugViewport && !mirrorHMDView)
-		debugViewport->setBackgroundColour(color);
+		debugViewport->setBackgroundColour(color.getOgreColor());
 }
 
 Ogre::SceneManager* OgreOculusRender::getSceneManager()
@@ -152,10 +155,7 @@ void OgreOculusRender::initLibraries(std::string loggerName)
 void OgreOculusRender::getOgreConfig()
 {
 	//Ogre as to be initialized
-	if(!root)
-	{
-		exit(ANN_ERR_NOTINIT);
-	}
+	if(!root) exit(ANN_ERR_NOTINIT);
 
 	//Load OgrePlugins
 	root->loadPlugin("RenderSystem_GL");
@@ -390,7 +390,7 @@ void OgreOculusRender::showRawView()
 	if(!debugTexturePlane) return;
 	self->debugViewport->setCamera(self->debugCam);
 	debugTexturePlane->setTextureName("RttTex");
-	self->debugViewport->setBackgroundColour(self->backgroundColor);
+	self->debugViewport->setBackgroundColour(self->backgroundColor.getOgreColor());
 	AnnDebug() << "Switched to Raw view";
 }
 
@@ -409,7 +409,7 @@ void OgreOculusRender::showMonscopicView()
 	mirrorHMDView = false;
 	if(!self) return;
 	self->debugViewport->setCamera(self->monoCam);
-	self->debugViewport->setBackgroundColour(self->backgroundColor);
+	self->debugViewport->setBackgroundColour(self->backgroundColor.getOgreColor());
 	AnnDebug() << "Switched to Monoscopic view";
 }
 

@@ -48,7 +48,9 @@ namespace Annwvyn
 		/// \param v the color of the light
 		void setAmbiantLight(AnnColor color);
 
-
+		///Set the distance of the near clipping plane
+		/// \param distace the distance to the clipping plane
+		void setNearClippingDistance(float distance);
 
 	private:
 		Ogre::SceneManager* smgr;

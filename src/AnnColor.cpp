@@ -22,6 +22,15 @@ AnnColor::AnnColor(Ogre::ColourValue color) :
 {
 }
 
+Annwvyn::AnnColor::AnnColor(const AnnColor & color) :
+	r(color.r),
+	g(color.g),
+	b(color.b),
+	a(color.a),
+	MAX8BIT(255)
+{
+}
+
 Ogre::ColourValue AnnColor::getOgreColor()
 {
 	return Ogre::ColourValue(r, g, b, a);

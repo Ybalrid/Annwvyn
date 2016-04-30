@@ -2,8 +2,6 @@
 * * \file main.cpp
 * \brief test/demo program
 * \author Arthur Brainville 
-* \version 0.6
-* \date 09/03/15
 *
 * Annwvyn test program http://annwvyn.org/
 *
@@ -94,7 +92,7 @@ AnnMain()
 
 	//SetUp Oculus system	
 	AnnGetEngine()->oculusInit();
-	AnnGetEngine()->setNearClippingDistance(0.20f);
+	AnnGetSceneryManager()->setNearClippingDistance(0.20f);
 	
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
