@@ -31,7 +31,7 @@ public:
 	void load()
 	{
 		//Set some ambiant light
-		AnnGetEngine()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
+		AnnGetSceneryManager()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
 		
 		//Add other source of light
 		auto Sun = addLightObject();

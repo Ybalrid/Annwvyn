@@ -20,10 +20,10 @@ void AnnAbstractLevel::unload()
 	//Remove background music
 	AnnGetAudioEngine()->stopBGM();
 	//Remove the sky
-	AnnGetEngine()->removeSkyDome();
+	AnnGetSceneryManager()->removeSkyDome();
 
 	//Remove the ambiant lighting
-	AnnGetEngine()->setAmbiantLight(AnnColor(0,0,0));
+	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0,0,0));
 	
 	//Remove the level lights
 	for(AnnLightList::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)

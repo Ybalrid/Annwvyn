@@ -61,6 +61,15 @@
     <Filter Include="Annwvyn\GameObject\LightObject">
       <UniqueIdentifier>{92cd8a07-7a53-4488-b4db-a8f6ba91ce4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\GameObject\TriggerObject">
+      <UniqueIdentifier>{3ce1bb7b-6132-48a4-99d4-fad0947e49cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\GameObject\GameObject">
+      <UniqueIdentifier>{dc39ee55-67cf-4cf0-abd0-e293465a0d52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\Scenery">
+      <UniqueIdentifier>{5c9abb67-b981-4469-9dd8-f1658f374bb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -78,17 +87,11 @@
     <ClInclude Include="..\..\include\AnnAbstractLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnCharacter.hpp">
-      <Filter>Annwvyn\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnEngine.hpp">
       <Filter>Annwvyn\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnEventManager.hpp">
       <Filter>Annwvyn\SubSystems\EventSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnGameObject.hpp">
-      <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnKeyCode.h">
       <Filter>Annwvyn\SubSystems\EventSystem</Filter>
@@ -168,8 +171,17 @@
     <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
       <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnCharacter.hpp">
+      <Filter>Annwvyn\GameObject\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnGameObject.hpp">
+      <Filter>Annwvyn\GameObject\GameObject</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
-      <Filter>Annwvyn\GameObject</Filter>
+      <Filter>Annwvyn\GameObject\TriggerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnSceneryManager.hpp">
+      <Filter>Annwvyn\SubSystems\Scenery</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -215,12 +227,6 @@
     <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp">
       <Filter>Annwvyn\SubSystems\EventSystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnCharacter.cpp">
-      <Filter>Annwvyn\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnGameObject.cpp">
-      <Filter>Annwvyn\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\tinyxml2.cpp">
       <Filter>Internaly packaged libraries\tinyxml2</Filter>
     </ClCompile>
@@ -260,8 +266,17 @@
     <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
       <Filter>Annwvyn\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\AnnCharacter.cpp">
+      <Filter>Annwvyn\GameObject\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnGameObject.cpp">
+      <Filter>Annwvyn\GameObject\GameObject</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp">
-      <Filter>Annwvyn\GameObject</Filter>
+      <Filter>Annwvyn\GameObject\TriggerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnSceneryManager.cpp">
+      <Filter>Annwvyn\SubSystems\Scenery</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
