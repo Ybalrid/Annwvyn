@@ -97,12 +97,13 @@ AnnMain()
 	AnnGetEngine()->setNearClippingDistance(0.20f);
 	
 	//Init some player body parameters
-	AnnGetEngine()->initPlayerPhysics();	 
+	AnnGetEngine()->initPlayerPhysics();	
+	AnnGetPhysicsEngine()->setDebugPhysics(false);
 
 	//Register a level
 	//AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
 	AnnAbstractLevel* level = new TestLevel();
-	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 7.1);
+	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 7.1f);
 	splash->setBGM("media/AnnSplash.ogg");
 
 	AnnGetEngine()->getLevelManager()->addLevel(splash);

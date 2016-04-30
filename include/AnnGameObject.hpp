@@ -18,6 +18,8 @@
 #include <OgreEntity.h>
 
 #include "BtOgreGP.h"
+#include "BtOgrePG.h"
+#include "BtOgreExtras.h"
 
 //Annwvyn
 #include "AnnTypes.h"
@@ -246,7 +248,7 @@ namespace Annwvyn
 
 			///True if the object is visible
 			bool visible;
-
+			BtOgre::RigidBodyState *state;
         public:
             ///Executed after object initialization
             virtual void postInit(){return;}

@@ -127,7 +127,7 @@ namespace Annwvyn
 		///Return the Annwvyn OpenAL simplified audio engine
 		AnnAudioEngine* getAudioEngine(); //audio
 
-										  ///Return the Physics Engine
+		///Return the Physics Engine
 		AnnPhysicsEngine* getPhysicsEngine();
 
 		///Get the current level manager
@@ -198,15 +198,6 @@ namespace Annwvyn
 		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
 		//////////////////////////////////////////////////////////////////////////////////////////////PLAYER MANAGEMENT
 		
-		///If the player is handeled throug the physics engine, this method will detach the rigidbody from the camera,
-		///remove it from the dynamics world, unalocate it from the memory and recreate it from scratch. This is usefull for
-		///"teleporting" the player, for example if you need to reset his position.
-		void resetPlayerPhysics();
-
-		///Display bullet debuging drawing
-		/// \param state debug state
-		void setDebugPhysicState(bool state); //engine debug
-
 		///Get the AnnObject the player is looking at
 		AnnGameObject* playerLookingAt(); //physics
 
@@ -224,8 +215,6 @@ namespace Annwvyn
 
 		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
-
-
 
 		///Get a pose information object
 		OgrePose getPoseFromOOR();
@@ -272,7 +261,7 @@ namespace Annwvyn
 		AnnFilesystemManager* filesystemManager;
 		///ResourceManager
 		AnnResourceManager* resourceManager;
-		///
+		///GameObjectManager
 		AnnGameObjectManager* gameObjectManager;
 
 		///The scene manager

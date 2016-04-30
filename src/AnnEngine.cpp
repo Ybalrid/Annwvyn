@@ -134,7 +134,6 @@ AnnFilesystemManager* AnnEngine::getFileSystemManager()
 	return filesystemManager;
 }
 
-////////////////////////////////////////////////////////// UTILITY
 void AnnEngine::log(std::string message, bool flag)
 {
 	Ogre::String messageForLog;
@@ -198,7 +197,7 @@ bool AnnEngine::refresh()
 	//Update VR form real world
 	renderer->updateTracking();
 
-
+	//Update view
 	renderer->renderAndSubmitFrame();
 
 	return !requestStop();
@@ -250,8 +249,6 @@ void AnnEngine::resetOculusOrientation()
 	renderer->recenter();
 }
 
-
-
 Ogre::SceneNode* AnnEngine::getCamera()
 {
 	return povNode;
@@ -287,12 +284,6 @@ double AnnEngine::getTimeFromStartupSeconds()
 double AnnEngine::getFrameTime()
 {
 	return updateTime;
-}
-
-void AnnEngine::setDebugPhysicState(bool state)
-{
-	log("Activating debug drawing for physics engine");
-	physicsEngine->setDebugPhysics(state);
 }
 
 void AnnEngine::setAmbiantLight(AnnColor color)
@@ -337,25 +328,6 @@ void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)
 
 	if (renderer)
 		renderer->setCamerasNearClippingDistance(nearClippingDistance);
-}
-
-void AnnEngine::resetPlayerPhysics()
-{
-	if (!player->hasPhysics()) return;
-	log("Reset player's physics");
-
-	//Remove the player's rigidbody from the world
-	physicsEngine->getWorld()->removeRigidBody(player->getBody());
-
-	//We don't need that body anymore...
-	delete player->getBody();
-	//prevent memory access to unallocated address
-	player->setBody(NULL);
-
-	//Put everything back in order
-	povNode->setPosition(player->getPosition());
-	physicsEngine->createPlayerPhysicalVirtualBody(player, povNode);
-	physicsEngine->addPlayerPhysicalBodyToDynamicsWorld(player);
 }
 
 OgrePose AnnEngine::getPoseFromOOR()

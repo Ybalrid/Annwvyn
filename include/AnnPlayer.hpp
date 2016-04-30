@@ -152,6 +152,12 @@ namespace Annwvyn
 		///Get the ratio between walking and running speed
 		float getRunFactor();
 
+		///If the player is handeled throug the physics engine, this method will detach the rigidbody from the camera,
+		///remove it from the dynamics world, unalocate it from the memory and recreate it from scratch. This is usefull for
+		///"teleporting" the player, for example if you need to reset his position.
+		void resetPlayerPhysics();
+
+
 	protected:
 
 		///Object that keep body parameters (= legacy structure)

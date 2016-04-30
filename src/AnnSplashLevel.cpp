@@ -135,7 +135,7 @@ void AnnSplashLevel::unload()
 	AnnDebug() << "Restore Player's normal state : ";
 	AnnGetPlayer()->ignorePhysics = false;
 	AnnGetPlayer()->setPosition(AnnVect3(0,0,10));
-	AnnGetEngine()->resetPlayerPhysics();
+	AnnGetPlayer()->resetPlayerPhysics();
 	AnnGetEngine()->setWorldBackgroundColor();
 }
 

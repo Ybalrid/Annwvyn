@@ -209,7 +209,7 @@ void AnnXmlLevel::load()
 		AnnGetPlayer()->setPosition(DEFAULT_STARTING_POS);
 		AnnGetPlayer()->setOrientation(DEFAULT_STARTING_ORIENT);
 	}
-	AnnGetEngine()->resetPlayerPhysics();
+	AnnGetPlayer()->resetPlayerPhysics();
 }
 
 void AnnXmlLevel::runLogic(){}

@@ -221,6 +221,25 @@ float AnnPlayer::getRunFactor()
 	return playerBody->runFactor;
 }
 
+void Annwvyn::AnnPlayer::resetPlayerPhysics()
+{
+	if (!hasPhysics()) return;
+	AnnDebug("Reset player's physics");
+
+	//Remove the player's rigidbody from the world
+	AnnGetPhysicsEngine()->getWorld()->removeRigidBody(getBody());
+
+	//We don't need that body anymore...
+	delete getBody();
+	//prevent memory access to unallocated address
+	setBody(NULL);
+
+	//Put everything back in order
+	AnnGetEngine()->syncPov();
+	AnnGetPhysicsEngine()->createPlayerPhysicalVirtualBody(this, AnnGetEngine()->getCamera());
+	AnnGetPhysicsEngine()->addPlayerPhysicalBodyToDynamicsWorld(this);
+}
+
 void AnnPlayer::engineUpdate(float deltaTime)
 {
 	if(ignorePhysics) return;

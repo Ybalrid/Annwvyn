@@ -93,6 +93,7 @@ namespace Annwvyn
 
 		///Debug drawer object from BtOgre
 		BtOgre::DebugDrawer* debugDrawer;
+		BtOgre::RigidBodyState* playerRigidBodyState;
 
 		AnnGameObjectList& gameObjects;
 		AnnTriggerObjectList& triggerObjects;
