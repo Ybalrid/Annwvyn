@@ -67,28 +67,25 @@ void AnnTextInputer::stopListening()
 
 void AnnTextInputer::setInput(std::string content)
 {
-	input=content;
+	input = content;
 }
 
 
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) : AnnSubSystem("EventManager"),
-	Keyboard(NULL),
-	Mouse(NULL)
+Keyboard(nullptr),
+Mouse(nullptr),
+defaultEventListener(nullptr)
 {
 	for(size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
 	for(size_t i(0); i < MouseButtonId::nbButtons; i++) previousMouseButtonStates[i] = false;
-	InputManager = NULL;
 
 	//Should be a HWND under windows, but, whatever, it's an unsigned integer...
-	size_t windowHnd;
-	w->getCustomAttribute("WINDOW", &windowHnd);
+	size_t windowHnd; w->getCustomAttribute("WINDOW", &windowHnd);
 
 	//Well, I think the best thing on the C++ standard library are the stream classes! :-D
-	std::stringstream windowHndStr;
-	windowHndStr << windowHnd;
+	std::stringstream windowHndStr; windowHndStr << windowHnd;
 
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
-
 	InputManager = OIS::InputManager::createInputSystem(pl);
 
 	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
@@ -114,6 +111,10 @@ AnnTextInputer* AnnEventManager::getTextInputer()
 
 AnnEventManager::~AnnEventManager()
 {
+	for (auto listener : listeners)
+		delete listener;
+	clearListenerList();
+	defaultEventListener = nullptr;
 	Keyboard->setEventCallback(nullptr);
 	delete textInputer;
 	delete Keyboard;
@@ -121,6 +122,27 @@ AnnEventManager::~AnnEventManager()
 	for(auto Joystick : Joysticks)
 		delete Joystick;
 	Joysticks.clear();
+}
+
+void Annwvyn::AnnEventManager::useDefaultEventListener()
+{
+	AnnDebug("Reconfiguring the engine to use the default event listener");
+	AnnDebug("This unregister any current listener in use!");
+
+	//Remove all event listeners
+	removeListener();
+
+	//If the event listenre isn't allready initialized, allocate one
+	if (!defaultEventListener)
+		defaultEventListener = new AnnDefaultEventListener;
+
+	//Set the default event listener to the event manager
+	addListener(defaultEventListener);
+}
+
+AnnAbstractEventListener * Annwvyn::AnnEventManager::getDefaultEventListener()
+{
+	return defaultEventListener;
 }
 
 void AnnEventManager::addListener(AnnAbstractEventListener* l)

@@ -225,17 +225,7 @@ namespace Annwvyn
 		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
 
-		///Set the engine to use the "default" event listener.
-		///This will create an instance of AnnDefaultEventListener (if it doesn't allready exist inside of AnnEngine)
-		///This will also unregister all listeners known by AnnEventListener
-		///The default event listerner implement a simple "FPS-like" controll scheme 
-		/// WASD for walking
-		/// Horizontal view with mouse X relative mouvement
-		/// That event listener is designed as an example of an event listener, and for exploring the environement without having to write a custom event listene
-		void useDefaultEventListener();
 
-		///Get the address of the default event listener declared by "use default event listener"
-		AnnDefaultEventListener* getInEngineDefaultListener();
 
 		///Get a pose information object
 		OgrePose getPoseFromOOR();
@@ -274,8 +264,6 @@ namespace Annwvyn
 		AnnPlayer* player;
 		///Event manager
 		AnnEventManager* eventManager;
-		///This event listener do WASD+mouse movement on the player
-		AnnDefaultEventListener* defaultEventListener;
 		///Physics
 		AnnPhysicsEngine* physicsEngine;
 		///LevelManager
