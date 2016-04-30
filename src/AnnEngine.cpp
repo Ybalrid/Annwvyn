@@ -64,6 +64,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	SubSystemList.push_back(audioEngine = new AnnAudioEngine);
 	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
 	SubSystemList.push_back(resourceManager = new AnnResourceManager);
+	SubSystemList.push_back(sceneryManager = new AnnSceneryManager(renderer));
 
 	log("===================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World    ", false);
@@ -115,6 +116,12 @@ AnnGameObjectManager * AnnEngine::getGameObjectManager()
 {
 	if (!canAccessSubSystems) return nullptr;
 	return gameObjectManager;
+}
+
+AnnSceneryManager * Annwvyn::AnnEngine::getSceneryManager()
+{
+	if (!canAccessSubSystems) return nullptr;
+	return sceneryManager;
 }
 
 AnnLevelManager* AnnEngine::getLevelManager()
@@ -216,33 +223,6 @@ inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
-
-AnnGameObject* AnnEngine::playerLookingAt()
-{
-	//Origin vector of the ray
-	AnnVect3 Orig(getPoseFromOOR().position);
-
-	//Caltulate direction Vector of the ray to be the midpont camera optical axis
-	AnnVect3 LookAt(AnnQuaternion(getPoseFromOOR().orientation).getAtVector());
-
-	//create ray
-	Ogre::Ray ray(Orig, LookAt);
-
-	//create query
-	Ogre::RaySceneQuery* raySceneQuery(SceneManager->createRayQuery(ray));
-	raySceneQuery->setSortByDistance(true);
-
-	//execute and get the results
-	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
-
-	//read the result list
-	for (auto it(result.begin()); it != result.end(); it++)
-		if (it->movable && it->movable->getMovableType() == "Entity")
-			return AnnGetGameObjectManager()->getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
-
-	return nullptr; //means that we don't know what the player is looking at.
-}
-
 void AnnEngine::resetOculusOrientation()
 {
 	log("Reseting the base direction of player's head");
@@ -284,42 +264,6 @@ double AnnEngine::getTimeFromStartupSeconds()
 double AnnEngine::getFrameTime()
 {
 	return updateTime;
-}
-
-void AnnEngine::setAmbiantLight(AnnColor color)
-{
-	AnnDebug() << "Setting the ambiant light to color " << color;
-	SceneManager->setAmbientLight(color.getOgreColor());
-}
-
-void AnnEngine::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)
-{
-	log("Setting skydome from material"); log(materialName, false);
-	SceneManager->setSkyDome(activate, materialName, curvature, tiling);
-}
-
-void AnnEngine::setSkyBoxMaterial(bool activate, const char materialName[], float distance, bool renderedFirst)
-{
-	log("Setting skybox from material"); log(materialName, false);
-	SceneManager->setSkyBox(activate, materialName, distance, renderedFirst);
-}
-
-void AnnEngine::setWorldBackgroundColor(AnnColor v)
-{
-	AnnDebug() << "Setting the backgroud world color " << v;
-	renderer->changeViewportBackgroundColor(v.getOgreColor());
-}
-
-void AnnEngine::removeSkyDome()
-{
-	log("Disabeling skydome");
-	SceneManager->setSkyDomeEnabled(false);
-}
-
-void AnnEngine::removeSkyBox()
-{
-	log("Disabeling skybox");
-	SceneManager->setSkyBoxEnabled(false);
 }
 
 void AnnEngine::setNearClippingDistance(Ogre::Real nearClippingDistance)

@@ -36,6 +36,7 @@
 #include "AnnResourceManager.hpp"
 #include "AnnGameObject.hpp"
 #include "AnnGameObjectManager.hpp"
+#include "AnnSceneryManager.hpp"
 
 #ifdef _WIN32
 #include <io.h>
@@ -61,9 +62,10 @@
 #define AnnGetPlayer() AnnGetEngine()->getPlayer()
 ///Get ResourceManager
 #define AnnGetResourceManager() AnnGetEngine()->getResourceManager()
-///GEt GameObjectManager
+///Get GameObjectManager
 #define AnnGetGameObjectManager() AnnGetEngine()->getGameObjectManager()
-
+///Get SceneryManager
+#define AnnGetSceneryManager() AnnGetEngine()->getSceneryManager()
 
 namespace Annwvyn
 {
@@ -139,6 +141,9 @@ namespace Annwvyn
 		///Get the GameObjectManager
 		AnnGameObjectManager* getGameObjectManager();
 
+		///Get the SceneryManager
+		AnnSceneryManager* getSceneryManager();
+
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
 		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
@@ -152,43 +157,10 @@ namespace Annwvyn
 		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
 		////////////////////////////////////////////////////////////////////////////////////////////////////////SCENERY
 		
-		///Set the ogre material for the skydome with params
-		/// \param activate if true put a skydome
-		/// \param materialName name of a material known from the Ogre Resource group manager
-		/// \param curvature curvature of the texture
-		/// \param tilling tilling of the texture
-		void setSkyDomeMaterial(bool activate,
-			const char materialName[],
-			float curvature = 2.0f,
-			float tiling = 1.0f); //scene
-
-		///Set the ogre material for the skybox with params
-		/// \param activate if true put the skybox on the scene
-		/// \param materialName name of a material declared on the resource manager
-		/// \param distance distance of the sky from the camera
-		/// \param renderedFirst if true, the skybox will be the first thing rendered
-		void setSkyBoxMaterial(bool activate,
-			const char materialName[],
-			float distance = 8000,
-			bool renderedFirst = true);
-
-		///Set the viewports background color
-		/// \param v background color
-		void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56, 1));
-
-		///Remove the sky dome
-		void removeSkyDome();
-
-		///Remove the sky box
-		void removeSkyBox();
-
-		///Set the ambiant light
-		/// \param v the color of the light
-		void setAmbiantLight(AnnColor color);
-
 		///Set the distance of the near clipping plane
 		/// \param distace the distance to the clipping plane
 		void setNearClippingDistance(Ogre::Real distance); //graphics
+
 
 		///Get ogre scene manager
 		Ogre::SceneManager* getSceneManager(); //scene or graphics
@@ -197,10 +169,6 @@ namespace Annwvyn
 		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
 		//////////////////////////////////////////////////////////////////////////////////////////////OBJECT MANAGEMENT
 		//////////////////////////////////////////////////////////////////////////////////////////////PLAYER MANAGEMENT
-		
-		///Get the AnnObject the player is looking at
-		AnnGameObject* playerLookingAt(); //physics
-
 		//////////////////////////////////////////////////////////////////////////////////////////////PLAYER MANAGEMENT
 		//////////////////////////////////////////////////////////////////////////////////////////////////GAMEPLAY LOOP
 
@@ -263,6 +231,8 @@ namespace Annwvyn
 		AnnResourceManager* resourceManager;
 		///GameObjectManager
 		AnnGameObjectManager* gameObjectManager;
+		///SceneryManager
+		AnnSceneryManager* sceneryManager;
 
 		///The scene manager
 		Ogre::SceneManager* SceneManager;

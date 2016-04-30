@@ -28,26 +28,14 @@ AnnGameObject::~AnnGameObject()
 		AnnGetAudioEngine()->destroySource(audioSource);
 	AnnDebug() << "Tidy my physics !";
 
-	if (Body)
-	{
-		AnnDebug() << "I'm deleting my RigidBody";
-		delete Body;
-	} 
+	if (Body) delete Body;
 	if (Shape)
 	{
 		if (Shape->getShapeType() == BroadphaseNativeTypes::TRIANGLE_MESH_SHAPE_PROXYTYPE)
 			delete static_cast<btBvhTriangleMeshShape*>(Shape)->getMeshInterface();
-
-		AnnDebug() << "I'm deleting my Shape";
 		delete Shape;
 	}
-
-	if (state)
-	{
-		AnnDebug() << "I'm deleting my RigidBodyState";
-		delete state;
-	}
-
+	if (state) delete state;
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)

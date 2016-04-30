@@ -164,3 +164,29 @@ void Annwvyn::AnnGameObjectManager::destroyTriggerObject(AnnTriggerObject * trig
 	AnnDebug() << "Destroy trigger : " << (void*)trigger;
 	delete trigger;
 }
+
+AnnGameObject * Annwvyn::AnnGameObjectManager::playerLookingAt()
+{
+	//Origin vector of the ray
+	AnnVect3 Orig(AnnGetEngine()->getPoseFromOOR().position);
+
+	//Caltulate direction Vector of the ray to be the midpont camera optical axis
+	AnnVect3 LookAt(AnnQuaternion(AnnGetEngine()->getPoseFromOOR().orientation).getAtVector());
+
+	//create ray
+	Ogre::Ray ray(Orig, LookAt);
+
+	//create query
+	Ogre::RaySceneQuery* raySceneQuery(AnnGetEngine()->getSceneManager()->createRayQuery(ray));
+	raySceneQuery->setSortByDistance(true);
+
+	//execute and get the results
+	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
+
+	//read the result list
+	for (auto it(result.begin()); it != result.end(); it++)
+		if (it->movable && it->movable->getMovableType() == "Entity")
+			return AnnGetGameObjectManager()->getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
+
+	return nullptr; //means that we don't know what the player is looking at.
+}

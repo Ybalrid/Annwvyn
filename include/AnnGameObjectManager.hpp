@@ -40,6 +40,10 @@ namespace Annwvyn
 		///Remove the object from the engine
 		void destroyTriggerObject(AnnTriggerObject* obj);
 
+		///Get the AnnObject the player is looking at
+		AnnGameObject* playerLookingAt(); //physics
+
+
 	private:
 		friend class AnnEngine;
 		AnnGameObjectList Objects;

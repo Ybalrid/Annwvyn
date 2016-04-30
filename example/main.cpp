@@ -98,7 +98,7 @@ AnnMain()
 	
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
-	AnnGetPhysicsEngine()->setDebugPhysics(false);
+	AnnGetPhysicsEngine()->setDebugPhysics(true);
 
 	//Register a level
 	//AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
@@ -120,7 +120,7 @@ AnnMain()
 	AnnLightObject* light = AnnGetGameObjectManager()->createLightObject(); 
 	AnnGetGameObjectManager()->destroyLightObject(light);
 
-	auto testFile = AnnEngine::Instance()->getFileSystemManager()->crateSaveFileDataObject("test");
+	auto testFile = AnnGetFileSystemManager()->crateSaveFileDataObject("test");
 	testFile->setValue("KEY0", "Thing");
 	testFile->setValue("KEY1", "otherThing");
 	testFile->setValue("lives", 10);
@@ -128,11 +128,10 @@ AnnMain()
 	testFile->setValue("pos", AnnVect3(2.5, 4.8, Ogre::Math::HALF_PI));
 	testFile->setValue("orient", AnnQuaternion(Ogre::Radian(Ogre::Math::HALF_PI), AnnVect3(.5,.5,.5)));
 
-
-	AnnFileWriter* writer(AnnEngine::Instance()->getFileSystemManager()->getFileWriter());
+	AnnFileWriter* writer(AnnGetFileSystemManager()->getFileWriter());
 	writer->write(testFile);
 
-	AnnFileReader* reader(AnnEngine::Instance()->getFileSystemManager()->getFileReader());
+	AnnFileReader* reader(AnnGetFileSystemManager()->getFileReader());
 	auto data = reader->read("test");
 	
 	AnnDebug() << "KEY0 val : " << data->getValue("KEY0");

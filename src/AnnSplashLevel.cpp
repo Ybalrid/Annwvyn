@@ -18,7 +18,7 @@ AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, AnnAbstractLevel* next
 void AnnSplashLevel::load()
 {
 	AnnDebug() << "Ignore physics";
-	AnnGetEngine()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
+	AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
 	AnnGetPlayer()->ignorePhysics = true;
 	AnnGetPlayer()->setOrientation(Ogre::Euler(0,0,0));
 
@@ -136,7 +136,7 @@ void AnnSplashLevel::unload()
 	AnnGetPlayer()->ignorePhysics = false;
 	AnnGetPlayer()->setPosition(AnnVect3(0,0,10));
 	AnnGetPlayer()->resetPlayerPhysics();
-	AnnGetEngine()->setWorldBackgroundColor();
+	AnnGetSceneryManager()->setWorldBackgroundColor();
 }
 
 void AnnSplashLevel::setNextLevel(AnnAbstractLevel* level)
