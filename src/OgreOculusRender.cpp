@@ -34,9 +34,9 @@ OgreOculusRender::OgreOculusRender(std::string winName) :
 		exit(ANN_ERR_RENDER);
 	}
 	self=this;
-	eyeCameras[left] = nullptr;
+	eyeCameras[left ] = nullptr;
 	eyeCameras[right] = nullptr;
-	vpts[left] = nullptr;		
+	vpts[left ] = nullptr;		
 	vpts[right] = nullptr;
 	monoCam = nullptr;
 }
@@ -134,8 +134,6 @@ void OgreOculusRender::recenter()
 {
 	ovr_RecenterTrackingOrigin(Oculus->getSession());
 }
-
-//See commant of the loadResourceFile method
 
 void OgreOculusRender::initLibraries(std::string loggerName)
 {
@@ -309,8 +307,8 @@ void OgreOculusRender::initRttRendering()
 	AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 
 	//Get texture size from ovr with the maximal FOV for each eye
-	ovrSizei texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().MaxEyeFov[left], 1.0f);
-	ovrSizei texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().MaxEyeFov[right], 1.0f);
+	ovrSizei texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);
+	ovrSizei texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right], 1.f);
 	
 	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
@@ -414,17 +412,17 @@ void OgreOculusRender::showMonscopicView()
 void OgreOculusRender::initOculus()
 {
 	//Populate OVR structures
-	EyeRenderDesc[left]  = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Left,  Oculus->getHmdDesc().MaxEyeFov[left]);
-	EyeRenderDesc[right] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().MaxEyeFov[right]);
-	offset[left] =EyeRenderDesc[left].HmdToEyeOffset;
-	offset[right]=EyeRenderDesc[right].HmdToEyeOffset;
+	EyeRenderDesc[left ] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Left , Oculus->getHmdDesc().DefaultEyeFov[left ]);
+	EyeRenderDesc[right] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right]);
+	offset[left ] = EyeRenderDesc[left ].HmdToEyeOffset;
+	offset[right] = EyeRenderDesc[right].HmdToEyeOffset;
 
 	//Create a layer with our single swaptexture on it. Each side is an eye.
 	layer.Header.Type = ovrLayerType_EyeFov;
 	layer.Header.Flags = 0;
-	layer.ColorTexture[left]  = textureSwapChain;
+	layer.ColorTexture[left ] = textureSwapChain;
 	layer.ColorTexture[right] = textureSwapChain;
-	layer.Fov[left]  = EyeRenderDesc[left].Fov;
+	layer.Fov[left ] = EyeRenderDesc[left ].Fov;
 	layer.Fov[right] = EyeRenderDesc[right].Fov;
 
 	//Define the two viewports : 
@@ -441,7 +439,7 @@ void OgreOculusRender::initOculus()
 	rightRect.Pos = rightPos;
 
 	//Assign the viewports
-	layer.Viewport[left]  = leftRect;
+	layer.Viewport[left ] = leftRect;
 	layer.Viewport[right] = rightRect;
 
 	//Get the projection matrix for the desired near/far clipping from Oculus and apply them to the eyeCameras

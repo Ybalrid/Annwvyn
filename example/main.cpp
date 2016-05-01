@@ -96,7 +96,7 @@ AnnMain()
 	
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
-	AnnGetPhysicsEngine()->setDebugPhysics(true);
+	AnnGetPhysicsEngine()->setDebugPhysics(false);
 
 	//Register a level
 	//AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
