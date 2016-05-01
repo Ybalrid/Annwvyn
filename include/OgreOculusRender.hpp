@@ -54,6 +54,12 @@ struct OgrePose
 ///Do the initialization and graphical rendering for the Oculus Rift using Ogre
 class DLL OgreOculusRender
 {
+	enum
+	{
+		left,
+		right
+	};
+
     public:
 		///Construct the OgreOculusRender. Can only be called once
         OgreOculusRender(std::string windowName = "OgreOculusRender");
@@ -141,14 +147,6 @@ class DLL OgreOculusRender
 		///Instance for the private singleton
 		static OgreOculusRender* self;
 
-		///Everything that is an array of 2 will use theses indexes in code. 
-        enum 
-        {
-            left = 0,
-            right = 1,
-        };
-
-
 		///Save content of the RenderTexture to the specified file. This verry slow operation is only usefull for debuging the renderer itself
         void debugSaveToFile(const char path[]);
 		
@@ -197,7 +195,7 @@ class DLL OgreOculusRender
 		///Render descriptor for each eye. Indexes are "left" and "right"
         ovrEyeRenderDesc EyeRenderDesc[2];
 
-		///Size of left eye texture
+		///Size of texture and headset
         ovrSizei bufferSize, hmdSize;
 
 		///Mirror texture 

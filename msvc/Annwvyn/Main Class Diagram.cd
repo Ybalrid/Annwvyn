@@ -32,14 +32,14 @@
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="Oculus" />
-      <Field Name="returnPose" />
       <Field Name="backgroundColor" />
+      <Field Name="returnPose" />
     </ShowAsAssociation>
   </Class>
   <Class Name="OculusInterface">
-    <Position X="49.5" Y="8.25" Width="2.25" />
+    <Position X="49.5" Y="18" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAIAAAABAAAAIBCAGAAAABIIAAACIAEgEAAAAEAAI=</HashCode>
+      <HashCode>AAAAAAAAABAAAAAACAGAAAABIIAAACAAAAAAAAAAAAI=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\OculusInterface.hpp</FileName>
     </TypeIdentifier>
   </Class>
@@ -352,8 +352,8 @@
       <FileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\AnnFilesystem.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="fileReader" />
       <Field Name="fileWriter" />
+      <Field Name="fileReader" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Ogre::Light" Collapsed="true">
@@ -430,7 +430,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnColor">
-    <Position X="48.75" Y="13.75" Width="3.75" />
+    <Position X="48.75" Y="8.75" Width="3.75" />
     <TypeIdentifier>
       <HashCode>BAAAACAQRIABAAAAAAIAQAAAAAAABAAoAQABIAEAGIA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\AnnColor.hpp</FileName>
@@ -465,7 +465,7 @@
     </TypeIdentifier>
   </Class>
   <Struct Name="OgrePose">
-    <Position X="39.75" Y="21" Width="2" />
+    <Position X="48.75" Y="16" Width="2" />
     <TypeIdentifier>
       <HashCode>AAABAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\OgreOculusRender.hpp</FileName>

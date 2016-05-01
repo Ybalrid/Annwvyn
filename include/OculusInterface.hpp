@@ -18,64 +18,44 @@
 #include <Ogre.h>
 #define USE_OGRE
 
+
 ///Comunicate with the Rift runtime (initialize OVR and get the info)
 class DLL OculusInterface
 {
-    public:
+	enum
+	{
+		left,
+		right
+	};
 
+public:
 	///Construct an OculusInterface object. This create an Oculus Session for comunication with the Oculus Runtime
-    OculusInterface();
+	OculusInterface();
 
 	///Destructor of Oculus Interface
-    ~OculusInterface();
-
-    ///Update. We use the predicted values from the rift. Therefore, we want the timecode of the "pose". Default : exact current time
-    void update(double time = ovr_GetTimeInSeconds());
-    
-    ///Return a position vector
-    OVR::Vector3f getPosition();
-    
-    ///Return a quaternion orentetion
-    OVR::Quatf getOrientation();
+	~OculusInterface();
 
 	///Return the active hmd desk object
-    ovrHmdDesc getHmdDesc();
+	ovrHmdDesc getHmdDesc();
 
 	///Return the current oculus session
 	ovrSession getSession();
-    
-    ///Print debuggin information to standard input;
-    void debugPrint();
 
-    private:
+	///Initialize the layer
+	void initOculusLayer();
 
-	///Print to the log all information about the headset
-    void customReport();
+private:
+	///Print every known characteristics about the hardware to the log output
+	void customReport();
 
-	///Init the oculus library
-    void init();
-	
-	///Shutdown the oculus library
-    void shutdown();
-
-    private:
-
-	///set to true when it's safe to call ovr_ function on the ovrSession
-    bool initialized;
-
-	///This object know a trackingstate from the Oculus Service
-    bool firstUpdated;
-	
 	///Oculus session for the application
-    ovrSession session;
+	ovrSession session;
 
 	///Description of the HMD
-    ovrHmdDesc hmdDesc; 
-
-	///Tracked state of the HMD
-	ovrTrackingState ts;
+	ovrHmdDesc hmdDesc;
 
 	///Graphics device identifier (internal for the Rift SDK)
 	ovrGraphicsLuid luid;
+
 };
 #endif

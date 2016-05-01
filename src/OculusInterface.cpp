@@ -4,47 +4,35 @@
 
 using namespace std;
 using namespace OVR;
+using namespace Annwvyn;
 
 OculusInterface::OculusInterface()
-{
-	initialized = false;
-	firstUpdated = false;
-	init();
-}
-
-OculusInterface::~OculusInterface()
-{
-	Annwvyn::AnnDebug() << "Shutdown OculusInterface object";
-	shutdown();
-}
-
-void OculusInterface::init()
 {
 	//Init Oculus Virtual Reality library
 	ovr_Initialize(nullptr);
 
 	//Attempt to create OVR session
-	if(ovr_Create(&session, &luid) != ovrSuccess)
+	if (ovr_Create(&session, &luid) != ovrSuccess)
 	{
 		//Notify user
-		Annwvyn::AnnDebug() << "Error: Cannot create Oculus Session";
+		AnnDebug() << "Error: Cannot create Oculus Session";
 		//Debug HMD is now handeled by the configuration utility and the runtime.
-		Annwvyn::AnnDebug() << "Please make sure Oculus Home is installed on your system and "
+		AnnDebug() << "Please make sure Oculus Home is installed on your system and "
 			" please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
 #ifdef _WIN32
-		MessageBox(NULL, 
+		MessageBox(NULL,
 			L"Please make sure Oculus Home is installed on your system\n"
-			L"and check HDMI and USB connection to your Rift and Tracker", 
-			L"Error: Cannot create Oculus Session!", 
+			L"and check HDMI and USB connection to your Rift and Tracker",
+			L"Error: Cannot create Oculus Session!",
 			MB_ICONERROR);
 #endif
 		//Cleanup
-		ovr_Shutdown();		
+		ovr_Shutdown();
 		//Return an error
-		Annwvyn::AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
-
+		AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
+		//Destroy Ogre
 		delete Ogre::Root::getSingletonPtr();
-		
+		//Stop program
 		exit(ANN_ERR_CRITIC);
 	}
 
@@ -54,51 +42,32 @@ void OculusInterface::init()
 	//Print to log all known information about the headset
 	customReport();
 
-	initialized = true;
 }
 
-void OculusInterface::shutdown()
+OculusInterface::~OculusInterface()
 {
-	if(initialized)
-		ovr_Destroy(getSession());
+	//Set the performance hud to Off
+	ovr_SetInt(getSession(), "PerfHudMode", ovrPerfHud_Off);
+
+	AnnDebug() << "Shutdown OculusInterface object";
+	ovr_Destroy(getSession());
 	ovr_Shutdown();
-	Annwvyn::AnnDebug("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
+	AnnDebug("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
 }
 
 void OculusInterface::customReport()
 {
 	//Print to the logger a bunch of information 
-	Annwvyn::AnnDebug() << "===================================";
-	Annwvyn::AnnDebug() << "Detected Oculus Rift VR Headset :";
-	Annwvyn::AnnDebug() << "Product name : " << hmdDesc.ProductName;
-	Annwvyn::AnnDebug() << "Serial number : " << hmdDesc.SerialNumber;
-	Annwvyn::AnnDebug() << "Manufacturer : " << hmdDesc.Manufacturer;
-	Annwvyn::AnnDebug() << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h;
-	Annwvyn::AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate <<"Hz";
-	Annwvyn::AnnDebug() << "Type of HMD identifier : " << hmdDesc.Type;
-	Annwvyn::AnnDebug() << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor;
-	Annwvyn::AnnDebug() << "===================================";
-}
-
-void OculusInterface::update(double time)
-{
-	if(!initialized) return;
-	firstUpdated = true;
-	ts = ovr_GetTrackingState(session, time, true);
-}
-
-OVR::Vector3f OculusInterface::getPosition()
-{
-	if(initialized && firstUpdated)
-		return OVR::Vector3f(ts.HeadPose.ThePose.Position);
-	return OVR::Vector3f(0, 0, 0);
-}
-
-OVR::Quatf OculusInterface::getOrientation()
-{
-	if(initialized && firstUpdated)
-		return OVR::Quatf(ts.HeadPose.ThePose.Orientation);
-	return OVR::Quatf(1, 0, 0, 0);
+	AnnDebug() << "===================================";
+	AnnDebug() << "Detected Oculus Rift VR Headset :";
+	AnnDebug() << "Product name : " << hmdDesc.ProductName;
+	AnnDebug() << "Serial number : " << hmdDesc.SerialNumber;
+	AnnDebug() << "Manufacturer : " << hmdDesc.Manufacturer;
+	AnnDebug() << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h;
+	AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate <<"Hz";
+	AnnDebug() << "Type of HMD identifier : " << hmdDesc.Type;
+	AnnDebug() << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor;
+	AnnDebug() << "===================================";
 }
 
 ovrHmdDesc OculusInterface::getHmdDesc()
@@ -111,21 +80,4 @@ ovrSession OculusInterface::getSession()
 	return session;
 }
 
-void OculusInterface::debugPrint()
-{
-	if(!(initialized && firstUpdated)) return;
 
-	//Get position and orientation
-	OVR::Vector3f p = this->getPosition();
-	OVR::Quatf q = this->getOrientation();
-
-	//Convert quatternion to (yaw,pitch,roll) euler vector
-	float o_y, o_p, o_r; q.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&o_y, &o_p, &o_r);
-
-	//Print out inforamtion 
-	cout << "Rift tracking state at last update : " << endl
-		<< "Position : " << "(" << p.x << ", "<< p.y<< ", " << p.z<< ")" << endl
-		<< "Orientation : " << "(" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << ")"<< endl
-		<< "Euler Orientation angle (yaw, pitch, roll) "<< "(" << o_y << ", " << o_p << ", " << o_r << ")" << endl
-		<< endl;
-}
