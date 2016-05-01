@@ -43,9 +43,6 @@ OgreOculusRender::OgreOculusRender(std::string winName) :
 
 OgreOculusRender::~OgreOculusRender()
 {
-	//Set the performance hud to Off
-	ovr_SetInt(Oculus->getSession(), "PerfHudMode", ovrPerfHud_Off);
-
 	//Destroy any Oculus SDK related objects
 	ovr_DestroyTextureSwapChain(Oculus->getSession(), textureSwapChain);
 	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
@@ -55,6 +52,7 @@ OgreOculusRender::~OgreOculusRender()
 	root->destroySceneManager(debugSmgr);
 	root->destroySceneManager(smgr);
 
+	//Set the material shared pointer to null. If not done, Ogre will crash.
 	DebugPlaneMaterial.setNull();
 
 	root->unloadPlugin("Plugin_OctreeSceneManager");
@@ -578,5 +576,4 @@ void OgreOculusRender::renderAndSubmitFrame()
 		debugViewport->update();
 		window->update();
 	}
-
 }
