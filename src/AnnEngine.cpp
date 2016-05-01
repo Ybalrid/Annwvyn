@@ -216,7 +216,6 @@ inline void AnnEngine::syncPov()
 	povNode->setOrientation(player->getOrientation().toQuaternion());
 }
 
-
 inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
 	if (!eventManager) return false;
