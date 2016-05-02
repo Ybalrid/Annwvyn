@@ -3,14 +3,14 @@
 #include "AnnSubsystem.hpp"
 #include "OgreSceneManager.h"
 #include "AnnTypes.h"
-#include "OgreOculusRender.hpp"
+#include "OgreVRRender.hpp"
 
 namespace Annwvyn
 {
 	class DLL AnnSceneryManager : public AnnSubSystem
 	{
 	public:
-		AnnSceneryManager(OgreOculusRender* renderer);
+		AnnSceneryManager(OgreVRRender* renderer);
 		bool needUpdate() { return false; }
 
 
@@ -54,6 +54,6 @@ namespace Annwvyn
 
 	private:
 		Ogre::SceneManager* smgr;
-		OgreOculusRender* renderer;
+		OgreVRRender* renderer;
 	};
 }

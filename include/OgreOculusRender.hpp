@@ -12,6 +12,8 @@
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
 
+#include "OgreVRRender.hpp"
+
 //Oculus Rift Lib
 //#include <OVR.h>
 #include <OVR_CAPI_GL.h>
@@ -19,9 +21,6 @@
 //C++ SDL Includes
 #include <iostream>
 #include <sstream>
-
-//Ogre
-#include <Ogre.h>
 
 //Accessing Oculus Rift through a class : 
 #include "OculusInterface.hpp"
@@ -41,20 +40,10 @@
 #include "AnnErrorCode.hpp"
 #include "AnnTypes.h"
 
-///A pose refer to the combinaison of a position and an orientation. 
-///It permit to define the placement of an object with 6DOF
-struct OgrePose
-{
-	///A 3D vector representing a position
-	Ogre::Vector3 position;
-	///A quaternion representiong an orientation
-	Ogre::Quaternion orientation;
-};
-
 ///Do the initialization and graphical rendering for the Oculus Rift using Ogre
-class DLL OgreOculusRender
+class DLL OgreOculusRender : public OgreVRRender
 {
-	enum
+	enum oorEyeType
 	{
 		left,
 		right
@@ -67,8 +56,12 @@ class DLL OgreOculusRender
 		///Class destructor
         ~OgreOculusRender();
 
+		bool shouldQuit();
+		bool shouldRecenter();
+		bool isVisibleInHmd();
+
 		///Cycle through all Oculus Performance HUD available
-		void cycleOculusHUD();
+		void cycleDebugHud();
 		
 		///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
 		void updateTracking();
@@ -77,10 +70,12 @@ class DLL OgreOculusRender
 		void renderAndSubmitFrame();
 
 		///Set the near Z clipping plane distance from the POV. Used to calculate Projections matricies
-		void setCamerasNearClippingDistance(float distance);
+		void setCamerasNearClippingDistance(float distance = 0.15f);
+		void setCameraFarClippingDistance(float distance);
+
 
 		///Start Oculus and Ogre libraries.
-        void initLibraries(std::string = "Ogre.log");
+        void initVrHmd();
         
 		///Get Configuration from ogre.cfg or display a Dialog. The Resolution and FullScreen settings will be ignored. 
 		void getOgreConfig();
@@ -98,25 +93,13 @@ class DLL OgreOculusRender
         void initRttRendering();
         
 		///Init the Rift rendering. Configure Oculus SDK to use the two RTT textures created.
-		void initOculus();
-
-		///Get the scene manager.
-        Ogre::SceneManager* getSceneManager();
-
-		///Get the RenderWindow
-        Ogre::RenderWindow* getWindow();
-
+		void initClientHmdRendering();
+		
 		///Print various informations about the cameras
         void debugPrint();
 
-		///Get a node representing the camera. NOTE: Camera isn"t attached.
-        Ogre::SceneNode* getCameraInformationNode();
-
 		///Get the timer
         Ogre::Timer* getTimer();
-
-		///Get time between frames
-        double getUpdateTime();
 
 		///Recenter rift to default position.
 		void recenter();
@@ -125,7 +108,7 @@ class DLL OgreOculusRender
 		void calculateProjectionMatrix();
 
 		///change main viewport background color
-		void changeViewportBackgroundColor(Annwvyn::AnnColor color);
+		void changeViewportBackgroundColor(Ogre::ColourValue color);
 
 		///Show in debug window what the camera are seeing
 		static void showRawView();
@@ -139,34 +122,24 @@ class DLL OgreOculusRender
 		///Get the status of the session
 		ovrSessionStatus getSessionStatus();
 
+		///Init the rendering pipeline
+		void initPipeline();
+
     private://Methods
 		///Set the Fov for the monoscopic view
 		void setMonoFov(float degreeFov);
 
 	private://Attributes
-		///Instance for the private singleton
-		static OgreOculusRender* self;
-
+		static OgreOculusRender* OculusSelf;
 		///Save content of the RenderTexture to the specified file. This verry slow operation is only usefull for debuging the renderer itself
         void debugSaveToFile(const char path[]);
 		
 		///Object for getting informations from the Oculus Rift
         OculusInterface* Oculus; 
 
-		///background color of viewports
-		Annwvyn::AnnColor backgroundColor;
-
-        ///Name of the Window
-        std::string name; 
-
-        ///Ogre Root instance
-        Ogre::Root* root; 
-
-		///Ogre Render Window for debuging out
-        Ogre::RenderWindow* window; 
 
 		///Ogre Scene Manager
-        Ogre::SceneManager* smgr, * debugSmgr;	
+        Ogre::SceneManager* debugSmgr;	
 
 		///Stereoscopic camera array. Indexes are "left" and "right" + debug view cam
         Ogre::Camera* eyeCameras[2], * debugCam, * monoCam; 
@@ -174,20 +147,11 @@ class DLL OgreOculusRender
 		///Nodes for the debug scene
 		Ogre::SceneNode* debugCamNode, * debugPlaneNode; 
 
-		///Node that store camera position/orientation
-        Ogre::SceneNode* headNode; 
-
 		///Vewports on textures. Textures are separated. One vieport for each textures
         Ogre::Viewport* vpts[2], *debugViewport;
 
 		///The Z axis clipping planes distances
         Ogre::Real nearClippingDistance, farClippingDistance;
-
-		///Position of the camera.
-        Ogre::Vector3 headPosition;
-
-		///Orientation of the camera.
-        Ogre::Quaternion headOrientation;
 
 		///Timing in seconds 
 		double currentFrameDisplayTime, lastFrameDisplayTime;
@@ -203,9 +167,6 @@ class DLL OgreOculusRender
 
 		///OpenGL Texture ID of the render buffers
 		GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureGLID, renderTextureGLID;
-
-		///Time between two frames in seconds
-        double updateTime;
 
 		///Pointer to the debug plane manual material
 		Ogre::MaterialPtr DebugPlaneMaterial;

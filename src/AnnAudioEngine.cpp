@@ -248,7 +248,7 @@ void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 
 void AnnAudioEngine::update()
 {
-	OgrePose pose = AnnGetEngine()->getPoseFromOOR();
+	OgrePose pose = AnnGetEngine()->getHmdPose();
 	updateListenerPos(pose.position);
 	updateListenerOrient(pose.orientation);
 }
