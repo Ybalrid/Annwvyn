@@ -91,7 +91,7 @@ AnnMain()
 	AnnGetResourceManager()->initResources();
 
 	//SetUp Oculus system	
-	AnnGetEngine()->oculusInit();
+	AnnGetEngine()->VrInit();
 	AnnGetSceneryManager()->setNearClippingDistance(0.20f);
 	
 	//Init some player body parameters

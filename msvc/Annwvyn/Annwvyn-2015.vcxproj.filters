@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Oculus rendering for Ogre">
-      <UniqueIdentifier>{80903f3b-ac93-417b-881a-c6fe14583547}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Annwvyn">
       <UniqueIdentifier>{71f4958c-4a0c-4d65-b5f2-9132994bfa62}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,12 @@
     </Filter>
     <Filter Include="Annwvyn\SubSystems\Scenery">
       <UniqueIdentifier>{5c9abb67-b981-4469-9dd8-f1658f374bb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OgreRenderingForVR">
+      <UniqueIdentifier>{80903f3b-ac93-417b-881a-c6fe14583547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OgreRenderingForVR\Oculus">
+      <UniqueIdentifier>{d83246f2-30b0-4dc4-96c9-644b2e03f8a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -153,12 +156,6 @@
     <ClInclude Include="..\..\include\Annwvyn.h">
       <Filter>Annwvyn</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\OculusInterface.hpp">
-      <Filter>Oculus rendering for Ogre</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\OgreOculusRender.hpp">
-      <Filter>Oculus rendering for Ogre</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnResourceManager.hpp">
       <Filter>Annwvyn\SubSystems\Resource</Filter>
     </ClInclude>
@@ -182,6 +179,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\AnnSceneryManager.hpp">
       <Filter>Annwvyn\SubSystems\Scenery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\OculusInterface.hpp">
+      <Filter>OgreRenderingForVR\Oculus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\OgreOculusRender.hpp">
+      <Filter>OgreRenderingForVR\Oculus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\OgreVRRender.hpp">
+      <Filter>OgreRenderingForVR</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -248,12 +254,6 @@
     <ClCompile Include="..\..\src\AnnLightObject.cpp">
       <Filter>Annwvyn\GameObject\LightObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\OculusInterface.cpp">
-      <Filter>Oculus rendering for Ogre</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\OgreOculusRender.cpp">
-      <Filter>Oculus rendering for Ogre</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnResourceManager.cpp">
       <Filter>Annwvyn\SubSystems\Resource</Filter>
     </ClCompile>
@@ -277,6 +277,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSceneryManager.cpp">
       <Filter>Annwvyn\SubSystems\Scenery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OculusInterface.cpp">
+      <Filter>OgreRenderingForVR\Oculus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreOculusRender.cpp">
+      <Filter>OgreRenderingForVR\Oculus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreVRRender.cpp">
+      <Filter>OgreRenderingForVR</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

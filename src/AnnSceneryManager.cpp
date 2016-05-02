@@ -4,7 +4,7 @@
 
 using namespace Annwvyn;
 
-AnnSceneryManager::AnnSceneryManager(OgreOculusRender* rendererFromEngine) : AnnSubSystem("SceneryManager"),
+AnnSceneryManager::AnnSceneryManager(OgreVRRender* rendererFromEngine) : AnnSubSystem("SceneryManager"),
 smgr(AnnGetEngine()->getSceneManager()),
 renderer(rendererFromEngine)
 {

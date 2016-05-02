@@ -20,7 +20,7 @@
   <Class Name="OgreOculusRender">
     <Position X="43.75" Y="8.75" Width="3.75" />
     <NestedTypes>
-      <Enum Name="OgreOculusRender::__unnamed_enum_0021_1" Collapsed="true">
+      <Enum Name="OgreOculusRender::__unnamed_enum_0022_1" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\OgreOculusRender.hpp</NewMemberFileName>
         </TypeIdentifier>
@@ -38,8 +38,15 @@
   </Class>
   <Class Name="OculusInterface">
     <Position X="49.5" Y="18" Width="2.25" />
+    <NestedTypes>
+      <Enum Name="OculusInterface::__unnamed_enum_0021_1" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\OculusInterface.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAACAGAAAABIIAAACAAAAAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAQAAAAAAAACAGAAAABIIAAACAAAAAAAAAAAAI=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\OculusInterface.hpp</FileName>
     </TypeIdentifier>
   </Class>
