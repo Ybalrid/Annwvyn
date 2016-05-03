@@ -39,20 +39,6 @@ AnnAudioEngine::~AnnAudioEngine()
 	shutdownOpenAL();
 }
 
-static void list_audio_devices(const ALCchar *devices)
-{
-	const ALCchar *device = devices, *next = devices + 1;
-	size_t len = 0;
-
-	AnnDebug() << "Devices list:";
-	while (device && *device != '\0' && next && *next != '\0') {
-		AnnDebug() << device;
-		len = strlen(device);
-		device += (len + 1);
-		next += (len + 2);
-	}
-}
-
 void AnnAudioEngine::detectPlaybackDevices(const char *list)
 {
 	if (!list || *list == '\0')
