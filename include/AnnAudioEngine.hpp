@@ -148,6 +148,9 @@ namespace Annwvyn
 		void update();
 
 	private:
+		///Detect playback devices from the device enumeration string
+		void detectPlaybackDevices(const char *list);
+
 		///The last error this class has generated
 		std::string lastError;
 		///AL Device
@@ -165,6 +168,7 @@ namespace Annwvyn
 		bool locked;
 		///Lis of the audio sources object present in the audio engine
 		std::list<AnnAudioSource*> AudioSources;
+		std::list<std::string> detectedDevices;
 	};
 }
 #endif
