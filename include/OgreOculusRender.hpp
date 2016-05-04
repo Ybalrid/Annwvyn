@@ -56,8 +56,13 @@ class DLL OgreOculusRender : public OgreVRRender
 		///Class destructor
         ~OgreOculusRender();
 
+		///Oculus runtime hint to quit
 		bool shouldQuit();
+		
+		///Oculus runtim hit to recenter
 		bool shouldRecenter();
+
+		///App not visible inside Oculus
 		bool isVisibleInHmd();
 
 		///Cycle through all Oculus Performance HUD available
@@ -71,8 +76,9 @@ class DLL OgreOculusRender : public OgreVRRender
 
 		///Set the near Z clipping plane distance from the POV. Used to calculate Projections matricies
 		void setCamerasNearClippingDistance(float distance = 0.15f);
-		void setCameraFarClippingDistance(float distance);
 
+		///Set the far Z clipping plan distance from the POV. Used to calculate Projection matrices
+		void setCameraFarClippingDistance(float distance = 4000.0f);
 
 		///Start Oculus and Ogre libraries.
         void initVrHmd();
@@ -125,28 +131,30 @@ class DLL OgreOculusRender : public OgreVRRender
 		///Init the rendering pipeline
 		void initPipeline();
 
+		///The Oculus Rift has integrated audio
 		bool usesCustomAudioDevice();
 
+		///The Oculus Rift integrated audio playback device will have "something (Rift Audio)" as a name
 		std::string getAudioDeviceIdentifierSubString();
 
-    private://Methods
+	private:
+		///Pointer to the renderer itself, recasted as this class, not the parent
+		static OgreOculusRender* OculusSelf;
+
 		///Set the Fov for the monoscopic view
 		void setMonoFov(float degreeFov);
-
-	private://Attributes
-		static OgreOculusRender* OculusSelf;
+		
 		///Save content of the RenderTexture to the specified file. This verry slow operation is only usefull for debuging the renderer itself
         void debugSaveToFile(const char path[]);
 		
 		///Object for getting informations from the Oculus Rift
         OculusInterface* Oculus; 
 
-
 		///Ogre Scene Manager
         Ogre::SceneManager* debugSmgr;	
 
-		///Stereoscopic camera array. Indexes are "left" and "right" + debug view cam
-        Ogre::Camera* eyeCameras[2], * debugCam, * monoCam; 
+		///Additional camera objects
+        Ogre::Camera* debugCam, * monoCam; 
 		
 		///Nodes for the debug scene
 		Ogre::SceneNode* debugCamNode, * debugPlaneNode; 

@@ -50,7 +50,8 @@ public:
 
 	///Init the VR client library
 	virtual void initVrHmd() = 0;
-	 
+	
+	///Init the VR client rendering
 	virtual void initClientHmdRendering() =0;
 
 	///If true, you should cleanly quit the program from now
@@ -93,23 +94,43 @@ public:
 	OgrePose returnPose;
 
 protected:
+	///Singleton pointer
+	static OgreVRRender* self;
+
+	///SceneManager of the VR world
 	Ogre::SceneManager* smgr;
+
+	///Ogre root object
 	Ogre::Root* root;
+
+	///Render window. VR isn't drawn to this window. A window is mandatory to init the RenderSystem. 
 	Ogre::RenderWindow* window;
+
+	///Update Time
 	double updateTime;
 
+	///Distance between eyeCamera and nearClippingDistance
 	Ogre::Real nearClippingDistance;
+
+	///Distance between eyeCamera and farClippingDistance
 	Ogre::Real farClippingDistance;
 
+	///Position of the head
 	Ogre::Vector3 headPosition;
+
+	///Orientation of the head
 	Ogre::Quaternion headOrientation;
 
+	///Name of the window
 	std::string name;
 
+	///Node that represent the head base. Move this in 3D to move the viewpoint
 	Ogre::SceneNode* headNode;
 
-	static OgreVRRender* self;
 	///background color of viewports
 	Ogre::ColourValue backgroundColor;
+
+	///Cameras that have to be put where the user's eye is
+	Ogre::Camera* eyeCameras[2];
 
 };
