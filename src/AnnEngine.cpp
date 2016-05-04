@@ -119,6 +119,11 @@ AnnSceneryManager * Annwvyn::AnnEngine::getSceneryManager()
 	return sceneryManager;
 }
 
+OgreVRRender * Annwvyn::AnnEngine::getVRRenderer()
+{
+	return renderer;
+}
+
 AnnLevelManager* AnnEngine::getLevelManager()
 {
 	if (!canAccessSubSystems) return nullptr;

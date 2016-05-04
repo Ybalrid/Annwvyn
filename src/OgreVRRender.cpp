@@ -22,7 +22,6 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 		exit(ANN_ERR_RENDER);
 	}
 	self = this;
-	std::cerr <<  "OGRE VR renderer created... ";
 }
 
 OgreVRRender::~OgreVRRender()

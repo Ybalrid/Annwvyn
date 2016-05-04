@@ -66,6 +66,8 @@
 #define AnnGetGameObjectManager() AnnGetEngine()->getGameObjectManager()
 ///Get SceneryManager
 #define AnnGetSceneryManager() AnnGetEngine()->getSceneryManager()
+///GEt VRREnderer
+#define AnnGetVRRenderer() AnnGetEngine()->getVRRenderer()
 
 namespace Annwvyn
 {
@@ -146,6 +148,8 @@ namespace Annwvyn
 
 		///Get the SceneryManager
 		AnnSceneryManager* getSceneryManager();
+
+		OgreVRRender* getVRRenderer();
 
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
