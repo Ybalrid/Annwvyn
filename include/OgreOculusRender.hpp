@@ -218,9 +218,6 @@ class DLL OgreOculusRender : public OgreVRRender
 		///Orientation of the rift at the last frame
         Ogre::Quaternion lastOculusOrientation;
 
-		///Pose to be returned
-		OgrePose returnPose;
-
 		///Texture unit state of the debug plane
 		static Ogre::TextureUnitState* debugTexturePlane;
 
