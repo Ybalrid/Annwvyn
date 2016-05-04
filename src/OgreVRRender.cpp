@@ -22,6 +22,9 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 		exit(ANN_ERR_RENDER);
 	}
 	self = this;
+
+	eyeCameras[0] = nullptr;
+	eyeCameras[1] = nullptr;
 }
 
 OgreVRRender::~OgreVRRender()

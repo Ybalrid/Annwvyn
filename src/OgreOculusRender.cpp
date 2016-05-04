@@ -19,14 +19,10 @@ OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 	textureSwapChain(0),
 	perfHudMode(ovrPerfHud_Off)
 {
-	
-	eyeCameras[left ] = nullptr;
-	eyeCameras[right] = nullptr;
 	vpts[left ] = nullptr;		
 	vpts[right] = nullptr;
 	monoCam = nullptr;
 	OculusSelf = static_cast<OgreOculusRender*>(self);
-
 }
 
 OgreOculusRender::~OgreOculusRender()
