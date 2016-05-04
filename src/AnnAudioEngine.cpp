@@ -39,11 +39,51 @@ AnnAudioEngine::~AnnAudioEngine()
 	shutdownOpenAL();
 }
 
+void AnnAudioEngine::detectPlaybackDevices(const char *list)
+{
+	if (!list || *list == '\0')
+		AnnDebug("    !!! none !!!\n");
+	else do {
+		AnnDebug() << "detected device : " << std::string(list);
+		detectedDevices.push_back(std::string(list));
+		list += strlen(list) + 1;
+	} while (*list != '\0');
+}
+ 
+
 bool AnnAudioEngine::initOpenAL()
 {
-    Device = alcOpenDevice(NULL);
+	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE)
+	{
+		AnnDebug() << "Enumerating audio devices : ";
+		detectPlaybackDevices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER));
+		bool gotDevice(false);
+		for (std::string deviceName : detectedDevices)
+		{
+			AnnDebug() << "Checking device : " << deviceName << " as Rift Audio";
+			if (deviceName.find("Rift Audio") != std::string::npos)
+			{
+				AnnDebug() << "Found Oculus Rift Audio Device!";
+				Device = alcOpenDevice(deviceName.c_str());
+				gotDevice = true;
+				break;
+			}
+		}
+		if (!gotDevice)
+		{
+			AnnDebug() << "Rift Audio not found. Using system's default device";
+			alcOpenDevice(NULL);
+		}
+		
+	}
+	else
+	{
+		AnnDebug() << "The current OpenAL runtime doesn't support Device Enumeration, using the default device";
+		Device = alcOpenDevice(NULL);
+	}
     if (!Device)
         return false;
+
    	Context = alcCreateContext(Device, NULL);
     if (!Context)
         return false;
