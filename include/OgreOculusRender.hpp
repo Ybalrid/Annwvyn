@@ -125,6 +125,10 @@ class DLL OgreOculusRender : public OgreVRRender
 		///Init the rendering pipeline
 		void initPipeline();
 
+		bool usesCustomAudioDevice();
+
+		std::string getAudioDeviceIdentifierSubString();
+
     private://Methods
 		///Set the Fov for the monoscopic view
 		void setMonoFov(float degreeFov);

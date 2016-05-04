@@ -20,7 +20,7 @@ public:
 
 	void atRefresh()
 	{
-																													   
+		AnnDebug() << "Sinbad position is : " << getPosition();
 	}
 };
 
@@ -70,7 +70,9 @@ public:
 	}
 
 	void runLogic()
-	{}
+	{
+		AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
+	}
 
 private:
 };

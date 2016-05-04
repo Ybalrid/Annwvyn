@@ -479,6 +479,16 @@ void OgreOculusRender::initPipeline()
 	initRttRendering();
 }
 
+bool OgreOculusRender::usesCustomAudioDevice()
+{
+	return true;
+}
+
+std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
+{
+	return std::string("Rift Audio");
+}
+
 void OgreOculusRender::updateTracking()
 {
 	//Get current camera base information
