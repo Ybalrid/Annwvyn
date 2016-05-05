@@ -222,6 +222,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\euler.h" />
     <ClInclude Include="..\..\include\OculusInterface.hpp" />
     <ClInclude Include="..\..\include\OgreOculusRender.hpp" />
+    <ClInclude Include="..\..\include\OgreVRRender.hpp" />
     <ClInclude Include="..\..\include\systemMacro.h" />
     <ClInclude Include="..\..\include\tinyxml2.h" />
     <ClInclude Include="..\..\pch\stdafx.h" />
@@ -260,6 +261,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\OculusInterface.cpp" />
     <ClCompile Include="..\..\src\OgreOculusRender.cpp" />
     <ClCompile Include="..\..\src\AnnLogger.cpp" />
+    <ClCompile Include="..\..\src\OgreVRRender.cpp" />
     <ClCompile Include="..\..\src\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>

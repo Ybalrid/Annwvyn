@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANN_GAME_OBJECT_MANAGER
+#define ANN_GAME_OBJECT_MANAGER
 #include "systemMacro.h"
 
 #include "AnnGameObject.hpp"
@@ -55,3 +56,5 @@ namespace Annwvyn
 
 	};
 }
+
+#endif

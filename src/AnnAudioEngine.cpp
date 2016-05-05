@@ -53,7 +53,8 @@ void AnnAudioEngine::detectPlaybackDevices(const char *list)
 
 bool AnnAudioEngine::initOpenAL()
 {
-	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE)
+	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
+		&& AnnGetVRRenderer()->usesCustomAudioDevice())
 	{
 		AnnDebug() << "Enumerating audio devices : ";
 		detectPlaybackDevices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER));
@@ -61,7 +62,8 @@ bool AnnAudioEngine::initOpenAL()
 		for (std::string deviceName : detectedDevices)
 		{
 			AnnDebug() << "Checking device : " << deviceName << " as Rift Audio";
-			if (deviceName.find("Rift Audio") != std::string::npos)
+			if (deviceName.
+				find(AnnGetVRRenderer()->getAudioDeviceIdentifierSubString()) != std::string::npos)
 			{
 				AnnDebug() << "Found Oculus Rift Audio Device!";
 				Device = alcOpenDevice(deviceName.c_str());
@@ -78,7 +80,7 @@ bool AnnAudioEngine::initOpenAL()
 	}
 	else
 	{
-		AnnDebug() << "The current OpenAL runtime doesn't support Device Enumeration, using the default device";
+		AnnDebug() << "Device enumeration unsuported, or VR headset don't need custom audio, using the default device";
 		Device = alcOpenDevice(NULL);
 	}
     if (!Device)
@@ -288,7 +290,7 @@ void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 
 void AnnAudioEngine::update()
 {
-	OgrePose pose = AnnGetEngine()->getPoseFromOOR();
+	OgrePose pose = AnnGetEngine()->getHmdPose();
 	updateListenerPos(pose.position);
 	updateListenerOrient(pose.orientation);
 }

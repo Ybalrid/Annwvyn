@@ -66,6 +66,8 @@
 #define AnnGetGameObjectManager() AnnGetEngine()->getGameObjectManager()
 ///Get SceneryManager
 #define AnnGetSceneryManager() AnnGetEngine()->getSceneryManager()
+///GEt VRREnderer
+#define AnnGetVRRenderer() AnnGetEngine()->getVRRenderer()
 
 namespace Annwvyn
 {
@@ -147,12 +149,14 @@ namespace Annwvyn
 		///Get the SceneryManager
 		AnnSceneryManager* getSceneryManager();
 
+		OgreVRRender* getVRRenderer();
+
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
 		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
 		
 		///Init OgreOculus stuff
-		void oculusInit(); //oculus
+		void VrInit(); //oculus
 
 	    ///Init the physics model
 		void initPlayerPhysics(); //physics on player
@@ -171,9 +175,6 @@ namespace Annwvyn
 
 		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
-
-		///Get a pose information object
-		OgrePose getPoseFromOOR();
 
 		///Reset the Rift Orientation
 		void resetOculusOrientation();///Gameplay... but engine related function. 
@@ -195,6 +196,7 @@ namespace Annwvyn
 
 		///Get elapsed time between two frames in seconds
 		double getFrameTime();
+		OgrePose getHmdPose();
 		///////////////////////////////////////////////////////////////////////////////////////////////TIMER MANAGEMENT
 
 	private:
@@ -228,7 +230,7 @@ namespace Annwvyn
 		Ogre::SceneNode* povNode;
 
 		///Oculus oculus;
-		OgreOculusRender* renderer;
+		OgreVRRender* renderer;
 
 		///Elapsed time between 2 frames
 		double updateTime;

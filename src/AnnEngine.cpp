@@ -42,19 +42,14 @@ AnnEngine::AnnEngine(const char title[]) :
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
 	renderer = new OgreOculusRender(title);
-	renderer->initLibraries("Annwvyn.log");
+	renderer->initOgreRoot("Annwvyn.log");
+
 	player = new AnnPlayer;
-	renderer->getOgreConfig();
-	renderer->createWindow();
-	renderer->initScene();
-	renderer->initCameras();
-	renderer->setCamerasNearClippingDistance(0.15f);
-	renderer->initRttRendering();
+	renderer->initVrHmd();
+	renderer->initPipeline();
 	SceneManager = renderer->getSceneManager();
 
-	log("OGRE Object-oriented Graphical Rendering Engine initialized", true);
-
-	renderer->showMonscopicView();
+	//renderer->showMonscopicView();
 
 	log("Setup Annwvyn's subsystems");
 	SubSystemList.push_back(levelManager = new AnnLevelManager);
@@ -124,6 +119,11 @@ AnnSceneryManager * Annwvyn::AnnEngine::getSceneryManager()
 	return sceneryManager;
 }
 
+OgreVRRender * Annwvyn::AnnEngine::getVRRenderer()
+{
+	return renderer;
+}
+
 AnnLevelManager* AnnEngine::getLevelManager()
 {
 	if (!canAccessSubSystems) return nullptr;
@@ -167,10 +167,10 @@ void AnnEngine::initPlayerPhysics()
 	physicsEngine->initPlayerPhysics(player, povNode);
 }
 
-void AnnEngine::oculusInit()
+void AnnEngine::VrInit()
 {
-	log("Init Oculus rendering system");
-	renderer->initOculus();
+	log("Init VR rendering system");
+	renderer->initClientHmdRendering();
 	povNode = renderer->getCameraInformationNode();
 	povNode->setPosition(player->getPosition() +
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
@@ -183,7 +183,7 @@ bool AnnEngine::requestStop()
 	if (isKeyDown(OIS::KC_ESCAPE))
 		return true;
 	//If the user quit the App from the Oculus Home
-	if (renderer->getSessionStatus().ShouldQuit)
+	if (renderer->shouldQuit())
 		return true;
 	return false;
 }
@@ -265,7 +265,7 @@ double AnnEngine::getFrameTime()
 	return updateTime;
 }
 
-OgrePose AnnEngine::getPoseFromOOR()
+OgrePose AnnEngine::getHmdPose()
 {
 	if (renderer)
 		return renderer->returnPose;
@@ -285,8 +285,7 @@ void AnnEngine::openConsole()
 		freopen("CONOUT$", "w", stdout);
 #pragma warning(default:4996)
 
-		SetConsoleTitle(L"Annwyn Debug Console");
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+		
 	}
 	//Redirect cerr to cout
 	std::cerr.rdbuf(std::cout.rdbuf());
@@ -318,6 +317,10 @@ void AnnEngine::openConsole()
 
 	std::ios::sync_with_stdio();
 #endif
+
+	SetConsoleTitle(L"Annwyn Debug Console");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+
 #endif
 }
 
@@ -328,12 +331,12 @@ void AnnEngine::toogleOnScreenConsole()
 
 void AnnEngine::toogleOculusPerfHUD()
 {
-	if (renderer) renderer->cycleOculusHUD();
+	if (renderer) renderer->cycleDebugHud();
 }
 
 bool AnnEngine::appVisibleInHMD()
 {
-	if (renderer->getSessionStatus().IsVisible == ovrTrue)
+	if (renderer->isVisibleInHmd() == true)
 		return true;
 	return false;
 }

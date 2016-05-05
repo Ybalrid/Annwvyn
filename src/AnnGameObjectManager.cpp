@@ -168,10 +168,10 @@ void Annwvyn::AnnGameObjectManager::destroyTriggerObject(AnnTriggerObject * trig
 AnnGameObject * Annwvyn::AnnGameObjectManager::playerLookingAt()
 {
 	//Origin vector of the ray
-	AnnVect3 Orig(AnnGetEngine()->getPoseFromOOR().position);
+	AnnVect3 Orig(AnnGetEngine()->getHmdPose().position);
 
 	//Caltulate direction Vector of the ray to be the midpont camera optical axis
-	AnnVect3 LookAt(AnnQuaternion(AnnGetEngine()->getPoseFromOOR().orientation).getAtVector());
+	AnnVect3 LookAt(AnnQuaternion(AnnGetEngine()->getHmdPose().orientation).getAtVector());
 
 	//create ray
 	Ogre::Ray ray(Orig, LookAt);
