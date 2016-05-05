@@ -4,13 +4,15 @@
 
 using namespace Annwvyn;
 
-AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager")
+AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager"),
+	reservedResourceGroupName("ANNWVYN_CORE")
 {
-
+	addDefaultResourceLocation();
 }
 
 void AnnResourceManager::loadZip(const char path[], const char resourceGroupName[])
 {
+	if (resourceGroupName == reservedResourceGroupName) refuseResource(path, resourceGroupName);
 	AnnDebug("Loading resources from Zip archive :");
 	AnnDebug() << path;
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
@@ -18,16 +20,18 @@ void AnnResourceManager::loadZip(const char path[], const char resourceGroupName
 
 void AnnResourceManager::loadDir(const char path[], const char resourceGroupName[])
 {
+	if (resourceGroupName == reservedResourceGroupName) refuseResource(path, resourceGroupName);
 	AnnDebug("Loading resources from Filesystem directory :");
 	AnnDebug() << path;
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
 }
 
-void AnnResourceManager::addDefaultResourceLocaton()
+void AnnResourceManager::addDefaultResourceLocation()
 {
 	AnnDebug("Adding Annwvyn CORE resources");
-	loadDir("media");
-	loadZip("media/CORE.zip");
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media/CORE.zip", "Zip", reservedResourceGroupName);
+	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media", "FileSystem", reservedResourceGroupName, true);
+	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(reservedResourceGroupName);
 }
 
 void AnnResourceManager::loadReseourceFile(const char path[])
@@ -40,6 +44,13 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 	while (seci.hasMoreElements())
 	{
 		secName = seci.peekNextKey();
+
+		if (secName == reservedResourceGroupName) 
+		{
+			refuseResource("*Did not read file*", secName);
+			continue;
+		}
+
 		Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
 		Ogre::ConfigFile::SettingsMultiMap::iterator i;
 		for (i = settings->begin(); i != settings->end(); ++i)
@@ -53,7 +64,13 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 
 void AnnResourceManager::initResources()
 {
-	addDefaultResourceLocaton();
+	//addDefaultResourceLocaton();
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	AnnDebug("Resources initialized");
 }
+
+void AnnResourceManager::refuseResource(std::string name, std::string group)
+{
+	AnnDebug() << "Annwvyn cannot allow you to use resources declared in " << group << " group";
+	AnnDebug() << "Resource location " << name << "has been rejected";
+} 

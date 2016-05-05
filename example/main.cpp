@@ -116,37 +116,34 @@ AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();
+
 	//Init game engine
 	AnnInit("AnnTest");
+
+	//SetUp Oculus system	
+	AnnGetEngine()->VrInit();
+	
+	//Init some player body parameters
+	AnnGetEngine()->initPlayerPhysics();	
+	AnnGetPhysicsEngine()->setDebugPhysics(false);
+
+	AnnGetEventManager()->useDefaultEventListener();
+	AnnGetEngine()->resetOculusOrientation();
+	AnnGetEngine()->getEventManager()->addListener(new DebugListener);
+	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
 
 	//load ressources
 	AnnGetResourceManager()->loadDir("media/environement");
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
 
-	//SetUp Oculus system	
-	AnnGetEngine()->VrInit();
-	AnnGetSceneryManager()->setNearClippingDistance(0.20f);
-	
-	//Init some player body parameters
-	AnnGetEngine()->initPlayerPhysics();	
-	AnnGetPhysicsEngine()->setDebugPhysics(false);
-
-	//Register a level
-	//AnnXmlLevel* level = new AnnXmlLevel("./level/test.xml");
 	AnnAbstractLevel* level = new TestLevel();
 	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 7.1f);
 	splash->setBGM("media/AnnSplash.ogg");
-	
-	AnnGetEventManager()->useDefaultEventListener();
-	AnnGetEngine()->resetOculusOrientation();
-	AnnGetEngine()->getEventManager()->addListener(new DebugListener);
-	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
 
 	AnnGetEngine()->getLevelManager()->addLevel(splash);
 	AnnGetEngine()->getLevelManager()->addLevel(level);
 	AnnGetEngine()->getLevelManager()->jumpToFirstLevel();
-
 
 	AnnDebug() << "Starting the render loop";
 	do	

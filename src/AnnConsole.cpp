@@ -78,7 +78,7 @@ AnnConsole::AnnConsole() : AnnSubSystem("OnScreenConsole"),
 	}
 
 	//Create a manual font
-	font = Ogre::FontManager::getSingleton().create("VeraMono", "ANNWVYN_DEFAULT");
+	font = Ogre::FontManager::getSingleton().create("VeraMono", "ANNWVYN_CORE");
 
 	//Load the VeraMono.ttf file
 	font->setType(Ogre::FontType::FT_TRUETYPE);
@@ -88,12 +88,12 @@ AnnConsole::AnnConsole() : AnnSubSystem("OnScreenConsole"),
 
 	//Aspect ration of the console is 2:1. The actuall size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
-	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_DEFAULT", Ogre::TEX_TYPE_2D, 2 * BASE, BASE, Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
+	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_CORE", Ogre::TEX_TYPE_2D, 2 * BASE, BASE, Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
 	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
 	displaySurfaceTextureUniteState->setTexture(texture);
 
 	//Load background texture to a buffer
-	background = Ogre::TextureManager::getSingleton().load("background.png", "ANNWVYN_DEFAULT");
+	background = Ogre::TextureManager::getSingleton().load("background.png", "ANNWVYN_CORE");
 
 	//Initialize the text buffer.
 	//CONSOLE_BUFFER is the number of lines to keep in memory and to load on the texture.
