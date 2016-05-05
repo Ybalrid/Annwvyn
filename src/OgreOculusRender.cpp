@@ -7,38 +7,22 @@ using namespace Annwvyn;
 
 //Static class members
 bool OgreOculusRender::mirrorHMDView(true);
-OgreOculusRender* OgreOculusRender::self(nullptr);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
-
-OgreOculusRender::OgreOculusRender(std::string winName) :
-	name(winName),
-	root(nullptr),
-	smgr(nullptr),
+OgreOculusRender* OgreOculusRender::OculusSelf = nullptr;
+OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 	debugSmgr(nullptr),
 	Oculus(nullptr),
-	headPosition(0,0,10),
-	headOrientation(Ogre::Quaternion::IDENTITY),
 	nearClippingDistance(0.5f),
 	farClippingDistance(4000.0f),
 	lastOculusPosition(headPosition),
 	lastOculusOrientation(headOrientation),
-	updateTime(0),
-	backgroundColor(0,0.56f,1),
 	textureSwapChain(0),
 	perfHudMode(ovrPerfHud_Off)
 {
-	//Handle singleton thing.
-	if(self)
-	{
-		MessageBox(NULL, L"Fatal error with renderer initialisation. OgreOculusRender object allready created.", L"Fatal Error", MB_ICONERROR);
-		exit(ANN_ERR_RENDER);
-	}
-	self=this;
-	eyeCameras[left ] = nullptr;
-	eyeCameras[right] = nullptr;
 	vpts[left ] = nullptr;		
 	vpts[right] = nullptr;
 	monoCam = nullptr;
+	OculusSelf = static_cast<OgreOculusRender*>(self);
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -57,9 +41,32 @@ OgreOculusRender::~OgreOculusRender()
 
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
+
+
 }
 
-void OgreOculusRender::cycleOculusHUD()
+bool OgreOculusRender::shouldQuit()
+{
+	if (getSessionStatus().ShouldQuit == ovrTrue)
+		return true;
+	return false;
+}
+
+bool OgreOculusRender::shouldRecenter()
+{
+	if (getSessionStatus().ShouldRecenter == ovrTrue)
+		return true;
+	return false;
+}
+
+bool OgreOculusRender::isVisibleInHmd()
+{
+	if (getSessionStatus().IsVisible == ovrTrue)
+		return true;
+	return false;
+}
+
+void OgreOculusRender::cycleDebugHud()
 {
 	//Loop through the perf HUD mode available
 	perfHudMode = (perfHudMode+1) % (ovrPerfHud_Count);
@@ -68,32 +75,19 @@ void OgreOculusRender::cycleOculusHUD()
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
 }
 
-void OgreOculusRender::changeViewportBackgroundColor(Annwvyn::AnnColor color)
+void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	//save the color then apply it to each viewport
-	backgroundColor.setRed(color.getRed());
-	backgroundColor.setGreen(color.getGreen());
-	backgroundColor.setBlue(color.getBlue());
-	backgroundColor.setAlpha(color.getAlpha());
+	backgroundColor = (color);
 
 	//Render buffers
 	for(byte i(0); i < 2; i++)
 		if(vpts[i])
-			vpts[i]->setBackgroundColour(color.getOgreColor());
+			vpts[i]->setBackgroundColour(backgroundColor);
 
 	//Debug window
 	if(debugViewport && !mirrorHMDView)
-		debugViewport->setBackgroundColour(color.getOgreColor());
-}
-
-Ogre::SceneManager* OgreOculusRender::getSceneManager()
-{
-	return smgr;
-}
-
-Ogre::RenderWindow* OgreOculusRender::getWindow()
-{
-	return window;
+		debugViewport->setBackgroundColour(backgroundColor);
 }
 
 void OgreOculusRender::debugPrint()
@@ -113,10 +107,6 @@ void OgreOculusRender::debugSaveToFile(const char path[])
 		Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer()->getBuffer(0, 0)->getRenderTarget()->writeContentsToFile(path);
 }
 
-Ogre::SceneNode* OgreOculusRender::getCameraInformationNode()
-{
-	return headNode;
-}
 
 Ogre::Timer* OgreOculusRender::getTimer()
 {
@@ -125,22 +115,14 @@ Ogre::Timer* OgreOculusRender::getTimer()
 	return nullptr;
 }
 
-double OgreOculusRender::getUpdateTime()
-{
-	return updateTime;
-}
 
 void OgreOculusRender::recenter()
 {
 	ovr_RecenterTrackingOrigin(Oculus->getSession());
 }
 
-void OgreOculusRender::initLibraries(std::string loggerName)
+void OgreOculusRender::initVrHmd()
 {
-	//Create the ogre root with standards Ogre configuration file
-	root = new Ogre::Root("", "ogre.cfg", loggerName.c_str());
-	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LoggingLevel::LL_BOREME);
-	
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
@@ -202,9 +184,9 @@ void OgreOculusRender::initCameras()
 	monoCam->setFOVy(Ogre::Degree(90));
 
 	//VR Eye cameras
-	eyeCameras[left] = smgr->createCamera("lcam");
-	eyeCameras[left]->setPosition(headPosition);
-	eyeCameras[left]->setAutoAspectRatio(true);
+	eyeCameras[left ] = smgr->createCamera("lcam");
+	eyeCameras[left ]->setPosition(headPosition);
+	eyeCameras[left ]->setAutoAspectRatio(true);
 	eyeCameras[right] = smgr->createCamera("rcam");
 	eyeCameras[right]->setPosition(headPosition);
 	eyeCameras[right]->setAutoAspectRatio(true);
@@ -221,6 +203,11 @@ void OgreOculusRender::setMonoFov(float degreeFov)
 void OgreOculusRender::setCamerasNearClippingDistance(float distance)
 {
 	nearClippingDistance = distance;
+}
+
+void OgreOculusRender::setCameraFarClippingDistance(float distance)
+{
+	farClippingDistance = distance;
 }
 
 void OgreOculusRender::initScene()
@@ -307,7 +294,7 @@ void OgreOculusRender::initRttRendering()
 	AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 
 	//Get texture size from ovr with the maximal FOV for each eye
-	ovrSizei texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);
+	ovrSizei texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left , Oculus->getHmdDesc().DefaultEyeFov[left ], 1.f);
 	ovrSizei texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right], 1.f);
 	
 	//Calculate the render buffer size for both eyes
@@ -345,7 +332,7 @@ void OgreOculusRender::initRttRendering()
 	renderTextureGLID = gltex->getGLID();
 
 	//Create viewports on the texture to render the eyeCameras
-	vpts[left]  = rttEyes->addViewport(eyeCameras[left],  0, 0,    0, 0.5f);
+	vpts[left]  = rttEyes->addViewport(eyeCameras[left ], 0,    0, 0, 0.5f);
 	vpts[right] = rttEyes->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f);
 
 	changeViewportBackgroundColor(backgroundColor);
@@ -384,9 +371,9 @@ void OgreOculusRender::showRawView()
 {
 	mirrorHMDView = false;
 	if(!debugTexturePlane) return;
-	self->debugViewport->setCamera(self->debugCam);
+	OculusSelf->debugViewport->setCamera(OculusSelf->debugCam);
 	debugTexturePlane->setTextureName("RttTex");
-	self->debugViewport->setBackgroundColour(self->backgroundColor.getOgreColor());
+	OculusSelf->debugViewport->setBackgroundColour(OculusSelf->backgroundColor);
 	AnnDebug() << "Switched to Raw view";
 }
 
@@ -394,22 +381,22 @@ void OgreOculusRender::showMirrorView()
 {
 	mirrorHMDView = true;
 	if(!debugTexturePlane) return;
-	self->debugViewport->setCamera(self->debugCam);
+	OculusSelf->debugViewport->setCamera(OculusSelf->debugCam);
 	debugTexturePlane->setTextureName("MirrorTex");
-	self->debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
+	OculusSelf->debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
 	AnnDebug() << "Switched to Oculus Compositor view";
 }
 
 void OgreOculusRender::showMonscopicView()
 {
 	mirrorHMDView = false;
-	if(!self) return;
-	self->debugViewport->setCamera(self->monoCam);
-	self->debugViewport->setBackgroundColour(self->backgroundColor.getOgreColor());
+	if(!OculusSelf) return;
+	OculusSelf->debugViewport->setCamera(OculusSelf->monoCam);
+	OculusSelf->debugViewport->setBackgroundColour(OculusSelf->backgroundColor);
 	AnnDebug() << "Switched to Monoscopic view";
 }
 
-void OgreOculusRender::initOculus()
+void OgreOculusRender::initClientHmdRendering()
 {
 	//Populate OVR structures
 	EyeRenderDesc[left ] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Left , Oculus->getHmdDesc().DefaultEyeFov[left ]);
@@ -476,6 +463,26 @@ ovrSessionStatus OgreOculusRender::getSessionStatus()
 {
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 	return sessionStatus;
+}
+
+void OgreOculusRender::initPipeline()
+{
+	getOgreConfig();
+	createWindow();
+	initScene();
+	initCameras();
+	setCamerasNearClippingDistance();
+	initRttRendering();
+}
+
+bool OgreOculusRender::usesCustomAudioDevice()
+{
+	return true;
+}
+
+std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
+{
+	return std::string("Rift Audio");
 }
 
 void OgreOculusRender::updateTracking()
