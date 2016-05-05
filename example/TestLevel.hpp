@@ -44,14 +44,14 @@ public:
 		S->playSound("media/monster.wav", true, 1);
 
 		//Add water
-		auto Water = addGameObject("Water.mesh");	
+		auto Water = addGameObject("environement/Water.mesh");	
 
 		//Add the island
-		auto Island = addGameObject("Island.mesh");
+		auto Island = addGameObject("environement/Island.mesh");
 		Island->setUpPhysics();
 
 		//Add the sign
-		auto Sign(addGameObject("Sign.mesh"));
+		auto Sign(addGameObject("environement/Sign.mesh"));
 		Sign->setPosition(1,-0,-2);
 		Sign->setUpPhysics(0, phyShapeType::staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
