@@ -160,6 +160,11 @@ AnnStickAxis::AnnStickAxis()
     setAbsValue(0);
 }
 
+StickAxisId AnnStickAxis::getAxisId()
+{
+	return id;
+}
+
 AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs)
 {
     setAxis(ax);

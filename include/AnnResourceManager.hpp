@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ANN_RESOURCE_MANAGER
+#define ANN_RESOURCE_MANAGER
+
 #include "systemMacro.h"
 #include "OgreResourceGroupManager.h"
 #include "AnnSubsystem.hpp"
@@ -32,3 +34,5 @@ namespace Annwvyn
 
 	};
 }
+
+#endif

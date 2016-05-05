@@ -1,4 +1,6 @@
-#pragma once
+#ifndef	ANN_SCENERY_MANAGER
+#define ANN_SCENERY_MANAGER
+
 #include "systemMacro.h"
 #include "AnnSubsystem.hpp"
 #include "OgreSceneManager.h"
@@ -10,7 +12,11 @@ namespace Annwvyn
 	class DLL AnnSceneryManager : public AnnSubSystem
 	{
 	public:
+
+		///Construct the AnnSceneryManager
 		AnnSceneryManager(OgreVRRender* renderer);
+
+		///This subsystem doesn't need to be updated
 		bool needUpdate() { return false; }
 
 
@@ -53,7 +59,12 @@ namespace Annwvyn
 		void setNearClippingDistance(float distance);
 
 	private:
+		///Scene manager created by the VR renderer
 		Ogre::SceneManager* smgr;
+
+		///Pointer to the VR renderer
 		OgreVRRender* renderer;
 	};
 }
+
+#endif

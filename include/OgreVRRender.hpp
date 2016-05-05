@@ -1,11 +1,12 @@
-#pragma once
+#ifndef OGREVRRENDER
+#define OGREVRRENDER
+
 #include "systemMacro.h"
 
 #include <string>
 
 #include <Ogre.h>
 #include "AnnErrorCode.hpp"
-
 
 
 ///A pose refer to the combinaison of a position and an orientation. 
@@ -21,7 +22,10 @@ struct OgrePose
 class DLL OgreVRRender
 {
 public:
+	///Construct VR Renderer
 	OgreVRRender(std::string windowName);
+
+	///Destruct VR Renderer
 	virtual ~OgreVRRender();
 
 	///Get the scene manager of the virtual world
@@ -134,3 +138,5 @@ protected:
 	Ogre::Camera* eyeCameras[2];
 
 };
+
+#endif
