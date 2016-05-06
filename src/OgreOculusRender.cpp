@@ -485,6 +485,19 @@ std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 	return std::string("Rift Audio");
 }
 
+void OgreOculusRender::showDebug(DebugMode mode)
+{
+	switch (mode)
+	{
+	case RAW_BUFFER:
+		return showRawView();
+	case HMD_MIRROR:
+		return showMirrorView();
+	case MONOSCOPIC:
+		return showMonscopicView();
+	}
+}
+
 void OgreOculusRender::updateTracking()
 {
 	//Get current camera base information

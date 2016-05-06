@@ -22,6 +22,14 @@ struct OgrePose
 class DLL OgreVRRender
 {
 public:
+	
+	enum DebugMode
+	{
+		RAW_BUFFER,
+		HMD_MIRROR,
+		MONOSCOPIC,
+	};
+
 	///Construct VR Renderer
 	OgreVRRender(std::string windowName);
 
@@ -96,6 +104,8 @@ public:
 
 	///The current position of the head center defined by the client library projected in World Space
 	OgrePose returnPose;
+
+	virtual void showDebug(DebugMode mode) = 0;
 
 protected:
 	///Singleton pointer

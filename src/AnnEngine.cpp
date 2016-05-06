@@ -49,7 +49,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	renderer->initPipeline();
 	SceneManager = renderer->getSceneManager();
 
-	//renderer->showMonscopicView();
+	renderer->showDebug(OgreVRRender::DebugMode::MONOSCOPIC);
 
 	log("Setup Annwvyn's subsystems");
 	SubSystemList.push_back(levelManager = new AnnLevelManager);
@@ -60,6 +60,15 @@ AnnEngine::AnnEngine(const char title[]) :
 	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
 	SubSystemList.push_back(resourceManager = new AnnResourceManager);
 	SubSystemList.push_back(sceneryManager = new AnnSceneryManager(renderer));
+
+	log("Init VR rendering system");
+	renderer->initClientHmdRendering();
+	povNode = renderer->getCameraInformationNode();
+	povNode->setPosition(player->getPosition() +
+		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
+
+	//This subsystem need the povNode object to be initialized.
+	SubSystemList.push_back(onScreenConsole = new AnnConsole());
 
 	log("===================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World    ", false);
@@ -165,16 +174,6 @@ void AnnEngine::log(std::string message, bool flag)
 void AnnEngine::initPlayerPhysics()
 {
 	physicsEngine->initPlayerPhysics(player, povNode);
-}
-
-void AnnEngine::VrInit()
-{
-	log("Init VR rendering system");
-	renderer->initClientHmdRendering();
-	povNode = renderer->getCameraInformationNode();
-	povNode->setPosition(player->getPosition() +
-		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
-	SubSystemList.push_back(onScreenConsole = new AnnConsole());
 }
 
 bool AnnEngine::requestStop()

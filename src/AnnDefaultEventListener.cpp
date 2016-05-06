@@ -74,13 +74,13 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		AnnGetEngine()->toogleOculusPerfHUD();
 		break;
 	case KeyCode::f1:
-		OgreOculusRender::showRawView();
+		AnnGetVRRenderer()->showDebug(OgreVRRender::RAW_BUFFER);
 		break;
 	case KeyCode::f2:
-		OgreOculusRender::showMirrorView();
+		AnnGetVRRenderer()->showDebug(OgreVRRender::HMD_MIRROR);
 		break;
 	case KeyCode::f3:
-		OgreOculusRender::showMonscopicView();
+		AnnGetVRRenderer()->showDebug(OgreVRRender::MONOSCOPIC);
 		break;
 	}
 

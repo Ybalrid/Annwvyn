@@ -53,6 +53,7 @@ void AnnAudioEngine::detectPlaybackDevices(const char *list)
 
 bool AnnAudioEngine::initOpenAL()
 {
+	//Open audio playback device
 	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
 		&& AnnGetVRRenderer()->usesCustomAudioDevice())
 	{
@@ -86,12 +87,16 @@ bool AnnAudioEngine::initOpenAL()
     if (!Device)
         return false;
 
+	//Create context
    	Context = alcCreateContext(Device, NULL);
     if (!Context)
         return false;
+
+	//Make the created context current
     if (!alcMakeContextCurrent(Context))
         return false;
 
+	//Display information
 	AnnDebug() << "OpenAL version : " << alGetString(AL_VERSION);
 	AnnDebug() << "OpenAL vendor  : " << alGetString(AL_VENDOR);
 
