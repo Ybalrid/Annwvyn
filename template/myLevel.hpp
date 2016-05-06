@@ -6,7 +6,7 @@ using namespace Annwvyn;
 
 //Each level you can create hinerits
 //from AnnAbstractLevel
-class MyLevel : public AnnAbstractLevel
+class MyLevel : LEVEL
 {
 public:
 	MyLevel();

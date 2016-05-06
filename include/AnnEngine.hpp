@@ -83,8 +83,7 @@ namespace Annwvyn
 		//This is the base class of the whole engine, the idea is more or less the one described in the 
 		//"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
 	public:
-		///This method is called by the OgreOculusRender object. Here is refresh code that needs to know current pose
-		void toogleOculusPerfHUD();
+		
 
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
@@ -173,9 +172,6 @@ namespace Annwvyn
 		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
 
-		///Reset the Rift Orientation
-		void resetOculusOrientation();///Gameplay... but engine related function. 
-
 		///Toogle the display of the in-engine console
 		void toogleOnScreenConsole();
 
@@ -226,7 +222,7 @@ namespace Annwvyn
 		///Point Of View : Node used as "root" for putting the VR "camera rig"
 		Ogre::SceneNode* povNode;
 
-		///Oculus oculus;
+		///VR renderer
 		OgreVRRender* renderer;
 
 		///Elapsed time between 2 frames
