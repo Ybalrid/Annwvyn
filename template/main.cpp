@@ -12,34 +12,24 @@ using namespace Annwvyn;
 AnnMain() //The application entry point is "AnnMain()". return type int.
 {
 	//Initialize the engine
-	//AnnEngine::openConsole();//optional : open console
-	new AnnEngine("A game using Annwvyn");
+	AnnEngine::openConsole();//optional : open console
+	AnnInit("NameOfApp");
 	
-	//Load your custom graphics resources here:
-	//e.g.:
-	//AnnEngine::Instance()->loadDir("relativePathToDirectory");
-	//AnnEngine::Instance()->loadZip("relativePathToZipedFile");
-	
-	AnnEngine::Instance()->initResources();
-	AnnEngine::Instance()->oculusInit();
-
 	//Call physics initialization for the player body:
-	AnnEngine::Instance()->initPlayerPhysics();
+	AnnGetEngine()->initPlayerPhysics();
 
 	//Intentiate and register our basic level and "jump" to it:
-	AnnEngine::Instance()->getLevelManager()->addLevel(new MyLevel);
-	AnnEngine::Instance()->getLevelManager()->jumpToFirstLevel();
-	
-	//This will recenter the facing direction of the player
+	AnnGetLevelManager()->addLevel(new MyLevel);
+	AnnGetLevelManager()->jumpToFirstLevel();
 
-	//in the real world with the VR
-	AnnEngine::Instance()->resetOculusOrientation();
 	//The game is rendering here now:
-	AnnEngine::Instance()->useDefaultEventListener();
-	AnnEngine::Instance()->startGameplayLoop();
+	AnnGetEventManager()->useDefaultEventListener();
+
+	//The game runs here
+	AnnGetEngine()->startGameplayLoop();
 
 	//destroy the engine
-	delete AnnEngine::Instance();
+	delete AnnGetEngine();
 	return EXIT_SUCCESS;
 }
 

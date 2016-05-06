@@ -221,12 +221,6 @@ inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
-void AnnEngine::resetOculusOrientation()
-{
-	log("Reseting the base direction of player's head");
-	renderer->recenter();
-}
-
 Ogre::SceneNode* AnnEngine::getCamera()
 {
 	return povNode;
@@ -326,11 +320,6 @@ void AnnEngine::openConsole()
 void AnnEngine::toogleOnScreenConsole()
 {
 	if (onScreenConsole) onScreenConsole->toogle();
-}
-
-void AnnEngine::toogleOculusPerfHUD()
-{
-	if (renderer) renderer->cycleDebugHud();
 }
 
 bool AnnEngine::appVisibleInHMD()

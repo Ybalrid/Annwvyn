@@ -125,7 +125,7 @@ AnnMain()
 	AnnGetPhysicsEngine()->setDebugPhysics(false);
 
 	AnnGetEventManager()->useDefaultEventListener();
-	AnnGetEngine()->resetOculusOrientation();
+	AnnGetVRRenderer()->recenter();
 	AnnGetEngine()->getEventManager()->addListener(new DebugListener);
 	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
 

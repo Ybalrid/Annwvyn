@@ -6,10 +6,7 @@ MyLevel::MyLevel() : AnnAbstractLevel()
 }
 
 void MyLevel::load()
-{
-	//For having a lighter syntax :
-	auto engine(AnnEngine::Instance());
-	
+{	
 	//Load Sinbad:
 	auto Sinbad (addGameObject("Sinbad.mesh"));
 	Sinbad->setUpPhysics(100, phyShapeType::boxShape);
@@ -21,9 +18,11 @@ void MyLevel::load()
 
 	//Create a light source
 	auto light(addLightObject());
-	light->setPosition(AnnVect3(0,1,3));
+	light->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
+	//zenith sunlight
+	light->setDirection(AnnVect3(0,-1,0));
 
-	engine->setAmbiantLight(AnnColor(.5,.5,.5));
+	AnnGetSceneryManager()->setAmbiantLight(AnnColor(.5,.5,.5));
 }
 
 void MyLevel::runLogic()

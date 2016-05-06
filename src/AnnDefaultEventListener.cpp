@@ -62,8 +62,8 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	//Jumping is a function call because it's an action and not a "state" the player has. 
 	//if(e.isPressed() && e.getKey() == jump)
 	//	player->jump();
-	if(e.isPressed() && e.getKey() == recenter)
-		AnnGetEngine()->resetOculusOrientation();
+	if (e.isPressed() && e.getKey() == recenter)
+		AnnGetVRRenderer()->recenter();
 
 	if(e.isPressed()) switch(e.getKey())
 	{
@@ -71,7 +71,7 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		AnnGetEngine()->toogleOnScreenConsole();
 		break;
 	case KeyCode::tab:
-		AnnGetEngine()->toogleOculusPerfHUD();
+		AnnGetVRRenderer()->cycleDebugHud();
 		break;
 	case KeyCode::f1:
 		AnnGetVRRenderer()->showDebug(OgreVRRender::RAW_BUFFER);
