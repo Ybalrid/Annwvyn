@@ -137,6 +137,7 @@ class DLL OgreOculusRender : public OgreVRRender
 		///The Oculus Rift integrated audio playback device will have "something (Rift Audio)" as a name
 		std::string getAudioDeviceIdentifierSubString();
 
+		///Show the requested debug view
 		void showDebug(DebugMode mode);
 
 	private:
