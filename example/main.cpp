@@ -119,9 +119,6 @@ AnnMain()
 
 	//Init game engine
 	AnnInit("AnnTest");
-
-	//SetUp Oculus system	
-	AnnGetEngine()->VrInit();
 	
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
