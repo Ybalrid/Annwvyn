@@ -1,44 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Oculus rendering for Ogre">
-      <UniqueIdentifier>{80903f3b-ac93-417b-881a-c6fe14583547}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Oculus rendering for Ogre\Header">
-      <UniqueIdentifier>{d79db725-8383-4ef2-87f5-203fb5caefca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Oculus rendering for Ogre\Source">
-      <UniqueIdentifier>{be30c26c-4830-4806-8d92-e51309629354}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Annwvyn">
       <UniqueIdentifier>{71f4958c-4a0c-4d65-b5f2-9132994bfa62}</UniqueIdentifier>
     </Filter>
     <Filter Include="precompilled headers">
       <UniqueIdentifier>{fbc76f4b-1892-4373-958b-3df6607820a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Annwvyn\MathObjects">
-      <UniqueIdentifier>{8002a392-511f-4f41-9d99-a4f6b3aac75c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Internaly packaged libraries">
       <UniqueIdentifier>{507eae2d-1c4a-4c92-add1-f6eb9cbe4364}</UniqueIdentifier>
     </Filter>
     <Filter Include="Annwvyn\Core">
       <UniqueIdentifier>{9c9fb862-e814-46a3-bf12-0f38f3eca234}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Annwvyn\LevelSystem">
-      <UniqueIdentifier>{93361f2e-9ee4-4a79-a0da-6249f40e362f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Annwvyn\EventSystem">
-      <UniqueIdentifier>{d4f4cafe-0ab2-4e44-9896-304a62446eca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Annwvyn\Physics&amp;Collision">
-      <UniqueIdentifier>{60b5c977-4cbc-480e-a19e-138c9c30522f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Annwvyn\Audio">
-      <UniqueIdentifier>{a2890224-c274-4cb9-956a-1690e52fda04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Annwvyn\GameObject">
-      <UniqueIdentifier>{c98e90b8-198c-4dd0-ac5c-f4ee64400799}</UniqueIdentifier>
     </Filter>
     <Filter Include="Internaly packaged libraries\tinyxml2">
       <UniqueIdentifier>{1efbc9df-fb99-462b-b2b4-2a0d005ea938}</UniqueIdentifier>
@@ -49,16 +22,61 @@
     <Filter Include="Internaly packaged libraries\Ogre::Euler">
       <UniqueIdentifier>{0d9d99de-a238-4239-9f8f-936a74e088b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\SubSystems">
+      <UniqueIdentifier>{872ec82f-71bd-4949-950e-8510a615b2c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\Physics&amp;Collision">
+      <UniqueIdentifier>{60b5c977-4cbc-480e-a19e-138c9c30522f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\LevelSystem">
+      <UniqueIdentifier>{93361f2e-9ee4-4a79-a0da-6249f40e362f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\EventSystem">
+      <UniqueIdentifier>{d4f4cafe-0ab2-4e44-9896-304a62446eca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\Audio">
+      <UniqueIdentifier>{a2890224-c274-4cb9-956a-1690e52fda04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\Console">
+      <UniqueIdentifier>{999c116e-25f9-4113-83ca-e7c8fb446282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\FileSystem">
+      <UniqueIdentifier>{fa83c668-40c4-43ad-8ad5-16a7ff0ceaa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\GameObject">
+      <UniqueIdentifier>{c98e90b8-198c-4dd0-ac5c-f4ee64400799}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\MathObjects">
+      <UniqueIdentifier>{8002a392-511f-4f41-9d99-a4f6b3aac75c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\Resource">
+      <UniqueIdentifier>{dc4a24bb-ed55-40f2-b82a-1cfbc40d2736}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\PlayerObject">
+      <UniqueIdentifier>{fef73889-f986-4d0a-8943-ff5549a9070a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\GameObject\LightObject">
+      <UniqueIdentifier>{92cd8a07-7a53-4488-b4db-a8f6ba91ce4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\GameObject\TriggerObject">
+      <UniqueIdentifier>{3ce1bb7b-6132-48a4-99d4-fad0947e49cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\GameObject\GameObject">
+      <UniqueIdentifier>{dc39ee55-67cf-4cf0-abd0-e293465a0d52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\SubSystems\Scenery">
+      <UniqueIdentifier>{5c9abb67-b981-4469-9dd8-f1658f374bb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OgreRenderingForVR">
+      <UniqueIdentifier>{80903f3b-ac93-417b-881a-c6fe14583547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OgreRenderingForVR\Oculus">
+      <UniqueIdentifier>{d83246f2-30b0-4dc4-96c9-644b2e03f8a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
       <Filter>Internaly packaged libraries\Ogre::Euler</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\OculusInterface.hpp">
-      <Filter>Oculus rendering for Ogre\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\OgreOculusRender.hpp">
-      <Filter>Oculus rendering for Ogre\Header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\pch\stdafx.h">
       <Filter>precompilled headers</Filter>
@@ -70,55 +88,34 @@
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnAbstractLevel.hpp">
-      <Filter>Annwvyn\LevelSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnCharacter.hpp">
-      <Filter>Annwvyn\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnConsole.hpp">
-      <Filter>Annwvyn\Core</Filter>
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnEngine.hpp">
       <Filter>Annwvyn\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnEventManager.hpp">
-      <Filter>Annwvyn\EventSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnGameObject.hpp">
-      <Filter>Annwvyn\GameObject</Filter>
+      <Filter>Annwvyn\SubSystems\EventSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnKeyCode.h">
-      <Filter>Annwvyn\EventSystem</Filter>
+      <Filter>Annwvyn\SubSystems\EventSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnLevelManager.hpp">
-      <Filter>Annwvyn\LevelSystem</Filter>
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnLogger.hpp">
       <Filter>Annwvyn\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp">
-      <Filter>Annwvyn\Physics&amp;Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnPlayer.hpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnPlayerActuator.hpp">
-      <Filter>Annwvyn\Core</Filter>
+      <Filter>Annwvyn\SubSystems\Physics&amp;Collision</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnSplashLevel.hpp">
-      <Filter>Annwvyn\LevelSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
-      <Filter>Annwvyn\Physics&amp;Collision</Filter>
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnXmlLevel.hpp">
-      <Filter>Annwvyn\LevelSystem</Filter>
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnTypes.h">
       <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Annwvyn.h">
-      <Filter>Annwvyn</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnErrorCode.hpp">
       <Filter>Annwvyn\Core</Filter>
@@ -138,26 +135,62 @@
     <ClInclude Include="..\..\include\BtOgreExtras.h">
       <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnFilesystem.hpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
-      <Filter>Annwvyn\Audio</Filter>
+      <Filter>Annwvyn\SubSystems\Audio</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnColor.hpp">
       <Filter>Annwvyn\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnLightObject.hpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnSubsystem.hpp">
-      <Filter>Annwvyn\Core</Filter>
+      <Filter>Annwvyn\SubSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnConsole.hpp">
+      <Filter>Annwvyn\SubSystems\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnFilesystem.hpp">
+      <Filter>Annwvyn\SubSystems\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnLightObject.hpp">
+      <Filter>Annwvyn\GameObject\LightObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Annwvyn.h">
+      <Filter>Annwvyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnResourceManager.hpp">
+      <Filter>Annwvyn\SubSystems\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnPlayer.hpp">
+      <Filter>Annwvyn\PlayerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnPlayerActuator.hpp">
+      <Filter>Annwvyn\PlayerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnCharacter.hpp">
+      <Filter>Annwvyn\GameObject\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnGameObject.hpp">
+      <Filter>Annwvyn\GameObject\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnTriggerObject.hpp">
+      <Filter>Annwvyn\GameObject\TriggerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnSceneryManager.hpp">
+      <Filter>Annwvyn\SubSystems\Scenery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\OculusInterface.hpp">
+      <Filter>OgreRenderingForVR\Oculus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\OgreOculusRender.hpp">
+      <Filter>OgreRenderingForVR\Oculus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\OgreVRRender.hpp">
+      <Filter>OgreRenderingForVR</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\OculusInterface.cpp">
-      <Filter>Oculus rendering for Ogre\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\pch\stdafx.cpp">
       <Filter>precompilled headers</Filter>
     </ClCompile>
@@ -167,59 +200,38 @@
     <ClCompile Include="..\..\src\AnnVect3.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\OgreOculusRender_Windows.cpp">
-      <Filter>Oculus rendering for Ogre\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnEngine.cpp">
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnPlayer.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnPlayerActuator.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnLevelManager.cpp">
-      <Filter>Annwvyn\LevelSystem</Filter>
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLogger.cpp">
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnAbsractLevel.cpp">
-      <Filter>Annwvyn\LevelSystem</Filter>
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp">
-      <Filter>Annwvyn\LevelSystem</Filter>
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnXmlLevel.cpp">
-      <Filter>Annwvyn\LevelSystem</Filter>
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnEventManager.cpp">
-      <Filter>Annwvyn\EventSystem</Filter>
+      <Filter>Annwvyn\SubSystems\EventSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnEvents.cpp">
-      <Filter>Annwvyn\EventSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnConsole.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnTriggerObject.cpp">
-      <Filter>Annwvyn\Physics&amp;Collision</Filter>
+      <Filter>Annwvyn\SubSystems\EventSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnPhysicsEngine.cpp">
-      <Filter>Annwvyn\Physics&amp;Collision</Filter>
+      <Filter>Annwvyn\SubSystems\Physics&amp;Collision</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp">
-      <Filter>Annwvyn\Audio</Filter>
+      <Filter>Annwvyn\SubSystems\Audio</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp">
-      <Filter>Annwvyn\EventSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnCharacter.cpp">
-      <Filter>Annwvyn\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnGameObject.cpp">
-      <Filter>Annwvyn\GameObject</Filter>
+      <Filter>Annwvyn\SubSystems\EventSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\tinyxml2.cpp">
       <Filter>Internaly packaged libraries\tinyxml2</Filter>
@@ -227,17 +239,53 @@
     <ClCompile Include="..\..\src\BtOgre.cpp">
       <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnFilesystem.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnColor.cpp">
       <Filter>Annwvyn\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnLightObject.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnSubSystem.cpp">
-      <Filter>Annwvyn\Core</Filter>
+      <Filter>Annwvyn\SubSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnConsole.cpp">
+      <Filter>Annwvyn\SubSystems\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnFilesystem.cpp">
+      <Filter>Annwvyn\SubSystems\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnLightObject.cpp">
+      <Filter>Annwvyn\GameObject\LightObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnResourceManager.cpp">
+      <Filter>Annwvyn\SubSystems\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnPlayer.cpp">
+      <Filter>Annwvyn\PlayerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnPlayerActuator.cpp">
+      <Filter>Annwvyn\PlayerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnCharacter.cpp">
+      <Filter>Annwvyn\GameObject\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnGameObject.cpp">
+      <Filter>Annwvyn\GameObject\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnTriggerObject.cpp">
+      <Filter>Annwvyn\GameObject\TriggerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnSceneryManager.cpp">
+      <Filter>Annwvyn\SubSystems\Scenery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OculusInterface.cpp">
+      <Filter>OgreRenderingForVR\Oculus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreOculusRender.cpp">
+      <Filter>OgreRenderingForVR\Oculus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreVRRender.cpp">
+      <Filter>OgreRenderingForVR</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
