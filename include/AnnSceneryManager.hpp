@@ -42,7 +42,7 @@ namespace Annwvyn
 
 		///Set the viewports background color
 		/// \param v background color
-		void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56, 1));
+		void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56f, 1));
 
 		///Remove the sky dome
 		void removeSkyDome();
