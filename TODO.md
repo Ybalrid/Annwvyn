@@ -1,7 +1,7 @@
 
 Todo list : 
 
-- [ ] Need a proper object factory for classes like AnnGameObject
+- [x] Need a proper object factory for classes like AnnGameObject
 - [ ] Object parenting
 - [x] Permit to create non spherical trigger
 - [ ] Rework the animation system. Animation state should run in a *state machine automata* with proper transition programming 
