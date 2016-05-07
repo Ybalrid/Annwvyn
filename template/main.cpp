@@ -14,7 +14,7 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	//Initialize the engine
 	AnnEngine::openConsole();//optional : open console
 	AnnInit("NameOfApp");
-	
+	/*
 	//Call physics initialization for the player body:
 	AnnGetEngine()->initPlayerPhysics();
 
@@ -24,7 +24,7 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 
 	//The game is rendering here now:
 	AnnGetEventManager()->useDefaultEventListener();
-
+	*/
 	//The game runs here
 	AnnGetEngine()->startGameplayLoop();
 

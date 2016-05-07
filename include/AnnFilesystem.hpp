@@ -14,6 +14,7 @@
 #include <fstream>
 #include <sstream>
 #include <list>
+#include <limits>
 #ifdef WIN32
 #include <Windows.h>
 #endif

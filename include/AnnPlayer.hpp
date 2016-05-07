@@ -206,7 +206,7 @@ namespace Annwvyn
 		float analogWalk;
 		float analogStraff;
 		float analogRotate;
-	};
+	}; 
 
 }
 #endif //ANN_PLAYER

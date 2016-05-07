@@ -27,19 +27,17 @@ void AnnFileWriter::write(AnnSaveFileData* data)
 	saveFile.open(path);if(!saveFile.is_open())return;
 		//push as plain text all key and data in a "key=data\n" format
 		for(auto storedData : data->storedTextData)
-		{
 			saveFile << storedData.first 
 				<< "=" 
 				<< storedData.second 
 				<< endl;
-		}
 	saveFile.close();
 	data->changed = false;
 }
 
 AnnFileReader::AnnFileReader()
 {
-		AnnDebug() << "FileReader instantiated";
+	AnnDebug() << "FileReader instantiated";
 }
 
 AnnSaveFileData* AnnFileReader::read(string fileName)
@@ -73,7 +71,7 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 		getline(readStream, value);
 
 		//Store on the file data object the given key
-		fileData->storedTextData[key]=value;
+		fileData->storedTextData[key] = value;
 	}
 	ifile.close();
 
@@ -87,7 +85,7 @@ AnnFilesystemManager::AnnFilesystemManager(std::string title) : AnnSubSystem("Fi
 {
 	//get from the OS the user's personal directory
 #ifdef WIN32
-#pragma warning (disable : 4996)
+#pragma warning (disable : 4996) //Remove warning at usage of function "getenv"
 	pathToUserDir = getenv("USERPROFILE");
 #pragma warning (default : 4996)
 #endif
@@ -237,7 +235,8 @@ void AnnSaveFileData::setValue(std::string key, int value)
 void AnnSaveFileData::setValue(std::string key, float value)
 {
 	std::stringstream sstream;
-	sstream << value;
+	sstream.precision(2+std::numeric_limits<float>::max_digits10);
+	sstream << std::fixed << value;
 	setValue(key, sstream.str());
 }
 
