@@ -23,6 +23,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cassert>
+#include <limits>
 
 //Object-Oriented Graphical Rendering Engine
 #include <Ogre.h>
