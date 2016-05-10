@@ -469,6 +469,7 @@ ovrSessionStatus OgreOculusRender::getSessionStatus()
 
 void OgreOculusRender::initPipeline()
 {
+	AnnDebug() << "Init pipeline for Oculus Rift rendering";
 	getOgreConfig();
 	createWindow();
 	initScene();
