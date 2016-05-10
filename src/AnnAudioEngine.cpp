@@ -75,7 +75,7 @@ bool AnnAudioEngine::initOpenAL()
 		if (!gotDevice)
 		{
 			AnnDebug() << "Rift Audio not found. Using system's default device";
-			alcOpenDevice(NULL);
+			Device = alcOpenDevice(NULL);
 		}
 		
 	}
