@@ -61,7 +61,6 @@ AnnEngine::AnnEngine(const char title[]) :
 	SubSystemList.push_back(resourceManager = new AnnResourceManager);
 	SubSystemList.push_back(sceneryManager = new AnnSceneryManager(renderer));
 
-	log("Init VR rendering system");
 	renderer->initClientHmdRendering();
 	povNode = renderer->getCameraInformationNode();
 	povNode->setPosition(player->getPosition() +

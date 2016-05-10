@@ -41,8 +41,6 @@ OgreOculusRender::~OgreOculusRender()
 
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
-
-
 }
 
 bool OgreOculusRender::shouldQuit()
@@ -398,6 +396,7 @@ void OgreOculusRender::showMonscopicView()
 
 void OgreOculusRender::initClientHmdRendering()
 {
+	AnnDebug() << "Configure Oculus Compositor";
 	//Populate OVR structures
 	EyeRenderDesc[left ] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Left , Oculus->getHmdDesc().DefaultEyeFov[left ]);
 	EyeRenderDesc[right] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right]);
@@ -405,6 +404,7 @@ void OgreOculusRender::initClientHmdRendering()
 	offset[right] = EyeRenderDesc[right].HmdToEyeOffset;
 
 	//Create a layer with our single swaptexture on it. Each side is an eye.
+	AnnDebug() << "Declare ovrLayerType_EyeFov with the texture swap chain";
 	layer.Header.Type = ovrLayerType_EyeFov;
 	layer.Header.Flags = 0;
 	layer.ColorTexture[left ] = textureSwapChain;
@@ -425,6 +425,7 @@ void OgreOculusRender::initClientHmdRendering()
 	leftRect.Pos = leftPos;				
 	rightRect.Pos = rightPos;
 
+	AnnDebug() << "Assign viewports to this layer";
 	//Assign the viewports
 	layer.Viewport[left ] = leftRect;
 	layer.Viewport[right] = rightRect;
@@ -433,6 +434,7 @@ void OgreOculusRender::initClientHmdRendering()
 	calculateProjectionMatrix();
 
 	//Make sure that the perf hud will not show up by himself...
+	AnnDebug() << "Put the Oculus Performance HUD to ovrPerfHud_Off";
 	perfHudMode = ovrPerfHud_Off;
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
 }
