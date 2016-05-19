@@ -148,6 +148,7 @@ namespace Annwvyn
 		///Get the SceneryManager
 		AnnSceneryManager* getSceneryManager();
 
+		///Get the VRRenderer
 		OgreVRRender* getVRRenderer();
 
 		
@@ -189,6 +190,8 @@ namespace Annwvyn
 
 		///Get elapsed time between two frames in seconds
 		double getFrameTime();
+
+		///Get the pose of the HMD in VR world space
 		OgrePose getHmdPose();
 		///////////////////////////////////////////////////////////////////////////////////////////////TIMER MANAGEMENT
 
