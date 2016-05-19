@@ -17,6 +17,8 @@ std::string AnnEngine::getAnnwvynVersion()
 {
 	std::stringstream version;
 	version << ANN_MAJOR << "." << ANN_MINOR << "." << ANN_PATCH;
+	if (ANN_EXPERIMENTAL)
+		version << "-experimental";
 	return version.str();
 }
 
@@ -26,9 +28,17 @@ void AnnEngine::startGameplayLoop()
 }
 
 AnnEngine::AnnEngine(const char title[]) :
+	player(nullptr),
+	audioEngine(nullptr),
 	eventManager(nullptr),
 	levelManager(nullptr),
+	filesystemManager(nullptr),
+	resourceManager(nullptr),
+	gameObjectManager(nullptr),
+	sceneryManager(nullptr),
+	renderer(nullptr),
 	povNode(nullptr),
+	updateTime(-1),
 	canAccessSubSystems(true)
 {
 	if (singleton)
