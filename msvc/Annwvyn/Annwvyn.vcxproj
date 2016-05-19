@@ -182,7 +182,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
   <ItemGroup>
     <ClInclude Include="..\..\include\AnnAbstractLevel.hpp" />
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
-    <ClInclude Include="..\..\include\AnnCharacter.hpp" />
     <ClInclude Include="..\..\include\AnnColor.hpp" />
     <ClInclude Include="..\..\include\AnnConsole.hpp" />
     <ClInclude Include="..\..\include\AnnEngine.hpp" />
@@ -226,7 +225,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     </ClCompile>
     <ClCompile Include="..\..\src\AnnAbsractLevel.cpp" />
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
-    <ClCompile Include="..\..\src\AnnCharacter.cpp" />
     <ClCompile Include="..\..\src\AnnColor.cpp" />
     <ClCompile Include="..\..\src\AnnConsole.cpp" />
     <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp" />
