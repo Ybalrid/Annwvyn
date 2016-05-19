@@ -62,6 +62,7 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 	{
 		//Read a line
 		getline(ifile, buffer);
+		//Don't try to extract data from empty lines on the file
 		if(buffer.empty()) continue;
 
 		//Create a string stream on the buffer
