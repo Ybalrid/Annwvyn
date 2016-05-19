@@ -12,6 +12,8 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 #ifndef ANN_ABSTRACTLEVEL
 #define ANN_ABSTRACTLEVEL
 
+#include <unordered_map>
+
 #include "AnnTypes.h"
 #include "AnnTriggerObject.hpp"
 #define LEVEL public Annwvyn::AnnAbstractLevel
@@ -44,6 +46,9 @@ namespace Annwvyn
 		AnnGameObjectList levelContent;
 		AnnLightList levelLighting;
 		AnnTriggerObjectList levelTrigger;
+		std::unordered_map<std::string, AnnGameObject*> levelContentIdMap;
+		std::unordered_map<std::string, AnnLightObject*> levelLightingIdMap;
+		std::unordered_map<std::string, AnnTriggerObject*> levelTriggerIdMap;
 
 		///Add a light object to the level
 		AnnLightObject* addLightObject(std::string id = noID);
