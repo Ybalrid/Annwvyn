@@ -168,9 +168,6 @@
     <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
       <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnCharacter.hpp">
-      <Filter>Annwvyn\GameObject\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnGameObject.hpp">
       <Filter>Annwvyn\GameObject\GameObject</Filter>
     </ClInclude>
@@ -265,9 +262,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
       <Filter>Annwvyn\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnCharacter.cpp">
-      <Filter>Annwvyn\GameObject\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnGameObject.cpp">
       <Filter>Annwvyn\GameObject\GameObject</Filter>
