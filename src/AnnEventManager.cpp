@@ -5,8 +5,6 @@
 
 using namespace Annwvyn;
 
-bool debug(false);
-
 AnnAbstractEventListener::AnnAbstractEventListener() :
 	player(AnnGetPlayer())
 {
