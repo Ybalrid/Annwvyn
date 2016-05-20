@@ -110,6 +110,15 @@ public:
 		if (e.isPressed() && e.getKey() == KeyCode::h)
 			testFileIO();
 	}
+
+	void StickEvent(AnnStickEvent e)
+	{
+		if (e.getStickID() == 0)
+		{
+			AnnStickPov pov = e.getPov(0);
+			AnnDebug() << pov.getNorth() << pov.getSouth() << pov.getEast() << pov.getWest();
+		}
+	}
 };
 
 AnnMain()
