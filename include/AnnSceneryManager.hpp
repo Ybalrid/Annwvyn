@@ -9,6 +9,7 @@
 
 namespace Annwvyn
 {
+	///Scenery Manager, scene configuration for lighting and sky. 
 	class DLL AnnSceneryManager : public AnnSubSystem
 	{
 	public:

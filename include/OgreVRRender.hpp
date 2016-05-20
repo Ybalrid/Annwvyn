@@ -9,8 +9,7 @@
 #include "AnnErrorCode.hpp"
 
 
-///A pose refer to the combinaison of a position and an orientation. 
-///It permit to define the placement of an object with 6DOF
+///A pose refer to the combinaison of a position and an orientation. It permit to define the placement of an object with 6DOF
 struct OgrePose
 {
 	///A 3D vector representing a position
@@ -19,10 +18,12 @@ struct OgrePose
 	Ogre::Quaternion orientation;
 };
 
+///Abstract class for VR Renderers. Serve as interface between Annwvyn, and "OgreHMDRender" object.
 class DLL OgreVRRender
 {
 public:
 	
+	///Type of Debug render you can do
 	enum DebugMode
 	{
 		RAW_BUFFER,
