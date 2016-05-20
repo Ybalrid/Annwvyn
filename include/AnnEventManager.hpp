@@ -161,6 +161,7 @@ namespace Annwvyn
 	///A joystick event
 	typedef size_t ButtonId;
 	typedef size_t StickAxisId;
+	typedef size_t PovId;
 #define InvalidStickAxisId -1
 #define INVALID 42.0f
 
@@ -190,6 +191,30 @@ namespace Annwvyn
 		///Real constructor
 		AnnStickAxis(StickAxisId ax, int rel, int abs);
 		bool noRel;
+
+	};
+
+	class DLL AnnStickPov
+	{
+	public:
+		AnnStickPov();
+
+		bool getNorth();
+		bool getSouth();
+		bool getEast();
+		bool getWest();
+
+		bool getNorthEast();
+		bool getSouthEast();
+		bool getNorthWest();
+		bool getSouthWest();
+
+	private:
+
+		bool north, south, east, west;
+		friend class AnnEventManager;
+		friend class AnnStickEvent;
+		AnnStickPov(unsigned int binaryDirection);
 
 	};
 
@@ -224,10 +249,14 @@ namespace Annwvyn
 		///Get the "vendor string" of this joystick (could be its name)
 		std::string getVendor();
 
+		size_t getNbPov();
+		AnnStickPov getPov(PovId pov);
+
 	private:
 		friend class AnnEventManager;
 		std::vector<bool> buttons;
 		std::vector<AnnStickAxis> axes;
+		std::vector<AnnStickPov> povs;
 		std::vector<unsigned short> pressed;
 		std::vector<unsigned short> released;
 		std::string vendor;
@@ -354,8 +383,8 @@ namespace Annwvyn
 		enum {ax_walk, ax_straff, ax_rotate};
 		StickAxisId axes[3];
 		///Buttons
-		enum {b_jump, b_run};
-		ButtonId buttons[2];
+		enum {b_jump, b_run, b_console, b_debug};
+		ButtonId buttons[4];
 
 	};
 

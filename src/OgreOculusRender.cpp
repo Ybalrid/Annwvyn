@@ -179,7 +179,7 @@ void OgreOculusRender::initCameras()
 	monoCam->setPosition(headPosition);
 	monoCam->setNearClipDistance(0.1);
 	monoCam->setFarClipDistance(4000);
-	monoCam->setFOVy(Ogre::Degree(110));
+	monoCam->setFOVy(Ogre::Degree(90));
 
 	//VR Eye cameras
 	eyeCameras[left ] = smgr->createCamera("lcam");
