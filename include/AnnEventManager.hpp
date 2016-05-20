@@ -194,26 +194,43 @@ namespace Annwvyn
 
 	};
 
+	///Represent a pad's POV controller
 	class DLL AnnStickPov
 	{
 	public:
+		///Construct a Pov with no direction pressed
 		AnnStickPov();
-
+		
+		///Get the up (north) state
 		bool getNorth();
+		///Get the down (south) state
 		bool getSouth();
+		///Get the right (east) state
 		bool getEast();
+		///Get the left (west) state
 		bool getWest();
 
+		///Get the north&&east state
 		bool getNorthEast();
+		///Get the south&&east state
 		bool getSouthEast();
+		///Get the north&&west state
 		bool getNorthWest();
+		///Get the south&&west state
 		bool getSouthWest();
+
+		///Return true if nothing is pressed on the POV controller
+		bool isCentred();
 
 	private:
 
+		///States
 		bool north, south, east, west;
+
 		friend class AnnEventManager;
 		friend class AnnStickEvent;
+		
+		///Private contructor used by the event manager. Need a direction integer from OIS
 		AnnStickPov(unsigned int binaryDirection);
 
 	};

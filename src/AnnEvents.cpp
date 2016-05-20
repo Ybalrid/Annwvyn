@@ -198,7 +198,7 @@ float AnnStickAxis::getAbsValue()
     return float(a)/float(OIS::JoyStick::MAX_AXIS);
 }
 
-Annwvyn::AnnStickPov::AnnStickPov() :
+AnnStickPov::AnnStickPov() :
 	north(false),
 	south(false),
 	east(false),
@@ -206,47 +206,52 @@ Annwvyn::AnnStickPov::AnnStickPov() :
 {
 }
 
-bool Annwvyn::AnnStickPov::getNorth()
+bool AnnStickPov::getNorth()
 {
 	return north;
 }
 
-bool Annwvyn::AnnStickPov::getSouth()
+bool AnnStickPov::getSouth()
 {
 	return south;
 }
 
-bool Annwvyn::AnnStickPov::getEast()
+bool AnnStickPov::getEast()
 {
 	return east;
 }
 
-bool Annwvyn::AnnStickPov::getWest()
+bool AnnStickPov::getWest()
 {
 	return west;
 }
 
-bool Annwvyn::AnnStickPov::getNorthEast()
+bool AnnStickPov::getNorthEast()
 {
 	return north && east;
 }
 
-bool Annwvyn::AnnStickPov::getSouthEast()
+bool AnnStickPov::getSouthEast()
 {
 	return south && east;
 }
 
-bool Annwvyn::AnnStickPov::getNorthWest()
+bool AnnStickPov::getNorthWest()
 {
 	return north && west;
 }
 
-bool Annwvyn::AnnStickPov::getSouthWest()
+bool AnnStickPov::getSouthWest()
 {
 	return south && west;
 }
 
-Annwvyn::AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
+bool AnnStickPov::isCentred()
+{
+	return !(north || south || east || west);
+}
+
+AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
 	north(false),
 	south(false),
 	east(false),
