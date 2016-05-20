@@ -198,6 +198,104 @@ float AnnStickAxis::getAbsValue()
     return float(a)/float(OIS::JoyStick::MAX_AXIS);
 }
 
+Annwvyn::AnnStickPov::AnnStickPov() :
+	north(false),
+	south(false),
+	east(false),
+	west(false)
+{
+}
+
+bool Annwvyn::AnnStickPov::getNorth()
+{
+	return north;
+}
+
+bool Annwvyn::AnnStickPov::getSouth()
+{
+	return south;
+}
+
+bool Annwvyn::AnnStickPov::getEast()
+{
+	return east;
+}
+
+bool Annwvyn::AnnStickPov::getWest()
+{
+	return west;
+}
+
+bool Annwvyn::AnnStickPov::getNorthEast()
+{
+	return north && east;
+}
+
+bool Annwvyn::AnnStickPov::getSouthEast()
+{
+	return south && east;
+}
+
+bool Annwvyn::AnnStickPov::getNorthWest()
+{
+	return north && west;
+}
+
+bool Annwvyn::AnnStickPov::getSouthWest()
+{
+	return south && west;
+}
+
+Annwvyn::AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
+	north(false),
+	south(false),
+	east(false),
+	west(false)
+{
+	switch (binaryDirection)
+	{
+	case OIS::Pov::North:
+		north = true;
+		break;
+
+	case OIS::Pov::NorthEast:
+		north = true;
+		east = true;
+		break;
+
+	case OIS::Pov::NorthWest:
+		north = true;
+		west = true;
+		break;
+
+	case OIS::Pov::South:
+		south = true;
+		break;
+
+	case OIS::Pov::SouthEast:
+		south = true;
+		east = true;
+		break;
+
+	case OIS::Pov::SouthWest:
+		south = true;
+		west = true;
+		break;
+
+	case OIS::Pov::East:
+		east = true;
+		break;
+
+	case OIS::Pov::West:
+		west = true;
+		break;
+
+	case OIS::Pov::Centered:
+	default:
+		break;
+	}
+}
+
 AnnStickEvent::AnnStickEvent() : AnnEvent()
 {
 	type = USER_INPUT;
@@ -265,6 +363,17 @@ bool AnnStickEvent::isReleased(ButtonId id)
 std::string AnnStickEvent::getVendor()
 {
 	return vendor;
+}
+
+AnnStickPov AnnStickEvent::getPov(PovId pov)
+{
+	if (pov < getNbPov())
+		return povs[pov];
+}
+
+size_t AnnStickEvent::getNbPov()
+{
+	return povs.size();
 }
 
 AnnTimeEvent::AnnTimeEvent() : AnnEvent()

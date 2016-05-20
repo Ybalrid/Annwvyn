@@ -23,6 +23,8 @@ AnnDefaultEventListener::AnnDefaultEventListener() : AnnAbstractEventListener(),
 
 	buttons[b_run] = 2;
 	buttons[b_jump] = 0;
+	buttons[b_console] = 7;
+	buttons[b_debug] = 6;
 }
 
 void AnnDefaultEventListener::setKeys(KeyCode::code fw, 
@@ -62,7 +64,7 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	//Jumping is a function call because it's an action and not a "state" the player has. 
 	//if(e.isPressed() && e.getKey() == jump)
 	//	player->jump();
-	if (e.isPressed() && e.getKey() == recenter)
+	if(e.isPressed() && e.getKey() == recenter)
 		AnnGetVRRenderer()->recenter();
 
 	if(e.isPressed()) switch(e.getKey())
@@ -111,4 +113,9 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 		player->run = true;
 	if(e.isReleased(buttons[b_run]))
 		player->run = false;
+
+	if(e.isPressed(buttons[b_console]))
+		AnnGetEngine()->toogleOnScreenConsole();
+	if(e.isPressed(buttons[b_debug]))
+		AnnGetVRRenderer()->cycleDebugHud();
 }
