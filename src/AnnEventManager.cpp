@@ -260,7 +260,7 @@ void AnnEventManager::processInput()
 				axis.noRel = true;
 			e.axes.push_back(axis);
 		}
-
+		//The joystick state object allwas have 4 Pov. The AnnStickEvent has the number of Pov the stick has
 		for (size_t i(0); i < Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV); i++)
 			e.povs.push_back(AnnStickPov(state.mPOV[i].direction));
 
@@ -277,22 +277,6 @@ void AnnEventManager::processInput()
 		e.populate();
 		e.validate();
 		e.stickID = Joystick->getID();
-
-		if (debug)
-		{
-			AnnDebug() << e.getVendor();
-			AnnDebug() << "has " << e.getNbButtons() << " buttons";
-			AnnDebug() << "has " << e.getNbAxis() << " axes";
-			std::stringstream buttonsStream;
-			for (auto buttonState : e.buttons)
-				buttonsStream << buttonState << " ";
-			AnnDebug() << buttonsStream.str();
-			AnnDebug() << "has " << Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV) << "POV(s)";
-			for (auto pov : e.povs)
-				AnnDebug() << "pov:" << pov.getNorth() << pov.getSouth() << pov.getWest() << pov.getEast(); 
-
-
-		}
 
 		for(size_t i(0); i < listeners.size(); i++)
 			listeners[i]->StickEvent(e);
@@ -368,8 +352,3 @@ size_t AnnEventManager::getNbStick()
 {
 	return Joysticks.size();
 }
-
-
-
-
-
