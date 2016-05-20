@@ -542,9 +542,6 @@ namespace Annwvyn
 		///Process triggers 
 		void processTriggerEvents();
 
-		///Send event to all listeners
-		void notifyListeners(AnnEvent e);
-
 		///Register trigger event for next triggerProcess by the engine
 		void spatialTrigger(AnnTriggerObject* sender);
 
