@@ -57,7 +57,7 @@ public:
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
 		AnnTriggerObject* t(AnnGetGameObjectManager()->createTriggerObject(new AnnAlignedBoxTriggerObject));
-		dynamic_cast<AnnAlignedBoxTriggerObject*>(t)->setBoundaries(-1,1,-1,1,-1,1);
+		dynamic_cast<AnnAlignedBoxTriggerObject*>(t)->setBoundaries(-1, 1, -1, 1, -1, 1);
 		levelTrigger.push_back(t);
 
 		//Put some music here

@@ -32,6 +32,9 @@ namespace Annwvyn
 			ANN_LIGHT_SPOTLIGHT = Ogre::Light::LightTypes::LT_SPOTLIGHT
 		};
 
+		static LightTypes getLightTypeFromString(std::string ltype);
+
+
 
 		///Set the position of the light (if relevent)
 		void setPosition(AnnVect3 position);
