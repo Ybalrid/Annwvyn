@@ -10,7 +10,7 @@
 
 //#include <Annwvyn.h>
 #include <vector>
-#include "AnnAbstractLevel.hpp"
+#include "AnnLevel.hpp"
 #include "tinyxml2.h"
 #include "AnnSubsystem.hpp"
 
@@ -33,12 +33,12 @@ namespace Annwvyn
 		void jump(level_id levelId);
 
 		///Jump to a pointer referenced level
-		///\param level address of a subclass instance of AbstractLevel
-		void jump(AnnAbstractLevel* level);
+		///\param level address of a subclass instance of AnnLevel
+		void jump(AnnLevel* level);
 
 		///Add a level to the level manager
-		///\param level address of a subclass instance of AbstractLevel
-		void addLevel(AnnAbstractLevel* level);
+		///\param level address of a subclass instance of AnnLevel
+		void addLevel(AnnLevel* level);
 
 		///Jumpt to the 1st level
 		void jumpToFirstLevel();
@@ -51,10 +51,10 @@ namespace Annwvyn
 
 	private:
 		///List of levels
-		std::vector<AnnAbstractLevel*> levelList;
+		std::vector<AnnLevel*> levelList;
 
 		///Address to the currently running level
-		AnnAbstractLevel* current;
+		AnnLevel* current;
 	};
 }
 #endif LEVELMANAGER

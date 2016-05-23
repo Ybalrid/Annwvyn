@@ -171,11 +171,14 @@ void AnnXmlLevel::load()
 		XMLElement* source = element->FirstChildElement("Source");
 		if(source) do
 		{
-			source->QueryFloatAttribute("X", &x);
-			source->QueryFloatAttribute("Y", &y);
-			source->QueryFloatAttribute("Z", &z);
+			std::string lightID = source->Attribute("ID");
 
-			AnnLightObject* lightSource = addLightObject();
+			XMLElement* position = source->FirstChildElement("Position");
+			position->QueryFloatAttribute("X", &x);
+			position->QueryFloatAttribute("Y", &y);
+			position->QueryFloatAttribute("Z", &z);
+
+			AnnLightObject* lightSource = addLightObject(lightID);
 			lightSource->setPosition(AnnVect3(x, y, z));
 		}while (source = source->NextSiblingElement());
 	}

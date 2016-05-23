@@ -143,7 +143,7 @@ AnnMain()
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
 
-	AnnAbstractLevel* level = new TestLevel();
+	AnnLevel* level = new TestLevel();
 	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 7.1f);
 	splash->setBGM("media/AnnSplash.ogg");
 

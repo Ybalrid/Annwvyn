@@ -5,33 +5,33 @@
 
 using namespace Annwvyn;
 
-AnnAbstractEventListener::AnnAbstractEventListener() :
+AnnEventListener::AnnEventListener() :
 	player(AnnGetPlayer())
 {
 }
 
-float AnnAbstractEventListener::trim(float v, float dz)
+float AnnEventListener::trim(float v, float dz)
 {
 	//Compute absolute value of v
-	float abs(v); 
-	if(v < 0) abs = -v;
+	float abs(v);
+	if (v < 0) abs = -v;
 
 	//The test is done on the abs value. Return the actuall value, or 0 if under the deadzone
-	if(abs >= dz) return v; 
+	if (abs >= dz) return v;
 	return 0.0f;
 }
 
 
-AnnTextInputer::AnnTextInputer():
+AnnTextInputer::AnnTextInputer() :
 	listen(false)
 {
 }
 
 bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 {
-	if(!listen) return true;
+	if (!listen) return true;
 	//If backspace, pop last char if possible
-	if(arg.key == OIS::KC_BACK && !input.empty())
+	if (arg.key == OIS::KC_BACK && !input.empty())
 		input.pop_back();
 	else
 		//Put typed char into the application 
@@ -76,8 +76,8 @@ Keyboard(nullptr),
 Mouse(nullptr),
 defaultEventListener(nullptr)
 {
-	for(size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
-	for(size_t i(0); i < MouseButtonId::nbButtons; i++) previousMouseButtonStates[i] = false;
+	for (size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
+	for (size_t i(0); i < MouseButtonId::nbButtons; i++) previousMouseButtonStates[i] = false;
 
 	//Should be a HWND under windows, but, whatever, it's an unsigned integer...
 	size_t windowHnd; w->getCustomAttribute("WINDOW", &windowHnd);
@@ -90,12 +90,12 @@ defaultEventListener(nullptr)
 
 	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
-	
-	for(int nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
+
+	for (int nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
 	{
 		OIS::JoyStick* Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		Joysticks.push_back(new JoystickBuffer(Joystick));
-		AnnDebug()<< "Detected joystick : " << Joystick->vendor();
+		AnnDebug() << "Detected joystick : " << Joystick->vendor();
 	}
 
 	lastTimerCreated = 0;
@@ -119,7 +119,7 @@ AnnEventManager::~AnnEventManager()
 	delete textInputer;
 	delete Keyboard;
 	delete Mouse;
-	for(auto Joystick : Joysticks)
+	for (auto Joystick : Joysticks)
 		delete Joystick;
 	Joysticks.clear();
 }
@@ -140,14 +140,14 @@ void Annwvyn::AnnEventManager::useDefaultEventListener()
 	addListener(defaultEventListener);
 }
 
-AnnAbstractEventListener * Annwvyn::AnnEventManager::getDefaultEventListener()
+AnnEventListener * Annwvyn::AnnEventManager::getDefaultEventListener()
 {
 	return defaultEventListener;
 }
 
-void AnnEventManager::addListener(AnnAbstractEventListener* l)
+void AnnEventManager::addListener(AnnEventListener* l)
 {
-	if(l != NULL)
+	if (l != NULL)
 		listeners.push_back(l);
 }
 
@@ -157,12 +157,12 @@ void AnnEventManager::clearListenerList()
 }
 
 //l equals NULL by default 
-void AnnEventManager::removeListener(AnnAbstractEventListener* l)
+void AnnEventManager::removeListener(AnnEventListener* l)
 {
-	if(l == NULL) {clearListenerList(); return;}
+	if (l == NULL) { clearListenerList(); return; }
 	auto iterator = listeners.begin();
-	while(iterator != listeners.end())
-		if(*iterator == l)
+	while (iterator != listeners.end())
+		if (*iterator == l)
 			iterator = listeners.erase(iterator);
 		else iterator++;
 }
@@ -181,18 +181,18 @@ void AnnEventManager::processInput()
 	//Capture events
 	Keyboard->capture();
 	Mouse->capture();
-	
-	for(auto joystick : Joysticks)
+
+	for (auto joystick : Joysticks)
 		joystick->stick->capture();
 
 	//if keyboard system initialized
-	if(Keyboard)
+	if (Keyboard)
 	{
 		//for each key of the keyboard
-		for(size_t c (0); c < KeyCode::SIZE; c++)
+		for (size_t c(0); c < KeyCode::SIZE; c++)
 		{
 			//if it's pressed
-			if(Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c])
+			if (Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c])
 			{
 				//create a coresponding key event 
 				AnnKeyEvent e;
@@ -201,13 +201,13 @@ void AnnEventManager::processInput()
 				e.populate();
 				e.validate();
 
-				for(size_t i(0); i < listeners.size(); i++)
+				for (size_t i(0); i < listeners.size(); i++)
 					listeners[i]->KeyEvent(e);
 
 				previousKeyStates[c] = true;
 			}
 			else if (!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c]) //key not pressed atm
-			{				
+			{
 				//same thing
 				AnnKeyEvent e;
 				e.setCode((KeyCode::code)c);
@@ -215,22 +215,22 @@ void AnnEventManager::processInput()
 				e.populate();
 				e.validate();
 
-				for(size_t i(0); i < listeners.size(); i++)
-					listeners[i]->KeyEvent(e);
+				for (auto listener : listeners)
+					listener->KeyEvent(e);
 
 				previousKeyStates[c] = false;
 			}
 		}
 	}
 
-	if(Mouse)
+	if (Mouse)
 	{
 		OIS::MouseState state(Mouse->getMouseState());
 
 		AnnMouseEvent e;
 
-		for(size_t i(0); i < MouseButtonId::nbButtons; i++)
-			e.setButtonStatus(MouseButtonId(i),state.buttonDown(OIS::MouseButtonID(i)));
+		for (size_t i(0); i < MouseButtonId::nbButtons; i++)
+			e.setButtonStatus(MouseButtonId(i), state.buttonDown(OIS::MouseButtonID(i)));
 
 		e.setAxisInformation(MouseAxisId::X, AnnMouseAxis(MouseAxisId::X, state.X.rel, state.X.abs));
 		e.setAxisInformation(MouseAxisId::Y, AnnMouseAxis(MouseAxisId::Y, state.Y.rel, state.Y.abs));
@@ -239,11 +239,11 @@ void AnnEventManager::processInput()
 		e.populate();
 		e.validate();
 
-		for(size_t i(0); i < listeners.size(); i++)
+		for (size_t i(0); i < listeners.size(); i++)
 			listeners[i]->MouseEvent(e);
 	}
 
-	for(auto Joystick : Joysticks)
+	for (auto Joystick : Joysticks)
 	{
 		OIS::JoyStickState state(Joystick->stick->getJoyStickState());
 		AnnStickEvent e;
@@ -251,37 +251,37 @@ void AnnEventManager::processInput()
 		//Get all butons imediate data
 		e.buttons = state.mButtons;
 		//Get all axes imediate data
-		for(size_t i(0); i < state.mAxes.size(); i++)
+		for (size_t i(0); i < state.mAxes.size(); i++)
 		{
 			AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
-			if(state.mAxes[i].absOnly)
+			if (state.mAxes[i].absOnly)
 				axis.noRel = true;
 			e.axes.push_back(axis);
 		}
-		//The joystick state object allwas have 4 Pov. The AnnStickEvent has the number of Pov the stick has
+		//The joystick state object allwas have 4 Pov but the AnnStickEvent has the number of Pov the stick has
 		for (size_t i(0); i < Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV); i++)
 			e.povs.push_back(AnnStickPov(state.mPOV[i].direction));
 
 		//Get press and release event lists
-		for(unsigned short i(0); i < state.mButtons.size() && i < Joystick->previousStickButtonStates.size(); i++)
-			if(!Joystick->previousStickButtonStates[i] &&  state.mButtons[i])
+		for (unsigned short i(0); i < state.mButtons.size() && i < Joystick->previousStickButtonStates.size(); i++)
+			if (!Joystick->previousStickButtonStates[i] && state.mButtons[i])
 				e.pressed.push_back(i);
-			else if(Joystick->previousStickButtonStates[i] && !state.mButtons[i])
+			else if (Joystick->previousStickButtonStates[i] && !state.mButtons[i])
 				e.released.push_back(i);
 
 		//Save current buttons state for next frame
-		Joystick->previousStickButtonStates = state.mButtons; 
+		Joystick->previousStickButtonStates = state.mButtons;
 		e.vendor = Joystick->stick->vendor();
 		e.populate();
 		e.validate();
 		e.stickID = Joystick->getID();
 
-		for(size_t i(0); i < listeners.size(); i++)
-			listeners[i]->StickEvent(e);
+		for (auto listener : listeners)
+			listener->StickEvent(e);
 	}
 
-	for(size_t i(0); i < listeners.size(); i++)
-		listeners[i]->tick();
+	for (auto listener : listeners)
+		listener->tick();
 }
 
 timerID AnnEventManager::fireTimerMillisec(double delay)
@@ -293,29 +293,29 @@ timerID AnnEventManager::fireTimerMillisec(double delay)
 
 timerID AnnEventManager::fireTimer(double delay)
 {
-	return fireTimerMillisec(1000*delay);
+	return fireTimerMillisec(1000 * delay);
 }
 
 void AnnEventManager::processTimers()
 {
 	//This permit listeners to set timers without invalidating the iterator declared below
-	if(!futureTimers.empty())
+	if (!futureTimers.empty())
 	{
-		for(size_t i(0); i < futureTimers.size(); i++)
+		for (size_t i(0); i < futureTimers.size(); i++)
 			activeTimers.push_back(futureTimers[i]);
 		futureTimers.clear();
 	}
 
 	auto iterator = activeTimers.begin();
-	while(iterator != activeTimers.end())
+	while (iterator != activeTimers.end())
 	{
-		if((*iterator).isTimeout())
+		if ((*iterator).isTimeout())
 		{
 			AnnTimeEvent e;
 			e.populate();
 			e.setTimerID((*iterator).tID);
 			e.validate();
-			for(size_t i(0); i < listeners.size(); ++i)
+			for (size_t i(0); i < listeners.size(); ++i)
 				listeners[i]->TimeEvent(e);
 			iterator = activeTimers.erase(iterator);
 		}
@@ -328,13 +328,13 @@ void AnnEventManager::processTimers()
 
 void AnnEventManager::processTriggerEvents()
 {
-	for(auto triggerIterator = triggerEventBuffer.begin(); triggerIterator != triggerEventBuffer.end(); triggerIterator++)
-		for(auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); listenerIterator++)
+	for (auto triggerIterator = triggerEventBuffer.begin(); triggerIterator != triggerEventBuffer.end(); triggerIterator++)
+		for (auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); listenerIterator++)
 		{
 			(*triggerIterator).validate();
 			(*listenerIterator)->TriggerEvent(*triggerIterator);
 		}
-		triggerEventBuffer.clear();
+	triggerEventBuffer.clear();
 }
 
 void AnnEventManager::spatialTrigger(AnnTriggerObject* sender)

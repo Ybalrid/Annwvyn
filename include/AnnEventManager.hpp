@@ -18,9 +18,9 @@
 
 //the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
-#define LISTENER public Annwvyn::AnnAbstractEventListener
+#define LISTENER public Annwvyn::AnnEventListener
 ///Macro for declaring a listener constructor
-#define constructListener() AnnAbstractEventListener() 
+#define constructListener() AnnEventListener() 
 
 namespace Annwvyn
 {
@@ -177,6 +177,7 @@ namespace Annwvyn
 		float getRelValue();
 		///Compute a float number between -1 and 1
 		float getAbsValue();
+
 	private:
 		int a, r; 
 		StickAxisId id; 
@@ -223,9 +224,14 @@ namespace Annwvyn
 		bool isCentred();
 
 	private:
-
-		///States
-		bool north, south, east, west;
+		///up
+		bool north;
+		///down
+		bool south;
+		///right
+		bool east;
+		///left
+		bool west;
 
 		friend class AnnEventManager;
 		friend class AnnStickEvent;
@@ -298,7 +304,6 @@ namespace Annwvyn
 		timerID tID;
 	};
 
-
 	///Trigger in/out event
 	class DLL AnnTriggerEvent : public AnnEvent
 	{
@@ -315,10 +320,8 @@ namespace Annwvyn
 		AnnTriggerObject* sender;
 	};
 
-
-
 	///Base class for all event listener
-	class DLL AnnAbstractEventListener 
+	class DLL AnnEventListener 
 	{
 
 		//Base Event listener class. Technicaly not abstract since it provides a default implementation for all
@@ -327,7 +330,7 @@ namespace Annwvyn
 
 	public:
 		///Construct a listener
-		AnnAbstractEventListener();
+		AnnEventListener();
 		///Event from the keyboard
 		virtual void KeyEvent(AnnKeyEvent e)			{return;}
 		///Event from the mouse
@@ -349,7 +352,7 @@ namespace Annwvyn
 
 
 	///Default event listener
-	class DLL AnnDefaultEventListener : public AnnAbstractEventListener
+	class DLL AnnDefaultEventListener : public AnnEventListener
 	{
 
 		//The default event listener that make WASD controlls move the player
@@ -397,11 +400,11 @@ namespace Annwvyn
 		///value used for trimming low joysticks value
 		float deadzone;
 		///Axes
-		enum {ax_walk, ax_straff, ax_rotate};
-		StickAxisId axes[3];
+		enum {ax_walk, ax_straff, ax_rotate, ax_size};
+		StickAxisId axes[ax_size];
 		///Buttons
-		enum {b_jump, b_run, b_console, b_debug};
-		ButtonId buttons[4];
+		enum {b_jump, b_run, b_console, b_debug, b_size};
+		ButtonId buttons[b_size];
 
 	};
 
@@ -427,20 +430,20 @@ namespace Annwvyn
 		friend class AnnEventManager;
 		///Private constructor for AnnEventManager
 		///Create a Joystick buffer object, incremetns a static counter of IDs
-		JoystickBuffer(OIS::JoyStick* joystick) : stick(joystick)
-		{id = idcounter++;}
+		JoystickBuffer(OIS::JoyStick* joystick) : stick(joystick) {id = idcounter++;}
 
 		///Delete the OIS stick at destruction time
-		~JoystickBuffer()
-		{delete stick;}
+		~JoystickBuffer() {delete stick;}
 
 		///Joystick object from OIS
 		OIS::JoyStick* stick;
+
 		///Array of "bool" for previous buttons
 		std::vector<bool> previousStickButtonStates;
+
 		///Get the ID if this stick
-		unsigned int getID()
-		{return id;}
+		unsigned int getID() {return id;}
+
 	private://mebmers
 		///The ID
 		unsigned int id;
@@ -502,11 +505,11 @@ namespace Annwvyn
 		/// That event listener is designed as an example of an event listener, and for exploring the environement without having to write a custom event listene
 		void useDefaultEventListener();
 
-		AnnAbstractEventListener* getDefaultEventListener();
+		AnnEventListener* getDefaultEventListener();
 
 		///Ad a listener to the event manager
 		/// \param listener Pointer to a listener object
-		void addListener(AnnAbstractEventListener* listener);
+		void addListener(AnnEventListener* listener);
 
 		///Remove every listener known from the EventManager. 
 		///This doesn't clear any memory
@@ -514,7 +517,7 @@ namespace Annwvyn
 
 		///Make the event manager forget about the listener
 		/// \param listener A listener object. If NULL (default), it will remove every listener form the manager (see clearListenerList())
-		void removeListener(AnnAbstractEventListener* listener = NULL);
+		void removeListener(AnnEventListener* listener = NULL);
 
 		///Create a timer that will timeout after "delay" seconds
 		timerID fireTimer(double delay);
@@ -529,7 +532,7 @@ namespace Annwvyn
 		AnnTextInputer* getTextInputer();
 
 	private:
-		std::vector<AnnAbstractEventListener*> listeners;
+		std::vector<AnnEventListener*> listeners;
 
 		friend class AnnEngine;
 		friend class AnnPhysicsEngine;

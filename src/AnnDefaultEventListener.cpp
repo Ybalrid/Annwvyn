@@ -4,7 +4,7 @@
 
 using namespace Annwvyn;
 
-AnnDefaultEventListener::AnnDefaultEventListener() : AnnAbstractEventListener(),
+AnnDefaultEventListener::AnnDefaultEventListener() : AnnEventListener(),
 	forward(KeyCode::w),
 	backward(KeyCode::s),
 	straffleft(KeyCode::a),

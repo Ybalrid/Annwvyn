@@ -285,8 +285,8 @@ void AnnEngine::openConsole()
 #pragma warning(disable:4996)
 		freopen("CONOUT$", "w", stdout);
 #pragma warning(default:4996)
-
 	}
+
 	//Redirect cerr to cout
 	std::cerr.rdbuf(std::cout.rdbuf());
 

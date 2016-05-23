@@ -7,7 +7,7 @@
 #ifndef ANN_XML_LEVEL
 #define ANN_XML_LEVEL
 #include "systemMacro.h"
-#include "AnnAbstractLevel.hpp"
+#include "AnnLevel.hpp"
 #include "tinyxml2.h"
 #include "AnnTypes.h"
 #include <string>
@@ -15,7 +15,7 @@
 namespace Annwvyn
 {
 	///A level loaded from an XML file
-	class DLL AnnXmlLevel : public AnnAbstractLevel
+	class DLL AnnXmlLevel : public AnnLevel
 	{
 	public:
 		static phyShapeType getShapeTypeFromString(std::string str);

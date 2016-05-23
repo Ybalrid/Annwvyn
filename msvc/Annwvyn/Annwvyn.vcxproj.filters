@@ -87,9 +87,6 @@
     <ClInclude Include="..\..\include\AnnQuaternion.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnAbstractLevel.hpp">
-      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnEngine.hpp">
       <Filter>Annwvyn\Core</Filter>
     </ClInclude>
@@ -186,6 +183,9 @@
     <ClInclude Include="..\..\include\OgreVRRender.hpp">
       <Filter>OgreRenderingForVR</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnLevel.hpp">
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -205,9 +205,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLogger.cpp">
       <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnAbsractLevel.cpp">
-      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
@@ -280,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\OgreVRRender.cpp">
       <Filter>OgreRenderingForVR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnLevel.cpp">
+      <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
