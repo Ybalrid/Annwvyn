@@ -116,7 +116,7 @@ public:
 		if (e.getStickID() == 0)
 		{
 			AnnStickPov pov = e.getPov(0);
-			AnnDebug() << pov.getNorth() << pov.getSouth() << pov.getEast() << pov.getWest();
+		//	AnnDebug() << pov.getNorth() << pov.getSouth() << pov.getEast() << pov.getWest();
 		}
 	}
 };
@@ -144,12 +144,16 @@ AnnMain()
 	AnnGetResourceManager()->initResources();
 
 	AnnLevel* level = new TestLevel();
-	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", level, 7.1f);
+	auto xmlLevel = new AnnXmlLevel("./level/test.xml");
+	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", xmlLevel, 7.1f);
 	splash->setBGM("media/AnnSplash.ogg");
+	
 
-	AnnGetEngine()->getLevelManager()->addLevel(splash);
-	AnnGetEngine()->getLevelManager()->addLevel(level);
-	AnnGetEngine()->getLevelManager()->jumpToFirstLevel();
+	//AnnGetEngine()->getLevelManager()->addLevel(splash);
+	AnnGetLevelManager()->addLevel(xmlLevel);
+
+	AnnGetLevelManager()->addLevel(level);
+	AnnGetLevelManager()->jumpToFirstLevel();
 
 	AnnDebug() << "Starting the render loop";
 	do	

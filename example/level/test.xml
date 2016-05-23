@@ -1,14 +1,14 @@
 <AnnLevel>
-    <Name>Test</Name>
+    <Name>test</Name>
     <ResourceLocations>
         <ResourceLocation Type="Zip" Path="CORE.zip"/>
     </ResourceLocations>
     <Player>
-        <Position X="0" Y="5" Z="5"/>
-        <Orientation Yaw="90"/>
+        <Position X="0" Y="2" Z="0"/>
+        <Orientation Yaw="45"/>
     </Player>
     <LevelContent>
-        <Object ID="d7UXdSgMPO">
+        <Object ID="mcr9DeLZTc">
             <Entity EntityName="Ground.mesh"/>
             <Position X="0" Y="0" Z="0"/>
             <Orientation X="0" Y="0" Z="0" W="1"/>
@@ -19,20 +19,36 @@
                 <Mass>0</Mass>
             </Physics>
         </Object>
-        <Object ID="gjyyfL7hSo">
+        <Object ID="O1b265jLAr">
             <Entity EntityName="male_Body.mesh"/>
-            <Position X="5" Y="10" Z="-0.75"/>
+            <Position X="0" Y="2" Z="1"/>
             <Orientation X="0" Y="0" Z="0" W="1"/>
             <Scale X="1" Y="1" Z="1"/>
             <Physics>
                 <Enabeled>1</Enabeled>
-                <Shape>box</Shape>
+                <Shape>static</Shape>
                 <Mass>80</Mass>
             </Physics>
         </Object>
     </LevelContent>
     <LevelLighting>
-        <Source X="0" Y="3" Z="3.75"/>
-        <Source X="0" Y="2.25" Z="-3.5"/>
+        <Source ID="hedothsith">
+            <Type>Point</Type>
+            <Position X="7.25" Y="2.75" Z="0"/>
+            <Direction X="0" Y="0" Z="1"/>
+            <Color R="1" G="0" B="0" A="1"/>
+        </Source>
+        <Source ID="bsttlqhetq">
+            <Type>Point</Type>
+            <Position X="3.25" Y="2.75" Z="-2.25"/>
+            <Direction X="0" Y="0" Z="1"/>
+            <Color R="1" G="0" B="0" A="1"/>
+        </Source>
+        <Source ID="GYY_DG2hkp">
+            <Type>Point</Type>
+            <Position X="0" Y="1.75" Z="11.25"/>
+            <Direction X="0" Y="0" Z="1"/>
+            <Color R="1" G="0" B="0" A="1"/>
+        </Source>
     </LevelLighting>
 </AnnLevel>
