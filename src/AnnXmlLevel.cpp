@@ -97,7 +97,8 @@ void AnnXmlLevel::load()
 	}
 
 	XMLElement* gameObject = element->FirstChildElement("Object");
-	if(gameObject) do //Iterate through all game objects 
+	if(!gameObject) AnnDebug() << "No objects declared to load.";
+	else do //Iterate through all game objects 
 	{
 		std::string entityName;
 		AnnDebug() << "Fond object to load";
@@ -161,25 +162,40 @@ void AnnXmlLevel::load()
 		levelContent.push_back(constructedGameObject);
 		
 	} while(gameObject = gameObject->NextSiblingElement());
-	else AnnDebug() << "No objects declared to load.";
 
 	element = level->FirstChildElement("LevelLighting");
 	if(!element) AnnDebug() << "No lights declared";
 	else
 	{
-		float x,y,z;
+		float x, y, z, dx, dy, dz, r, g, b, a;
+		std::string lightType;
 		XMLElement* source = element->FirstChildElement("Source");
 		if(source) do
 		{
 			std::string lightID = source->Attribute("ID");
 
 			XMLElement* position = source->FirstChildElement("Position");
+			XMLElement* color = source->FirstChildElement("Color");
+			XMLElement* type = source->FirstChildElement("Type");
+			XMLElement* direction = source->FirstChildElement("Direction");
+
 			position->QueryFloatAttribute("X", &x);
 			position->QueryFloatAttribute("Y", &y);
 			position->QueryFloatAttribute("Z", &z);
+			direction->QueryFloatAttribute("X", &dx);
+			direction->QueryFloatAttribute("Y", &dy);
+			direction->QueryFloatAttribute("Z", &dz);
+			color->QueryFloatAttribute("R", &r);
+			color->QueryFloatAttribute("G", &g);
+			color->QueryFloatAttribute("B", &b);
+			color->QueryFloatAttribute("A", &a);
+			lightType = type->GetText();
 
 			AnnLightObject* lightSource = addLightObject(lightID);
 			lightSource->setPosition(AnnVect3(x, y, z));
+			lightSource->setType(AnnLightObject::getLightTypeFromString(lightType));
+			lightSource->setDirection(AnnVect3(dx, dy, dz));
+			lightSource->setDiffuseColor(AnnColor(r,g,b,a));
 		}while (source = source->NextSiblingElement());
 	}
 

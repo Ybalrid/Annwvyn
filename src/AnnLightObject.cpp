@@ -8,6 +8,14 @@ AnnLightObject::AnnLightObject(Ogre::Light* light) :
 {
 }
 
+AnnLightObject::LightTypes Annwvyn::AnnLightObject::getLightTypeFromString(std::string ltype)
+{
+	if (ltype == "Point") return ANN_LIGHT_POINT;
+	if (ltype == "Spotlight") return ANN_LIGHT_SPOTLIGHT;
+	if (ltype == "Directional") return ANN_LIGHT_DIRECTIONAL;
+	return ANN_LIGHT_POINT;
+}
+
 void AnnLightObject::setPosition(AnnVect3 position)
 {
 	light->setPosition(position);
