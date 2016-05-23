@@ -68,7 +68,7 @@
 #include "AnnAudioEngine.hpp"
 #include "AnnEventManager.hpp"
 #include "AnnLogger.hpp"
-#include "AnnAbstractLevel.hpp"
+#include "AnnLevel.hpp"
 #include "AnnXmlLevel.hpp"
 #include "AnnSplashLevel.hpp"
 #include "AnnFilesystem.hpp"

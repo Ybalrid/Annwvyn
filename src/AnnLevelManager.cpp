@@ -28,7 +28,7 @@ void AnnLevelManager::jump(size_t levelId)
 	current->load();
 }
 
-void AnnLevelManager::jump(AnnAbstractLevel* level)
+void AnnLevelManager::jump(AnnLevel* level)
 {
 	for(size_t i(0); i < levelList.size(); i++)
 		if(levelList[i] == level)
@@ -38,7 +38,7 @@ void AnnLevelManager::jump(AnnAbstractLevel* level)
 		}
 }
 
-void AnnLevelManager::addLevel(AnnAbstractLevel* level)
+void AnnLevelManager::addLevel(AnnLevel* level)
 {
 	if(!level) return;
 	levelList.push_back(level);

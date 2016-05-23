@@ -5,7 +5,7 @@
 
 using namespace Annwvyn;
 
-AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, AnnAbstractLevel* nextLevel, float timeoutTime) : constructLevel(),
+AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, AnnLevel* nextLevel, float timeoutTime) : constructLevel(),
 	next(nextLevel),
 	timeout(timeoutTime*1000),
 	currentTime(0),
@@ -125,7 +125,7 @@ void AnnSplashLevel::runLogic()
 void AnnSplashLevel::unload()
 {
 	//Normal level unload
-	AnnAbstractLevel::unload();
+	AnnLevel::unload();
 
 	AnnDebug() << "Removing object from scene" ;
 	auto smgr(AnnGetEngine()->getSceneManager());
@@ -139,7 +139,7 @@ void AnnSplashLevel::unload()
 	AnnGetSceneryManager()->setWorldBackgroundColor();
 }
 
-void AnnSplashLevel::setNextLevel(AnnAbstractLevel* level)
+void AnnSplashLevel::setNextLevel(AnnLevel* level)
 {
 	next = level;
 }

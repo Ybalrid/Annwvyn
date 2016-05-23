@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "myLevel.hpp"
 
-MyLevel::MyLevel() : AnnAbstractLevel()
+MyLevel::MyLevel() : constructLevel()
 {
 }
 

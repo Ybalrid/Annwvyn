@@ -24,7 +24,7 @@ public:
 	}
 };
 
-class TestLevel : public AnnAbstractLevel
+class TestLevel : LEVEL
 {
 public:
 	///Construct the Level : 

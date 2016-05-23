@@ -8,17 +8,17 @@
 #define ANN_SPLASH
 
 #include "systemMacro.h"
-#include "AnnAbstractLevel.hpp"
+#include "AnnLevel.hpp"
 
 namespace Annwvyn
 {
 	///"Level" that display an image on a giant plane, then jump to another level after a timeout
-	class DLL AnnSplashLevel : public AnnAbstractLevel
+	class DLL AnnSplashLevel : public AnnLevel
 	{
 	public:
 		///Construct a SplashLevel.
 		///\param splashTexture Name of the resource (image) to put in front of the player
-		AnnSplashLevel(Ogre::String splashTexture, AnnAbstractLevel* nextLevel = nullptr, float timeoutTime = 10);
+		AnnSplashLevel(Ogre::String splashTexture, AnnLevel* nextLevel = nullptr, float timeoutTime = 10);
 		
 		///Load the level. This create a manual material and a manual object to present the splash image
 		void load();
@@ -33,7 +33,7 @@ namespace Annwvyn
 		void setBGM(std::string path, bool preload = true);
 
 		///Set the level to jump to after timeout
-		void setNextLevel(AnnAbstractLevel* level);
+		void setNextLevel(AnnLevel* level);
 
 		///Set timeout time in seconds
 		void setTimeout(float time);
@@ -45,7 +45,7 @@ namespace Annwvyn
 		float timeout, currentTime, startTime;
 
 		///Pointer to the next level to load
-		AnnAbstractLevel* next;
+		AnnLevel* next;
 
 		///The plane that present the object
 		Ogre::ManualObject* CurvedPlane;

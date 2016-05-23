@@ -95,7 +95,7 @@
       <FileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\AnnEventManager.hpp</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Annwvyn::AnnAbstractEventListener">
+  <Class Name="Annwvyn::AnnEventListener">
     <Position X="10" Y="26.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AABgAAAAAAAAAAAAAIAAAABBEAAAAAABAAAAAAGAAAA=</HashCode>
@@ -261,11 +261,11 @@
       <Field Name="next" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Annwvyn::AnnAbstractLevel">
+  <Class Name="Annwvyn::AnnLevel">
     <Position X="6.75" Y="16.5" Width="4.75" />
     <TypeIdentifier>
       <HashCode>AIgAAAAAAMAAAAEAAAAAAQEIAEAEAAAAAAAAIgAAQAA=</HashCode>
-      <FileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\AnnAbstractLevel.hpp</FileName>
+      <FileName>C:\Oculus\AnnwvynSDK64_2015\Annwvyn\include\AnnLevel.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Annwvyn::AnnXmlLevel">

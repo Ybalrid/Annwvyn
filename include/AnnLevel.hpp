@@ -1,5 +1,5 @@
 /**
-* \file AnnAbstractLevel.hpp
+* \file AnnLevel.hpp
 * \brief Pure virtual class that represent a level
 *        AnnLevelManager class only handle object that derive from this class
 You need to overload at least the load() and runLogic() methods to create a level.
@@ -9,32 +9,32 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANN_ABSTRACTLEVEL
-#define ANN_ABSTRACTLEVEL
+#ifndef ANN_LEVEL
+#define ANN_LEVEL
 
 #include <unordered_map>
 
 #include "AnnTypes.h"
 #include "AnnTriggerObject.hpp"
-#define LEVEL public Annwvyn::AnnAbstractLevel
-#define constructLevel() AnnAbstractLevel()
+#define LEVEL public Annwvyn::AnnLevel
+#define constructLevel() AnnLevel()
 #define noID "noID"
 #define defaultIdLen 15
 
 namespace Annwvyn
 {
-	///Base class for all Levels
-	class DLL AnnAbstractLevel
+	///Base class for all Levels. Is absrtract
+	class DLL AnnLevel
 	{
 	public:
 		///Construct the level 
-		AnnAbstractLevel();
+		AnnLevel();
 
 		///Pure virtual methods that loads the level
 		virtual void load() = 0;
 
 		///Destroy the level
-		virtual ~AnnAbstractLevel();
+		virtual ~AnnLevel();
 
 		///Unload the level by destroying every objects in "levelContent" and every lights in "levelLighting"
 		virtual void unload();

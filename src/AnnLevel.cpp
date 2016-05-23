@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "AnnAbstractLevel.hpp"
+#include "AnnLevel.hpp"
 #include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
-AnnAbstractLevel::AnnAbstractLevel()
+AnnLevel::AnnLevel()
 {
 	AnnDebug() << "A level has been created";
 }
 
-AnnAbstractLevel::~AnnAbstractLevel()
+AnnLevel::~AnnLevel()
 {
 	unload();
 	AnnDebug() << "Destroying a level";
 }
 
-void AnnAbstractLevel::unload()
+void AnnLevel::unload()
 {
 	//Remove background music
 	AnnGetAudioEngine()->stopBGM();
@@ -44,7 +44,7 @@ void AnnAbstractLevel::unload()
 	levelTriggerIdMap.clear();
 }
 
-AnnLightObject* AnnAbstractLevel::addLightObject(std::string id)
+AnnLightObject* AnnLevel::addLightObject(std::string id)
 {
 	AnnLightObject* light (AnnGetGameObjectManager()->createLightObject());
 	levelLighting.push_back(light);
@@ -52,7 +52,7 @@ AnnLightObject* AnnAbstractLevel::addLightObject(std::string id)
 	return light;
 }
 
-AnnGameObject* AnnAbstractLevel::addGameObject(std::string entityName, std::string id)
+AnnGameObject* AnnLevel::addGameObject(std::string entityName, std::string id)
 {
 	AnnGameObject* object(AnnGetGameObjectManager()->createGameObject(entityName.c_str()));
 	object->setID(id);
@@ -61,7 +61,7 @@ AnnGameObject* AnnAbstractLevel::addGameObject(std::string entityName, std::stri
 	return object;
 }
 
-AnnTriggerObject* AnnAbstractLevel::addTrggerObject(AnnTriggerObject* obj , std::string id)
+AnnTriggerObject* AnnLevel::addTrggerObject(AnnTriggerObject* obj , std::string id)
 {
 	AnnGetGameObjectManager()->createTriggerObject(obj);
 	levelTrigger.push_back(obj);
@@ -69,7 +69,7 @@ AnnTriggerObject* AnnAbstractLevel::addTrggerObject(AnnTriggerObject* obj , std:
 	return obj;
 }
 
-std::string AnnAbstractLevel::generateRandomID(size_t len)
+std::string AnnLevel::generateRandomID(size_t len)
 {
 	std::string id;
 	std::string buffer = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
