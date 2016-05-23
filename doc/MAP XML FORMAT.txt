@@ -1,0 +1,48 @@
+AnnLevel
+    |
+	+ Name
+	|
+	|
+	+ ResourceLocations
+	|       |
+	|       (- ResourceLocation (Type, Path))
+	|
+	|
+	+ Player
+	|    |
+	|    + Position (X,Y,Z)
+	|    |
+	|    - Orientation (Yaw)
+	|
+	|
+	+ LevelContent
+	|	    |
+	|	    + Object (ID)
+	|		   	|
+	|		   	+ Entity
+	|	   	   	|
+	|	   		+ Position	
+	|	   		|
+	|	   		+ Orientation	
+	|	   		|
+	|	   		+ Scale	
+	|	   		|
+	|	   		- Physics
+	|				 | 
+	|				 + Enabeled [0/1]
+	|				 | 
+	|				 + Shape [nameOfShape]
+	|				 | 
+	|				 + Mass [number]
+	|
+	- LevelLighting
+			|
+			- Source (ID)
+				|
+				+ Type
+				|
+				+ Position
+				|
+				+ Direction
+				|
+				- Color
