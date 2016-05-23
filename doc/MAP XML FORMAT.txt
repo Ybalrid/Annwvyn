@@ -4,36 +4,36 @@ AnnLevel
 	|
 	|
 	+ ResourceLocations
-	|       |
-	|       (- ResourceLocation (Type, Path))
+	|		|
+	|		(- ResourceLocation (Type, Path))
 	|
 	|
 	+ Player
-	|    |
-	|    + Position (X,Y,Z)
-	|    |
-	|    - Orientation (Yaw)
+	|	|
+	|	+ Position (X,Y,Z)
+	|	|
+	|	- Orientation (Yaw)
 	|
 	|
 	+ LevelContent
-	|	    |
-	|	    + Object (ID)
-	|		   	|
-	|		   	+ Entity
-	|	   	   	|
-	|	   		+ Position	
-	|	   		|
-	|	   		+ Orientation	
-	|	   		|
-	|	   		+ Scale	
-	|	   		|
-	|	   		- Physics
-	|				 | 
-	|				 + Enabeled [0/1]
-	|				 | 
-	|				 + Shape [nameOfShape]
-	|				 | 
-	|				 + Mass [number]
+	|		|
+	|		+ Object (ID)
+	|			|
+	|			+ Entity
+	|			|
+	|			+ Position	
+	|			|
+	|			+ Orientation	
+	|			|
+	|			+ Scale	
+	|			|
+	|			- Physics
+	|				| 
+	|				+ Enabeled [0/1]
+	|				| 
+	|				+ Shape [nameOfShape]
+	|				| 
+	|				+ Mass [number]
 	|
 	- LevelLighting
 			|
