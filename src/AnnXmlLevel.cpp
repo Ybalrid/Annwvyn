@@ -157,6 +157,7 @@ void AnnXmlLevel::load()
 		phyInfo = physics->FirstChildElement("Shape");
 		if(!phyInfo) continue;
 		shape = phyInfo->GetText();
+		if (shape == "static") mass = 0; //this case is weird. Static stuff have allways been static, even with mass. Need to see if bullet has changed stuff
 		constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
 
 		levelContent.push_back(constructedGameObject);
@@ -231,4 +232,7 @@ void AnnXmlLevel::load()
 	AnnGetPlayer()->resetPlayerPhysics();
 }
 
-void AnnXmlLevel::runLogic(){}
+void AnnXmlLevel::runLogic()
+{
+	return;
+}
