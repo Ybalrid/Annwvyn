@@ -17,7 +17,7 @@ AnnLevel
 	|
 	+ LevelContent
 	|		|
-	|		+ Object (ID)
+	|		(+ Object (ID))
 	|			|
 	|			+ Entity
 	|			|
@@ -37,7 +37,7 @@ AnnLevel
 	|
 	- LevelLighting
 			|
-			- Source (ID)
+			(- Source (ID))
 				|
 				+ Type
 				|
