@@ -35,7 +35,7 @@ But, if you really want to build the engine yourself, here's a simple guide how 
 - hit Ctrl+Shift+B
 - Open Annwvyn/msvc/test/test.sln
 - hit Ctrl+Shift+B
-- You need to copy a bunch of .dll in the "example" (and template) directories
+- You need to copy a bunch of .dll in the "example" (and template) directories. You can do this automatically by launching the "getLibs.bat" scripts
     - Ogre  
         - OgreMain.dll
         - OgreOverlay.dll  
