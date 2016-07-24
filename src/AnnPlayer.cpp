@@ -10,7 +10,7 @@ bodyParams::bodyParams()
 	//these parameters looks good for testing. Costumise them before initializing the physics!
 	eyeHeight = 1.59f;
 	walkSpeed = 3;
-	turnSpeed = 0.5f;
+	turnSpeed = 0.15f;
 	mass = 80.0f;
 	Position = AnnVect3(0, 0, 10);
 	HeadOrientation = AnnQuaternion(1, 0, 0, 0);
