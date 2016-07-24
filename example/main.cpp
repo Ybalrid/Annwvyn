@@ -131,30 +131,33 @@ AnnMain()
 	
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
-	AnnGetPhysicsEngine()->setDebugPhysics(false);
+	AnnGetPhysicsEngine()->setDebugPhysics(true);
 
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetVRRenderer()->recenter();
 	AnnGetEngine()->getEventManager()->addListener(new DebugListener);
-	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
 
 	//load ressources
 	AnnGetResourceManager()->loadDir("media/environement");
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
 
+	AnnDebug() << "Sleeping...";
+
 	AnnLevel* level = new TestLevel();
+	AnnGetLevelManager()->addLevel(level);
+
 	auto xmlLevel = new AnnXmlLevel("./level/test.xml");
+	AnnGetLevelManager()->addLevel(xmlLevel);
+	
 	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", xmlLevel, 7.1f);
 	splash->setBGM("media/AnnSplash.ogg");
-	
+	AnnGetEngine()->getLevelManager()->addLevel(splash);
+	AnnGetLevelManager()->jump(splash);
 
-	//AnnGetEngine()->getLevelManager()->addLevel(splash);
-	AnnGetLevelManager()->addLevel(xmlLevel);
 
-	AnnGetLevelManager()->addLevel(level);
-	AnnGetLevelManager()->jumpToFirstLevel();
 
+	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
 	AnnDebug() << "Starting the render loop";
 	do	
 	{

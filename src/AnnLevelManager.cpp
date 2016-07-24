@@ -26,6 +26,7 @@ void AnnLevelManager::jump(size_t levelId)
 		current->unload();
 	current = levelList[levelId];
 	current->load();
+	Sleep(10);
 }
 
 void AnnLevelManager::jump(AnnLevel* level)

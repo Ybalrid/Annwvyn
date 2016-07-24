@@ -463,7 +463,11 @@ void OgreOculusRender::calculateProjectionMatrix()
 
 ovrSessionStatus OgreOculusRender::getSessionStatus()
 {
-	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
+	if (currentSessionStatusFrameIndex != frameCounter)
+	{
+		ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
+		currentSessionStatusFrameIndex = frameCounter;
+	}
 	return sessionStatus;
 }
 
@@ -515,7 +519,7 @@ void OgreOculusRender::updateTracking()
 
 	//Get the tracking state 
 	ts = ovr_GetTrackingState(Oculus->getSession(), 
-		currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), 0),
+		currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), frameCounter++),
 		ovrTrue);
 	
 	//Calculate delta between last and this frame
@@ -582,7 +586,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 
 	//Submit the frame 
 	ovr_CommitTextureSwapChain(Oculus->getSession(), textureSwapChain);
-	ovr_SubmitFrame(Oculus->getSession(), 0, nullptr, &layers, 1);
+	ovr_SubmitFrame(Oculus->getSession(), frameCounter, nullptr, &layers, 1);
 
 	//Update the render mirrored view
 	if(window->isVisible())
@@ -597,4 +601,6 @@ void OgreOculusRender::renderAndSubmitFrame()
 		debugViewport->update();
 		window->update();
 	}
+	//Pause
+	Sleep(1);
 }

@@ -222,6 +222,9 @@ class DLL OgreOculusRender : public OgreVRRender
 		///Index of the current texture in the textureSwapChain
 		int currentIndex;
 
+		///Frame index of the current session status
+		unsigned long long int currentSessionStatusFrameIndex;
+
     public:
 		///Position of the rift at the last frame
         Ogre::Vector3 lastOculusPosition;

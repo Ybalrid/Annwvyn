@@ -149,6 +149,9 @@ protected:
 	///Cameras that have to be put where the user's eye is
 	Ogre::Camera* eyeCameras[2];
 
+	///Counter of frames
+	unsigned long long int frameCounter;
+
 	private:
 
 };
