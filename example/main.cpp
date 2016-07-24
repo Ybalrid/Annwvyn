@@ -131,7 +131,7 @@ AnnMain()
 	
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
-	AnnGetPhysicsEngine()->setDebugPhysics(true);
+	AnnGetPhysicsEngine()->setDebugPhysics(false);
 
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetVRRenderer()->recenter();
