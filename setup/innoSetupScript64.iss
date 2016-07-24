@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AnnwvynSDK64"
-#define MyAppVersion "0.2.2"
+#define MyAppVersion "0.2.3"
 #define MyAppPublisher "Arthur (Ybalrid) Brainville"
 #define MyAppURL "http://annwvyn.org/"
 
@@ -25,7 +25,7 @@ AllowNoIcons=yes
 LicenseFile=C:\Oculus\AnnwvynSDK64\Annwvyn\LICENSE
 InfoAfterFile=C:\Oculus\AnnwvynSDK64\README.TXT
 OutputDir=C:\Oculus\AnnwvynSetup64
-OutputBaseFilename=setupAnnwvynSDKx64
+OutputBaseFilename=setupAnnwvynSDKx64 
 Compression=lzma
 SolidCompression=yes
 
