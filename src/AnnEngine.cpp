@@ -60,14 +60,21 @@ AnnEngine::AnnEngine(const char title[]) :
 	renderer->showDebug(OgreVRRender::DebugMode::MONOSCOPIC);
 
 	log("Setup Annwvyn's subsystems");
+
+	//Element on this list will be updated in order by the engine each frame
 	SubSystemList.push_back(levelManager = new AnnLevelManager);
 	SubSystemList.push_back(gameObjectManager = new AnnGameObjectManager);
-	SubSystemList.push_back(physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers));
+
+	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
+	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers);
 	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
+	SubSystemList.push_back(physicsEngine);
+
 	SubSystemList.push_back(audioEngine = new AnnAudioEngine);
 	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
 	SubSystemList.push_back(resourceManager = new AnnResourceManager);
 	SubSystemList.push_back(sceneryManager = new AnnSceneryManager(renderer));
+
 
 	renderer->initClientHmdRendering();
 	povNode = renderer->getCameraInformationNode();
