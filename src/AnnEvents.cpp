@@ -374,6 +374,8 @@ AnnStickPov AnnStickEvent::getPov(PovId pov)
 {
 	if (pov < getNbPov())
 		return povs[pov];
+	AnnStickPov p;
+	return p;
 }
 
 size_t AnnStickEvent::getNbPov()

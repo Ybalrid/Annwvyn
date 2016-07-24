@@ -63,7 +63,8 @@ AnnGameObject * AnnGameObjectManager::createGameObject(const char entityName[], 
 	obj->setNode(node);
 	obj->setEntity(ent);
 	obj->audioSource = AnnGetAudioEngine()->createSource();
-	obj->setBulletDynamicsWorld(AnnGetPhysicsEngine()->getWorld());
+	if (AnnGetPhysicsEngine())
+		obj->setBulletDynamicsWorld(AnnGetPhysicsEngine()->getWorld());
 	obj->postInit(); //Run post init directives
 
 	Objects.push_back(obj); //keep addreAnnDebug() in list

@@ -244,6 +244,9 @@ void AnnPlayer::engineUpdate(float deltaTime)
 {
 	if(ignorePhysics) return;
 	updateTime = deltaTime;
+	//AnnDebug() << "player update delta = " << deltaTime;
+	//if (getBody()) AnnDebug() << "player has rigidbody";
+
 	if(getBody())
 	{
 		applyAnalogYaw();

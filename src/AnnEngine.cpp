@@ -5,8 +5,6 @@ using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(NULL);
 AnnConsole* AnnEngine::onScreenConsole(NULL);
-std::stringstream oss;
-std::streambuf* old = nullptr;
 
 AnnEngine* AnnEngine::Instance()
 {

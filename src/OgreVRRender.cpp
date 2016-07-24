@@ -14,7 +14,8 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	farClippingDistance(4000.0f),
 	headNode(nullptr),
 	backgroundColor(0, 0.56f, 1),
-	name(windowName)
+	name(windowName),
+	frameCounter(0)
 {
 	if (self)
 	{
