@@ -41,13 +41,19 @@ AnnAudioEngine::~AnnAudioEngine()
 
 void AnnAudioEngine::detectPlaybackDevices(const char *list)
 {
+	//If list not null or fist character end of string
 	if (!list || *list == '\0')
 		AnnDebug("    !!! none !!!\n");
-	else do {
-		AnnDebug() << "detected device : " << std::string(list);
-		detectedDevices.push_back(std::string(list));
-		list += strlen(list) + 1;
-	} while (*list != '\0');
+	else do 
+	{
+		//Get the first string from the list
+		std::string deviceName(list);
+		
+		AnnDebug() << "detected device : " << deviceName;
+		detectedDevices.push_back(deviceName);
+		
+		list += strlen(list) + 1; //This avance the sart of the string after the end of the current one, because sizeof(char) = 1
+	} while (*list != '\0');//End of the list is marked by \0\0 instead of \0
 }
  
 
@@ -57,16 +63,18 @@ bool AnnAudioEngine::initOpenAL()
 	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
 		&& AnnGetVRRenderer()->usesCustomAudioDevice())
 	{
+		AnnDebug() << "This implementation of OpenAL support Audio Device enumeration, and the current VR renderer hint to use a specific audio device.";
 		AnnDebug() << "Enumerating audio devices : ";
 		detectPlaybackDevices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER));
 		bool gotDevice(false);
 		for (std::string deviceName : detectedDevices)
 		{
-			AnnDebug() << "Checking device : " << deviceName << " as Rift Audio";
+			AnnDebug() << "VR device uses this identifier substring : " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString();
+			AnnDebug() << "Checking device : " << deviceName << " as " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString();
 			if (deviceName.
 				find(AnnGetVRRenderer()->getAudioDeviceIdentifierSubString()) != std::string::npos)
 			{
-				AnnDebug() << "Found Oculus Rift Audio Device!";
+				AnnDebug() << "Found " << deviceName << " as " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString() << " Device!";
 				Device = alcOpenDevice(deviceName.c_str());
 				gotDevice = true;
 				break;
