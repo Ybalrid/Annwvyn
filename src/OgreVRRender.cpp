@@ -15,7 +15,8 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	headNode(nullptr),
 	backgroundColor(0, 0.56f, 1),
 	name(windowName),
-	frameCounter(0)
+	frameCounter(0),
+	AALevel(16U)
 {
 	if (self)
 	{
@@ -67,6 +68,8 @@ void OgreVRRender::initOgreRoot(std::string loggerName)
 {
 	//Create the ogre root with standards Ogre configuration file
 	root = new Ogre::Root("", "ogre.cfg", loggerName.c_str());
+
+	//Set the log verbosity to "bore me" 
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LoggingLevel::LL_BOREME);
 }
 

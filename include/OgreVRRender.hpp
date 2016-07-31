@@ -152,6 +152,9 @@ protected:
 	///Counter of frames
 	unsigned long long int frameCounter;
 
+	///Anti Aliasing level
+	Ogre::uint AALevel;
+
 	private:
 
 };
