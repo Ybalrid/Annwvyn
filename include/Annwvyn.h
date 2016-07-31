@@ -63,6 +63,7 @@
 
 //Annwvyn classes
 #include "AnnEngine.hpp"
+#include "AnnGameObjectManager.hpp"
 #include "AnnGameObject.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnAudioEngine.hpp"
@@ -79,6 +80,7 @@
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 
+///Annwvyn initialization macro 
 #define AnnInit(AppName) new AnnEngine(AppName)
 
 //===================Application Entrypoint definition=================//

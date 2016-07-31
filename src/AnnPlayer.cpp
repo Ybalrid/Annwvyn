@@ -35,7 +35,6 @@ AnnPlayer::AnnPlayer()
 	analogStraff = 0;
 	analogRotate = 0;
 	
-	frameCount = 0;
 	standing = true;
 	updateTime = 0;
 	physics = false;
@@ -231,6 +230,7 @@ void Annwvyn::AnnPlayer::resetPlayerPhysics()
 
 	//We don't need that body anymore...
 	delete getBody();
+
 	//prevent memory access to unallocated address
 	setBody(NULL);
 
@@ -244,8 +244,6 @@ void AnnPlayer::engineUpdate(float deltaTime)
 {
 	if(ignorePhysics) return;
 	updateTime = deltaTime;
-	//AnnDebug() << "player update delta = " << deltaTime;
-	//if (getBody()) AnnDebug() << "player has rigidbody";
 
 	if(getBody())
 	{
@@ -257,15 +255,11 @@ void AnnPlayer::engineUpdate(float deltaTime)
 	actuator->actuate(deltaTime);
 	
 	//get back position data from physics engine
-	if(getBody())
+	if (getBody())
 	{
-		setPosition(
-			AnnVect3(getBody()->getCenterOfMassPosition())
-			+
-			AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation())
-			*
-			AnnVect3(0,getEyesHeight()/2,0)
-			);
+		setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) +
+					AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation()) *
+					AnnVect3(0, getEyesHeight() / 2, 0));
 	}
 }
 

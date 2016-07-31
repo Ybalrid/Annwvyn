@@ -73,6 +73,15 @@
     <Filter Include="OgreRenderingForVR\Oculus">
       <UniqueIdentifier>{d83246f2-30b0-4dc4-96c9-644b2e03f8a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\Core\AnnEngine">
+      <UniqueIdentifier>{e7f30595-e00c-4e76-b1ea-26e781f0c81e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\Core\Utility">
+      <UniqueIdentifier>{e54df639-44cf-4c18-aa40-4b5902e011f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\Core\DataTypes">
+      <UniqueIdentifier>{3f866286-f886-4410-92d8-dc30cc4850c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -87,9 +96,6 @@
     <ClInclude Include="..\..\include\AnnQuaternion.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnEngine.hpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnEventManager.hpp">
       <Filter>Annwvyn\SubSystems\EventSystem</Filter>
     </ClInclude>
@@ -99,9 +105,6 @@
     <ClInclude Include="..\..\include\AnnLevelManager.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnLogger.hpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnPhysicsEngine.hpp">
       <Filter>Annwvyn\SubSystems\Physics&amp;Collision</Filter>
     </ClInclude>
@@ -110,15 +113,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\AnnXmlLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnTypes.h">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnErrorCode.hpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\systemMacro.h">
-      <Filter>Annwvyn\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\tinyxml2.h">
       <Filter>Internaly packaged libraries\tinyxml2</Filter>
@@ -134,9 +128,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
       <Filter>Annwvyn\SubSystems\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\AnnColor.hpp">
-      <Filter>Annwvyn\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnSubsystem.hpp">
       <Filter>Annwvyn\SubSystems</Filter>
@@ -186,6 +177,24 @@
     <ClInclude Include="..\..\include\AnnLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnEngine.hpp">
+      <Filter>Annwvyn\Core\AnnEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnErrorCode.hpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnTypes.h">
+      <Filter>Annwvyn\Core\DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnColor.hpp">
+      <Filter>Annwvyn\Core\DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnLogger.hpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\systemMacro.h">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -197,14 +206,8 @@
     <ClCompile Include="..\..\src\AnnVect3.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnEngine.cpp">
-      <Filter>Annwvyn\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnLevelManager.cpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnLogger.cpp">
-      <Filter>Annwvyn\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
@@ -232,9 +235,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\BtOgre.cpp">
       <Filter>Internaly packaged libraries\BtOgre</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\AnnColor.cpp">
-      <Filter>Annwvyn\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSubSystem.cpp">
       <Filter>Annwvyn\SubSystems</Filter>
@@ -280,6 +280,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLevel.cpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnEngine.cpp">
+      <Filter>Annwvyn\Core\AnnEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnLogger.cpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnColor.cpp">
+      <Filter>Annwvyn\Core\DataTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
