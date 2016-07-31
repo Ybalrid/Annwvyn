@@ -32,7 +32,7 @@ namespace Annwvyn
 		AnnConsole();
 
 		///Add text to the console buffer. The console buffer will keep CONSOLE_BUFFER lines of messages in memory only
-		/// \pram string text to append to the console
+		/// \param string text to append to the console
 		void append(std::string string);
 
 		///Set arbitrary the visibility state of the console
@@ -51,23 +51,45 @@ namespace Annwvyn
 	private:
 		///This peice of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs 
 		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l',  bool wordwrap = true);
+		
+		///True if content of the buffer has been modified
 		bool modified;
-		//////////////////////////////
-
+		
+		///Array of 3D points to construct the render plane
 		AnnVect3 points[4];
+
+		///Array of UV coordinates to construd the render plane
 		AnnVect2 textCoord[4];
 
+		///Buffer of string objects
 		std::string buffer[CONSOLE_BUFFER];
-		bool visibility;
+
+		///The surface used to display (aka the render plane)
 		Ogre::ManualObject* displaySurface;
-		Ogre::TexturePtr displayTexture;
+
+		///Node where the console is attached
 		Ogre::SceneNode* consoleNode;
 
+		///The actual texture of the dispaly 
 		Ogre::TexturePtr texture;
-		Ogre::FontPtr font;
+
+		///Position of the plane using the camera as reference
+		AnnVect3 offset;
+
+		///Background texutre, should be a random PNG file from the CORE resources
 		Ogre::TexturePtr background; 
 
-		AnnVect3 offset;
+		///OpenGL Texture IDs, to use glCopyImageSubData to clone texture quickly. 
+		GLuint backgroundID, textureID;
+
+		///The class contructor will check if the current render system is OpenGL, if so, this will be 'true'
+		bool usingOpenGL;
+
+		///The font object used, should be Vera Mono in true type format from the Gnome project, included in CORE resources
+		Ogre::FontPtr font;
+
+		///If false, the console is not visible
+		bool visibility;
 	};
 }
 

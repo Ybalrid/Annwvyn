@@ -140,6 +140,8 @@ void OgreOculusRender::getOgreConfig()
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
 	root->getRenderSystem()->setFixedPipelineEnabled(true);
+	root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
+	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 }
 
 void OgreOculusRender::createWindow()
@@ -153,6 +155,7 @@ void OgreOculusRender::createWindow()
 
 	Ogre::NameValuePairList misc;
 	misc["vsync"] = "false"; //This vsync parameter has no scence in VR. The display is done by the Compositor
+	//misc["FSAA"] = std::to_string(AALevel);
 	misc["top"] = "0";
 	misc["left"] = "0";
 	root->initialise(false);
@@ -322,7 +325,7 @@ void OgreOculusRender::initRttRendering()
 	//Create the Ogre equivalent of the texture as a render target for Ogre
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 	Ogre::TexturePtr rtt_texture(textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+		Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, false));
 
 	//Save the texture id for low-level GL call on the texture during render
 	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0, 0)->getRenderTarget();
@@ -332,6 +335,7 @@ void OgreOculusRender::initRttRendering()
 	//Create viewports on the texture to render the eyeCameras
 	vpts[left]  = rttEyes->addViewport(eyeCameras[left ], 0,    0, 0, 0.5f);
 	vpts[right] = rttEyes->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f);
+
 
 	changeViewportBackgroundColor(backgroundColor);
 	
