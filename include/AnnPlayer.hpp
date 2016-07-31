@@ -187,15 +187,20 @@ namespace Annwvyn
 		///Apply yaw from analog value
 		void applyAnalogYaw();
 
-		unsigned long int frameCount;
-
+		///time lengh of the frame 
 		double updateTime;
 
+		///Player body physics enabled
 		bool physics;
 
+		///PlayerActuator to use
 		AnnPlayerActuator* actuator;
+
 	public:
+
+		///Turning that off bypass the physics code. Cool for menu scene or weird manipulation of the player object
 		bool ignorePhysics;
+		
 		///Waling state. Forward Backward Left Right
 		bool walking[4];
 

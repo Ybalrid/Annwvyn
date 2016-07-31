@@ -101,7 +101,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	log("===================================================", false);
 }
 
-void Annwvyn::AnnEngine::destroyAllSubSystem()
+void AnnEngine::destroyAllSubSystem()
 {
 	//Destroy all SubSystems
 	for (auto SubSystem : SubSystemList)
@@ -153,13 +153,13 @@ AnnGameObjectManager * AnnEngine::getGameObjectManager()
 	return gameObjectManager;
 }
 
-AnnSceneryManager * Annwvyn::AnnEngine::getSceneryManager()
+AnnSceneryManager * AnnEngine::getSceneryManager()
 {
 	if (!canAccessSubSystems) return nullptr;
 	return sceneryManager;
 }
 
-OgreVRRender * Annwvyn::AnnEngine::getVRRenderer()
+OgreVRRender * AnnEngine::getVRRenderer()
 {
 	return renderer;
 }
