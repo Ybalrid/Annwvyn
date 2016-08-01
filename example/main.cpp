@@ -11,7 +11,6 @@
 //Annwvyn
 #include <Annwvyn.h>
 #include "TestLevel.hpp"
-#include <AnnSplashLevel.hpp>
 
 using namespace std;
 using namespace Annwvyn;
@@ -135,16 +134,13 @@ AnnMain()
 
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetVRRenderer()->recenter();
-	AnnGetEngine()->getEventManager()->addListener(new DebugListener);
 
 	//load ressources
 	AnnGetResourceManager()->loadDir("media/environement");
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
 
-	AnnDebug() << "Sleeping...";
-
-	AnnLevel* level = new TestLevel();
+	auto level = new TestLevel();
 	AnnGetLevelManager()->addLevel(level);
 
 	auto xmlLevel = new AnnXmlLevel("./level/test.xml");
@@ -155,9 +151,6 @@ AnnMain()
 	AnnGetEngine()->getLevelManager()->addLevel(splash);
 	AnnGetLevelManager()->jump(splash);
 
-
-
-	demoTimer = AnnGetEngine()->getEventManager()->fireTimer(10);
 	AnnDebug() << "Starting the render loop";
 	do	
 	{
