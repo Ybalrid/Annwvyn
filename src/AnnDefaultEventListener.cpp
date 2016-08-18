@@ -100,7 +100,7 @@ void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 //The stick event contain all the data for a specific joystick. In includes buttons current states, press and release events, stick relative and absolute values
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 {
-	if(e.getStickID() != 0) return;
+	if (!e.isXboxController()) return;
 	if(e.getNbAxis() >= 4) //If we have 2 analog stick (or equivalent) available
 	{
 		player->analogWalk = trim(e.getAxis(axes[ax_walk]).getAbsValue(), deadzone);

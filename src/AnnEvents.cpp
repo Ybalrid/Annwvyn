@@ -198,6 +198,8 @@ float AnnStickAxis::getAbsValue()
     return float(a)/float(OIS::JoyStick::MAX_AXIS);
 }
 
+
+
 AnnStickPov::AnnStickPov() :
 	north(false),
 	south(false),
@@ -301,7 +303,8 @@ AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
 	}
 }
 
-AnnStickEvent::AnnStickEvent() : AnnEvent()
+AnnStickEvent::AnnStickEvent() : AnnEvent(),
+xbox(false)
 {
 	type = USER_INPUT;
 }
@@ -376,6 +379,11 @@ AnnStickPov AnnStickEvent::getPov(PovId pov)
 		return povs[pov];
 	AnnStickPov p;
 	return p;
+}
+
+bool AnnStickEvent::isXboxController()
+{
+	return xbox;
 }
 
 size_t AnnStickEvent::getNbPov()
