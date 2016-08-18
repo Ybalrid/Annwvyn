@@ -74,7 +74,8 @@ void AnnTextInputer::setInput(std::string content)
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) : AnnSubSystem("EventManager"),
 Keyboard(nullptr),
 Mouse(nullptr),
-defaultEventListener(nullptr)
+defaultEventListener(nullptr),
+knowXbox(false)
 {
 	for (size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
 	for (size_t i(0); i < MouseButtonId::nbButtons; i++) previousMouseButtonStates[i] = false;
@@ -96,6 +97,12 @@ defaultEventListener(nullptr)
 		OIS::JoyStick* Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		Joysticks.push_back(new JoystickBuffer(Joystick));
 		AnnDebug() << "Detected joystick : " << Joystick->vendor();
+		if (Joystick->vendor().find("Xbox") != std::string::npos)
+		{
+			knowXbox = true;
+			xboxID = (StickAxisId)Joystick->getID();
+			AnnDebug() << "Detected Xbox controller at ID " << xboxID;
+		}
 	}
 
 	lastTimerCreated = 0;
@@ -250,6 +257,7 @@ void AnnEventManager::processInput()
 
 		//Get all butons imediate data
 		e.buttons = state.mButtons;
+
 		//Get all axes imediate data
 		for (size_t i(0); i < state.mAxes.size(); i++)
 		{
@@ -258,6 +266,7 @@ void AnnEventManager::processInput()
 				axis.noRel = true;
 			e.axes.push_back(axis);
 		}
+		
 		//The joystick state object allwas have 4 Pov but the AnnStickEvent has the number of Pov the stick has
 		for (size_t i(0); i < Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV); i++)
 			e.povs.push_back(AnnStickPov(state.mPOV[i].direction));
@@ -275,6 +284,9 @@ void AnnEventManager::processInput()
 		e.populate();
 		e.validate();
 		e.stickID = Joystick->getID();
+		if (knowXbox)
+			if (e.stickID == xboxID)
+				e.xbox = true;
 
 		for (auto listener : listeners)
 			listener->StickEvent(e);

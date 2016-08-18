@@ -275,7 +275,11 @@ namespace Annwvyn
 		size_t getNbPov();
 		AnnStickPov getPov(PovId pov);
 
+		///Retrun true if this event is from an Xbox controller
+		bool isXboxController();
+
 	private:
+		bool xbox;
 		friend class AnnEventManager;
 		std::vector<bool> buttons;
 		std::vector<AnnStickAxis> axes;
@@ -581,6 +585,9 @@ namespace Annwvyn
 
 		///Default event listener
 		AnnDefaultEventListener* defaultEventListener;
+
+		StickAxisId xboxID;
+		bool knowXbox;
 	};
 }
 

@@ -9,6 +9,7 @@ using namespace Annwvyn;
 bool OgreOculusRender::mirrorHMDView(true);
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
 OgreOculusRender* OgreOculusRender::OculusSelf = nullptr;
+
 OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 	debugSmgr(nullptr),
 	Oculus(nullptr),
