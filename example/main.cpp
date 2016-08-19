@@ -162,5 +162,6 @@ AnnMain()
 	while(AnnGetEngine()->refresh());
 
 	delete AnnGetEngine();
+
 	return EXIT_SUCCESS;
 }

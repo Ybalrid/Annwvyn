@@ -20,6 +20,7 @@
 //C++ STD & STL
 #include <cassert>
 #include <list>
+#include <memory>
 
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
@@ -105,7 +106,7 @@ namespace Annwvyn
 		static void log(std::string message, bool flag = true); //engine
 
 		///Get the player
-		AnnPlayer* getPlayer();
+		std::shared_ptr<AnnPlayer> getPlayer();
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
 		/// key an OIS key code
@@ -125,31 +126,31 @@ namespace Annwvyn
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
 		
 		///Get the event manager
-		AnnEventManager* getEventManager();
+		std::shared_ptr<AnnEventManager> getEventManager();
 
 		///Get the filesystem manager
-		AnnFilesystemManager* getFileSystemManager();
+		std::shared_ptr<AnnFilesystemManager> getFileSystemManager();
 
 		///Return the Annwvyn OpenAL simplified audio engine
-		AnnAudioEngine* getAudioEngine(); //audio
+		std::shared_ptr<AnnAudioEngine> getAudioEngine(); //audio
 
 		///Return the Physics Engine
-		AnnPhysicsEngine* getPhysicsEngine();
+		std::shared_ptr<AnnPhysicsEngine> getPhysicsEngine();
 
 		///Get the current level manager
-		AnnLevelManager* getLevelManager();
+		std::shared_ptr<AnnLevelManager> getLevelManager();
 
 		///Get the ResourceManager
-		AnnResourceManager* getResourceManager();
+		std::shared_ptr<AnnResourceManager> getResourceManager();
 
 		///Get the GameObjectManager
-		AnnGameObjectManager* getGameObjectManager();
+		std::shared_ptr<AnnGameObjectManager> getGameObjectManager();
 
 		///Get the SceneryManager
-		AnnSceneryManager* getSceneryManager();
+		std::shared_ptr<AnnSceneryManager> getSceneryManager();
 
 		///Get the VRRenderer
-		OgreVRRender* getVRRenderer();
+		std::shared_ptr<OgreVRRender> getVRRenderer();
 
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
@@ -198,41 +199,41 @@ namespace Annwvyn
 	private:
 		void destroyAllSubSystem();
 
-		///The onScreenConsole object
-		static AnnConsole* onScreenConsole;
+		///VR renderer
+		std::shared_ptr<OgreVRRender> renderer;
 
-		///Audio engine
-		AnnAudioEngine* audioEngine;
-		///Player
-		AnnPlayer* player;
-		///Event manager
-		AnnEventManager* eventManager;
-		///Physics
-		AnnPhysicsEngine* physicsEngine;
-		///LevelManager
-		AnnLevelManager* levelManager;
-		///FilesystemManager
-		AnnFilesystemManager* filesystemManager;
+		///The onScreenConsole object
+		static std::shared_ptr<AnnConsole> onScreenConsole;
 		///ResourceManager
-		AnnResourceManager* resourceManager;
-		///GameObjectManager
-		AnnGameObjectManager* gameObjectManager;
+		std::shared_ptr<AnnResourceManager> resourceManager;
 		///SceneryManager
-		AnnSceneryManager* sceneryManager;
+		std::shared_ptr<AnnSceneryManager> sceneryManager;
+		///FilesystemManager
+		std::shared_ptr<AnnFilesystemManager> filesystemManager;
+		///Audio engine
+		std::shared_ptr<AnnAudioEngine> audioEngine;
+		///Event manager	
+		std::shared_ptr<AnnEventManager> eventManager;
+		///Physics
+		std::shared_ptr<AnnPhysicsEngine> physicsEngine;
+		///GameObjectManager
+		std::shared_ptr<AnnGameObjectManager> gameObjectManager;
+		///LevelManager
+		std::shared_ptr<AnnLevelManager> levelManager;
+		///Player
+		std::shared_ptr<AnnPlayer> player;
 
 		///The scene manager
 		Ogre::SceneManager* SceneManager;
 		///Point Of View : Node used as "root" for putting the VR "camera rig"
 		Ogre::SceneNode* povNode;
 
-		///VR renderer
-		OgreVRRender* renderer;
 
 		///Elapsed time between 2 frames
 		double updateTime;
 
 		///Container for all the subsystem. Populated in the update/delete order 
-		std::list<AnnSubSystem*> SubSystemList;
+		std::list<std::shared_ptr<AnnSubSystem>> SubSystemList;
 
 		///If false, all getStuff will return nullptr
 		bool canAccessSubSystems;
