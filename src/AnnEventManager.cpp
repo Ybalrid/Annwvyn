@@ -6,7 +6,7 @@
 using namespace Annwvyn;
 
 AnnEventListener::AnnEventListener() :
-	player(AnnGetPlayer())
+	player(AnnGetPlayer().get())
 {
 }
 
