@@ -12,6 +12,7 @@ AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
 
 AnnGameObjectManager::~AnnGameObjectManager()
 {
+	/*
 	//In case of orphan objects, do their cleanup here. 
 	AnnDebug("Destroying every objects remaining orphan object in engine");
 	if (Objects.size() > 0)
@@ -31,6 +32,7 @@ AnnGameObjectManager::~AnnGameObjectManager()
 			destroyTriggerObject(object);
 	else 
 		AnnDebug("Trigger list allready clean");
+		*/
 }
 
 void AnnGameObjectManager::update()
@@ -45,15 +47,16 @@ void AnnGameObjectManager::update()
 
 }
 
-AnnGameObject * AnnGameObjectManager::createGameObject(const char entityName[], AnnGameObject * obj)
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char entityName[], std::shared_ptr<AnnGameObject> obj)
 {
+
 	AnnDebug("Creatig a game object from the entity " + std::string(entityName));
 
 	if (std::string(entityName).empty())
 	{
 		AnnDebug("Hey! what are you trying to do here? Please specify a non empty string for entityName !");
-		delete obj;
-		return NULL;
+		obj = nullptr;
+		return nullptr;
 	}
 
 	Ogre::Entity* ent = AnnGetEngine()->getSceneManager()->createEntity(entityName);
@@ -67,54 +70,28 @@ AnnGameObject * AnnGameObjectManager::createGameObject(const char entityName[], 
 		obj->setBulletDynamicsWorld(AnnGetPhysicsEngine()->getWorld());
 	obj->postInit(); //Run post init directives
 
-	Objects.push_back(obj); //keep addreAnnDebug() in list
+	Objects.push_back(shared_ptr<AnnGameObject>(obj)); //keep addreAnnDebug() in list
 
 	AnnDebug() << "The object " << entityName << " has been created. Annwvyn memory address " << obj;
 
 	return obj;
 }
-bool AnnGameObjectManager::destroyGameObject(AnnGameObject * object)
+bool AnnGameObjectManager::destroyGameObject(std::shared_ptr<AnnGameObject> object)
 {
-	Ogre::SceneManager* SceneManager(AnnGetEngine()->getSceneManager());
-	AnnDebug() << "Destroy call : " << object;
+	//Ogre::SceneManager* SceneManager(AnnGetEngine()->getSceneManager());
 	if (!object) return false;
 	bool returnCode(false);
-	//TODO: remove the need to mark Objects as NULL in this array before being able to clear them.
-	for (auto it = Objects.begin(); it != Objects.end(); it++)
-	{
-		if (!*it) continue;
-		(*it)->stopGettingCollisionWith(object);
-		if (*it == object)
-		{
-			returnCode = true;
-			*it = NULL;
-
-			Ogre::SceneNode* node = object->getNode();
-			node->getParent()->removeChild(node);
-			size_t nbObject(node->numAttachedObjects());
-			std::vector<Ogre::MovableObject*> attachedObject;
-
-			for (unsigned short i(0); i < nbObject; i++)
-				attachedObject.push_back(node->getAttachedObject(i));
-
-			node->detachAllObjects();
-
-			auto attachedIterator(attachedObject.begin());
-			while (attachedIterator != attachedObject.end())
-				SceneManager->destroyMovableObject(*attachedIterator++);
-			if (AnnGetPhysicsEngine()) AnnGetPhysicsEngine()->removeRigidBody(object->getBody());
-			SceneManager->destroySceneNode(node);
-			delete object;
-		}
-	}
-
-	//Clear everything equals to "NULL" on the vector
-	Objects.remove(NULL);
-
+	Objects.remove(object);
+	Objects.remove(nullptr);
 	return returnCode;
 }
 
-Annwvyn::AnnGameObject* AnnGameObjectManager::getFromNode(Ogre::SceneNode* node)
+void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> object)
+{
+	Objects.remove(object);
+}
+
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode* node)
 {
 	if (!node)
 	{
@@ -166,7 +143,7 @@ void Annwvyn::AnnGameObjectManager::destroyTriggerObject(AnnTriggerObject * trig
 	delete trigger;
 }
 
-AnnGameObject * Annwvyn::AnnGameObjectManager::playerLookingAt()
+std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()
 {
 	//Origin vector of the ray
 	AnnVect3 Orig(AnnGetEngine()->getHmdPose().position);

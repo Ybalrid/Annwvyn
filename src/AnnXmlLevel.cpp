@@ -109,7 +109,7 @@ void AnnXmlLevel::load()
 		if(gameObjectData)
 		entityName = (gameObjectData->Attribute("EntityName"));
 		
-		AnnGameObject* constructedGameObject;
+		std::shared_ptr<AnnGameObject> constructedGameObject;
 		if(!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
 		
 		gameObjectData = gameObject->FirstChildElement("Position");

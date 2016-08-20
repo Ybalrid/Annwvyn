@@ -23,10 +23,14 @@ AnnGameObject::AnnGameObject() :
 
 AnnGameObject::~AnnGameObject()
 {
+	AnnDebug() << "Destructing game object !";
 	//Clean OpenAL desaloc
 	if(AnnGetAudioEngine())
 		AnnGetAudioEngine()->destroySource(audioSource);
 	AnnDebug() << "Tidy my physics !";
+
+	if (AnnGetPhysicsEngine())
+		AnnGetPhysicsEngine()->removeRigidBody(Body);
 
 	if (Body) delete Body;
 	if (Shape)
@@ -36,6 +40,17 @@ AnnGameObject::~AnnGameObject()
 		delete Shape;
 	}
 	if (state) delete state;
+
+	Node->getParent()->removeChild(Node);
+	std::vector<Ogre::MovableObject*> attachedObject;
+	for (size_t i(0); i < Node->numAttachedObjects(); i++)
+		attachedObject.push_back(Node->getAttachedObject(i));
+	Node->detachAllObjects();
+	for (auto object : attachedObject)
+		AnnGetEngine()->getSceneManager()->destroyMovableObject(object);
+	AnnGetEngine()->getSceneManager()->destroySceneNode(Node);
+	Node = nullptr;
+	
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume)
