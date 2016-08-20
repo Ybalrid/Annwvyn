@@ -43,7 +43,7 @@ AnnGameObject::~AnnGameObject()
 
 	Node->getParent()->removeChild(Node);
 	std::vector<Ogre::MovableObject*> attachedObject;
-	for (size_t i(0); i < Node->numAttachedObjects(); i++)
+	for (unsigned short i(0); i < Node->numAttachedObjects(); i++)
 		attachedObject.push_back(Node->getAttachedObject(i));
 	Node->detachAllObjects();
 	for (auto object : attachedObject)

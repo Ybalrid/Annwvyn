@@ -47,11 +47,11 @@ namespace Annwvyn
 		AnnLightList levelLighting;
 		AnnTriggerObjectList levelTrigger;
 		std::unordered_map<std::string, std::shared_ptr<AnnGameObject> > levelContentIdMap;
-		std::unordered_map<std::string, AnnLightObject*> levelLightingIdMap;
+		std::unordered_map<std::string, std::shared_ptr<AnnLightObject> > levelLightingIdMap;
 		std::unordered_map<std::string, AnnTriggerObject*> levelTriggerIdMap;
 
 		///Add a light object to the level
-		AnnLightObject* addLightObject(std::string id = noID);
+		std::shared_ptr<AnnLightObject> addLightObject(std::string id = noID);
 
 		///Add a trigger object to the level
 		AnnTriggerObject* addTrggerObject(AnnTriggerObject* obj = new AnnSphericalTriggerObject, std::string id = noID);

@@ -35,14 +35,19 @@ namespace Annwvyn
 		/// \param object the object to remove
 		void removeGameObject(std::shared_ptr<AnnGameObject> object);
 
+		///Search for an AnnGameObject that holds this node, returns it if found. Return nullptr if not found.
 		std::shared_ptr<AnnGameObject> getFromNode(Ogre::SceneNode * node);
 
 		///Destroy the given light
 		/// \param light pointer to the light to destroy
-		void destroyLightObject(AnnLightObject* light);
+		DEPRECATED void destroyLightObject(std::shared_ptr<AnnLightObject> light);
+		
+		///Remove the given light from the scene
+		/// \param light shared pointer to the light
+		void removeLightObject(std::shared_ptr<AnnLightObject> light);
 
 		///Add a light source to the scene. return a pointer to the new light
-		AnnLightObject* createLightObject();
+		std::shared_ptr<AnnLightObject> createLightObject();
 
 		///Create a trigger object
 		/// \param trigger an empty trigger object
@@ -59,15 +64,10 @@ namespace Annwvyn
 		friend class AnnEngine;
 		std::list<std::shared_ptr<AnnGameObject>> Objects;
 
-		/*std::shared_ptr<AnnGameObject> anObject;
-		std::list<std::shared_ptr<int> > listOfIntsOnFreeSpace;
-
-		std::list<std::shared_ptr<AnnGameObject> > listOfObjects;*/
-
 		///Dynamic container for triggers objects present in engine.
 		std::list<AnnTriggerObject*> Triggers;
 		///Dynamic container for lights objects present in engine.
-		std::list<AnnLightObject*> Lights;
+		std::list<std::shared_ptr<AnnLightObject>> Lights;
 
 	};
 }

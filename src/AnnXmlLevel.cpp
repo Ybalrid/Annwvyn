@@ -192,7 +192,7 @@ void AnnXmlLevel::load()
 			color->QueryFloatAttribute("A", &a);
 			lightType = type->GetText();
 
-			AnnLightObject* lightSource = addLightObject(lightID);
+			auto lightSource = addLightObject(lightID);
 			lightSource->setPosition(AnnVect3(x, y, z));
 			lightSource->setType(AnnLightObject::getLightTypeFromString(lightType));
 			lightSource->setDirection(AnnVect3(dx, dy, dz));
