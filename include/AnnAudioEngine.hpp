@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <memory>
 
 //OpenAl
 #include <al.h>
@@ -35,11 +36,10 @@ namespace Annwvyn
 	///Represent an audio source in the engine
 	class DLL AnnAudioSource 
 	{
-	private:
+	public:
 		///Private contructor. You have to call AnnAudioEngine::createAudioSource() to get an AnnAudioSource object
 		AnnAudioSource();
-		friend class AnnAudioEngine;
-	public:
+
 		///Destroy audio source
 		~AnnAudioSource();
 
@@ -65,6 +65,7 @@ namespace Annwvyn
 		void setPositionRelToPlayer(bool relToPlayer = true);
 
 	private:
+		friend class AnnAudioEngine;
 		///Name of the buffer (filename)
 		std::string bufferName;
 		///OpenAL source object
@@ -125,10 +126,13 @@ namespace Annwvyn
 		const std::string getLastError();
 
 		///Create an audio source
-		AnnAudioSource* createSource();
-		AnnAudioSource* createSource(std::string path);
+		std::shared_ptr<AnnAudioSource> createSource();
 
-		void destroySource(AnnAudioSource* source);
+		///Create an audio source and attache (and load if necessary) buffer from audio file
+		std::shared_ptr<AnnAudioSource> createSource(std::string path);
+
+		DEPRECATED void destroySource(std::shared_ptr<AnnAudioSource> source);
+		void removeSource(std::shared_ptr<AnnAudioSource> source);
 
 		///Write laste error text to the log
 		void logError();
@@ -167,7 +171,7 @@ namespace Annwvyn
 		std::unordered_map<std::string, ALuint> buffers;
 		bool locked;
 		///Lis of the audio sources object present in the audio engine
-		std::list<AnnAudioSource*> AudioSources;
+		std::list<std::shared_ptr<AnnAudioSource>> AudioSources;
 		std::list<std::string> detectedDevices;
 	};
 }

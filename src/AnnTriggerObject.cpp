@@ -22,7 +22,7 @@ void AnnTriggerObject::setPosition(Ogre::Vector3 pos)
 
 void AnnTriggerObject::setPosition(float x, float y, float z)
 {
-	position = Ogre::Vector3(x,y,z);
+	position = Ogre::Vector3(x, y, z);
 }
 
 bool AnnTriggerObject::getContactInformation()

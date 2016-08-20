@@ -34,11 +34,11 @@ namespace Annwvyn
 
 		///Jump to a pointer referenced level
 		///\param level address of a subclass instance of AnnLevel
-		void jump(AnnLevel* level);
+		void jump(std::shared_ptr<AnnLevel> level);
 
 		///Add a level to the level manager
 		///\param level address of a subclass instance of AnnLevel
-		void addLevel(AnnLevel* level);
+		void addLevel(std::shared_ptr<AnnLevel> level);
 
 		///Jumpt to the 1st level
 		void jumpToFirstLevel();
@@ -51,10 +51,10 @@ namespace Annwvyn
 
 	private:
 		///List of levels
-		std::vector<AnnLevel*> levelList;
+		std::vector<std::shared_ptr<AnnLevel>> levelList;
 
 		///Address to the currently running level
-		AnnLevel* current;
+		std::shared_ptr<AnnLevel> current;
 	};
 }
 #endif LEVELMANAGER
