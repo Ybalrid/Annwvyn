@@ -10,31 +10,6 @@ AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
 
 }
 
-AnnGameObjectManager::~AnnGameObjectManager()
-{
-	/*
-	//In case of orphan objects, do their cleanup here. 
-	AnnDebug("Destroying every objects remaining orphan object in engine");
-	if (Objects.size() > 0)
-		for (auto object : Objects)
-			destroyGameObject(object);
-	else
-		AnnDebug("Object list allready clean");
-
-	if (Lights.size() > 0)
-		for (auto object : Lights)
-			destroyLightObject(object);
-	else
-		AnnDebug("Light list allready clean");
-
-	if (Triggers.size() > 0) 
-		for (auto object : Triggers) 
-			destroyTriggerObject(object);
-	else 
-		AnnDebug("Trigger list allready clean");
-		*/
-}
-
 void AnnGameObjectManager::update()
 {
 	//Run animations and update OpenAL sources position
@@ -128,7 +103,7 @@ std::shared_ptr<AnnLightObject> Annwvyn::AnnGameObjectManager::createLightObject
 	return Light;
 }
 
-AnnTriggerObject * Annwvyn::AnnGameObjectManager::createTriggerObject(AnnTriggerObject * trigger)
+std::shared_ptr<AnnTriggerObject> Annwvyn::AnnGameObjectManager::createTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
 {
 	AnnDebug("Creating a trigger object");
 	Triggers.push_back(trigger);
@@ -136,11 +111,16 @@ AnnTriggerObject * Annwvyn::AnnGameObjectManager::createTriggerObject(AnnTrigger
 	return trigger;
 }
 
-void Annwvyn::AnnGameObjectManager::destroyTriggerObject(AnnTriggerObject * trigger)
+void AnnGameObjectManager::destroyTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
 {
 	Triggers.remove(trigger);
-	AnnDebug() << "Destroy trigger : " << (void*)trigger;
-	delete trigger;
+	AnnDebug() << "Destroy trigger : " << (void*)trigger.get();
+	//delete trigger;
+}
+
+void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
+{
+	Triggers.remove(trigger);
 }
 
 std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()

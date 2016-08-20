@@ -429,7 +429,7 @@ bool AnnTriggerEvent::getContactStatus()
 	return contact;
 }
 
-AnnTriggerObject* AnnTriggerEvent::getSender()
+std::shared_ptr<AnnTriggerObject> AnnTriggerEvent::getSender()
 {
 	return sender;
 }

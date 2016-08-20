@@ -349,7 +349,7 @@ void AnnEventManager::processTriggerEvents()
 	triggerEventBuffer.clear();
 }
 
-void AnnEventManager::spatialTrigger(AnnTriggerObject* sender)
+void AnnEventManager::spatialTrigger(std::shared_ptr<AnnTriggerObject> sender)
 {
 	AnnTriggerEvent e;
 	e.sender = sender;

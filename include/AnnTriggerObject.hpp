@@ -25,7 +25,7 @@ namespace Annwvyn
 		AnnTriggerObject();
 
 		///Class destructor
-		virtual ~AnnTriggerObject(){}
+		virtual ~AnnTriggerObject();
 
 		///Set position form Vector 3D
 		/// \param pos 3D vector positioning the object
