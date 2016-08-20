@@ -20,6 +20,9 @@ namespace Annwvyn
 	class DLL AnnLightObject 
 	{
 	public:
+		AnnLightObject(Ogre::Light* light);
+		virtual ~AnnLightObject();
+
 
 		/// Defines the type of light
 		enum LightTypes
@@ -51,9 +54,8 @@ namespace Annwvyn
 		///Get the specular color of this light source
 		AnnColor getSpecularColor();
 
+
 	private:
-		///Create a light object. We use an Ogre Light becaus we just need to talk to Ogre...
-		AnnLightObject(Ogre::Light* light);
 		friend class AnnEngine;
 		friend class AnnGameObjectManager;
 		Ogre::Light* light;

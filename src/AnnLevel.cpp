@@ -26,10 +26,10 @@ void AnnLevel::unload()
 	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0,0,0));
 	
 	//Remove the level lights
-	for(AnnLightList::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)
-		AnnGetGameObjectManager()->destroyLightObject(*it);
-	levelLighting.clear();
 	levelLightingIdMap.clear();
+	for(AnnLightList::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)
+		AnnGetGameObjectManager()->removeLightObject(*it);
+	levelLighting.clear();
 
 	//Remove the level objects
 	levelContentIdMap.clear();
@@ -38,15 +38,15 @@ void AnnLevel::unload()
 	levelContent.clear();
 
 	//Remove volumetric event triggers
+	levelTriggerIdMap.clear();
 	for(AnnTriggerObjectList::iterator it = levelTrigger.begin(); it != levelTrigger.end(); ++it)
 		AnnGetGameObjectManager()->destroyTriggerObject(*it);
 	levelTrigger.clear();
-	levelTriggerIdMap.clear();
 }
 
-AnnLightObject* AnnLevel::addLightObject(std::string id)
+std::shared_ptr<AnnLightObject> AnnLevel::addLightObject(std::string id)
 {
-	AnnLightObject* light (AnnGetGameObjectManager()->createLightObject());
+	auto light (AnnGetGameObjectManager()->createLightObject());
 	levelLighting.push_back(light);
 	levelLightingIdMap[id] = light;
 	return light;

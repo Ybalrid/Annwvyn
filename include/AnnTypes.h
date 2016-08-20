@@ -30,7 +30,7 @@ namespace Annwvyn
 	//Remove some ugliness : 
 	typedef std::list<AnnTriggerObject *> AnnTriggerObjectList;
 	typedef std::list<std::shared_ptr<AnnGameObject> > AnnGameObjectList;
-	typedef std::list<AnnLightObject *> AnnLightList;
+	typedef std::list<std::shared_ptr<AnnLightObject> > AnnLightList;
 
 	///Because sometimes, after one byte you're full...
 	typedef unsigned char byte;

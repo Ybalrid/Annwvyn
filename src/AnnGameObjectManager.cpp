@@ -109,20 +109,20 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 	return NULL;
 }
 
-void Annwvyn::AnnGameObjectManager::destroyLightObject(AnnLightObject * light)
+void Annwvyn::AnnGameObjectManager::destroyLightObject(std::shared_ptr<AnnLightObject> light)
 {
-	if (light)
-		AnnGetEngine()->getSceneManager()->destroyLight(light->light);
-
-	//Forget that this light existed
-	Lights.remove(light);
-	delete light;
+	removeLightObject(light);
 }
 
-AnnLightObject * Annwvyn::AnnGameObjectManager::createLightObject()
+void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> light)
+{
+	Lights.remove(light);
+}
+
+std::shared_ptr<AnnLightObject> Annwvyn::AnnGameObjectManager::createLightObject()
 {
 	AnnDebug("Creating a light");
-	AnnLightObject* Light = new AnnLightObject(AnnGetEngine()->getSceneManager()->createLight());
+	auto Light = std::make_shared<AnnLightObject>(AnnGetEngine()->getSceneManager()->createLight());
 	Light->setType(AnnLightObject::LightTypes::ANN_LIGHT_POINT);
 	Lights.push_back(Light);
 	return Light;

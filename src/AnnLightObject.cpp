@@ -1,11 +1,20 @@
 #include "stdafx.h"
 #include "AnnLightObject.hpp"
-
+#include "AnnEngine.hpp"
+#include "AnnLogger.hpp"
 using namespace Annwvyn;
 
 AnnLightObject::AnnLightObject(Ogre::Light* light) :
 	light(light)
 {
+	AnnDebug() << "Light constructor called";
+}
+
+AnnLightObject::~AnnLightObject()
+{
+	AnnDebug() << "Light destructor called";
+	if (light)
+		AnnGetEngine()->getSceneManager()->destroyLight(light);
 }
 
 AnnLightObject::LightTypes Annwvyn::AnnLightObject::getLightTypeFromString(std::string ltype)
