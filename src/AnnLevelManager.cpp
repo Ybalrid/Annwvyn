@@ -14,12 +14,12 @@ AnnLevelManager::~AnnLevelManager()
 {
 	AnnGetEngine()->log("Deleting the Level Manager. Destroing every level known by the Level Manager before.");
 	//clear the levels
-	for(auto it = levelList.begin(); it != levelList.end(); it++)
-		delete *it;
+	/*for(auto it = levelList.begin(); it != levelList.end(); it++)
+		delete *it;*/
 	levelList.clear();
 }
 
-void AnnLevelManager::jump(size_t levelId)
+void AnnLevelManager::jump(level_id levelId)
 {
 	if(!(levelId < levelList.size())) return;
 	if(current)
@@ -29,9 +29,9 @@ void AnnLevelManager::jump(size_t levelId)
 	Sleep(10);
 }
 
-void AnnLevelManager::jump(AnnLevel* level)
+void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
 {
-	for(size_t i(0); i < levelList.size(); i++)
+	for(level_id i(0); i < levelList.size(); i++)
 		if(levelList[i] == level)
 		{
 			jump(i);
@@ -39,7 +39,7 @@ void AnnLevelManager::jump(AnnLevel* level)
 		}
 }
 
-void AnnLevelManager::addLevel(AnnLevel* level)
+void AnnLevelManager::addLevel(std::shared_ptr<AnnLevel> level)
 {
 	if(!level) return;
 	levelList.push_back(level);

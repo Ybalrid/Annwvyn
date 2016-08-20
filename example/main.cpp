@@ -140,16 +140,20 @@ AnnMain()
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
 
-	auto level = new TestLevel();
+	auto level = make_shared<TestLevel>();
 	AnnGetLevelManager()->addLevel(level);
 
-	auto xmlLevel = new AnnXmlLevel("./level/test.xml");
+	auto xmlLevel = make_shared<AnnXmlLevel>("./level/test.xml");
 	AnnGetLevelManager()->addLevel(xmlLevel);
 	
-	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", xmlLevel, 7.1f);
+	auto splash = make_shared<AnnSplashLevel>("splash.png", xmlLevel, 7.1f);
 	splash->setBGM("media/AnnSplash.ogg");
 	AnnGetEngine()->getLevelManager()->addLevel(splash);
 	AnnGetLevelManager()->jump(splash);
+	///These pointers are instances on the level manager, they will clear themselves from now, unless we still have them in use. 
+	level = nullptr;
+	xmlLevel = nullptr;
+	splash = nullptr;
 
 	AnnDebug() << "Starting the render loop";
 	do	

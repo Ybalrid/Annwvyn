@@ -240,7 +240,7 @@ namespace Annwvyn
             bool bulletReady;
 
 			///AnnAudioEngine audioSource;
-			AnnAudioSource* audioSource;
+			std::shared_ptr<AnnAudioSource> audioSource;
 
 			///Name of the object
 			std::string name;
@@ -258,7 +258,5 @@ namespace Annwvyn
             ///Executed at refresh time (each frames)
             virtual void atRefresh(){return;}
     };
-
-	//std::list<std::shared_ptr<AnnGameObject>> Objects;
 }
 #endif

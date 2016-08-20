@@ -21,26 +21,25 @@ void AnnLevel::unload()
 	AnnGetAudioEngine()->stopBGM();
 	//Remove the sky
 	AnnGetSceneryManager()->removeSkyDome();
-
 	//Remove the ambiant lighting
-	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0,0,0));
+	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0, 0, 0));
 	
 	//Remove the level lights
 	levelLightingIdMap.clear();
-	for(AnnLightList::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)
-		AnnGetGameObjectManager()->removeLightObject(*it);
+	for (auto obj : levelLighting)
+		AnnGetGameObjectManager()->removeLightObject(obj);
 	levelLighting.clear();
 
 	//Remove the level objects
 	levelContentIdMap.clear();
-	for(auto it = levelContent.begin(); it != levelContent.end(); ++it)
-		AnnGetGameObjectManager()->removeGameObject(*it);
+	for(auto obj : levelContent)
+		AnnGetGameObjectManager()->removeGameObject(obj);
 	levelContent.clear();
 
 	//Remove volumetric event triggers
 	levelTriggerIdMap.clear();
-	for(AnnTriggerObjectList::iterator it = levelTrigger.begin(); it != levelTrigger.end(); ++it)
-		AnnGetGameObjectManager()->removeTriggerObject(*it);
+	for(auto obj : levelTrigger)
+		AnnGetGameObjectManager()->removeTriggerObject(obj);
 	levelTrigger.clear();
 }
 
