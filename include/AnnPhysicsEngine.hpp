@@ -29,19 +29,19 @@ namespace Annwvyn
 	public:
 
 		///Create the physics engine
-		AnnPhysicsEngine(Ogre::SceneNode* rootNode, AnnPlayer* player, AnnGameObjectList& objects, AnnTriggerObjectList& triggers);
+		AnnPhysicsEngine(Ogre::SceneNode* rootNode, std::shared_ptr<AnnPlayer> player, AnnGameObjectList& objects, AnnTriggerObjectList& triggers);
 
 		///Destroy the physics engine
 		~AnnPhysicsEngine();
 
 		///Add the player body to the dynamics world
-		void addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player);
+		void addPlayerPhysicalBodyToDynamicsWorld();
 
 		///Create player's rigidbody
-		void createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::SceneNode* node);
+		void createPlayerPhysicalVirtualBody( Ogre::SceneNode* node);
 
 		///Create player's body shape (a capsule)
-		void createVirtualBodyShape(AnnPlayer* player);
+		void createVirtualBodyShape();
 		
 		///Pointer to the bullet's dynamics world
 		btDiscreteDynamicsWorld* getWorld();
@@ -57,13 +57,13 @@ namespace Annwvyn
 		///Process triggers contact event
 		/// \param player The player object
 		/// \param triggers list where to process collision querry
-		void processTriggersContacts(AnnPlayer* player, AnnTriggerObjectList& triggers);
+		void processTriggersContacts();
 
 		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body);
 
 		///Init player's body physical simulation
-		void initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node);
+		void initPlayerPhysics(Ogre::SceneNode* cameraNode);
 
 		///Set the debug drawer state
 		void setDebugPhysics(bool state);
@@ -97,7 +97,7 @@ namespace Annwvyn
 
 		AnnGameObjectList& gameObjects;
 		AnnTriggerObjectList& triggerObjects;
-		AnnPlayer* playerObject;
+		std::shared_ptr<AnnPlayer> playerObject;
 	};
 }
 

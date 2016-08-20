@@ -58,7 +58,7 @@ AnnSphericalTriggerObject::AnnSphericalTriggerObject() : AnnTriggerObject(),
 {
 }
 
-bool AnnSphericalTriggerObject::computeVolumetricTest(AnnPlayer* player)
+bool AnnSphericalTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer> player)
 {
 	return getPosition().squaredDistance(player->getPosition()) <= squaredThreshold;
 }
@@ -83,7 +83,7 @@ void AnnAlignedBoxTriggerObject::setBoundaries(float x1, float x2, float y1, flo
 	zMax = z2;
 }
 
-bool AnnAlignedBoxTriggerObject::computeVolumetricTest(AnnPlayer* player)
+bool AnnAlignedBoxTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer> player)
 {
 	AnnVect3 position(player->getPosition());
 
