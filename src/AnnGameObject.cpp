@@ -26,7 +26,7 @@ AnnGameObject::~AnnGameObject()
 	AnnDebug() << "Destructing game object !";
 	//Clean OpenAL desaloc
 	if(AnnGetAudioEngine())
-		AnnGetAudioEngine()->destroySource(audioSource);
+		AnnGetAudioEngine()->removeSource(audioSource);
 	AnnDebug() << "Tidy my physics !";
 
 	if (AnnGetPhysicsEngine())

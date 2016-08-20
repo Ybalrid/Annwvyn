@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <cassert>
 #include <limits>
+#include <memory>
 
 //Object-Oriented Graphical Rendering Engine
 #include <Ogre.h>

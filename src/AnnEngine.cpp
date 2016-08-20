@@ -74,7 +74,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	- audio is synced (sonds comes form where they should)
 	- then the game can redraw*/
 
-	physicsEngine = std::make_shared<AnnPhysicsEngine>(getSceneManager()->getRootSceneNode(), player.get(), gameObjectManager->Objects, gameObjectManager->Triggers);
+	physicsEngine = std::make_shared<AnnPhysicsEngine>(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers);
 	SubSystemList.push_back(eventManager = std::make_shared< AnnEventManager>(renderer->getWindow()));
 	SubSystemList.push_back(physicsEngine);
 	SubSystemList.push_back(audioEngine = std::make_shared< AnnAudioEngine>());
@@ -101,58 +101,31 @@ AnnEngine::AnnEngine(const char title[]) :
 	log("===================================================", false);
 }
 
-void AnnEngine::destroyAllSubSystem()
-{
-	//Destroy all SubSystems
-	for (auto SubSystem : SubSystemList)
-	{
-		/*Some part of the engine will check for theses pointers to be null or not. This can cause segfaults if we delete them without putting them at null, even in the "destroyAllSubsystems" context
-		TODO:Find a way for subsystemps to be destroyed without calling others subsystems (non critical)*/
-		if (SubSystem == physicsEngine) physicsEngine = nullptr;
-		if (SubSystem == audioEngine) audioEngine = nullptr;
-		// SubSystem;
-	}
-	//This is another safegard. Sorry for the spaghettiness of this.
-	//canAccessSubSystems = false;
-}
-
 AnnEngine::~AnnEngine()
 {
-	//Destroy all parts of the engine
-	//destroyAllSubSystem();
-
 	//Some cute log messsages
-	log("Game engine sucessfully destroyed.");
+	log("Game engine stopped. Subsystem are shutting down...");
 	log("Good luck with the real world now! :3");
-	
-	//Forget AnnEngine static address
-	//singleton = nullptr;
-
-	//At this point, you *could* recreate an instance of the engine. But I don't know why you would want that.
 }
 
 //All theses getter are for encapsulation purpose. Calling them directly would make verry long lines of code. Note that there's a whole bunch of macro in AnnEngine.hpp to help with that
 std::shared_ptr<AnnEventManager> AnnEngine::getEventManager()
 {
-	//if (!canAccessSubSystems) return nullptr;
 	return eventManager;
 }
 
 std::shared_ptr<AnnResourceManager> AnnEngine::getResourceManager()
 {
-	//if (!canAccessSubSystems) return nullptr;
 	return resourceManager;
 }
 
 std::shared_ptr<AnnGameObjectManager> AnnEngine::getGameObjectManager()
 {
-	//if (!canAccessSubSystems) return nullptr;
 	return gameObjectManager;
 }
 
 std::shared_ptr<AnnSceneryManager> AnnEngine::getSceneryManager()
 {
-	//if (!canAccessSubSystems) return nullptr;
 	return sceneryManager;
 }
 
@@ -163,7 +136,6 @@ std::shared_ptr<OgreVRRender> AnnEngine::getVRRenderer()
 
 std::shared_ptr<AnnLevelManager> AnnEngine::getLevelManager()
 {
-	//if (!canAccessSubSystems) return nullptr;
 	return levelManager;
 }
 
@@ -174,7 +146,6 @@ std::shared_ptr<AnnPlayer> AnnEngine::getPlayer()
 
 std::shared_ptr<AnnFilesystemManager> AnnEngine::getFileSystemManager()
 {
-	////if (!canAccessSubSystems) return nullptr;
 	return filesystemManager;
 }
 
@@ -186,7 +157,6 @@ std::shared_ptr<AnnAudioEngine> AnnEngine::getAudioEngine()
 
 std::shared_ptr<AnnPhysicsEngine> AnnEngine::getPhysicsEngine()
 {
-	//if (!canAccessSubSystems) return nullptr;
 	return physicsEngine;
 }
 
@@ -214,7 +184,7 @@ void AnnEngine::log(std::string message, bool flag)
 //Don't ask me why this is not part of the Physics engine. Actually it just calls something on the physics engine. Will be probably deleted in the future.
 void AnnEngine::initPlayerPhysics()
 {
-	physicsEngine->initPlayerPhysics(player.get(), povNode);
+	physicsEngine->initPlayerPhysics(povNode);
 }
 
 //Need to be redone. 

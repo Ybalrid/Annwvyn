@@ -60,6 +60,7 @@ void AnnPlayer::setActuator(AnnPlayerActuator* act)
 
 AnnPlayer::~AnnPlayer()
 {
+
 	delete playerBody;
 }
 
@@ -220,7 +221,7 @@ float AnnPlayer::getRunFactor()
 	return playerBody->runFactor;
 }
 
-void Annwvyn::AnnPlayer::resetPlayerPhysics()
+void AnnPlayer::resetPlayerPhysics()
 {
 	if (!hasPhysics()) return;
 	AnnDebug("Reset player's physics");
@@ -236,8 +237,8 @@ void Annwvyn::AnnPlayer::resetPlayerPhysics()
 
 	//Put everything back in order
 	AnnGetEngine()->syncPov();
-	AnnGetPhysicsEngine()->createPlayerPhysicalVirtualBody(this, AnnGetEngine()->getCamera());
-	AnnGetPhysicsEngine()->addPlayerPhysicalBodyToDynamicsWorld(this);
+	AnnGetPhysicsEngine()->createPlayerPhysicalVirtualBody(AnnGetEngine()->getCamera());
+	AnnGetPhysicsEngine()->addPlayerPhysicalBodyToDynamicsWorld();
 }
 
 void AnnPlayer::engineUpdate(float deltaTime)

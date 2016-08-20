@@ -4,7 +4,7 @@
 
 using namespace Annwvyn;
 
-AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode, AnnPlayer * player, AnnGameObjectList & objects, AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode, shared_ptr<AnnPlayer> player, AnnGameObjectList & objects, AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
 playerObject(player),
 gameObjects(objects),
 triggerObjects(triggers),
@@ -34,7 +34,6 @@ playerRigidBodyState(nullptr)
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
 {
-	//Bullet
 	delete DynamicsWorld;
 	delete Broadphase;
 	delete CollisionConfiguration;
@@ -43,18 +42,18 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
 	delete debugDrawer;
 }
 
-void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld(AnnPlayer* player)
+void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
-	assert(player->getBody());
+	assert(playerObject->getBody());
 	//TODO define name for the bullet's collision masks
-	DynamicsWorld->addRigidBody(player->getBody(), MASK(0), MASK(1));
+	DynamicsWorld->addRigidBody(playerObject->getBody(), MASK(0), MASK(1));
 }
 
-void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::SceneNode* node)
+void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 {
 	AnnDebug() << "createPlayerPhysicalVirtualBody";
 	//Player need to have a shape (capsule)
-	assert(player->getShape());
+	assert(playerObject->getShape());
 
 	//Create a rigid body state through BtOgre
 	if (playerRigidBodyState) delete playerRigidBodyState;
@@ -62,21 +61,21 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(AnnPlayer* player, Ogre::
 
 	//Get inertia vector
 	btVector3 inertia;
-	player->getShape()->calculateLocalInertia(player->getMass(), inertia);
+	playerObject->getShape()->calculateLocalInertia(playerObject->getMass(), inertia);
 
 	//Set the body to the player
-	player->setBody(new btRigidBody(
-		player->getMass(),
+	playerObject->setBody(new btRigidBody(
+		playerObject->getMass(),
 		playerRigidBodyState,
-		player->getShape(),
+		playerObject->getShape(),
 		inertia));
 }
 
-void AnnPhysicsEngine::createVirtualBodyShape(AnnPlayer* player)
+void AnnPhysicsEngine::createVirtualBodyShape()
 {
-	assert(player);
+	assert(playerObject);
 	float radius(0.125f);
-	player->setShape(new btCapsuleShape(radius, player->getEyesHeight() - 2 * radius));
+	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
 }
 
 btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld()
@@ -159,12 +158,12 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
 		DynamicsWorld->removeRigidBody(body);
 }
 
-void AnnPhysicsEngine::initPlayerPhysics(AnnPlayer* player, Ogre::SceneNode* node)
+void AnnPhysicsEngine::initPlayerPhysics(Ogre::SceneNode* node)
 {
-	AnnDebug() << "Initializing player's physics " << player->getMass() << "Kg ~" << player->getEyesHeight();
-	createVirtualBodyShape(player);
-	createPlayerPhysicalVirtualBody(player, node);
-	addPlayerPhysicalBodyToDynamicsWorld(player);
+	AnnDebug() << "Initializing player's physics " << playerObject->getMass() << "Kg ~" << playerObject->getEyesHeight();
+	createVirtualBodyShape();
+	createPlayerPhysicalVirtualBody(node);
+	addPlayerPhysicalBodyToDynamicsWorld();
 }
 
 void AnnPhysicsEngine::setDebugPhysics(bool state)
@@ -172,12 +171,12 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 	debugPhysics = state;
 }
 
-void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObjectList& triggers)
+void AnnPhysicsEngine::processTriggersContacts()
 {
-	for (auto trigger : triggers)
+	for (auto trigger : triggerObjects)
 	{
 		auto current(trigger);
-		if (current->computeVolumetricTest(player))
+		if (current->computeVolumetricTest(playerObject))
 		{
 			current->setContactInformation(true);
 			current->atContact();
@@ -201,7 +200,7 @@ void AnnPhysicsEngine::changeGravity(AnnVect3 gravity)
 void AnnPhysicsEngine::update()
 {
 	processCollisionTesting(gameObjects);
-	processTriggersContacts(playerObject, triggerObjects);
+	processTriggersContacts();
 	stepDebugDrawer();
 	step(AnnGetEngine()->getFrameTime());
 }
