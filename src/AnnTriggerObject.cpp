@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AnnTriggerObject.hpp"
+#include "AnnLogger.hpp" 
 
 using namespace Annwvyn;
 
@@ -7,6 +8,11 @@ AnnTriggerObject::AnnTriggerObject() :
 	contactWithPlayer(false),
 	position(Ogre::Vector3(0, 0, 0))
 {
+}
+
+AnnTriggerObject::~AnnTriggerObject()
+{
+	AnnDebug() << "AnnTriggerObject destructor called";
 }
 
 void AnnTriggerObject::setPosition(Ogre::Vector3 pos)

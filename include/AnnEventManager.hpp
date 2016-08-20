@@ -16,6 +16,8 @@
 
 #include "AnnSubsystem.hpp"
 
+#include <memory>
+
 //the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
 #define LISTENER public Annwvyn::AnnEventListener
@@ -317,11 +319,11 @@ namespace Annwvyn
 		///Return true if if there's collision
 		bool getContactStatus();
 		///Pointer to the trigger that have sent this event
-		AnnTriggerObject* getSender();
+		std::shared_ptr<AnnTriggerObject> getSender();
 	private:
 		friend class AnnEventManager;
 		bool contact;
-		AnnTriggerObject* sender;
+		std::shared_ptr<AnnTriggerObject> sender;
 	};
 
 	///Base class for all event listener
@@ -550,7 +552,7 @@ namespace Annwvyn
 		void processTriggerEvents();
 
 		///Register trigger event for next triggerProcess by the engine
-		void spatialTrigger(AnnTriggerObject* sender);
+		void spatialTrigger(std::shared_ptr<AnnTriggerObject> sender);
 
 		///OIS Event Manager
 		OIS::InputManager *InputManager;

@@ -19,8 +19,9 @@ namespace Annwvyn
 	{
 	public:
 		AnnGameObjectManager();
-		~AnnGameObjectManager();
-		void update();
+
+		///Update from the game engine 
+		virtual void update();
 
 		///Create a game object form the name of an entity.
 		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
@@ -51,10 +52,11 @@ namespace Annwvyn
 
 		///Create a trigger object
 		/// \param trigger an empty trigger object
-		AnnTriggerObject* createTriggerObject(AnnTriggerObject* trigger = new AnnSphericalTriggerObject); //object factory
+		std::shared_ptr<AnnTriggerObject> createTriggerObject(std::shared_ptr<AnnTriggerObject> trigger = std::make_shared<AnnSphericalTriggerObject>()); //object factory
 
 		///Remove the object from the engine
-		void destroyTriggerObject(AnnTriggerObject* obj);
+		DEPRECATED void destroyTriggerObject(std::shared_ptr<AnnTriggerObject> obj);
+		void removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger);
 
 		///Get the AnnObject the player is looking at
 		std::shared_ptr<AnnGameObject> playerLookingAt(); //physics
@@ -62,12 +64,14 @@ namespace Annwvyn
 
 	private:
 		friend class AnnEngine;
-		std::list<std::shared_ptr<AnnGameObject>> Objects;
 
 		///Dynamic container for triggers objects present in engine.
-		std::list<AnnTriggerObject*> Triggers;
+		std::list<std::shared_ptr<AnnTriggerObject>> Triggers;
 		///Dynamic container for lights objects present in engine.
 		std::list<std::shared_ptr<AnnLightObject>> Lights;
+		///Dynamic container for Game objects present in engine
+		std::list<std::shared_ptr<AnnGameObject>> Objects;
+
 
 	};
 }

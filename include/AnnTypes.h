@@ -28,7 +28,7 @@ namespace Annwvyn
 	typedef Ogre::Vector2 AnnVect2;
 
 	//Remove some ugliness : 
-	typedef std::list<AnnTriggerObject *> AnnTriggerObjectList;
+	typedef std::list<std::shared_ptr<AnnTriggerObject> > AnnTriggerObjectList;
 	typedef std::list<std::shared_ptr<AnnGameObject> > AnnGameObjectList;
 	typedef std::list<std::shared_ptr<AnnLightObject> > AnnLightList;
 

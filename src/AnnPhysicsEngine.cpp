@@ -176,7 +176,7 @@ void AnnPhysicsEngine::processTriggersContacts(AnnPlayer* player, AnnTriggerObje
 {
 	for (auto trigger : triggers)
 	{
-		AnnTriggerObject* current(trigger);
+		auto current(trigger);
 		if (current->computeVolumetricTest(player))
 		{
 			current->setContactInformation(true);
