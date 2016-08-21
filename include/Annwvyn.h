@@ -82,6 +82,7 @@
 
 ///Annwvyn initialization macro 
 #define AnnInit(AppName) new AnnEngine(AppName)
+#define AnnQuit() delete AnnGetEngine()
 
 //===================Application Entrypoint definition=================//
 /*Main definition :

@@ -140,20 +140,15 @@ AnnMain()
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
 
-	auto level = make_shared<TestLevel>();
-	AnnGetLevelManager()->addLevel(level);
-
-	auto xmlLevel = make_shared<AnnXmlLevel>("./level/test.xml");
-	AnnGetLevelManager()->addLevel(xmlLevel);
 	
-	auto splash = make_shared<AnnSplashLevel>("splash.png", xmlLevel, 7.1f);
-	splash->setBGM("media/AnnSplash.ogg");
-	AnnGetEngine()->getLevelManager()->addLevel(splash);
-	AnnGetLevelManager()->jump(splash);
-	///These pointers are instances on the level manager, they will clear themselves from now, unless we still have them in use. 
-	level = nullptr;
-	xmlLevel = nullptr;
-	splash = nullptr;
+	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
+	AnnGetLevelManager()->addLevel(make_shared<AnnXmlLevel>("./level/test.xml"));
+	AnnGetEngine()->getLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getLastLevelLoaded(), 7.1f));
+	dynamic_cast<AnnSplashLevel*>(AnnGetLevelManager()->getLastLevelLoaded().get())->setBGM("media/AnnSplash.ogg");
+	
+	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
+
+
 
 	AnnDebug() << "Starting the render loop";
 	do	
@@ -165,7 +160,7 @@ AnnMain()
 	}
 	while(AnnGetEngine()->refresh());
 
-	delete AnnGetEngine();
+	AnnQuit();
 
 	return EXIT_SUCCESS;
 }
