@@ -31,7 +31,6 @@ void AnnFileWriter::write(std::shared_ptr<AnnSaveFileData> data)
 				<< "=" 
 				<< storedData.second 
 				<< endl;
-	saveFile.close();
 	data->changed = false;
 }
 
@@ -75,10 +74,8 @@ std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 		//Store on the file data object the given key
 		fileData->storedTextData[key] = value;
 	}
-	ifile.close();
 
 	fileData->changed = false;
-
 	return fileData;
 }
 
@@ -113,18 +110,12 @@ fileWriter(nullptr)
 	charToStrip.push_back('=');
 	charToStrip.push_back('\n');
 
-	fileWriter = new AnnFileWriter;
-	fileReader = new AnnFileReader;
+	fileWriter = std::make_shared<AnnFileWriter>();
+	fileReader = std::make_shared<AnnFileReader>();
 
 	setSaveDirectoryName(title);
 }
 
-AnnFilesystemManager::~AnnFilesystemManager()
-{
-	delete fileWriter;
-	delete fileReader;
-
-}
 
 void AnnFilesystemManager::setSaveDirectoryName(string dirname)
 {
@@ -184,12 +175,12 @@ std::shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObje
 	return nullptr;
 }
 
-AnnFileReader* AnnFilesystemManager::getFileReader()
+std::shared_ptr<AnnFileReader> AnnFilesystemManager::getFileReader()
 {
 	return fileReader;
 }
 
-AnnFileWriter* AnnFilesystemManager::getFileWriter()
+std::shared_ptr<AnnFileWriter> AnnFilesystemManager::getFileWriter()
 {
 	return fileWriter;
 }
