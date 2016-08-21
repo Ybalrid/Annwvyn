@@ -118,8 +118,6 @@ AnnTextInputer* AnnEventManager::getTextInputer()
 
 AnnEventManager::~AnnEventManager()
 {
-	for (auto listener : listeners)
-		delete listener;
 	clearListenerList();
 	defaultEventListener = nullptr;
 	Keyboard->setEventCallback(nullptr);
@@ -141,18 +139,18 @@ void Annwvyn::AnnEventManager::useDefaultEventListener()
 
 	//If the event listenre isn't allready initialized, allocate one
 	if (!defaultEventListener)
-		defaultEventListener = new AnnDefaultEventListener;
+		defaultEventListener = std::make_shared<AnnDefaultEventListener>();
 
 	//Set the default event listener to the event manager
 	addListener(defaultEventListener);
 }
 
-AnnEventListener * Annwvyn::AnnEventManager::getDefaultEventListener()
+std::shared_ptr<AnnEventListener> Annwvyn::AnnEventManager::getDefaultEventListener()
 {
 	return defaultEventListener;
 }
 
-void AnnEventManager::addListener(AnnEventListener* l)
+void AnnEventManager::addListener(std::shared_ptr<AnnEventListener> l)
 {
 	if (l != NULL)
 		listeners.push_back(l);
@@ -164,9 +162,9 @@ void AnnEventManager::clearListenerList()
 }
 
 //l equals NULL by default 
-void AnnEventManager::removeListener(AnnEventListener* l)
+void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 {
-	if (l == NULL) { clearListenerList(); return; }
+	if (l == nullptr) { clearListenerList(); return; }
 	auto iterator = listeners.begin();
 	while (iterator != listeners.end())
 		if (*iterator == l)
