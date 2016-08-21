@@ -67,6 +67,7 @@ std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 
 		//Create a string stream on the buffer
 		std::stringstream readStream(buffer);
+
 		//Getline permit you to specify the "endline" character. We use this to split the sting at the '=' in the file
 		getline(readStream, key, '=');
 		getline(readStream, value);
@@ -82,7 +83,9 @@ std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 }
 
 
-AnnFilesystemManager::AnnFilesystemManager(std::string title) : AnnSubSystem("FilesystemManager")
+AnnFilesystemManager::AnnFilesystemManager(std::string title) : AnnSubSystem("FilesystemManager"),
+fileReader(nullptr),
+fileWriter(nullptr)
 {
 	//get from the OS the user's personal directory
 #ifdef WIN32
@@ -283,7 +286,7 @@ void AnnSaveFileData::clearQuaternionValue(std::string key)
 	clearValue(key + ".w"); clearVectorValue(key);
 }
 
-AnnSaveDataInterpretor::AnnSaveDataInterpretor(AnnSaveFileData* data) :
+AnnSaveDataInterpretor::AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data) :
 	dataObject(data)
 {
 }

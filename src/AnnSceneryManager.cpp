@@ -4,7 +4,7 @@
 
 using namespace Annwvyn;
 
-AnnSceneryManager::AnnSceneryManager(OgreVRRender* rendererFromEngine) : AnnSubSystem("SceneryManager"),
+AnnSceneryManager::AnnSceneryManager(std::shared_ptr<OgreVRRender> rendererFromEngine) : AnnSubSystem("SceneryManager"),
 smgr(AnnGetEngine()->getSceneManager()),
 renderer(rendererFromEngine)
 {

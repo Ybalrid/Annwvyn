@@ -83,7 +83,7 @@ AnnEngine::AnnEngine(const char title[]) :
 	//These could be anywere
 	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
 	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
-	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer.get()));
+	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
 
 
 	renderer->initClientHmdRendering();

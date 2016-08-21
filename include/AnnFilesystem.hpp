@@ -162,7 +162,7 @@ namespace Annwvyn
 
 	public:
 		///FileInterpetor
-		AnnSaveDataInterpretor(AnnSaveFileData* data);
+		AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data);
 		
 		///Get a float from this string
 		float stringToFloat(std::string text);	
@@ -181,7 +181,7 @@ namespace Annwvyn
 		virtual void extract() =0;
 	
 	protected:
-		AnnSaveFileData* dataObject;
+		std::shared_ptr<AnnSaveFileData> dataObject;
 	};
 
 
