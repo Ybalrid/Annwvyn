@@ -15,6 +15,8 @@
 #include <sstream>
 #include <list>
 #include <limits>
+#include <memory>
+
 #ifdef WIN32
 #include <Windows.h>
 #endif
@@ -22,7 +24,6 @@
 #include "AnnTypes.h"
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
-
 #include "AnnSubsystem.hpp"
 
 using namespace std;
@@ -40,7 +41,7 @@ namespace Annwvyn
 		AnnFileWriter();
 	public:
 		///Write the fileData to disc in the appropriate directory
-		void write(AnnSaveFileData* dataToWrite);
+		void write(std::shared_ptr<AnnSaveFileData> dataToWrite);
 	};
 
 	///Handle opening, reading and closing files
@@ -52,7 +53,7 @@ namespace Annwvyn
 		AnnFileReader();
 	public:
 		///read the asked file and return a new AnnSaveFileData*
-		AnnSaveFileData* read(string filename);
+		std::shared_ptr<AnnSaveFileData> read(string filename);
 	};
 
 	class AnnSaveFileData;
@@ -81,11 +82,13 @@ namespace Annwvyn
 		void createSaveDirectory();
 
 		///Create en empty SaveFileData Object for a specific file
-		AnnSaveFileData* crateSaveFileDataObject(string filename);
+		std::shared_ptr<AnnSaveFileData> crateSaveFileDataObject(string filename);
+
 		///Get an allready existing SaveFileData object for this filename
-		AnnSaveFileData* getCachedSaveFileDataObject(string filename);
+		std::shared_ptr<AnnSaveFileData> getCachedSaveFileDataObject(string filename);
 		///Destroy this SaveFileData Object. Will loose cached data if this file didn't go through the FileWriter
-		void destroySaveFileDataObject(AnnSaveFileData* data);
+		DEPRECATED void destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
+		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 		
 		///Get the FileReader object
 		AnnFileReader* getFileReader();
@@ -97,7 +100,7 @@ namespace Annwvyn
 		string pathToUserDir;
 		AnnFileWriter* fileWriter;
 		AnnFileReader* fileReader;
-		std::list<AnnSaveFileData*> cachedData;
+		std::list<std::shared_ptr<AnnSaveFileData>> cachedData;
 	public:
 		static std::vector<char> charToEscape;
 		static std::vector<char> charToStrip;
@@ -108,6 +111,8 @@ namespace Annwvyn
 	class DLL AnnSaveFileData
 	{
 	public:
+		///Private constructor of SaveFileData class. 
+		AnnSaveFileData(std::string name);
 
 		///Get the name of this file
 		std::string getFilename();
@@ -143,8 +148,6 @@ namespace Annwvyn
 		friend class AnnFileReader;
 		friend class AnnFilesystemManager;
 
-		///Private constructor of SaveFileData class. 
-		AnnSaveFileData(std::string name);
 		std::string fileName;
 		std::map<std::string, std::string> storedTextData;
 
