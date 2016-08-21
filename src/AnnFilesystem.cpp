@@ -13,7 +13,7 @@ AnnFileWriter::AnnFileWriter()
 	AnnDebug() << "FileWriter instantiated";
 }
 
-void AnnFileWriter::write(AnnSaveFileData* data)
+void AnnFileWriter::write(std::shared_ptr<AnnSaveFileData> data)
 {
 	//Create the resources needed for the write operation
 	auto fsmanager(AnnGetFileSystemManager());
@@ -40,7 +40,7 @@ AnnFileReader::AnnFileReader()
 	AnnDebug() << "FileReader instantiated";
 }
 
-AnnSaveFileData* AnnFileReader::read(string fileName)
+std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 {
 	AnnDebug() << "Reading file " << fileName << " to memory";
 
@@ -120,8 +120,7 @@ AnnFilesystemManager::~AnnFilesystemManager()
 {
 	delete fileWriter;
 	delete fileReader;
-	for(auto dataObject : cachedData)
-		delete dataObject;
+
 }
 
 void AnnFilesystemManager::setSaveDirectoryName(string dirname)
@@ -157,21 +156,24 @@ void AnnFilesystemManager::createSaveDirectory()
 	createDirectory(getSaveDirectoryFullPath());
 }
 
-void AnnFilesystemManager::destroySaveFileDataObject(AnnSaveFileData* data)
+void AnnFilesystemManager::destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data)
 {
-	cachedData.remove(data);
-	delete data;
+	releaseSaveFileDataObject(data);
 }
 
-
-AnnSaveFileData* AnnFilesystemManager::crateSaveFileDataObject(string filename)
+void AnnFilesystemManager::releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data)
 {
-	AnnSaveFileData* data = new AnnSaveFileData(filename);
+	cachedData.remove(data);
+}
+
+std::shared_ptr<AnnSaveFileData> AnnFilesystemManager::crateSaveFileDataObject(string filename)
+{
+	auto data = make_shared<AnnSaveFileData>(filename);
 	cachedData.push_back(data);
 	return data;
 }
 
-AnnSaveFileData* AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
+std::shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
 {
 	for(auto dataObject : cachedData)
 		if(dataObject->getFilename() == filename)
