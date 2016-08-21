@@ -20,7 +20,7 @@ timerID demoTimer;
 class MySaveTest : public AnnSaveDataInterpretor
 {
 public:
-	MySaveTest(AnnSaveFileData* data) : AnnSaveDataInterpretor(data)
+	MySaveTest(std::shared_ptr<AnnSaveFileData> data) : AnnSaveDataInterpretor(data)
 	{
 	}
 
