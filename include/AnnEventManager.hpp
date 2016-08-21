@@ -511,11 +511,11 @@ namespace Annwvyn
 		/// That event listener is designed as an example of an event listener, and for exploring the environement without having to write a custom event listene
 		void useDefaultEventListener();
 
-		AnnEventListener* getDefaultEventListener();
+		std::shared_ptr<AnnEventListener> getDefaultEventListener();
 
 		///Ad a listener to the event manager
 		/// \param listener Pointer to a listener object
-		void addListener(AnnEventListener* listener);
+		void addListener(std::shared_ptr<AnnEventListener> listener);
 
 		///Remove every listener known from the EventManager. 
 		///This doesn't clear any memory
@@ -523,7 +523,7 @@ namespace Annwvyn
 
 		///Make the event manager forget about the listener
 		/// \param listener A listener object. If NULL (default), it will remove every listener form the manager (see clearListenerList())
-		void removeListener(AnnEventListener* listener = NULL);
+		void removeListener(std::shared_ptr<AnnEventListener> listener = nullptr);
 
 		///Create a timer that will timeout after "delay" seconds
 		timerID fireTimer(double delay);
@@ -538,7 +538,7 @@ namespace Annwvyn
 		AnnTextInputer* getTextInputer();
 
 	private:
-		std::vector<AnnEventListener*> listeners;
+		std::vector<std::shared_ptr<AnnEventListener>> listeners;
 
 		friend class AnnEngine;
 		friend class AnnPhysicsEngine;
@@ -586,7 +586,7 @@ namespace Annwvyn
 		AnnTextInputer* textInputer;
 
 		///Default event listener
-		AnnDefaultEventListener* defaultEventListener;
+		std::shared_ptr<AnnDefaultEventListener> defaultEventListener;
 
 		StickAxisId xboxID;
 		bool knowXbox;
