@@ -49,6 +49,15 @@ namespace Annwvyn
 		///Unload the level currently running
 		void unloadCurrentLevel();
 
+		///Retrive the last loaded level pointer
+		std::shared_ptr<AnnLevel> getLastLevelLoaded();
+
+		///Retrive the first loaded level pointer
+		std::shared_ptr<AnnLevel> getFirstLevelLoaded();
+
+		///Retrive the `id`th  loaded level pointer
+		std::shared_ptr<AnnLevel> getLevelByIndex(level_id id);
+
 	private:
 		///List of levels
 		std::vector<std::shared_ptr<AnnLevel>> levelList;

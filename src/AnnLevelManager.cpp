@@ -60,3 +60,19 @@ void AnnLevelManager::unloadCurrentLevel()
 	if(current) current->unload();
 	current = NULL;
 }
+
+std::shared_ptr<AnnLevel> AnnLevelManager::getLastLevelLoaded()
+{
+	return levelList.back();
+}
+
+std::shared_ptr<AnnLevel> AnnLevelManager::getFirstLevelLoaded()
+{
+	return levelList.front();
+}
+
+std::shared_ptr<AnnLevel> AnnLevelManager::getLevelByIndex(level_id id)
+{
+	if (id >= levelList.size()) return nullptr;
+	return levelList[id];
+}
