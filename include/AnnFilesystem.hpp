@@ -35,11 +35,10 @@ namespace Annwvyn
 	///Handle opening, writing and closing files
 	class DLL AnnFileWriter
 	{
-		friend class AnnFilesystemManager;
-	private:
+		public:
 		///Construct file writer object
 		AnnFileWriter();
-	public:
+	
 		///Write the fileData to disc in the appropriate directory
 		void write(std::shared_ptr<AnnSaveFileData> dataToWrite);
 	};
@@ -47,11 +46,10 @@ namespace Annwvyn
 	///Handle opening, reading and closing files
 	class DLL AnnFileReader
 	{
-		friend class AnnFilesystemManager;
-	private:
+	public:
 		///Construct file reader object
 		AnnFileReader();
-	public:
+
 		///read the asked file and return a new AnnSaveFileData*
 		std::shared_ptr<AnnSaveFileData> read(string filename);
 	};
@@ -65,9 +63,6 @@ namespace Annwvyn
 		
 		///Construct FileSystem manager
 		AnnFilesystemManager(std::string title);
-
-		///Destroy FileSystem manager
-		~AnnFilesystemManager();
 
 		///Set the name of the app directory
 		void setSaveDirectoryName(string name);
@@ -91,15 +86,15 @@ namespace Annwvyn
 		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 		
 		///Get the FileReader object
-		AnnFileReader* getFileReader();
+		std::shared_ptr<AnnFileReader> getFileReader();
 		///Get the FileWriter object
-		AnnFileWriter* getFileWriter();
+		std::shared_ptr<AnnFileWriter> getFileWriter();
 
 	private:
 		string saveDirectoryName;
 		string pathToUserDir;
-		AnnFileWriter* fileWriter;
-		AnnFileReader* fileReader;
+		std::shared_ptr<AnnFileWriter> fileWriter;
+		std::shared_ptr<AnnFileReader> fileReader;
 		std::list<std::shared_ptr<AnnSaveFileData>> cachedData;
 	public:
 		static std::vector<char> charToEscape;
