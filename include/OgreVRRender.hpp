@@ -14,6 +14,7 @@ struct OgrePose
 {
 	///A 3D vector representing a position
 	Ogre::Vector3 position;
+
 	///A quaternion representiong an orientation
 	Ogre::Quaternion orientation;
 };
@@ -154,9 +155,6 @@ protected:
 
 	///Anti Aliasing level
 	Ogre::uint AALevel;
-
-	private:
-
 };
 
 #endif
