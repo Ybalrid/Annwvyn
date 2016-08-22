@@ -71,7 +71,7 @@ namespace Annwvyn
 			/// \param y Y componant of the translation vector
 			/// \param z Z componant of the translation vector
             void translate(float x, float y, float z);
-
+			
             ///Set orientation from Quaternion components
 			/// \param w W composant of a quaternion
 			/// \param x X composant of a quaternion
@@ -240,7 +240,7 @@ namespace Annwvyn
             bool bulletReady;
 
 			///AnnAudioEngine audioSource;
-			AnnAudioSource* audioSource;
+			std::shared_ptr<AnnAudioSource> audioSource;
 
 			///Name of the object
 			std::string name;
@@ -249,6 +249,8 @@ namespace Annwvyn
 			///True if the object is visible
 			bool visible;
 			BtOgre::RigidBodyState *state;
+
+
         public:
             ///Executed after object initialization
             virtual void postInit(){return;}

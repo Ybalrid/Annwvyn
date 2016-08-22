@@ -109,7 +109,7 @@ void AnnXmlLevel::load()
 		if(gameObjectData)
 		entityName = (gameObjectData->Attribute("EntityName"));
 		
-		AnnGameObject* constructedGameObject;
+		std::shared_ptr<AnnGameObject> constructedGameObject;
 		if(!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
 		
 		gameObjectData = gameObject->FirstChildElement("Position");
@@ -192,7 +192,7 @@ void AnnXmlLevel::load()
 			color->QueryFloatAttribute("A", &a);
 			lightType = type->GetText();
 
-			AnnLightObject* lightSource = addLightObject(lightID);
+			auto lightSource = addLightObject(lightID);
 			lightSource->setPosition(AnnVect3(x, y, z));
 			lightSource->setType(AnnLightObject::getLightTypeFromString(lightType));
 			lightSource->setDirection(AnnVect3(dx, dy, dz));

@@ -4,7 +4,7 @@
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(NULL);
-AnnConsole* AnnEngine::onScreenConsole(NULL);
+std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
 
 AnnEngine* AnnEngine::Instance()
 {
@@ -49,10 +49,10 @@ AnnEngine::AnnEngine(const char title[]) :
 
 	//Launching initialisation routines : 
 	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
-	renderer = new OgreOculusRender(title);
+	renderer = std::make_shared<OgreOculusRender>(title);
 	renderer->initOgreRoot("Annwvyn.log");
 
-	player = new AnnPlayer;
+	player = std::make_shared< AnnPlayer>();
 	renderer->initVrHmd();
 	renderer->initPipeline();
 	SceneManager = renderer->getSceneManager();
@@ -62,8 +62,8 @@ AnnEngine::AnnEngine(const char title[]) :
 	log("Setup Annwvyn's subsystems");
 
 	//Element on this list will be updated in order by the engine each frame
-	SubSystemList.push_back(levelManager = new AnnLevelManager);
-	SubSystemList.push_back(gameObjectManager = new AnnGameObjectManager);
+	SubSystemList.push_back(levelManager = std::make_shared<AnnLevelManager>());
+	SubSystemList.push_back(gameObjectManager = std::make_shared<AnnGameObjectManager>());
 
 	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
 
@@ -74,16 +74,16 @@ AnnEngine::AnnEngine(const char title[]) :
 	- audio is synced (sonds comes form where they should)
 	- then the game can redraw*/
 
-	physicsEngine = new AnnPhysicsEngine(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers);
-	SubSystemList.push_back(eventManager = new AnnEventManager(renderer->getWindow()));
+	physicsEngine = std::make_shared<AnnPhysicsEngine>(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers);
+	SubSystemList.push_back(eventManager = std::make_shared< AnnEventManager>(renderer->getWindow()));
 	SubSystemList.push_back(physicsEngine);
-	SubSystemList.push_back(audioEngine = new AnnAudioEngine);
+	SubSystemList.push_back(audioEngine = std::make_shared< AnnAudioEngine>());
 
 	
 	//These could be anywere
-	SubSystemList.push_back(filesystemManager = new AnnFilesystemManager(title));
-	SubSystemList.push_back(resourceManager = new AnnResourceManager);
-	SubSystemList.push_back(sceneryManager = new AnnSceneryManager(renderer));
+	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
+	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
+	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
 
 
 	renderer->initClientHmdRendering();
@@ -92,7 +92,7 @@ AnnEngine::AnnEngine(const char title[]) :
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 
 	//This subsystem need the povNode object to be initialized. And the Resource manager because it wants a font file and an image background 
-	SubSystemList.push_back(onScreenConsole = new AnnConsole());
+	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
 
 	log("===================================================", false);
 	log("Annwvyn Game Engine - Step into the Other World    ", false);
@@ -101,96 +101,62 @@ AnnEngine::AnnEngine(const char title[]) :
 	log("===================================================", false);
 }
 
-void AnnEngine::destroyAllSubSystem()
-{
-	//Destroy all SubSystems
-	for (auto SubSystem : SubSystemList)
-	{
-		/*Some part of the engine will check for theses pointers to be null or not. This can cause segfaults if we delete them without putting them at null, even in the "destroyAllSubsystems" context
-		TODO:Find a way for subsystemps to be destroyed without calling others subsystems (non critical)*/
-		if (SubSystem == physicsEngine) physicsEngine = nullptr;
-		if (SubSystem == audioEngine) audioEngine = nullptr;
-		delete SubSystem;
-	}
-	//This is another safegard. Sorry for the spaghettiness of this.
-	canAccessSubSystems = false;
-}
-
 AnnEngine::~AnnEngine()
 {
-	//Destroy all parts of the engine
-	destroyAllSubSystem();
-
 	//Some cute log messsages
-	log("Game engine sucessfully destroyed.");
+	log("Game engine stopped. Subsystem are shutting down...");
 	log("Good luck with the real world now! :3");
-	
-	//Destroy the VR renderer
-	delete renderer;
-
-	//Forget AnnEngine static address
-	singleton = nullptr;
-
-	//At this point, you *could* recreate an instance of the engine. But I don't know why you would want that.
 }
 
 //All theses getter are for encapsulation purpose. Calling them directly would make verry long lines of code. Note that there's a whole bunch of macro in AnnEngine.hpp to help with that
-AnnEventManager* AnnEngine::getEventManager()
+std::shared_ptr<AnnEventManager> AnnEngine::getEventManager()
 {
-	if (!canAccessSubSystems) return nullptr;
 	return eventManager;
 }
 
-AnnResourceManager* AnnEngine::getResourceManager()
+std::shared_ptr<AnnResourceManager> AnnEngine::getResourceManager()
 {
-	if (!canAccessSubSystems) return nullptr;
 	return resourceManager;
 }
 
-AnnGameObjectManager * AnnEngine::getGameObjectManager()
+std::shared_ptr<AnnGameObjectManager> AnnEngine::getGameObjectManager()
 {
-	if (!canAccessSubSystems) return nullptr;
 	return gameObjectManager;
 }
 
-AnnSceneryManager * AnnEngine::getSceneryManager()
+std::shared_ptr<AnnSceneryManager> AnnEngine::getSceneryManager()
 {
-	if (!canAccessSubSystems) return nullptr;
 	return sceneryManager;
 }
 
-OgreVRRender * AnnEngine::getVRRenderer()
+std::shared_ptr<OgreVRRender> AnnEngine::getVRRenderer()
 {
 	return renderer;
 }
 
-AnnLevelManager* AnnEngine::getLevelManager()
+std::shared_ptr<AnnLevelManager> AnnEngine::getLevelManager()
 {
-	if (!canAccessSubSystems) return nullptr;
 	return levelManager;
 }
 
-AnnPlayer* AnnEngine::getPlayer()
+std::shared_ptr<AnnPlayer> AnnEngine::getPlayer()
 {
 	return player;
 }
 
-AnnFilesystemManager* AnnEngine::getFileSystemManager()
+std::shared_ptr<AnnFilesystemManager> AnnEngine::getFileSystemManager()
 {
-	if (!canAccessSubSystems) return nullptr;
 	return filesystemManager;
 }
 
 
-AnnAudioEngine* AnnEngine::getAudioEngine()
+std::shared_ptr<AnnAudioEngine> AnnEngine::getAudioEngine()
 {
-	if (!canAccessSubSystems) return nullptr;
 	return audioEngine;
 }
 
-AnnPhysicsEngine* AnnEngine::getPhysicsEngine()
+std::shared_ptr<AnnPhysicsEngine> AnnEngine::getPhysicsEngine()
 {
-	if (!canAccessSubSystems) return nullptr;
 	return physicsEngine;
 }
 
@@ -209,7 +175,7 @@ void AnnEngine::log(std::string message, bool flag)
 
 	messageForLog += message;
 	Ogre::LogManager::getSingleton().logMessage(messageForLog);
-	if (onScreenConsole)
+	if (onScreenConsole != nullptr)
 		onScreenConsole->append(message);
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
@@ -218,7 +184,7 @@ void AnnEngine::log(std::string message, bool flag)
 //Don't ask me why this is not part of the Physics engine. Actually it just calls something on the physics engine. Will be probably deleted in the future.
 void AnnEngine::initPlayerPhysics()
 {
-	physicsEngine->initPlayerPhysics(player, povNode);
+	physicsEngine->initPlayerPhysics(povNode);
 }
 
 //Need to be redone. 

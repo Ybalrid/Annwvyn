@@ -20,7 +20,7 @@ timerID demoTimer;
 class MySaveTest : public AnnSaveDataInterpretor
 {
 public:
-	MySaveTest(AnnSaveFileData* data) : AnnSaveDataInterpretor(data)
+	MySaveTest(std::shared_ptr<AnnSaveFileData> data) : AnnSaveDataInterpretor(data)
 	{
 	}
 
@@ -86,10 +86,10 @@ public:
 		testFile->setValue("pos", AnnVect3(2.5, 4.8, Ogre::Math::HALF_PI));
 		testFile->setValue("orient", AnnQuaternion(Ogre::Radian(Ogre::Math::HALF_PI), AnnVect3(.5, .5, .5)));
 
-		AnnFileWriter* writer(AnnGetFileSystemManager()->getFileWriter());
+		auto writer(AnnGetFileSystemManager()->getFileWriter());
 		writer->write(testFile);
 
-		AnnFileReader* reader(AnnGetFileSystemManager()->getFileReader());
+		auto reader(AnnGetFileSystemManager()->getFileReader());
 		auto data = reader->read("test");
 
 		AnnDebug() << "KEY0 val : " << data->getValue("KEY0");
@@ -131,7 +131,6 @@ AnnMain()
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
 	AnnGetPhysicsEngine()->setDebugPhysics(false);
-
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetVRRenderer()->recenter();
 
@@ -139,17 +138,12 @@ AnnMain()
 	AnnGetResourceManager()->loadDir("media/environement");
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
-
-	auto level = new TestLevel();
-	AnnGetLevelManager()->addLevel(level);
-
-	auto xmlLevel = new AnnXmlLevel("./level/test.xml");
-	AnnGetLevelManager()->addLevel(xmlLevel);
 	
-	AnnSplashLevel* splash = new AnnSplashLevel("splash.png", xmlLevel, 7.1f);
-	splash->setBGM("media/AnnSplash.ogg");
-	AnnGetEngine()->getLevelManager()->addLevel(splash);
-	AnnGetLevelManager()->jump(splash);
+	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
+	AnnGetLevelManager()->addLevel(make_shared<AnnXmlLevel>("./level/test.xml"));
+	AnnGetEngine()->getLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getLastLevelLoaded(), 7.1f));
+	dynamic_cast<AnnSplashLevel*>(AnnGetLevelManager()->getLastLevelLoaded().get())->setBGM("media/AnnSplash.ogg");
+	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
 
 	AnnDebug() << "Starting the render loop";
 	do	
@@ -161,6 +155,7 @@ AnnMain()
 	}
 	while(AnnGetEngine()->refresh());
 
-	delete AnnGetEngine();
+	AnnQuit();
+
 	return EXIT_SUCCESS;
 }

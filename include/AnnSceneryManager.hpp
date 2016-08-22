@@ -6,6 +6,7 @@
 #include "OgreSceneManager.h"
 #include "AnnTypes.h"
 #include "OgreVRRender.hpp"
+#include <memory>
 
 namespace Annwvyn
 {
@@ -15,7 +16,7 @@ namespace Annwvyn
 	public:
 
 		///Construct the AnnSceneryManager
-		AnnSceneryManager(OgreVRRender* renderer);
+		AnnSceneryManager(std::shared_ptr<OgreVRRender> renderer);
 
 		///This subsystem doesn't need to be updated
 		bool needUpdate() { return false; }
@@ -64,7 +65,7 @@ namespace Annwvyn
 		Ogre::SceneManager* smgr;
 
 		///Pointer to the VR renderer
-		OgreVRRender* renderer;
+		std::shared_ptr<OgreVRRender> renderer;
 	};
 }
 

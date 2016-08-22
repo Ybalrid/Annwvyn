@@ -13,7 +13,7 @@ AnnFileWriter::AnnFileWriter()
 	AnnDebug() << "FileWriter instantiated";
 }
 
-void AnnFileWriter::write(AnnSaveFileData* data)
+void AnnFileWriter::write(std::shared_ptr<AnnSaveFileData> data)
 {
 	//Create the resources needed for the write operation
 	auto fsmanager(AnnGetFileSystemManager());
@@ -31,7 +31,6 @@ void AnnFileWriter::write(AnnSaveFileData* data)
 				<< "=" 
 				<< storedData.second 
 				<< endl;
-	saveFile.close();
 	data->changed = false;
 }
 
@@ -40,7 +39,7 @@ AnnFileReader::AnnFileReader()
 	AnnDebug() << "FileReader instantiated";
 }
 
-AnnSaveFileData* AnnFileReader::read(string fileName)
+std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 {
 	AnnDebug() << "Reading file " << fileName << " to memory";
 
@@ -67,6 +66,7 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 
 		//Create a string stream on the buffer
 		std::stringstream readStream(buffer);
+
 		//Getline permit you to specify the "endline" character. We use this to split the sting at the '=' in the file
 		getline(readStream, key, '=');
 		getline(readStream, value);
@@ -74,15 +74,15 @@ AnnSaveFileData* AnnFileReader::read(string fileName)
 		//Store on the file data object the given key
 		fileData->storedTextData[key] = value;
 	}
-	ifile.close();
 
 	fileData->changed = false;
-
 	return fileData;
 }
 
 
-AnnFilesystemManager::AnnFilesystemManager(std::string title) : AnnSubSystem("FilesystemManager")
+AnnFilesystemManager::AnnFilesystemManager(std::string title) : AnnSubSystem("FilesystemManager"),
+fileReader(nullptr),
+fileWriter(nullptr)
 {
 	//get from the OS the user's personal directory
 #ifdef WIN32
@@ -110,19 +110,12 @@ AnnFilesystemManager::AnnFilesystemManager(std::string title) : AnnSubSystem("Fi
 	charToStrip.push_back('=');
 	charToStrip.push_back('\n');
 
-	fileWriter = new AnnFileWriter;
-	fileReader = new AnnFileReader;
+	fileWriter = std::make_shared<AnnFileWriter>();
+	fileReader = std::make_shared<AnnFileReader>();
 
 	setSaveDirectoryName(title);
 }
 
-AnnFilesystemManager::~AnnFilesystemManager()
-{
-	delete fileWriter;
-	delete fileReader;
-	for(auto dataObject : cachedData)
-		delete dataObject;
-}
 
 void AnnFilesystemManager::setSaveDirectoryName(string dirname)
 {
@@ -157,21 +150,24 @@ void AnnFilesystemManager::createSaveDirectory()
 	createDirectory(getSaveDirectoryFullPath());
 }
 
-void AnnFilesystemManager::destroySaveFileDataObject(AnnSaveFileData* data)
+void AnnFilesystemManager::destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data)
 {
-	cachedData.remove(data);
-	delete data;
+	releaseSaveFileDataObject(data);
 }
 
-
-AnnSaveFileData* AnnFilesystemManager::crateSaveFileDataObject(string filename)
+void AnnFilesystemManager::releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data)
 {
-	AnnSaveFileData* data = new AnnSaveFileData(filename);
+	cachedData.remove(data);
+}
+
+std::shared_ptr<AnnSaveFileData> AnnFilesystemManager::crateSaveFileDataObject(string filename)
+{
+	auto data = make_shared<AnnSaveFileData>(filename);
 	cachedData.push_back(data);
 	return data;
 }
 
-AnnSaveFileData* AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
+std::shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
 {
 	for(auto dataObject : cachedData)
 		if(dataObject->getFilename() == filename)
@@ -179,12 +175,12 @@ AnnSaveFileData* AnnFilesystemManager::getCachedSaveFileDataObject(string filena
 	return nullptr;
 }
 
-AnnFileReader* AnnFilesystemManager::getFileReader()
+std::shared_ptr<AnnFileReader> AnnFilesystemManager::getFileReader()
 {
 	return fileReader;
 }
 
-AnnFileWriter* AnnFilesystemManager::getFileWriter()
+std::shared_ptr<AnnFileWriter> AnnFilesystemManager::getFileWriter()
 {
 	return fileWriter;
 }
@@ -281,7 +277,7 @@ void AnnSaveFileData::clearQuaternionValue(std::string key)
 	clearValue(key + ".w"); clearVectorValue(key);
 }
 
-AnnSaveDataInterpretor::AnnSaveDataInterpretor(AnnSaveFileData* data) :
+AnnSaveDataInterpretor::AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data) :
 	dataObject(data)
 {
 }
