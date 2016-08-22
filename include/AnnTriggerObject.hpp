@@ -25,7 +25,7 @@ namespace Annwvyn
 		AnnTriggerObject();
 
 		///Class destructor
-		virtual ~AnnTriggerObject(){}
+		virtual ~AnnTriggerObject();
 
 		///Set position form Vector 3D
 		/// \param pos 3D vector positioning the object
@@ -50,7 +50,7 @@ namespace Annwvyn
 		void setContactInformation(bool contact);
 		
 		///Return true if player's head (this is player's trigger point) is inside the trigger volume.
-		virtual bool computeVolumetricTest(AnnPlayer* player) = 0;
+		virtual bool computeVolumetricTest(std::shared_ptr<AnnPlayer> player) = 0;
 
 		friend class AnnEngine;
 		friend class AnnGameObjectManager;
@@ -94,7 +94,7 @@ namespace Annwvyn
 	private:
 		
 		///implement the test on player position
-		bool computeVolumetricTest(AnnPlayer* player);
+		bool computeVolumetricTest(std::shared_ptr<AnnPlayer> player);
 		
 		///Distance where the trigger is triggered
 		float threshold;
@@ -125,7 +125,7 @@ namespace Annwvyn
 	private:
 		
 		///implement the test on player position
-		bool computeVolumetricTest(AnnPlayer* player);
+		bool computeVolumetricTest(std::shared_ptr <AnnPlayer> player);
 		
 		///Boundaries values. All defaults to 0
 		float xMin, xMax, yMin, yMax, zMin, zMax;

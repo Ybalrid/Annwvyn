@@ -12,7 +12,7 @@ AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager"),
 
 void AnnResourceManager::loadZip(const char path[], const char resourceGroupName[])
 {
-	if (resourceGroupName == reservedResourceGroupName) refuseResource(path, resourceGroupName);
+	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
 	AnnDebug("Loading resources from Zip archive :");
 	AnnDebug() << path;
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
@@ -20,7 +20,7 @@ void AnnResourceManager::loadZip(const char path[], const char resourceGroupName
 
 void AnnResourceManager::loadDir(const char path[], const char resourceGroupName[])
 {
-	if (resourceGroupName == reservedResourceGroupName) refuseResource(path, resourceGroupName);
+	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
 	AnnDebug("Loading resources from Filesystem directory :");
 	AnnDebug() << path;
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);

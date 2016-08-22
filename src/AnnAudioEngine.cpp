@@ -120,8 +120,8 @@ void AnnAudioEngine::shutdownOpenAL()
     alDeleteSources(1, &bgm);
 	
 	//Stop and delete other audio sources
-	for(auto source : AudioSources)
-		delete source;
+	for (auto source : AudioSources)
+		source = nullptr;
 
 	//Delete the BGM buffer if it has been initialized
 	if(alIsBuffer(bgmBuffer) == AL_TRUE)
@@ -314,24 +314,27 @@ const std::string AnnAudioEngine::getLastError()
 {
 	return lastError;
 }
-AnnAudioSource* AnnAudioEngine::createSource(std::string path)
+
+std::shared_ptr<AnnAudioSource> AnnAudioEngine::createSource(std::string path)
 {
 	auto source = createSource();
 	source->changeSound(path);
 	return source;
 }
 
-void Annwvyn::AnnAudioEngine::destroySource(AnnAudioSource * source)
+void AnnAudioEngine::destroySource(std::shared_ptr<AnnAudioSource> source)
 {
-	if (!source) return;
+	removeSource(source);
+}
+void AnnAudioEngine::removeSource(std::shared_ptr<AnnAudioSource> source)
+{
 	AudioSources.remove(source);
-	delete source;
 }
 
-AnnAudioSource* AnnAudioEngine::createSource()
+std::shared_ptr<AnnAudioSource> AnnAudioEngine::createSource()
 {
 	
-	AnnAudioSource* audioSource = new AnnAudioSource;
+	auto audioSource = std::make_shared<AnnAudioSource>();
 	audioSource->bufferName = "Nothing";
 	alGenSources(1, &audioSource->source);
 	
@@ -350,6 +353,7 @@ AnnAudioSource::AnnAudioSource()
 
 AnnAudioSource::~AnnAudioSource()
 {
+	AnnDebug() << "Destroying source";
 	stop();
 	alDeleteSources(1, &source);
 	source = AL_NONE;

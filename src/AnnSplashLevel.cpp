@@ -5,7 +5,7 @@
 
 using namespace Annwvyn;
 
-AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, AnnLevel* nextLevel, float timeoutTime) : constructLevel(),
+AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, std::shared_ptr<AnnLevel> nextLevel, float timeoutTime) : constructLevel(),
 	next(nextLevel),
 	timeout(timeoutTime*1000),
 	currentTime(0),
@@ -112,13 +112,14 @@ void AnnSplashLevel::runLogic()
 	}
 
 	//Run the following only if you set a "next" level to jump to
-	if(next)
+	if(auto nextLevel = next.lock())
+		if(nextLevel)
 	{
 		//test if the splash has timed out
 		currentTime = AnnGetEngine()->getTimeFromStartUp();
 		if(currentTime - startTime> timeout)
 			//Jump to the next
-			AnnGetEngine()->getLevelManager()->jump(next);
+			AnnGetEngine()->getLevelManager()->jump(nextLevel);
 	}
 }
 
@@ -139,7 +140,7 @@ void AnnSplashLevel::unload()
 	AnnGetSceneryManager()->setWorldBackgroundColor();
 }
 
-void AnnSplashLevel::setNextLevel(AnnLevel* level)
+void AnnSplashLevel::setNextLevel(std::shared_ptr<AnnLevel> level)
 {
 	next = level;
 }

@@ -15,6 +15,8 @@
 #include <sstream>
 #include <list>
 #include <limits>
+#include <memory>
+
 #ifdef WIN32
 #include <Windows.h>
 #endif
@@ -22,7 +24,6 @@
 #include "AnnTypes.h"
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
-
 #include "AnnSubsystem.hpp"
 
 using namespace std;
@@ -34,25 +35,23 @@ namespace Annwvyn
 	///Handle opening, writing and closing files
 	class DLL AnnFileWriter
 	{
-		friend class AnnFilesystemManager;
-	private:
+		public:
 		///Construct file writer object
 		AnnFileWriter();
-	public:
+	
 		///Write the fileData to disc in the appropriate directory
-		void write(AnnSaveFileData* dataToWrite);
+		void write(std::shared_ptr<AnnSaveFileData> dataToWrite);
 	};
 
 	///Handle opening, reading and closing files
 	class DLL AnnFileReader
 	{
-		friend class AnnFilesystemManager;
-	private:
+	public:
 		///Construct file reader object
 		AnnFileReader();
-	public:
+
 		///read the asked file and return a new AnnSaveFileData*
-		AnnSaveFileData* read(string filename);
+		std::shared_ptr<AnnSaveFileData> read(string filename);
 	};
 
 	class AnnSaveFileData;
@@ -64,9 +63,6 @@ namespace Annwvyn
 		
 		///Construct FileSystem manager
 		AnnFilesystemManager(std::string title);
-
-		///Destroy FileSystem manager
-		~AnnFilesystemManager();
 
 		///Set the name of the app directory
 		void setSaveDirectoryName(string name);
@@ -81,23 +77,25 @@ namespace Annwvyn
 		void createSaveDirectory();
 
 		///Create en empty SaveFileData Object for a specific file
-		AnnSaveFileData* crateSaveFileDataObject(string filename);
+		std::shared_ptr<AnnSaveFileData> crateSaveFileDataObject(string filename);
+
 		///Get an allready existing SaveFileData object for this filename
-		AnnSaveFileData* getCachedSaveFileDataObject(string filename);
+		std::shared_ptr<AnnSaveFileData> getCachedSaveFileDataObject(string filename);
 		///Destroy this SaveFileData Object. Will loose cached data if this file didn't go through the FileWriter
-		void destroySaveFileDataObject(AnnSaveFileData* data);
+		DEPRECATED void destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
+		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 		
 		///Get the FileReader object
-		AnnFileReader* getFileReader();
+		std::shared_ptr<AnnFileReader> getFileReader();
 		///Get the FileWriter object
-		AnnFileWriter* getFileWriter();
+		std::shared_ptr<AnnFileWriter> getFileWriter();
 
 	private:
 		string saveDirectoryName;
 		string pathToUserDir;
-		AnnFileWriter* fileWriter;
-		AnnFileReader* fileReader;
-		std::list<AnnSaveFileData*> cachedData;
+		std::shared_ptr<AnnFileWriter> fileWriter;
+		std::shared_ptr<AnnFileReader> fileReader;
+		std::list<std::shared_ptr<AnnSaveFileData>> cachedData;
 	public:
 		static std::vector<char> charToEscape;
 		static std::vector<char> charToStrip;
@@ -108,6 +106,8 @@ namespace Annwvyn
 	class DLL AnnSaveFileData
 	{
 	public:
+		///Private constructor of SaveFileData class. 
+		AnnSaveFileData(std::string name);
 
 		///Get the name of this file
 		std::string getFilename();
@@ -143,8 +143,6 @@ namespace Annwvyn
 		friend class AnnFileReader;
 		friend class AnnFilesystemManager;
 
-		///Private constructor of SaveFileData class. 
-		AnnSaveFileData(std::string name);
 		std::string fileName;
 		std::map<std::string, std::string> storedTextData;
 
@@ -159,7 +157,7 @@ namespace Annwvyn
 
 	public:
 		///FileInterpetor
-		AnnSaveDataInterpretor(AnnSaveFileData* data);
+		AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data);
 		
 		///Get a float from this string
 		float stringToFloat(std::string text);	
@@ -178,7 +176,7 @@ namespace Annwvyn
 		virtual void extract() =0;
 	
 	protected:
-		AnnSaveFileData* dataObject;
+		std::shared_ptr<AnnSaveFileData> dataObject;
 	};
 
 

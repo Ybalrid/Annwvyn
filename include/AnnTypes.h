@@ -10,7 +10,9 @@
 
 #include "systemMacro.h"
 
+#include <list>
 #include <vector>
+#include <memory>
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 #include "AnnLightObject.hpp"
@@ -26,9 +28,9 @@ namespace Annwvyn
 	typedef Ogre::Vector2 AnnVect2;
 
 	//Remove some ugliness : 
-	typedef std::list<AnnTriggerObject *> AnnTriggerObjectList;
-	typedef std::list<AnnGameObject *> AnnGameObjectList;
-	typedef std::list<AnnLightObject *> AnnLightList;
+	typedef std::list<std::shared_ptr<AnnTriggerObject> > AnnTriggerObjectList;
+	typedef std::list<std::shared_ptr<AnnGameObject> > AnnGameObjectList;
+	typedef std::list<std::shared_ptr<AnnLightObject> > AnnLightList;
 
 	///Because sometimes, after one byte you're full...
 	typedef unsigned char byte;

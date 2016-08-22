@@ -21,47 +21,45 @@ void AnnLevel::unload()
 	AnnGetAudioEngine()->stopBGM();
 	//Remove the sky
 	AnnGetSceneryManager()->removeSkyDome();
-
 	//Remove the ambiant lighting
-	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0,0,0));
+	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0, 0, 0));
 	
 	//Remove the level lights
-	for(AnnLightList::iterator it = levelLighting.begin(); it != levelLighting.end(); ++it)
-		AnnGetGameObjectManager()->destroyLightObject(*it);
-	levelLighting.clear();
 	levelLightingIdMap.clear();
+	for (auto obj : levelLighting)
+		AnnGetGameObjectManager()->removeLightObject(obj);
+	levelLighting.clear();
 
 	//Remove the level objects
-	for(AnnGameObjectList::iterator it = levelContent.begin(); it != levelContent.end(); ++it)
-		AnnGetGameObjectManager()->destroyGameObject(*it);
-	levelContent.clear();
 	levelContentIdMap.clear();
+	for(auto obj : levelContent)
+		AnnGetGameObjectManager()->removeGameObject(obj);
+	levelContent.clear();
 
 	//Remove volumetric event triggers
-	for(AnnTriggerObjectList::iterator it = levelTrigger.begin(); it != levelTrigger.end(); ++it)
-		AnnGetGameObjectManager()->destroyTriggerObject(*it);
-	levelTrigger.clear();
 	levelTriggerIdMap.clear();
+	for(auto obj : levelTrigger)
+		AnnGetGameObjectManager()->removeTriggerObject(obj);
+	levelTrigger.clear();
 }
 
-AnnLightObject* AnnLevel::addLightObject(std::string id)
+std::shared_ptr<AnnLightObject> AnnLevel::addLightObject(std::string id)
 {
-	AnnLightObject* light (AnnGetGameObjectManager()->createLightObject());
+	auto light (AnnGetGameObjectManager()->createLightObject());
 	levelLighting.push_back(light);
 	levelLightingIdMap[id] = light;
 	return light;
 }
 
-AnnGameObject* AnnLevel::addGameObject(std::string entityName, std::string id)
+std::shared_ptr<AnnGameObject> AnnLevel::addGameObject(std::string entityName, std::string id)
 {
-	AnnGameObject* object(AnnGetGameObjectManager()->createGameObject(entityName.c_str()));
+	auto object(AnnGetGameObjectManager()->createGameObject(entityName.c_str()));
 	object->setID(id);
 	levelContent.push_back(object);
 	levelContentIdMap[id] = object;
 	return object;
 }
-
-AnnTriggerObject* AnnLevel::addTrggerObject(AnnTriggerObject* obj , std::string id)
+std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::shared_ptr<AnnTriggerObject> obj , std::string id)
 {
 	AnnGetGameObjectManager()->createTriggerObject(obj);
 	levelTrigger.push_back(obj);

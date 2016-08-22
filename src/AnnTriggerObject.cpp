@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AnnTriggerObject.hpp"
+#include "AnnLogger.hpp" 
 
 using namespace Annwvyn;
 
@@ -9,6 +10,11 @@ AnnTriggerObject::AnnTriggerObject() :
 {
 }
 
+AnnTriggerObject::~AnnTriggerObject()
+{
+	AnnDebug() << "AnnTriggerObject destructor called";
+}
+
 void AnnTriggerObject::setPosition(Ogre::Vector3 pos)
 {
 	setPosition(pos.x, pos.y, pos.z);
@@ -16,7 +22,7 @@ void AnnTriggerObject::setPosition(Ogre::Vector3 pos)
 
 void AnnTriggerObject::setPosition(float x, float y, float z)
 {
-	position = Ogre::Vector3(x,y,z);
+	position = Ogre::Vector3(x, y, z);
 }
 
 bool AnnTriggerObject::getContactInformation()
@@ -52,7 +58,7 @@ AnnSphericalTriggerObject::AnnSphericalTriggerObject() : AnnTriggerObject(),
 {
 }
 
-bool AnnSphericalTriggerObject::computeVolumetricTest(AnnPlayer* player)
+bool AnnSphericalTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer> player)
 {
 	return getPosition().squaredDistance(player->getPosition()) <= squaredThreshold;
 }
@@ -77,7 +83,7 @@ void AnnAlignedBoxTriggerObject::setBoundaries(float x1, float x2, float y1, flo
 	zMax = z2;
 }
 
-bool AnnAlignedBoxTriggerObject::computeVolumetricTest(AnnPlayer* player)
+bool AnnAlignedBoxTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer> player)
 {
 	AnnVect3 position(player->getPosition());
 
