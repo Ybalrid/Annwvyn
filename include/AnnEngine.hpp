@@ -25,6 +25,9 @@
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
 
+//Graphic rendering system for the vive
+#include "OgreOpenVRRender.hpp"
+
 //Annwvyn
 #include "AnnEventManager.hpp"
 #include "AnnTriggerObject.hpp"
