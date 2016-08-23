@@ -82,6 +82,9 @@
     <Filter Include="Annwvyn\Core\DataTypes">
       <UniqueIdentifier>{3f866286-f886-4410-92d8-dc30cc4850c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OgreRenderingForVR\Vive">
+      <UniqueIdentifier>{817503ff-7928-493f-a8dc-882bc4b068eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -195,6 +198,9 @@
     <ClInclude Include="..\..\include\systemMacro.h">
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\OgreOpenVRRender.hpp">
+      <Filter>OgreRenderingForVR\Vive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -289,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnColor.cpp">
       <Filter>Annwvyn\Core\DataTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreOpenVRRender.cpp">
+      <Filter>OgreRenderingForVR\Vive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -65,6 +65,11 @@
 #include <OVR_CAPI_GL.h>
 #include <Extras/OVR_Math.h>
 
+//OpenVR (Valve/HTC Vive) API
+#include <openvr.h>
+#include <openvr_capi.h>
+
+
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
