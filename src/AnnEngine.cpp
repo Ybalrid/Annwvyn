@@ -42,10 +42,21 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	std::cerr << "HMD selection from command line routine retuned : " << hmdCommand << std::endl;
 
 	//Launching initialisation routines : 
-	if(hmdCommand == "OgreOculusRender"
-	   || hmdCommand == "OgreDefaultRender")
+	if (hmdCommand == "OgreOculusRender"
+		|| hmdCommand == "OgreDefaultRender")
+	{
 		renderer = std::make_shared<OgreOculusRender>(title);
+	}
 	///else if vive
+	else if (hmdCommand == "OgreOpenVRRender")
+	{
+		MessageBox(NULL,
+				   L"The Vive rendering is not implemented yet.\n"
+				   L"Sorry for that. ^^\"",
+				   L"Error: Vive not implemented. Yet ;-)",
+				   MB_ICONERROR);
+		exit(ANN_ERR_CANTHMD);
+	}
 	///else if osvr
 	///else if ...
 	else
