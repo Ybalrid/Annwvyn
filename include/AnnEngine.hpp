@@ -95,7 +95,7 @@ namespace Annwvyn
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
 		/// \param fs the fullscreen state of the application. set it to false may help when developping with VS debugger on one screen
-		AnnEngine(const char title[]);
+		AnnEngine(const char title[], std::string hmdCommand);
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();

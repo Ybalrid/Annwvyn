@@ -45,4 +45,9 @@ See log. Something that should have been initialized beforehand isn't here.
 If there isn't a log, you tried to use something relating ogre before Ogre initialization
 */
 
+#define ANN_ERR_CANTHMD 0xB12D60D // BL(i)ND God
+/*
+Cannot select the wanted HMD
+*/
+
 #endif
