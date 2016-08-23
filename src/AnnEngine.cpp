@@ -39,6 +39,13 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	updateTime(-1),
 	canAccessSubSystems(true)
 {
+
+	if (singleton)
+	{
+		log("Can't create 2 instances of the engine!");
+		exit(ANN_ERR_MEMORY);
+	}
+
 	std::cerr << "HMD selection from command line routine retuned : " << hmdCommand << std::endl;
 
 	//Launching initialisation routines : 
@@ -69,12 +76,6 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 				   L"Error: Cannot understand what HMD you want to use!",
 				   MB_ICONERROR);
 		exit(ANN_ERR_CANTHMD);
-	}
-
-	if (singleton)
-	{
-		log("Can't create 2 instances of the engine!");
-		exit(ANN_ERR_MEMORY);
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");
