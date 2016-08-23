@@ -60,7 +60,7 @@
 #include <vector>
 #include <list>
 #include <unordered_map>
-
+#include <cstring>
 //Annwvyn classes
 #include "AnnEngine.hpp"
 #include "AnnGameObjectManager.hpp"
@@ -80,27 +80,80 @@
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 
+///Namespace containing the totality of Annwvyn components
+namespace Annwvyn
+{
+	inline std::string getHMDFromCmdLine(const char* cmd)
+	{
+		if (strlen(cmd) == 0)
+			return "OgreDefaultRender";
+		const char argChar = '-';
+
+		if (cmd[0] != argChar)
+			return "arg_error";
+
+		std::string strCmd{ cmd };
+
+		if (strCmd == "-rift")
+			return "OgreOculusRender";
+
+		if (strCmd == "-vive")
+			return "OgreOpenVRRender";
+
+		if (strCmd == "-osvr")
+			return "OgreOSVRRender";
+
+		return "arg_error";
+	}
+
+	inline void preStart()
+	{
+
+	}
+}
+
+
+
 ///Annwvyn initialization macro 
-#define AnnInit(AppName) new AnnEngine(AppName)
+#define AnnInit(AppName) new AnnEngine(AppName, detectedHMD)
 #define AnnQuit() delete AnnGetEngine()
 
 //===================Application Entrypoint definition=================//
 /*Main definition :
  *
  *	For more simplicity, Program start by a "AnnMain" function at the library user
- *	side. This allow to select proper entry proint for the aplication, and maybe 
+ *	side. This allow to select proper entry proint for the aplication, and maybe
  *	add pre-starting treatements here.
  */
+
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN 
 #include "windows.h"
+
 ///Application entry point
-#define AnnMain() INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
+#define AnnMain() int AnnwvynStart();\
+std::string detectedHMD;\
+INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT) \
+{\
+	detectedHMD = Annwvyn::getHMDFromCmdLine(static_cast<const char*>(strCmdLine));\
+	Annwvyn::preStart();\
+	return AnnwvynStart();\
+}\
+int AnnwvynStart()
 
 #else
 ///Application entry point
-#define AnnMain() int main(int argc, char** argv)
+#define AnnMain() int AnnwvynStart();\
+std::string detectedHMD;\
+int main(int argc, char** argv)\
+{\
+	if(argc < 2) detectedHMD = Annwvyn::getHMDFromCmdLine("");\
+	else detectedHMD = Annwvyn::getHMDFromCmdLine(argv[1]);\
+	Annwvyn::presart();\
+	return AnnwvynStart();\
+}\
+int AnnwvynStart()
 #endif
 //=======================================================================//
 
@@ -108,8 +161,4 @@
 
 #ifndef ANN_NAMESPACE
 #define ANN_NAMESPACE
-///Namespace containing the totality of Annwvyn components
-namespace Annwvyn
-{
-}
 #endif

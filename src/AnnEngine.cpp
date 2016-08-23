@@ -25,7 +25,7 @@ void AnnEngine::startGameplayLoop()
 	while (refresh());
 }
 
-AnnEngine::AnnEngine(const char title[]) :
+AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	player(nullptr),
 	audioEngine(nullptr),
 	eventManager(nullptr),
@@ -39,18 +39,38 @@ AnnEngine::AnnEngine(const char title[]) :
 	updateTime(-1),
 	canAccessSubSystems(true)
 {
+	std::cerr << "HMD selection from command line routine retuned : " << hmdCommand << std::endl;
+
+	//Launching initialisation routines : 
+	if(hmdCommand == "OgreOculusRender"
+	   || hmdCommand == "OgreDefaultRender")
+		renderer = std::make_shared<OgreOculusRender>(title);
+	///else if vive
+	///else if osvr
+	///else if ...
+	else
+	{
+		MessageBox(NULL,
+				   L"This program can be used with multiple VR sollution.\n"
+				   L"The executable should be launched from the intended launcher.\n"
+				   L"If you're trying to launch it by hand, please check if your command line parameter is correct!\n\n"
+				   L"Availaible command line parameter : \n\t-oculus\n",
+				   L"Error: Cannot understand what HMD you want to use!",
+				   MB_ICONERROR);
+		exit(ANN_ERR_CANTHMD);
+	}
+
 	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
 		exit(ANN_ERR_MEMORY);
 	}
+
+	renderer->initOgreRoot("Annwvyn.log");
+
+
 	srand(time(nullptr));
 	singleton = this;
-
-	//Launching initialisation routines : 
-	//All Ogre related critical component is done inside the OgreOculusRenderer class. 
-	renderer = std::make_shared<OgreOculusRender>(title);
-	renderer->initOgreRoot("Annwvyn.log");
 
 	player = std::make_shared< AnnPlayer>();
 	renderer->initVrHmd();
