@@ -33,7 +33,7 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "C:\Oculus\AnnwvynSDK64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs ; Excludes: "*.sdf,*.ipch,*.pch, VS2012_Dependencies_AnnwvynSDK_64-OVR1.3.2.zip"
+Source: "C:\Oculus\AnnwvynSDK64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs ; Excludes: "*.sdf,*.ipch,*.pch, VS2015_Dependencies_AnnwvynSDK_64-OVR1.7.zip"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
