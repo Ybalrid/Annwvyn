@@ -122,10 +122,8 @@ public:
 
 AnnMain()
 {
-
 	//Only usefull on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();
-
 
 	//Init game engine
 	AnnInit("AnnTest");
