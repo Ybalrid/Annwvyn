@@ -129,22 +129,6 @@ void OgreOculusRender::initVrHmd()
 	updateTime = 1.0 / static_cast<double>(Oculus->getHmdDesc().DisplayRefreshRate);
 }
 
-void OgreOculusRender::getOgreConfig()
-{
-	//Ogre as to be initialized
-	if(!root) exit(ANN_ERR_NOTINIT);
-
-	//Load OgrePlugins
-	root->loadPlugin("RenderSystem_GL");
-	root->loadPlugin("Plugin_OctreeSceneManager");
-	
-	//Set the classic OpenGL render system
-	root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
-	root->getRenderSystem()->setFixedPipelineEnabled(true);
-	root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
-	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
-}
-
 void OgreOculusRender::createWindow()
 {
 	if(!root) exit(ANN_ERR_NOTINIT);
