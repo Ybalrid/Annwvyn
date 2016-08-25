@@ -50,4 +50,10 @@ If there isn't a log, you tried to use something relating ogre before Ogre initi
 Cannot select the wanted HMD
 */
 
+#include <Windows.h>
+inline void displayWin32ErrorMessage(LPCWSTR title, LPCWSTR content)
+{
+	MessageBox(NULL, content, title, MB_ICONERROR);
+}
+
 #endif
