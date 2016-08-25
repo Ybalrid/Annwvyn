@@ -57,12 +57,13 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	///else if vive
 	else if (hmdCommand == "OgreOpenVRRender")
 	{
-		MessageBox(NULL,
+		/*MessageBox(NULL,
 				   L"The Vive rendering is not implemented yet.\n"
 				   L"Sorry for that. ^^\"",
 				   L"Error: Vive not implemented. Yet ;-)",
 				   MB_ICONERROR);
-		exit(ANN_ERR_CANTHMD);
+		exit(ANN_ERR_CANTHMD);*/
+		renderer = std::make_shared<OgreOpenVRRender>(title);
 	}
 	///else if osvr
 	///else if ...
