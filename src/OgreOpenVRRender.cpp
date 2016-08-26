@@ -383,12 +383,3 @@ inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::H
 		0.0f,		 0.0f,		  0.0f,		   1.0f
 	};
 }
-
-/*
-Ogre::Real OgreOpenVRRender::getIPD()
-{
-	
-	//TODO get Real IPD
-	return 0.063f;
-}
-*/

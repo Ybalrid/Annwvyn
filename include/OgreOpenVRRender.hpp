@@ -135,7 +135,6 @@ private:
 	vr::VRTextureBounds_t GLBounds;
 	
 	//Timing
-	vr::Compositor_FrameTiming frameTiming;
 	double then, now;
 
 	vr::TrackedDevicePose_t trackedPoses[vr::k_unMaxTrackedDeviceCount];
@@ -145,6 +144,5 @@ private:
 	inline Ogre::Matrix4 getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat);
 	Ogre::SceneNode* eyeRig;
 
-	//Ogre::Real getIPD();
 	bool shouldQuitState;
 };
