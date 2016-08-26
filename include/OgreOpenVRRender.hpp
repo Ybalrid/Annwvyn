@@ -75,27 +75,70 @@ public:
 
 	void getProjectionMatrix();
 
-	vr::EVREye getEye(oovrEyeType eye)
+	inline vr::EVREye getEye(oovrEyeType eye)
 	{
 		if (eye == left) return vr::Eye_Left;
 		return vr::Eye_Right;
 	}
 
+	void setupDistrotion();
+
 protected:
 private:
+
+	inline Ogre::Vector3 getTrackedHMDTranslation();
+	inline Ogre::Quaternion getTrackedHMDOrieation();
+
+
+	///Singleton pointer
 	static OgreOpenVRRender* OpenVRSelf;
 
+	///main OpenVR object
 	vr::IVRSystem* vrSystem;
+
+	///Error handeling vaiable
 	vr::HmdError hmdError;
 
-	vr::IVRCompositor* vrCompositor;
-
+	///window size
 	unsigned int windowWidth, windowHeight;
 
+	///EyeCamera render texures
 	Ogre::TexturePtr rttTexture[2];
+	///OpenGL "id" of the render textures
 	GLuint rttTextureGLID[2];
 
+	///EyeCameraViewport
+	Ogre::Viewport* rttViewports[2];
+
+	///Use hardware gamma correction
 	bool gamma;
 
+	///API handler, should be initialized to "OpenGL"
 	vr::GraphicsAPIConvention API;
+
+	///OpenVR texture handlers
+	vr::Texture_t vrTextures[2];
+
+	Ogre::Camera* monoCam;
+	Ogre::Viewport* windowViewport;
+
+
+	Ogre::SceneManager* distortionScene;
+
+	std::string strDriver, strDisplay;
+
+	vr::VRTextureBounds_t GLBounds;
+	
+	//Timing
+	vr::Compositor_FrameTiming frameTiming;
+	double then, now;
+
+	vr::TrackedDevicePose_t trackedPoses[vr::k_unMaxTrackedDeviceCount];
+
+	Ogre::Matrix4 hmdAbsoluteTransform;
+	
+	inline Ogre::Matrix4 getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat);
+	Ogre::SceneNode* eyeRig;
+
+	//Ogre::Real getIPD();
 };
