@@ -91,7 +91,7 @@ void OgreOpenVRRender::initVrHmd()
 void OgreOpenVRRender::initClientHmdRendering()
 {
 	setupDistrotion();
-	
+	//Should init the device model things here if we want to display the vive controllers 
 }
 
 bool OgreOpenVRRender::shouldQuit()
@@ -101,12 +101,12 @@ bool OgreOpenVRRender::shouldQuit()
 
 bool OgreOpenVRRender::shouldRecenter()
 {
-	return false;
+	return false; //Only usefull with the Oculus runtime
 }
 
 bool OgreOpenVRRender::isVisibleInHmd()
 {
-	return true;
+	return true; //Only usefull with the oculus runtime
 }
 
 void OgreOpenVRRender::updateTracking()

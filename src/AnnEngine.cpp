@@ -73,7 +73,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 				   L"This program can be used with multiple VR solution.\n"
 				   L"The executable should be launched from the intended launcher.\n"
 				   L"If you're trying to launch it by hand, please check if your command line parameter is correct!\n\n"
-				   L"Available command line parameter : \n\t-oculus\n",
+				   L"Available command line parameter : \n\t-oculus\n"
+				   L"\t-vive\n",
 				   L"Error: Cannot understand what HMD you want to use!",
 				   MB_ICONERROR);
 		exit(ANN_ERR_CANTHMD);
