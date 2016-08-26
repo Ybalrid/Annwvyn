@@ -97,7 +97,8 @@ knowXbox(false)
 		OIS::JoyStick* Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		Joysticks.push_back(new JoystickBuffer(Joystick));
 		AnnDebug() << "Detected joystick : " << Joystick->vendor();
-		if (Joystick->vendor().find("Xbox") != std::string::npos)
+		if (Joystick->vendor().find("Xbox") != std::string::npos 
+		|| Joystick->vendor().find("XBOX") != std::string::npos)
 		{
 			knowXbox = true;
 			xboxID = (StickAxisId)Joystick->getID();
