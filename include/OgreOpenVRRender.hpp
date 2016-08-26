@@ -88,7 +88,11 @@ private:
 
 	inline Ogre::Vector3 getTrackedHMDTranslation();
 	inline Ogre::Quaternion getTrackedHMDOrieation();
+	
+	void processVREvents();
+	void processTrackedPoses();
 
+	void handleIPDChange();
 
 	///Singleton pointer
 	static OgreOpenVRRender* OpenVRSelf;
@@ -119,6 +123,7 @@ private:
 	///OpenVR texture handlers
 	vr::Texture_t vrTextures[2];
 
+
 	Ogre::Camera* monoCam;
 	Ogre::Viewport* windowViewport;
 
@@ -141,4 +146,5 @@ private:
 	Ogre::SceneNode* eyeRig;
 
 	//Ogre::Real getIPD();
+	bool shouldQuitState;
 };
