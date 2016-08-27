@@ -19,7 +19,7 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	AnnGetEngine()->initPlayerPhysics();
 
 	//Intentiate and register our basic level and "jump" to it:
-	AnnGetLevelManager()->addLevel(new MyLevel);
+	AnnGetLevelManager()->addLevel(std::make_shared<MyLevel>());
 	AnnGetLevelManager()->jumpToFirstLevel();
 
 	//The game is rendering here now:
