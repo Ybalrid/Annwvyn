@@ -19,13 +19,13 @@ AnnLevel
 	|		|
 	|		(+ Object (ID))
 	|			|
-	|			+ Entity
+	|			+ Entity [stringMesh]
 	|			|
-	|			+ Position	
+	|			+ Position (X,Y,Z)	
 	|			|
-	|			+ Orientation	
+	|			+ Orientation  (X,Y,Z,W)	
 	|			|
-	|			+ Scale	
+	|			+ Scale	 (X,Y,Z)
 	|			|
 	|			- Physics
 	|				| 
@@ -33,16 +33,16 @@ AnnLevel
 	|				| 
 	|				+ Shape [nameOfShape]
 	|				| 
-	|				+ Mass [number]
+	|				- Mass [number]
 	|
 	- LevelLighting
 			|
 			(- Source (ID))
 				|
-				+ Type
+				+ Type [directional/point]
 				|
-				+ Position
+				+ Position (X,Y,Z)
 				|
-				+ Direction
+				+ Direction (X,Y,Z)
 				|
-				- Color
+				- Color (R, G, B, A)
