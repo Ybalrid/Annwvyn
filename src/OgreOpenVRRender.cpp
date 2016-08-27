@@ -14,12 +14,14 @@ API(vr::API_OpenGL),
 shouldQuitState(false)
 {
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
+
+	rttViewports[left] = nullptr;
+	rttViewports[right] = nullptr;
 }
 
 OgreOpenVRRender::~OgreOpenVRRender()
 {
 	vr::VR_Shutdown();
-
 
 	rttTexture[left].setNull();
 	rttTexture[right].setNull();
@@ -174,7 +176,7 @@ void OgreOpenVRRender::recenter()
 void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	backgroundColor = color;
-	for (char i(0); i < 2; i++)
+	for (char i(0); i < 2; i++) if(rttViewports[i])
 		rttViewports[i]->setBackgroundColour(backgroundColor);
 }
 
@@ -292,8 +294,10 @@ void OgreOpenVRRender::initRttRendering()
 	rttViewports[right] = rttTexture[right]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right]);
 	
 	windowViewport = window->addViewport(monoCam);
-	windowViewport->setBackgroundColour(Ogre::ColourValue(1, 0, 1, 1));
+	windowViewport->setBackgroundColour(backgroundColor);
+	changeViewportBackgroundColor(backgroundColor);
 
+	//V is inverted in OpenGL
 	GLBounds = {};
 	GLBounds.uMin = 0;
 	GLBounds.uMax = 1;

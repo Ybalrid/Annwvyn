@@ -8,6 +8,8 @@ rmdir deploy
 @echo deploying game...
 mkdir deploy
 copy Game.exe deploy\
+copy rift_launcher.bat deploy\
+copy vive_launcher.bat deploy\
 copy *.dll deploy\
 copy *.cfg deploy\
 xcopy plugin deploy\plugin\
