@@ -48,39 +48,33 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	std::cerr << "HMD selection from command line routine retuned : " << hmdCommand << std::endl;
 
-	//Launching initialisation routines : 
+	//Select the correct OgreVRRender class to use : 
 	if (hmdCommand == "OgreOculusRender"
 		|| hmdCommand == "OgreDefaultRender")
-	{
 		renderer = std::make_shared<OgreOculusRender>(title);
-	}
-	///else if vive
 	else if (hmdCommand == "OgreOpenVRRender")
-	{
-		/*MessageBox(NULL,
-				   L"The Vive rendering is not implemented yet.\n"
-				   L"Sorry for that. ^^\"",
-				   L"Error: Vive not implemented. Yet ;-)",
-				   MB_ICONERROR);
-		exit(ANN_ERR_CANTHMD);*/
 		renderer = std::make_shared<OgreOpenVRRender>(title);
-	}
-	///else if osvr
-	///else if ...
+
 	else
 	{
-		MessageBox(NULL,
-				   L"This program can be used with multiple VR solution.\n"
-				   L"The executable should be launched from the intended launcher.\n"
-				   L"If you're trying to launch it by hand, please check if your command line parameter is correct!\n\n"
-				   L"Available command line parameter : \n\t-rift\n"
-				   L"\t-vive\n",
-				   L"Error: Cannot understand what HMD you want to use!",
-				   MB_ICONERROR);
+		displayWin32ErrorMessage(L"Error: Cannot understand VR System you want to use!",
+								 L"This program can be used with multiple VR solution.\n"
+								 L"The executable should be launched via a dedicated launcher.\n"
+								 L"If you're trying to launch it by hand, please check if your command line parameter is correct!\n\n"
+								 L"Available command line parameter : \n"
+								 L"\t-rift\n"
+								 L"\t-vive\n"
+								 L"\nIf you don't specify anything, the default system will be used (here it's the Oculus Rift)"
+		);
 		exit(ANN_ERR_CANTHMD);
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");
+	log("===================================================", false);
+	log("Annwvyn Game Engine - Step into the Other World    ", false);
+	log("Free/Libre Game Engine designed for Virtual Reality", false);
+	log("Version : " + getAnnwvynVersion(), false);
+	log("===================================================", false);
 
 
 	srand(time(nullptr));
@@ -128,11 +122,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	//This subsystem need the povNode object to be initialized. And the Resource manager because it wants a font file and an image background 
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
 
-	log("===================================================", false);
-	log("Annwvyn Game Engine - Step into the Other World    ", false);
-	log("Free/Libre Game Engine designed for Virtual Reality", false);
-	log("Version : " + getAnnwvynVersion(), false);
-	log("===================================================", false);
+	
 }
 
 AnnEngine::~AnnEngine()
