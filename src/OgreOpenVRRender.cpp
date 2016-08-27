@@ -142,6 +142,11 @@ void OgreOpenVRRender::updateTracking()
 	//Update the eye rig tracking to make the eyes match yours
 	eyeRig->setPosition(headPosition + getTrackedHMDTranslation() - Ogre::Vector3(0, Annwvyn::AnnGetPlayer()->getEyesHeight(), 0));
 	eyeRig->setOrientation(headOrientation * getTrackedHMDOrieation());
+
+	//Get the head reference back to the gameplay code 
+	returnPose.position = eyeRig->getPosition();
+	returnPose.orientation = eyeRig->getOrientation();
+
 }
 
 void OgreOpenVRRender::renderAndSubmitFrame()
@@ -361,7 +366,7 @@ void OgreOpenVRRender::processTrackedPoses()
 	{
 		if (trackedPoses[i].bPoseIsValid)
 		{
-
+			//I think I need actual vive controllers to go further. And Annwvyn has no abstraction for hand controllers right now. 
 		}
 	}
 }
