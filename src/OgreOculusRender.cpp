@@ -245,7 +245,7 @@ void OgreOculusRender::initScene()
 	 *    |     /         |
 	 *    |  /            |
 	 *  1 +----------------+ 3
-	 * Texture coordinates are also mapped. To display properly, the texture should respect the same aspect ratio (2:1)
+	 * Texture coordinates are also mapped.
 	 */
 
 	debugPlane->begin("DebugPlaneMaterial", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
