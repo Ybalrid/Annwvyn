@@ -56,8 +56,9 @@ std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t
 
 void OgreOpenVRRender::initVrHmd()
 {
+	//Initialize OpenVR
 	vrSystem = vr::VR_Init(&hmdError, vr::EVRApplicationType::VRApplication_Scene);
-	if (hmdError != vr::VRInitError_None)
+	if (hmdError != vr::VRInitError_None) //Check for errors
 		switch (hmdError)
 		{
 			default:
@@ -73,6 +74,7 @@ void OgreOpenVRRender::initVrHmd()
 				exit(ANN_ERR_CANTHMD);
 		}
 
+	//Check if VRCompositor is present
 	if (!vr::VRCompositor())
 	{
 		displayWin32ErrorMessage(L"Error: failed to init OpenVR VRCompositor",
@@ -80,9 +82,9 @@ void OgreOpenVRRender::initVrHmd()
 		exit(ANN_ERR_NOTINIT);
 	}
 
+	//Get Driver and Display information
 	strDriver = GetTrackedDeviceString(vrSystem, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_TrackingSystemName_String);
 	strDisplay = GetTrackedDeviceString(vrSystem, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_SerialNumber_String);
-
 	Annwvyn::AnnDebug() << "Driver : " << strDriver;
 	Annwvyn::AnnDebug() << "Display : " << strDisplay;
 
@@ -189,6 +191,7 @@ void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 	backgroundColor = color;
 	for (char i(0); i < 2; i++) if (rttViewports[i])
 		rttViewports[i]->setBackgroundColour(backgroundColor);
+	if (windowViewport) windowViewport->setBackgroundColour(backgroundColor);
 }
 
 void OgreOpenVRRender::setCamerasNearClippingDistance(float distance)
@@ -234,12 +237,16 @@ void OgreOpenVRRender::initScene()
 	if (!root) exit(ANN_ERR_NOTINIT);
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
+
+	//Optional additional scenes here
 }
 
 void OgreOpenVRRender::initCameras()
 {
 	//VR Eye cameras
 	eyeRig = smgr->getRootSceneNode()->createChildSceneNode();
+
+	//Camera for  each eye
 	eyeCameras[left] = smgr->createCamera("lcam");
 	eyeCameras[left]->setAutoAspectRatio(true);
 	eyeRig->attachObject(eyeCameras[left]);
@@ -251,6 +258,7 @@ void OgreOpenVRRender::initCameras()
 	//This will translate the cameras to put the correct IPD distance for the user
 	handleIPDChange();
 
+	//Monoscopic view camera, for non-VR display
 	monoCam = smgr->createCamera("mcam");
 	monoCam->setAspectRatio(16.0 / 9.0);
 	monoCam->setAutoAspectRatio(false);
@@ -265,51 +273,49 @@ void OgreOpenVRRender::initCameras()
 
 void OgreOpenVRRender::initRttRendering()
 {
-	//Init GLEW here to be able to call OpenGL functions
-	Annwvyn::AnnDebug() << "Init GL Extension Wrangler";
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		Annwvyn::AnnDebug("Failed to glewTnit()\n\
-						  Cannot call manual OpenGL\n\
-						  Error Code : " + (unsigned int)err);
-		exit(ANN_ERR_RENDER);
-	}
-	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
-
+	//Get the render texture size recomended by the OpenVR API for the current Driver/Display
 	unsigned int w, h;
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
 	Annwvyn::AnnDebug() << "Recomended Render Target Size : " << w << "x" << h;
 
-	//When OgreVRRender() intialize Ogre, the OpenGL RenderSystem is loaded in hard.
+	//Create theses textures in OpenGL and get their OpenGL ID
+	//
+	//When the parent class *OgreVRRender* intialize Ogre, the OpenGL RenderSystem is loaded in hard.
 	//We don't need to check that we're using OpenGL before doing this kind of cast:
 	Ogre::GLTextureManager* textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
 
+	//Left eye texture
 	rttTexture[left] = textureManager->createManual("RTT_TEX_L", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 													Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
 	rttTextureGLID[left] = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX_L").getPointer())->getGLID();
 
+	//Right eye texture
 	rttTexture[right] = textureManager->createManual("RTT_TEX_R", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 													 Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
 	rttTextureGLID[right] = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX_R").getPointer())->getGLID();
 
-
+	//Create viewport for each cameras in each render texture
 	rttViewports[left] = rttTexture[left]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left]);
 	rttViewports[right] = rttTexture[right]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right]);
 
+	//Do the same for the window 
 	windowViewport = window->addViewport(monoCam);
-	windowViewport->setBackgroundColour(backgroundColor);
+
+	//Make sure the default viewport background color is set for everything
 	changeViewportBackgroundColor(backgroundColor);
 }
 
 void OgreOpenVRRender::getProjectionMatrix()
 {
+	//Get the couple of matrices
 	vr::HmdMatrix44_t prj[2]
 		= { vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance, API),
 		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance, API) };
 
+	//Apply them to the camera
 	for (char eye(0); eye < 2; eye++)
 	{
+		//Need to convert them to Ogre's object
 		Ogre::Matrix4 m;
 		for (char i(0); i < 4; i++) for (char j(0); j < 4; j++)
 			m[i][j] = prj[eye].m[i][j];
@@ -333,6 +339,7 @@ inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
 
 inline Ogre::Quaternion OgreOpenVRRender::getTrackedHMDOrieation()
 {
+	//Orientation/scale as quaternion (the matrix transfrom has no scale componant.
 	return hmdAbsoluteTransform.extractQuaternion();
 }
 
