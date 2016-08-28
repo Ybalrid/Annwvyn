@@ -15,8 +15,8 @@ OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 	Oculus(nullptr),
 	nearClippingDistance(0.5f),
 	farClippingDistance(4000.0f),
-	lastOculusPosition(headPosition),
-	lastOculusOrientation(headOrientation),
+	lastOculusPosition(feetPosition),
+	lastOculusOrientation(bodyOrientation),
 	textureSwapChain(0),
 	perfHudMode(ovrPerfHud_Off)
 {
@@ -164,17 +164,17 @@ void OgreOculusRender::initCameras()
 	smgr->createCamera("monocam");
 	monoCam->setAspectRatio(16.0/9.0);
 	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(headPosition);
+	monoCam->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
 	monoCam->setNearClipDistance(0.1);
 	monoCam->setFarClipDistance(4000);
 	monoCam->setFOVy(Ogre::Degree(90));
 
 	//VR Eye cameras
 	eyeCameras[left ] = smgr->createCamera("lcam");
-	eyeCameras[left ]->setPosition(headPosition);
+	eyeCameras[left ]->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
 	eyeCameras[left ]->setAutoAspectRatio(true);
 	eyeCameras[right] = smgr->createCamera("rcam");
-	eyeCameras[right]->setPosition(headPosition);
+	eyeCameras[right]->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
 	eyeCameras[right]->setAutoAspectRatio(true);
 
 	//do NOT attach camera to this node...
@@ -497,8 +497,8 @@ void OgreOculusRender::showDebug(DebugMode mode)
 void OgreOculusRender::updateTracking()
 {
 	//Get current camera base information
-	headPosition = headNode->getPosition();
-	headOrientation = headNode->getOrientation();
+	feetPosition = headNode->getPosition();
+	bodyOrientation = headNode->getOrientation();
 
 	//Begin frame - get timing
 	lastFrameDisplayTime = currentFrameDisplayTime;
@@ -526,24 +526,25 @@ void OgreOculusRender::updateTracking()
 	for(byte eye = 0; eye < ovrEye_Count; eye++)
 	{
 		//headOrientation and headPosition are the player position/orientation on the space
-		eyeCameras[eye]->setOrientation(headOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
+		eyeCameras[eye]->setOrientation(bodyOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z));
 		eyeCameras[eye]->setPosition
-			(headPosition  //the "gameplay" position of player's avatar head
+		(feetPosition  //the "gameplay" position of player's avatar head
 
-			+ (eyeCameras[eye]->getOrientation() * Ogre::Vector3( //realword camera orientation + the  
-			EyeRenderDesc[eye].HmdToEyeOffset.x, //view adjust vector.
-			EyeRenderDesc[eye].HmdToEyeOffset.y, //The translations has to occur in function of the current head orientation.
-			EyeRenderDesc[eye].HmdToEyeOffset.z) //That's why just multiply by the quaternion we just calculated. 
+		 + (eyeCameras[eye]->getOrientation() * Ogre::Vector3( //realword camera orientation + the  
+		 EyeRenderDesc[eye].HmdToEyeOffset.x, //view adjust vector.
+		 EyeRenderDesc[eye].HmdToEyeOffset.y, //The translations has to occur in function of the current head orientation.
+		 EyeRenderDesc[eye].HmdToEyeOffset.z) //That's why just multiply by the quaternion we just calculated. 
 
-			+ headOrientation * Ogre::Vector3( //headOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
-			oculusPos.x,
-			oculusPos.y,
-			oculusPos.z)));
+		 + bodyOrientation * (Ogre::Vector3( //headOrientation is in fact the direction the avatar is facing expressed as an Ogre::Quaternion
+		 oculusPos.x,
+		 oculusPos.y,
+		 oculusPos.z)
+		 + AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y)));
 	}
 
 	//Update the pose for gameplay purposes
-	returnPose.position = headPosition + headOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
-	returnPose.orientation = headOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
+	returnPose.position = (feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y) + bodyOrientation * Ogre::Vector3(oculusPos.x, oculusPos.y, oculusPos.z);
+	returnPose.orientation = bodyOrientation * Ogre::Quaternion(oculusOrient.w, oculusOrient.x, oculusOrient.y, oculusOrient.z);
 	monoCam->setPosition(returnPose.position);
 	monoCam->setOrientation(returnPose.orientation);
 }

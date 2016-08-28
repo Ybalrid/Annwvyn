@@ -54,17 +54,16 @@ std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t
 	return sResult;
 }
 
-
 void OgreOpenVRRender::initVrHmd()
 {
 	vrSystem = vr::VR_Init(&hmdError, vr::EVRApplicationType::VRApplication_Scene);
 	if (hmdError != vr::VRInitError_None)
-	{
 		switch (hmdError)
 		{
 			default:
 				displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
-										 L"Undescribed error when initalizing the OpenVR Render object");
+										 L"Undescribed error when initalizing the OpenVR Render object"
+				);
 				exit(ANN_ERR_NOTINIT);
 			case vr::VRInitError_Init_HmdNotFound:
 			case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
@@ -73,7 +72,6 @@ void OgreOpenVRRender::initVrHmd()
 										 L"Please install SteamVR and launchj it, and verrify HMD USB and HDMI connection");
 				exit(ANN_ERR_CANTHMD);
 		}
-	}
 
 	if (!vr::VRCompositor())
 	{
@@ -94,6 +92,18 @@ void OgreOpenVRRender::initClientHmdRendering()
 {
 	setupDistrotion();
 	//Should init the device model things here if we want to display the vive controllers 
+
+	//Declare the textures for SteamVR
+	vrTextures[left] = { (void*)rttTextureGLID[left], API, vr::ColorSpace_Gamma };
+	vrTextures[right] = { (void*)rttTextureGLID[right], API, vr::ColorSpace_Gamma };
+
+	//Set the OpenGL texture geometry
+	GLBounds = {};
+	GLBounds.uMin = 0;
+	GLBounds.uMax = 1;
+	GLBounds.vMin = 1;
+	GLBounds.vMax = 0;
+
 }
 
 bool OgreOpenVRRender::shouldQuit()
@@ -116,12 +126,12 @@ void OgreOpenVRRender::updateTracking()
 	processVREvents();
 
 	//Get current camera base information
-	headPosition = headNode->getPosition();
-	headOrientation = headNode->getOrientation();
+	feetPosition = headNode->getPosition();
+	bodyOrientation = headNode->getOrientation();
 
 	//Calculate update time
 	then = now;
-	now = getTimer()->getMilliseconds()/1000.0;
+	now = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
 
 	//Wait for next frame pose 
@@ -132,16 +142,16 @@ void OgreOpenVRRender::updateTracking()
 
 	//Here we just care about the HMD
 	vr::TrackedDevicePose_t hmdPose;
-	if ((hmdPose =  trackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
+	if ((hmdPose = trackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
 	//Update the monoscopic camera view
-	monoCam->setPosition(headPosition + getTrackedHMDTranslation());
-	monoCam->setOrientation(headOrientation * getTrackedHMDOrieation());
+	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y + getTrackedHMDTranslation());
+	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Update the eye rig tracking to make the eyes match yours
-	eyeRig->setPosition(headPosition + getTrackedHMDTranslation() - Ogre::Vector3(0, Annwvyn::AnnGetPlayer()->getEyesHeight(), 0));
-	eyeRig->setOrientation(headOrientation * getTrackedHMDOrieation());
+	eyeRig->setPosition(feetPosition + getTrackedHMDTranslation());
+	eyeRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Get the head reference back to the gameplay code 
 	returnPose.position = eyeRig->getPosition();
@@ -161,10 +171,6 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	windowViewport->update();
 	window->update();
 
-	//Declare the textures for SteamVR
-	vrTextures[left] = { (void*)rttTextureGLID[left], API, vr::ColorSpace_Gamma };
-	vrTextures[right] = { (void*)rttTextureGLID[right], API, vr::ColorSpace_Gamma };
-
 	//Submit the textures to the SteamVR compositor
 	vr::VRCompositor()->Submit(getEye(left), &vrTextures[left], &GLBounds);
 	vr::VRCompositor()->Submit(getEye(right), &vrTextures[right], &GLBounds);
@@ -181,7 +187,7 @@ void OgreOpenVRRender::recenter()
 void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	backgroundColor = color;
-	for (char i(0); i < 2; i++) if(rttViewports[i])
+	for (char i(0); i < 2; i++) if (rttViewports[i])
 		rttViewports[i]->setBackgroundColour(backgroundColor);
 }
 
@@ -232,36 +238,29 @@ void OgreOpenVRRender::initScene()
 
 void OgreOpenVRRender::initCameras()
 {
-	Ogre::Matrix4 eyeToHeadTransform[2];
-	for (char i(0); i < 2; i++)
-		eyeToHeadTransform[i] = getMatrix4FromSteamVRMatrix34(vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i))));
-
 	//VR Eye cameras
 	eyeRig = smgr->getRootSceneNode()->createChildSceneNode();
 	eyeCameras[left] = smgr->createCamera("lcam");
 	eyeCameras[left]->setAutoAspectRatio(true);
 	eyeRig->attachObject(eyeCameras[left]);
-	eyeCameras[left]->setPosition(eyeToHeadTransform[left].getTrans());
 
 	eyeCameras[right] = smgr->createCamera("rcam");
 	eyeCameras[right]->setAutoAspectRatio(true);
 	eyeRig->attachObject(eyeCameras[right]);
-	eyeCameras[right]->setPosition(eyeToHeadTransform[right].getTrans());
 
-	Annwvyn::AnnDebug() << "eyeLeftTranformTrans " << eyeToHeadTransform[left].getTrans();
-	Annwvyn::AnnDebug() << "eyeRightTranformTrans " << eyeToHeadTransform[right].getTrans();
+	//This will translate the cameras to put the correct IPD distance for the user
+	handleIPDChange();
 
 	monoCam = smgr->createCamera("mcam");
 	monoCam->setAspectRatio(16.0 / 9.0);
 	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(headPosition);
+	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
 	monoCam->setNearClipDistance(0.1);
 	monoCam->setFarClipDistance(4000);
 	monoCam->setFOVy(Ogre::Degree(90));
 
 	//do NOT attach camera to this node...
 	headNode = smgr->getRootSceneNode()->createChildSceneNode();
-
 }
 
 void OgreOpenVRRender::initRttRendering()
@@ -297,18 +296,10 @@ void OgreOpenVRRender::initRttRendering()
 
 	rttViewports[left] = rttTexture[left]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left]);
 	rttViewports[right] = rttTexture[right]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right]);
-	
+
 	windowViewport = window->addViewport(monoCam);
 	windowViewport->setBackgroundColour(backgroundColor);
 	changeViewportBackgroundColor(backgroundColor);
-
-	//V is inverted in OpenGL
-	GLBounds = {};
-	GLBounds.uMin = 0;
-	GLBounds.uMax = 1;
-	GLBounds.vMin = 1;
-	GLBounds.vMax = 0;
-
 }
 
 void OgreOpenVRRender::getProjectionMatrix()
@@ -330,13 +321,13 @@ void OgreOpenVRRender::getProjectionMatrix()
 void OgreOpenVRRender::setupDistrotion()
 {
 	//distortionScene = root->createSceneManager(Ogre::ST_GENERIC, "DistortionScene");
-	
+
 	//Actually there's nothing to do here :)
 
 }
 
 inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
-{	
+{
 	return hmdAbsoluteTransform.getTrans();
 }
 

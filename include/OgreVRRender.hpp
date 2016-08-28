@@ -147,10 +147,10 @@ protected:
 	Ogre::Real farClippingDistance;
 
 	///Position of the head
-	Ogre::Vector3 headPosition;
+	Ogre::Vector3 feetPosition;
 
 	///Orientation of the head
-	Ogre::Quaternion headOrientation;
+	Ogre::Quaternion bodyOrientation;
 
 	///Name of the window
 	std::string name;
