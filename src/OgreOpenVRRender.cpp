@@ -148,11 +148,11 @@ void OgreOpenVRRender::updateTracking()
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
 	//Update the monoscopic camera view
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y + getTrackedHMDTranslation());
+	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y + bodyOrientation* getTrackedHMDTranslation());
 	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Update the eye rig tracking to make the eyes match yours
-	eyeRig->setPosition(feetPosition + getTrackedHMDTranslation());
+	eyeRig->setPosition(feetPosition + bodyOrientation * getTrackedHMDTranslation());
 	eyeRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Get the head reference back to the gameplay code 
@@ -326,10 +326,8 @@ void OgreOpenVRRender::getProjectionMatrix()
 
 void OgreOpenVRRender::setupDistrotion()
 {
-	//distortionScene = root->createSceneManager(Ogre::ST_GENERIC, "DistortionScene");
-
 	//Actually there's nothing to do here :)
-
+	return;
 }
 
 inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
