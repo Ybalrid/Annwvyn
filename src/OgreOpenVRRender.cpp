@@ -308,8 +308,8 @@ void OgreOpenVRRender::initRttRendering()
 void OgreOpenVRRender::getProjectionMatrix()
 {
 	//Get the couple of matrices
-	vr::HmdMatrix44_t prj[2]
-		= { vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance, API),
+	vr::HmdMatrix44_t prj[2] = { 
+		vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance, API),
 		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance, API) };
 
 	//Apply them to the camera
@@ -323,6 +323,13 @@ void OgreOpenVRRender::getProjectionMatrix()
 		eyeCameras[eye]->setCustomProjectionMatrix(true, m);
 	}
 }
+
+inline vr::EVREye OgreOpenVRRender::getEye(oovrEyeType eye)
+{
+	if (eye == left) return vr::Eye_Left;
+	return vr::Eye_Right;
+}
+
 
 void OgreOpenVRRender::setupDistrotion()
 {
@@ -369,7 +376,7 @@ void OgreOpenVRRender::processTrackedPoses()
 
 void OgreOpenVRRender::handleIPDChange()
 {
-	//Ghe teh eyeToHeadTransform (they contain the IPD translation)
+	//Get teh eyeToHeadTransform (they contain the IPD translation)
 	Ogre::Matrix4 eyeToHeadTransform[2];
 	for (char i(0); i < 2; i++)
 	{
