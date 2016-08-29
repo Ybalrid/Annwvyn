@@ -1,4 +1,6 @@
-#pragma once
+#ifndef OGRE_OPENVR_RENDER
+#define OGRE_OPENVR_RENDER
+
 #include "systemMacro.h"
 #include "OgreVRRender.hpp"
 
@@ -98,11 +100,7 @@ public:
 	void getProjectionMatrix();
 
 	///Get a "vr::EVREye" from an "oovrEyeType"
-	inline vr::EVREye getEye(oovrEyeType eye)
-	{
-		if (eye == left) return vr::Eye_Left;
-		return vr::Eye_Right;
-	}
+	inline vr::EVREye getEye(oovrEyeType eye);
 
 	///Setup the distortion rendering. Apparently this is actually not needed. Even if the official sample does it. This funciton is a placeholder
 	void setupDistrotion();
@@ -187,3 +185,5 @@ private:
 
 
 };
+
+#endif
