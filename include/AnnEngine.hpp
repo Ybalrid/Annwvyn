@@ -218,7 +218,7 @@ namespace Annwvyn
 		///The scene manager
 		Ogre::SceneManager* SceneManager;
 		///Point Of View : Node used as "root" for putting the VR "camera rig"
-		Ogre::SceneNode* povNode;
+		Ogre::SceneNode* vrRendererPovGameplayPlacement;
 
 		///Elapsed time between 2 frames
 		double updateTime;

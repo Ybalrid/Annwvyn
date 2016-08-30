@@ -35,7 +35,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	gameObjectManager(nullptr),
 	sceneryManager(nullptr),
 	renderer(nullptr),
-	povNode(nullptr),
+	vrRendererPovGameplayPlacement(nullptr),
 	updateTime(-1),
 	canAccessSubSystems(true)
 {
@@ -115,11 +115,11 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 
 	renderer->initClientHmdRendering();
-	povNode = renderer->getCameraInformationNode();
-	povNode->setPosition(player->getPosition() +
+	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();
+	vrRendererPovGameplayPlacement->setPosition(player->getPosition() +
 		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 
-	//This subsystem need the povNode object to be initialized. And the Resource manager because it wants a font file and an image background 
+	//This subsystem need the vrRendererPovGameplayPlacement object to be initialized. And the Resource manager because it wants a font file and an image background 
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
 
 	
@@ -208,7 +208,7 @@ void AnnEngine::log(std::string message, bool flag)
 //Don't ask me why this is not part of the Physics engine. Actually it just calls something on the physics engine. Will be probably deleted in the future.
 void AnnEngine::initPlayerPhysics()
 {
-	physicsEngine->initPlayerPhysics(povNode);
+	physicsEngine->initPlayerPhysics(vrRendererPovGameplayPlacement);
 }
 
 //Need to be redone. 
@@ -250,8 +250,8 @@ bool AnnEngine::refresh()
 //This just move a node where the other node is. Yes I know about parenting. I had reasons to do it that way, but I forgot. 
 inline void AnnEngine::syncPov()
 {
-	povNode->setPosition(player->getPosition());
-	povNode->setOrientation(player->getOrientation().toQuaternion());
+	vrRendererPovGameplayPlacement->setPosition(player->getPosition());
+	vrRendererPovGameplayPlacement->setOrientation(player->getOrientation().toQuaternion());
 }
 
 //Bad. Don't use. Register an event listener and use the KeyEvent callback. 
@@ -263,7 +263,7 @@ inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 
 Ogre::SceneNode* AnnEngine::getCamera()
 {
-	return povNode;
+	return vrRendererPovGameplayPlacement;
 }
 
 
