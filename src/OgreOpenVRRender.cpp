@@ -7,26 +7,53 @@ OgreOpenVRRender* OgreOpenVRRender::OpenVRSelf(nullptr);
 
 OgreOpenVRRender::OgreOpenVRRender(std::string winName) : OgreVRRender(winName),
 vrSystem(nullptr),
+hmdError(vr::EVRInitError::VRInitError_None),
 windowWidth(1280),
 windowHeight(720),
 gamma(false),
 API(vr::API_OpenGL),
+monoCam(nullptr),
+windowViewport(nullptr),
+then(0),
+now(0),
+hmdAbsoluteTransform({}),
+eyeRig(0),
 shouldQuitState(false)
 {
+	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
+
+	//I like to initialize everything to zero 
+	rttTexture[left].setNull();
+	rttTexture[right].setNull();
+
+	rttTextureGLID[left] = NULL;
+	rttTextureGLID[right] = NULL;
 
 	rttViewports[left] = nullptr;
 	rttViewports[right] = nullptr;
+
+	vrTextures[left] = {};
+	vrTextures[right] = {};
+	GLBounds = {};
 }
 
 OgreOpenVRRender::~OgreOpenVRRender()
 {
+	//Shutdown SteamVR
 	vr::VR_Shutdown();
 
+	//Need to forget Ogre's smart pointers
 	rttTexture[left].setNull();
 	rttTexture[right].setNull();
+
+	//Destroy the main scene manager
 	root->destroySceneManager(smgr);
+
+	//Unload manually loaded plugins
 	root->unloadPlugin("Plugin_OctreeSceneManager");
+
+	//Destroy the root. Everything Ogre related that is remaining should be cleaned up by the root's destructor
 	delete root;
 }
 
@@ -63,9 +90,9 @@ void OgreOpenVRRender::initVrHmd()
 		{
 			default:
 				displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
-										 L"Undescribed error when initalizing the OpenVR Render object"
-				);
+										 L"Undescribed error when initalizing the OpenVR Render object");
 				exit(ANN_ERR_NOTINIT);
+
 			case vr::VRInitError_Init_HmdNotFound:
 			case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
 				displayWin32ErrorMessage(L"Error: cannot find HMD",
@@ -123,6 +150,7 @@ bool OgreOpenVRRender::isVisibleInHmd()
 
 void OgreOpenVRRender::updateTracking()
 {
+	//Process the event from OpenVR
 	processVREvents();
 
 	//Get current camera base information
@@ -146,11 +174,14 @@ void OgreOpenVRRender::updateTracking()
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
 	//Update the monoscopic camera view
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y + bodyOrientation * getTrackedHMDTranslation());
+	monoCam->setPosition(feetPosition 
+						 + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y 
+						 + bodyOrientation * getTrackedHMDTranslation());
 	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Update the eye rig tracking to make the eyes match yours
-	eyeRig->setPosition(feetPosition + bodyOrientation * getTrackedHMDTranslation());
+	eyeRig->setPosition(feetPosition 
+						+ bodyOrientation * getTrackedHMDTranslation());
 	eyeRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Get the head reference back to the gameplay code 
@@ -162,6 +193,8 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 {
 	//Make Windows happy by pumping clearing it's event queue
 	Ogre::WindowEventUtilities::messagePump();
+
+	//Mark the fact that the frame rendering will hapen to Ogre (unlock the animation state updates for example)
 	root->_fireFrameRenderingQueued();
 
 	//Update each viewports
@@ -187,8 +220,11 @@ void OgreOpenVRRender::recenter()
 void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	backgroundColor = color;
+	//Eye camera virwports
 	for (char i(0); i < 2; i++) if (rttViewports[i])
 		rttViewports[i]->setBackgroundColour(backgroundColor);
+
+	//Debug window viewports
 	if (windowViewport) windowViewport->setBackgroundColour(backgroundColor);
 }
 
@@ -196,6 +232,8 @@ void OgreOpenVRRender::setCamerasNearClippingDistance(float distance)
 {
 	if (distance <= 0) return;
 	nearClippingDistance = distance;
+
+	//Need to recalcutate the projection 
 	getProjectionMatrix();
 }
 
@@ -203,6 +241,8 @@ void OgreOpenVRRender::setCameraFarClippingDistance(float distance)
 {
 	if (distance <= 0) return;
 	farClippingDistance = distance;
+
+	//Need to recalcuate the projection
 	getProjectionMatrix();
 }
 
@@ -213,6 +253,7 @@ void OgreOpenVRRender::showDebug(DebugMode mode)
 
 void OgreOpenVRRender::createWindow()
 {
+	//Need to have the root created before
 	if (!root) exit(ANN_ERR_NOTINIT);
 
 	//Basic window configuration
@@ -221,9 +262,10 @@ void OgreOpenVRRender::createWindow()
 	misc["top"] = "0";
 	misc["left"] = "0";
 
-	//manual ogre init
+	//Manual ogre init
 	root->initialise(false);
 
+	//Create a manual window
 	window = root->createRenderWindow(name + " : Vive debug mirror view. Please put on HMD.",
 									  windowWidth, windowHeight,
 									  false, &misc);
@@ -318,6 +360,7 @@ void OgreOpenVRRender::getProjectionMatrix()
 		for (char i(0); i < 4; i++) for (char j(0); j < 4; j++)
 			m[i][j] = prj[eye].m[i][j];
 
+		//Apply projection matrix
 		eyeCameras[eye]->setCustomProjectionMatrix(true, m);
 	}
 }
@@ -337,6 +380,7 @@ void OgreOpenVRRender::setupDistrotion()
 
 inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
 {
+	//Extract translation vector from the matrix
 	return hmdAbsoluteTransform.getTrans();
 }
 
@@ -349,12 +393,16 @@ inline Ogre::Quaternion OgreOpenVRRender::getTrackedHMDOrieation()
 void OgreOpenVRRender::processVREvents()
 {
 	vr::VREvent_t event;
+	//Pump the events, and for each event, switch on it type
 	while (vrSystem->PollNextEvent(&event, sizeof(event))) switch (event.eventType)
 	{
+		//Handle quiting the app from Steam
 		case vr::VREvent_DriverRequestedQuit:
 		case vr::VREvent_Quit:
 			shouldQuitState = true;
 			break;
+
+		//Handle user IPD adjustment
 		case vr::VREvent_IpdChanged:
 			handleIPDChange();
 			break;
@@ -375,12 +423,9 @@ void OgreOpenVRRender::processTrackedPoses()
 void OgreOpenVRRender::handleIPDChange()
 {
 	//Get teh eyeToHeadTransform (they contain the IPD translation)
-	Ogre::Matrix4 eyeToHeadTransform[2];
 	for (char i(0); i < 2; i++)
-	{
-		eyeToHeadTransform[i] = getMatrix4FromSteamVRMatrix34(vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i))));
-		eyeCameras[i]->setPosition(eyeToHeadTransform[i].getTrans());
-	}
+		eyeCameras[i]->setPosition(getMatrix4FromSteamVRMatrix34(
+			vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i)))).getTrans());
 }
 
 inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t & mat)
