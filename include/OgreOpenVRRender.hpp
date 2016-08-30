@@ -183,7 +183,6 @@ private:
 	///State of the "should quit" marker. If it goes to true, the game loop should stop 
 	bool shouldQuitState;
 
-
 };
 
 #endif
