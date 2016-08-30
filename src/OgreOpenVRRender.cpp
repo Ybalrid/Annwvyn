@@ -180,6 +180,7 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 
 void OgreOpenVRRender::recenter()
 {
+	//This should do. But the effecto of that commend doesn't look to affect a "seated" pose if you're actually standing
 	if (vrSystem) vrSystem->ResetSeatedZeroPose();
 }
 
