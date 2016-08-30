@@ -226,8 +226,6 @@ namespace Annwvyn
 		///Container for all the subsystem. Populated in the update/delete order 
 		std::list<std::shared_ptr<AnnSubSystem>> SubSystemList;
 
-		///If false, all getStuff will return nullptr
-		bool canAccessSubSystems;
 	};
 }
 #endif ///ANN_ENGINE
