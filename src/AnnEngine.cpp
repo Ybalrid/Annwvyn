@@ -26,18 +26,19 @@ void AnnEngine::startGameplayLoop()
 }
 
 AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
-	player(nullptr),
+	renderer(nullptr),
+	resourceManager(nullptr),
+	sceneryManager(nullptr),
+	filesystemManager(nullptr),
 	audioEngine(nullptr),
 	eventManager(nullptr),
-	levelManager(nullptr),
-	filesystemManager(nullptr),
-	resourceManager(nullptr),
+	physicsEngine(nullptr),
 	gameObjectManager(nullptr),
-	sceneryManager(nullptr),
-	renderer(nullptr),
+	levelManager(nullptr),
+	player(nullptr),
+	SceneManager(nullptr),
 	vrRendererPovGameplayPlacement(nullptr),
-	updateTime(-1),
-	canAccessSubSystems(true)
+	updateTime(-1)
 {
 
 	if (singleton)
@@ -121,8 +122,6 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	//This subsystem need the vrRendererPovGameplayPlacement object to be initialized. And the Resource manager because it wants a font file and an image background 
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
-
-	
 }
 
 AnnEngine::~AnnEngine()
@@ -172,7 +171,6 @@ std::shared_ptr<AnnFilesystemManager> AnnEngine::getFileSystemManager()
 {
 	return filesystemManager;
 }
-
 
 std::shared_ptr<AnnAudioEngine> AnnEngine::getAudioEngine()
 {
@@ -265,7 +263,6 @@ Ogre::SceneNode* AnnEngine::getCamera()
 {
 	return vrRendererPovGameplayPlacement;
 }
-
 
 Ogre::SceneManager* AnnEngine::getSceneManager()
 {
