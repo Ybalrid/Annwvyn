@@ -87,7 +87,6 @@ void OgreOpenVRRender::initVrHmd()
 	strDisplay = GetTrackedDeviceString(vrSystem, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_SerialNumber_String);
 	Annwvyn::AnnDebug() << "Driver : " << strDriver;
 	Annwvyn::AnnDebug() << "Display : " << strDisplay;
-
 }
 
 void OgreOpenVRRender::initClientHmdRendering()
@@ -105,7 +104,6 @@ void OgreOpenVRRender::initClientHmdRendering()
 	GLBounds.uMax = 1;
 	GLBounds.vMin = 1;
 	GLBounds.vMax = 0;
-
 }
 
 bool OgreOpenVRRender::shouldQuit()
@@ -148,7 +146,7 @@ void OgreOpenVRRender::updateTracking()
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
 	//Update the monoscopic camera view
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y + bodyOrientation* getTrackedHMDTranslation());
+	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y + bodyOrientation * getTrackedHMDTranslation());
 	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Update the eye rig tracking to make the eyes match yours
@@ -158,7 +156,6 @@ void OgreOpenVRRender::updateTracking()
 	//Get the head reference back to the gameplay code 
 	returnPose.position = eyeRig->getPosition();
 	returnPose.orientation = eyeRig->getOrientation();
-
 }
 
 void OgreOpenVRRender::renderAndSubmitFrame()
@@ -262,7 +259,7 @@ void OgreOpenVRRender::initCameras()
 	monoCam = smgr->createCamera("mcam");
 	monoCam->setAspectRatio(16.0 / 9.0);
 	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
+	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y);
 	monoCam->setNearClipDistance(0.1);
 	monoCam->setFarClipDistance(4000);
 	monoCam->setFOVy(Ogre::Degree(90));
