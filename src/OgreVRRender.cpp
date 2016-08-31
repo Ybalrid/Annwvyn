@@ -8,8 +8,8 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	smgr(nullptr),
 	window(nullptr),
 	updateTime(0),
-	headPosition(0, 0, 10),
-	headOrientation(Ogre::Quaternion::IDENTITY),
+	feetPosition(0, 0, 10),
+	bodyOrientation(Ogre::Quaternion::IDENTITY),
 	nearClippingDistance(0.5f),
 	farClippingDistance(4000.0f),
 	headNode(nullptr),
@@ -71,6 +71,23 @@ void OgreVRRender::initOgreRoot(std::string loggerName)
 
 	//Set the log verbosity to "bore me" 
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LoggingLevel::LL_BOREME);
+}
+
+
+void OgreVRRender::getOgreConfig()
+{
+	//Ogre as to be initialized
+	if (!root) exit(ANN_ERR_NOTINIT);
+
+	//Load OgrePlugins
+	root->loadPlugin("RenderSystem_GL");
+	root->loadPlugin("Plugin_OctreeSceneManager");
+
+	//Set the classic OpenGL render system
+	root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
+	root->getRenderSystem()->setFixedPipelineEnabled(true);
+	root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
+	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 }
 
 

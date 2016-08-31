@@ -56,6 +56,8 @@ public:
 	///Get frame update time from the VR renderer
 	double getUpdateTime();
 
+	void getOgreConfig();
+
 	///Init Ogre, please provie the name of the output log file
 	void initOgreRoot(std::string loggerName);
 
@@ -64,6 +66,18 @@ public:
 
 	///Init the VR client library
 	virtual void initVrHmd() = 0;
+
+	///Create the render window
+	virtual void createWindow() = 0;
+
+	///Create the scene(s) manager(s) needed for the rendering
+	virtual void initScene() = 0;
+
+	///Create the pair of cameras for the streo render;
+	virtual void initCameras() = 0;
+
+	///Initialize the Render To Texture rendering 
+	virtual void initRttRendering() = 0;
 	
 	///Init the VR client rendering
 	virtual void initClientHmdRendering() =0;
@@ -133,10 +147,10 @@ protected:
 	Ogre::Real farClippingDistance;
 
 	///Position of the head
-	Ogre::Vector3 headPosition;
+	Ogre::Vector3 feetPosition;
 
 	///Orientation of the head
-	Ogre::Quaternion headOrientation;
+	Ogre::Quaternion bodyOrientation;
 
 	///Name of the window
 	std::string name;

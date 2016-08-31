@@ -77,7 +77,20 @@ public:
 private:
 };
 
+class PhysicsDebugLevel : LEVEL
+{
+	void load()
+	{
+		AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(0, 0, 0));
+		AnnGetPhysicsEngine()->getWorld()->setGravity(btVector3(0, 0, 0));
+		AnnGetPlayer()->setPosition(AnnVect3::ZERO);
+		AnnGetPlayer()->resetPlayerPhysics();
+	}
 
-
+	void runLogic()
+	{
+		AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
+	}
+};
 
 #endif //TESTLEVEL

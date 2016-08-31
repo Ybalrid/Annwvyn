@@ -1,9 +1,18 @@
 Annwvyn
 =======
 
-Annwvyn Engine is a simple C++ game engine built upon free and open source technologies to easily create applications and games using the Oculus Rift Headset.
+Annwvyn Engine is a simple C++ game engine built upon free and open source technologies to easily create applications and games using Virtual Reality HMD.
+Freely distributed under the MIT licence.
 
-It uses Ogre for rendering to the Oculus Rift official runtime in OpenGL, Bullet for simulating physics and collisions and OpenAL for spatialized audio playback.
+Currently the engine supports :
+ - Oculus Rift through the Oculus SDK
+ - OpenVR
+     - HTC Vive
+     - Oculus Rift (You can use the Oculus Rift with SteamVR, but the "native" way is recomended)
+     - Any headset officially supported by SteamVR
+
+
+It uses Ogre for rendering to OpenGL buffers that are given to each VR libraries, Bullet for simulating physics and collisions and OpenAL for spatialized audio playback.
 
 Please read the DEPEDENCIES file to know what you need to build it.
 
@@ -13,9 +22,9 @@ System requirement
 
  - A fairly recent GPU. Support for OpenGL 4.3 is mandatory
  - Graphics driver with "direct driver" for VR implemented. The lattest Nvidia/AMD driver available will do
- - Oculus VR Headset (Rift) CV1 or Dev Kit 2 
+ - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive
  - 64bit Operating system
- - Oculus Runtime 1.7 (8/19/16) installed from http://oculus.com/setup
+ - Oculus Runtime 1.7 (8/19/16) installed from http://oculus.com/setup OR SteamVR installed through Steam http://steampowered.com/
  - Microsoft Visual Studio 2015 Comunity (free to download and use from Microsoft)
 
 Building on Windows
@@ -47,9 +56,11 @@ But, if you really want to build the engine yourself, here's a simple guide how 
     - GLEW
         - glew32.dll        
     - sndfile
-        - libsndfile-1.dll          
+        - libsndfile-1.dll
+    - OpenVR API client
+        - openvr_api.dll
 
-If you have an Oculus Rift plugged in (or in Debug HMD mode) you can launch example/test.exe now
+If you have an Oculus Rift plugged in (or in Debug HMD mode), or a Vive with SteamVR open you can launch example/test.exe now
 
 
 Using the engine

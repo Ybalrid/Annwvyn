@@ -83,9 +83,6 @@ class DLL OgreOculusRender : public OgreVRRender
 		///Start Oculus and Ogre libraries.
         void initVrHmd();
         
-		///Get Configuration from ogre.cfg or display a Dialog. The Resolution and FullScreen settings will be ignored. 
-		void getOgreConfig();
-        
 		///Create the RenderWindow
         void createWindow();
 
