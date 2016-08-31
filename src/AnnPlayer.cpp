@@ -12,7 +12,7 @@ bodyParams::bodyParams()
 	walkSpeed = 3;
 	turnSpeed = 0.15f;
 	mass = 80.0f;
-	Position = AnnVect3(0, 0, 10);
+	FeetPosition = AnnVect3(0, 0, 10);
 	HeadOrientation = AnnQuaternion(1, 0, 0, 0);
 	Shape = NULL;
 	Body = NULL;
@@ -61,6 +61,7 @@ void AnnPlayer::setActuator(AnnPlayerActuator* act)
 AnnPlayer::~AnnPlayer()
 {
 
+
 	delete playerBody;
 }
 
@@ -71,7 +72,7 @@ bool AnnPlayer::isLocked()
 
 void AnnPlayer::setPosition(AnnVect3 Position)
 {
-	playerBody->Position = Position;
+	playerBody->FeetPosition = Position;
 }
 
 void AnnPlayer::setOrientation(Ogre::Euler Orientation)
@@ -167,7 +168,7 @@ btCollisionShape* AnnPlayer::getShape()
 
 AnnVect3 AnnPlayer::getPosition()
 {
-	return playerBody->Position;
+	return playerBody->FeetPosition;
 }
 
 Ogre::Euler AnnPlayer::getOrientation()
@@ -258,7 +259,7 @@ void AnnPlayer::engineUpdate(float deltaTime)
 	//get back position data from physics engine
 	if (getBody())
 	{
-		setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) +
+		setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) -
 					AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation()) *
 					AnnVect3(0, getEyesHeight() / 2, 0));
 	}

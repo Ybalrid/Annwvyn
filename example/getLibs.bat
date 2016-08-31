@@ -26,6 +26,8 @@ ECHO LibSndFile DLL
 COPY %ANNWVYNSDK64%\libsndfile\bin\libsndfile-1.dll
 ECHO Object-oriented Input System dll
 COPY %ANNWVYNSDK64%\OIS\lib\OIS.dll .
+ECHO OpenVR api - runtime DLL
+COPY %ANNWVYNSDK64%\openvr\bin\win64\openvr_api.dll . 
 
 @ECHO done 
 PAUSE

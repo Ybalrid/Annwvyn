@@ -64,17 +64,20 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 	playerObject->getShape()->calculateLocalInertia(playerObject->getMass(), inertia);
 
 	//Set the body to the player
-	playerObject->setBody(new btRigidBody(
+	auto body = new btRigidBody(
 		playerObject->getMass(),
 		playerRigidBodyState,
 		playerObject->getShape(),
-		inertia));
+		inertia);
+	playerObject->setBody(body);
 }
 
 void AnnPhysicsEngine::createVirtualBodyShape()
 {
 	assert(playerObject);
 	float radius(0.125f);
+
+	//remove the diameter of the two half spehre on top and bottom of the capsule
 	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
 }
 

@@ -1,8 +1,7 @@
 /**
 * \file AnnEngine.hpp
 * \brief Main Annwvyn Engine class
-*        handle intialization, destruction of object at runtime
-*        handle rendering initialization, physics initialization and sound engine initialization
+*        Initialize the renderer and all subsystem. Provide access to all of the engine components 
 * \author A. Brainville (Ybalrid)
 */
 
@@ -12,7 +11,7 @@
 //Keep track of engine version here
 #define ANN_MAJOR 0
 #define ANN_MINOR 2
-#define ANN_PATCH 3 
+#define ANN_PATCH 4 
 #define ANN_EXPERIMENTAL true
 
 #include "systemMacro.h"
@@ -24,6 +23,9 @@
 
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
+
+//Graphic rendering system for the vive
+#include "OgreOpenVRRender.hpp"
 
 //Annwvyn
 #include "AnnEventManager.hpp"
@@ -72,20 +74,20 @@
 
 namespace Annwvyn
 {
-	///Main engine class. Creating an instance of that class make the engine start.
+	///Main engine class. Creating an instance of this class make the engine start.
 	class DLL AnnEngine
 	{
-	private:
-		///the singleton address itself is stored here
-		static AnnEngine* singleton;
-
 		//It's more or less a singleton, and will be the only one in the engine architecture. 
 		//You can intantiate it like a normal class and bypass the idea of a singleton complettely.
 		//This is the base class of the whole engine, the idea is more or less the one described in the 
 		//"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
+
+	private:
+		///the singleton address itself is stored here
+		static AnnEngine* singleton;
+
 	public:
 		
-
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 
@@ -152,15 +154,10 @@ namespace Annwvyn
 		///Get the VRRenderer
 		std::shared_ptr<OgreVRRender> getVRRenderer();
 
-		
-		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
-		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
+		//////////////////////////////////////////////////////////////////////////////////////////////END OF SUBSYSTEMS
 
 	    ///Init the physics model
 		void initPlayerPhysics(); //physics on player
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////TO CALL AT INIT
-		//////////////////////////////////////////////////////////////////////////////////////////////////GAMEPLAY LOOP
 
 		///Return true if the game want to terminate the program
 		bool requestStop(); //engine
@@ -180,9 +177,6 @@ namespace Annwvyn
 		///Return true if the app is visible inside the head mounted display
 		bool appVisibleInHMD();
 
-		//////////////////////////////////////////////////////////////////////////////////////////////////GAMEPLAY LOOP
-		///////////////////////////////////////////////////////////////////////////////////////////////TIMER MANAGEMENT
-
 		///Get elapsed time from engine startup in millisec
 		unsigned long getTimeFromStartUp();//engine
 
@@ -194,10 +188,8 @@ namespace Annwvyn
 
 		///Get the pose of the HMD in VR world space
 		OgrePose getHmdPose();
-		///////////////////////////////////////////////////////////////////////////////////////////////TIMER MANAGEMENT
 
 	private:
-		void destroyAllSubSystem();
 
 		///VR renderer
 		std::shared_ptr<OgreVRRender> renderer;
@@ -226,8 +218,7 @@ namespace Annwvyn
 		///The scene manager
 		Ogre::SceneManager* SceneManager;
 		///Point Of View : Node used as "root" for putting the VR "camera rig"
-		Ogre::SceneNode* povNode;
-
+		Ogre::SceneNode* vrRendererPovGameplayPlacement;
 
 		///Elapsed time between 2 frames
 		double updateTime;
@@ -235,8 +226,6 @@ namespace Annwvyn
 		///Container for all the subsystem. Populated in the update/delete order 
 		std::list<std::shared_ptr<AnnSubSystem>> SubSystemList;
 
-		///If false, all getStuff will return nullptr
-		bool canAccessSubSystems;
 	};
 }
 #endif ///ANN_ENGINE

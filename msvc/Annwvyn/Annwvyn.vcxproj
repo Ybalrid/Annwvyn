@@ -149,7 +149,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NOMINMAX;BOOST_ALL_NO_LIB;DLLDIR_EX;WIN32;NDEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\OgreSDK\boost;..\..\..\AL\openal-soft\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext\GL;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;..\..\pch;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\OgreSDK\boost;..\..\..\AL\openal-soft\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext\GL;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\OgreSDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;..\..\pch;..\..\..\openvr\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/Zm300 %(AdditionalOptions)</AdditionalOptions>
@@ -163,8 +163,8 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\AL\openal-soft\build\Release;..\..\..\bullet3\lib\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\OIS_ReleaseDll;..\..\..\OgreSDK\boost\lib;..\..\..\OgreSDK\lib\Release\opt;..\..\..\OgreSDK\lib\Release;..\..\..\OculusSDK\LibOVR\Lib\Windows\x64\Release\VS2015\;..\..\..\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;RenderSystem_GL.lib;OIS.lib;Setupapi.lib;LibOVR.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\AL\openal-soft\build\Release;..\..\..\bullet3\lib\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\OIS_ReleaseDll;..\..\..\OgreSDK\boost\lib;..\..\..\OgreSDK\lib\Release\opt;..\..\..\OgreSDK\lib\Release;..\..\..\OculusSDK\LibOVR\Lib\Windows\x64\Release\VS2015\;..\..\..\glew\lib\Release\x64;..\..\..\openvr\lib\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;RenderSystem_GL.lib;OIS.lib;Setupapi.lib;LibOVR.lib;openvr_api.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -213,6 +213,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\euler.h" />
     <ClInclude Include="..\..\include\OculusInterface.hpp" />
     <ClInclude Include="..\..\include\OgreOculusRender.hpp" />
+    <ClInclude Include="..\..\include\OgreOpenVRRender.hpp" />
     <ClInclude Include="..\..\include\OgreVRRender.hpp" />
     <ClInclude Include="..\..\include\systemMacro.h" />
     <ClInclude Include="..\..\include\tinyxml2.h" />
@@ -251,6 +252,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\OculusInterface.cpp" />
     <ClCompile Include="..\..\src\OgreOculusRender.cpp" />
     <ClCompile Include="..\..\src\AnnLogger.cpp" />
+    <ClCompile Include="..\..\src\OgreOpenVRRender.cpp" />
     <ClCompile Include="..\..\src\OgreVRRender.cpp" />
     <ClCompile Include="..\..\src\tinyxml2.cpp" />
   </ItemGroup>
