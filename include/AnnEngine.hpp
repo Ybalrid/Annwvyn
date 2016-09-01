@@ -1,7 +1,7 @@
 /**
 * \file AnnEngine.hpp
 * \brief Main Annwvyn Engine class
-*        Initialize the renderer and all subsystem. Provide access to all of the engine components 
+*        Initialize the renderer and all subsystem. Provide access to all of the engine components
 * \author A. Brainville (Ybalrid)
 */
 
@@ -87,7 +87,7 @@ namespace Annwvyn
 		static AnnEngine* singleton;
 
 	public:
-		
+
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 
@@ -126,7 +126,7 @@ namespace Annwvyn
 		Ogre::SceneManager* getSceneManager(); //scene or graphics
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
-		
+
 		///Get the event manager
 		std::shared_ptr<AnnEventManager> getEventManager();
 
@@ -156,7 +156,7 @@ namespace Annwvyn
 
 		//////////////////////////////////////////////////////////////////////////////////////////////END OF SUBSYSTEMS
 
-	    ///Init the physics model
+		///Init the physics model
 		void initPlayerPhysics(); //physics on player
 
 		///Return true if the game want to terminate the program
