@@ -36,6 +36,9 @@ shouldQuitState(false)
 	vrTextures[left] = {};
 	vrTextures[right] = {};
 	GLBounds = {};
+
+	handControllers[left] = nullptr;
+	handControllers[right] = nullptr;
 }
 
 OgreOpenVRRender::~OgreOpenVRRender()
@@ -118,6 +121,18 @@ void OgreOpenVRRender::initVrHmd()
 
 void OgreOpenVRRender::initClientHmdRendering()
 {
+
+	//Init GLEW here to be able to call OpenGL functions
+	Annwvyn::AnnDebug() << "Init GL Extension Wrangler";
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		Annwvyn::AnnDebug("Failed to glewTnit()\n\
+						  Cannot call manual OpenGL\n\
+						  Error Code : " + (unsigned int)err);
+		exit(ANN_ERR_RENDER);
+	}
+	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 	setupDistrotion();
 	//Should init the device model things here if we want to display the vive controllers 
 
@@ -164,9 +179,7 @@ void OgreOpenVRRender::updateTracking()
 
 	//Wait for next frame pose 
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-
-	//Process other tracked device. (Vive Controllers, maybe? :p)
-	processTrackedPoses();
+	processTrackedDevices();
 
 	//Here we just care about the HMD
 	vr::TrackedDevicePose_t hmdPose;
@@ -409,14 +422,56 @@ void OgreOpenVRRender::processVREvents()
 	}
 }
 
-void OgreOpenVRRender::processTrackedPoses()
+void OgreOpenVRRender::processTrackedDevices()
 {
-	for (vr::TrackedDeviceIndex_t i(0); i < vr::k_unMaxTrackedDeviceCount; i++)
+	//Iterate through the possible trackedDeviceIndexes
+	for (vr::TrackedDeviceIndex_t trackedDevice = vr::k_unTrackedDeviceIndex_Hmd + 1;
+		 trackedDevice < vr::k_unMaxTrackedDeviceCount;
+		 trackedDevice++)
 	{
-		if (trackedPoses[i].bPoseIsValid)
+		//If the device is not connected, pass.
+		if (!vrSystem->IsTrackedDeviceConnected(trackedDevice))
+			continue;
+		//If the device is not recognized as a controller, pass
+		if (vrSystem->GetTrackedDeviceClass(trackedDevice) != vr::TrackedDeviceClass_Controller)
+			continue;
+		//If we don't have a valid pose of the controller, pass
+		if (!trackedPoses[trackedDevice].bPoseIsValid)
+			continue;
+
+		//At this point, we know that "trackedDevice" is the index of a valid SteamVR hand controller. We can extract it's tracking information
+		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
+
+		Ogre::Vector3 position = transform.getTrans();
+		Ogre::Quaternion orientation = transform.extractQuaternion();
+
+		Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
+
+
+		//TODO: determime, if possible, if it's a right hand or left hand device (look at the api documentation)
+
+		//TODO: get the buttons (stick, touchpad, whatever) states of this controller 
+
+		//TODO: feed all controller informations, with the current frameindex, to the class(es) that represent the hand controllers
+
+		//This is a fairly naive implementation that is BAD, but it's a test. 
+		Annwvyn::AnnHandControllerID controllerID{ trackedDevice - 1 };
+		if (controllerID > MAX_CONTROLLER_NUMBER) break;
+
+		Annwvyn::AnnHandController::AnnHandControllerSide side;
+		//Dinamically allocate the controller if the controller exist
+		if (!handControllers[controllerID])
 		{
-			//I think I need actual vive controllers to go further. And Annwvyn has no abstraction for hand controllers right now. 
+			handControllers[controllerID] = std::make_shared<Annwvyn::AnnHandController>
+				(smgr->getRootSceneNode()->createChildSceneNode(), controllerID, side);
+			handControllers[controllerID]->attachModel(smgr->createEntity("gizmo.mesh"));
 		}
+
+		handControllers[controllerID]->setTrackedPosition(feetPosition + bodyOrientation*position);
+		handControllers[controllerID]->setTrackedOrientation(bodyOrientation*orientation);
+
+
+
 	}
 }
 
