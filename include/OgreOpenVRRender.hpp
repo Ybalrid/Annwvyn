@@ -23,6 +23,9 @@
 #include "AnnErrorCode.hpp"
 #include "AnnTypes.h"
 
+#include "AnnHandController.hpp"
+
+#define MAX_CONTROLLER_NUMBER 2
 
 class DLL OgreOpenVRRender : public OgreVRRender
 {
@@ -119,9 +122,8 @@ private:
 	
 	///Iterate through the list of events from SteamVR and call code that react to it
 	void processVREvents();
-
-	///Iterate through the list of tracked devices, and do stuff with there poses, if relevent
-	void processTrackedPoses();
+	
+	void processTrackedDevices();
 
 	///Reset the IPD displacement of the cameras according to the EyeToHeadTransform matrix
 	void handleIPDChange();
@@ -182,6 +184,9 @@ private:
 
 	///State of the "should quit" marker. If it goes to true, the game loop should stop 
 	bool shouldQuitState;
+
+	std::shared_ptr<Annwvyn::AnnHandController> handControllers[MAX_CONTROLLER_NUMBER];
+
 
 };
 

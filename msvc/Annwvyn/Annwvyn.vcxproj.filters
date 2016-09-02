@@ -201,6 +201,7 @@
     <ClInclude Include="..\..\include\OgreOpenVRRender.hpp">
       <Filter>OgreRenderingForVR\Vive</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnHandController.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
