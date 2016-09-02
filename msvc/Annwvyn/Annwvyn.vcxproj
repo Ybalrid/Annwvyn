@@ -180,6 +180,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\AnnHandController.hpp" />
     <ClInclude Include="..\..\include\AnnLevel.hpp" />
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
     <ClInclude Include="..\..\include\AnnColor.hpp" />

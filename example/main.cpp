@@ -140,9 +140,9 @@ AnnMain()
 	AnnGetResourceManager()->initResources();
 	
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
-	AnnGetLevelManager()->addLevel(make_shared<AnnXmlLevel>("./level/test.xml"));
+	/*AnnGetLevelManager()->addLevel(make_shared<AnnXmlLevel>("./level/test.xml"));
 	AnnGetEngine()->getLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getLastLevelLoaded(), 7.1f));
-	dynamic_cast<AnnSplashLevel*>(AnnGetLevelManager()->getLastLevelLoaded().get())->setBGM("media/AnnSplash.ogg");
+	dynamic_cast<AnnSplashLevel*>(AnnGetLevelManager()->getLastLevelLoaded().get())->setBGM("media/AnnSplash.ogg");*/
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
 
 	AnnDebug() << "Starting the render loop";
