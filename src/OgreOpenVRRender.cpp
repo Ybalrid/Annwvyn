@@ -422,6 +422,8 @@ void OgreOpenVRRender::processVREvents()
 	}
 }
 
+const bool DEBUG(true);
+
 void OgreOpenVRRender::processTrackedDevices()
 {
 	//Iterate through the possible trackedDeviceIndexes
@@ -439,39 +441,37 @@ void OgreOpenVRRender::processTrackedDevices()
 		if (!trackedPoses[trackedDevice].bPoseIsValid)
 			continue;
 
-		//At this point, we know that "trackedDevice" is the index of a valid SteamVR hand controller. We can extract it's tracking information
-		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
-
-		Ogre::Vector3 position = transform.getTrans();
-		Ogre::Quaternion orientation = transform.extractQuaternion();
-
-		Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
-
-
-		//TODO: determime, if possible, if it's a right hand or left hand device (look at the api documentation)
-
-		//TODO: get the buttons (stick, touchpad, whatever) states of this controller 
-
-		//TODO: feed all controller informations, with the current frameindex, to the class(es) that represent the hand controllers
-
-		//This is a fairly naive implementation that is BAD, but it's a test. 
+		//Get the controller ID; If we can't handle more devices, break;
 		Annwvyn::AnnHandControllerID controllerID{ trackedDevice - 1 };
 		if (controllerID > MAX_CONTROLLER_NUMBER) break;
 
-		Annwvyn::AnnHandController::AnnHandControllerSide side;
-		//Dinamically allocate the controller if the controller exist
+		//At this point, we know that "trackedDevice" is the index of a valid SteamVR hand controller. We can extract it's tracking information
+		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
+		
+		//Extract the pose from the transformation matrix 
+		Ogre::Vector3 position = transform.getTrans();
+		Ogre::Quaternion orientation = transform.extractQuaternion();
+
+		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
+		//controllerID 0 = left; 1 = right;
+		Annwvyn::AnnHandController::AnnHandControllerSide side{ Annwvyn::AnnHandController::leftHandController };
+		if (controllerID == 1)
+			side = Annwvyn::AnnHandController::rightHandController;
+
+		//TODO: get the buttons (stick, touchpad, whatever) states of this controller 
+
+		//Dinamically allocate the controller if the controller doesn't exist yet
 		if (!handControllers[controllerID])
 		{
 			handControllers[controllerID] = std::make_shared<Annwvyn::AnnHandController>
 				(smgr->getRootSceneNode()->createChildSceneNode(), controllerID, side);
-			handControllers[controllerID]->attachModel(smgr->createEntity("gizmo.mesh"));
+			
+			if (DEBUG) handControllers[controllerID]->attachModel(smgr->createEntity("gizmo.mesh"));
 		}
 
 		handControllers[controllerID]->setTrackedPosition(feetPosition + bodyOrientation*position);
 		handControllers[controllerID]->setTrackedOrientation(bodyOrientation*orientation);
-
-
-
+		handControllers[controllerID]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
 	}
 }
 
