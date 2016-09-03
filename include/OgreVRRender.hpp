@@ -7,7 +7,9 @@
 
 #include <Ogre.h>
 #include "AnnErrorCode.hpp"
+#include "AnnHandController.hpp"
 
+#define MAX_CONTROLLER_NUMBER 2
 
 ///A pose refer to the combinaison of a position and an orientation. It permit to define the placement of an object with 6DOF
 struct OgrePose
@@ -23,7 +25,7 @@ struct OgrePose
 class DLL OgreVRRender
 {
 public:
-	
+
 	///Type of Debug render you can do
 	enum DebugMode
 	{
@@ -78,9 +80,9 @@ public:
 
 	///Initialize the Render To Texture rendering 
 	virtual void initRttRendering() = 0;
-	
+
 	///Init the VR client rendering
-	virtual void initClientHmdRendering() =0;
+	virtual void initClientHmdRendering() = 0;
 
 	///If true, you should cleanly quit the program from now
 	virtual bool shouldQuit() = 0;
@@ -108,7 +110,7 @@ public:
 
 	///Set the VR cameras near clipping plane distance
 	virtual void setCamerasNearClippingDistance(float distance) = 0;
-	
+
 	///Set the VR cameras far clipping plane distance
 	virtual void setCameraFarClippingDistance(float distance) = 0;
 
@@ -123,6 +125,12 @@ public:
 
 	///She the asked debug view 
 	virtual void showDebug(DebugMode mode) = 0;
+
+	///Get a naked array of hand controllers
+	std::shared_ptr<Annwvyn::AnnHandController>* getHandControllerArray();
+
+	///Get the size of the controller array
+	size_t getHanControllerArraySize();
 
 protected:
 	///Singleton pointer
@@ -169,6 +177,10 @@ protected:
 
 	///Anti Aliasing level
 	Ogre::uint AALevel;
+
+	///Array of hand controller
+	std::shared_ptr<Annwvyn::AnnHandController> handControllers[MAX_CONTROLLER_NUMBER];
+
 };
 
 #endif

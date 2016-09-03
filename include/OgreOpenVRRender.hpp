@@ -25,7 +25,6 @@
 
 #include "AnnHandController.hpp"
 
-#define MAX_CONTROLLER_NUMBER 2
 
 class DLL OgreOpenVRRender : public OgreVRRender
 {
@@ -185,7 +184,6 @@ private:
 	///State of the "should quit" marker. If it goes to true, the game loop should stop 
 	bool shouldQuitState;
 
-	std::shared_ptr<Annwvyn::AnnHandController> handControllers[MAX_CONTROLLER_NUMBER];
 
 
 };
