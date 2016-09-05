@@ -56,13 +56,13 @@ offset(0, 0.125f, -0.75f)
 	displaySurface->end();
 
 	//create a node child to the camera here : 
-	consoleNode = AnnGetEngine()->getCamera()->createChildSceneNode();
+	consoleNode = AnnGetEngine()->getPlayerPovNode()->createChildSceneNode();
 
 	//attach The object
 	consoleNode->attachObject(displaySurface);
 
-	//set the camera relative position
-	consoleNode->setPosition(offset);
+	//set the player relative position
+	consoleNode->setPosition(offset + AnnGetPlayer()->getEyesHeight() * AnnVect3::UNIT_Y);
 
 	//Make sure the object is the last thing rendered (to be on top of everyting
 	//displaySurface->setRenderQueueGroup(Ogre::uint8(-1));
