@@ -454,11 +454,26 @@ void OgreOpenVRRender::processTrackedDevices()
 
 		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
 		//controllerID 0 = left; 1 = right;
-		Annwvyn::AnnHandController::AnnHandControllerSide side{ Annwvyn::AnnHandController::leftHandController };
-		if (controllerID == 1)
-			side = Annwvyn::AnnHandController::rightHandController;
+
+		Annwvyn::AnnHandController::AnnHandControllerSide side; 
+		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
+		{
+			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
+				side = Annwvyn::AnnHandController::leftHandController;
+				break;
+
+			case vr::ETrackedControllerRole::TrackedControllerRole_RightHand:
+				side = Annwvyn::AnnHandController::rightHandController;
+				break;
+
+			case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:
+			default:
+				side = Annwvyn::AnnHandController::invalidHandController;
+				break;
+		}
 
 		//TODO: get the buttons (stick, touchpad, whatever) states of this controller 
+
 
 		//Dinamically allocate the controller if the controller doesn't exist yet
 		if (!handControllers[controllerID])
@@ -469,9 +484,10 @@ void OgreOpenVRRender::processTrackedDevices()
 			if (DEBUG) handControllers[controllerID]->attachModel(smgr->createEntity("gizmo.mesh"));
 		}
 
-		handControllers[controllerID]->setTrackedPosition(feetPosition + bodyOrientation*position);
-		handControllers[controllerID]->setTrackedOrientation(bodyOrientation*orientation);
+		handControllers[controllerID]->setTrackedPosition(feetPosition + bodyOrientation * position);
+		handControllers[controllerID]->setTrackedOrientation(bodyOrientation * orientation);
 		handControllers[controllerID]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
+		handControllers[controllerID]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
 	}
 }
 

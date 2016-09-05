@@ -12,7 +12,7 @@ namespace Annwvyn
 	class AnnHandController
 	{
 	public:
-		enum AnnHandControllerSide{leftHandController, rightHandController};
+		enum AnnHandControllerSide{leftHandController, rightHandController, invalidHandController};
 		AnnHandController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
 			node(handNode),
 			id(controllerID),
@@ -20,7 +20,7 @@ namespace Annwvyn
 			model(nullptr),
 			grabbed(nullptr),
 			tracked(false),
-			trackedAcceleration(AnnVect3::ZERO),
+			trackedAngularSpeed(AnnVect3::ZERO),
 			trackedLinearSpeed(AnnVect3::ZERO)
 		{
 			std::cerr << "HandController ID : " << id << " created"; 
@@ -56,9 +56,9 @@ namespace Annwvyn
 			return node->getOrientation();
 		}
 
-		AnnVect3 getAcceleration()
+		AnnVect3 getAngularSpeed()
 		{
-			return trackedAcceleration;
+			return trackedAngularSpeed;
 		}
 
 		AnnVect3 getLinearSpeed()
@@ -97,10 +97,10 @@ namespace Annwvyn
 			trackedLinearSpeed = v;
 		}
 
-		void setTrackedAcceleration(AnnVect3 a)
+		void setTrackedAngularSpeed(AnnVect3 v)
 		{
 			tracked = true;
-			trackedAcceleration = a;
+			trackedAngularSpeed = v;
 		}
 
 		bool isTracked()
@@ -116,7 +116,7 @@ namespace Annwvyn
 		Ogre::Entity* model;
 		bool tracked;
 
-		AnnVect3 trackedAcceleration; 
+		AnnVect3 trackedAngularSpeed; 
 		AnnVect3 trackedLinearSpeed;
 	};
 }
