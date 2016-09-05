@@ -259,7 +259,7 @@ inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
-Ogre::SceneNode* AnnEngine::getCamera()
+Ogre::SceneNode* AnnEngine::getPlayerPovNode()
 {
 	return vrRendererPovGameplayPlacement;
 }
