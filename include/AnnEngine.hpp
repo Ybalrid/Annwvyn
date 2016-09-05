@@ -115,7 +115,7 @@ namespace Annwvyn
 		inline bool isKeyDown(OIS::KeyCode key); //event
 
 		///Get ogre camera scene node
-		Ogre::SceneNode* getCamera();
+		Ogre::SceneNode* getPlayerPovNode();
 
 		///Open a console and redirect standard output to it.
 		///This is only effective on Windows. There is no other
