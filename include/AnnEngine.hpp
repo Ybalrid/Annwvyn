@@ -27,6 +27,9 @@
 //Graphic rendering system for the vive
 #include "OgreOpenVRRender.hpp"
 
+//Graphic rendering system for NO FREAKING VR SYSTEM
+#include "OgreNoVRRender.hpp"
+
 //Annwvyn
 #include "AnnEventManager.hpp"
 #include "AnnTriggerObject.hpp"

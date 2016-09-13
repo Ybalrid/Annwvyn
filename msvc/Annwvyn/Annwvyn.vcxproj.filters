@@ -88,6 +88,9 @@
     <Filter Include="Annwvyn\SubSystems\GameObject">
       <UniqueIdentifier>{15b3cdd4-9e22-4ca2-b7af-644817628363}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OgreRenderingForVR\NoVR">
+      <UniqueIdentifier>{7303763a-539a-49b3-aa98-47e541c7797b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -204,6 +207,9 @@
     <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
       <Filter>Annwvyn\SubSystems\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\OgreNoVRRender.hpp">
+      <Filter>OgreRenderingForVR\NoVR</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -301,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
       <Filter>Annwvyn\SubSystems\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreNoVRRender.cpp">
+      <Filter>OgreRenderingForVR\NoVR</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
