@@ -3,6 +3,10 @@
 
 #include "systemMacro.h"
 #include "AnnSubsystem.hpp"
+#include <memory>
+
+#define AnnUserSystemAs(type) std::dynamic_pointer_cast<type>
+
 namespace Annwvyn
 {
 	class AnnEngine;

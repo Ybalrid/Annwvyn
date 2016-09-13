@@ -130,6 +130,11 @@ public:
 
 	}
 
+	void dummyMethod() 
+	{
+		AnnDebug() << "access from smart poiner casted through the stupid macro ACTUALLY WORKS!";
+	}
+
 protected:
 	bool needUpdate()
 	{
@@ -168,7 +173,7 @@ AnnMain()
 	AnnRadian(Ogre::Degree(90));
 	AnnDegree(Ogre::Radian(3.14));
 
-	AnnGetEngine()->registerUserSubSystem(std::make_shared<DummySubsystem>());
+	auto dummy = AnnUserSystemAs(DummySubsystem)(AnnGetEngine()->registerUserSubSystem(std::make_shared<DummySubsystem>()));
 
 	AnnDebug() << "Starting the render loop";
 	do	
@@ -177,8 +182,14 @@ AnnMain()
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
 			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	
+		dummy->dummyMethod();
+
 	}
 	while(AnnGetEngine()->refresh());
+
+	//Dummy only exist for debugging the user space sub system. Clearing the engine here will cause an exeption when "dummy" goes out of scope.
+	//To prevent it, we will reset the dummy pointer before calling AnnQuit()
+	dummy.reset();
 
 	AnnQuit();
 
