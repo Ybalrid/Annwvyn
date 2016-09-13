@@ -55,6 +55,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		renderer = std::make_shared<OgreOculusRender>(title);
 	else if (hmdCommand == "OgreOpenVRRender")
 		renderer = std::make_shared<OgreOpenVRRender>(title);
+	else if (hmdCommand == "OgreNoVRRender")
+		renderer = std::make_shared<OgreNoVRRender>(title);
 
 	else
 	{
@@ -113,7 +115,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
 	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
 	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
-
+ 
 
 	renderer->initClientHmdRendering();
 	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();

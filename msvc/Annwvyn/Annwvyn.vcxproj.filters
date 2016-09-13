@@ -85,6 +85,9 @@
     <Filter Include="OgreRenderingForVR\Vive">
       <UniqueIdentifier>{817503ff-7928-493f-a8dc-882bc4b068eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OgreRenderingForVR\NoVR">
+      <UniqueIdentifier>{7303763a-539a-49b3-aa98-47e541c7797b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -201,6 +204,9 @@
     <ClInclude Include="..\..\include\OgreOpenVRRender.hpp">
       <Filter>OgreRenderingForVR\Vive</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\OgreNoVRRender.hpp">
+      <Filter>OgreRenderingForVR\NoVR</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -298,6 +304,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\OgreOpenVRRender.cpp">
       <Filter>OgreRenderingForVR\Vive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\OgreNoVRRender.cpp">
+      <Filter>OgreRenderingForVR\NoVR</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
