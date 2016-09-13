@@ -103,6 +103,9 @@ namespace Annwvyn
 		if (strCmd == "-osvr")
 			return "OgreOSVRRender";
 
+		if (strCmd == "-noVR")
+			return "OgreNoVRRender";
+
 		return "arg_error";
 	}
 
