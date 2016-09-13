@@ -225,7 +225,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnHandControllers.cpp" />
+    <ClCompile Include="..\..\src\AnnHandController.cpp" />
     <ClCompile Include="..\..\src\AnnLevel.cpp" />
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
     <ClCompile Include="..\..\src\AnnColor.cpp" />
