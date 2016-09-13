@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "OgreNoVRRender.hpp"
 
+#include "AnnLogger.hpp"
+
 OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
 
 OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
@@ -61,12 +63,25 @@ void OgreNoVRRender::initRttRendering()
 
 void OgreNoVRRender::initClientHmdRendering()
 {
+	auto error = glewInit();
+	if (error != GLEW_OK)
+	{
+		Annwvyn::AnnDebug() << "failed to glew init";
+		exit(ANN_ERR_RENDER);
+	}
 	return;
 }
 
 void OgreNoVRRender::updateTracking()
 {
-	noVRCam->setPosition(feetPosition);
+	feetPosition = headNode->getPosition();
+	bodyOrientation = headNode->getOrientation();
+
+	then = now;
+	now = getTimer()->getMilliseconds() / 1000.0;
+	updateTime = now - then;
+
+	noVRCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y);
 	noVRCam->setOrientation(bodyOrientation);
 }
 

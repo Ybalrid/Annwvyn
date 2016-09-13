@@ -41,6 +41,8 @@ private:
 
 	Ogre::Viewport* noVRViewport;
 
+
+	double then, now;
 };
 
 #endif //OGRE_NO_VR_RENDER
