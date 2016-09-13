@@ -8,8 +8,6 @@
 #include <openvr.h>
 #include <openvr_capi.h>
 
-//OS Specific build macro 
-#include "systemMacro.h"
 #ifdef _WIN32
 #include <Windows.h>
 #include <glew.h>

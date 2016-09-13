@@ -499,7 +499,7 @@ void OgreOpenVRRender::handleIPDChange()
 			vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i)))).getTrans());
 }
 
-inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t & mat)
+inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat)
 {
 	return Ogre::Matrix4
 	{
