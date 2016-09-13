@@ -44,6 +44,8 @@
 #include "AnnGameObjectManager.hpp"
 #include "AnnSceneryManager.hpp"
 
+#include "AnnUserSpaceSubSystem.hpp"
+
 #ifdef _WIN32
 #include <io.h>
 #include <fcntl.h>
@@ -191,6 +193,9 @@ namespace Annwvyn
 
 		///Get the pose of the HMD in VR world space
 		OgrePose getHmdPose();
+
+		///Register your own subsystem to be updated by the engine
+		std::shared_ptr<AnnUserSubSystem> registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem);
 
 	private:
 

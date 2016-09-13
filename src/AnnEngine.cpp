@@ -310,6 +310,12 @@ OgrePose AnnEngine::getHmdPose()
 	return OgrePose();
 }
 
+std::shared_ptr<AnnUserSubSystem> AnnEngine::registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem)
+{
+	SubSystemList.push_back(userSystem);
+	return userSystem;
+}
+
 //Because Windows and the Win32 platform sucks. 
 void AnnEngine::openConsole()
 {

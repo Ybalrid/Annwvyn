@@ -122,6 +122,26 @@ public:
 	}
 };
 
+class DummySubsystem : public AnnUserSubSystem
+{
+public:
+	DummySubsystem(std::string name = "Dummy") : AnnUserSubSystem(name)
+	{
+
+	}
+
+protected:
+	bool needUpdate()
+	{
+		return true;
+	}
+
+	void update()
+	{
+		AnnDebug() << "Dummy debug";
+	}
+};
+
 AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
@@ -147,6 +167,8 @@ AnnMain()
 
 	AnnRadian(Ogre::Degree(90));
 	AnnDegree(Ogre::Radian(3.14));
+
+	AnnGetEngine()->registerUserSubSystem(std::make_shared<DummySubsystem>());
 
 	AnnDebug() << "Starting the render loop";
 	do	
