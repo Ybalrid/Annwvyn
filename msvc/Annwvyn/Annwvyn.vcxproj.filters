@@ -85,6 +85,9 @@
     <Filter Include="OgreRenderingForVR\Vive">
       <UniqueIdentifier>{817503ff-7928-493f-a8dc-882bc4b068eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\SubSystems\GameObject">
+      <UniqueIdentifier>{15b3cdd4-9e22-4ca2-b7af-644817628363}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -156,9 +159,6 @@
     <ClInclude Include="..\..\include\AnnPlayerActuator.hpp">
       <Filter>Annwvyn\PlayerObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
-      <Filter>Annwvyn\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnGameObject.hpp">
       <Filter>Annwvyn\GameObject\GameObject</Filter>
     </ClInclude>
@@ -200,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\OgreOpenVRRender.hpp">
       <Filter>OgreRenderingForVR\Vive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
+      <Filter>Annwvyn\SubSystems\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -263,9 +266,6 @@
     <ClCompile Include="..\..\src\AnnPlayerActuator.cpp">
       <Filter>Annwvyn\PlayerObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
-      <Filter>Annwvyn\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnGameObject.cpp">
       <Filter>Annwvyn\GameObject\GameObject</Filter>
     </ClCompile>
@@ -298,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\OgreOpenVRRender.cpp">
       <Filter>OgreRenderingForVR\Vive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
+      <Filter>Annwvyn\SubSystems\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
