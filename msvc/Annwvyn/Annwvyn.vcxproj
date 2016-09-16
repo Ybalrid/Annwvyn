@@ -221,6 +221,9 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\pch\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\OgreNoVRRender.hpp">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClCompile Include="..\..\pch\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -252,6 +255,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnXmlLevel.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />
     <ClCompile Include="..\..\src\OculusInterface.cpp" />
+    <ClCompile Include="..\..\src\OgreNoVRRender.cpp" />
     <ClCompile Include="..\..\src\OgreOculusRender.cpp" />
     <ClCompile Include="..\..\src\AnnLogger.cpp" />
     <ClCompile Include="..\..\src\OgreOpenVRRender.cpp" />
