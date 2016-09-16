@@ -20,13 +20,16 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 {
 	if (self)
 	{
-		MessageBox(NULL, L"Fatal error with renderer initialisation. OgreOculusRender object allready created.", L"Fatal Error", MB_ICONERROR);
+		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialisation. OgreOculusRender object allready created.");
 		exit(ANN_ERR_RENDER);
 	}
 	self = this;
 
 	eyeCameras[0] = nullptr;
 	eyeCameras[1] = nullptr;
+
+	handControllers[0] = nullptr;
+	handControllers[1] = nullptr;
 }
 
 OgreVRRender::~OgreVRRender()
@@ -48,7 +51,7 @@ Ogre::RenderWindow* OgreVRRender::getWindow()
 	return window;
 }
 
-Ogre::SceneNode * OgreVRRender::getCameraInformationNode()
+Ogre::SceneNode* OgreVRRender::getCameraInformationNode()
 {
 	return headNode;
 }
@@ -90,4 +93,12 @@ void OgreVRRender::getOgreConfig()
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 }
 
+std::shared_ptr<Annwvyn::AnnHandController>* OgreVRRender::getHandControllerArray()
+{
+	return handControllers;
+}
 
+size_t OgreVRRender::getHanControllerArraySize()
+{
+	return MAX_CONTROLLER_NUMBER;
+}
