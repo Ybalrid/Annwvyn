@@ -26,7 +26,8 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 {
 
 	AnnDebug("Creatig a game object from the entity " + std::string(entityName));
-
+	
+	//TODO: either choose to throw an execption or quit the program. If it's true, there's a programing error. And "tomber en marche" is bad. 
 	if (std::string(entityName).empty())
 	{
 		AnnDebug("Hey! what are you trying to do here? Please specify a non empty string for entityName !");
@@ -51,15 +52,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 	return obj;
 }
-bool AnnGameObjectManager::destroyGameObject(std::shared_ptr<AnnGameObject> object)
-{
-	//Ogre::SceneManager* SceneManager(AnnGetEngine()->getSceneManager());
-	if (!object) return false;
-	bool returnCode(false);
-	Objects.remove(object);
-	Objects.remove(nullptr);
-	return returnCode;
-}
+
 
 void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> object)
 {
@@ -84,11 +77,6 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 	return NULL;
 }
 
-void Annwvyn::AnnGameObjectManager::destroyLightObject(std::shared_ptr<AnnLightObject> light)
-{
-	removeLightObject(light);
-}
-
 void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> light)
 {
 	Lights.remove(light);
@@ -111,12 +99,6 @@ std::shared_ptr<AnnTriggerObject> Annwvyn::AnnGameObjectManager::createTriggerOb
 	return trigger;
 }
 
-void AnnGameObjectManager::destroyTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
-{
-	Triggers.remove(trigger);
-	AnnDebug() << "Destroy trigger : " << (void*)trigger.get();
-	//delete trigger;
-}
 
 void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
 {
