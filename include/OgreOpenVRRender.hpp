@@ -8,8 +8,6 @@
 #include <openvr.h>
 #include <openvr_capi.h>
 
-//OS Specific build macro 
-#include "systemMacro.h"
 #ifdef _WIN32
 #include <Windows.h>
 #include <glew.h>
@@ -22,6 +20,8 @@
 
 #include "AnnErrorCode.hpp"
 #include "AnnTypes.h"
+
+#include "AnnHandController.hpp"
 
 
 class DLL OgreOpenVRRender : public OgreVRRender
@@ -119,9 +119,8 @@ private:
 	
 	///Iterate through the list of events from SteamVR and call code that react to it
 	void processVREvents();
-
-	///Iterate through the list of tracked devices, and do stuff with there poses, if relevent
-	void processTrackedPoses();
+	
+	void processTrackedDevices();
 
 	///Reset the IPD displacement of the cameras according to the EyeToHeadTransform matrix
 	void handleIPDChange();
@@ -182,6 +181,8 @@ private:
 
 	///State of the "should quit" marker. If it goes to true, the game loop should stop 
 	bool shouldQuitState;
+
+
 
 };
 

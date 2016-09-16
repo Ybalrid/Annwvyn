@@ -36,6 +36,9 @@ shouldQuitState(false)
 	vrTextures[left] = {};
 	vrTextures[right] = {};
 	GLBounds = {};
+
+	handControllers[left] = nullptr;
+	handControllers[right] = nullptr;
 }
 
 OgreOpenVRRender::~OgreOpenVRRender()
@@ -118,6 +121,18 @@ void OgreOpenVRRender::initVrHmd()
 
 void OgreOpenVRRender::initClientHmdRendering()
 {
+
+	//Init GLEW here to be able to call OpenGL functions
+	Annwvyn::AnnDebug() << "Init GL Extension Wrangler";
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		Annwvyn::AnnDebug("Failed to glewTnit()\n\
+						  Cannot call manual OpenGL\n\
+						  Error Code : " + (unsigned int)err);
+		exit(ANN_ERR_RENDER);
+	}
+	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 	setupDistrotion();
 	//Should init the device model things here if we want to display the vive controllers 
 
@@ -164,9 +179,7 @@ void OgreOpenVRRender::updateTracking()
 
 	//Wait for next frame pose 
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-
-	//Process other tracked device. (Vive Controllers, maybe? :p)
-	processTrackedPoses();
+	processTrackedDevices();
 
 	//Here we just care about the HMD
 	vr::TrackedDevicePose_t hmdPose;
@@ -409,14 +422,72 @@ void OgreOpenVRRender::processVREvents()
 	}
 }
 
-void OgreOpenVRRender::processTrackedPoses()
+const bool DEBUG(true);
+
+void OgreOpenVRRender::processTrackedDevices()
 {
-	for (vr::TrackedDeviceIndex_t i(0); i < vr::k_unMaxTrackedDeviceCount; i++)
+	//Iterate through the possible trackedDeviceIndexes
+	for (vr::TrackedDeviceIndex_t trackedDevice = vr::k_unTrackedDeviceIndex_Hmd + 1;
+		 trackedDevice < vr::k_unMaxTrackedDeviceCount;
+		 trackedDevice++)
 	{
-		if (trackedPoses[i].bPoseIsValid)
+		//If the device is not connected, pass.
+		if (!vrSystem->IsTrackedDeviceConnected(trackedDevice))
+			continue;
+		//If the device is not recognized as a controller, pass
+		if (vrSystem->GetTrackedDeviceClass(trackedDevice) != vr::TrackedDeviceClass_Controller)
+			continue;
+		//If we don't have a valid pose of the controller, pass
+		if (!trackedPoses[trackedDevice].bPoseIsValid)
+			continue;
+
+		//Get the controller ID; If we can't handle more devices, break;
+		Annwvyn::AnnHandControllerID controllerID{ trackedDevice - 1 };
+		if (controllerID > MAX_CONTROLLER_NUMBER) break;
+
+		//At this point, we know that "trackedDevice" is the index of a valid SteamVR hand controller. We can extract it's tracking information
+		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
+		
+		//Extract the pose from the transformation matrix 
+		Ogre::Vector3 position = transform.getTrans();
+		Ogre::Quaternion orientation = transform.extractQuaternion();
+
+		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
+		//controllerID 0 = left; 1 = right;
+
+		Annwvyn::AnnHandController::AnnHandControllerSide side; 
+		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
-			//I think I need actual vive controllers to go further. And Annwvyn has no abstraction for hand controllers right now. 
+			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
+				side = Annwvyn::AnnHandController::leftHandController;
+				break;
+
+			case vr::ETrackedControllerRole::TrackedControllerRole_RightHand:
+				side = Annwvyn::AnnHandController::rightHandController;
+				break;
+
+			case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:
+			default:
+				side = Annwvyn::AnnHandController::invalidHandController;
+				break;
 		}
+
+		//TODO: get the buttons (stick, touchpad, whatever) states of this controller 
+
+
+		//Dinamically allocate the controller if the controller doesn't exist yet
+		if (!handControllers[controllerID])
+		{
+			handControllers[controllerID] = std::make_shared<Annwvyn::AnnHandController>
+				(smgr->getRootSceneNode()->createChildSceneNode(), controllerID, side);
+			
+			if (DEBUG) handControllers[controllerID]->attachModel(smgr->createEntity("gizmo.mesh"));
+		}
+
+		handControllers[controllerID]->setTrackedPosition(feetPosition + bodyOrientation * position);
+		handControllers[controllerID]->setTrackedOrientation(bodyOrientation * orientation);
+		handControllers[controllerID]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
+		handControllers[controllerID]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
 	}
 }
 
@@ -428,7 +499,7 @@ void OgreOpenVRRender::handleIPDChange()
 			vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i)))).getTrans());
 }
 
-inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t & mat)
+inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat)
 {
 	return Ogre::Matrix4
 	{

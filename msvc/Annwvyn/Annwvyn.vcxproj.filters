@@ -204,6 +204,7 @@
     <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
       <Filter>Annwvyn\SubSystems\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnHandController.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -302,6 +303,7 @@
     <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
       <Filter>Annwvyn\SubSystems\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\AnnHandControllers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />
