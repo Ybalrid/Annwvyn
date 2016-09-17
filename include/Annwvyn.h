@@ -85,24 +85,31 @@ namespace Annwvyn
 {
 	inline std::string getHMDFromCmdLine(const char* cmd)
 	{
+		//If no args, default
 		if (strlen(cmd) == 0)
 			return "OgreDefaultRender";
-		const char argChar = '-';
 
+		//Args should start by a '-'
+		const char argChar = '-';
 		if (cmd[0] != argChar)
 			return "arg_error";
 
+		//Convert to C++ string object
 		std::string strCmd{ cmd };
 
+		//User want to use a rift
 		if (strCmd == "-rift")
 			return "OgreOculusRender";
 
-		if (strCmd == "-vive")
+		//User want to use a Vive or another OpenVR headset
+		if (strCmd == "-vive" || strCmd == "-openVR")
 			return "OgreOpenVRRender";
 
+		//Not implemented. I don't have OSVR hardware to try it out.
 		if (strCmd == "-osvr")
 			return "OgreOSVRRender";
 
+		//Bodge to run game on a flatscreen on hardware that is not compatible with x
 		if (strCmd == "-noVR")
 			return "OgreNoVRRender";
 
