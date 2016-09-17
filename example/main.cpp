@@ -175,6 +175,14 @@ AnnMain()
 
 	auto dummy = AnnUserSystemAs(DummySubsystem)(AnnGetEngine()->registerUserSubSystem(std::make_shared<DummySubsystem>()));
 
+	auto otherDummy = AnnUserSystemAs(DummySubsystem)(AnnGetEngine()->getSubSystemByName("Dummy"));
+
+	//sanity check : 
+	if ((void*)dummy.get() == (void*)otherDummy.get())
+	{
+		AnnDebug() << "getByName, then recast work"; 
+	}otherDummy.reset();
+
 	AnnDebug() << "Starting the render loop";
 	do	
 	{

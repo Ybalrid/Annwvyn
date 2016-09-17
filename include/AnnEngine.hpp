@@ -197,6 +197,9 @@ namespace Annwvyn
 		///Register your own subsystem to be updated by the engine
 		std::shared_ptr<AnnUserSubSystem> registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem);
 
+		///Get pointer to a subsystem by name
+		std::shared_ptr<AnnSubSystem> getSubSystemByName(std::string name);
+
 	private:
 
 		///VR renderer
