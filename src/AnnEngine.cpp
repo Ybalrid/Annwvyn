@@ -316,6 +316,14 @@ std::shared_ptr<AnnUserSubSystem> AnnEngine::registerUserSubSystem(std::shared_p
 	return userSystem;
 }
 
+std::shared_ptr<AnnSubSystem> Annwvyn::AnnEngine::getSubSystemByName(std::string name)
+{
+	for (auto subsystem : SubSystemList)
+		if (subsystem->name == name)
+			return subsystem;
+	return nullptr;
+}
+
 //Because Windows and the Win32 platform sucks. 
 void AnnEngine::openConsole()
 {
