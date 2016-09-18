@@ -17,16 +17,58 @@ namespace Annwvyn
 	class DLL Ann3DTextPlane
 	{
 	public:
+		///Text alignment flag
+		enum TextAlign{ALIGN_LEFT = 'l', ALIGN_CENTER = 'c', ALIGN_RIGHT = 'r' };
+
+		///Construct a 3D text plane. Need to provide a caption to auto render text
 		Ann3DTextPlane(float w, float h, float resolution, std::string caption = "", std::string font = "defaultFont");
+		
+		///Set or change the caption
 		void setCaption(std::string newCaption);
-		void setFontName(std::string font);
+		//void setFontName(std::string font);
+
+		///The plane will auto-rerender at changes if set to true
+		void setAutoUpdate(bool state);
+
+		///Change the color
+		void setTextColor(AnnColor color);
+
+		///Call text re-render (if needed)
+		void update();
+
+		///Set the position of the plane
+		void setPosition(AnnVect3 p);
+		
+		///Set the orient of the plane
+		void setOrientation(AnnQuaternion q);
+
+		///Set the text alignment mode
+		void setTextAlign(TextAlign talign);
+
+		///Get the position of the plane
+		AnnVect3 getPosition();
+
+		///Get the orientation
+		AnnQuaternion getOrientaiton();
+
 	private:
+		///Render the text
 		void renderText();
+	
+		///Fill the texture with transparent black
 		void clearTexture();
 
-
-
+		///Calculate the actuall vertex coordinates for the plane geometry
 		void calculateVerticesForPlaneSize();
+		
+		///Check if autoupdate is on. If so, call update
+		void autoUpdateCheck();
+		
+		///Generat a random string of leter of arbitrary lenght
+		std::string generateRandomString(size_t len = 15);
+		
+		///Generate a random material name
+		void generateMaterialName();
 
 		Ogre::ManualObject* renderPlane;
 		Ogre::SceneNode* node;
@@ -35,11 +77,7 @@ namespace Annwvyn
 		
 		bool needUpdating;
 		
-		void generateMaterialName();
-
 		const size_t materialNameLen = 30;
-		std::string generateRandomString(size_t len = 15);
-
 
 		void createMaterial();
 		std::string materialName;
@@ -49,5 +87,9 @@ namespace Annwvyn
 		float width, height, resolutionFactor, xOffset, yOffset;
 
 		Ogre::FontPtr font;
+		AnnColor textColor;
+		TextAlign align;
+
+		bool autoUpdate;
 	};
 }

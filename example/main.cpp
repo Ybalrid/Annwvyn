@@ -149,6 +149,11 @@ AnnMain()
 	AnnRadian(Ogre::Degree(90));
 	AnnDegree(Ogre::Radian(3.14));
 	Ann3DTextPlane* test = new Ann3DTextPlane(1, 0.5, 96.0 / 0.0254, "Annwvyn");
+	test->setAutoUpdate(true);
+	test->setTextColor(AnnColor(1, 0, 1));
+	test->setCaption("Hello World");
+	test->setPosition({ 0, 0.5, 0 });
+	//test->update();
 
 	AnnDebug() << "Starting the render loop";
 	do	
