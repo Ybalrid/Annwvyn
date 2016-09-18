@@ -215,6 +215,7 @@
     <ClInclude Include="..\..\include\AnnAngle.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Ann3DTextPlane.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -320,6 +321,7 @@
     <ClCompile Include="..\..\src\AnnAngle.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Ann3DTextPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />

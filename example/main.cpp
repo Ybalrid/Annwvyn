@@ -10,6 +10,7 @@
 
 //Annwvyn
 #include <Annwvyn.h>
+#include <Ann3DTextPlane.hpp>
 #include "TestLevel.hpp"
 
 using namespace std;
@@ -147,6 +148,7 @@ AnnMain()
 
 	AnnRadian(Ogre::Degree(90));
 	AnnDegree(Ogre::Radian(3.14));
+	Ann3DTextPlane* test = new Ann3DTextPlane(1, 0.5, 96.0 / 0.0254, "Annwvyn");
 
 	AnnDebug() << "Starting the render loop";
 	do	

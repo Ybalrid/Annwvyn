@@ -182,6 +182,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\AnnAngle.hpp" />
+    <ClInclude Include="..\..\include\Ann3DTextPlane.hpp" />
     <ClInclude Include="..\..\include\AnnHandController.hpp" />
     <ClInclude Include="..\..\include\AnnLevel.hpp" />
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp" />
@@ -231,6 +232,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnAngle.cpp" />
+    <ClCompile Include="..\..\src\Ann3DTextPlane.cpp" />
     <ClCompile Include="..\..\src\AnnHandController.cpp" />
     <ClCompile Include="..\..\src\AnnLevel.cpp" />
     <ClCompile Include="..\..\src\AnnAudioEngine.cpp" />
