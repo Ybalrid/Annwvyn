@@ -17,6 +17,8 @@ OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 	farClippingDistance(4000.0f),
 	lastOculusPosition(feetPosition),
 	lastOculusOrientation(bodyOrientation),
+	lastFrameDisplayTime(0),
+	currentFrameDisplayTime(0),
 	textureSwapChain(0),
 	perfHudMode(ovrPerfHud_Off)
 {
