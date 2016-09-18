@@ -176,14 +176,16 @@ using namespace Annwvyn;
 
 Ann3DTextPlane::Ann3DTextPlane(float w,
 							   float h,
-							   float resolution, 
+							   float resolution,
 							   std::string str,
 							   std::string fName) :
 	width(w),
 	height(h),
 	resolutionFactor(resolution),
 	caption(str),
-	fontName(fName)
+	fontName(fName),
+	textColor(AnnColor(1, 0, 0)),
+	autoUpdate(false)
 {
 	AnnDebug() << "3D Text plane created";
 	AnnDebug() << "Size is : " << width << "x" << height;
@@ -235,6 +237,18 @@ Ann3DTextPlane::Ann3DTextPlane(float w,
 	}
 }
 
+void Annwvyn::Ann3DTextPlane::setCaption(std::string newCaption)
+{
+	caption = newCaption;
+	needUpdating = true;
+	autoUpdateCheck();
+}
+
+void Annwvyn::Ann3DTextPlane::setAutoUpdate(bool state)
+{
+	autoUpdate = state;
+}
+
 void Ann3DTextPlane::calculateVerticesForPlaneSize()
 {
 	xOffset = { width / 2.0f };
@@ -276,6 +290,11 @@ void Ann3DTextPlane::createMaterial()
 	renderPlaneTextureUnitState->setTexture(texture);
 }
 
+void Annwvyn::Ann3DTextPlane::autoUpdateCheck()
+{
+	if (autoUpdate) update();
+}
+
 void Ann3DTextPlane::generateMaterialName()
 {
 	materialName = generateRandomString(materialNameLen);
@@ -289,10 +308,51 @@ std::string Ann3DTextPlane::generateRandomString(size_t len)
 	return s; 
 }
 
+void Annwvyn::Ann3DTextPlane::setTextColor(AnnColor color)
+{
+	textColor.setRed(color.getRed());
+	textColor.setGreen(color.getGreen());
+	textColor.setBlue(color.getBlue());
+	needUpdating = true;
+	autoUpdateCheck();
+}
+
+void Annwvyn::Ann3DTextPlane::update()
+{
+	if (!needUpdating) return;
+	renderText();
+	needUpdating = false;
+}
+
+void Annwvyn::Ann3DTextPlane::setPosition(AnnVect3 p)
+{
+	node->setPosition(p);
+}
+
+void Annwvyn::Ann3DTextPlane::setOrientation(AnnQuaternion q)
+{
+	node->setOrientation(q);
+}
+
+void Annwvyn::Ann3DTextPlane::setTextAlign(TextAlign talign)
+{
+	align = talign;
+}
+
+AnnVect3 Annwvyn::Ann3DTextPlane::getPosition()
+{
+	return node->getPosition();
+}
+
+AnnQuaternion Annwvyn::Ann3DTextPlane::getOrientaiton()
+{
+	return node->getOrientation();
+}
+
 void Ann3DTextPlane::renderText()
 {
-	//clearTexture(); 
-	WriteToTexture(caption, texture, Ogre::Image::Box(0, 0, width*resolutionFactor, height*resolutionFactor), font.getPointer(), Ogre::ColourValue::Red, 'c', true);
+	clearTexture(); 
+	WriteToTexture(caption, texture, Ogre::Image::Box(0, 0, width*resolutionFactor, height*resolutionFactor), font.getPointer(), textColor.getOgreColor(), align, true);
 	needUpdating = false; 
 //	texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("", "textDebug.png");
 }
@@ -300,15 +360,16 @@ void Ann3DTextPlane::renderText()
 void Ann3DTextPlane::clearTexture()
 {
 	HardwarePixelBufferSharedPtr textureBuffer = texture->getBuffer();
-	const size_t w = textureBuffer->getWidth();
-	const size_t h = textureBuffer->getHeight();
-	const size_t bufferSize = w*h;
+	const uint32 w = textureBuffer->getWidth();
+	const uint32 h = textureBuffer->getHeight();
 	
-	//Create an array of black, transparant R8G8B8A8 pixels to fill the texture
-	unsigned char* clearBuffer = (unsigned char*)malloc(bufferSize * 4);
-	for (size_t i(0); i < bufferSize*4; i++) clearBuffer[i] = 0;
-	textureBuffer->writeData(0, bufferSize * 4, (void*)clearBuffer);
-	free(clearBuffer);
+	Ogre::Image::Box imageBox(0, 0, w, h);
+	Ogre::PixelBox pixelBox = textureBuffer->lock(imageBox, HardwareBuffer::HBL_NORMAL);
+
+	for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
+		pixelBox.setColourAt(Ogre::ColourValue(0, 0, 0, 0), i, j, 0);
+
+	textureBuffer->unlock();
 }
 
 using namespace Ogre;
