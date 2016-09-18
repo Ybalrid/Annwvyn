@@ -6,7 +6,9 @@
 OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
 
 OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
-noVRCam(nullptr)
+noVRCam(nullptr),
+then(0),
+now(0)
 {
 	noVRself = dynamic_cast<OgreNoVRRender*>(self);
 }
