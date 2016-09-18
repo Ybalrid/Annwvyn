@@ -174,16 +174,13 @@ stop:
 }
 using namespace Annwvyn;
 
-Ann3DTextPlane::Ann3DTextPlane(float w,
-							   float h,
-							   float resolution,
-							   std::string str,
-							   std::string fName) :
+Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std::string str, std::string fName, std::string TTF) :
 	width(w),
 	height(h),
 	resolutionFactor(resolution),
 	caption(str),
 	fontName(fName),
+	fontTTF(TTF),
 	textColor(AnnColor(1, 0, 0)),
 	autoUpdate(false)
 {
@@ -226,7 +223,7 @@ Ann3DTextPlane::Ann3DTextPlane(float w,
 		{
 			font = Ogre::FontManager::getSingleton().create(fontName, "ANNWVYN_CORE");
 			font->setType(Ogre::FontType::FT_TRUETYPE);
-			font->setSource("VeraMono.ttf");
+			font->setSource(fontTTF);
 			font->setTrueTypeResolution(300);
 			font->setTrueTypeSize(64);
 		}
@@ -235,6 +232,20 @@ Ann3DTextPlane::Ann3DTextPlane(float w,
 	{
 		renderText();
 	}
+}
+
+Ann3DTextPlane::~Ann3DTextPlane()
+{
+	auto smgr = AnnGetEngine()->getSceneManager();
+	
+	node->detachObject(renderPlane);
+	smgr->destroyManualObject(renderPlane);
+	
+	Ogre::MaterialManager::getSingleton().remove(materialName);
+	texture.setNull();
+
+	smgr->destroySceneNode(node);
+	node = nullptr;
 }
 
 void Annwvyn::Ann3DTextPlane::setCaption(std::string newCaption)

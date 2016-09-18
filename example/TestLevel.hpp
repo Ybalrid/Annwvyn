@@ -42,6 +42,9 @@ public:
 
 		//The shape aproximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
 		
+		text = std::make_shared<Ann3DTextPlane>(1, 0.5, 96.f / 0.0254f, "Hello hello!");
+		text->setPosition({ 0, 0.5, 0 });
+
 		//Add other source of light
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
@@ -78,12 +81,20 @@ public:
 		AnnGetPlayer()->resetPlayerPhysics();
 	}
 
+	void unload()
+	{
+		text.reset();
+		AnnLevel::unload();
+	}
+
 	void runLogic()
 	{
 		//AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
 	}
 
 private:
+
+	std::shared_ptr<Ann3DTextPlane> text;
 };
 
 class PhysicsDebugLevel : LEVEL
