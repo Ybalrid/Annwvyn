@@ -37,6 +37,9 @@ namespace Annwvyn
 		///Change the color
 		void setTextColor(AnnColor color);
 
+		///Change the background color (note: alpha is either one or nothing. Fragments are discarded, not blended)
+		void setBackgroundColor(AnnColor color);
+
 		///Call text re-render (if needed)
 		void update();
 
@@ -92,7 +95,7 @@ namespace Annwvyn
 		float width, height, resolutionFactor, xOffset, yOffset;
 
 		Ogre::FontPtr font;
-		AnnColor textColor;
+		AnnColor textColor, bgColor;
 		TextAlign align;
 
 		bool autoUpdate;
