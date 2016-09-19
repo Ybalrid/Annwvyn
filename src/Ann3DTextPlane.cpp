@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "Ann3DTextPlane.hpp"
 #include "AnnLogger.hpp"
+
 using namespace Ogre;
-void WriteToTexture(const String &str, TexturePtr destTexture, Image::Box destRectangle, Font* font, const ColourValue &color, char justify = 'l', bool wordwrap = true)
+void WriteToTexture(const std::string &str, TexturePtr destTexture, Image::Box destRectangle, Font* font, const ColourValue &color, char justify = 'l', bool wordwrap = true)
 {
 	using namespace Ogre;
 
@@ -174,7 +175,7 @@ stop:
 }
 using namespace Annwvyn;
 
-Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std::string str, std::string fName, std::string TTF) :
+Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std::string str, std::string fName, std::string TTF, int size) :
 	width(w),
 	height(h),
 	resolutionFactor(resolution),
@@ -182,14 +183,15 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std:
 	fontName(fName),
 	fontTTF(TTF),
 	textColor(AnnColor(1, 0, 0)),
-	autoUpdate(false)
+	autoUpdate(false),
+	fontSize(size)
 {
 	AnnDebug() << "3D Text plane created";
 	AnnDebug() << "Size is : " << width << "x" << height;
 	if (caption.empty())
 		AnnDebug() << "No caption yet";
 	else
-		AnnDebug() << "caption : " << caption;
+		AnnDebug() << "caption : " << caption.c_str();
 	if (fontName.empty())
 		AnnDebug() << "No font family yet";
 	else
@@ -225,7 +227,7 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std:
 			font->setType(Ogre::FontType::FT_TRUETYPE);
 			font->setSource(fontTTF);
 			font->setTrueTypeResolution(300);
-			font->setTrueTypeSize(64);
+			font->setTrueTypeSize(size);
 		}
 	}
 	if (!caption.empty())
@@ -282,8 +284,6 @@ void Ann3DTextPlane::calculateVerticesForPlaneSize()
 	vertices[1] = AnnVect3(-xOffset, -yOffset, 0);
 	vertices[2] = AnnVect3(+xOffset, +yOffset, 0);
 	vertices[3] = AnnVect3(+xOffset, -yOffset, 0);
-
-	
 }
 
 void Ann3DTextPlane::createMaterial()
@@ -382,5 +382,3 @@ void Ann3DTextPlane::clearTexture()
 
 	textureBuffer->unlock();
 }
-
-using namespace Ogre;

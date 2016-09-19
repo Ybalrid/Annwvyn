@@ -8,9 +8,11 @@
 
 #include <string>
 
+
 #include "AnnEngine.hpp"
 
 #include "AnnTypes.h"
+
 
 namespace Annwvyn
 {
@@ -21,14 +23,13 @@ namespace Annwvyn
 		enum TextAlign{ALIGN_LEFT = 'l', ALIGN_CENTER = 'c', ALIGN_RIGHT = 'r' };
 
 		///Construct a 3D text plane. Need to provide a caption to auto render text
-		Ann3DTextPlane(float w, float h, float resolution, std::string caption = "", std::string font = "defaultFont", std::string fontTTF = "VeraMono.ttf");
+		Ann3DTextPlane(float w, float h, float resolution, std::string caption = "", std::string font = "defaultFont", std::string fontTTF = "VeraMono.ttf", int ttfSize = 64);
 		
 
 		~Ann3DTextPlane();
 		
 		///Set or change the caption
 		void setCaption(std::string newCaption);
-		//void setFontName(std::string font);
 
 		///The plane will auto-rerender at changes if set to true
 		void setAutoUpdate(bool state);
@@ -76,7 +77,8 @@ namespace Annwvyn
 		Ogre::ManualObject* renderPlane;
 		Ogre::SceneNode* node;
 		Ogre::TexturePtr texture;
-		std::string caption, fontName, fontTTF;
+		std::string fontName, fontTTF;
+		std::string caption;
 		
 		bool needUpdating;
 		
@@ -94,5 +96,7 @@ namespace Annwvyn
 		TextAlign align;
 
 		bool autoUpdate;
+
+		int fontSize;
 	};
 }
