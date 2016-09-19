@@ -183,6 +183,7 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std:
 	fontName(fName),
 	fontTTF(TTF),
 	textColor(AnnColor(1, 0, 0)),
+	bgColor(AnnColor(0, 0, 0, 0)),
 	autoUpdate(false),
 	fontSize(size)
 {
@@ -328,6 +329,16 @@ void Annwvyn::Ann3DTextPlane::setTextColor(AnnColor color)
 	autoUpdateCheck();
 }
 
+void Annwvyn::Ann3DTextPlane::setBackgroundColor(AnnColor color)
+{
+	bgColor.setRed(color.getRed());
+	bgColor.setGreen(color.getGreen());
+	bgColor.setBlue(color.getBlue());
+	bgColor.setAlpha(color.getAlpha());
+	needUpdating = true;
+	autoUpdateCheck();
+}
+
 void Annwvyn::Ann3DTextPlane::update()
 {
 	if (!needUpdating) return;
@@ -378,7 +389,7 @@ void Ann3DTextPlane::clearTexture()
 	Ogre::PixelBox pixelBox = textureBuffer->lock(imageBox, HardwareBuffer::HBL_NORMAL);
 
 	for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
-		pixelBox.setColourAt(Ogre::ColourValue(0, 0, 0, 0), i, j, 0);
+		pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
 
 	textureBuffer->unlock();
 }
