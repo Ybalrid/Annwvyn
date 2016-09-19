@@ -42,13 +42,14 @@ public:
 
 		//The shape aproximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
 		
-		text = std::make_shared<Ann3DTextPlane>(1, 0.5, 96.f / 0.0254f, "Hello hello!");
-		text->setPosition({ 0, 0.5, 0 });
+		text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, 96.f / 0.0254f, "Hello, Virtual World!\nthis is one line only this is one line only this is one line only this is one line only");
+		text->setTextAlign(text->ALIGN_LEFT);
+		text->setPosition({ 0, 0.5f, 0 });
 
 		//Add other source of light
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5* AnnVect3::NEGATIVE_UNIT_Z);
+		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5f* AnnVect3::NEGATIVE_UNIT_Z);
 
 		//Create objects and register them as content of the level
 		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", std::make_shared<Sinbad>());
