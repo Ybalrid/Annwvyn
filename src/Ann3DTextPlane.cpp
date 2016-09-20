@@ -175,17 +175,19 @@ stop:
 }
 using namespace Annwvyn;
 
-Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std::string str, std::string fName, std::string TTF, int size) :
+Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int size, float resolution, std::string fName, std::string TTF) :
 	width(w),
 	height(h),
 	resolutionFactor(resolution),
+	dpi(resolution),
 	caption(str),
 	fontName(fName),
 	fontTTF(TTF),
 	textColor(AnnColor(1, 0, 0)),
 	bgColor(AnnColor(0, 0, 0, 0)),
 	autoUpdate(false),
-	fontSize(size)
+	fontSize(size),
+	margin(0)
 {
 	AnnDebug() << "3D Text plane created";
 	AnnDebug() << "Size is : " << width << "x" << height;
@@ -197,6 +199,11 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std:
 		AnnDebug() << "No font family yet";
 	else
 		AnnDebug() << "font : " << fontName;
+
+	resolutionFactor /= dpi2dpm;
+	AnnDebug() << "Resolution factor in dot per metters " << resolutionFactor;
+	AnnDebug() << "Texture resolution is : " << (size_t)(w*resolutionFactor) << "x" << (size_t)(h*resolutionFactor);
+	AnnDebug() << "Font resolution in DPI is : " << dpi;
 
 	calculateVerticesForPlaneSize();
 	
@@ -227,7 +234,7 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, float resolution, std:
 			font = Ogre::FontManager::getSingleton().create(fontName, "ANNWVYN_CORE");
 			font->setType(Ogre::FontType::FT_TRUETYPE);
 			font->setSource(fontTTF);
-			font->setTrueTypeResolution(300);
+			font->setTrueTypeResolution(dpi);
 			font->setTrueTypeSize(size);
 		}
 	}
@@ -371,10 +378,19 @@ AnnQuaternion Annwvyn::Ann3DTextPlane::getOrientaiton()
 	return node->getOrientation();
 }
 
+void Annwvyn::Ann3DTextPlane::setMargin(float m)
+{
+	margin = m;
+	pixelMargin = resolutionFactor*margin;
+
+	needUpdating = true;
+	autoUpdateCheck();
+}
+
 void Ann3DTextPlane::renderText()
 {
 	clearTexture(); 
-	WriteToTexture(caption, texture, Ogre::Image::Box(0, 0, width*resolutionFactor, height*resolutionFactor), font.getPointer(), textColor.getOgreColor(), align, true);
+	WriteToTexture(caption, texture, Ogre::Image::Box(pixelMargin, pixelMargin, width*resolutionFactor - pixelMargin, height*resolutionFactor - pixelMargin), font.getPointer(), textColor.getOgreColor(), align, true);
 	needUpdating = false; 
 //	texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("", "textDebug.png");
 }

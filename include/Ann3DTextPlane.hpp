@@ -23,7 +23,14 @@ namespace Annwvyn
 		enum TextAlign{ALIGN_LEFT = 'l', ALIGN_CENTER = 'c', ALIGN_RIGHT = 'r' };
 
 		///Construct a 3D text plane. Need to provide a caption to auto render text
-		Ann3DTextPlane(float w, float h, float resolution, std::string caption = "", std::string font = "defaultFont", std::string fontTTF = "VeraMono.ttf", int ttfSize = 64);
+		/// \param w Width in metter
+		/// \param h Height in metter
+		/// \param caption Caption 
+		/// \param size Character size in typographic point
+		/// \param resolution Character "print" resolution in DPI. Thiw will influence the texture resolution
+		/// \param font Your name of the font. To reuse a font configuration
+		/// \param fontTTF Name of the TTF file known by the resource manager
+		Ann3DTextPlane(float w, float h, std::string caption = "",int size = 128, float resolution = 96.0f, std::string font = "defaultFont", std::string fontTTF = "VeraMono.ttf");
 		
 
 		~Ann3DTextPlane();
@@ -57,6 +64,8 @@ namespace Annwvyn
 
 		///Get the orientation
 		AnnQuaternion getOrientaiton();
+
+		void setMargin(float margin);
 
 	private:
 		///Render the text
@@ -101,5 +110,13 @@ namespace Annwvyn
 		bool autoUpdate;
 
 		int fontSize;
+
+
+		const float dpi2dpm = 0.0254f;
+
+		float dpi;
+
+		unsigned int pixelMargin;
+		float margin;
 	};
 }
