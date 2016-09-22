@@ -7,6 +7,7 @@ OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
 
 OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
 noVRCam(nullptr),
+noVRViewport(nullptr),
 then(0),
 now(0)
 {

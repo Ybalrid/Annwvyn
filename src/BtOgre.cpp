@@ -820,6 +820,8 @@ namespace BtOgre {
 
 	DynamicRenderable::DynamicRenderable()
 	{
+		mVertexBufferCapacity = 0;
+		mIndexBufferCapacity = 0;
 	}
 	//------------------------------------------------------------------------------------------------
 	DynamicRenderable::~DynamicRenderable()

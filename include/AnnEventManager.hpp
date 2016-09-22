@@ -30,6 +30,7 @@ namespace Annwvyn
 	class AnnEventManager; //predeclaration of the event manager for class friendness directives
 	enum AnnEventType
 	{
+		NO_TYPE,
 		USER_INPUT,
 		TIMER_TIMEOUT,
 		TRIGGER_CONTACT
@@ -289,10 +290,10 @@ namespace Annwvyn
 		std::vector<unsigned short> pressed;
 		std::vector<unsigned short> released;
 		std::string vendor;
-		unsigned int stickID;
+		int stickID;
 	};
 
-	typedef size_t timerID;
+	typedef int timerID;
 
 	///A timer timeout event
 	class DLL AnnTimeEvent : public AnnEvent

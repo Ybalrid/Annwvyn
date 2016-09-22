@@ -18,7 +18,14 @@ OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 	lastFrameDisplayTime(0),
 	currentFrameDisplayTime(0),
 	textureSwapChain(0),
-	perfHudMode(ovrPerfHud_Off)
+	perfHudMode(ovrPerfHud_Off),
+	debugCam(nullptr),
+	debugCamNode(nullptr),
+	debugPlaneNode(nullptr),
+	debugViewport(nullptr),
+	layers(nullptr),
+	currentIndex(0),
+	currentSessionStatusFrameIndex(0)
 {
 	vpts[left ] = nullptr;		
 	vpts[right] = nullptr;

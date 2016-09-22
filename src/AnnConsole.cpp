@@ -255,7 +255,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 					size_t textwidth = 0;
 					size_t wordwidth = 0;
 
-					while ((l < str.size()) && (str[l] != '\n)'))
+					while ((l < str.size()) && (str[l] != '\n'))
 					{
 						wordwidth = 0;
 

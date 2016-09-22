@@ -284,7 +284,7 @@ void AnnEventManager::processInput()
 		e.validate();
 		e.stickID = Joystick->getID();
 		if (knowXbox)
-			if (e.stickID == (unsigned int)xboxID)
+			if (e.stickID == xboxID)
 				e.xbox = true;
 
 		for (auto listener : listeners)

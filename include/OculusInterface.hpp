@@ -22,13 +22,15 @@
 ///Comunicate with the Rift runtime (initialize OVR and get the info)
 class DLL OculusInterface
 {
-	enum
+	
+public:
+
+	enum OculusInterfaceEyeSide
 	{
 		left,
 		right
 	};
 
-public:
 	///Construct an OculusInterface object. This create an Oculus Session for comunication with the Oculus Runtime
 	OculusInterface();
 

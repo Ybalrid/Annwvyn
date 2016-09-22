@@ -349,6 +349,7 @@ AnnAudioSource::AnnAudioSource()
 {
 	source = 0;
 	pos = AnnVect3::ZERO;
+	posRelToPlayer = false;
 }
 
 AnnAudioSource::~AnnAudioSource()
