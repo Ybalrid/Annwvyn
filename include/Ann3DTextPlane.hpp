@@ -67,6 +67,8 @@ namespace Annwvyn
 
 		void setMargin(float margin);
 
+		void setBackgroundImage(std::string imgName);
+
 	private:
 		///Render the text
 		void renderText();
@@ -88,7 +90,7 @@ namespace Annwvyn
 
 		Ogre::ManualObject* renderPlane;
 		Ogre::SceneNode* node;
-		Ogre::TexturePtr texture;
+		Ogre::TexturePtr texture, bgTexture;
 		std::string fontName, fontTTF;
 		std::string caption;
 		

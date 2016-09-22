@@ -46,7 +46,8 @@ public:
 		//text->setTextAlign(text->ALIGN_CENTER);
 		text->setBackgroundColor(AnnColor(0, 1, 0));
 		text->setPosition({ 0, 0.5f, -1 });
-		//text->setMargin(0.15f);
+		text->setBackgroundImage("background.png");
+		text->setMargin(0.1f);
 
 		text->update();
 
