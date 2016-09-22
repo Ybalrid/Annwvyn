@@ -10,16 +10,6 @@ void WriteToTexture(const std::string &str, Ogre::TexturePtr destTexture, Ogre::
 {
 	using namespace Ogre;
 
-	AnnDebug() << "WriteToTexture";
-	AnnDebug() << "Ags : " << endl
-		<< "str : " << str << endl
-		<< "destTexture " << destTexture->getName() << " " << destTexture->getWidth() << "x" << destTexture->getHeight()  << endl
-		<< "destRectangle " << destRectangle.getWidth() << "x" << destRectangle.getHeight() << destRectangle.top << "x" << destRectangle.left << endl
-		<< "font " << font << endl
-		<< "color " << color << endl
-		<< "justify " << justify << endl
-		<< "wordwrap " << wordwrap << endl;
-
 	if (destTexture->getHeight() < destRectangle.bottom)
 		destRectangle.bottom = destTexture->getHeight();
 	if (destTexture->getWidth() < destRectangle.right)
@@ -91,7 +81,7 @@ void WriteToTexture(const std::string &str, Ogre::TexturePtr destTexture, Ogre::
 	if (spacewidth != charwidth) spacewidth = (size_t)((float)spacewidth*(0.5f));
 	
 
-	Annwvyn::AnnDebug() << "Width of a space : " << spacewidth;
+//	Annwvyn::AnnDebug() << "Width of a space : " << spacewidth;
 
 	size_t cursorX = 0;
 	size_t cursorY = 0;
@@ -120,7 +110,7 @@ void WriteToTexture(const std::string &str, Ogre::TexturePtr destTexture, Ogre::
 					size_t textwidth = 0;
 					size_t wordwidth = 0;
 
-					while ((l < str.size()) && (str[l] != '\n)'))
+					while ((l < str.size()) && (str[l] != '\n'))
 					{
 						wordwidth = 0;
 
@@ -174,8 +164,6 @@ void WriteToTexture(const std::string &str, Ogre::TexturePtr destTexture, Ogre::
 				if ((cursorY + charheight) > destRectangle.getHeight())
 					goto stop;
 
-				AnnDebug() << "Dest pixel box : " << destPb.getWidth() << "x" << destPb.getHeight();
-
 				//draw pixel by pixel
 				for (size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
 					for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
@@ -183,18 +171,11 @@ void WriteToTexture(const std::string &str, Ogre::TexturePtr destTexture, Ogre::
 						float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0f);
 						float invalpha = 1.0 - alpha;
 						size_t offset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
-						/*cerr << "i: " << i;
-						cerr << " j: " << j;
-						cerr << " alpha: " << alpha;
-						cerr << " invalpha " << invalpha;
-						cerr << '\n';*/
 				
 						ColourValue pix;
 						PixelUtil::unpackColour(&pix, destPb.format, &destData[offset]);
 						pix = (pix * invalpha) + (color * alpha);
 						PixelUtil::packColour(pix, destPb.format, &destData[offset]);
-						/*if (alpha == 1.0f)
-						destPb.setColourAt(color, j + cursorX, i + cursorY, 0);*/
 					}
 
 				cursorX += GlyphTexCoords[strindex].getWidth();
@@ -224,9 +205,9 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 	autoUpdate(false),
 	fontSize(size),
 	margin(0),
-	pixelMargin(0)
+	pixelMargin(0),
+	useImageAsBackground(false)
 {
-	AnnDebug() << "Reading uninitialized memory " << DoNotInitializeMe;
 	AnnDebug() << "3D Text plane created";
 	AnnDebug() << "Size is : " << width << "x" << height;
 	if (caption.empty())
@@ -309,9 +290,7 @@ Ann3DTextPlane::~Ann3DTextPlane()
 	Ogre::MaterialManager::getSingleton().remove(materialName);
 	
 	std::string textureName = texture->getName();
-	//texture.setNull();
 	Ogre::TextureManager::getSingleton().remove(textureName);
-
 
 	smgr->destroySceneNode(node);
 	node = nullptr;
@@ -449,36 +428,30 @@ void Annwvyn::Ann3DTextPlane::setMargin(float m)
 void Ann3DTextPlane::renderText()
 {
 	clearTexture(); 
-	try
-	{
-		WriteToTexture(caption, texture, Ogre::Image::Box(pixelMargin, pixelMargin, width*resolutionFactor - pixelMargin, height*resolutionFactor - pixelMargin), font.getPointer(), textColor.getOgreColor(), align, true);
-	}
-	catch (Ogre::Exception e)
-	{
-		AnnDebug() << "Exception: " << e.getNumber();
-		AnnDebug() << "Description: " << e.getFullDescription();
-		AnnDebug() << "At:" << e.getFile() << ":" << e.getLine();
-		AnnDebug() << "In funciton: " << e.getSource();
-	}
-	catch(...)
-	{
-		AnnDebug() << "Unknow exception when Writing to texture. No idea what's going on there. It's not an Ogre exception, it's a Win32 exception";
-	}
+	WriteToTexture(caption, texture, Ogre::Image::Box(pixelMargin, pixelMargin, width*resolutionFactor - pixelMargin, height*resolutionFactor - pixelMargin), font.getPointer(), textColor.getOgreColor(), align, true);
 	needUpdating = false; 
 	texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("", "textDebug.png");
 }
 
+
 void Ann3DTextPlane::clearTexture()
 {
-	Ogre::HardwarePixelBufferSharedPtr textureBuffer = texture->getBuffer();
-	const Ogre::uint32 w = textureBuffer->getWidth();
-	const Ogre::uint32 h = textureBuffer->getHeight();
-	
-	Ogre::Image::Box imageBox(0, 0, w, h);
-	Ogre::PixelBox pixelBox = textureBuffer->lock(imageBox, Ogre::HardwareBuffer::HBL_NORMAL);
+	if (useImageAsBackground)
+	{
 
-	for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
-		pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
+	}
+	else
+	{
+		Ogre::HardwarePixelBufferSharedPtr textureBuffer = texture->getBuffer();
+		const Ogre::uint32 w = textureBuffer->getWidth();
+		const Ogre::uint32 h = textureBuffer->getHeight();
 
-	textureBuffer->unlock();
+		Ogre::Image::Box imageBox(0, 0, w, h);
+		Ogre::PixelBox pixelBox = textureBuffer->lock(imageBox, Ogre::HardwareBuffer::HBL_NORMAL);
+
+		for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
+			pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
+
+		textureBuffer->unlock();
+	}
 }
