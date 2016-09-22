@@ -313,7 +313,7 @@
     <ClCompile Include="..\..\src\OgreNoVRRender.cpp">
       <Filter>OgreRenderingForVR\NoVR</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnHandControllers.cpp" />
+    <ClCompile Include="..\..\src\AnnHandController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />

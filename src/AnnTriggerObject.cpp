@@ -46,9 +46,9 @@ float AnnSphericalTriggerObject::getThreshold()
 	return threshold;
 }
 
-void AnnSphericalTriggerObject::setThreshold(float threshold)
+void AnnSphericalTriggerObject::setThreshold(float newThreshold)
 {
-	threshold = threshold;
+	threshold = newThreshold;
 	squaredThreshold = threshold*threshold;
 }
 
@@ -85,11 +85,11 @@ void AnnAlignedBoxTriggerObject::setBoundaries(float x1, float x2, float y1, flo
 
 bool AnnAlignedBoxTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer> player)
 {
-	AnnVect3 position(player->getPosition());
+	AnnVect3 pos(player->getPosition());
 
-	if((position.x >= xMin && position.x <= xMax) && 
-		(position.y >= yMin && position.y <= yMax) && 
-		(position.z >= zMin && position.z <= zMax))
+	if((pos.x >= xMin && pos.x <= xMax) && 
+		(pos.y >= yMin && pos.y <= yMax) && 
+		(pos.z >= zMin && pos.z <= zMax))
 		return true;
 	return false;
 }

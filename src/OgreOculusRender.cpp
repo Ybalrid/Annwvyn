@@ -13,8 +13,6 @@ OgreOculusRender* OgreOculusRender::OculusSelf = nullptr;
 OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 	debugSmgr(nullptr),
 	Oculus(nullptr),
-	nearClippingDistance(0.5f),
-	farClippingDistance(4000.0f),
 	lastOculusPosition(feetPosition),
 	lastOculusOrientation(bodyOrientation),
 	lastFrameDisplayTime(0),
@@ -125,6 +123,7 @@ void OgreOculusRender::recenter()
 void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
+	if(Oculus) delete Oculus;
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);

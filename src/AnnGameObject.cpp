@@ -289,11 +289,11 @@ bool AnnGameObject::collideWith(AnnGameObject* Object)
 	return false;
 }
 
-void AnnGameObject::updateCollisionStateWith(AnnGameObject* Object, bool state)
+void AnnGameObject::updateCollisionStateWith(AnnGameObject* Object, bool updatedState)
 {
 	for(size_t i = 0; i < collisionMask.size(); i++)
 		if(collisionMask[i]->Object == Object)
-			collisionMask[i]->collisionState = state;
+			collisionMask[i]->collisionState = updatedState;
 }
 
 void AnnGameObject::cleanCollisionMask()
@@ -336,7 +336,7 @@ void AnnGameObject::stopGettingCollisionWith(AnnGameObject* Object)
 		}
 }
 
-void AnnGameObject::setAnimation(const char name[])
+void AnnGameObject::setAnimation(const char animationName[])
 {
 	if(animIsSetted)
 	{
@@ -348,7 +348,7 @@ void AnnGameObject::setAnimation(const char name[])
 		anim = NULL;
 	}
 
-	anim = Entity->getAnimationState(name);
+	anim = Entity->getAnimationState(animationName);
 	if (anim != NULL)
 		animIsSetted = true;
 }

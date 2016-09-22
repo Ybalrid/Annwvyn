@@ -81,7 +81,7 @@ void AnnXmlLevel::load()
 				std::string type(resourceLocation->Attribute("Type")), path(resourceLocation->Attribute("Path"));
 				if(!type.empty() && !path.empty())
 					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dirPath + "/" + path, type, name);
-			}while(resourceLocation = resourceLocation->NextSiblingElement());
+			}while((resourceLocation = resourceLocation->NextSiblingElement()) != nullptr);
 			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(name);
 		resourceLocAdded = true;
 		}
@@ -162,7 +162,7 @@ void AnnXmlLevel::load()
 
 		levelContent.push_back(constructedGameObject);
 		
-	} while(gameObject = gameObject->NextSiblingElement());
+	} while((gameObject = gameObject->NextSiblingElement()) != nullptr);
 
 	element = level->FirstChildElement("LevelLighting");
 	if(!element) AnnDebug() << "No lights declared";
@@ -197,7 +197,7 @@ void AnnXmlLevel::load()
 			lightSource->setType(AnnLightObject::getLightTypeFromString(lightType));
 			lightSource->setDirection(AnnVect3(dx, dy, dz));
 			lightSource->setDiffuseColor(AnnColor(r,g,b,a));
-		}while (source = source->NextSiblingElement());
+		}while ((source = source->NextSiblingElement()) != nullptr);
 	}
 
 	element = level->FirstChildElement("Player");

@@ -162,9 +162,6 @@ class DLL OgreOculusRender : public OgreVRRender
 		///Vewports on textures. Textures are separated. One vieport for each textures
         Ogre::Viewport* vpts[2], *debugViewport;
 
-		///The Z axis clipping planes distances
-        Ogre::Real nearClippingDistance, farClippingDistance;
-
 		///Timing in seconds 
 		double currentFrameDisplayTime, lastFrameDisplayTime;
 

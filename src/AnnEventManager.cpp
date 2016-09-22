@@ -258,7 +258,7 @@ void AnnEventManager::processInput()
 		e.buttons = state.mButtons;
 
 		//Get all axes imediate data
-		for (size_t i(0); i < state.mAxes.size(); i++)
+		for (int i(0); i < state.mAxes.size(); i++)
 		{
 			AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
 			if (state.mAxes[i].absOnly)
@@ -284,7 +284,7 @@ void AnnEventManager::processInput()
 		e.validate();
 		e.stickID = Joystick->getID();
 		if (knowXbox)
-			if (e.stickID == xboxID)
+			if (e.stickID == (unsigned int)xboxID)
 				e.xbox = true;
 
 		for (auto listener : listeners)
