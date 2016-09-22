@@ -442,7 +442,7 @@ void Ann3DTextPlane::renderText()
 	clearTexture(); 
 	WriteToTexture(caption, texture, Ogre::Image::Box(pixelMargin, pixelMargin, width*resolutionFactor - pixelMargin, height*resolutionFactor - pixelMargin), font.getPointer(), textColor.getOgreColor(), align, true);
 	needUpdating = false; 
-	texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("", "textDebug.png");
+	//texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("", "textDebug.png");
 }
 
 
