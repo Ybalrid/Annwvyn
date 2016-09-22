@@ -120,5 +120,7 @@ namespace Annwvyn
 		float margin;
 
 		float DoNotInitializeMe;
+
+		bool useImageAsBackground;
 	};
 }
