@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <includedir>
+        <dir name="include/"/>
+        <dir name="src/"/>
+        <dir name="template/"/>
+    </includedir>
+    <libraries>
+        <library>windows</library>
+    </libraries>
+</project>
