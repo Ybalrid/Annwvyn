@@ -118,5 +118,7 @@ namespace Annwvyn
 
 		unsigned int pixelMargin;
 		float margin;
+
+		float DoNotInitializeMe;
 	};
 }

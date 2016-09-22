@@ -2,10 +2,23 @@
 #include "Ann3DTextPlane.hpp"
 #include "AnnLogger.hpp"
 
-using namespace Ogre;
-void WriteToTexture(const std::string &str, TexturePtr destTexture, Image::Box destRectangle, Font* font, const ColourValue &color, char justify = 'l', bool wordwrap = true)
+
+using namespace Annwvyn;
+using namespace std;
+
+void WriteToTexture(const std::string &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true)
 {
 	using namespace Ogre;
+
+	AnnDebug() << "WriteToTexture";
+	AnnDebug() << "Ags : " << endl
+		<< "str : " << str << endl
+		<< "destTexture " << destTexture->getName() << " " << destTexture->getWidth() << "x" << destTexture->getHeight()  << endl
+		<< "destRectangle " << destRectangle.getWidth() << "x" << destRectangle.getHeight() << destRectangle.top << "x" << destRectangle.left << endl
+		<< "font " << font << endl
+		<< "color " << color << endl
+		<< "justify " << justify << endl
+		<< "wordwrap " << wordwrap << endl;
 
 	if (destTexture->getHeight() < destRectangle.bottom)
 		destRectangle.bottom = destTexture->getHeight();
@@ -65,6 +78,20 @@ void WriteToTexture(const std::string &str, TexturePtr destTexture, Image::Box d
 		}
 
 	}
+	
+	size_t spacewidth(0);
+	//get the size of the glyph '0' 
+	glypheTexRect = font->getGlyphTexCoords('0');
+	Box spaceBox;
+	spaceBox.left = glypheTexRect.left * fontTexture->getSrcWidth();
+	spaceBox.right = glypheTexRect.right * fontTexture->getSrcWidth();
+	spacewidth = spaceBox.getWidth();
+
+	//if not monospaced
+	if (spacewidth != charwidth) spacewidth = (size_t)((float)spacewidth*(0.5f));
+	
+
+	Annwvyn::AnnDebug() << "Width of a space : " << spacewidth;
 
 	size_t cursorX = 0;
 	size_t cursorY = 0;
@@ -74,7 +101,7 @@ void WriteToTexture(const std::string &str, TexturePtr destTexture, Image::Box d
 	{
 		switch (str[strindex])
 		{
-			case ' ': cursorX += charwidth;  break;
+			case ' ': cursorX += spacewidth;  break;
 			case '\t':cursorX += charwidth * 3; break;
 			case '\n':cursorY += charheight; carriagreturn = true; break;
 			default:
@@ -99,7 +126,7 @@ void WriteToTexture(const std::string &str, TexturePtr destTexture, Image::Box d
 
 						switch (str[l])
 						{
-							case ' ': wordwidth = charwidth; ++l; break;
+							case ' ': wordwidth = spacewidth; ++l; break;
 							case '\t': wordwidth = charwidth * 3; ++l; break;
 							case '\n': l = str.size();
 						}
@@ -147,17 +174,27 @@ void WriteToTexture(const std::string &str, TexturePtr destTexture, Image::Box d
 				if ((cursorY + charheight) > destRectangle.getHeight())
 					goto stop;
 
+				AnnDebug() << "Dest pixel box : " << destPb.getWidth() << "x" << destPb.getHeight();
+
 				//draw pixel by pixel
 				for (size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
 					for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
 					{
-						float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0);
+						float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0f);
 						float invalpha = 1.0 - alpha;
 						size_t offset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
+						/*cerr << "i: " << i;
+						cerr << " j: " << j;
+						cerr << " alpha: " << alpha;
+						cerr << " invalpha " << invalpha;
+						cerr << '\n';*/
+				
 						ColourValue pix;
 						PixelUtil::unpackColour(&pix, destPb.format, &destData[offset]);
 						pix = (pix * invalpha) + (color * alpha);
 						PixelUtil::packColour(pix, destPb.format, &destData[offset]);
+						/*if (alpha == 1.0f)
+						destPb.setColourAt(color, j + cursorX, i + cursorY, 0);*/
 					}
 
 				cursorX += GlyphTexCoords[strindex].getWidth();
@@ -173,7 +210,6 @@ stop:
 	// Free the memory allocated for the buffer
 	free(buffer); buffer = 0;
 }
-using namespace Annwvyn;
 
 Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int size, float resolution, std::string fName, std::string TTF) :
 	width(w),
@@ -187,8 +223,10 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 	bgColor(AnnColor(0, 0, 0, 0)),
 	autoUpdate(false),
 	fontSize(size),
-	margin(0)
+	margin(0),
+	pixelMargin(0)
 {
+	AnnDebug() << "Reading uninitialized memory " << DoNotInitializeMe;
 	AnnDebug() << "3D Text plane created";
 	AnnDebug() << "Size is : " << width << "x" << height;
 	if (caption.empty())
@@ -196,9 +234,14 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 	else
 		AnnDebug() << "caption : " << caption.c_str();
 	if (fontName.empty())
-		AnnDebug() << "No font family yet";
+	{
+		AnnDebug() << "You need set a font to initialize a text render plane";
+		exit(ANN_ERR_NOTINIT);
+	}
 	else
 		AnnDebug() << "font : " << fontName;
+
+	needUpdating = true;
 
 	resolutionFactor /= dpi2dpm;
 	AnnDebug() << "Resolution factor in dot per metters " << resolutionFactor;
@@ -206,7 +249,8 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 	AnnDebug() << "Font resolution in DPI is : " << dpi;
 
 	calculateVerticesForPlaneSize();
-	
+
+	//TOTO put this in a separate method
 	auto smgr(AnnGetEngine()->getSceneManager());
 	node = smgr->getRootSceneNode()->createChildSceneNode();
 	renderPlane = smgr->createManualObject();
@@ -224,24 +268,35 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 	renderPlane->end();
 
 	node->attachObject(renderPlane);
+	//end of the thing that should be in it's own method
 
+	//Create or retreive the font from the font manager. Will also create the font manager if not availabe yet (unlikely since the font manager is initialized by the on screen console)
 	if (!fontName.empty())
 	{
+		//Be sure that the font manager exist, if not, instantiante one (singleton) 
 		if (!Ogre::FontManager::getSingletonPtr()) new Ogre::FontManager();
+		
+		//Attempt to retreive the font 
 		font = Ogre::FontManager::getSingleton().getByName(fontName);
+
+		//Need to create the font
 		if (font.isNull())
 		{
+			//Create the font
 			font = Ogre::FontManager::getSingleton().create(fontName, "ANNWVYN_CORE");
+
+			//Load truetype file
 			font->setType(Ogre::FontType::FT_TRUETYPE);
 			font->setSource(fontTTF);
+			
+			//Set important parameters
 			font->setTrueTypeResolution(dpi);
 			font->setTrueTypeSize(size);
 		}
 	}
-	if (!caption.empty())
-	{
-		renderText();
-	}
+
+	//If there's text to draw, draw it
+	if (!caption.empty()) update();
 }
 
 Ann3DTextPlane::~Ann3DTextPlane()
@@ -252,7 +307,11 @@ Ann3DTextPlane::~Ann3DTextPlane()
 	smgr->destroyManualObject(renderPlane);
 	
 	Ogre::MaterialManager::getSingleton().remove(materialName);
-	texture.setNull();
+	
+	std::string textureName = texture->getName();
+	//texture.setNull();
+	Ogre::TextureManager::getSingleton().remove(textureName);
+
 
 	smgr->destroySceneNode(node);
 	node = nullptr;
@@ -390,19 +449,33 @@ void Annwvyn::Ann3DTextPlane::setMargin(float m)
 void Ann3DTextPlane::renderText()
 {
 	clearTexture(); 
-	WriteToTexture(caption, texture, Ogre::Image::Box(pixelMargin, pixelMargin, width*resolutionFactor - pixelMargin, height*resolutionFactor - pixelMargin), font.getPointer(), textColor.getOgreColor(), align, true);
+	try
+	{
+		WriteToTexture(caption, texture, Ogre::Image::Box(pixelMargin, pixelMargin, width*resolutionFactor - pixelMargin, height*resolutionFactor - pixelMargin), font.getPointer(), textColor.getOgreColor(), align, true);
+	}
+	catch (Ogre::Exception e)
+	{
+		AnnDebug() << "Exception: " << e.getNumber();
+		AnnDebug() << "Description: " << e.getFullDescription();
+		AnnDebug() << "At:" << e.getFile() << ":" << e.getLine();
+		AnnDebug() << "In funciton: " << e.getSource();
+	}
+	catch(...)
+	{
+		AnnDebug() << "Unknow exception when Writing to texture. No idea what's going on there. It's not an Ogre exception, it's a Win32 exception";
+	}
 	needUpdating = false; 
-//	texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("", "textDebug.png");
+	texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("", "textDebug.png");
 }
 
 void Ann3DTextPlane::clearTexture()
 {
-	HardwarePixelBufferSharedPtr textureBuffer = texture->getBuffer();
-	const uint32 w = textureBuffer->getWidth();
-	const uint32 h = textureBuffer->getHeight();
+	Ogre::HardwarePixelBufferSharedPtr textureBuffer = texture->getBuffer();
+	const Ogre::uint32 w = textureBuffer->getWidth();
+	const Ogre::uint32 h = textureBuffer->getHeight();
 	
 	Ogre::Image::Box imageBox(0, 0, w, h);
-	Ogre::PixelBox pixelBox = textureBuffer->lock(imageBox, HardwareBuffer::HBL_NORMAL);
+	Ogre::PixelBox pixelBox = textureBuffer->lock(imageBox, Ogre::HardwareBuffer::HBL_NORMAL);
 
 	for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
 		pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
