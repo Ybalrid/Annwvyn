@@ -292,6 +292,12 @@ Ann3DTextPlane::~Ann3DTextPlane()
 	std::string textureName = texture->getName();
 	Ogre::TextureManager::getSingleton().remove(textureName);
 
+	if (!bgTexture.isNull())
+	{
+		textureName = texture->getName();
+		Ogre::TextureManager::getSingleton().remove(textureName);
+	}
+
 	smgr->destroySceneNode(node);
 	node = nullptr;
 }
@@ -425,6 +431,12 @@ void Annwvyn::Ann3DTextPlane::setMargin(float m)
 	autoUpdateCheck();
 }
 
+void Annwvyn::Ann3DTextPlane::setBackgroundImage(std::string imgName)
+{
+	bgTexture = Ogre::TextureManager::getSingleton().load(imgName, "ANNWVYN_CORE");
+	useImageAsBackground = true;
+}
+
 void Ann3DTextPlane::renderText()
 {
 	clearTexture(); 
@@ -438,7 +450,7 @@ void Ann3DTextPlane::clearTexture()
 {
 	if (useImageAsBackground)
 	{
-
+		bgTexture->copyToTexture(texture);
 	}
 	else
 	{
