@@ -8,7 +8,8 @@ AnnEvent::AnnEvent() :
 	accepted(false),
 	rejected(false),
 	unpopulated(true),
-	valid(false)
+	valid(false),
+	type(AnnEventType::NO_TYPE)
 {
 }
 
@@ -158,6 +159,8 @@ AnnStickAxis::AnnStickAxis()
     setAxis(InvalidStickAxisId);
     setRelValue(0);
     setAbsValue(0);
+	noRel = true;
+	
 }
 
 StickAxisId AnnStickAxis::getAxisId()
@@ -304,7 +307,8 @@ AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
 }
 
 AnnStickEvent::AnnStickEvent() : AnnEvent(),
-xbox(false)
+xbox(false),
+stickID(-1)
 {
 	type = USER_INPUT;
 }
@@ -394,6 +398,7 @@ size_t AnnStickEvent::getNbPov()
 AnnTimeEvent::AnnTimeEvent() : AnnEvent()
 {
 	type = TIMER_TIMEOUT;
+	tID = -1;
 }
 
 void AnnTimeEvent::setTimerID(timerID id)
@@ -422,6 +427,7 @@ bool AnnTimer::isTimeout()
 AnnTriggerEvent::AnnTriggerEvent() : AnnEvent()
 {
 	type = TRIGGER_CONTACT;
+	contact = false;
 }
 
 bool AnnTriggerEvent::getContactStatus()
