@@ -69,8 +69,8 @@ void AnnResourceManager::initResources()
 	AnnDebug("Resources initialized");
 }
 
-void AnnResourceManager::refuseResource(std::string name, std::string group)
+void AnnResourceManager::refuseResource(std::string resourceName, std::string group)
 {
 	AnnDebug() << "Annwvyn cannot allow you to use resources declared in " << group << " group";
-	AnnDebug() << "Resource location " << name << "has been rejected";
+	AnnDebug() << "Resource location " << resourceName << "has been rejected";
 } 

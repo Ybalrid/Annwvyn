@@ -161,9 +161,9 @@ namespace Annwvyn
 	};
 
 	///A joystick event
-	typedef size_t ButtonId;
-	typedef size_t StickAxisId;
-	typedef size_t PovId;
+	typedef int ButtonId;
+	typedef int StickAxisId;
+	typedef int PovId;
 #define InvalidStickAxisId -1
 #define INVALID 42.0f
 
