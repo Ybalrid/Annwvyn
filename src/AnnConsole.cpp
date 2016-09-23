@@ -103,14 +103,14 @@ offset(0, 0.125f, -0.75f)
 
 	//To optimize texture copy, make sure to use the most efficient OpenGL method
 
-
+	/*
 	if (Ogre::Root::getSingleton().getRenderSystem()->getName()
 		== "OpenGL Rendering Subsystem")
 	{
 		backgroundID = static_cast<Ogre::GLTexture*>(background.get())->getGLID();
 		textureID = static_cast<Ogre::GLTexture*>(texture.get())->getGLID();
 		usingOpenGL = true;
-	}
+	}*/
 }
 
 void AnnConsole::append(std::string str)
