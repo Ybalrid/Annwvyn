@@ -51,6 +51,11 @@
  *
  * Enjoy your stay and make great virtual reality experiencies ;-)
  *
+ * N.B: This Doxygen site is intended to be hosted at <a href="http://api.annwvyn.org">api.annwvyn.org</a>. *
+ * If it's the case, you have to know that it's based on the master branch of a local mirror of the repository. 
+ * Modification of the engine can take up to 5 hours to apear on this website. While the engine is in "experimental" phase, 
+ * This site doesn't mirror the content of the last release of the engine, but the current state of the master branch code. 
+ *
  */
 
 //Some C++ misc utils
