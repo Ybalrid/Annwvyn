@@ -32,6 +32,15 @@ public:
 	{
 		//Set some ambiant light
 		AnnGetSceneryManager()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
+
+
+		//We add our brand new 3D object
+		auto MyObject = addGameObject("MyObject.mesh");
+		MyObject->setPosition(5, 1, 0);//We put it 5 meters to the right, and 1 metter up...
+		//MyObject->setUpPhysics(); // <---- This activate the physics for the object as static geommetry
+		MyObject->setUpPhysics(100, convexShape); // <------- this activate the physics as a dynamic object. We need to tell the shape aproximation to use. and a mass in Kg
+
+		//The shape aproximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
 		
 		//Add other source of light
 		auto Sun = addLightObject();
