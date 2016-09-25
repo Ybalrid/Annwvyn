@@ -125,9 +125,15 @@ public:
 class DummySubsystem : public AnnUserSubSystem
 {
 public:
-	DummySubsystem(std::string name = "Dummy") : AnnUserSubSystem(name)
+	DummySubsystem(std::string name = "Dummy") : AnnUserSubSystem(name),
+		call(0)
 	{
 
+	}
+
+	virtual ~DummySubsystem()
+	{
+		AnnDebug() << "Dummy is no more. ";
 	}
 
 	void dummyMethod() 
@@ -143,8 +149,9 @@ protected:
 
 	void update()
 	{
-		AnnDebug() << "Dummy debug";
+		AnnDebug() << "Dummy debug " << ++call;;
 	}
+	unsigned long call; 
 };
 
 AnnMain()
@@ -183,6 +190,15 @@ AnnMain()
 		AnnDebug() << "getByName, then recast work"; 
 	}otherDummy.reset();
 
+	if (AnnGetEngine()->isUserSubSystem(dummy))
+	{
+		AnnDebug() << "Dummy subsystem recognized as user defined!";
+	}
+	if (!AnnGetEngine()->isUserSubSystem(AnnGetPhysicsEngine()))
+	{
+		AnnDebug() << "Physics engine recognized as NOT user defined!";
+	}
+	bool dummyExist{ true };
 	AnnDebug() << "Starting the render loop";
 	do	
 	{
@@ -190,8 +206,12 @@ AnnMain()
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
 			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	
-		dummy->dummyMethod();
-
+		if (AnnGetEngine()->isKeyDown(OIS::KC_Z) && dummyExist)
+		{
+			AnnGetEngine()->removeUserSubSystem(dummy);
+			dummyExist = false;
+			dummy.reset();
+		}
 	}
 	while(AnnGetEngine()->refresh());
 

@@ -312,6 +312,12 @@ OgrePose AnnEngine::getHmdPose()
 
 std::shared_ptr<AnnUserSubSystem> AnnEngine::registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem)
 {
+	for (auto system : SubSystemList)
+		if (userSystem->name == system->name)
+		{
+			AnnDebug() << "A subsystem with the name " << userSystem->name << "is allready registered.";
+			return nullptr;
+		}
 	SubSystemList.push_back(userSystem);
 	return userSystem;
 }
@@ -322,6 +328,20 @@ std::shared_ptr<AnnSubSystem> Annwvyn::AnnEngine::getSubSystemByName(std::string
 		if (subsystem->name == name)
 			return subsystem;
 	return nullptr;
+}
+
+bool AnnEngine::isUserSubSystem(std::shared_ptr<AnnSubSystem> subsystem)
+{
+	AnnSubSystem* nakedSubSystem(subsystem.get());
+
+	AnnUserSubSystem* result = dynamic_cast<AnnUserSubSystem*>(nakedSubSystem);
+	if (result != nullptr) return true;
+	return false;
+}
+
+void Annwvyn::AnnEngine::removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem)
+{
+	SubSystemList.remove(subsystem);
 }
 
 //Because Windows and the Win32 platform sucks. 
