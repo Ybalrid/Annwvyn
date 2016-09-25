@@ -200,6 +200,12 @@ namespace Annwvyn
 		///Get pointer to a subsystem by name
 		std::shared_ptr<AnnSubSystem> getSubSystemByName(std::string name);
 
+		///Know if subsystem is user defined
+		static bool isUserSubSystem(std::shared_ptr<AnnSubSystem> subsystem);
+
+		///Remove a subsystem form the engine. Only works if the system has been user defined. 
+		void removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem);
+
 	private:
 
 		///VR renderer
