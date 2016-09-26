@@ -32,5 +32,8 @@
     <ClInclude Include="..\..\example\TestLevel.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\example\DemoLevel.hpp">
+      <Filter>Fichiers sources</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
