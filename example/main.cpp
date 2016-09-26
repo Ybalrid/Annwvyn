@@ -173,7 +173,8 @@ AnnMain()
 	AnnGetResourceManager()->loadDir("media/environement");
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
-	
+
+
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
