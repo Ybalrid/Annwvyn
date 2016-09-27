@@ -56,6 +56,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> object)
 {
+	AnnDebug() << "Removed object " << object.get();
 	Objects.remove(object);
 }
 
