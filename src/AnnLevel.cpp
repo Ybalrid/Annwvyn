@@ -6,17 +6,18 @@ using namespace Annwvyn;
 
 AnnLevel::AnnLevel()
 {
-	AnnDebug() << "A level has been created";
+	AnnDebug() << "Level object " << this << " has been created";
 }
 
 AnnLevel::~AnnLevel()
 {
 	unload();
-	AnnDebug() << "Destroying a level";
+	AnnDebug() << "Destructing level object " << this;
 }
 
 void AnnLevel::unload()
 {
+	AnnDebug() << "Unloading the level " << this << " From the scene";
 	//Remove background music
 	AnnGetAudioEngine()->stopBGM();
 	//Remove the sky

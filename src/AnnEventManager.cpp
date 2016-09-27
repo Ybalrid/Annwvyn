@@ -153,6 +153,7 @@ std::shared_ptr<AnnEventListener> Annwvyn::AnnEventManager::getDefaultEventListe
 
 void AnnEventManager::addListener(std::shared_ptr<AnnEventListener> l)
 {
+	AnnDebug() << "Adding an event listener : " << l.get() ;
 	if (l != NULL)
 		listeners.push_back(l);
 }
@@ -165,6 +166,7 @@ void AnnEventManager::clearListenerList()
 //l equals NULL by default 
 void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 {
+	AnnDebug() << "Removing an event listener : " << l.get();
 	if (l == nullptr) { clearListenerList(); return; }
 	auto iterator = listeners.begin();
 	while (iterator != listeners.end())

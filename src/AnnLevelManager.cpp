@@ -21,6 +21,7 @@ AnnLevelManager::~AnnLevelManager()
 
 void AnnLevelManager::jump(level_id levelId)
 {
+	AnnDebug() << "LevelManager jumping to levelId : " << levelId;
 	if(!(levelId < levelList.size())) return;
 	if(current)
 		current->unload();
@@ -41,6 +42,7 @@ void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
 
 void AnnLevelManager::addLevel(std::shared_ptr<AnnLevel> level)
 {
+	AnnDebug() << "Adding level " << level << "to LevelManager";
 	if(!level) return;
 	levelList.push_back(level);
 }
