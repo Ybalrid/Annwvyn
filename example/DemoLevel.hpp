@@ -8,16 +8,28 @@ using namespace Annwvyn;
 //Forward definition of the listener class
 class DemoHubTriggerListener;
 
-//Hub to select Demos
-class DemoHub : LEVEL
+class triggerCallback
 {
 public:
-
-	DemoHub() : constructLevel(),
-		willJump(-1)
+	triggerCallback()
 	{
 		triggerListener = static_pointer_cast<AnnEventListener>
 			(make_shared<DemoHubTriggerListener>(this));
+	}
+	virtual void triggerEventCallback(AnnTriggerEvent e) = 0;
+
+protected:
+	shared_ptr<AnnEventListener> triggerListener;
+};
+
+//Hub to select Demos
+class DemoHub : LEVEL, public triggerCallback
+{
+public:
+
+	DemoHub() : constructLevel(), triggerCallback()
+	{
+	
 	}
 
 	~DemoHub()
@@ -55,14 +67,6 @@ public:
 	//Called at each frame
 	void runLogic()
 	{
-		//processDemoJump();
-	}
-
-	void processDemoJump()
-	{
-		if (willJump == -1) return;
-		AnnGetLevelManager()->jump(willJump);
-		willJump = -1;
 	}
 
 	void unload()
@@ -82,7 +86,6 @@ public:
 	void jumpToLevelTriggeredBy(std::shared_ptr<AnnTriggerObject> trigger)
 	{
 		if (demo0trig == trigger)
-			//willJump = (0 + 1);
 			AnnGetLevelManager()->jump(getDemo(0));
 	}
 
@@ -92,8 +95,6 @@ public:
 	}
 
 private:
-	int willJump;
-	std::shared_ptr<AnnEventListener> triggerListener;
 	std::shared_ptr<AnnTriggerObject> demo0trig;
 
 };
@@ -101,7 +102,7 @@ private:
 class DemoHubTriggerListener : LISTENER
 {
 public:
-	DemoHubTriggerListener(DemoHub* hubCallback) : constructListener(),
+	DemoHubTriggerListener(triggerCallback* hubCallback) : constructListener(),
 		callback(hubCallback)
 	{
 	}
@@ -112,10 +113,10 @@ public:
 	}
 
 private:
-	DemoHub* callback;
+	triggerCallback* callback;
 };
 
-class Demo0 : LEVEL
+class Demo0 : LEVEL, public triggerCallback
 {
 public:
 	void load()
@@ -134,6 +135,11 @@ public:
 		AnnGetPlayer()->setPosition({ 0, 1, 0 });
 		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
 		AnnGetPlayer()->resetPlayerPhysics();
+
+	}
+
+	void triggerEventCallback(AnnTriggerEvent e)
+	{
 
 	}
 
