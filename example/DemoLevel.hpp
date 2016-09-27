@@ -55,9 +55,14 @@ public:
 	//Called at each frame
 	void runLogic()
 	{
+		processDemoJump();
+	}
+
+	void processDemoJump()
+	{
 		if (willJump == -1) return;
-			AnnGetLevelManager()->jump(willJump);
-			willJump = -1;
+		AnnGetLevelManager()->jump(willJump);
+		willJump = -1;
 	}
 
 	void unload()
@@ -76,8 +81,8 @@ public:
 
 	void jumpToLevelTriggeredBy(std::shared_ptr<AnnTriggerObject> trigger)
 	{
-		if(demo0trig == trigger)
-			willJump=(0 + 1);
+		if (demo0trig == trigger)
+			willJump = (0 + 1);
 	}
 
 private:
