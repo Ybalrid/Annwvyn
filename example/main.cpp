@@ -12,6 +12,7 @@
 #include <Annwvyn.h>
 #include <Ann3DTextPlane.hpp>
 #include "TestLevel.hpp"
+#include "DemoLevel.hpp"
 
 using namespace std;
 using namespace Annwvyn;
@@ -160,12 +161,11 @@ AnnMain()
 	//Only usefull on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();
 
-	//Init game engine
 	AnnInit("AnnTest");
 	
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
-	AnnGetPhysicsEngine()->setDebugPhysics(true);
+	//AnnGetPhysicsEngine()->setDebugPhysics(true);
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetVRRenderer()->recenter();
 
@@ -175,9 +175,11 @@ AnnMain()
 	AnnGetResourceManager()->initResources();
 
 
-	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
+	//AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
+	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
+	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
 
-	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
+	AnnGetLevelManager()->jump(AnnGetLevelManager()->getFirstLevelLoaded());
 
 	AnnRadian(Ogre::Degree(90));
 	AnnDegree(Ogre::Radian(3.14));
