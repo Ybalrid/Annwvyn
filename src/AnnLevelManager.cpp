@@ -6,7 +6,9 @@
 using namespace Annwvyn;
 
 AnnLevelManager::AnnLevelManager() : AnnSubSystem("LevelManager"),
-	current(NULL)
+	current(nullptr),
+	jumpRequested(false),
+	jumpTo(0)
 {
 }
 
@@ -22,12 +24,25 @@ AnnLevelManager::~AnnLevelManager()
 void AnnLevelManager::jump(level_id levelId)
 {
 	AnnDebug() << "LevelManager jumping to levelId : " << levelId;
-	if(!(levelId < levelList.size())) return;
-	if(current)
-		current->unload();
-	current = levelList[levelId];
-	current->load();
-	Sleep(10);
+	
+    if (!(levelId < levelList.size())) return;
+	
+	if (!jumpRequested)
+	{
+		jumpRequested = true;
+		jumpTo = levelId;
+		return;
+	}
+
+	if (jumpRequested)
+	{
+		jumpRequested = false;
+		jumpTo = 0;
+		if (current)
+			current->unload();
+		current = levelList[levelId];
+		current->load();
+	}
 }
 
 void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
@@ -54,6 +69,8 @@ void AnnLevelManager::jumpToFirstLevel()
 
 void AnnLevelManager::update()
 {
+	if (jumpRequested)
+		return jump(jumpTo);
 	if(current) current->runLogic();
 }
 
