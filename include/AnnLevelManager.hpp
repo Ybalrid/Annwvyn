@@ -64,6 +64,9 @@ namespace Annwvyn
 
 		///Address to the currently running level
 		std::shared_ptr<AnnLevel> current;
+
+		bool jumpRequested;
+		level_id jumpTo;
 	};
 }
 #endif LEVELMANAGER

@@ -35,7 +35,7 @@ public:
 		Ground->setUpPhysics();
 
 		auto Stone = addGameObject("DemoStone.mesh");
-		Stone->setPosition({ 0,0, -3 });
+		Stone->setPosition({ 0, 0, -3 });
 		Stone->setUpPhysics();
 
 		auto Sun = addLightObject();
@@ -55,7 +55,7 @@ public:
 	//Called at each frame
 	void runLogic()
 	{
-		processDemoJump();
+		//processDemoJump();
 	}
 
 	void processDemoJump()
@@ -82,7 +82,13 @@ public:
 	void jumpToLevelTriggeredBy(std::shared_ptr<AnnTriggerObject> trigger)
 	{
 		if (demo0trig == trigger)
-			willJump = (0 + 1);
+			//willJump = (0 + 1);
+			AnnGetLevelManager()->jump(getDemo(0));
+	}
+
+	level_id getDemo(level_id id)
+	{
+		return 1 + id;
 	}
 
 private:
