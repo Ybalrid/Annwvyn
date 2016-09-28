@@ -8,10 +8,10 @@ using namespace Annwvyn;
 //Forward definition of the listener class
 class DemoHubTriggerListener;
 
-class triggerCallback
+class TriggerCallback
 {
 public:
-	triggerCallback()
+	TriggerCallback()
 	{
 		triggerListener = static_pointer_cast<AnnEventListener>
 			(make_shared<DemoHubTriggerListener>(this));
@@ -23,13 +23,12 @@ protected:
 };
 
 //Hub to select Demos
-class DemoHub : LEVEL, public triggerCallback
+class DemoHub : LEVEL, public TriggerCallback
 {
 public:
 
-	DemoHub() : constructLevel(), triggerCallback()
+	DemoHub() : constructLevel(), TriggerCallback()
 	{
-	
 	}
 
 	~DemoHub()
@@ -47,7 +46,8 @@ public:
 		Ground->setUpPhysics();
 
 		auto Stone = addGameObject("DemoStone.mesh");
-		Stone->setPosition({ 0, 0, -3 });
+		Stone->setPosition({ -2, 0, -4 });
+		Stone->setOrientation(AnnQuaternion(Ogre::Degree(45), AnnVect3::UNIT_Y));
 		Stone->setUpPhysics();
 
 		auto Sun = addLightObject();
@@ -78,7 +78,6 @@ public:
 
 	void triggerEventCallback(AnnTriggerEvent e)
 	{
-		AnnDebug() << "Hey. Got a trigger event bro.";
 		if (e.getContactStatus())
 			jumpToLevelTriggeredBy(e.getSender());
 	}
@@ -102,7 +101,7 @@ private:
 class DemoHubTriggerListener : LISTENER
 {
 public:
-	DemoHubTriggerListener(triggerCallback* hubCallback) : constructListener(),
+	DemoHubTriggerListener(TriggerCallback* hubCallback) : constructListener(),
 		callback(hubCallback)
 	{
 	}
@@ -113,12 +112,17 @@ public:
 	}
 
 private:
-	triggerCallback* callback;
+	TriggerCallback* callback;
 };
 
-class Demo0 : LEVEL, public triggerCallback
+class Demo0 : LEVEL, public TriggerCallback
 {
 public:
+
+	Demo0() : constructLevel(), TriggerCallback()
+	{
+	}
+
 	void load()
 	{
 		auto Ground = addGameObject("Ground.mesh");
