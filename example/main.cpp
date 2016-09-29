@@ -86,11 +86,11 @@ public:
 		testFile->setValue("lives", 10);
 		testFile->setValue("PI", 3.14f);
 		testFile->setValue("pos", AnnVect3(2.5, 4.8, Ogre::Math::HALF_PI));
-		testFile->setValue("orient", AnnQuaternion(Ogre::Radian(Ogre::Math::HALF_PI), AnnVect3(.5, .5, .5)));
+		testFile->setValue("orient", AnnQuaternion(AnnDegree(90), AnnVect3(.5, .5, .5)));
 
 		auto writer(AnnGetFileSystemManager()->getFileWriter());
 		writer->write(testFile);
-
+		
 		auto reader(AnnGetFileSystemManager()->getFileReader());
 		auto data = reader->read("test");
 

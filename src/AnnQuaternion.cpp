@@ -11,7 +11,7 @@ AnnQuaternion::AnnQuaternion(float cw, float cx, float cy, float cz) : Ogre::Qua
 
 AnnQuaternion::AnnQuaternion(const Ogre::Matrix3& rot) : Ogre::Quaternion(rot){init();}
 
-AnnQuaternion::AnnQuaternion(const Ogre::Radian angle, AnnVect3 raxis) : Ogre::Quaternion(angle, raxis){init();}
+AnnQuaternion::AnnQuaternion(const AnnRadian angle, AnnVect3 raxis) : Ogre::Quaternion(angle, raxis){init();}
 
 AnnQuaternion::AnnQuaternion(const AnnVect3& xAxis, const AnnVect3& yAxis, const AnnVect3& zAxis) : Ogre::Quaternion(xAxis, yAxis, zAxis){init();}
 
