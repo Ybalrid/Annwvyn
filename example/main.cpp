@@ -145,6 +145,9 @@ AnnMain()
 
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
 
+	AnnRadian(Ogre::Degree(90));
+	AnnDegree(Ogre::Radian(3.14));
+
 	AnnDebug() << "Starting the render loop";
 	do	
 	{
