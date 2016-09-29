@@ -13,6 +13,7 @@
 #include <list>
 #include <vector>
 #include <memory>
+#include "AnnAngle.hpp"
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 #include "AnnLightObject.hpp"

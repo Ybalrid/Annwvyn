@@ -212,6 +212,9 @@
     <ClInclude Include="..\..\include\OgreNoVRRender.hpp">
       <Filter>OgreRenderingForVR\NoVR</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnAngle.hpp">
+      <Filter>Annwvyn\MathObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -314,6 +317,9 @@
       <Filter>OgreRenderingForVR\NoVR</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnHandController.cpp" />
+    <ClCompile Include="..\..\src\AnnAngle.cpp">
+      <Filter>Annwvyn\MathObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />

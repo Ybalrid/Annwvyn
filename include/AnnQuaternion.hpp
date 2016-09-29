@@ -9,6 +9,7 @@
 
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
+#include "AnnAngle.hpp"
 #include <OgreQuaternion.h>
 #include <OgreMatrix3.h>
 #include <LinearMath/btQuaternion.h>
@@ -29,7 +30,7 @@ namespace Annwvyn
 		///Construct from a rotation matrix 3x3
 		AnnQuaternion(const Ogre::Matrix3& rot);
 		///Construct from an angle around an abritrary axis
-		AnnQuaternion(const Ogre::Radian angle, AnnVect3 raxis);
+		AnnQuaternion(const AnnRadian angle, AnnVect3 raxis);
 		///Constuct from a 3 axis base
 		AnnQuaternion(const AnnVect3& xAxis, const AnnVect3& yAxis, const AnnVect3& zAxis);
 		///Construct from a vector array
