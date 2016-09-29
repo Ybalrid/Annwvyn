@@ -27,6 +27,8 @@ namespace Annwvyn
 
 	///Harmonise names :
 	typedef Ogre::Vector2 AnnVect2;
+	typedef Ogre::Matrix3 AnnMatrix3;
+	typedef Ogre::Matrix4 AnnMatrix4;
 
 	//Remove some ugliness : 
 	typedef std::list<std::shared_ptr<AnnTriggerObject> > AnnTriggerObjectList;
@@ -34,7 +36,7 @@ namespace Annwvyn
 	typedef std::list<std::shared_ptr<AnnLightObject> > AnnLightList;
 
 	///Because sometimes, after one byte you're full...
-	typedef unsigned char byte;
+	typedef std::uint8_t byte;
 
 
 	///Name of the objects physical shapes
