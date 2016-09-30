@@ -212,13 +212,11 @@
     <ClInclude Include="..\..\include\OgreNoVRRender.hpp">
       <Filter>OgreRenderingForVR\NoVR</Filter>
     </ClInclude>
-<<<<<<< d66682d0651078111af54e29754b6a1c60ddd000
     <ClInclude Include="..\..\include\AnnAngle.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
-=======
+    </ClInclude>
     <ClInclude Include="..\..\include\AnnUserSpaceSubSystem.hpp">
       <Filter>Annwvyn\SubSystems</Filter>
->>>>>>> Add the possibility to register an user defined subsystem
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
