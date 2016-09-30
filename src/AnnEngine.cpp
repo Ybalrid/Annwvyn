@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
+
 using namespace Annwvyn;
 
-AnnEngine* AnnEngine::singleton(NULL);
+AnnEngine* AnnEngine::singleton(NULL); 
+
+//Log is static. Therefore this has to be static too to be able to write to it. 
 std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
 
 AnnEngine* AnnEngine::Instance()
@@ -78,14 +81,18 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");
-	log("===========================================================", false);
-	log("| Annwvyn Game Engine - Step into the Other World         |", false);
-	log("| Free/Libre C++ Game Engine designed for Virtual Reality |", false);
-	log("| Copyright Arthur Brainvile (a.k.a. Ybalrid) 2013-2016   |", false);
-	log("| Distributed under the terms of the MIT licence agreement|", false);
-	log("| Visit http://annwvyn.org/ for more informations!        |", false);
-	log("| Version : " + getAnnwvynVersion(60-13-1) + "|", false);
-	log("===========================================================", false);
+	
+	//Display start banner
+	log("============================================================", false);
+	log("| Annwvyn Game Engine - Step into the Other World          |", false);
+	log("| Free/Libre C++ Game Engine designed for Virtual Reality  |", false);
+	log("|                                                          |", false);
+	log("| Copyright Arthur Brainvile (a.k.a. Ybalrid) 2013-2016    |", false);
+	log("| Distributed under the terms of the MIT licence agreement |", false);
+	log("|                                                          |", false);
+	log("| Visit http://annwvyn.org/ for more informations!         |", false);
+	log("| Version : " + getAnnwvynVersion(61-13-1) +              "|", false);
+	log("============================================================", false);
 
 
 	srand(time(nullptr));
