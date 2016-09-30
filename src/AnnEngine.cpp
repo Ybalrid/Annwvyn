@@ -11,12 +11,15 @@ AnnEngine* AnnEngine::Instance()
 	return singleton;
 }
 
-std::string AnnEngine::getAnnwvynVersion()
+std::string AnnEngine::getAnnwvynVersion(long long int padding)
 {
 	std::stringstream version;
 	version << ANN_MAJOR << "." << ANN_MINOR << "." << ANN_PATCH;
 	if (ANN_EXPERIMENTAL)
 		version << "-experimental";
+	padding -= version.str().length();
+	for (int i(0); i < padding; i++)
+		version << " ";
 	return version.str();
 }
 
@@ -67,17 +70,22 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 								 L"Available command line parameter : \n"
 								 L"\t-rift\n"
 								 L"\t-vive\n"
-								 L"\nIf you don't specify anything, the default system will be used (here it's the Oculus Rift)"
+								 L"\nIf you don't specify anything, the default system will be used (here it's the Oculus Rift)\n"
+								 L"If you don't have (or can't use) VR Hardware, you can launch with -noVR.\n"
+								 L"This will display the image on a simple window without attempting to talk to VR hardware"
 		);
 		exit(ANN_ERR_CANTHMD);
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");
-	log("===================================================", false);
-	log("Annwvyn Game Engine - Step into the Other World    ", false);
-	log("Free/Libre Game Engine designed for Virtual Reality", false);
-	log("Version : " + getAnnwvynVersion(), false);
-	log("===================================================", false);
+	log("===========================================================", false);
+	log("| Annwvyn Game Engine - Step into the Other World         |", false);
+	log("| Free/Libre C++ Game Engine designed for Virtual Reality |", false);
+	log("| Copyright Arthur Brainvile (a.k.a. Ybalrid) 2013-2016   |", false);
+	log("| Distributed under the terms of the MIT licence agreement|", false);
+	log("| Visit http://annwvyn.org/ for more informations!        |", false);
+	log("| Version : " + getAnnwvynVersion(60-13-1) + "|", false);
+	log("===========================================================", false);
 
 
 	srand(time(nullptr));

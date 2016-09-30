@@ -95,7 +95,7 @@ namespace Annwvyn
 		static AnnEngine* Instance();
 
 		///Return a string descibing the version of the engine
-		static std::string getAnnwvynVersion();
+		static std::string getAnnwvynVersion(long long int padding = -1);
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
@@ -157,7 +157,7 @@ namespace Annwvyn
 		///Get the VRRenderer
 		std::shared_ptr<OgreVRRender> getVRRenderer();
 
-		//////////////////////////////////////////////////////////////////////////////////////////////END OF SUBSYSTEMS
+		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 
 		///Init the physics model
 		void initPlayerPhysics(); //physics on player
