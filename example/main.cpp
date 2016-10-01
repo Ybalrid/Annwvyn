@@ -10,6 +10,7 @@
 
 //Annwvyn
 #include <Annwvyn.h>
+#include <Ann3DTextPlane.hpp>
 #include "TestLevel.hpp"
 
 using namespace std;

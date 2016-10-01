@@ -42,10 +42,20 @@ public:
 
 		//The shape aproximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
 		
+		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Accent test: 'é' Hello, Virtual World!\nthis is one line only one line only only",128,96.0f,"LibSerif", "LiberationSerif-regular.ttf");
+		//text->setTextAlign(text->ALIGN_CENTER);
+		text->setBackgroundColor(AnnColor(0, 1, 0));
+		text->setPosition({ 0, 0.5f, -1 });
+		text->setBackgroundImage("background.png");
+		text->setMargin(0.1f);
+
+		text->update();
+			addManualMovableObject(text);
+
 		//Add other source of light
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5* AnnVect3::NEGATIVE_UNIT_Z);
+		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5f* AnnVect3::NEGATIVE_UNIT_Z);
 
 		//Create objects and register them as content of the level
 		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", std::make_shared<Sinbad>());
@@ -78,12 +88,20 @@ public:
 		AnnGetPlayer()->resetPlayerPhysics();
 	}
 
+	/*void unload()
+	{
+		text.reset();
+		AnnLevel::unload();
+	}*/
+
 	void runLogic()
 	{
 		//AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
 	}
 
 private:
+
+	//std::shared_ptr<Ann3DTextPlane> text;
 };
 
 class PhysicsDebugLevel : LEVEL

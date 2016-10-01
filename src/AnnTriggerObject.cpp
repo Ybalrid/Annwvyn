@@ -16,14 +16,9 @@ AnnTriggerObject::~AnnTriggerObject()
 	AnnDebug() << "AnnTriggerObject destructor called";
 }
 
-void AnnTriggerObject::setPosition(Ogre::Vector3 pos)
+void AnnTriggerObject::setPosition(AnnVect3 pos)
 {
-	setPosition(pos.x, pos.y, pos.z);
-}
-
-void AnnTriggerObject::setPosition(float x, float y, float z)
-{
-	position = Ogre::Vector3(x, y, z);
+	position = pos;
 }
 
 bool AnnTriggerObject::getContactInformation()
@@ -31,7 +26,7 @@ bool AnnTriggerObject::getContactInformation()
 	return contactWithPlayer;
 }
 
-Ogre::Vector3 AnnTriggerObject::getPosition()
+AnnVect3 AnnTriggerObject::getPosition()
 {
 	return position;
 }

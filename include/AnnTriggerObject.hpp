@@ -10,6 +10,7 @@
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
 #include "AnnPlayer.hpp"
+#include "AnnAbstractMovable.hpp"
 
 namespace Annwvyn
 {
@@ -18,7 +19,7 @@ namespace Annwvyn
 	class AnnPhysicsGameEngine;
 
 	///Object for representing a volume that trigger an event
-	class DLL AnnTriggerObject
+	class DLL AnnTriggerObject : public AnnAbstractMovable
 	{
 	public:
 		///Class constructor
@@ -29,16 +30,16 @@ namespace Annwvyn
 
 		///Set position form Vector 3D
 		/// \param pos 3D vector positioning the object
-		void setPosition(Ogre::Vector3 pos);
+		virtual void setPosition(AnnVect3 pos);
 
-		///Set position form Variables
-		/// \param x X component of the poisition vector
-		/// \param y Y component of the poisition vector
-		/// \param z Z component of the poisition vector
-		void setPosition(float x, float y, float z);
+		///Does nothing 
+		virtual void setOrientation(AnnQuaternion orient) { return; }
 
 		///Get position
-		Ogre::Vector3 getPosition();
+		virtual AnnVect3 getPosition();
+
+		///Does nothing
+		virtual AnnQuaternion getOrientation() { return AnnQuaternion::IDENTITY; }
 
 		///Get contact information
 		bool getContactInformation();
