@@ -291,13 +291,6 @@
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
-    <NestedTypes>
-      <Class Name="Annwvyn::AnnDebug::AnnDebugBuff" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\AnnLogger.hpp</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\AnnLogger.hpp</FileName>
@@ -567,21 +560,30 @@
   </Class>
   <Class Name="std::shared_ptr&lt;_Ty&gt;" Collapsed="true">
     <Position X="36" Y="17.25" Width="1.5" />
-    <NestedTypes>
-      <Typedef Name="std::shared_ptr&lt;_Ty&gt;::_Myt" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\memory</NewMemberFileName>
-        </TypeIdentifier>
-      </Typedef>
-      <Typedef Name="std::shared_ptr&lt;_Ty&gt;::_Mybase" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\memory</NewMemberFileName>
-        </TypeIdentifier>
-      </Typedef>
-    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAEAAAAAAAkAAAAQgAAAAAAIICAAQAgAAAAAAA=</HashCode>
       <FileName>c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\memory</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Annwvyn::Ann3DTextPlane">
+    <Position X="15.25" Y="47.25" Width="6.25" />
+    <NestedTypes>
+      <Enum Name="Annwvyn::Ann3DTextPlane::TextAlign" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\Ann3DTextPlane.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gQIIIBogEQBAAAQSdAAATMAigUQSAgAAAAQxQAlEAAA=</HashCode>
+      <FileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\Ann3DTextPlane.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Annwvyn::AnnAbstractMovable">
+    <Position X="19" Y="45.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAACAAAAAAAAEAABAAAAAAA=</HashCode>
+      <FileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\AnnAbstractMovable.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="OgrePose">
@@ -591,8 +593,8 @@
       <FileName>C:\Oculus\AnnwvynSDK64\Annwvyn\include\OgreVRRender.hpp</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="orientation" />
       <Field Name="position" />
+      <Field Name="orientation" />
     </ShowAsAssociation>
   </Struct>
   <Struct Name="Annwvyn::collisionTest">

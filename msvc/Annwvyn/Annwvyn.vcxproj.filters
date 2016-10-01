@@ -216,6 +216,9 @@
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Ann3DTextPlane.hpp" />
+    <ClInclude Include="..\..\include\AnnAbstractMovable.hpp">
+      <Filter>Annwvyn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">

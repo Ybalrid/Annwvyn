@@ -181,6 +181,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\AnnAbstractMovable.hpp" />
     <ClInclude Include="..\..\include\AnnAngle.hpp" />
     <ClInclude Include="..\..\include\Ann3DTextPlane.hpp" />
     <ClInclude Include="..\..\include\AnnHandController.hpp" />

@@ -42,6 +42,8 @@ void AnnLevel::unload()
 	for(auto obj : levelTrigger)
 		AnnGetGameObjectManager()->removeTriggerObject(obj);
 	levelTrigger.clear();
+
+	levelMovable.clear();
 }
 
 std::shared_ptr<AnnLightObject> AnnLevel::addLightObject(std::string id)
@@ -60,6 +62,12 @@ std::shared_ptr<AnnGameObject> AnnLevel::addGameObject(std::string entityName, s
 	levelContentIdMap[id] = object;
 	return object;
 }
+
+void AnnLevel::addManualMovableObject(std::shared_ptr<AnnAbstractMovable> movable)
+{
+	levelMovable.push_back(movable);
+}
+
 std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::shared_ptr<AnnTriggerObject> obj , std::string id)
 {
 	AnnGetGameObjectManager()->createTriggerObject(obj);

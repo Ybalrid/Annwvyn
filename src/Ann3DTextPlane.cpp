@@ -282,6 +282,7 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 
 Ann3DTextPlane::~Ann3DTextPlane()
 {
+	AnnDebug() << "Destructiong a 3D Text plane!";
 	auto smgr = AnnGetEngine()->getSceneManager();
 	
 	node->detachObject(renderPlane);
@@ -412,14 +413,16 @@ void Annwvyn::Ann3DTextPlane::setTextAlign(TextAlign talign)
 	align = talign;
 }
 
-AnnVect3 Annwvyn::Ann3DTextPlane::getPosition()
+AnnVect3 Ann3DTextPlane::getPosition()
 {
-	return node->getPosition();
+	if (node) return node->getPosition();
+	return AnnVect3();
 }
 
-AnnQuaternion Annwvyn::Ann3DTextPlane::getOrientaiton()
+AnnQuaternion Ann3DTextPlane::getOrientation()
 {
-	return node->getOrientation();
+	if (node) return node->getOrientation();
+	return AnnQuaternion();
 }
 
 void Annwvyn::Ann3DTextPlane::setMargin(float m)

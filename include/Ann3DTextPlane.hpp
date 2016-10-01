@@ -5,18 +5,15 @@
 #include <Ogre.h>
 #include <Overlay\OgreFontManager.h>
 #include <Overlay\OgreFont.h>
-
 #include <string>
-
 
 #include "AnnEngine.hpp"
 
-#include "AnnTypes.h"
-
+#include "AnnAbstractMovable.hpp"
 
 namespace Annwvyn
 {
-	class DLL Ann3DTextPlane
+	class DLL Ann3DTextPlane : public AnnAbstractMovable
 	{
 	public:
 		///Text alignment flag
@@ -59,6 +56,7 @@ namespace Annwvyn
 		///Set the orient of the plane
 		void setOrientation(AnnQuaternion q);
 
+
 		///Set the text alignment mode
 		void setTextAlign(TextAlign talign);
 
@@ -66,7 +64,7 @@ namespace Annwvyn
 		AnnVect3 getPosition();
 
 		///Get the orientation
-		AnnQuaternion getOrientaiton();
+		AnnQuaternion getOrientation();
 
 		///Set margin
 		/// \param margin Margin in metters
