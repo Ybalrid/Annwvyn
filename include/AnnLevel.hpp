@@ -21,6 +21,8 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 #define noID "noID"
 #define defaultIdLen 15
 
+#include "AnnAbstractMovable.hpp"
+
 namespace Annwvyn
 {
 	///Base class for all Levels. Is absrtract
@@ -46,6 +48,9 @@ namespace Annwvyn
 		AnnGameObjectList levelContent;
 		AnnLightList levelLighting;
 		AnnTriggerObjectList levelTrigger;
+
+		std::list<std::shared_ptr<Annwvyn::AnnAbstractMovable>> levelMovable;
+
 		std::unordered_map<std::string, std::shared_ptr<AnnGameObject> > levelContentIdMap;
 		std::unordered_map<std::string, std::shared_ptr<AnnLightObject> > levelLightingIdMap;
 		std::unordered_map<std::string, std::shared_ptr<AnnTriggerObject> > levelTriggerIdMap;
@@ -58,6 +63,8 @@ namespace Annwvyn
 
 		///Add a Game object to the level
 		std::shared_ptr<AnnGameObject> addGameObject(std::string entityName, std::string id = noID);
+
+		void addManualMovableObject(std::shared_ptr<AnnAbstractMovable> movable);
 
 		///Name of the level
 		std::string name;
