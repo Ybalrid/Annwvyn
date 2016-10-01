@@ -215,9 +215,11 @@
     <ClInclude Include="..\..\include\AnnAngle.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Ann3DTextPlane.hpp" />
     <ClInclude Include="..\..\include\AnnAbstractMovable.hpp">
-      <Filter>Annwvyn</Filter>
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Ann3DTextPlane.hpp">
+      <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -324,7 +326,9 @@
     <ClCompile Include="..\..\src\AnnAngle.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Ann3DTextPlane.cpp" />
+    <ClCompile Include="..\..\src\Ann3DTextPlane.cpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />
