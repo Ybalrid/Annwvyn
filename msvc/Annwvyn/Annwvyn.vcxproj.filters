@@ -215,6 +215,12 @@
     <ClInclude Include="..\..\include\AnnAngle.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnAbstractMovable.hpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Ann3DTextPlane.hpp">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -319,6 +325,9 @@
     <ClCompile Include="..\..\src\AnnHandController.cpp" />
     <ClCompile Include="..\..\src\AnnAngle.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Ann3DTextPlane.cpp">
+      <Filter>Annwvyn\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

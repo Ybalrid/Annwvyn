@@ -139,6 +139,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	//This subsystem need the vrRendererPovGameplayPlacement object to be initialized. And the Resource manager because it wants a font file and an image background 
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
+	
 }
 
 AnnEngine::~AnnEngine()

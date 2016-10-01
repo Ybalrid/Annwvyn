@@ -5,12 +5,11 @@
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 
-
 namespace Annwvyn 
 {
 
 	typedef size_t AnnHandControllerID;
-	class DLL AnnHandController
+	class DLL AnnHandController 
 	{
 	public:
 		///Identify the controller as "left hand", "right hand" or "invalid hand"

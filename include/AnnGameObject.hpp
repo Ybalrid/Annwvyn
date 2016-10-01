@@ -24,6 +24,8 @@
 //Annwvyn
 #include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
+
+#include "AnnAbstractMovable.hpp"
 #pragma warning(default:4996)
 
 namespace Annwvyn
@@ -46,7 +48,7 @@ namespace Annwvyn
     };
 
 	///An object that exist in the game. Graphicaly and Potentialy Physicialy
-    class DLL AnnGameObject
+    class DLL AnnGameObject : public AnnAbstractMovable
     {
         public:
 
