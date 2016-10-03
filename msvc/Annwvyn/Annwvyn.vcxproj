@@ -209,6 +209,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnSubsystem.hpp" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
     <ClInclude Include="..\..\include\AnnTypes.h" />
+    <ClInclude Include="..\..\include\AnnUserSpaceSubSystem.hpp" />
     <ClInclude Include="..\..\include\AnnVect3.hpp" />
     <ClInclude Include="..\..\include\Annwvyn.h" />
     <ClInclude Include="..\..\include\AnnXmlLevel.hpp" />
@@ -257,6 +258,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp" />
     <ClCompile Include="..\..\src\AnnSubSystem.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
+    <ClCompile Include="..\..\src\AnnUserSpaceSubSystem.cpp" />
     <ClCompile Include="..\..\src\AnnVect3.cpp" />
     <ClCompile Include="..\..\src\AnnXmlLevel.cpp" />
     <ClCompile Include="..\..\src\BtOgre.cpp" />

@@ -44,6 +44,8 @@
 #include "AnnGameObjectManager.hpp"
 #include "AnnSceneryManager.hpp"
 
+#include "AnnUserSpaceSubSystem.hpp"
+
 #ifdef _WIN32
 #include <io.h>
 #include <fcntl.h>
@@ -191,6 +193,18 @@ namespace Annwvyn
 
 		///Get the pose of the HMD in VR world space
 		OgrePose getHmdPose();
+
+		///Register your own subsystem to be updated by the engine
+		std::shared_ptr<AnnUserSubSystem> registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem);
+
+		///Get pointer to a subsystem by name
+		std::shared_ptr<AnnSubSystem> getSubSystemByName(std::string name);
+
+		///Know if subsystem is user defined
+		static bool isUserSubSystem(std::shared_ptr<AnnSubSystem> subsystem);
+
+		///Remove a subsystem form the engine. Only works if the system has been user defined. 
+		void removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem);
 
 	private:
 

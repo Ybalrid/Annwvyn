@@ -80,6 +80,7 @@
 #include "AnnFilesystem.hpp"
 #include "AnnResourceManager.hpp"
 #include "Ann3DTextPlane.hpp"
+#include "AnnUserSpaceSubSystem.hpp"
 
 //Other Annwvyn
 #include "AnnTypes.h"
