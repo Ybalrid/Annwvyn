@@ -104,14 +104,15 @@ usingOpenGL(false)
 
 	//To optimize texture copy, make sure to use the most efficient OpenGL method
 
-	/*
+	
 	if (Ogre::Root::getSingleton().getRenderSystem()->getName()
 		== "OpenGL Rendering Subsystem")
 	{
 		backgroundID = static_cast<Ogre::GLTexture*>(background.get())->getGLID();
 		textureID = static_cast<Ogre::GLTexture*>(texture.get())->getGLID();
-		usingOpenGL = true;
-	}*/
+		//TODO check if OpenGL version is > at 4.3 and set this to true
+		usingOpenGL = false;
+	}
 }
 
 void AnnConsole::append(std::string str)
@@ -154,7 +155,25 @@ void AnnConsole::update()
 						   textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
 						   texture->getSrcWidth(), texture->getSrcHeight(), 1);
 	else
-		background->copyToTexture(texture);
+	{
+		//background->copyToTexture(texture);
+		float w(texture->getBuffer()->getWidth());
+		float h(texture->getBuffer()->getHeight());
+		
+		auto texture_out = texture->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::HardwareBuffer::LockOptions::HBL_WRITE_ONLY);
+
+		w = background->getBuffer()->getWidth();
+		h = background->getBuffer()->getHeight();
+
+		auto background_in = background->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::HardwareBuffer::LockOptions::HBL_READ_ONLY);
+
+		for (int y(0); y < h; ++y) for (int x(0); x < w; ++x)
+			texture_out.setColourAt(background_in.getColourAt(x, y, 0), x, y, 0);
+
+		background->getBuffer()->unlock();
+		texture->getBuffer()->unlock();
+
+	}
 
 	//Write text to texture
 	WriteToTexture
