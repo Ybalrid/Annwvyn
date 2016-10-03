@@ -91,6 +91,9 @@
     <Filter Include="OgreRenderingForVR\NoVR">
       <UniqueIdentifier>{7303763a-539a-49b3-aa98-47e541c7797b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\SubSystems\UserDefined">
+      <UniqueIdentifier>{bcf07207-ac3d-49db-93d0-2ff867869628}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -216,7 +219,7 @@
       <Filter>Annwvyn\MathObjects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnUserSpaceSubSystem.hpp">
-      <Filter>Annwvyn\SubSystems</Filter>
+      <Filter>Annwvyn\SubSystems\UserDefined</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -322,10 +325,10 @@
     <ClCompile Include="..\..\src\AnnAngle.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\AnnHandController.cpp" />
     <ClCompile Include="..\..\src\AnnUserSpaceSubSystem.cpp">
-      <Filter>Annwvyn\SubSystems</Filter>
+      <Filter>Annwvyn\SubSystems\UserDefined</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnHandControllers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />
