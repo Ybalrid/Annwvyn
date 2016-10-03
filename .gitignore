@@ -85,3 +85,8 @@ utils/
 *.pch
 *.gch
 ipch/
+
+#Blender cache of old files
+*.blend1
+*.blend@
+
