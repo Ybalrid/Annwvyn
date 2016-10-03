@@ -91,6 +91,9 @@
     <Filter Include="OgreRenderingForVR\NoVR">
       <UniqueIdentifier>{7303763a-539a-49b3-aa98-47e541c7797b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\SubSystems\UserDefined">
+      <UniqueIdentifier>{bcf07207-ac3d-49db-93d0-2ff867869628}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -221,6 +224,9 @@
     <ClInclude Include="..\..\include\Ann3DTextPlane.hpp">
       <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnUserSpaceSubSystem.hpp">
+      <Filter>Annwvyn\SubSystems\UserDefined</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -322,12 +328,15 @@
     <ClCompile Include="..\..\src\OgreNoVRRender.cpp">
       <Filter>OgreRenderingForVR\NoVR</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnHandController.cpp" />
     <ClCompile Include="..\..\src\AnnAngle.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Ann3DTextPlane.cpp">
       <Filter>Annwvyn\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnHandController.cpp" />
+    <ClCompile Include="..\..\src\AnnUserSpaceSubSystem.cpp">
+      <Filter>Annwvyn\SubSystems\UserDefined</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

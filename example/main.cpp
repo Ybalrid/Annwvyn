@@ -123,6 +123,38 @@ public:
 	}
 };
 
+class DummySubsystem : public AnnUserSubSystem
+{
+public:
+	DummySubsystem(std::string name = "Dummy") : AnnUserSubSystem(name),
+		call(0)
+	{
+
+	}
+
+	virtual ~DummySubsystem()
+	{
+		AnnDebug() << "Dummy is no more. ";
+	}
+
+	void dummyMethod() 
+	{
+		AnnDebug() << "access from smart poiner casted through the stupid macro ACTUALLY WORKS!";
+	}
+
+protected:
+	bool needUpdate()
+	{
+		return true;
+	}
+
+	void update()
+	{
+		AnnDebug() << "Dummy debug " << ++call;;
+	}
+	unsigned long call; 
+};
+
 AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
@@ -149,6 +181,25 @@ AnnMain()
 	AnnRadian(Ogre::Degree(90));
 	AnnDegree(Ogre::Radian(3.14));
 
+	auto dummy = AnnUserSystemAs(DummySubsystem)(AnnGetEngine()->registerUserSubSystem(std::make_shared<DummySubsystem>()));
+
+	auto otherDummy = AnnUserSystemAs(DummySubsystem)(AnnGetEngine()->getSubSystemByName("Dummy"));
+
+	//sanity check : 
+	if ((void*)dummy.get() == (void*)otherDummy.get())
+	{
+		AnnDebug() << "getByName, then recast work"; 
+	}otherDummy.reset();
+
+	if (AnnGetEngine()->isUserSubSystem(dummy))
+	{
+		AnnDebug() << "Dummy subsystem recognized as user defined!";
+	}
+	if (!AnnGetEngine()->isUserSubSystem(AnnGetPhysicsEngine()))
+	{
+		AnnDebug() << "Physics engine recognized as NOT user defined!";
+	}
+	bool dummyExist{ true };
 	AnnDebug() << "Starting the render loop";
 	do	
 	{
@@ -156,8 +207,18 @@ AnnMain()
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
 			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	
+		if (AnnGetEngine()->isKeyDown(OIS::KC_Z) && dummyExist)
+		{
+			AnnGetEngine()->removeUserSubSystem(dummy);
+			dummyExist = false;
+			dummy.reset();
+		}
 	}
 	while(AnnGetEngine()->refresh());
+
+	//Dummy only exist for debugging the user space sub system. Clearing the engine here will cause an exeption when "dummy" goes out of scope.
+	//To prevent it, we will reset the dummy pointer before calling AnnQuit()
+	dummy.reset();
 
 	AnnQuit();
 
