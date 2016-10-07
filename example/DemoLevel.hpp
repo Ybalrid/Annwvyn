@@ -50,6 +50,14 @@ public:
 		Stone->setOrientation(AnnQuaternion(Ogre::Degree(45), AnnVect3::UNIT_Y));
 		Stone->setUpPhysics();
 
+		auto TextPane = make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, 18);
+		TextPane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
+		TextPane->setTextColor(AnnColor{ 0, 0, 0 });
+		TextPane->setPosition(Stone->getPosition() + Stone->getOrientation()*  AnnVect3{ 0, 2, -0.35 });
+		TextPane->setOrientation(Stone->getOrientation());
+		TextPane->update();
+		addManualMovableObject(TextPane);
+		
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ -0.5, -1, -0.5 });
@@ -98,6 +106,31 @@ private:
 
 };
 
+class GoBackToDemoHub : LISTENER
+{
+public:
+	GoBackToDemoHub() : constructListener()
+	{
+	}
+
+	virtual void KeyEvent(AnnKeyEvent e)
+	{
+		if (e.isPressed() && e.getKey() == KeyCode::space)
+			jumpToHub();
+	}
+
+	virtual void StickEvent(AnnStickEvent e)
+	{
+		if (e.isPressed(8)) jumpToHub();
+	}
+
+private:
+	void jumpToHub()
+	{
+		AnnGetLevelManager()->jumpToFirstLevel();
+	}
+};
+
 class DemoHubTriggerListener : LISTENER
 {
 public:
@@ -125,6 +158,7 @@ public:
 
 	void load()
 	{
+		AnnGetEventManager()->addListener(goBackListener = make_shared<GoBackToDemoHub>());
 		auto Ground = addGameObject("Ground.mesh");
 		Ground->setUpPhysics();
 
@@ -139,7 +173,14 @@ public:
 		AnnGetPlayer()->setPosition({ 0, 1, 0 });
 		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
 		AnnGetPlayer()->resetPlayerPhysics();
+	}
 
+	void unload()
+	{
+		AnnGetEventManager()->removeListener(goBackListener);
+		goBackListener.reset();
+
+		AnnLevel::unload();
 	}
 
 	void triggerEventCallback(AnnTriggerEvent e)
@@ -151,4 +192,7 @@ public:
 	{
 
 	}
+
+private:
+	shared_ptr<GoBackToDemoHub> goBackListener;
 };
