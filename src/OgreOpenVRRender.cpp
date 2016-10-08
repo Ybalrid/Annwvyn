@@ -66,7 +66,7 @@ void OgreOpenVRRender::initPipeline()
 	createWindow();
 	initScene();
 	initCameras();
-	setCamerasNearClippingDistance();
+	updateProjectionMatrix();
 	initRttRendering();
 }
 
@@ -241,24 +241,6 @@ void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 	if (windowViewport) windowViewport->setBackgroundColour(backgroundColor);
 }
 
-void OgreOpenVRRender::setCamerasNearClippingDistance(float distance)
-{
-	if (distance <= 0) return;
-	nearClippingDistance = distance;
-
-	//Need to recalcutate the projection 
-	getProjectionMatrix();
-}
-
-void OgreOpenVRRender::setCameraFarClippingDistance(float distance)
-{
-	if (distance <= 0) return;
-	farClippingDistance = distance;
-
-	//Need to recalcuate the projection
-	getProjectionMatrix();
-}
-
 void OgreOpenVRRender::showDebug(DebugMode mode)
 {
 	return;
@@ -360,8 +342,13 @@ void OgreOpenVRRender::initRttRendering()
 
 void OgreOpenVRRender::getProjectionMatrix()
 {
+	
+}
+
+void OgreOpenVRRender::updateProjectionMatrix()
+{
 	//Get the couple of matrices
-	vr::HmdMatrix44_t prj[2] = { 
+	vr::HmdMatrix44_t prj[2] = {
 		vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance, API),
 		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance, API) };
 
