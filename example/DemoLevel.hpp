@@ -3,24 +3,9 @@
 #include <Annwvyn.h>
 #include <memory>
 
+#include "DemoUtils.hpp"
+
 using namespace Annwvyn;
-
-//Forward definition of the listener class
-class DemoHubTriggerListener;
-
-class TriggerCallback
-{
-public:
-	TriggerCallback()
-	{
-		triggerListener = static_pointer_cast<AnnEventListener>
-			(make_shared<DemoHubTriggerListener>(this));
-	}
-	virtual void triggerEventCallback(AnnTriggerEvent e) = 0;
-
-protected:
-	shared_ptr<AnnEventListener> triggerListener;
-};
 
 //Hub to select Demos
 class DemoHub : LEVEL, public TriggerCallback
@@ -50,7 +35,7 @@ public:
 		Stone->setOrientation(AnnQuaternion(Ogre::Degree(45), AnnVect3::UNIT_Y));
 		Stone->setUpPhysics();
 
-		auto TextPane = make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, 18);
+		auto TextPane = make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, 18.f);
 		TextPane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
 		TextPane->setTextColor(AnnColor{ 0, 0, 0 });
 		TextPane->setPosition(Stone->getPosition() + Stone->getOrientation()*  AnnVect3{ 0, 2, -0.35 });
@@ -104,48 +89,6 @@ public:
 private:
 	std::shared_ptr<AnnTriggerObject> demo0trig;
 
-};
-
-class GoBackToDemoHub : LISTENER
-{
-public:
-	GoBackToDemoHub() : constructListener()
-	{
-	}
-
-	virtual void KeyEvent(AnnKeyEvent e)
-	{
-		if (e.isPressed() && e.getKey() == KeyCode::space)
-			jumpToHub();
-	}
-
-	virtual void StickEvent(AnnStickEvent e)
-	{
-		if (e.isPressed(8)) jumpToHub();
-	}
-
-private:
-	void jumpToHub()
-	{
-		AnnGetLevelManager()->jumpToFirstLevel();
-	}
-};
-
-class DemoHubTriggerListener : LISTENER
-{
-public:
-	DemoHubTriggerListener(TriggerCallback* hubCallback) : constructListener(),
-		callback(hubCallback)
-	{
-	}
-
-	virtual void TriggerEvent(AnnTriggerEvent e)
-	{
-		callback->triggerEventCallback(e);
-	}
-
-private:
-	TriggerCallback* callback;
 };
 
 class Demo0 : LEVEL, public TriggerCallback
