@@ -109,10 +109,14 @@ public:
 	virtual void cycleDebugHud() {};
 
 	///Set the VR cameras near clipping plane distance
-	virtual void setCamerasNearClippingDistance(float distance) = 0;
+	DEPRECATED virtual void setCamerasNearClippingDistance(float distance) { return updateProjectionMatrix(); }
+	virtual void setNearClippingDistance(float distance);
 
 	///Set the VR cameras far clipping plane distance
-	virtual void setCameraFarClippingDistance(float distance) = 0;
+	DEPRECATED virtual void setCameraFarClippingDistance(float distance) { return updateProjectionMatrix(); }
+	virtual void setFarClippingDistance(float distance);
+
+	virtual void updateProjectionMatrix() = 0;
 
 	///(Optional) return true if audio has to come out from a specific audio device
 	virtual bool usesCustomAudioDevice() { return false; }

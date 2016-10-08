@@ -108,21 +108,16 @@ void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 	noVRViewport->setBackgroundColour(color);
 }
 
-void OgreNoVRRender::setCamerasNearClippingDistance(float distance)
-{
-	if (distance <= 0) return;
-	nearClippingDistance = distance;
-	noVRCam->setNearClipDistance(distance);
-}
-
-void OgreNoVRRender::setCameraFarClippingDistance(float distance)
-{
-	if (distance <= 0) return;
-	farClippingDistance = distance;
-	noVRCam->setFarClipDistance(distance);
-}
-
 void OgreNoVRRender::showDebug(DebugMode mode)
 {
 	return;
+}
+
+void OgreNoVRRender::updateProjectionMatrix()
+{
+	if (!noVRCam) return;
+
+	//Here we don't use a custom projection matrix. Just tell the Ogre Camera to use the current near/far clip planes
+	noVRCam->setNearClipDistance(nearClippingDistance);
+	noVRCam->setFarClipDistance(farClippingDistance);
 }

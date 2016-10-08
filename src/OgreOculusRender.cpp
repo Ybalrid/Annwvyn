@@ -194,16 +194,6 @@ void OgreOculusRender::setMonoFov(float degreeFov)
 	if(monoCam) monoCam->setFOVy(Ogre::Degree(degreeFov));
 }
 
-void OgreOculusRender::setCamerasNearClippingDistance(float distance)
-{
-	nearClippingDistance = distance;
-}
-
-void OgreOculusRender::setCameraFarClippingDistance(float distance)
-{
-	farClippingDistance = distance;
-}
-
 void OgreOculusRender::initScene()
 {
 	//Create the scene manager for the engine
@@ -438,19 +428,25 @@ void OgreOculusRender::initClientHmdRendering()
 
 void OgreOculusRender::calculateProjectionMatrix()
 {
+	
+}
+
+void OgreOculusRender::updateProjectionMatrix()
+{
 	//The average human has 2 eyes, but for some reason there's an "ovrEye_Count" constant on the oculus library. 
-	for(byte eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
+	for (byte eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
 	{
 		//Get the projection matrix
-		ovrMatrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov, 
-			nearClippingDistance, 
-			farClippingDistance, 
-			0);
+		ovrMatrix4f proj = ovrMatrix4f_Projection(EyeRenderDesc[eyeIndex].Fov,
+												  nearClippingDistance,
+												  farClippingDistance,
+												  0);
 
+		//TODO: Matrix4 constuctor should be able to take proj.m to construct itself. 
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
-		for(byte x(0); x < 4; x++)
-			for(byte y(0); y < 4; y++)
+		for (byte x(0); x < 4; x++)
+			for (byte y(0); y < 4; y++)
 				OgreProj[x][y] = proj.M[x][y];
 
 		//Set the matrix
@@ -475,7 +471,7 @@ void OgreOculusRender::initPipeline()
 	createWindow();
 	initScene();
 	initCameras();
-	setCamerasNearClippingDistance();
+	updateProjectionMatrix();
 	initRttRendering();
 }
 

@@ -69,12 +69,6 @@ public:
 	///Change the background color of every viewport on the rendering pipeline
 	virtual void changeViewportBackgroundColor(Ogre::ColourValue color);
 
-	///Set the cameras near clip plane distance
-	virtual void setCamerasNearClippingDistance(float distance = 0.15f);
-
-	///Set the cameras far clip plane distance
-	virtual void setCameraFarClippingDistance(float distance = 4000.0f);
-
 	///Return true if this VR system has an integrated audio device
 	virtual bool usesCustomAudioDevice() { return false; }
 
@@ -98,6 +92,7 @@ public:
 
 	///Get the correct projection matrix for the cameras and set each camera to use it
 	void getProjectionMatrix();
+	void updateProjectionMatrix();
 
 	///Get a "vr::EVREye" from an "oovrEyeType"
 	inline vr::EVREye getEye(oovrEyeType eye);
