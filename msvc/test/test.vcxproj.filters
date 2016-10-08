@@ -35,5 +35,8 @@
     <ClInclude Include="..\..\example\DemoLevel.hpp">
       <Filter>Fichiers sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\example\DemoUtils.hpp">
+      <Filter>Fichiers sources</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
