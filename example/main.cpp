@@ -180,11 +180,10 @@ AnnMain()
 
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getFirstLevelLoaded());
 
-	AnnRadian(Ogre::Degree(90));
-	AnnDegree(Ogre::Radian(3.14));
 	AnnDebug() << "Starting the render loop";
 	do	
 	{
+		//This is just for debugging stuff with the level manager
 		if(AnnGetEngine()->isKeyDown(OIS::KC_Q))
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
