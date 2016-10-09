@@ -30,7 +30,7 @@ void OgreNoVRRender::initVrHmd()
 void OgreNoVRRender::createWindow()
 {
 	Ogre::NameValuePairList misc;
-	misc["vsync"] = "true";
+	misc["vsync"] = "false";
 	misc["top"] = "0";
 	misc["left"] = "0";
 	root->initialise(false);

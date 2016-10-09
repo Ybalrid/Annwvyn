@@ -177,6 +177,7 @@ AnnMain()
 	//AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
 	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
+	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getFirstLevelLoaded());
 
