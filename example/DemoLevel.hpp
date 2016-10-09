@@ -70,8 +70,7 @@ public:
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
 
-		AnnGetSceneryManager()->setAmbiantLight(AnnColor(0.25f, 0.25f, 0.25f));
-
+		AnnGetSceneryManager()->setAmbiantLight(AnnColor(0.15f, 0.15f, 0.15f));
 
 		AnnGetPlayer()->setPosition({ 0, 1, 0 });
 		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
@@ -157,12 +156,10 @@ public:
 
 	void triggerEventCallback(AnnTriggerEvent e)
 	{
-
 	}
 
 	void runLogic()
 	{
-
 	}
 
 private:

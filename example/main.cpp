@@ -179,7 +179,8 @@ AnnMain()
 	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 
-	AnnGetLevelManager()->jump(AnnGetLevelManager()->getFirstLevelLoaded());
+
+	AnnGetLevelManager()->jumpToFirstLevel();
 
 	AnnDebug() << "Starting the render loop";
 	do	
