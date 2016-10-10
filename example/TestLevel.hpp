@@ -2,6 +2,7 @@
 #define TESTLEVEL
  
 #include <Annwvyn.h>
+#include "DemoUtils.hpp"
 using namespace Annwvyn;
 
 //Custom object:
@@ -30,6 +31,7 @@ public:
 	///Construct the Level : 
 	void load()
 	{
+		AnnGetEventManager()->addListener(goBackListener = make_shared<GoBackToDemoHub>());
 		//Set some ambiant light
 		AnnGetSceneryManager()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
 
@@ -88,11 +90,11 @@ public:
 		AnnGetPlayer()->resetPlayerPhysics();
 	}
 
-	/*void unload()
+	void unload()
 	{
-		text.reset();
+		AnnGetEventManager()->removeListener(goBackListener);
 		AnnLevel::unload();
-	}*/
+	}
 
 	void runLogic()
 	{
@@ -100,7 +102,7 @@ public:
 	}
 
 private:
-
+	std::shared_ptr<GoBackToDemoHub> goBackListener;
 	//std::shared_ptr<Ann3DTextPlane> text;
 };
 

@@ -172,6 +172,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\example\DemoLevel.hpp" />
+    <ClInclude Include="..\..\example\DemoUtils.hpp" />
     <ClInclude Include="..\..\example\TestLevel.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

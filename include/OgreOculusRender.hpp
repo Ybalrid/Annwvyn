@@ -74,12 +74,6 @@ class DLL OgreOculusRender : public OgreVRRender
 		///Render each texture buffer, copy contne to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
 		void renderAndSubmitFrame();
 
-		///Set the near Z clipping plane distance from the POV. Used to calculate Projections matricies
-		void setCamerasNearClippingDistance(float distance = 0.15f);
-
-		///Set the far Z clipping plan distance from the POV. Used to calculate Projection matrices
-		void setCameraFarClippingDistance(float distance = 4000.0f);
-
 		///Start Oculus and Ogre libraries.
         void initVrHmd();
         
@@ -109,6 +103,8 @@ class DLL OgreOculusRender : public OgreVRRender
 
 		///Compute from OVR the correct projection matrix for the given clipping distance
 		void calculateProjectionMatrix();
+		virtual void updateProjectionMatrix();
+
 
 		///change main viewport background color
 		void changeViewportBackgroundColor(Ogre::ColourValue color);
@@ -136,6 +132,7 @@ class DLL OgreOculusRender : public OgreVRRender
 
 		///Show the requested debug view
 		void showDebug(DebugMode mode);
+
 
 	private:
 		///Pointer to the renderer itself, recasted as this class, not the parent

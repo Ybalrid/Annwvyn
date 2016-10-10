@@ -28,10 +28,9 @@ public:
 
 	virtual void changeViewportBackgroundColor(Ogre::ColourValue);
 
-	virtual void setCamerasNearClippingDistance(float distance);
-	virtual void setCameraFarClippingDistance(float distance);
-
 	virtual void showDebug(DebugMode mode);
+
+	virtual void updateProjectionMatrix();
 
 private:
 	static OgreNoVRRender* noVRself;

@@ -58,6 +58,7 @@ public:
 	///Get frame update time from the VR renderer
 	double getUpdateTime();
 
+	///Configure the Ogre root engine. Will load all the ogre Plugins and componants we need. 
 	void getOgreConfig();
 
 	///Init Ogre, please provie the name of the output log file
@@ -108,11 +109,21 @@ public:
 	///(Optional) Cycle through the client debug display if available.
 	virtual void cycleDebugHud() {};
 
-	///Set the VR cameras near clipping plane distance
-	virtual void setCamerasNearClippingDistance(float distance) = 0;
+	///Set the VR cameras near clipping plane distance. Please use SetNearClippingDistance instead
+	DEPRECATED virtual void setCamerasNearClippingDistance(float distance) { return updateProjectionMatrix(); }
 
-	///Set the VR cameras far clipping plane distance
-	virtual void setCameraFarClippingDistance(float distance) = 0;
+	///Set the distance from the viewpoint to the near clipping distance plane 
+	virtual void setNearClippingDistance(float distance);
+
+	///Set the VR cameras far clipping plane distance. Please use SetFarClippingDistance instead
+	DEPRECATED virtual void setCameraFarClippingDistance(float distance) { return updateProjectionMatrix(); }
+
+	///Set the distance from the viewpoint to the far clipping distance plane
+	virtual void setFarClippingDistance(float distance);
+
+	///The projection matrix is generally given by the underlying VR api, generally, using the near/far clipping distances set in this class
+	/// \note this method is called by the set{Near/Far}ClippingDistance() automatically. 
+	virtual void updateProjectionMatrix() = 0;
 
 	///(Optional) return true if audio has to come out from a specific audio device
 	virtual bool usesCustomAudioDevice() { return false; }
