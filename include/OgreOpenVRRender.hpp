@@ -69,12 +69,6 @@ public:
 	///Change the background color of every viewport on the rendering pipeline
 	virtual void changeViewportBackgroundColor(Ogre::ColourValue color);
 
-	///Set the cameras near clip plane distance
-	virtual void setCamerasNearClippingDistance(float distance = 0.15f);
-
-	///Set the cameras far clip plane distance
-	virtual void setCameraFarClippingDistance(float distance = 4000.0f);
-
 	///Return true if this VR system has an integrated audio device
 	virtual bool usesCustomAudioDevice() { return false; }
 
@@ -97,7 +91,10 @@ public:
 	virtual void initRttRendering();
 
 	///Get the correct projection matrix for the cameras and set each camera to use it
-	void getProjectionMatrix();
+	DEPRECATED void getProjectionMatrix();
+
+	///Get the projection matrix from the OpenVR API and apply it to the cameras using the near/far clip planes distances
+	void updateProjectionMatrix();
 
 	///Get a "vr::EVREye" from an "oovrEyeType"
 	inline vr::EVREye getEye(oovrEyeType eye);
@@ -105,7 +102,6 @@ public:
 	///Setup the distortion rendering. Apparently this is actually not needed. Even if the official sample does it. This funciton is a placeholder
 	void setupDistrotion();
 
-protected:
 private:
 
 	///Get the HMD position in the OpenVR tracking space
@@ -120,6 +116,7 @@ private:
 	///Iterate through the list of events from SteamVR and call code that react to it
 	void processVREvents();
 	
+	///Process through the array of OpenVR tracked devices, get the data of the interesting ones (hand controllers) 
 	void processTrackedDevices();
 
 	///Reset the IPD displacement of the cameras according to the EyeToHeadTransform matrix
@@ -181,9 +178,6 @@ private:
 
 	///State of the "should quit" marker. If it goes to true, the game loop should stop 
 	bool shouldQuitState;
-
-
-
 };
 
 #endif

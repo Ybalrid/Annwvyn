@@ -10,8 +10,8 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	updateTime(0),
 	feetPosition(0, 0, 10),
 	bodyOrientation(Ogre::Quaternion::IDENTITY),
-	nearClippingDistance(0.5f),
-	farClippingDistance(4000.0f),
+	nearClippingDistance(0.1f),
+	farClippingDistance(500.0f),
 	headNode(nullptr),
 	backgroundColor(0, 0.56f, 1),
 	name(windowName),
@@ -101,4 +101,16 @@ std::shared_ptr<Annwvyn::AnnHandController>* OgreVRRender::getHandControllerArra
 size_t OgreVRRender::getHanControllerArraySize()
 {
 	return MAX_CONTROLLER_NUMBER;
+}
+
+void OgreVRRender::setNearClippingDistance(float distance)
+{
+	nearClippingDistance = distance;
+	updateProjectionMatrix();
+}
+
+void OgreVRRender::setFarClippingDistance(float distance)
+{
+	farClippingDistance = distance;
+	updateProjectionMatrix();
 }

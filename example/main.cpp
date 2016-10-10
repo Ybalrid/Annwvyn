@@ -12,6 +12,7 @@
 #include <Annwvyn.h>
 #include <Ann3DTextPlane.hpp>
 #include "TestLevel.hpp"
+#include "DemoLevel.hpp"
 
 using namespace std;
 using namespace Annwvyn;
@@ -160,12 +161,11 @@ AnnMain()
 	//Only usefull on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();
 
-	//Init game engine
 	AnnInit("AnnTest");
 	
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();	
-	AnnGetPhysicsEngine()->setDebugPhysics(true);
+	AnnGetPhysicsEngine()->setDebugPhysics(false);
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetVRRenderer()->recenter();
 
@@ -173,52 +173,25 @@ AnnMain()
 	AnnGetResourceManager()->loadDir("media/environement");
 	AnnGetResourceManager()->loadDir("media/debug");
 	AnnGetResourceManager()->initResources();
-	
+
+	//AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
+	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
+	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 
-	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
 
-	AnnRadian(Ogre::Degree(90));
-	AnnDegree(Ogre::Radian(3.14));
+	AnnGetLevelManager()->jumpToFirstLevel();
 
-	auto dummy = AnnUserSystemAs(DummySubsystem)(AnnGetEngine()->registerUserSubSystem(std::make_shared<DummySubsystem>()));
-
-	auto otherDummy = AnnUserSystemAs(DummySubsystem)(AnnGetEngine()->getSubSystemByName("Dummy"));
-
-	//sanity check : 
-	if ((void*)dummy.get() == (void*)otherDummy.get())
-	{
-		AnnDebug() << "getByName, then recast work"; 
-	}otherDummy.reset();
-
-	if (AnnGetEngine()->isUserSubSystem(dummy))
-	{
-		AnnDebug() << "Dummy subsystem recognized as user defined!";
-	}
-	if (!AnnGetEngine()->isUserSubSystem(AnnGetPhysicsEngine()))
-	{
-		AnnDebug() << "Physics engine recognized as NOT user defined!";
-	}
-	bool dummyExist{ true };
 	AnnDebug() << "Starting the render loop";
 	do	
 	{
+		//This is just for debugging stuff with the level manager
 		if(AnnGetEngine()->isKeyDown(OIS::KC_Q))
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
 			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	
-		if (AnnGetEngine()->isKeyDown(OIS::KC_Z) && dummyExist)
-		{
-			AnnGetEngine()->removeUserSubSystem(dummy);
-			dummyExist = false;
-			dummy.reset();
-		}
 	}
 	while(AnnGetEngine()->refresh());
-
-	//Dummy only exist for debugging the user space sub system. Clearing the engine here will cause an exeption when "dummy" goes out of scope.
-	//To prevent it, we will reset the dummy pointer before calling AnnQuit()
-	dummy.reset();
 
 	AnnQuit();
 
