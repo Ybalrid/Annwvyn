@@ -4,7 +4,9 @@
 
 using namespace Annwvyn;
 
-AnnAudioEngine::AnnAudioEngine() : AnnSubSystem("AudioEngine")
+AnnAudioEngine::AnnAudioEngine() : AnnSubSystem("AudioEngine"),
+Device(nullptr),
+Context(nullptr)
 {
 	lastError = "Initialize OpenAL based sound system";
 
@@ -60,48 +62,36 @@ void AnnAudioEngine::detectPlaybackDevices(const char *list)
 bool AnnAudioEngine::initOpenAL()
 {
 	//Open audio playback device
-
-	// TODO: make this humanly readable
+	//Check if OpenAL support device enumeration extention here
 	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
 		&& AnnGetVRRenderer()->usesCustomAudioDevice())
 	{
 		AnnDebug() << "This implementation of OpenAL support Audio Device enumeration, and the current VR renderer hint to use a specific audio device.";
-		AnnDebug() << "Enumerating audio devices : ";
+		AnnDebug() << "VR device uses this identifier substring : " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString();
+		//Get the list of all devices
 		detectPlaybackDevices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER));
-		bool gotDevice(false);
-		for (std::string deviceName : detectedDevices)
-		{
-			AnnDebug() << "VR device uses this identifier substring : " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString();
-			AnnDebug() << "Checking device : " << deviceName << " as " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString();
-			if (deviceName.
-				find(AnnGetVRRenderer()->getAudioDeviceIdentifierSubString()) != std::string::npos)
+		
+		//Iterate through the name of each device and check if we can find the substring the renderer ask for
+		for (auto& deviceName : detectedDevices)
+			if (deviceName.find(AnnGetVRRenderer()->getAudioDeviceIdentifierSubString()) 
+				!= std::string::npos)
 			{
 				AnnDebug() << "Found " << deviceName << " as " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString() << " Device!";
+				//Open the selected device 
 				Device = alcOpenDevice(deviceName.c_str());
-				gotDevice = true;
 				break;
 			}
-		}
-		if (!gotDevice)
-		{
-			AnnDebug() << "Rift Audio not found. Using system's default device";
-			Device = alcOpenDevice(NULL);
-		}
-		
 	}
-	else
-	{
-		AnnDebug() << "Device enumeration unsuported, or VR headset don't need custom audio, using the default device";
-		Device = alcOpenDevice(NULL);
-	}
+	//If no device has been set above : 
+	if(!Device) Device = alcOpenDevice(NULL);
     if (!Device)
         return false;
-
+	
 	//Create context
    	Context = alcCreateContext(Device, NULL);
     if (!Context)
         return false;
-
+	
 	//Make the created context current
     if (!alcMakeContextCurrent(Context))
         return false;

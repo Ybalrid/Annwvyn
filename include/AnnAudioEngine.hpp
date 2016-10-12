@@ -172,7 +172,7 @@ namespace Annwvyn
 		bool locked;
 		///Lis of the audio sources object present in the audio engine
 		std::list<std::shared_ptr<AnnAudioSource>> AudioSources;
-		std::list<std::string> detectedDevices;
+		std::vector<std::string> detectedDevices;
 	};
 }
 #endif

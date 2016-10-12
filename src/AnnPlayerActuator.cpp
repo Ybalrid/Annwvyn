@@ -16,7 +16,7 @@ AnnDefaultPlayerActuator::AnnDefaultPlayerActuator() : AnnPlayerActuator()
 
 void AnnDefaultPlayerActuator::actuate(float delta)
 {
-	Sleep(1);
+	if (delta < 0) return;
 	if(!player->getBody()) return;
 
 	//Get WASD or Gamepad joystick tranlation vector
