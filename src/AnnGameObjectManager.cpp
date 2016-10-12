@@ -27,7 +27,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 	AnnDebug("Creatig a game object from the entity " + std::string(entityName));
 	
-	//TODO: either choose to throw an execption or quit the program. If it's true, there's a programing error. And "tomber en marche" is bad. 
+	// TOTO: either choose to throw an execption or quit the program. If it's true, there's a programing error. And "tomber en marche" is bad. 
 	if (std::string(entityName).empty())
 	{
 		AnnDebug("Hey! what are you trying to do here? Please specify a non empty string for entityName !");

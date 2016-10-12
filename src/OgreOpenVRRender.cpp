@@ -459,7 +459,7 @@ void OgreOpenVRRender::processTrackedDevices()
 				break;
 		}
 
-		//TODO: get the buttons (stick, touchpad, whatever) states of this controller 
+		// TOTO: get the buttons (stick, touchpad, whatever) states of this controller 
 
 
 		//Dinamically allocate the controller if the controller doesn't exist yet

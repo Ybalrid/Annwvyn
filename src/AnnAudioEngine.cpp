@@ -61,7 +61,7 @@ bool AnnAudioEngine::initOpenAL()
 {
 	//Open audio playback device
 
-	//TODO: make this humanly readable
+	// TODO: make this humanly readable
 	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
 		&& AnnGetVRRenderer()->usesCustomAudioDevice())
 	{

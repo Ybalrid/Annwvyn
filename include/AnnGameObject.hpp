@@ -33,7 +33,7 @@ namespace Annwvyn
     class DLL AnnGameObject;
 	class DLL AnnGameObjectManager;
 
-	//TODO get rid of 
+	// TODO get rid of 
 	///Simple collision state representation (pointer between 2 objects and a boolean)
     struct collisionTest
     {
@@ -147,17 +147,17 @@ namespace Annwvyn
 			/// \param Object the objet we want to know the current collision state
             bool collideWith(AnnGameObject* Object);
 
-			//TODO create animlation state machine
+			// TODO create animlation state machine
             ///Set curently playing animation
 			/// \param name Name of the animation as defined by the 3D entity
             void setAnimation(const char name[]);
 
-			//TODO create animation state machine
+			// TODO create animation state machine
             ///Set if we want to play the animation
 			/// \param play the playing state we want to apply
             void playAnimation(bool play = true);
 
-			//TODO create animation state machine
+			// TODO create animation state machine
             ///Loop the animation ?
 			/// \param loop the looping state of the animation
             void loopAnimation(bool loop = true);
@@ -207,7 +207,7 @@ namespace Annwvyn
             ///For engine : set bullet world
             void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
 
-			//TODO credate animatiln state machine
+			// TODO credate animatiln state machine
             ///For engine : get elapsed time
             void addAnimationTime(double offsetTime);
 
@@ -229,7 +229,7 @@ namespace Annwvyn
             Ogre::SceneNode* Node;
             Ogre::Entity* Entity;
 
-			//TODO create animation state machine 
+			// TODO create animation state machine 
             bool animIsSetted;
             bool animIsPlaying;
             bool animIsLooping;
