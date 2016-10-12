@@ -170,16 +170,19 @@ AnnMain()
 	AnnGetVRRenderer()->recenter();
 
 	//load ressources
-	AnnGetResourceManager()->loadDir("media/environement");
-	AnnGetResourceManager()->loadDir("media/debug");
+	AnnGetResourceManager()->addFileLocation("media/environement");
+	AnnGetResourceManager()->addFileLocation("media/debug");
 	AnnGetResourceManager()->initResources();
-
-	//AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
+	AnnGetResourceManager()->loadGroup(AnnResourceManager::reservedResourceGroupName);
+	AnnGetResourceManager()->loadGroup(AnnResourceManager::defaultResourceGroupName);
+	AnnGetAudioEngine()->preLoadBuffer("media/bgm/bensound-happyrock.ogg");
+	
+	//create and load level objects
 	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
 	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
-
-
+	
+	//ask the level manager to perform a jump to the first level 
 	AnnGetLevelManager()->jumpToFirstLevel();
 
 	AnnDebug() << "Starting the render loop";

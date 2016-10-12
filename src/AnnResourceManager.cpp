@@ -4,31 +4,30 @@
 
 using namespace Annwvyn;
 
-AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager"),
-	reservedResourceGroupName("ANNWVYN_CORE")
+AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager")
 {
 	addDefaultResourceLocation();
 }
 
-void AnnResourceManager::loadZip(const char path[], const char resourceGroupName[])
+void AnnResourceManager::addZipLocation(const std::string& path, const std::string& resourceGroupName)
 {
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
-	AnnDebug("Loading resources from Zip archive :");
+	AnnDebug("Will load resources from Zip archive :");
 	AnnDebug() << path;
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
 }
 
-void AnnResourceManager::loadDir(const char path[], const char resourceGroupName[])
+void AnnResourceManager::addFileLocation(const std::string& path, const std::string& resourceGroupName)
 {
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
-	AnnDebug("Loading resources from Filesystem directory :");
+	AnnDebug("Will load resources from Filesystem directory :");
 	AnnDebug() << path;
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
 }
 
 void AnnResourceManager::addDefaultResourceLocation()
 {
-	AnnDebug("Adding Annwvyn CORE resources");
+	AnnDebug("Adding Annwvyn CORE resource locations");
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media/CORE.zip", "Zip", reservedResourceGroupName);
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media", "FileSystem", reservedResourceGroupName, true);
 	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(reservedResourceGroupName);
@@ -69,8 +68,13 @@ void AnnResourceManager::initResources()
 	AnnDebug("Resources initialized");
 }
 
-void AnnResourceManager::refuseResource(std::string resourceName, std::string group)
+void Annwvyn::AnnResourceManager::loadGroup(const std::string & groupName)
 {
-	AnnDebug() << "Annwvyn cannot allow you to use resources declared in " << group << " group";
+	Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(groupName);
+}
+
+void AnnResourceManager::refuseResource(const std::string& resourceName, const std::string& group)
+{
+	AnnDebug() << "Annwvyn cannot allow you to set location inside the " << group << " resource group";
 	AnnDebug() << "Resource location " << resourceName << "has been rejected";
 } 
