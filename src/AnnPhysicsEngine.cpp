@@ -45,7 +45,7 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
 	assert(playerObject->getBody());
-	//TODO define name for the bullet's collision masks
+	// TOTO define name for the bullet's collision masks
 	DynamicsWorld->addRigidBody(playerObject->getBody(), MASK(0), MASK(1));
 }
 
@@ -100,7 +100,7 @@ void AnnPhysicsEngine::stepDebugDrawer()
 
 void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 {
-	//TODO make a typedeff for getting off the uglyness here 
+	// TOTO make a typedeff for getting off the uglyness here 
 	std::vector<struct collisionTest*> pairs;
 
 	//get all collision mask

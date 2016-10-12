@@ -443,7 +443,7 @@ void OgreOculusRender::updateProjectionMatrix()
 												  farClippingDistance,
 												  0);
 
-		//TODO: Matrix4 constuctor should be able to take proj.m to construct itself. 
+		// TOTO: Matrix4 constuctor should be able to take proj.m to construct itself. 
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
 		for (byte x(0); x < 4; x++)
