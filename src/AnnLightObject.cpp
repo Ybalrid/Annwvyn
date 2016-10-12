@@ -59,3 +59,8 @@ AnnColor Annwvyn::AnnLightObject::getSpecularColor()
 {
 	return AnnColor(light->getSpecularColour());
 }
+
+AnnVect3 AnnLightObject::getPosition()
+{
+	return light->getPosition();
+}
