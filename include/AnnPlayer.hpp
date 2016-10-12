@@ -161,6 +161,7 @@ namespace Annwvyn
 
 
 		void teleport(AnnVect3 position, AnnRadian orientation);
+		void teleport(AnnVect3 position);
 
 
 	protected:

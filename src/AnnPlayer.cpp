@@ -250,6 +250,13 @@ void AnnPlayer::teleport(AnnVect3 position, AnnRadian orientation)
 
 }
 
+void Annwvyn::AnnPlayer::teleport(AnnVect3 position)
+{
+	teleport(position, this->getOrientation().getYaw());
+}
+
+
+
 void AnnPlayer::engineUpdate(float deltaTime)
 {
 	if(ignorePhysics) return;
