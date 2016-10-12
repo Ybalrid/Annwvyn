@@ -159,10 +159,11 @@ namespace Annwvyn
 		///"teleporting" the player, for example if you need to reset his position.
 		void resetPlayerPhysics();
 
-
+		///Teleport the player to the given location, and get it facing the given direction
 		void teleport(AnnVect3 position, AnnRadian orientation);
-		void teleport(AnnVect3 position);
 
+		///Teleport the player without touchning it's direction
+		void teleport(AnnVect3 position);
 
 	protected:
 
