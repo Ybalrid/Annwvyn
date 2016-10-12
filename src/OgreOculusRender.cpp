@@ -418,7 +418,7 @@ void OgreOculusRender::initClientHmdRendering()
 	layer.Viewport[right] = rightRect;
 
 	//Get the projection matrix for the desired near/far clipping from Oculus and apply them to the eyeCameras
-	calculateProjectionMatrix();
+	updateProjectionMatrix();
 
 	//Make sure that the perf hud will not show up by himself...
 	AnnDebug() << "Put the Oculus Performance HUD to ovrPerfHud_Off";
@@ -433,6 +433,7 @@ void OgreOculusRender::calculateProjectionMatrix()
 
 void OgreOculusRender::updateProjectionMatrix()
 {
+
 	//The average human has 2 eyes, but for some reason there's an "ovrEye_Count" constant on the oculus library. 
 	for (byte eyeIndex(0); eyeIndex < ovrEye_Count; eyeIndex++)
 	{
@@ -471,8 +472,8 @@ void OgreOculusRender::initPipeline()
 	createWindow();
 	initScene();
 	initCameras();
-	updateProjectionMatrix();
 	initRttRendering();
+	updateProjectionMatrix();
 }
 
 bool OgreOculusRender::usesCustomAudioDevice()

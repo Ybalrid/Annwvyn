@@ -52,8 +52,8 @@ public:
 		text->setMargin(0.1f);
 
 		text->update();
-			addManualMovableObject(text);
-
+		addManualMovableObject(text);
+		
 		//Add other source of light
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);

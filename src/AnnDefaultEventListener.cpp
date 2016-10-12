@@ -19,7 +19,7 @@ AnnDefaultEventListener::AnnDefaultEventListener() : AnnEventListener(),
 	//Use second analog stick for horizontal rotation
 	axes[ax_rotate] = 3;
 	//Trim before 1/11 of the stick
-	deadzone = 1.0f/11.0f;
+	deadzone = 1.0f/10.0f;
 
 	buttons[b_run] = 2;
 	buttons[b_jump] = 0;
