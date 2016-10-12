@@ -7,7 +7,7 @@ using namespace Annwvyn;
 //Forward definition of the listener class
 class DemoHubTriggerListener;
 
-//TODO: see if there is a way to NOT do this
+// TODO: see if there is a way to NOT do this
 //The original problem was to have the level be itself an event listener. This was causing problems when unloading the LevelManager
 //and the the EventManager.
 //Having a method inside the level that catch the event seemed a good idea, but the lifecycle of the listener object cannot be the same
