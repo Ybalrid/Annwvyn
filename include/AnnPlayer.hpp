@@ -160,6 +160,9 @@ namespace Annwvyn
 		void resetPlayerPhysics();
 
 
+		void teleport(AnnVect3 position, AnnRadian orientation);
+
+
 	protected:
 
 		///Object that keep body parameters (= legacy structure)

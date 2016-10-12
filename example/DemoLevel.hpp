@@ -72,9 +72,7 @@ public:
 
 		AnnGetSceneryManager()->setAmbiantLight(AnnColor(0.15f, 0.15f, 0.15f));
 
-		AnnGetPlayer()->setPosition({ 0, 1, 0 });
-		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
-		AnnGetPlayer()->resetPlayerPhysics();
+		AnnGetPlayer()->teleport({ 0,1,0 }, 0);
 	}
 
 	//Called at each frame
@@ -141,9 +139,7 @@ public:
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0,1,-0.75 });
 
-		AnnGetPlayer()->setPosition({ 0, 1, 0 });
-		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
-		AnnGetPlayer()->resetPlayerPhysics();
+		AnnGetPlayer()->teleport({ 0,1,0 }, 0);
 	}
 
 	void unload()

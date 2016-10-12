@@ -242,6 +242,14 @@ void AnnPlayer::resetPlayerPhysics()
 	AnnGetPhysicsEngine()->addPlayerPhysicalBodyToDynamicsWorld();
 }
 
+void AnnPlayer::teleport(AnnVect3 position, AnnRadian orientation)
+{
+	setPosition(position);
+	setOrientation(Ogre::Euler(orientation));
+	resetPlayerPhysics();
+
+}
+
 void AnnPlayer::engineUpdate(float deltaTime)
 {
 	if(ignorePhysics) return;
