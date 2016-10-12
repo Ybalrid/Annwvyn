@@ -7,6 +7,9 @@
 #define ANN_LIGHT_OBJECT
 
 #include "systemMacro.h"
+
+#include "AnnAbstractMovable.hpp"
+
 #include <OgreLight.h>
 #include "AnnVect3.hpp"
 #include "AnnColor.hpp"
@@ -15,14 +18,12 @@ namespace Annwvyn
 {
 	class AnnEngine;
 
-
 	///Light Object : Represent a light source
-	class DLL AnnLightObject 
+	class DLL AnnLightObject : public AnnAbstractTranslatable
 	{
 	public:
 		AnnLightObject(Ogre::Light* light);
 		virtual ~AnnLightObject();
-
 
 		/// Defines the type of light
 		enum LightTypes
@@ -37,10 +38,10 @@ namespace Annwvyn
 
 		static LightTypes getLightTypeFromString(std::string ltype);
 
-
-
 		///Set the position of the light (if relevent)
 		void setPosition(AnnVect3 position);
+		///Get the position of the light (if relevent)
+		AnnVect3 getPosition();
 		///Set the direction of the light (if relevent)
 		void setDirection(AnnVect3 direction);
 		///Set the type of the light
@@ -53,7 +54,6 @@ namespace Annwvyn
 		AnnColor getDiffuseColor();
 		///Get the specular color of this light source
 		AnnColor getSpecularColor();
-
 
 	private:
 		friend class AnnEngine;
