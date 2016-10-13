@@ -20,12 +20,22 @@ Please read the DEPEDENCIES file to know what you need to build it.
 System requirement
 ----------------
 
- - A fairly recent GPU. Support for OpenGL 4.3 is mandatory
+ - A fairly recent GPU. Support for OpenGL 4.3 is recomended. Tested on 4.0 GPU in "noVR" mode only
  - Graphics driver with "direct driver" for VR implemented. The lattest Nvidia/AMD driver available will do
  - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive
  - 64bit Operating system
  - Oculus Runtime 1.8 (9/18/16) installed from http://oculus.com/setup OR SteamVR installed through Steam http://steampowered.com/
  - Microsoft Visual Studio 2015 Comunity (free to download and use from Microsoft)
+ 
+Installation
+------------
+
+First, please install Visual Studio 2015 (the community version is free) from Microsoft.
+
+Then, go get the SDK installer here http://annwvyn.org/?static1/download and run it. 
+If near the end of the installer, a CMD window open asking about setting up environement variables, say yes.
+
+After that, if you need to update the engine to the current master branch, see the "Updating the engine" section below.
 
 Building on Windows
 -------------------
@@ -86,6 +96,6 @@ ______
 
 If you want more information about the project, please consult the official website (http://annwvyn.org/). It aslo contains documentation about the code.
 
-This project is in it's realy early phases of developpement. If you have any question, feel free to contact me directly at ybalrid@cecmu.org 
+This project is in it's realy early phases of developpement. If you have any question, feel free to contact me directly at ybalrid@ybalrid.info 
 
 Licence MIT.
