@@ -8,11 +8,11 @@
 using namespace Annwvyn;
 
 //Hub to select Demos
-class DemoHub : LEVEL, public TriggerCallback
+class DemoHub : LEVEL, LISTENER
 {
 public:
 
-	DemoHub() : constructLevel(), TriggerCallback()
+	DemoHub() : constructLevel(), constructListener()
 	{
 	}
 
@@ -24,7 +24,7 @@ public:
 	void load()
 	{
 		//Register ourselve as event listener
-		AnnGetEventManager()->addListener(triggerListener);
+		AnnGetEventManager()->addListener(getSharedListener());
 
 		//Add static geometry
 		auto Ground = addGameObject("Ground.mesh");
@@ -83,11 +83,11 @@ public:
 	void unload()
 	{
 		//Unregister the listener
-		AnnGetEventManager()->removeListener(triggerListener);
+		AnnGetEventManager()->removeListener(getSharedListener());
 		AnnLevel::unload();
 	}
 
-	void triggerEventCallback(AnnTriggerEvent e)
+	void TriggerEvent(AnnTriggerEvent e)
 	{
 		if (e.getContactStatus())
 			jumpToLevelTriggeredBy(e.getSender());
@@ -117,11 +117,11 @@ private:
 
 };
 
-class Demo0 : LEVEL, public TriggerCallback
+class Demo0 : LEVEL
 {
 public:
 
-	Demo0() : constructLevel(), TriggerCallback()
+	Demo0() : constructLevel()
 	{
 	}
 

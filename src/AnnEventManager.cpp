@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "AnnEventManager.hpp"
-#include "AnnLogger.hpp"//to access logger static method
+#include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
 
 using namespace Annwvyn;
@@ -19,6 +19,11 @@ float AnnEventListener::trim(float v, float dz)
 	//The test is done on the abs value. Return the actuall value, or 0 if under the deadzone
 	if (abs >= dz) return v;
 	return 0.0f;
+}
+
+std::shared_ptr<AnnEventListener> Annwvyn::AnnEventListener::getSharedListener()
+{
+	return std::enable_shared_from_this<AnnEventListener>::shared_from_this();
 }
 
 
@@ -70,43 +75,46 @@ void AnnTextInputer::setInput(std::string content)
 	input = content;
 }
 
-
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) : AnnSubSystem("EventManager"),
 Keyboard(nullptr),
 Mouse(nullptr),
 defaultEventListener(nullptr),
-knowXbox(false)
+knowXbox(false),
+lastTimerCreated(0)
 {
-	for (size_t i(0); i < KeyCode::SIZE; i++) previousKeyStates[i] = false;
-	for (size_t i(0); i < MouseButtonId::nbButtons; i++) previousMouseButtonStates[i] = false;
+	//Init all bool array to false
+	for (auto& keyState : previousKeyStates) keyState = false;
+	for (auto& mouseButtonState : previousMouseButtonStates) mouseButtonState = false;
 
 	//Should be a HWND under windows, but, whatever, it's an unsigned integer...
 	size_t windowHnd; w->getCustomAttribute("WINDOW", &windowHnd);
-
-	//Well, I think the best thing on the C++ standard library are the stream classes! :-D
 	std::stringstream windowHndStr; windowHndStr << windowHnd;
 
+	//Configure and create the input system
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 	InputManager = OIS::InputManager::createInputSystem(pl);
 
+	//Get the keyboard, mouse and joysticks objects 
 	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
 
+	//There's a joystick object for each joysticks
 	for (int nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
 	{
+		//Create joystick object
 		OIS::JoyStick* Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		Joysticks.push_back(new JoystickBuffer(Joystick));
 		AnnDebug() << "Detected joystick : " << Joystick->vendor();
-		if (Joystick->vendor().find("Xbox") != std::string::npos 
-		|| Joystick->vendor().find("XBOX") != std::string::npos)
+
+		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)
+		if (Joystick->vendor().find("Xbox") != std::string::npos
+			|| Joystick->vendor().find("XBOX") != std::string::npos)
 		{
 			knowXbox = true;
 			xboxID = (StickAxisId)Joystick->getID();
 			AnnDebug() << "Detected Xbox controller at ID " << xboxID;
 		}
 	}
-
-	lastTimerCreated = 0;
 
 	textInputer = new AnnTextInputer;
 	Keyboard->setEventCallback(textInputer);
@@ -153,8 +161,8 @@ std::shared_ptr<AnnEventListener> Annwvyn::AnnEventManager::getDefaultEventListe
 
 void AnnEventManager::addListener(std::shared_ptr<AnnEventListener> l)
 {
-	AnnDebug() << "Adding an event listener : " << l.get() ;
-	if (l != NULL)
+	AnnDebug() << "Adding an event listener : " << l.get();
+	if (l != nullptr)
 		listeners.push_back(l);
 }
 
@@ -168,9 +176,10 @@ void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 {
 	AnnDebug() << "Removing an event listener : " << l.get();
 	if (l == nullptr) { clearListenerList(); return; }
+
 	auto iterator = listeners.begin();
 	while (iterator != listeners.end())
-		if (*iterator == l)
+		if (((*iterator).lock()) && (*iterator).lock().get() == l.get())
 			iterator = listeners.erase(iterator);
 		else iterator++;
 }
@@ -190,7 +199,7 @@ void AnnEventManager::processInput()
 	Keyboard->capture();
 	Mouse->capture();
 
-	for (auto joystick : Joysticks)
+	for (auto& joystick : Joysticks)
 		joystick->stick->capture();
 
 	//if keyboard system initialized
@@ -209,8 +218,9 @@ void AnnEventManager::processInput()
 				e.populate();
 				e.validate();
 
-				for (size_t i(0); i < listeners.size(); i++)
-					listeners[i]->KeyEvent(e);
+				for (auto weak_listener : listeners)
+					if (auto listener = weak_listener.lock())
+						listener->KeyEvent(e);
 
 				previousKeyStates[c] = true;
 			}
@@ -223,8 +233,9 @@ void AnnEventManager::processInput()
 				e.populate();
 				e.validate();
 
-				for (auto listener : listeners)
-					listener->KeyEvent(e);
+				for (auto weak_listener : listeners)
+					if (auto listener = weak_listener.lock())
+						listener->KeyEvent(e);
 
 				previousKeyStates[c] = false;
 			}
@@ -247,8 +258,9 @@ void AnnEventManager::processInput()
 		e.populate();
 		e.validate();
 
-		for (size_t i(0); i < listeners.size(); i++)
-			listeners[i]->MouseEvent(e);
+		for (auto& weak_listener : listeners)
+			if (auto listener = weak_listener.lock())
+				listener->MouseEvent(e);
 	}
 
 	for (auto Joystick : Joysticks)
@@ -267,7 +279,7 @@ void AnnEventManager::processInput()
 				axis.noRel = true;
 			e.axes.push_back(axis);
 		}
-		
+
 		//The joystick state object allwas have 4 Pov but the AnnStickEvent has the number of Pov the stick has
 		for (size_t i(0); i < Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV); i++)
 			e.povs.push_back(AnnStickPov(state.mPOV[i].direction));
@@ -289,12 +301,14 @@ void AnnEventManager::processInput()
 			if (e.stickID == xboxID)
 				e.xbox = true;
 
-		for (auto listener : listeners)
-			listener->StickEvent(e);
+		for (auto& weak_listener : listeners)
+			if (auto listener = weak_listener.lock())
+				listener->StickEvent(e);
 	}
 
-	for (auto listener : listeners)
-		listener->tick();
+	for (auto& weak_listener : listeners)
+		if (auto listener = weak_listener.lock())
+			listener->tick();
 }
 
 timerID AnnEventManager::fireTimerMillisec(double delay)
@@ -329,7 +343,8 @@ void AnnEventManager::processTimers()
 			e.setTimerID((*iterator).tID);
 			e.validate();
 			for (size_t i(0); i < listeners.size(); ++i)
-				listeners[i]->TimeEvent(e);
+				if (auto listener = listeners[i].lock())
+					listener->TimeEvent(e);
 			iterator = activeTimers.erase(iterator);
 		}
 		else
@@ -345,7 +360,8 @@ void AnnEventManager::processTriggerEvents()
 		for (auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); listenerIterator++)
 		{
 			(*triggerIterator).validate();
-			(*listenerIterator)->TriggerEvent(*triggerIterator);
+			if (auto listener = (*listenerIterator).lock())
+				listener->TriggerEvent(*triggerIterator);
 		}
 	triggerEventBuffer.clear();
 }
