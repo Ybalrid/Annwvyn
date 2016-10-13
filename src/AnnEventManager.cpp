@@ -21,6 +21,11 @@ float AnnEventListener::trim(float v, float dz)
 	return 0.0f;
 }
 
+std::shared_ptr<AnnEventListener> Annwvyn::AnnEventListener::getSharedListener()
+{
+	return std::enable_shared_from_this<AnnEventListener>::shared_from_this();
+}
+
 
 AnnTextInputer::AnnTextInputer() :
 	listen(false)
