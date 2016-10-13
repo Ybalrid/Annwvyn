@@ -539,8 +539,8 @@ namespace Annwvyn
 		AnnTextInputer* getTextInputer();
 
 	private:
-		std::vector<std::shared_ptr<AnnEventListener>> listeners;
-
+		std::vector<std::weak_ptr<AnnEventListener>> listeners;
+	 
 		friend class AnnEngine;
 		friend class AnnPhysicsEngine;
 		///Engine call for refreshing the event system
