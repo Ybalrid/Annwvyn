@@ -9,14 +9,15 @@
 
 #include "systemMacro.h"
 
+#include <array>
+#include <memory>
+
 //This also include OIS
 #include "AnnKeyCode.h"
 #include "AnnPlayer.hpp"
 #include "AnnTriggerObject.hpp"
 
 #include "AnnSubsystem.hpp"
-
-#include <memory>
 
 //the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
@@ -576,10 +577,10 @@ namespace Annwvyn
 
 		OIS::ParamList pl;
 		///Array for remembering the key states at last update. 
-		bool previousKeyStates[static_cast<unsigned int>(KeyCode::SIZE)];
+		std::array<bool, KeyCode::SIZE> previousKeyStates;
 
 		///Array for remembering the button states at last update
-		bool previousMouseButtonStates[static_cast<unsigned int>(MouseButtonId::nbButtons)];
+		std::array<bool, MouseButtonId::nbButtons> previousMouseButtonStates;
 
 		///Dinamicly sized array for remembering the joystick button state at last update
 		timerID lastTimerCreated;
