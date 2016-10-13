@@ -179,8 +179,6 @@ void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 		if (((*iterator).lock()) && (*iterator).lock().get() == l.get())
 			iterator = listeners.erase(iterator);
 		else iterator++;
-
-
 }
 
 void AnnEventManager::update()
