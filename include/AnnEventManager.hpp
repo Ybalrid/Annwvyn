@@ -541,10 +541,15 @@ namespace Annwvyn
 		AnnTextInputer* getTextInputer();
 
 	private:
+
+		///List of pointer to the listeners.
+		///The use of weak pointers permit to keep acccess to the listeners without having to own them.
+		///This permit to use any classes of the engine (like levels) to be themselves event listener.
 		std::vector<std::weak_ptr<AnnEventListener>> listeners;
 	 
 		friend class AnnEngine;
 		friend class AnnPhysicsEngine;
+
 		///Engine call for refreshing the event system
 		void update();
 		///Process user inputs
