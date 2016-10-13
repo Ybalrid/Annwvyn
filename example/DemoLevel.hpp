@@ -8,7 +8,7 @@
 using namespace Annwvyn;
 
 //Hub to select Demos
-class DemoHub : LEVEL, LISTENER, public std::enable_shared_from_this<DemoHub>
+class DemoHub : LEVEL, LISTENER
 {
 public:
 
@@ -24,7 +24,7 @@ public:
 	void load()
 	{
 		//Register ourselve as event listener
-		AnnGetEventManager()->addListener(shared_from_this());
+		AnnGetEventManager()->addListener(getSharedListener());
 
 		//Add static geometry
 		auto Ground = addGameObject("Ground.mesh");
@@ -83,7 +83,7 @@ public:
 	void unload()
 	{
 		//Unregister the listener
-		AnnGetEventManager()->removeListener(shared_from_this());
+		AnnGetEventManager()->removeListener(getSharedListener());
 		AnnLevel::unload();
 	}
 

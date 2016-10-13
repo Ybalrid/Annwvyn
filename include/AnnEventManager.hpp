@@ -328,7 +328,7 @@ namespace Annwvyn
 	};
 
 	///Base class for all event listener
-	class DLL AnnEventListener 
+	class DLL AnnEventListener : public std::enable_shared_from_this<AnnEventListener>
 	{
 
 		//Base Event listener class. Technicaly not abstract since it provides a default implementation for all
@@ -352,6 +352,8 @@ namespace Annwvyn
 		virtual void tick()								{return;}
 		///Utility function for applying a deadzone on a joystick axis
 		static float trim(float value, float deadzone);
+		///return a shared_ptr to this listener 
+		std::shared_ptr<AnnEventListener> getSharedListener();
 	protected:
 		///Pointer to the player. Set by the constructor, provide easy access to the AnnPlayer
 		AnnPlayer* player;

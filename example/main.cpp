@@ -157,7 +157,7 @@ protected:
 };
 
 
-class MyLevel : LEVEL, LISTENER, public std::enable_shared_from_this<MyLevel>
+class MyLevel : LEVEL, LISTENER
 {
 public:
 	MyLevel() : constructLevel(), constructListener()
@@ -166,14 +166,14 @@ public:
 
 	virtual void load()
 	{
-		AnnGetEventManager()->addListener(shared_from_this());
+		AnnGetEventManager()->addListener(getSharedListener());
 		auto ground = addGameObject("Ground.mesh");
 		ground->setUpPhysics();
 	}
 
 	virtual void unload()
 	{
-		AnnGetEventManager()->removeListener(shared_from_this());
+		AnnGetEventManager()->removeListener(getSharedListener());
 		AnnLevel::unload();
 	}
 
