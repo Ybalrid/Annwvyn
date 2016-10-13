@@ -23,7 +23,7 @@ class DemoHubTriggerListener;
 //Event manage -> call event listener method -> call callback method of a level. Or is it?
 
 
-class TriggerCallback
+/*class TriggerCallback
 {
 public:
 	///At the construct, create the listener as a shared ptr, because it's owning will be shared with the event manager
@@ -38,9 +38,9 @@ public:
 
 protected:
 	shared_ptr<AnnEventListener> triggerListener;
-};
+};*/
 
-///Normal listener
+/*///Normal listener
 class DemoHubTriggerListener : LISTENER
 {
 public:
@@ -59,7 +59,7 @@ public:
 
 private:
 	TriggerCallback* callback;
-};
+};*/
 
 
 class GoBackToDemoHub : LISTENER

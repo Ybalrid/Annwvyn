@@ -168,11 +168,14 @@ void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 {
 	AnnDebug() << "Removing an event listener : " << l.get();
 	if (l == nullptr) { clearListenerList(); return; }
+
 	auto iterator = listeners.begin();
 	while (iterator != listeners.end())
-		if (*iterator == l)
+		if (((*iterator).lock()) && (*iterator).lock().get() == l.get())
 			iterator = listeners.erase(iterator);
 		else iterator++;
+
+
 }
 
 void AnnEventManager::update()
@@ -210,7 +213,8 @@ void AnnEventManager::processInput()
 				e.validate();
 
 				for (size_t i(0); i < listeners.size(); i++)
-					listeners[i]->KeyEvent(e);
+					if(auto listener = listeners[i].lock())
+						listener->KeyEvent(e);
 
 				previousKeyStates[c] = true;
 			}
@@ -223,8 +227,9 @@ void AnnEventManager::processInput()
 				e.populate();
 				e.validate();
 
-				for (auto listener : listeners)
-					listener->KeyEvent(e);
+				for (auto weak_listener : listeners)
+						if(auto listener =  weak_listener.lock())
+							listener->KeyEvent(e);
 
 				previousKeyStates[c] = false;
 			}
@@ -247,8 +252,9 @@ void AnnEventManager::processInput()
 		e.populate();
 		e.validate();
 
-		for (size_t i(0); i < listeners.size(); i++)
-			listeners[i]->MouseEvent(e);
+		for (auto weak_listener : listeners) 
+			if(auto listener = weak_listener.lock())
+				listener->MouseEvent(e);
 	}
 
 	for (auto Joystick : Joysticks)
@@ -289,12 +295,14 @@ void AnnEventManager::processInput()
 			if (e.stickID == xboxID)
 				e.xbox = true;
 
-		for (auto listener : listeners)
-			listener->StickEvent(e);
+		for (auto weak_listener : listeners)
+			if(auto listener = weak_listener.lock())
+				listener->StickEvent(e);
 	}
 
-	for (auto listener : listeners)
-		listener->tick();
+	for (auto weak_listener : listeners)
+		if(auto listener = weak_listener.lock())
+			listener->tick();
 }
 
 timerID AnnEventManager::fireTimerMillisec(double delay)
@@ -329,7 +337,8 @@ void AnnEventManager::processTimers()
 			e.setTimerID((*iterator).tID);
 			e.validate();
 			for (size_t i(0); i < listeners.size(); ++i)
-				listeners[i]->TimeEvent(e);
+				if(auto listener = listeners[i].lock())
+				listener->TimeEvent(e);
 			iterator = activeTimers.erase(iterator);
 		}
 		else
@@ -345,7 +354,8 @@ void AnnEventManager::processTriggerEvents()
 		for (auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); listenerIterator++)
 		{
 			(*triggerIterator).validate();
-			(*listenerIterator)->TriggerEvent(*triggerIterator);
+			if(auto listener = (*listenerIterator).lock())
+				listener->TriggerEvent(*triggerIterator);
 		}
 	triggerEventBuffer.clear();
 }

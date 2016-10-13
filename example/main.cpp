@@ -156,6 +156,36 @@ protected:
 	unsigned long call; 
 };
 
+
+class MyLevel : LEVEL, LISTENER, public std::enable_shared_from_this<MyLevel>
+{
+public:
+	MyLevel() : constructLevel(), constructListener()
+	{	
+	}
+
+	virtual void load()
+	{
+		AnnGetEventManager()->addListener(shared_from_this());
+		auto ground = addGameObject("Ground.mesh");
+		ground->setUpPhysics();
+	}
+
+	virtual void unload()
+	{
+		AnnGetEventManager()->removeListener(shared_from_this());
+		AnnLevel::unload();
+	}
+
+	virtual void runLogic()
+	{
+
+	}
+
+private:
+
+};
+
 AnnMain()
 {
 	//Only usefull on windows : Open a debug console to get stdout/stderr
@@ -184,15 +214,21 @@ AnnMain()
 	
 	//ask the level manager to perform a jump to the first level 
 	AnnGetLevelManager()->jumpToFirstLevel();
+	
+
+	/*AnnGetLevelManager()->addLevel(std::make_shared<MyLevel>());
+
+	AnnGetLevelManager()->jumpToFirstLevel();*/
+
 
 	AnnDebug() << "Starting the render loop";
 	do	
 	{
-		//This is just for debugging stuff with the level manager
+		/*//This is just for debugging stuff with the level manager
 		if(AnnGetEngine()->isKeyDown(OIS::KC_Q))
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
-			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	
+			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	*/
 	}
 	while(AnnGetEngine()->refresh());
 
