@@ -67,12 +67,6 @@
     <Filter Include="Annwvyn\SubSystems\Scenery">
       <UniqueIdentifier>{5c9abb67-b981-4469-9dd8-f1658f374bb2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OgreRenderingForVR">
-      <UniqueIdentifier>{80903f3b-ac93-417b-881a-c6fe14583547}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="OgreRenderingForVR\Oculus">
-      <UniqueIdentifier>{d83246f2-30b0-4dc4-96c9-644b2e03f8a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Annwvyn\Core\AnnEngine">
       <UniqueIdentifier>{e7f30595-e00c-4e76-b1ea-26e781f0c81e}</UniqueIdentifier>
     </Filter>
@@ -82,17 +76,29 @@
     <Filter Include="Annwvyn\Core\DataTypes">
       <UniqueIdentifier>{3f866286-f886-4410-92d8-dc30cc4850c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OgreRenderingForVR\Vive">
-      <UniqueIdentifier>{817503ff-7928-493f-a8dc-882bc4b068eb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Annwvyn\SubSystems\GameObject">
       <UniqueIdentifier>{15b3cdd4-9e22-4ca2-b7af-644817628363}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OgreRenderingForVR\NoVR">
-      <UniqueIdentifier>{7303763a-539a-49b3-aa98-47e541c7797b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Annwvyn\SubSystems\UserDefined">
       <UniqueIdentifier>{bcf07207-ac3d-49db-93d0-2ff867869628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\VrUtility">
+      <UniqueIdentifier>{70b22f84-67b3-4bdb-b3dd-ac00327ffc2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\VrUtility\OgreRenderingForVR">
+      <UniqueIdentifier>{80903f3b-ac93-417b-881a-c6fe14583547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\VrUtility\OgreRenderingForVR\Oculus">
+      <UniqueIdentifier>{d83246f2-30b0-4dc4-96c9-644b2e03f8a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\VrUtility\OgreRenderingForVR\Vive">
+      <UniqueIdentifier>{817503ff-7928-493f-a8dc-882bc4b068eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\VrUtility\OgreRenderingForVR\NoVR">
+      <UniqueIdentifier>{7303763a-539a-49b3-aa98-47e541c7797b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Annwvyn\VrUtility\HandController">
+      <UniqueIdentifier>{85fcb2e7-8e5d-4c8d-967f-74ab74619a14}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -175,13 +181,13 @@
       <Filter>Annwvyn\SubSystems\Scenery</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\OculusInterface.hpp">
-      <Filter>OgreRenderingForVR\Oculus</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR\Oculus</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\OgreOculusRender.hpp">
-      <Filter>OgreRenderingForVR\Oculus</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR\Oculus</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\OgreVRRender.hpp">
-      <Filter>OgreRenderingForVR</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
@@ -205,15 +211,13 @@
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\OgreOpenVRRender.hpp">
-      <Filter>OgreRenderingForVR\Vive</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR\Vive</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnGameObjectManager.hpp">
       <Filter>Annwvyn\SubSystems\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\AnnHandController.hpp">
-    </ClInclude>
     <ClInclude Include="..\..\include\OgreNoVRRender.hpp">
-      <Filter>OgreRenderingForVR\NoVR</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR\NoVR</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\AnnAngle.hpp">
       <Filter>Annwvyn\MathObjects</Filter>
@@ -226,6 +230,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\AnnUserSpaceSubSystem.hpp">
       <Filter>Annwvyn\SubSystems\UserDefined</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnHandController.hpp">
+      <Filter>Annwvyn\VrUtility\HandController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,13 +306,13 @@
       <Filter>Annwvyn\SubSystems\Scenery</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OculusInterface.cpp">
-      <Filter>OgreRenderingForVR\Oculus</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR\Oculus</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OgreOculusRender.cpp">
-      <Filter>OgreRenderingForVR\Oculus</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR\Oculus</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OgreVRRender.cpp">
-      <Filter>OgreRenderingForVR</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnLevel.cpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
@@ -320,13 +327,13 @@
       <Filter>Annwvyn\Core\DataTypes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OgreOpenVRRender.cpp">
-      <Filter>OgreRenderingForVR\Vive</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR\Vive</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnGameObjectManager.cpp">
       <Filter>Annwvyn\SubSystems\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\OgreNoVRRender.cpp">
-      <Filter>OgreRenderingForVR\NoVR</Filter>
+      <Filter>Annwvyn\VrUtility\OgreRenderingForVR\NoVR</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnAngle.cpp">
       <Filter>Annwvyn\MathObjects</Filter>
