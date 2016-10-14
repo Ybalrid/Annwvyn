@@ -370,7 +370,7 @@ void AnnEngine::toogleOnScreenConsole()
 
 bool AnnEngine::appVisibleInHMD()
 {
-	if (renderer->isVisibleInHmd() == true) // why "== true" ? Because at some point it was returning an ovrBool, witch is the boolean type of the oculus SDK that doesn't cast correctly to a C++ bool. YES. I DON'T KNOW HOW THEY MANAGED TO FFFF TAHT UP.
+	if (renderer->isVisibleInHmd()) 
 		return true;
 	return false;
 }

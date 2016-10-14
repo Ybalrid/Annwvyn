@@ -71,7 +71,7 @@ public:
 	///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
 	void updateTracking();
 
-	///Render each texture buffer, copy contne to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
+	///Render each texture buffer, copy content to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
 	void renderAndSubmitFrame();
 
 	///Start Oculus and Ogre libraries.
@@ -80,13 +80,13 @@ public:
 	///Create the RenderWindow
 	void createWindow();
 
-	///Initialize the SceneManager for the aplication.
+	///Initialize the SceneManager for the application.
 	void initScene();
 
-	///Initialise the camera for Stereo Render
+	///Initialize the camera for Stereo Render
 	void initCameras();
 
-	///Initialise the RTT Rendering System. Create two textures, two viewports and bind cameras on them.
+	///Initialize the RTT Rendering System. Create two textures, two viewports and bind cameras on them.
 	void initRttRendering();
 
 	///Init the Rift rendering. Configure Oculus SDK to use the two RTT textures created.
@@ -132,13 +132,13 @@ public:
 	void showDebug(DebugMode mode);
 
 private:
-	///Pointer to the renderer itself, recasted as this class, not the parent
+	///Pointer to the renderer itself, re-casted as this class, not the parent
 	static OgreOculusRender* OculusSelf;
 
 	///Set the Fov for the monoscopic view
 	void setMonoFov(float degreeFov);
 
-	///Save content of the RenderTexture to the specified file. This very slow operation is only useful for debuging the renderer itself
+	///Save content of the RenderTexture to the specified file. This very slow operation is only useful for debugging the renderer itself
 	void debugSaveToFile(const char path[]);
 
 	///Object for getting informations from the Oculus Rift
@@ -153,7 +153,7 @@ private:
 	///Nodes for the debug scene
 	Ogre::SceneNode* debugCamNode, *debugPlaneNode;
 
-	///Vewports on textures. Textures are separated. One vieport for each textures
+	///Viewports on textures. Textures are separated. One viewport for each textures
 	Ogre::Viewport* vpts[2], *debugViewport;
 
 	///Timing in seconds
@@ -198,10 +198,10 @@ private:
 	///Position of the headset
 	ovrVector3f oculusPos;
 
-	///Pointer to the layer to be submited
+	///Pointer to the layer to be submitted
 	ovrLayerHeader* layers;
 
-	///Staus of the current session
+	///Status of the current session
 	ovrSessionStatus sessionStatus;
 
 	///State of the performance HUD

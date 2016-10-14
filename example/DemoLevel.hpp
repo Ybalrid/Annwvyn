@@ -23,7 +23,7 @@ public:
 
 	void load()
 	{
-		//Register ourselve as event listener
+		//Register ourselves as event listener
 		AnnGetEventManager()->addListener(getSharedListener());
 
 		//Add static geometry

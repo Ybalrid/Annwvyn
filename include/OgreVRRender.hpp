@@ -11,13 +11,13 @@
 
 #define MAX_CONTROLLER_NUMBER 2
 
-///A pose refer to the combinaison of a position and an orientation. It permit to define the placement of an object with 6DOF
+///A pose refer to the combination of a position and an orientation. It permit to define the placement of an object with 6DOF
 struct OgrePose
 {
 	///A 3D vector representing a position
 	Ogre::Vector3 position;
 
-	///A quaternion representiong an orientation
+	///A quaternion representing an orientation
 	Ogre::Quaternion orientation;
 };
 
@@ -58,10 +58,10 @@ public:
 	///Get frame update time from the VR renderer
 	double getUpdateTime();
 
-	///Configure the Ogre root engine. Will load all the ogre Plugins and componants we need.
+	///Configure the Ogre root engine. Will load all the ogre Plug-ins and components we need.
 	void getOgreConfig();
 
-	///Init Ogre, please provie the name of the output log file
+	///Init Ogre, please provide the name of the output log file
 	void initOgreRoot(std::string loggerName);
 
 	///Init the VR rendering pipeline
@@ -76,7 +76,7 @@ public:
 	///Create the scene(s) manager(s) needed for the rendering
 	virtual void initScene() = 0;
 
-	///Create the pair of cameras for the streo render;
+	///Create the pair of cameras for the stereo render;
 	virtual void initCameras() = 0;
 
 	///Initialize the Render To Texture rendering

@@ -53,7 +53,7 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	//Destroy the main scene manager
 	root->destroySceneManager(smgr);
 
-	//Unload manually loaded plugins
+	//Unload manually loaded plug-ins
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 
 	//Destroy the root. Everything Ogre related that is remaining should be cleaned up by the root's destructor
@@ -93,14 +93,14 @@ void OgreOpenVRRender::initVrHmd()
 		{
 			default:
 				displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
-										 L"Undescribed error when initalizing the OpenVR Render object");
+										 L"Non described error when initializing the OpenVR Render object");
 				exit(ANN_ERR_NOTINIT);
 
 			case vr::VRInitError_Init_HmdNotFound:
 			case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
 				displayWin32ErrorMessage(L"Error: cannot find HMD",
 										 L"OpenVR cannot find HMD.\n"
-										 L"Please install SteamVR and launchj it, and verrify HMD USB and HDMI connection");
+										 L"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
 				exit(ANN_ERR_CANTHMD);
 		}
 
@@ -206,7 +206,7 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	//Make Windows happy by pumping clearing it's event queue
 	Ogre::WindowEventUtilities::messagePump();
 
-	//Mark the fact that the frame rendering will hapen to Ogre (unlock the animation state updates for example)
+	//Mark the fact that the frame rendering will happen to Ogre (unlock the animation state updates for example)
 	root->_fireFrameRenderingQueued();
 
 	//Update each viewports
@@ -225,14 +225,14 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 
 void OgreOpenVRRender::recenter()
 {
-	//This should do. But the effecto of that commend doesn't look to affect a "seated" pose if you're actually standing
+	//This should do. But the effect of that commend doesn't look to affect a "seated" pose if you're actually standing
 	if (vrSystem) vrSystem->ResetSeatedZeroPose();
 }
 
 void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	backgroundColor = color;
-	//Eye camera virwports
+	//Eye camera viewports
 	for (char i(0); i < 2; i++) if (rttViewports[i])
 		rttViewports[i]->setBackgroundColour(backgroundColor);
 
@@ -252,7 +252,7 @@ void OgreOpenVRRender::createWindow()
 
 	//Basic window configuration
 	Ogre::NameValuePairList misc;
-	misc["vsync"] = "false"; //This vsync parameter has no scence in VR. The display is done by the Compositor
+	misc["vsync"] = "false"; //This vsync parameter has no scene in VR. The display is done by the Compositor
 	misc["top"] = "0";
 	misc["left"] = "0";
 
@@ -307,14 +307,14 @@ void OgreOpenVRRender::initCameras()
 
 void OgreOpenVRRender::initRttRendering()
 {
-	//Get the render texture size recomended by the OpenVR API for the current Driver/Display
+	//Get the render texture size recommended by the OpenVR API for the current Driver/Display
 	unsigned int w, h;
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
-	Annwvyn::AnnDebug() << "Recomended Render Target Size : " << w << "x" << h;
+	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create theses textures in OpenGL and get their OpenGL ID
 	//
-	//When the parent class *OgreVRRender* intialize Ogre, the OpenGL RenderSystem is loaded in hard.
+	//When the parent class *OgreVRRender* initialize Ogre, the OpenGL RenderSystem is loaded in hard.
 	//We don't need to check that we're using OpenGL before doing this kind of cast:
 	Ogre::GLTextureManager* textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
 
@@ -383,7 +383,7 @@ inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
 
 inline Ogre::Quaternion OgreOpenVRRender::getTrackedHMDOrieation()
 {
-	//Orientation/scale as quaternion (the matrix transfrom has no scale component.
+	//Orientation/scale as quaternion (the matrix transform has no scale component.
 	return hmdAbsoluteTransform.extractQuaternion();
 }
 
@@ -456,9 +456,9 @@ void OgreOpenVRRender::processTrackedDevices()
 				break;
 		}
 
-		// TOTO: get the buttons (stick, touchpad, whatever) states of this controller
+		// TOTO: get the buttons (stick, touch-pad, whatever) states of this controller
 
-		//Dinamically allocate the controller if the controller doesn't exist yet
+		//Dynamically allocate the controller if the controller doesn't exist yet
 		if (!handControllers[controllerID])
 		{
 			handControllers[controllerID] = std::make_shared<Annwvyn::AnnHandController>

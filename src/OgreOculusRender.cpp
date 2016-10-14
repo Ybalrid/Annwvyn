@@ -399,7 +399,7 @@ void OgreOculusRender::initClientHmdRendering()
 	ovrRecti leftRect, rightRect;
 	leftRect.Size = bufferSize;			//same size than the buffer
 	leftRect.Size.w /= 2;				//but half the width
-	rightRect = leftRect;				//The two rect are of the same size, but not at the same position
+	rightRect = leftRect;				//The two rects are of the same size, but not at the same position
 	ovrVector2i leftPos, rightPos;
 	leftPos.x = 0;						//The left one start at the bottom left corner
 	leftPos.y = 0;
