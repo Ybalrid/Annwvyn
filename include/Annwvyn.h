@@ -66,6 +66,7 @@
 #include <list>
 #include <unordered_map>
 #include <cstring>
+
 //Annwvyn classes
 #include "AnnEngine.hpp"
 #include "AnnGameObjectManager.hpp"
@@ -171,7 +172,3 @@ int AnnwvynStart()
 //=======================================================================//
 
 #endif //ANNWVYN
-
-#ifndef ANN_NAMESPACE
-#define ANN_NAMESPACE
-#endif
