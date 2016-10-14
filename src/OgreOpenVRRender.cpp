@@ -25,19 +25,15 @@ shouldQuitState(false)
 
 	//I like to initialize everything to zero
 	rttTexture.setNull();
-
 	rttTextureGLID = NULL;
 
-	rttViewports[left] = nullptr;
-	rttViewports[right] = nullptr;
-
-	vrTextures[left] = {};
-	vrTextures[right] = {};
-	GLBounds[left] = {};
-	GLBounds[right] = {};
-
-	handControllers[left] = nullptr;
-	handControllers[right] = nullptr;
+	for (auto side : { left, right })
+	{
+		rttViewports[side] = nullptr;
+		handControllers[side] = nullptr;
+		vrTextures[side] = {};
+		GLBounds[side] = {};
+	}
 }
 
 OgreOpenVRRender::~OgreOpenVRRender()
@@ -146,7 +142,6 @@ void OgreOpenVRRender::initClientHmdRendering()
 	GLBounds[right].uMax = 1;
 	GLBounds[right].vMin = 1;
 	GLBounds[right].vMax = 0;
-
 }
 
 bool OgreOpenVRRender::shouldQuit()
@@ -324,9 +319,8 @@ void OgreOpenVRRender::initRttRendering()
 
 	//shared texture
 	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-													Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
+											  Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
 	rttTextureGLID = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX").getPointer())->getGLID();
-
 
 	//Create viewport for each cameras in each render texture
 	rttViewports[left] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
@@ -337,10 +331,6 @@ void OgreOpenVRRender::initRttRendering()
 
 	//Make sure the default viewport background color is set for everything
 	changeViewportBackgroundColor(backgroundColor);
-}
-
-void OgreOpenVRRender::getProjectionMatrix()
-{
 }
 
 void OgreOpenVRRender::updateProjectionMatrix()
@@ -460,9 +450,6 @@ void OgreOpenVRRender::processTrackedDevices()
 
 		if (controllerIndex > MAX_CONTROLLER_NUMBER) break;
 
-
-
-
 		// TOTO: get the buttons (stick, touch-pad, whatever) states of this controller
 
 		//Dynamically allocate the controller if the controller doesn't exist yet
@@ -493,9 +480,9 @@ inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::H
 {
 	return Ogre::Matrix4
 	{
-		mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[0][3],
-		mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[1][3],
-		mat.m[2][0], mat.m[2][1], mat.m[2][2], mat.m[2][3],
-		0.0f,		 0.0f,		  0.0f,		   1.0f
+		mat.m[0][0],	mat.m[0][1],	mat.m[0][2],	mat.m[0][3],
+		mat.m[1][0],	mat.m[1][1],	mat.m[1][2],	mat.m[1][3],
+		mat.m[2][0],	mat.m[2][1],	mat.m[2][2],	mat.m[2][3],
+		0.0f,			0.0f,			0.0f,			1.0f
 	};
 }

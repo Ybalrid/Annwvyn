@@ -89,8 +89,6 @@ public:
 	///Create the render targets
 	virtual void initRttRendering();
 
-	///Get the correct projection matrix for the cameras and set each camera to use it
-	DEPRECATED void getProjectionMatrix();
 
 	///Get the projection matrix from the OpenVR API and apply it to the cameras using the near/far clip planes distances
 	void updateProjectionMatrix();
@@ -140,7 +138,7 @@ private:
 	GLuint rttTextureGLID;
 
 	///EyeCameraViewport
-	Ogre::Viewport* rttViewports[2];
+	std::array<Ogre::Viewport*, 2> rttViewports;
 
 	///Use hardware gamma correction
 	bool gamma;
@@ -149,7 +147,7 @@ private:
 	vr::GraphicsAPIConvention API;
 
 	///OpenVR texture handlers
-	vr::Texture_t vrTextures[2];
+	std::array<vr::Texture_t, 2> vrTextures;
 
 	///Monoscopic camera
 	Ogre::Camera* monoCam;
@@ -161,7 +159,7 @@ private:
 	std::string strDriver, strDisplay;
 
 	///Geometry of an OpenGL texture
-	vr::VRTextureBounds_t GLBounds[2];
+	std::array<vr::VRTextureBounds_t, 2> GLBounds;
 
 	///Timing marker
 	double then, now;

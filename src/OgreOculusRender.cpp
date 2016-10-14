@@ -503,7 +503,7 @@ void OgreOculusRender::updateTracking()
 
 	//Get the tracking state
 	ts = ovr_GetTrackingState(Oculus->getSession(),
-							  currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), frameCounter++),
+							  currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter),
 							  ovrTrue);
 
 						  //Calculate delta between last and this frame
@@ -511,7 +511,7 @@ void OgreOculusRender::updateTracking()
 
 	//Get the pose
 	pose = ts.HeadPose.ThePose;
-	ovr_CalcEyePoses(pose, offset, layer.RenderPose);
+	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
 
 	//Get the hmd orientation
 	oculusOrient = pose.Orientation;
@@ -579,10 +579,10 @@ void OgreOculusRender::renderAndSubmitFrame()
 		//Put the mirrored view available for Ogre if asked for
 		if (mirrorHMDView)
 			glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-							   ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-							   hmdSize.w, hmdSize.h, 1);
+								ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
+								hmdSize.w, hmdSize.h, 1);
 
-						   //Update the window
+		//Update the window
 		debugViewport->update();
 		window->update();
 	}
