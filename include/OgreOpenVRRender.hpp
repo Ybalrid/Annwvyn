@@ -127,7 +127,7 @@ private:
 	///main OpenVR object
 	vr::IVRSystem* vrSystem;
 
-	///Error handeling vaiable
+	///Error handling vaiable
 	vr::HmdError hmdError;
 
 	///window size

@@ -29,7 +29,7 @@
 
 namespace BtOgre {
 //A MotionState is Bullet's way of informing you about updates to an object.
-//Pass this MotionState to a btRigidBody to have your SceneNode updated automaticaly.
+//Pass this MotionState to a btRigidBody to have your SceneNode updated automatically.
 	class DLL RigidBodyState : public btMotionState
 	{
 	protected:

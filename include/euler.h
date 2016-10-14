@@ -197,8 +197,8 @@ namespace Ogre
 		inline Ogre::Vector3 getUp() { return toQuaternion() * Ogre::Vector3::UNIT_Y; }
 
 		/**
-		\brief Calculate the quaternion of the euler object.
-		\details The result is cached, it is only recalculated when the component euler angles are changed.
+		\brief Calculate the quaternion of the Euler object.
+		\details The result is cached, it is only recalculated when the component Euler angles are changed.
 		*/
 		inline Ogre::Quaternion toQuaternion()
 		{
@@ -217,7 +217,7 @@ namespace Ogre
 		}
 
 		/**
-		\brief Calculate the current eulers of a given quaternion object.
+		\brief Calculate the current Euler of a given quaternion object.
 		\param quaternion Quaternion which is used to calculate current euler angles
 		*/
 		inline void fromQuaternion(Ogre::Quaternion quaternion)
@@ -481,7 +481,7 @@ namespace Ogre
 		Ogre::Radian mYaw;					//!< Rotation around the Y axis.
 		Ogre::Radian mPitch;				//!< Rotation around the X axis.
 		Ogre::Radian mRoll;					//!< Rotation around the Z axis.
-		Ogre::Quaternion mCachedQuaternion;	//!< Cached quaternion equivalent of this euler object.
+		Ogre::Quaternion mCachedQuaternion;	//!< Cached quaternion equivalent of this Euler object.
 		bool mChanged;						//!< Is the cached quaternion out of date?
 	};
 }

@@ -20,7 +20,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 {
 	if (self)
 	{
-		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialisation. OgreOculusRender object allready created.");
+		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialisation. OgreOculusRender object already created.");
 		exit(ANN_ERR_RENDER);
 	}
 	self = this;

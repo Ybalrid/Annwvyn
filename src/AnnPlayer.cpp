@@ -7,7 +7,7 @@ using namespace Annwvyn;
 
 bodyParams::bodyParams()
 {
-	//these parameters looks good for testing. Costumise them before initializing the physics!
+	//these parameters looks good for testing. Customize them before initializing the physics!
 	eyeHeight = 1.59f;
 	walkSpeed = 3;
 	turnSpeed = 0.15f;
@@ -224,7 +224,7 @@ void AnnPlayer::resetPlayerPhysics()
 	if (!hasPhysics()) return;
 	AnnDebug("Reset player's physics");
 
-	//Remove the player's rigidbody from the world
+	//Remove the player's rigid-body from the world
 	AnnGetPhysicsEngine()->getWorld()->removeRigidBody(getBody());
 
 	//We don't need that body anymore...

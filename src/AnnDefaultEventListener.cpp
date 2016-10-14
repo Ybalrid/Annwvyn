@@ -42,14 +42,14 @@ void AnnDefaultEventListener::setKeys(KeyCode::code fw,
 	run = rn;
 }
 
-//Each key press an release are a separated event. in contain a state "pressed" or "relased" and the Annwvyn keycode corespondng to the key.
-//They are derivated from the OIS keycode list, see AnnKeyCode.h for the complete list.
-//All keys are regarded as their equivalent on the american QWERTY layout, independently of the operating system behaviour.
+//Each key press an release are a separated event. in contain a state "pressed" or "released" and the Annwvyn keycode corresponding to the key.
+//They are derivate from the OIS keycode list, see AnnKeyCode.h for the complete list.
+//All keys are regarded as their equivalent on the American QWERTY layout, independently of the operating system behavior.
 //For compatibility purposes, it's possible that the engine has done a system call to set the current keyboard layout to the American QWERTY layout.
 //It will normally switch the keyboard back to it's original configuration once the AnnEngine object is destroyed
 void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 {
-	//If the coresponding key is pressed, set the direction to true.
+	//If the corresponding key is pressed, set the direction to true.
 	if (e.getKey() == forward)
 		player->walking[walkDirection::forward] = e.isPressed();
 	if (e.getKey() == backward)
@@ -87,10 +87,10 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	}
 }
 
-//The mouse event contain all information about the mouse. Mouse mouvement are integer and are represented by 3 axis
-// X : horizontal mouvement to the right in pixels
-// Y : Vertical mouvement, to the front in pixels
-// Z : Scroll whell mouvement, scroll up is positive, in "line" increments
+//The mouse event contain all information about the mouse. Mouse movement are integer and are represented by 3 axis
+// X : horizontal movement to the right in pixels
+// Y : Vertical movement, to the front in pixels
+// Z : Scroll wheel movement, scroll up is positive, in "line" increments
 void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 {
 	player->applyMouseRelativeRotation(e.getAxis(MouseAxisId(X)).getRelValue());

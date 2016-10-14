@@ -56,7 +56,7 @@ namespace Annwvyn
 
 	class AnnSaveFileData;
 
-	///Manage where and how files will be wrote and read from the OS filesystem
+	///Manage where and how files will be wrote and read from the OS file-system
 	class DLL AnnFilesystemManager : public AnnSubSystem
 	{
 	public:
@@ -79,7 +79,7 @@ namespace Annwvyn
 		///Create en empty SaveFileData Object for a specific file
 		std::shared_ptr<AnnSaveFileData> crateSaveFileDataObject(string filename);
 
-		///Get an allready existing SaveFileData object for this filename
+		///Get an already existing SaveFileData object for this filename
 		std::shared_ptr<AnnSaveFileData> getCachedSaveFileDataObject(string filename);
 		///Destroy this SaveFileData Object. Will loose cached data if this file didn't go through the FileWriter
 		DEPRECATED void destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
@@ -116,7 +116,7 @@ namespace Annwvyn
 
 		///Set the value for this key (string)
 		void setValue(std::string key, std::string value);
-		///Set the value for this key (C syle const string)
+		///Set the value for this key (C style const string)
 		void setValue(std::string, const char* value);
 		///Set the value for this key (integer)
 		void setValue(std::string key, int value);
@@ -148,7 +148,7 @@ namespace Annwvyn
 		bool changed;
 	};
 
-	///Interface class to switch from text to usefull data.
+	///Interface class to switch from text to useful data.
 	class DLL AnnSaveDataInterpretor
 	{
 	//Inherit from this to use your saved data
@@ -161,13 +161,13 @@ namespace Annwvyn
 		float stringToFloat(std::string text);
 		///Get a int from this string
 		int stringToInt(std::string text);
-		///Extract a float from the dataobject stored at the given key
+		///Extract a float from the data-object stored at the given key
 		float keyStringToFloat(std::string key);
-		///Extract a int from the dataobject stored at the given key
+		///Extract a int from the data-object stored at the given key
 		int keyStringToInt(std::string key);
-		///Extract a Vector3 from the dataobject stored at the given key
+		///Extract a Vector3 from the data-object stored at the given key
 		AnnVect3 keyStringToVect3(std::string key);
-		///Extract a quaternion from the dataobject stored at the given key
+		///Extract a quaternion from the data-object stored at the given key
 		AnnQuaternion keyStringToQuaternion(std::string key);
 
 		///Overload this method with

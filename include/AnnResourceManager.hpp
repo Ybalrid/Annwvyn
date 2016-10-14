@@ -16,7 +16,7 @@ namespace Annwvyn
 		/// \param path The path to a zip file.
 		/// \param resourceGroupName name of the resource group where the content will be added
 		void addZipLocation(const std::string& path, const std::string& resourceGroupName = defaultResourceGroupName);
-		///Give a directory resouce location to the Ogre Resource Group Manager
+		///Give a directory resource location to the Ogre Resource Group Manager
 		/// \param path The path to the directory
 		/// \param resourceGroupName name of the resource group
 		void addFileLocation(const std::string& path, const std::string& resourceGroupName = defaultResourceGroupName);
@@ -39,7 +39,7 @@ namespace Annwvyn
 		///Name of the default resource group
 		static constexpr const char* const defaultResourceGroupName = "Annwvyn_UserDefined_Group";
 
-		///name of the resrource group used to store CORE resources
+		///name of the resource group used to store CORE resources
 		static constexpr const char* const reservedResourceGroupName = "ANNWVYN_CORE";
 
 	public:

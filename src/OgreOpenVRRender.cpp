@@ -154,12 +154,12 @@ bool OgreOpenVRRender::shouldQuit()
 
 bool OgreOpenVRRender::shouldRecenter()
 {
-	return false; //Only usefull with the Oculus runtime
+	return false; //Only useful with the Oculus runtime
 }
 
 bool OgreOpenVRRender::isVisibleInHmd()
 {
-	return true; //Only usefull with the oculus runtime
+	return true; //Only useful with the oculus runtime
 }
 
 void OgreOpenVRRender::updateTracking()
@@ -383,7 +383,7 @@ inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
 
 inline Ogre::Quaternion OgreOpenVRRender::getTrackedHMDOrieation()
 {
-	//Orientation/scale as quaternion (the matrix transfrom has no scale componant.
+	//Orientation/scale as quaternion (the matrix transfrom has no scale component.
 	return hmdAbsoluteTransform.extractQuaternion();
 }
 
@@ -476,7 +476,7 @@ void OgreOpenVRRender::processTrackedDevices()
 
 void OgreOpenVRRender::handleIPDChange()
 {
-	//Get teh eyeToHeadTransform (they contain the IPD translation)
+	//Get the eyeToHeadTransform (they contain the IPD translation)
 	for (char i(0); i < 2; i++)
 		eyeCameras[i]->setPosition(getMatrix4FromSteamVRMatrix34(
 			vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i)))).getTrans());

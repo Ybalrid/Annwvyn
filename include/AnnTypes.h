@@ -25,7 +25,7 @@ namespace Annwvyn
 	class AnnGameObject;
 	class AnnTriggerObject;
 
-	///Harmonise names :
+	///Harmonize names :
 	typedef Ogre::Vector2 AnnVect2;
 	typedef Ogre::Matrix3 AnnMatrix3;
 	typedef Ogre::Matrix4 AnnMatrix4;

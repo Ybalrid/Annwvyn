@@ -1,6 +1,6 @@
 /**
  * \file AnnColor.hpp
- * \brief Represent an RGBA color. Each chanel is stored as a float between 0 and 1
+ * \brief Represent an RGBA color. Each channel is stored as a float between 0 and 1
  * \author A. Brainville (Ybalrid)
  */
 
@@ -21,7 +21,7 @@ namespace Annwvyn
 		AnnColor(float red, float green, float blue, float alpha = 1.0f);
 		///Create a color object from a Ogre::ColourValue
 		AnnColor(const Ogre::ColourValue color);
-		///Create a color object form a referece to another color object
+		///Create a color object form a reference to another color object
 		AnnColor(const AnnColor& color);
 
 		///Return a Ogre::ColourValue from the internal color value

@@ -53,7 +53,7 @@ namespace Annwvyn
 		///Node where the splash screen is attached
 		Ogre::SceneNode* Splash;
 
-		///Name of the image of the splashscreen
+		///Name of the image of the splash-screen
 		Ogre::String splashImage;
 
 		///True if music is set

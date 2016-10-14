@@ -368,7 +368,7 @@ namespace BtOgre {
 		btScalar height = std::max(sz.x, std::max(sz.y, sz.z));
 		btScalar radius;
 		btCapsuleShape* shape;
-		// Orient the capsule such that its axiz is aligned with the largest dimension.
+		// Orient the capsule such that its axis is aligned with the largest dimension.
 		if (height == sz.y)
 		{
 			radius = std::max(sz.x, sz.z);

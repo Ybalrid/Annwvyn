@@ -24,7 +24,7 @@ AnnGameObject::AnnGameObject() :
 AnnGameObject::~AnnGameObject()
 {
 	AnnDebug() << "Destructing game object !";
-	//Clean OpenAL desaloc
+	//Clean OpenAL de-aloc
 	if (AnnGetAudioEngine())
 		AnnGetAudioEngine()->removeSource(audioSource);
 	AnnDebug() << "Tidy my physics !";
@@ -308,7 +308,7 @@ void AnnGameObject::resetCollisionMask()
 
 void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 {
-	if (Object == this) return; //Explain me how I can colide with myself o.O
+	if (Object == this) return; //Explain me how I can collide with myself o.O
 
 	struct collisionTest* tester = new collisionTest;
 

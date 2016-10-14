@@ -28,7 +28,7 @@
 namespace Annwvyn
 {
 	class AnnEngine;
-	class AnnEventManager; //predeclaration of the event manager for class friendness directives
+	class AnnEventManager; //pre-declaration of the event manager for class friendliness directives
 	enum AnnEventType
 	{
 		NO_TYPE,
@@ -53,7 +53,7 @@ namespace Annwvyn
 		friend class AnnEventManager;
 		///Class called by the event manager to tell that the event is valid (correctly constructed)
 		void validate();
-		///Method being called by the event manager to signifiy that the event object has been populated with data
+		///Method being called by the event manager to signify that the event object has been populated with data
 		void populate();
 	};
 
@@ -69,7 +69,7 @@ namespace Annwvyn
 		///Return true if it's a key press. Key event are debounced.
 		bool isPressed();
 
-		///Return ture if it's a key release. Key event are debounced.
+		///Return true if it's a key release. Key event are debounced.
 		bool isReleased();
 
 	private:
@@ -80,7 +80,7 @@ namespace Annwvyn
 		bool pressed;
 		///Released state
 		bool released;
-		///Set the event as a key relase event
+		///Set the event as a key release event
 		void setPressed();
 		///Set the event as a key press event
 		void setReleased();
@@ -95,11 +95,11 @@ namespace Annwvyn
 	///Name and number of mouse button
 	enum MouseButtonId { Left, Right, Middle, Button3, Button4, Button5, Button6, Button7, nbButtons, invalidButton };
 
-	///A mouse axis infomation object
+	///A mouse axis information object
 	class DLL AnnMouseAxis
 	{
 	public:
-		///Construct a mouse axis infomation object
+		///Construct a mouse axis information object
 		AnnMouseAxis();
 		///Return the id of the axis that object represent
 		MouseAxisId getMouseAxisId();
@@ -109,15 +109,15 @@ namespace Annwvyn
 		int getAbsValue();
 
 	private:
-		///Give access to private feilds to the EventManager
+		///Give access to private fields to the EventManager
 		friend class AnnEventManager;
-		///Give acces to  private feilds to the MouseEvent class
+		///Give access to  private fields to the MouseEvent class
 		friend class AnnMouseEvent;
 		///ID of the axis
 		MouseAxisId id;
 		///Relative value
 		int rel;
-		///Absolute value (if aplicable)
+		///Absolute value (if applicable)
 		int abs;
 
 		///Set the id of the axis
@@ -130,13 +130,13 @@ namespace Annwvyn
 		AnnMouseAxis(MouseAxisId ax, int rel, int abs);
 	};
 
-	///A mouse event informaiton objecct
+	///A mouse event information object
 	class DLL AnnMouseEvent : public AnnEvent
 	{
 	public:
 		AnnMouseEvent();
-		///Returns true if given butoon is pressed
-		/// \parm id Id of the button
+		///Returns true if given button is pressed
+		/// \param id Id of the button
 		bool getButtonState(MouseButtonId id);
 
 		///Get given axis data
@@ -151,10 +151,10 @@ namespace Annwvyn
 
 		///Set the status of a button
 		/// \param id Id of a specific button
-		/// \param value Current pressed/relased state of that button
+		/// \param value Current pressed/released state of that button
 		void setButtonStatus(MouseButtonId id, bool value);
 
-		///Set the infomatio about an axis
+		///Set the information about an axis
 		/// \param id Id of a specific axis
 		/// \param information The information object of the given axis
 		void setAxisInformation(MouseAxisId id, AnnMouseAxis information);
@@ -189,7 +189,7 @@ namespace Annwvyn
 		void setAxis(StickAxisId ax);
 		///Set a relative value
 		void setRelValue(int rel);
-		///Set an aboslute value
+		///Set an absolute value
 		void setAbsValue(int abs);
 		///Real constructor
 		AnnStickAxis(StickAxisId ax, int rel, int abs);
@@ -237,7 +237,7 @@ namespace Annwvyn
 		friend class AnnEventManager;
 		friend class AnnStickEvent;
 
-		///Private contructor used by the event manager. Need a direction integer from OIS
+		///Private constructor used by the event manager. Need a direction integer from OIS
 		AnnStickPov(unsigned int binaryDirection);
 	};
 
@@ -259,7 +259,7 @@ namespace Annwvyn
 
 		///Return true if this button just have been pressed
 		bool isPressed(ButtonId id);
-		///Return true if this buttton just have been released
+		///Return true if this button just have been released
 		bool isReleased(ButtonId id);
 		///Return true if this button is currently pressed
 		bool isDown(ButtonId id);
@@ -275,7 +275,7 @@ namespace Annwvyn
 		size_t getNbPov();
 		AnnStickPov getPov(PovId pov);
 
-		///Retrun true if this event is from an Xbox controller
+		///Return true if this event is from an Xbox controller
 		bool isXboxController();
 
 	private:
@@ -296,7 +296,7 @@ namespace Annwvyn
 	class DLL AnnTimeEvent : public AnnEvent
 	{
 	public:
-		///Create a timer timout event
+		///Create a timer timeout event
 		AnnTimeEvent();
 		///Get the ID of this timer
 		timerID getID();
@@ -327,8 +327,8 @@ namespace Annwvyn
 	///Base class for all event listener
 	class DLL AnnEventListener : public std::enable_shared_from_this<AnnEventListener>
 	{
-		//Base Event listener class. Technicaly not abstract since it provides a default implementation for all
-		//virtual members. But theses definitions are pointless because they acutally don't do anything.
+		//Base Event listener class. Technically not abstract since it provides a default implementation for all
+		//virtual members. But theses definitions are pointless because they actually don't do anything.
 		//You need to subclass it to create an EventListener
 
 	public:
@@ -344,9 +344,9 @@ namespace Annwvyn
 		virtual void TimeEvent(AnnTimeEvent e) { return; }
 		///Event from a trigger
 		virtual void TriggerEvent(AnnTriggerEvent e) { return; }
-		///This method is called at each frame. Usefull for updating player's movement command for example
+		///This method is called at each frame. Useful for updating player's movement command for example
 		virtual void tick() { return; }
-		///Utility function for applying a deadzone on a joystick axis
+		///Utility function for applying a dead-zone on a joystick axis
 		static float trim(float value, float deadzone);
 		///return a shared_ptr to this listener
 		std::shared_ptr<AnnEventListener> getSharedListener();
@@ -358,7 +358,7 @@ namespace Annwvyn
 	///Default event listener
 	class DLL AnnDefaultEventListener : public AnnEventListener
 	{
-		//The default event listener that make WASD controlls move the player
+		//The default event listener that make WASD controls move the player
 		//The mouse turns the player's body
 		//Shift to "run"
 		//F1 and F2 to switch between Debug Mode
@@ -376,7 +376,7 @@ namespace Annwvyn
 		///GEt events from the joystick
 		void StickEvent(AnnStickEvent e);
 
-		///Set all the keycodes for the the controlls
+		///Set all the key-codes for the controls
 		void setKeys(KeyCode::code fw,
 					 KeyCode::code bw,
 					 KeyCode::code sl,
@@ -417,7 +417,7 @@ namespace Annwvyn
 		friend class AnnEventManager;
 		///Timer object for the EventMAnager
 		AnnTimer(timerID id, double delay);
-		///If timouted
+		///If timeout
 		bool isTimeout();
 		///Timeout ID
 		timerID tID;
@@ -431,7 +431,7 @@ namespace Annwvyn
 	private:
 		friend class AnnEventManager;
 		///Private constructor for AnnEventManager
-		///Create a Joystick buffer object, incremetns a static counter of IDs
+		///Create a Joystick buffer object, increments a static counter of IDs
 		JoystickBuffer(OIS::JoyStick* joystick) : stick(joystick) { id = idcounter++; }
 
 		///Delete the OIS stick at destruction time
@@ -446,7 +446,7 @@ namespace Annwvyn
 		///Get the ID if this stick
 		unsigned int getID() { return id; }
 
-	private://mebmers
+	private://members
 		///The ID
 		unsigned int id;
 		///The counter
@@ -474,18 +474,18 @@ namespace Annwvyn
 		///Stop recording typed text
 		void stopListening();
 	private:
-		///String that holds typed text. Characters are push/poped at the back of this string
+		///String that holds typed text. Characters are push/popped at the back of this string
 		std::string input;
 		///If set false, this class does nothing.
 		bool listen;
 	};
 
 	//The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by
-	//AnnEngine and provide the hearbeat for the event system.
+	//AnnEngine and provide the heartbeat for the event system.
 	//Events can be user inputs or mostly anything else.
-	//AnnEventManager creates AnnEvent (or subclass of AnnEvent) for each kind of event, populate that object with relevent envent data
+	//AnnEventManager creates AnnEvent (or subclass of AnnEvent) for each kind of event, populate that object with relevant event data
 	//And propagate that event to any declared event listener.
-	//Listeners should subclass AnnEventListener. A listener is registred when a pointer to it is passed as argument to the addListener() method.
+	//Listeners should subclass AnnEventListener. A listener is registered when a pointer to it is passed as argument to the addListener() method.
 	//You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
 
 	///Event Manager : Object that handle the event system
@@ -499,12 +499,12 @@ namespace Annwvyn
 		~AnnEventManager();
 
 		///Set the engine to use the "default" event listener.
-		///This will create an instance of AnnDefaultEventListener (if it doesn't allready exist inside of AnnEngine)
+		///This will create an instance of AnnDefaultEventListener (if it doesn't already exist inside of AnnEngine)
 		///This will also unregister all listeners known by AnnEventListener
-		///The default event listerner implement a simple "FPS-like" controll scheme
+		///The default event listener implement a simple "FPS-like" control scheme
 		/// WASD for walking
-		/// Horizontal view with mouse X relative mouvement
-		/// That event listener is designed as an example of an event listener, and for exploring the environement without having to write a custom event listene
+		/// Horizontal view with mouse X relative movement
+		/// That event listener is designed as an example of an event listener, and for exploring the environment without having to write a custom event listener
 		void useDefaultEventListener();
 
 		std::shared_ptr<AnnEventListener> getDefaultEventListener();
@@ -524,7 +524,7 @@ namespace Annwvyn
 		///Create a timer that will timeout after "delay" seconds
 		timerID fireTimer(double delay);
 
-		///Create a timer that will timeout after "delay" millisconds
+		///Create a timer that will timeout after "delay" milliseconds
 		timerID fireTimerMillisec(double millisecDelay);
 
 		///Get the number of available sticks
@@ -536,7 +536,7 @@ namespace Annwvyn
 	private:
 
 		///List of pointer to the listeners.
-		///The use of weak pointers permit to keep acccess to the listeners without having to own them.
+		///The use of weak pointers permit to keep access to the listeners without having to own them.
 		///This permit to use any classes of the engine (like levels) to be themselves event listener.
 		std::vector<std::weak_ptr<AnnEventListener>> listeners;
 
@@ -574,7 +574,7 @@ namespace Annwvyn
 		///Array for remembering the button states at last update
 		std::array<bool, MouseButtonId::nbButtons> previousMouseButtonStates;
 
-		///Dinamicly sized array for remembering the joystick button state at last update
+		///Dynamically sized array for remembering the joystick button state at last update
 		timerID lastTimerCreated;
 
 		///List of timers

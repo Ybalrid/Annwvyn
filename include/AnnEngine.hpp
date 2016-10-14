@@ -54,7 +54,7 @@
 //Get the deprecated warnings
 #pragma warning(default:4996)
 
-///Easy acces to AnnEnigine instance
+///Easy access to AnnEnigine instance
 #define AnnGetEngine() AnnEngine::Instance()
 ///Get audio
 #define AnnGetAudioEngine() AnnGetEngine()->getAudioEngine()
@@ -83,7 +83,7 @@ namespace Annwvyn
 	class DLL AnnEngine
 	{
 		//It's more or less a singleton, and will be the only one in the engine architecture.
-		//You can intantiate it like a normal class and bypass the idea of a singleton complettely.
+		//You can instantiate it like a normal class and bypass the idea of a singleton completely.
 		//This is the base class of the whole engine, the idea is more or less the one described in the
 		//"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
 
@@ -96,26 +96,26 @@ namespace Annwvyn
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 
-		///Return a string descibing the version of the engine
+		///Return a string describing the version of the engine
 		static std::string getAnnwvynVersion(long long int padding = -1);
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
-		/// \param fs the fullscreen state of the application. set it to false may help when developping with VS debugger on one screen
+		/// \param fs the fullscreen state of the application. set it to false may help when developing with VS debugger on one screen
 		AnnEngine(const char title[], std::string hmdCommand);
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();
 
 		///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
-		/// \param message Message to be loged
+		/// \param message Message to be logged
 		/// \param flag If true : Put the "Annwvyn -" flag before the message
 		static void log(std::string message, bool flag = true); //engine
 
 		///Get the player
 		std::shared_ptr<AnnPlayer> getPlayer();
 
-		///Is key 'key' pressed ? (see OIS headers for KeyCode, generaly 'OIS::KC_X' where X is the key you want.
+		///Is key 'key' pressed ? (see OIS headers for KeyCode, generally 'OIS::KC_X' where X is the key you want.
 		/// key an OIS key code
 		inline bool isKeyDown(OIS::KeyCode key); //event
 
@@ -124,7 +124,7 @@ namespace Annwvyn
 
 		///Open a console and redirect standard output to it.
 		///This is only effective on Windows. There is no other
-		///simple way to acces the standard io on a Win32 application
+		///simple way to access the standard io on a Win32 application
 		static void openConsole();
 
 		///Get ogre scene manager
@@ -135,7 +135,7 @@ namespace Annwvyn
 		///Get the event manager
 		std::shared_ptr<AnnEventManager> getEventManager();
 
-		///Get the filesystem manager
+		///Get the file-system manager
 		std::shared_ptr<AnnFilesystemManager> getFileSystemManager();
 
 		///Return the Annwvyn OpenAL simplified audio engine
@@ -173,16 +173,16 @@ namespace Annwvyn
 		///Set the POV node to the AnnPlayer gameplay defined position/orientation of the player's body
 		inline void syncPov();
 
-		///This start the reder loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
+		///This start the render loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
 
-		///Toogle the display of the in-engine console
+		///Toggle the display of the in-engine console
 		void toogleOnScreenConsole();
 
 		///Return true if the app is visible inside the head mounted display
 		bool appVisibleInHMD();
 
-		///Get elapsed time from engine startup in millisec
+		///Get elapsed time from engine startup in millisecond
 		unsigned long getTimeFromStartUp();//engine
 
 		///Get elapsed time from engine startup in seconds

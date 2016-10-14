@@ -30,10 +30,10 @@ namespace Annwvyn
 		virtual void runLogic();
 
 	private:
-		///Path of the xml file
+		///Path of the XML file
 		std::string xmlFilePath;
 
-		///Resource location allready added to the resource group manager
+		///Resource location already added to the resource group manager
 		bool resourceLocAdded;
 	};
 }

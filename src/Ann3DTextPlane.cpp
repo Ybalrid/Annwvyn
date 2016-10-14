@@ -75,10 +75,10 @@ void WriteToTexture(const std::string &str, Ogre::TexturePtr destTexture, Ogre::
 	spaceBox.right = glypheTexRect.right * fontTexture->getSrcWidth();
 	spacewidth = spaceBox.getWidth();
 
-	//if not monospaced
+	//if not mono-spaced
 	if (spacewidth != charwidth) spacewidth = (size_t)((float)spacewidth*(0.5f));
 
-//	Annwvyn::AnnDebug() << "Width of a space : " << spacewidth;
+//	Annwvyn::AnnDebug() << "Width of a space : " << space-width;
 
 	size_t cursorX = 0;
 	size_t cursorY = 0;
@@ -222,7 +222,7 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 	needUpdating = true;
 
 	resolutionFactor /= dpi2dpm;
-	AnnDebug() << "Resolution factor in dot per metters " << resolutionFactor;
+	AnnDebug() << "Resolution factor in dot per meters " << resolutionFactor;
 	AnnDebug() << "Texture resolution is : " << (size_t)(w*resolutionFactor) << "x" << (size_t)(h*resolutionFactor);
 	AnnDebug() << "Font resolution in DPI is : " << dpi;
 
@@ -248,13 +248,13 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 	node->attachObject(renderPlane);
 	//end of the thing that should be in it's own method
 
-	//Create or retreive the font from the font manager. Will also create the font manager if not availabe yet (unlikely since the font manager is initialized by the on screen console)
+	//Create or retrieve the font from the font manager. Will also create the font manager if not available yet (unlikely since the font manager is initialized by the on screen console)
 	if (!fontName.empty())
 	{
-		//Be sure that the font manager exist, if not, instantiante one (singleton)
+		//Be sure that the font manager exist, if not, instantiate one (singleton)
 		if (!Ogre::FontManager::getSingletonPtr()) new Ogre::FontManager();
 
-		//Attempt to retreive the font
+		//Attempt to retrieve the font
 		font = Ogre::FontManager::getSingleton().getByName(fontName);
 
 		//Need to create the font
@@ -263,7 +263,7 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 			//Create the font
 			font = Ogre::FontManager::getSingleton().create(fontName, "ANNWVYN_CORE");
 
-			//Load truetype file
+			//Load true-type file
 			font->setType(Ogre::FontType::FT_TRUETYPE);
 			font->setSource(fontTTF);
 
@@ -279,7 +279,7 @@ Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int s
 
 Ann3DTextPlane::~Ann3DTextPlane()
 {
-	AnnDebug() << "Destructiong a 3D Text plane!";
+	AnnDebug() << "Destructing a 3D Text plane!";
 	auto smgr = AnnGetEngine()->getSceneManager();
 
 	node->detachObject(renderPlane);
@@ -319,7 +319,7 @@ void Ann3DTextPlane::calculateVerticesForPlaneSize()
 
 	/*
 	* The plane is a perfect rectangle drawn by 2 polygons (triangles).
-	* The position in object-space are defined as folowing
+	* The position in object-space are defined as following
 	* on the "points" array :
 	*  0 +---------------+ 2
 	*    |           /   |

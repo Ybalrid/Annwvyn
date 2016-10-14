@@ -14,7 +14,7 @@ namespace Annwvyn
 	namespace KeyCode//maybe change that name...
 	{
 		///Every key usable on the keyboard is described here.
-		///These keycode are layout independant on Windows, but layout dependent on Linux
+		///These keycode are layout independent on Windows, but layout dependent on Linux
 		enum code
 		{
 			unassigned = OIS::KC_UNASSIGNED,
@@ -108,11 +108,11 @@ namespace Annwvyn
 			f14 = OIS::KC_F14,    //                     (NEC PC98)
 			f15 = OIS::KC_F15,    //                     (NEC PC98)
 			kana = OIS::KC_KANA,    // (Japanese keyboard)
-			anbt_c1 = OIS::KC_ABNT_C1,    // / ? on Portugese (Brazilian) keyboards
+			anbt_c1 = OIS::KC_ABNT_C1,    // / ? on Portuguese (Brazilian) keyboards
 			convert = OIS::KC_CONVERT,    // (Japanese keyboard)
 			noconvert = OIS::KC_NOCONVERT,    // (Japanese keyboard)
 			yen = OIS::KC_YEN,    // (Japanese keyboard)
-			abnt_C2 = OIS::KC_ABNT_C2,    // Numpad . on Portugese (Brazilian) keyboards
+			abnt_C2 = OIS::KC_ABNT_C2,    // Numpad . on Portuguese (Brazilian) keyboards
 			num_equals = OIS::KC_NUMPADEQUALS,    // = on numeric keypad (NEC PC98)
 			prevtrack = OIS::KC_PREVTRACK,    // Previous Track (KC_CIRCUMFLEX on Japanese keyboard)
 			at = OIS::KC_AT,    //                     (NEC PC98)

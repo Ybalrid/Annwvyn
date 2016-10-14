@@ -38,11 +38,11 @@ namespace Annwvyn
 
 		static LightTypes getLightTypeFromString(std::string ltype);
 
-		///Set the position of the light (if relevent)
+		///Set the position of the light (if relevant)
 		void setPosition(AnnVect3 position);
-		///Get the position of the light (if relevent)
+		///Get the position of the light (if relevant)
 		AnnVect3 getPosition();
-		///Set the direction of the light (if relevent)
+		///Set the direction of the light (if relevant)
 		void setDirection(AnnVect3 direction);
 		///Set the type of the light
 		void setType(LightTypes type);

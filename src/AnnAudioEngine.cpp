@@ -24,7 +24,7 @@ lastError("Initialize OpenAL based sound system")
 	//Apply the orientation
 	alListenerfv(AL_ORIENTATION, Orientation);
 
-	//Create a soruce for the BGM
+	//Create a source for the BGM
 	alGenSources(1, &bgm);
 	locked = false;
 }
@@ -53,14 +53,14 @@ void AnnAudioEngine::detectPlaybackDevices(const char *list)
 		AnnDebug() << "detected device : " << deviceName;
 		detectedDevices.push_back(deviceName);
 
-		list += strlen(list) + 1; //This avance the sart of the string after the end of the current one, because sizeof(char) = 1
+		list += strlen(list) + 1; //This advance the start of the string after the end of the current one, because sizeof(char) = 1
 	} while (*list != '\0');//End of the list is marked by \0\0 instead of \0
 }
 
 bool AnnAudioEngine::initOpenAL()
 {
 	//Open audio playback device
-	//Check if OpenAL support device enumeration extention here
+	//Check if OpenAL support device enumeration extension here
 	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
 		&& AnnGetVRRenderer()->usesCustomAudioDevice())
 	{
@@ -119,7 +119,7 @@ void AnnAudioEngine::shutdownOpenAL()
 	for (auto buffer : buffers)
 		alDeleteBuffers(1, &buffer.second);
 
-	//Close the AL environement
+	//Close the AL environment
 	alcMakeContextCurrent(NULL);
 	alcDestroyContext(Context);
 	alcCloseDevice(Device);
@@ -144,7 +144,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
 	if (ALuint buffer = isBufferLoader(filepath))
 		return buffer;
 
-	AnnDebug() << filepath << " is unkown to the engine. Loading from file...";
+	AnnDebug() << filepath << " is unknown to the engine. Loading from file...";
 
 	// Open Audio file with libsndfile
 	SF_INFO FileInfos;
@@ -155,22 +155,22 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
 		return 0;
 	}
 
-	//get the number of sample and the samplerate (in samples by seconds)
+	//get the number of sample and the sample-rate (in samples by seconds)
 	ALsizei NbSamples = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
 	ALsizei SampleRate = static_cast<ALsizei>(FileInfos.samplerate);
 
-	AnnDebug() << "Loading " << NbSamples << " samples. Playback samplerate : " << SampleRate << "Hz";
+	AnnDebug() << "Loading " << NbSamples << " samples. Playback sample-rate : " << SampleRate << "Hz";
 
 	//Read samples in 16bits signed
 	std::vector<float> SamplesFloat(NbSamples);
 	sf_count_t readSamples = sf_read_float(File, &SamplesFloat[0], NbSamples);
 	AnnDebug() << "Read " << readSamples << " samples from a " << NbSamples << " samples file";
 
-	//This sometimes happen with OGG files, but it seems tu run fine anyway.
+	//This sometimes happen with OGG files, but it seems to run fine anyway.
 	if (readSamples < NbSamples)
 	{
 		lastError = "Warning: It looks like the " + (NbSamples - readSamples);
-		lastError += " last samples of the file have been omited";
+		lastError += " last samples of the file have been omitted";
 		logError();
 	}
 
@@ -190,7 +190,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
 	//close file
 	sf_close(File);
 
-	//Read the number of chanels. sound effects should be mono and background music should be stereo
+	//Read the number of channels. sound effects should be mono and background music should be stereo
 	ALenum Format;
 	switch (FileInfos.channels)
 	{
@@ -216,7 +216,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
 		return 0;
 	}
 
-	AnnDebug() << filepath << " sucessfully loaded into audio engine";
+	AnnDebug() << filepath << " successfully loaded into audio engine";
 	AnnEngine::log("buffer added to the Audio engine");
 	buffers[filepath] = buffer;
 	return buffer;
@@ -227,13 +227,13 @@ void AnnAudioEngine::unloadBuffer(const std::string& path)
 	if (locked) return;
 
 	//Search for the buffer
-	AnnDebug() << "Unloading soudfile " << path;
+	AnnDebug() << "Unloading sound file " << path;
 	auto query = buffers.find(path);
 	if (query == buffers.end())
 	{
 		lastError = "Error: cannot unload buffer " + path + " is unknown";
 		logError();
-		return; //if querry is equal to iterator::end(), buffer isn't known
+		return; //if query is equal to iterator::end(), buffer isn't known
 	}
 
 	//Get the buffer from the iterator
@@ -326,7 +326,7 @@ std::shared_ptr<AnnAudioSource> AnnAudioEngine::createSource()
 	alGenSources(1, &audioSource->source);
 
 	AudioSources.push_back(audioSource);
-	AnnDebug() << "OpenAL:source:" << audioSource->source << " sucessfully created";
+	AnnDebug() << "OpenAL:source:" << audioSource->source << " successfully created";
 
 	//Return it to the caller
 	return audioSource;

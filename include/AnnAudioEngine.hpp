@@ -1,6 +1,6 @@
 /**
 * \file AnnAudioEngine.hpp
-* \brief OpenAL audio handeling for Annwvvyn
+* \brief OpenAL audio handling for Annwvyn
 *        handle the OpenAL context creation and the loading of sound files
 *        handle the position/orientation of the listener
 * \author A. Brainville (Ybalrid)
@@ -36,7 +36,7 @@ namespace Annwvyn
 	class DLL AnnAudioSource
 	{
 	public:
-		///Private contructor. You have to call AnnAudioEngine::createAudioSource() to get an AnnAudioSource object
+		///Private constructor. You have to call AnnAudioEngine::createAudioSource() to get an AnnAudioSource object
 		AnnAudioSource();
 
 		///Destroy audio source
@@ -44,7 +44,7 @@ namespace Annwvyn
 
 		///Put the audio source at this position in space
 		void setPositon(AnnVect3 position);
-		///Set the volume at the given gain (betwenn 0 & 1)
+		///Set the volume at the given gain (between 0 & 1)
 		/// \param gain value between 0 and 1
 		void setVolume(float gain);
 		///Put the audio read position at the origin
@@ -79,7 +79,7 @@ namespace Annwvyn
 	class DLL AnnAudioEngine : public AnnSubSystem
 	{
 	public:
-		///class constuctor
+		///class constructor
 		AnnAudioEngine();
 
 		///class destructor
@@ -91,15 +91,15 @@ namespace Annwvyn
 		///shutdown and cleanup OpenAL
 		void shutdownOpenAL();
 
-		///Load a sound file. return a sond buffer. Add the buffer to the buffer list.
-		///This permit to preload sound files to the engine. If want to avoid loading a
-		///Bunch of soundfile (that causes disk I/O access) you can just load the soundfile
+		///Load a sound file. return a sound buffer. Add the buffer to the buffer list.
+		///This permit to pre-load sound files to the engine. If want to avoid loading a
+		///Bunch of sound file (that causes disk I/O access) you can just load the sound file
 		///before the start of your gameplay sequence.
 		/// \param filePath Path of the file you want to load
 		ALuint loadBuffer(const std::string& filePath);
 
 		///This method is intended to be used in moments like loading levels
-		///If a buffer is allready loaded, getting it with loadBuffer is equivalent at
+		///If a buffer is already loaded, getting it with loadBuffer is equivalent at
 		///getting something from an unordered map.
 		///If loadBuffer is called with a "new" sound file, the engine will load it in memory
 		///before doing anything else, delaying stuff because of disk I/O
@@ -109,7 +109,7 @@ namespace Annwvyn
 		///Return "false" if buffer not loaded. Return buffer index if buffer is loaded.
 		ALuint isBufferLoader(const std::string& filePath);
 
-		///Unload a buffer from the engine. The buffer is identified by the soud file it represent
+		///Unload a buffer from the engine. The buffer is identified by the sound file it represent
 		/// \param path Path of the file you want to load
 		void unloadBuffer(const std::string& path);
 
@@ -121,19 +121,19 @@ namespace Annwvyn
 		///stop the current background music from playing
 		void stopBGM();
 
-		///Get the last error message that ocured in-engine
+		///Get the last error message that occurred in-engine
 		const std::string getLastError();
 
 		///Create an audio source
 		std::shared_ptr<AnnAudioSource> createSource();
 
-		///Create an audio source and attache (and load if necessary) buffer from audio file
+		///Create an audio source and attach (and load if necessary) buffer from audio file
 		std::shared_ptr<AnnAudioSource> createSource(std::string path);
 
 		DEPRECATED void destroySource(std::shared_ptr<AnnAudioSource> source);
 		void removeSource(std::shared_ptr<AnnAudioSource> source);
 
-		///Write laste error text to the log
+		///Write last error text to the log
 		void logError();
 
 	private:
@@ -141,11 +141,11 @@ namespace Annwvyn
 		/// \param pos The position of the player
 		void updateListenerPos(AnnVect3 pos);
 
-		///For the engine : update the listener orientation to mach the player's head
-		/// \param orient The orientatio of the player
+		///For the engine : update the listener orientation to match the player's head
+		/// \param orient The orientation of the player
 		void updateListenerOrient(AnnQuaternion orient);
 
-		///For engine : update listener Oirentation
+		///For engine : update listener Orientation
 		friend class Annwvyn::AnnEngine;
 
 		void update();
@@ -169,7 +169,7 @@ namespace Annwvyn
 		///Map between audio filenames and OpenAL buffer
 		std::unordered_map<std::string, ALuint> buffers;
 		bool locked;
-		///Lis of the audio sources object present in the audio engine
+		///List of the audio sources object present in the audio engine
 		std::list<std::shared_ptr<AnnAudioSource>> AudioSources;
 		std::vector<std::string> detectedDevices;
 	};

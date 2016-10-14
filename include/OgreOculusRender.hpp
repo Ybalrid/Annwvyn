@@ -7,7 +7,7 @@
 ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
 ///(even if now I'm not using code from him anymore)
 ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
-///The website http://learnopengl.com/ for improving my (verry little at the time) understanding of OpenGL
+///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
 
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
@@ -59,7 +59,7 @@ public:
 	///Oculus runtime hint to quit
 	bool shouldQuit();
 
-	///Oculus runtim hit to recenter
+	///Oculus runtime hint to recenter
 	bool shouldRecenter();
 
 	///App not visible inside Oculus
@@ -102,7 +102,6 @@ public:
 	void recenter();
 
 	///Compute from OVR the correct projection matrix for the given clipping distance
-	void calculateProjectionMatrix();
 	virtual void updateProjectionMatrix();
 
 	///change main viewport background color
@@ -139,7 +138,7 @@ private:
 	///Set the Fov for the monoscopic view
 	void setMonoFov(float degreeFov);
 
-	///Save content of the RenderTexture to the specified file. This verry slow operation is only usefull for debuging the renderer itself
+	///Save content of the RenderTexture to the specified file. This very slow operation is only useful for debuging the renderer itself
 	void debugSaveToFile(const char path[]);
 
 	///Object for getting informations from the Oculus Rift
