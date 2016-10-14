@@ -24,11 +24,9 @@ shouldQuitState(false)
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
 
 	//I like to initialize everything to zero
-	rttTexture[left].setNull();
-	rttTexture[right].setNull();
+	rttTexture.setNull();
 
-	rttTextureGLID[left] = NULL;
-	rttTextureGLID[right] = NULL;
+	rttTextureGLID = NULL;
 
 	rttViewports[left] = nullptr;
 	rttViewports[right] = nullptr;
@@ -48,8 +46,7 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	vr::VR_Shutdown();
 
 	//Need to forget Ogre's smart pointers
-	rttTexture[left].setNull();
-	rttTexture[right].setNull();
+	rttTexture.setNull();
 
 	//Destroy the main scene manager
 	root->destroySceneManager(smgr);
@@ -137,18 +134,18 @@ void OgreOpenVRRender::initClientHmdRendering()
 	//Should init the device model things here if we want to display the vive controllers
 
 	//Declare the textures for SteamVR
-	vrTextures[left] = { (void*)rttTextureGLID[0], API, vr::ColorSpace_Gamma };
+	vrTextures[left] = { (void*)rttTextureGLID, API, vr::ColorSpace_Gamma };
 
 	//Set the OpenGL texture geometry
-	GLBounds[0].uMin = 0;
-	GLBounds[0].uMax = 0.5f;
-	GLBounds[0].vMin = 1;
-	GLBounds[0].vMax = 0;
+	GLBounds[left].uMin = 0;
+	GLBounds[left].uMax = 0.5f;
+	GLBounds[left].vMin = 1;
+	GLBounds[left].vMax = 0;
 
-	GLBounds[1].uMin = 0.5f;
-	GLBounds[1].uMax = 1;
-	GLBounds[1].vMin = 1;
-	GLBounds[1].vMax = 0;
+	GLBounds[right].uMin = 0.5f;
+	GLBounds[right].uMax = 1;
+	GLBounds[right].vMin = 1;
+	GLBounds[right].vMax = 0;
 
 }
 
@@ -316,6 +313,7 @@ void OgreOpenVRRender::initRttRendering()
 	//Get the render texture size recommended by the OpenVR API for the current Driver/Display
 	unsigned int w, h;
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
+	w *= 2;
 	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create theses textures in OpenGL and get their OpenGL ID
@@ -324,19 +322,15 @@ void OgreOpenVRRender::initRttRendering()
 	//We don't need to check that we're using OpenGL before doing this kind of cast:
 	Ogre::GLTextureManager* textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
 
-	//Left eye texture
-	rttTexture[left] = textureManager->createManual("RTT_TEX_L", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-													Ogre::TEX_TYPE_2D, 2*w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
-	rttTextureGLID[left] = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX_L").getPointer())->getGLID();
+	//shared texture
+	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+													Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
+	rttTextureGLID = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX").getPointer())->getGLID();
 
-	//Right eye texture
-/*	rttTexture[right] = textureManager->createManual("RTT_TEX_R", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-													 Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
-	rttTextureGLID[right] = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX_R").getPointer())->getGLID();*/
 
 	//Create viewport for each cameras in each render texture
-	rttViewports[left] = rttTexture[left]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left], 0, 0,0,0.5f,1);
-	rttViewports[right] = rttTexture[left]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right],1,0.5f,0,0.5f,1);
+	rttViewports[left] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
+	rttViewports[right] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
 
 	//Do the same for the window
 	windowViewport = window->addViewport(monoCam);
