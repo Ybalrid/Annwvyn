@@ -161,7 +161,7 @@ private:
 	std::string strDriver, strDisplay;
 
 	///Geometry of an OpenGL texture
-	vr::VRTextureBounds_t GLBounds;
+	vr::VRTextureBounds_t GLBounds[2];
 
 	///Timing marker
 	double then, now;
