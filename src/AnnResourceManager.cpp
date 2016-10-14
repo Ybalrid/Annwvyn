@@ -44,7 +44,7 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 	{
 		secName = seci.peekNextKey();
 
-		if (secName == reservedResourceGroupName) 
+		if (secName == reservedResourceGroupName)
 		{
 			refuseResource("*Did not read file*", secName);
 			continue;
@@ -77,4 +77,4 @@ void AnnResourceManager::refuseResource(const std::string& resourceName, const s
 {
 	AnnDebug() << "Annwvyn cannot allow you to set location inside the " << group << " resource group";
 	AnnDebug() << "Resource location " << resourceName << "has been rejected";
-} 
+}

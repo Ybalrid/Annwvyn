@@ -4,9 +4,9 @@
 
 using namespace Annwvyn;
 
-AnnEngine* AnnEngine::singleton(NULL); 
+AnnEngine* AnnEngine::singleton(NULL);
 
-//Log is static. Therefore this has to be static too to be able to write to it. 
+//Log is static. Therefore this has to be static too to be able to write to it.
 std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
 
 AnnEngine* AnnEngine::Instance()
@@ -46,7 +46,6 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	vrRendererPovGameplayPlacement(nullptr),
 	updateTime(-1)
 {
-
 	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
@@ -55,7 +54,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	std::cerr << "HMD selection from command line routine retuned : " << hmdCommand << std::endl;
 
-	//Select the correct OgreVRRender class to use : 
+	//Select the correct OgreVRRender class to use :
 	if (hmdCommand == "OgreOculusRender"
 		|| hmdCommand == "OgreDefaultRender")
 		renderer = std::make_shared<OgreOculusRender>(title);
@@ -81,7 +80,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");
-	
+
 	//Display start banner
 	log("============================================================", false);
 	log("| Annwvyn Game Engine - Step into the Other World          |", false);
@@ -91,9 +90,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	log("| Distributed under the terms of the MIT licence agreement |", false);
 	log("|                                                          |", false);
 	log("| Visit http://annwvyn.org/ for more informations!         |", false);
-	log("| Version : " + getAnnwvynVersion(61-13-1) +              "|", false);
+	log("| Version : " + getAnnwvynVersion(61 - 13 - 1) + "|", false);
 	log("============================================================", false);
-
 
 	srand(time(nullptr));
 	singleton = this;
@@ -113,8 +111,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
 
-
-	/*The wanted order is 
+	/*The wanted order is
 	- event happens (player input, timers...)
 	- physics is ticked (stuff move)
 	- audio is synced (sonds comes form where they should)
@@ -125,21 +122,18 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	SubSystemList.push_back(physicsEngine);
 	SubSystemList.push_back(audioEngine = std::make_shared< AnnAudioEngine>());
 
-	
 	//These could be anywere
 	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
 	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
 	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
- 
 
 	renderer->initClientHmdRendering();
 	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();
 	vrRendererPovGameplayPlacement->setPosition(player->getPosition() +
-		AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
+												AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 
-	//This subsystem need the vrRendererPovGameplayPlacement object to be initialized. And the Resource manager because it wants a font file and an image background 
+											//This subsystem need the vrRendererPovGameplayPlacement object to be initialized. And the Resource manager because it wants a font file and an image background
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
-	
 }
 
 AnnEngine::~AnnEngine()
@@ -227,7 +221,7 @@ void AnnEngine::initPlayerPhysics()
 	physicsEngine->initPlayerPhysics(vrRendererPovGameplayPlacement);
 }
 
-//Need to be redone. 
+//Need to be redone.
 bool AnnEngine::requestStop()
 {
 	//pres ESC to quit. Stupid but efficient. I like that.
@@ -246,31 +240,31 @@ bool AnnEngine::refresh()
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(getFrameTime());
 
-	for (auto SubSystem : SubSystemList) 
+	for (auto SubSystem : SubSystemList)
 		if (!SubSystem->needUpdate()) continue; //If doen't need update, swith to the next
 		else SubSystem->update();				//The "else" keyword is used to not put curly braces, by lazyness and by code style.
 
 	//Update camera from player
-	syncPov();
+		syncPov();
 
-	//Update VR form real world
-	renderer->updateTracking();
+		//Update VR form real world
+		renderer->updateTracking();
 
-	//Update view
-	renderer->renderAndSubmitFrame();
+		//Update view
+		renderer->renderAndSubmitFrame();
 
-	//Don't laugh
-	return !requestStop();
+		//Don't laugh
+		return !requestStop();
 }
 
-//This just move a node where the other node is. Yes I know about parenting. I had reasons to do it that way, but I forgot. 
+//This just move a node where the other node is. Yes I know about parenting. I had reasons to do it that way, but I forgot.
 inline void AnnEngine::syncPov()
 {
 	vrRendererPovGameplayPlacement->setPosition(player->getPosition());
 	vrRendererPovGameplayPlacement->setOrientation(player->getOrientation().toQuaternion());
 }
 
-//Bad. Don't use. Register an event listener and use the KeyEvent callback. 
+//Bad. Don't use. Register an event listener and use the KeyEvent callback.
 inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
 {
 	if (!eventManager) return false;
@@ -303,7 +297,7 @@ double AnnEngine::getFrameTime()
 	return updateTime;
 }
 
-//Raw position and orientaiton of the head in world space. This is usefull if you want to mess around with weird stuff. This has been bodged when I integrated a LEAP motion in that mess. 
+//Raw position and orientaiton of the head in world space. This is usefull if you want to mess around with weird stuff. This has been bodged when I integrated a LEAP motion in that mess.
 OgrePose AnnEngine::getHmdPose()
 {
 	if (renderer)
@@ -345,7 +339,7 @@ void Annwvyn::AnnEngine::removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> s
 	SubSystemList.remove(subsystem);
 }
 
-//Because Windows and the Win32 platform sucks. 
+//Because Windows and the Win32 platform sucks.
 void AnnEngine::openConsole()
 {
 #ifdef _WIN32
@@ -355,7 +349,7 @@ void AnnEngine::openConsole()
 	{
 		//put stdout on this console;
 #pragma warning(disable:4996) //Okay, so for some reason, freopen is "bad" because potentially dangerous. However, since I'm passing static strings here, unless you go hack the DLL, I don't know what harm you can do.
-		freopen("CONOUT$", "w", stdout); 
+		freopen("CONOUT$", "w", stdout);
 #pragma warning(default:4996)
 	}
 
@@ -368,7 +362,7 @@ void AnnEngine::openConsole()
 #endif
 }
 
-//Well, I may make the pointer to the onScreenConsole more accessible. 
+//Well, I may make the pointer to the onScreenConsole more accessible.
 void AnnEngine::toogleOnScreenConsole()
 {
 	if (onScreenConsole) onScreenConsole->toogle();
@@ -376,7 +370,7 @@ void AnnEngine::toogleOnScreenConsole()
 
 bool AnnEngine::appVisibleInHMD()
 {
-	if (renderer->isVisibleInHmd() == true) // why "== true" ? Because at some point it was returning an ovrBool, wich is the boolean type of the oculus SDK that doesn't cast correctly to a C++ bool. YES. I DON'T KNOW HOW THEY MANAGED TO FFFF TAHT UP. 
+	if (renderer->isVisibleInHmd() == true) // why "== true" ? Because at some point it was returning an ovrBool, wich is the boolean type of the oculus SDK that doesn't cast correctly to a C++ bool. YES. I DON'T KNOW HOW THEY MANAGED TO FFFF TAHT UP.
 		return true;
 	return false;
 }

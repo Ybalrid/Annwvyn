@@ -23,8 +23,8 @@ inline phyShapeType AnnXmlLevel::getShapeTypeFromString(std::string str)
 }
 
 AnnXmlLevel::AnnXmlLevel(std::string path) : constructLevel(),
-	xmlFilePath(path),
-	resourceLocAdded(false)
+xmlFilePath(path),
+resourceLocAdded(false)
 {
 }
 
@@ -33,13 +33,13 @@ void AnnXmlLevel::load()
 	//Get the parent directory of the file (all file path are in "unix style")
 	std::string dirPath;
 	const size_t last_slash = xmlFilePath.rfind('/');
-	if(std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
+	if (std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
 	AnnDebug() << "Working directory of the level file : " << dirPath;
 
 	//Start reading the XML file
 	XMLDocument xmlInFile;
 	//open the file
-	if(xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS) 
+	if (xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS)
 	{
 		AnnDebug() << "Cant load XML level : " << xmlFilePath;
 		exit(ANN_ERR_INFILE);
@@ -48,7 +48,7 @@ void AnnXmlLevel::load()
 
 	//get the root node of the XML DOM
 	XMLNode* level(xmlInFile.FirstChild());
-	if(!level)
+	if (!level)
 	{
 		AnnDebug() << "Cant get 1st XML Node from " << xmlFilePath;
 		exit(ANN_ERR_INFILE);
@@ -56,7 +56,7 @@ void AnnXmlLevel::load()
 
 	//Get the name of the level
 	XMLElement* element(level->FirstChildElement("Name"));
-	if(!element)
+	if (!element)
 	{
 		AnnDebug() << "Cant get Level name from " << xmlFilePath;
 		exit(ANN_ERR_INFILE);
@@ -66,39 +66,39 @@ void AnnXmlLevel::load()
 	AnnDebug() << "This will be the resource group name for Level Specific resource location declaration";
 
 	//Add resource location to the Ogre Resource Group Manager
-	if(!resourceLocAdded)
+	if (!resourceLocAdded)
 	{
 		element = level->FirstChildElement("ResourceLocations");
-		if(!element)
+		if (!element)
 		{
 			AnnDebug() << xmlFilePath << "Does not apear to have a 'ResourceLocations' section";
 		}
 		else
 		{
 			XMLElement* resourceLocation = element->FirstChildElement("ResourceLocation");
-			if(resourceLocation) do
+			if (resourceLocation) do
 			{
 				std::string type(resourceLocation->Attribute("Type")), path(resourceLocation->Attribute("Path"));
-				if(!type.empty() && !path.empty())
+				if (!type.empty() && !path.empty())
 					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dirPath + "/" + path, type, name);
-			}while((resourceLocation = resourceLocation->NextSiblingElement()) != nullptr);
+			} while ((resourceLocation = resourceLocation->NextSiblingElement()) != nullptr);
 			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(name);
-		resourceLocAdded = true;
+			resourceLocAdded = true;
 		}
 	}
 
 	//Get level content
 	element = level->FirstChildElement("LevelContent");
-	
-	if(!element)
+
+	if (!element)
 	{
 		AnnDebug() << xmlFilePath << "Don't have a 'LevelContent' section. This mean the level can't be loaded";
 		exit(ANN_ERR_INFILE);
 	}
 
 	XMLElement* gameObject = element->FirstChildElement("Object");
-	if(!gameObject) AnnDebug() << "No objects declared to load.";
-	else do //Iterate through all game objects 
+	if (!gameObject) AnnDebug() << "No objects declared to load.";
+	else do //Iterate through all game objects
 	{
 		std::string entityName;
 		AnnDebug() << "Fond object to load";
@@ -106,14 +106,14 @@ void AnnXmlLevel::load()
 		std::string ID(gameObject->Attribute("ID"));
 		AnnDebug() << "Registred ID : " << ID;
 		XMLElement* gameObjectData = gameObject->FirstChildElement("Entity");
-		if(gameObjectData)
-		entityName = (gameObjectData->Attribute("EntityName"));
-		
+		if (gameObjectData)
+			entityName = (gameObjectData->Attribute("EntityName"));
+
 		std::shared_ptr<AnnGameObject> constructedGameObject;
-		if(!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
-		
+		if (!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
+
 		gameObjectData = gameObject->FirstChildElement("Position");
-		if(gameObjectData)
+		if (gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
@@ -123,7 +123,7 @@ void AnnXmlLevel::load()
 		}
 
 		gameObjectData = gameObject->FirstChildElement("Orientation");
-		if(gameObjectData)
+		if (gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
@@ -133,45 +133,44 @@ void AnnXmlLevel::load()
 		}
 
 		gameObjectData = gameObject->FirstChildElement("Scale");
-		if(gameObjectData)
+		if (gameObjectData)
 		{
 			gameObjectData->QueryFloatAttribute("X", &x);
 			gameObjectData->QueryFloatAttribute("Y", &y);
 			gameObjectData->QueryFloatAttribute("Z", &z);
 			constructedGameObject->setScale(x, y, z);
 		}
-	
+
 		XMLElement* physics = gameObject->FirstChildElement("Physics");
-		if(!physics) continue; //no physics section. not mandatory. just ignore
+		if (!physics) continue; //no physics section. not mandatory. just ignore
 		XMLElement* state = physics->FirstChildElement("Enabeled");
-		if(!state) continue;
-		bool phy; state->QueryBoolText(&phy); if(!phy) continue;
+		if (!state) continue;
+		bool phy; state->QueryBoolText(&phy); if (!phy) continue;
 
 		float mass(0); std::string shape;
 
 		XMLElement* phyInfo = physics->FirstChildElement("Mass");
-		if(!phyInfo) continue;
+		if (!phyInfo) continue;
 		phyInfo->QueryFloatText(&mass);
 		phyInfo = nullptr;
 
 		phyInfo = physics->FirstChildElement("Shape");
-		if(!phyInfo) continue;
+		if (!phyInfo) continue;
 		shape = phyInfo->GetText();
 		if (shape == "static") mass = 0; //this case is weird. Static stuff have allways been static, even with mass. Need to see if bullet has changed stuff
 		constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
 
 		levelContent.push_back(constructedGameObject);
-		
-	} while((gameObject = gameObject->NextSiblingElement()) != nullptr);
+	} while ((gameObject = gameObject->NextSiblingElement()) != nullptr);
 
 	element = level->FirstChildElement("LevelLighting");
-	if(!element) AnnDebug() << "No lights declared";
+	if (!element) AnnDebug() << "No lights declared";
 	else
 	{
 		float x, y, z, dx, dy, dz, r, g, b, a;
 		std::string lightType;
 		XMLElement* source = element->FirstChildElement("Source");
-		if(source) do
+		if (source) do
 		{
 			std::string lightID = source->Attribute("ID");
 
@@ -196,33 +195,35 @@ void AnnXmlLevel::load()
 			lightSource->setPosition(AnnVect3(x, y, z));
 			lightSource->setType(AnnLightObject::getLightTypeFromString(lightType));
 			lightSource->setDirection(AnnVect3(dx, dy, dz));
-			lightSource->setDiffuseColor(AnnColor(r,g,b,a));
-		}while ((source = source->NextSiblingElement()) != nullptr);
+			lightSource->setDiffuseColor(AnnColor(r, g, b, a));
+		} while ((source = source->NextSiblingElement()) != nullptr);
 	}
 
 	element = level->FirstChildElement("Player");
-	if(element)
+	if (element)
 	{
 		XMLElement* playerElement = element->FirstChildElement("Position");
-		if(playerElement)
+		if (playerElement)
 		{
-			float x,y,z;
-			playerElement->QueryFloatAttribute("X",&x);
-			playerElement->QueryFloatAttribute("Y",&y);
-			playerElement->QueryFloatAttribute("Z",&z);
+			float x, y, z;
+			playerElement->QueryFloatAttribute("X", &x);
+			playerElement->QueryFloatAttribute("Y", &y);
+			playerElement->QueryFloatAttribute("Z", &z);
 			AnnDebug() << "Player starting position : (" << x << ", " << y << ", " << z << ")";
 
-			AnnGetPlayer()->setPosition(AnnVect3(x,y,z));
-		} else AnnGetPlayer()->setPosition(DEFAULT_STARTING_POS);
+			AnnGetPlayer()->setPosition(AnnVect3(x, y, z));
+		}
+		else AnnGetPlayer()->setPosition(DEFAULT_STARTING_POS);
 
 		playerElement = element->FirstChildElement("Orientation");
-		if(playerElement)
+		if (playerElement)
 		{
 			float yaw;
 			playerElement->QueryFloatAttribute("Yaw", &yaw);
 			AnnDebug() << "Player Yaw : " << yaw;
 			AnnGetPlayer()->setOrientation(Ogre::Euler(Ogre::Degree(yaw).valueRadians()));
-		} else AnnGetPlayer()->setOrientation(DEFAULT_STARTING_ORIENT);
+		}
+		else AnnGetPlayer()->setOrientation(DEFAULT_STARTING_ORIENT);
 	}
 	else
 	{

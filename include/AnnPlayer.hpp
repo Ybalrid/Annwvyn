@@ -22,14 +22,14 @@ namespace Annwvyn
 {
 	class AnnEngine; //predeclaration of AnnEngine
 
-	///Parameters of the user's VirtualBody		
+	///Parameters of the user's VirtualBody
 	class DLL bodyParams
 	{
 		/**
 		* That class was a structure. It is keeped as a class with public attributes to keep compatibility with legacy code.
 		*/
 	public:
-		///Constructor that handle the default body parameters. 
+		///Constructor that handle the default body parameters.
 		bodyParams();
 
 		float eyeHeight;
@@ -49,8 +49,7 @@ namespace Annwvyn
 	};
 
 	///Correspondance between array position and walk direction for the "walking" array
-	enum walkDirection{forward, backward, left, right};
-
+	enum walkDirection { forward, backward, left, right };
 
 	///class that represent the player. This is the user's "Virtual body" in the world. It's the object that you have to move and turn to explore the space.
 	class DLL AnnPlayer
@@ -93,7 +92,7 @@ namespace Annwvyn
 		void setTurnSpeed(float turnSpeed);
 
 		///Mass in Kg
-		/// \param mass Mass of the player in Kg 
+		/// \param mass Mass of the player in Kg
 		void setMass(float mass);
 
 		///Bullet shape
@@ -148,7 +147,7 @@ namespace Annwvyn
 		///Set the player actuator object
 		void setActuator(AnnPlayerActuator* act);
 
-		///Boolean false if the player can get orientation transformation from 
+		///Boolean false if the player can get orientation transformation from
 		bool standing;
 
 		///Get the ratio between walking and running speed
@@ -194,7 +193,7 @@ namespace Annwvyn
 		///Apply yaw from analog value
 		void applyAnalogYaw();
 
-		///time lengh of the frame 
+		///time lengh of the frame
 		double updateTime;
 
 		///Player body physics enabled
@@ -207,7 +206,7 @@ namespace Annwvyn
 
 		///Turning that off bypass the physics code. Cool for menu scene or weird manipulation of the player object
 		bool ignorePhysics;
-		
+
 		///Waling state. Forward Backward Left Right
 		bool walking[4];
 
@@ -218,7 +217,6 @@ namespace Annwvyn
 		float analogWalk;
 		float analogStraff;
 		float analogRotate;
-	}; 
-
+	};
 }
 #endif //ANN_PLAYER

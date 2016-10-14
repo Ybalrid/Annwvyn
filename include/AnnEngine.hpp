@@ -11,7 +11,7 @@
 //Keep track of engine version here
 #define ANN_MAJOR 0
 #define ANN_MINOR 2
-#define ANN_PATCH 4 
+#define ANN_PATCH 4
 #define ANN_EXPERIMENTAL true
 
 #include "systemMacro.h"
@@ -82,9 +82,9 @@ namespace Annwvyn
 	///Main engine class. Creating an instance of this class make the engine start.
 	class DLL AnnEngine
 	{
-		//It's more or less a singleton, and will be the only one in the engine architecture. 
+		//It's more or less a singleton, and will be the only one in the engine architecture.
 		//You can intantiate it like a normal class and bypass the idea of a singleton complettely.
-		//This is the base class of the whole engine, the idea is more or less the one described in the 
+		//This is the base class of the whole engine, the idea is more or less the one described in the
 		//"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
 
 	private:
@@ -108,7 +108,7 @@ namespace Annwvyn
 		~AnnEngine();
 
 		///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
-		/// \param message Message to be loged 
+		/// \param message Message to be loged
 		/// \param flag If true : Put the "Annwvyn -" flag before the message
 		static void log(std::string message, bool flag = true); //engine
 
@@ -203,7 +203,7 @@ namespace Annwvyn
 		///Know if subsystem is user defined
 		static bool isUserSubSystem(std::shared_ptr<AnnSubSystem> subsystem);
 
-		///Remove a subsystem form the engine. Only works if the system has been user defined. 
+		///Remove a subsystem form the engine. Only works if the system has been user defined.
 		void removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem);
 
 	private:
@@ -221,7 +221,7 @@ namespace Annwvyn
 		std::shared_ptr<AnnFilesystemManager> filesystemManager;
 		///Audio engine
 		std::shared_ptr<AnnAudioEngine> audioEngine;
-		///Event manager	
+		///Event manager
 		std::shared_ptr<AnnEventManager> eventManager;
 		///Physics
 		std::shared_ptr<AnnPhysicsEngine> physicsEngine;
@@ -240,9 +240,8 @@ namespace Annwvyn
 		///Elapsed time between 2 frames
 		double updateTime;
 
-		///Container for all the subsystem. Populated in the update/delete order 
+		///Container for all the subsystem. Populated in the update/delete order
 		std::list<std::shared_ptr<AnnSubSystem>> SubSystemList;
-
 	};
 }
 #endif ///ANN_ENGINE

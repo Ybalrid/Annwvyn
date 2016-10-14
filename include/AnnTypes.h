@@ -21,7 +21,7 @@
 
 namespace Annwvyn
 {
-	//Predefinition of Annwvyn classes : 
+	//Predefinition of Annwvyn classes :
 	class AnnGameObject;
 	class AnnTriggerObject;
 
@@ -30,7 +30,7 @@ namespace Annwvyn
 	typedef Ogre::Matrix3 AnnMatrix3;
 	typedef Ogre::Matrix4 AnnMatrix4;
 
-	//Remove some ugliness : 
+	//Remove some ugliness :
 	typedef std::list<std::shared_ptr<AnnTriggerObject> > AnnTriggerObjectList;
 	typedef std::list<std::shared_ptr<AnnGameObject> > AnnGameObjectList;
 	typedef std::list<std::shared_ptr<AnnLightObject> > AnnLightList;
@@ -38,19 +38,18 @@ namespace Annwvyn
 	///Because sometimes, after one byte you're full...
 	typedef std::uint8_t byte;
 
-
 	///Name of the objects physical shapes
 	///Theses shapes are available to create objects's rigid body for the physics
 	enum phyShapeType {
-		staticShape, 
-		convexShape, 
-		boxShape, 
-		cylinderShape, 
+		staticShape,
+		convexShape,
+		boxShape,
+		cylinderShape,
 		capsuleShape,
 		sphereShape
 	};
 
-	///Macro used 
+	///Macro used
 #define MASK(x) (1<<(x))
 }
 #endif

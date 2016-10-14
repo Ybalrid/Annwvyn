@@ -9,9 +9,8 @@
 
 #include <memory>
 
-
 namespace Annwvyn
-{	
+{
 	class AnnEngine;
 
 	///Game object manager. Create, destroy and keep track of objects, lights and other movable stuff
@@ -20,7 +19,7 @@ namespace Annwvyn
 	public:
 		AnnGameObjectManager();
 
-		///Update from the game engine 
+		///Update from the game engine
 		virtual void update();
 
 		///Create a game object form the name of an entity.
@@ -33,7 +32,7 @@ namespace Annwvyn
 
 		///Search for an AnnGameObject that holds this node, returns it if found. Return nullptr if not found.
 		std::shared_ptr<AnnGameObject> getFromNode(Ogre::SceneNode * node);
-		
+
 		///Remove the given light from the scene
 		/// \param light shared pointer to the light
 		void removeLightObject(std::shared_ptr<AnnLightObject> light);
@@ -51,7 +50,6 @@ namespace Annwvyn
 		///Get the AnnObject the player is looking at
 		std::shared_ptr<AnnGameObject> playerLookingAt(); //physics
 
-
 	private:
 		friend class AnnEngine;
 
@@ -61,8 +59,6 @@ namespace Annwvyn
 		std::list<std::shared_ptr<AnnLightObject>> Lights;
 		///Dynamic container for Game objects present in engine
 		std::list<std::shared_ptr<AnnGameObject>> Objects;
-
-
 	};
 }
 

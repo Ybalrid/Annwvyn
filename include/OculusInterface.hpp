@@ -4,8 +4,8 @@
  * \author A. Brainville (Ybalrid)
  */
 
-#ifndef OCULUS_INTERFACE 
-#define OCULUS_INTERFACE 
+#ifndef OCULUS_INTERFACE
+#define OCULUS_INTERFACE
 
 #include <iostream>
 
@@ -18,11 +18,9 @@
 #include <Ogre.h>
 #define USE_OGRE
 
-
 ///Comunicate with the Rift runtime (initialize OVR and get the info)
 class DLL OculusInterface
 {
-	
 public:
 
 	enum OculusInterfaceEyeSide
@@ -58,6 +56,5 @@ private:
 
 	///Graphics device identifier (internal for the Rift SDK)
 	ovrGraphicsLuid luid;
-
 };
 #endif

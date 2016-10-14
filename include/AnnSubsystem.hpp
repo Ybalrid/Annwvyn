@@ -25,7 +25,6 @@ namespace Annwvyn
 
 		///Name of the subsystem
 		std::string name;
-
 	};
 }
 #endif //ANN_SUB_SYSTEM

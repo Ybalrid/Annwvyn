@@ -271,6 +271,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\README.md" />
     <None Include="..\..\TODO.md" />
     <None Include="Main Class Diagram.cd" />
   </ItemGroup>

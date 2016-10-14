@@ -51,7 +51,7 @@ namespace Annwvyn
 		///If true you can trust the data on this Quaternion
 		bool isValid();
 
-		///Used to say that the quaternion hasn't been retrived 
+		///Used to say that the quaternion hasn't been retrived
 		AnnQuaternion(bool validState);
 	private:
 		///Set valid to true

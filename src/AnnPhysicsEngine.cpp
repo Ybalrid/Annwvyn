@@ -100,7 +100,7 @@ void AnnPhysicsEngine::stepDebugDrawer()
 
 void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 {
-	// TOTO make a typedeff for getting off the uglyness here 
+	// TOTO make a typedeff for getting off the uglyness here
 	std::vector<struct collisionTest*> pairs;
 
 	//get all collision mask
@@ -113,7 +113,7 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 			pairs.push_back(onThisObject[j]);
 	}
 
-	//Reset the value before extracting data 
+	//Reset the value before extracting data
 	for (auto pair : pairs)
 		pair->collisionState = false;
 

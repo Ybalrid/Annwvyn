@@ -16,7 +16,7 @@ AnnSubSystem::~AnnSubSystem()
 }
 
 bool AnnSubSystem::needUpdate()
-{ 
+{
 	return true;
 }
 

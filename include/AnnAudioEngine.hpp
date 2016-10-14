@@ -27,14 +27,13 @@
 
 #include "AnnSubsystem.hpp"
 
-
 namespace Annwvyn
 {
 	class AnnEngine;
 	class AnnAudioEngine;
 
 	///Represent an audio source in the engine
-	class DLL AnnAudioSource 
+	class DLL AnnAudioSource
 	{
 	public:
 		///Private contructor. You have to call AnnAudioEngine::createAudioSource() to get an AnnAudioSource object
@@ -46,7 +45,7 @@ namespace Annwvyn
 		///Put the audio source at this position in space
 		void setPositon(AnnVect3 position);
 		///Set the volume at the given gain (betwenn 0 & 1)
-		/// \param gain value between 0 and 1 
+		/// \param gain value between 0 and 1
 		void setVolume(float gain);
 		///Put the audio read position at the origin
 		void rewind();
@@ -116,7 +115,7 @@ namespace Annwvyn
 
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
 		/// \param path path of the audio file to use as background music
-		/// \param volume Float number between 0 and 1, Loudness of the sound 
+		/// \param volume Float number between 0 and 1, Loudness of the sound
 		void playBGM(const std::string path, const float volume = 0.5f);
 
 		///stop the current background music from playing
@@ -142,7 +141,7 @@ namespace Annwvyn
 		/// \param pos The position of the player
 		void updateListenerPos(AnnVect3 pos);
 
-		///For the engine : update the listener orientation to mach the player's head 
+		///For the engine : update the listener orientation to mach the player's head
 		/// \param orient The orientatio of the player
 		void updateListenerOrient(AnnQuaternion orient);
 
@@ -163,7 +162,7 @@ namespace Annwvyn
 		ALCcontext* Context;
 
 		///Audio buffer for background music
-		ALuint bgmBuffer; 
+		ALuint bgmBuffer;
 		///Audio source for background music
 		ALuint bgm;
 

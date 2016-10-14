@@ -29,7 +29,7 @@ namespace Annwvyn
 	class DLL AnnLevel
 	{
 	public:
-		///Construct the level 
+		///Construct the level
 		AnnLevel();
 
 		///Pure virtual methods that loads the level
@@ -42,7 +42,7 @@ namespace Annwvyn
 		virtual void unload();
 
 		///Run logic code from the level
-		virtual void runLogic() =0;
+		virtual void runLogic() = 0;
 
 	protected:
 		AnnGameObjectList levelContent;

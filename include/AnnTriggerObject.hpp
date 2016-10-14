@@ -14,7 +14,7 @@
 
 namespace Annwvyn
 {
-	//Anticipated declaration of AnnEngine class 
+	//Anticipated declaration of AnnEngine class
 	class AnnEngine;
 	class AnnPhysicsGameEngine;
 
@@ -32,7 +32,7 @@ namespace Annwvyn
 		/// \param pos 3D vector positioning the object
 		virtual void setPosition(AnnVect3 pos);
 
-		///Does nothing 
+		///Does nothing
 		virtual void setOrientation(AnnQuaternion orient) { return; }
 
 		///Get position
@@ -44,12 +44,12 @@ namespace Annwvyn
 		///Get contact information
 		bool getContactInformation();
 
-	private:	
-		
-		///For engine : Set contact state 
+	private:
+
+		///For engine : Set contact state
 		/// \param contact Contact state
 		void setContactInformation(bool contact);
-		
+
 		///Return true if player's head (this is player's trigger point) is inside the trigger volume.
 		virtual bool computeVolumetricTest(std::shared_ptr<AnnPlayer> player) = 0;
 
@@ -58,7 +58,7 @@ namespace Annwvyn
 		friend class AnnPhysicsEngine;
 
 	private:
-		
+
 		///Position of the object
 		AnnVect3 position;
 
@@ -69,19 +69,19 @@ namespace Annwvyn
 		bool lastFrameContactWithPlayer;
 
 	private:
-		
+
 		///When contact happened
-		virtual void atContact() {return;}
-		
+		virtual void atContact() { return; }
+
 		///After initialization
-		virtual void postInit() {return;}
+		virtual void postInit() { return; }
 	};
 
 	///Trigger volume in the form of a sphere
 	class DLL AnnSphericalTriggerObject : public AnnTriggerObject
 	{
 	public:
-		
+
 		///Construc a spherical trigger. The radius is set wiht setThreshold
 		AnnSphericalTriggerObject();
 
@@ -93,10 +93,10 @@ namespace Annwvyn
 		void setThreshold(float threshold);
 
 	private:
-		
+
 		///implement the test on player position
 		bool computeVolumetricTest(std::shared_ptr<AnnPlayer> player);
-		
+
 		///Distance where the trigger is triggered
 		float threshold;
 		float squaredThreshold;
@@ -105,12 +105,11 @@ namespace Annwvyn
 	///Create a trigger volume that is aligned with the scene referential.
 	class DLL AnnAlignedBoxTriggerObject : public AnnTriggerObject
 	{
-
 	///Volume is defined by min/max XYZ boundaries
 	///This is the lowest load in CPU time
 
 	public:
-		
+
 		///Create an aligned box trigger on the XYZ referencies
 		AnnAlignedBoxTriggerObject();
 
@@ -122,18 +121,15 @@ namespace Annwvyn
 		/// \param z1 Z minimal plane boundary
 		/// \param z2 Z maximal plane boundary
 		void setBoundaries(float x1, float x2, float y1, float y2, float z1, float z2);
-	
+
 	private:
-		
+
 		///implement the test on player position
 		bool computeVolumetricTest(std::shared_ptr <AnnPlayer> player);
-		
+
 		///Boundaries values. All defaults to 0
 		float xMin, xMax, yMin, yMax, zMin, zMax;
 	};
 }
 
-
 #endif
-
-

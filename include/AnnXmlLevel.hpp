@@ -19,7 +19,7 @@ namespace Annwvyn
 	{
 	public:
 		static phyShapeType getShapeTypeFromString(std::string str);
-		///Construct an AnnXmlLevel 
+		///Construct an AnnXmlLevel
 		/// \param path
 		AnnXmlLevel(std::string path);
 

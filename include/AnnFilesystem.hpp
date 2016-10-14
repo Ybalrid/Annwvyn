@@ -35,10 +35,10 @@ namespace Annwvyn
 	///Handle opening, writing and closing files
 	class DLL AnnFileWriter
 	{
-		public:
-		///Construct file writer object
+	public:
+	///Construct file writer object
 		AnnFileWriter();
-	
+
 		///Write the fileData to disc in the appropriate directory
 		void write(std::shared_ptr<AnnSaveFileData> dataToWrite);
 	};
@@ -60,7 +60,7 @@ namespace Annwvyn
 	class DLL AnnFilesystemManager : public AnnSubSystem
 	{
 	public:
-		
+
 		///Construct FileSystem manager
 		AnnFilesystemManager(std::string title);
 
@@ -70,7 +70,7 @@ namespace Annwvyn
 		string getPathForFileName(string fileName);
 		///Get the path to the directory where save are read/written
 		string getSaveDirectoryFullPath();
-		
+
 		///Create the given directory (OS call)
 		static void createDirectory(string path);
 		///Create the save directory (should be done at least once)
@@ -84,7 +84,7 @@ namespace Annwvyn
 		///Destroy this SaveFileData Object. Will loose cached data if this file didn't go through the FileWriter
 		DEPRECATED void destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
-		
+
 		///Get the FileReader object
 		std::shared_ptr<AnnFileReader> getFileReader();
 		///Get the FileWriter object
@@ -99,14 +99,13 @@ namespace Annwvyn
 	public:
 		static std::vector<char> charToEscape;
 		static std::vector<char> charToStrip;
-
 	};
-	
+
 	///Class that holds data to read or write
 	class DLL AnnSaveFileData
 	{
 	public:
-		///Private constructor of SaveFileData class. 
+		///Private constructor of SaveFileData class.
 		AnnSaveFileData(std::string name);
 
 		///Get the name of this file
@@ -136,7 +135,7 @@ namespace Annwvyn
 		void clearQuaternionValue(std::string key);
 
 		///Return true if keys were manipulated but changes weren't wrote to disk yet
-		bool hasUnsavedChanges();	
+		bool hasUnsavedChanges();
 
 	private:
 		friend class AnnFileWriter;
@@ -149,18 +148,17 @@ namespace Annwvyn
 		bool changed;
 	};
 
-	///Interface class to switch from text to usefull data. 
+	///Interface class to switch from text to usefull data.
 	class DLL AnnSaveDataInterpretor
 	{
-
 	//Inherit from this to use your saved data
 
 	public:
 		///FileInterpetor
 		AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data);
-		
+
 		///Get a float from this string
-		float stringToFloat(std::string text);	
+		float stringToFloat(std::string text);
 		///Get a int from this string
 		int stringToInt(std::string text);
 		///Extract a float from the dataobject stored at the given key
@@ -173,13 +171,11 @@ namespace Annwvyn
 		AnnQuaternion keyStringToQuaternion(std::string key);
 
 		///Overload this method with
-		virtual void extract() =0;
-	
+		virtual void extract() = 0;
+
 	protected:
 		std::shared_ptr<AnnSaveFileData> dataObject;
 	};
-
-
 }
 
 #endif

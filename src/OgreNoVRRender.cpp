@@ -53,9 +53,8 @@ void OgreNoVRRender::initCameras()
 	noVRCam->setNearClipDistance(nearClippingDistance);
 	noVRCam->setFarClipDistance(farClippingDistance);
 	noVRCam->setFOVy(Ogre::Degree(90));
-	
-	headNode = smgr->getRootSceneNode()->createChildSceneNode();
 
+	headNode = smgr->getRootSceneNode()->createChildSceneNode();
 }
 
 void OgreNoVRRender::initRttRendering()
@@ -83,7 +82,7 @@ void OgreNoVRRender::updateTracking()
 	then = now;
 	now = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
-	
+
 	noVRCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y);
 	noVRCam->setOrientation(bodyOrientation);
 }
