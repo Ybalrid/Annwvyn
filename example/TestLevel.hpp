@@ -38,12 +38,12 @@ public:
 		//We add our brand new 3D object
 		auto MyObject = addGameObject("MyObject.mesh");
 		MyObject->setPosition(5, 1, 0);//We put it 5 meters to the right, and 1 meter up...
-		//MyObject->setUpPhysics(); // <---- This activate the physics for the object as static geommetry
-		MyObject->setUpPhysics(100, convexShape); // <------- this activate the physics as a dynamic object. We need to tell the shape aproximation to use. and a mass in Kg
+		//MyObject->setUpPhysics(); // <---- This activate the physics for the object as static geometry
+		MyObject->setUpPhysics(100, convexShape); // <------- this activate the physics as a dynamic object. We need to tell the shape approximation to use. and a mass in Kg
 
-		//The shape aproximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
+		//The shape approximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
 
-		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Accent test: 'é' Hello, Virtual World!\nthis is one line only one line only only", 128, 96.0f, "LibSerif", "LiberationSerif-regular.ttf");
+		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Accent test: 'é' Hello, Virtual World!\nthis is one line only one line only", 128, 96.0f, "LibSerif", "LiberationSerif-regular.ttf");
 		//text->setTextAlign(text->ALIGN_CENTER);
 		text->setBackgroundColor(AnnColor(0, 1, 0));
 		text->setPosition({ 0, 0.5f, -1 });

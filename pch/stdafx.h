@@ -35,7 +35,7 @@
 #include <OgreEntity.h>
 #include <OgreLight.h>
 #include <OgreMatrix3.h>
-//For the consosole, we use the font system of the Overlay
+//For the console, we use the font system of the Overlay
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 //We need to get access to the guts of the OpenGL RenderSystem

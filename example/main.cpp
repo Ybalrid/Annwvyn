@@ -30,7 +30,7 @@ AnnMain()
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetVRRenderer()->recenter();
 
-	//load ressources
+	//load resources
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 	AnnGetResourceManager()->initResources();

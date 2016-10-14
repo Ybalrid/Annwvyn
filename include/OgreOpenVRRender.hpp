@@ -98,7 +98,7 @@ public:
 	///Get a "vr::EVREye" from an "oovrEyeType"
 	inline vr::EVREye getEye(oovrEyeType eye);
 
-	///Setup the distortion rendering. Apparently this is actually not needed. Even if the official sample does it. This funciton is a placeholder
+	///Setup the distortion rendering. Apparently this is actually not needed. Even if the official sample does it. This function is a placeholder
 	void setupDistrotion();
 
 private:
@@ -127,13 +127,13 @@ private:
 	///main OpenVR object
 	vr::IVRSystem* vrSystem;
 
-	///Error handling vaiable
+	///Error handling viable
 	vr::HmdError hmdError;
 
 	///window size
 	unsigned int windowWidth, windowHeight;
 
-	///EyeCamera render texures
+	///EyeCamera render textures
 	Ogre::TexturePtr rttTexture[2];
 
 	///OpenGL "id" of the render textures
@@ -169,7 +169,7 @@ private:
 	///Array of tracked poses
 	vr::TrackedDevicePose_t trackedPoses[vr::k_unMaxTrackedDeviceCount];
 
-	///Transform that corespond to the HMD tracking
+	///Transform that correspond to the HMD tracking
 	Ogre::Matrix4 hmdAbsoluteTransform;
 
 	///Camera Rig that holds the 2 cameras on the same plane
