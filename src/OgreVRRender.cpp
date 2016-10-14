@@ -92,7 +92,7 @@ void OgreVRRender::getOgreConfig()
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 }
 
-std::shared_ptr<Annwvyn::AnnHandController>* OgreVRRender::getHandControllerArray()
+std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> OgreVRRender::getHandControllerArray()
 {
 	return handControllers;
 }

@@ -4,6 +4,7 @@
 #include "systemMacro.h"
 
 #include <string>
+#include <array>
 
 #include <Ogre.h>
 #include "AnnErrorCode.hpp"
@@ -138,7 +139,7 @@ public:
 	virtual void showDebug(DebugMode mode) = 0;
 
 	///Get a naked array of hand controllers
-	std::shared_ptr<Annwvyn::AnnHandController>* getHandControllerArray();
+	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> getHandControllerArray();
 
 	///Get the size of the controller array
 	size_t getHanControllerArraySize();
@@ -190,7 +191,7 @@ protected:
 	Ogre::uint AALevel;
 
 	///Array of hand controller
-	std::shared_ptr<Annwvyn::AnnHandController> handControllers[MAX_CONTROLLER_NUMBER];
+	std::array< std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> handControllers;
 };
 
 #endif
