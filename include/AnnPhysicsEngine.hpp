@@ -38,14 +38,14 @@ namespace Annwvyn
 		void addPlayerPhysicalBodyToDynamicsWorld();
 
 		///Create player's rigidbody
-		void createPlayerPhysicalVirtualBody( Ogre::SceneNode* node);
+		void createPlayerPhysicalVirtualBody(Ogre::SceneNode* node);
 
 		///Create player's body shape (a capsule)
 		void createVirtualBodyShape();
-		
+
 		///Pointer to the bullet's dynamics world
 		btDiscreteDynamicsWorld* getWorld();
-		
+
 		///Step the simulation
 		/// \param delta Interval in seconds that time has to be simulated
 		void step(float delta);

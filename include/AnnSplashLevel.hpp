@@ -19,14 +19,14 @@ namespace Annwvyn
 		///Construct a SplashLevel.
 		///\param splashTexture Name of the resource (image) to put in front of the player
 		AnnSplashLevel(Ogre::String splashTexture, std::shared_ptr<AnnLevel> nextLevel = nullptr, float timeoutTime = 10);
-		
+
 		///Load the level. This create a manual material and a manual object to present the splash image
 		void load();
 
 		///Run the logic of the splash screen. This will check for the time and jump to next level if timeout
 		void runLogic();
 
-		///Clean up the manually allocated object 
+		///Clean up the manually allocated object
 		void unload();
 
 		///Set the background music
@@ -49,7 +49,7 @@ namespace Annwvyn
 
 		///The plane that present the object
 		Ogre::ManualObject* CurvedPlane;
-		
+
 		///Node where the splash screen is attached
 		Ogre::SceneNode* Splash;
 
@@ -62,6 +62,5 @@ namespace Annwvyn
 		///Path to the file that is loaded as an audio buffer
 		std::string bgmPath;
 	};
-
 }
 #endif

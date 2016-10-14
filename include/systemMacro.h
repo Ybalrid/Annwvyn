@@ -15,19 +15,19 @@
 #undef DLL
 #ifdef DLLDIR_EX //Defined in Annwvyn MSVC project file only
 	///To contruct a DLL, The macro __declspec(dllexport) have to be called in front of the exported symbol
-   #define DLL  __declspec(dllexport)   // export DLL information
+#define DLL  __declspec(dllexport)   // export DLL information
 #else
 	///Macro to reference symbols from a DLL the macro __declspec(dllimport) have to be called the same way
-   #define DLL  __declspec(dllimport)   // import DLL information
+#define DLL  __declspec(dllimport)   // import DLL information
 #endif
 
 //DO NOT FORGET TO CALL THE DLL MACRO AT ANY CLASS AND GLOBAL FUNCTION DECLARATION!
 //e.g. class DLL SomeClass {};
 
-//Bypass on GNU/Linux : 
+//Bypass on GNU/Linux :
 #ifdef __gnu_linux__ //All that stuff is handeled by the makefile and the way g++ is called. DLL macros have to be empty but declared.
-	#undef DLL	
-	#define DLL
+#undef DLL
+#define DLL
 #endif
 
 //Thanks to http://stackoverflow.com/a/21265197 for this convinient macro
@@ -42,5 +42,3 @@
 ///Mark the symbol as Deprecated. The comments on it should help you use the correct mehtod
 #define DEPRECATED
 #endif
-
-

@@ -21,10 +21,10 @@ OculusInterface::OculusInterface()
 			" please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
 #ifdef _WIN32
 		MessageBox(NULL,
-			L"Please make sure Oculus Home is installed on your system\n"
-			L"and check HDMI and USB connection to your Rift and Tracker",
-			L"Error: Cannot create Oculus Session!",
-			MB_ICONERROR);
+				   L"Please make sure Oculus Home is installed on your system\n"
+				   L"and check HDMI and USB connection to your Rift and Tracker",
+				   L"Error: Cannot create Oculus Session!",
+				   MB_ICONERROR);
 #endif
 		//Cleanup
 		ovr_Shutdown();
@@ -41,7 +41,6 @@ OculusInterface::OculusInterface()
 
 	//Print to log all known information about the headset
 	customReport();
-
 }
 
 OculusInterface::~OculusInterface()
@@ -57,14 +56,14 @@ OculusInterface::~OculusInterface()
 
 void OculusInterface::customReport()
 {
-	//Print to the logger a bunch of information 
+	//Print to the logger a bunch of information
 	AnnDebug() << "===================================";
 	AnnDebug() << "Detected Oculus Rift VR Headset :";
 	AnnDebug() << "Product name : " << hmdDesc.ProductName;
 	AnnDebug() << "Serial number : " << hmdDesc.SerialNumber;
 	AnnDebug() << "Manufacturer : " << hmdDesc.Manufacturer;
 	AnnDebug() << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h;
-	AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate <<"Hz";
+	AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate << "Hz";
 	AnnDebug() << "Type of HMD identifier : " << hmdDesc.Type;
 	AnnDebug() << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor;
 	AnnDebug() << "===================================";
@@ -79,5 +78,3 @@ ovrSession OculusInterface::getSession()
 {
 	return session;
 }
-
-

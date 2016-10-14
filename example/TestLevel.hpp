@@ -1,6 +1,6 @@
 #ifndef TESTLEVEL
 #define TESTLEVEL
- 
+
 #include <Annwvyn.h>
 #include "DemoUtils.hpp"
 using namespace Annwvyn;
@@ -11,8 +11,8 @@ class Sinbad : public AnnGameObject
 public:
 	void postInit()
 	{
-		setPosition(0,0,-5);
-		setScale(0.2f,0.2f,0.2f);
+		setPosition(0, 0, -5);
+		setScale(0.2f, 0.2f, 0.2f);
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
@@ -28,13 +28,12 @@ public:
 class TestLevel : LEVEL
 {
 public:
-	///Construct the Level : 
+	///Construct the Level :
 	void load()
 	{
 		AnnGetEventManager()->addListener(goBackListener = make_shared<GoBackToDemoHub>());
 		//Set some ambiant light
-		AnnGetSceneryManager()->setAmbiantLight(AnnColor(.6f,.6f,.6f));
-
+		AnnGetSceneryManager()->setAmbiantLight(AnnColor(.6f, .6f, .6f));
 
 		//We add our brand new 3D object
 		auto MyObject = addGameObject("MyObject.mesh");
@@ -43,8 +42,8 @@ public:
 		MyObject->setUpPhysics(100, convexShape); // <------- this activate the physics as a dynamic object. We need to tell the shape aproximation to use. and a mass in Kg
 
 		//The shape aproximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
-		
-		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Accent test: 'é' Hello, Virtual World!\nthis is one line only one line only only",128,96.0f,"LibSerif", "LiberationSerif-regular.ttf");
+
+		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Accent test: 'é' Hello, Virtual World!\nthis is one line only one line only only", 128, 96.0f, "LibSerif", "LiberationSerif-regular.ttf");
 		//text->setTextAlign(text->ALIGN_CENTER);
 		text->setBackgroundColor(AnnColor(0, 1, 0));
 		text->setPosition({ 0, 0.5f, -1 });
@@ -53,7 +52,7 @@ public:
 
 		text->update();
 		addManualMovableObject(text);
-		
+
 		//Add other source of light
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
@@ -65,7 +64,7 @@ public:
 		S->playSound("media/monster.wav", true, 1);
 
 		//Add water
-		auto Water = addGameObject("environement/Water.mesh");	
+		auto Water = addGameObject("environement/Water.mesh");
 
 		//Add the island
 		auto Island = addGameObject("environement/Island.mesh");
@@ -73,7 +72,7 @@ public:
 
 		//Add the sign
 		auto Sign(addGameObject("environement/Sign.mesh"));
-		Sign->setPosition(1,-0,-2);
+		Sign->setPosition(1, -0, -2);
 		Sign->setUpPhysics(0, phyShapeType::staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
@@ -84,7 +83,7 @@ public:
 		//Put some music here
 		AnnGetAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg", 0.4);
 
-		//Place the starting point 
+		//Place the starting point
 		AnnGetPlayer()->setPosition(AnnVect3::ZERO);
 		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
 		AnnGetPlayer()->resetPlayerPhysics();

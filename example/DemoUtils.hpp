@@ -7,7 +7,6 @@ using namespace Annwvyn;
 //Forward definition of the listener class
 class DemoHubTriggerListener;
 
-
 class GoBackToDemoHub : LISTENER
 {
 public:

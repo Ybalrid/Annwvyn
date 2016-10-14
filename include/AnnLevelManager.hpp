@@ -2,7 +2,7 @@
  * \file AnnLevelManager.hpp
  * \brief Main class of the level system
  *	      The Level Manager load and unload levels from the internal Ogre Scene.
- *		  It also permit to jump from a level to another one. 
+ *		  It also permit to jump from a level to another one.
  * \author A. Brainville (Ybalrid)
  */
 #ifndef ANN_LEVELMANAGER

@@ -7,7 +7,7 @@
 
 namespace Annwvyn
 {
-	///Annwvyn interface class with Ogre's ResourceGroupManager. 
+	///Annwvyn interface class with Ogre's ResourceGroupManager.
 	class DLL AnnResourceManager : public AnnSubSystem
 	{
 	public:
@@ -26,17 +26,15 @@ namespace Annwvyn
 
 		///InitAllResources
 		void initResources();
-		
+
 		///Load in memory the content of the specified group
 		void loadGroup(const std::string& groupName);
-
 
 		///Deprecated. Use addZipLocation instead
 		DEPRECATED void loadZip(const char path[], const char resourceGroupName[] = defaultResourceGroupName) { return addZipLocation(path, resourceGroupName); }
 
 		///Deprecated. Use addFileLocation instead
 		DEPRECATED void loadDir(const char path[], const char resourceGroupName[] = defaultResourceGroupName) { return addFileLocation(path, resourceGroupName); }
-
 
 		///Name of the default resource group
 		static constexpr const char* const defaultResourceGroupName = "Annwvyn_UserDefined_Group";
@@ -50,8 +48,6 @@ namespace Annwvyn
 
 		///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
 		void addDefaultResourceLocation();
-
-
 	};
 }
 

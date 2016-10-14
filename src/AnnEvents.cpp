@@ -30,9 +30,9 @@ AnnEventType AnnEvent::getType()
 
 //---------------------------------------KEYBOARD
 AnnKeyEvent::AnnKeyEvent() : AnnEvent(),
-	key(KeyCode::unassigned),
-	pressed(false),
-	released(false)
+key(KeyCode::unassigned),
+pressed(false),
+released(false)
 {
 	type = USER_INPUT;
 }
@@ -100,7 +100,7 @@ void AnnMouseAxis::setAbsValue(int v)
 }
 
 MouseAxisId AnnMouseAxis::getMouseAxisId()
-{ 
+{
 	return id;
 }
 
@@ -116,17 +116,17 @@ int AnnMouseAxis::getAbsValue()
 
 AnnMouseEvent::AnnMouseEvent() : AnnEvent()
 {
-	for(size_t i(0); i < MouseButtonId::nbButtons; i++)
+	for (size_t i(0); i < MouseButtonId::nbButtons; i++)
 		buttonsStatus[i] = false;
-	
+
 	type = USER_INPUT;
 }
 
 bool AnnMouseEvent::getButtonState(MouseButtonId id)
 {
-	if(id == MouseButtonId::invalidButton) return false;
-	
-	if((int)id < (int)MouseButtonId::nbButtons)
+	if (id == MouseButtonId::invalidButton) return false;
+
+	if ((int)id < (int)MouseButtonId::nbButtons)
 		return buttonsStatus[id];
 
 	return false;
@@ -134,9 +134,9 @@ bool AnnMouseEvent::getButtonState(MouseButtonId id)
 
 AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
 {
-	if(id == MouseAxisId::invalidAxis) return AnnMouseAxis(MouseAxisId::invalidAxis,0,0);
+	if (id == MouseAxisId::invalidAxis) return AnnMouseAxis(MouseAxisId::invalidAxis, 0, 0);
 
-	if((int)id < (int)MouseAxisId::nbAxes)
+	if ((int)id < (int)MouseAxisId::nbAxes)
 		return axes[id];
 
 	return AnnMouseAxis(MouseAxisId::invalidAxis, 0, 0);
@@ -144,23 +144,22 @@ AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
 
 void AnnMouseEvent::setButtonStatus(MouseButtonId id, bool value)
 {
-	if((int)id < (int)MouseButtonId::nbButtons)
-		buttonsStatus[id]=value;
+	if ((int)id < (int)MouseButtonId::nbButtons)
+		buttonsStatus[id] = value;
 }
 
 void AnnMouseEvent::setAxisInformation(MouseAxisId id, AnnMouseAxis information)
 {
-	if((int)id < (int)MouseAxisId::nbAxes)
+	if ((int)id < (int)MouseAxisId::nbAxes)
 		axes[id] = information;
 }
 
 AnnStickAxis::AnnStickAxis()
 {
-    setAxis(InvalidStickAxisId);
-    setRelValue(0);
-    setAbsValue(0);
+	setAxis(InvalidStickAxisId);
+	setRelValue(0);
+	setAbsValue(0);
 	noRel = true;
-	
 }
 
 StickAxisId AnnStickAxis::getAxisId()
@@ -170,38 +169,36 @@ StickAxisId AnnStickAxis::getAxisId()
 
 AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs)
 {
-    setAxis(ax);
-    setRelValue(rel);
-    setAbsValue(abs);
+	setAxis(ax);
+	setRelValue(rel);
+	setAbsValue(abs);
 }
 
 void AnnStickAxis::setRelValue(int rel)
 {
-    r = rel;
+	r = rel;
 }
 
 void AnnStickAxis::setAbsValue(int abs)
 {
-    a = abs;
+	a = abs;
 }
 
 void AnnStickAxis::setAxis(StickAxisId ax)
 {
-    id = ax;
+	id = ax;
 }
 
 float AnnStickAxis::getRelValue()
 {
-    if(noRel) return INVALID;
-    return float(r)/float(OIS::JoyStick::MAX_AXIS);
+	if (noRel) return INVALID;
+	return float(r) / float(OIS::JoyStick::MAX_AXIS);
 }
 
 float AnnStickAxis::getAbsValue()
 {
-    return float(a)/float(OIS::JoyStick::MAX_AXIS);
+	return float(a) / float(OIS::JoyStick::MAX_AXIS);
 }
-
-
 
 AnnStickPov::AnnStickPov() :
 	north(false),
@@ -264,45 +261,45 @@ AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
 {
 	switch (binaryDirection)
 	{
-	case OIS::Pov::North:
-		north = true;
-		break;
+		case OIS::Pov::North:
+			north = true;
+			break;
 
-	case OIS::Pov::NorthEast:
-		north = true;
-		east = true;
-		break;
+		case OIS::Pov::NorthEast:
+			north = true;
+			east = true;
+			break;
 
-	case OIS::Pov::NorthWest:
-		north = true;
-		west = true;
-		break;
+		case OIS::Pov::NorthWest:
+			north = true;
+			west = true;
+			break;
 
-	case OIS::Pov::South:
-		south = true;
-		break;
+		case OIS::Pov::South:
+			south = true;
+			break;
 
-	case OIS::Pov::SouthEast:
-		south = true;
-		east = true;
-		break;
+		case OIS::Pov::SouthEast:
+			south = true;
+			east = true;
+			break;
 
-	case OIS::Pov::SouthWest:
-		south = true;
-		west = true;
-		break;
+		case OIS::Pov::SouthWest:
+			south = true;
+			west = true;
+			break;
 
-	case OIS::Pov::East:
-		east = true;
-		break;
+		case OIS::Pov::East:
+			east = true;
+			break;
 
-	case OIS::Pov::West:
-		west = true;
-		break;
+		case OIS::Pov::West:
+			west = true;
+			break;
 
-	case OIS::Pov::Centered:
-	default:
-		break;
+		case OIS::Pov::Centered:
+		default:
+			break;
 	}
 }
 
@@ -313,7 +310,7 @@ stickID(-1)
 	type = USER_INPUT;
 }
 
-AnnStickEvent::~AnnStickEvent(){}
+AnnStickEvent::~AnnStickEvent() {}
 
 unsigned int AnnStickEvent::getStickID()
 {
@@ -322,24 +319,23 @@ unsigned int AnnStickEvent::getStickID()
 
 bool AnnStickEvent::isDown(ButtonId id)
 {
-    if (id >= buttons.size()) return false;
-    return buttons[id];
+	if (id >= buttons.size()) return false;
+	return buttons[id];
 }
 
 size_t AnnStickEvent::getNbButtons()
 {
-    return buttons.size();
+	return buttons.size();
 }
-
 
 std::vector<unsigned short> AnnStickEvent::getPressed()
 {
-    return pressed;
+	return pressed;
 }
 
 std::vector<unsigned short> AnnStickEvent::getReleased()
 {
-    return released;
+	return released;
 }
 
 AnnStickAxis AnnStickEvent::getAxis(StickAxisId ax)
@@ -357,8 +353,8 @@ bool AnnStickEvent::isPressed(ButtonId id)
 	//if id is not a valid buton
 	if (id >= buttons.size()) return false;
 
-	for(ButtonId i(0); i < pressed.size();  i++)
-		if(pressed[i] == id) return true;
+	for (ButtonId i(0); i < pressed.size(); i++)
+		if (pressed[i] == id) return true;
 	return false;
 }
 
@@ -367,8 +363,8 @@ bool AnnStickEvent::isReleased(ButtonId id)
 	//if id is not a valid buton
 	if (id >= buttons.size()) return false;
 
-	for(ButtonId i(0); i < released.size();  i++)
-		if(released[i] == id) return true;
+	for (ButtonId i(0); i < released.size(); i++)
+		if (released[i] == id) return true;
 	return false;
 }
 
@@ -419,7 +415,7 @@ AnnTimer::AnnTimer(timerID id, double delay)
 
 bool AnnTimer::isTimeout()
 {
-	if(AnnGetEngine()->getTimeFromStartUp() >= timeoutTime)
+	if (AnnGetEngine()->getTimeFromStartUp() >= timeoutTime)
 		return true;
 	return false;
 }

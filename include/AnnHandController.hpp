@@ -5,15 +5,14 @@
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 
-namespace Annwvyn 
+namespace Annwvyn
 {
-
 	typedef size_t AnnHandControllerID;
-	class DLL AnnHandController 
+	class DLL AnnHandController
 	{
 	public:
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
-		enum AnnHandControllerSide{leftHandController, rightHandController, invalidHandController};
+		enum AnnHandControllerSide { leftHandController, rightHandController, invalidHandController };
 
 		///Construct a Controller object
 		AnnHandController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
@@ -48,7 +47,7 @@ namespace Annwvyn
 		///Attach the node as a child to the controller node
 		void attachNode(Ogre::SceneNode* grabbedObject);
 
-		///Set the position of the hand 
+		///Set the position of the hand
 		void setTrackedPosition(AnnVect3 position);
 
 		///Set the orientaiton of the hand
@@ -64,14 +63,14 @@ namespace Annwvyn
 		bool isTracked();
 
 	private:
-		///ID of the controller, expect 1 or 2 
+		///ID of the controller, expect 1 or 2
 		AnnHandControllerID id;
 
 		///Side of the controller, right hand? left hand? Who knows!
 		AnnHandControllerSide side;
 
 		///Some Ogre Scene Nodes
-		Ogre::SceneNode* node, * grabbed;
+		Ogre::SceneNode* node, *grabbed;
 
 		///Currently attached entity
 		Ogre::Entity* model;
@@ -80,7 +79,7 @@ namespace Annwvyn
 		bool tracked;
 
 		///Angular velocity (euler?) vector
-		AnnVect3 trackedAngularSpeed; 
+		AnnVect3 trackedAngularSpeed;
 
 		///Linear velocity vector
 		AnnVect3 trackedLinearSpeed;

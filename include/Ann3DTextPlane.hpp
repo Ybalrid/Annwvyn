@@ -17,21 +17,21 @@ namespace Annwvyn
 	{
 	public:
 		///Text alignment flag
-		enum TextAlign{ALIGN_LEFT = 'l', ALIGN_CENTER = 'c', ALIGN_RIGHT = 'r' };
+		enum TextAlign { ALIGN_LEFT = 'l', ALIGN_CENTER = 'c', ALIGN_RIGHT = 'r' };
 
 		///Construct a 3D text plane. Need to provide a caption to auto render text
 		/// \param w Width in metter
 		/// \param h Height in metter
-		/// \param caption Caption 
+		/// \param caption Caption
 		/// \param size Character size in typographic point
 		/// \param resolution Character "print" resolution in DPI. Thiw will influence the texture resolution
 		/// \param font Your name of the font. To reuse a font configuration
 		/// \param fontTTF Name of the TTF file known by the resource manager
-		Ann3DTextPlane(float w, float h, std::string caption = "",int size = 128, float resolution = 96.0f, std::string font = "defaultFont", std::string fontTTF = "VeraMono.ttf");
-		
+		Ann3DTextPlane(float w, float h, std::string caption = "", int size = 128, float resolution = 96.0f, std::string font = "defaultFont", std::string fontTTF = "VeraMono.ttf");
+
 		///Class destructor
 		~Ann3DTextPlane();
-		
+
 		///Set or change the caption
 		/// \param newCaption the new text to display
 		void setCaption(std::string newCaption);
@@ -52,10 +52,9 @@ namespace Annwvyn
 
 		///Set the position of the plane
 		void setPosition(AnnVect3 p);
-		
+
 		///Set the orient of the plane
 		void setOrientation(AnnQuaternion q);
-
 
 		///Set the text alignment mode
 		void setTextAlign(TextAlign talign);
@@ -77,22 +76,22 @@ namespace Annwvyn
 	private:
 		///Render the text
 		void renderText();
-	
+
 		///Fill the texture with transparent black
 		void clearTexture();
 
 		///Calculate the actuall vertex coordinates for the plane geometry
 		void calculateVerticesForPlaneSize();
-		
+
 		///Check if autoupdate is on. If so, call update
 		void autoUpdateCheck();
-		
+
 		///Generat a random string of leter of arbitrary lenght
 		std::string generateRandomString(size_t len = 15);
-		
+
 		///Generate a random material name
 		void generateMaterialName();
-		
+
 		///Create the material
 		void createMaterial();
 
@@ -102,7 +101,7 @@ namespace Annwvyn
 		///Node where the object is attached
 		Ogre::SceneNode* node;
 
-		///Textures 
+		///Textures
 		Ogre::TexturePtr texture, bgTexture;
 
 		///Font configuration
@@ -110,10 +109,10 @@ namespace Annwvyn
 
 		///Text to display
 		std::string caption;
-		
+
 		///If true, next update call will update
 		bool needUpdating;
-		
+
 		///Lenght of the random material name
 		const size_t materialNameLen = 30;
 
@@ -124,7 +123,7 @@ namespace Annwvyn
 		AnnVect3 vertices[4];
 
 		///Static texture coordinates
-		const AnnVect2 textureCoords[4] = {{0,0},{0,1},{1,0},{1,1}};
+		const AnnVect2 textureCoords[4] = { {0,0},{0,1},{1,0},{1,1} };
 
 		///Various floats for size computation
 		float width, height, resolutionFactor, xOffset, yOffset;
@@ -132,7 +131,7 @@ namespace Annwvyn
 		///The font from the Ogre::FontManager
 		Ogre::FontPtr font;
 
-		///Colors 
+		///Colors
 		AnnColor textColor, bgColor;
 
 		///Text alignment
@@ -141,7 +140,7 @@ namespace Annwvyn
 		///if true, will update each time something is updated
 		bool autoUpdate;
 
-		///Size of the font, in points 
+		///Size of the font, in points
 		int fontSize;
 
 		///Static convertions factor between Dot Per Inch and Dot Per Metters
@@ -155,7 +154,7 @@ namespace Annwvyn
 
 		///Margin in metters
 		float margin;
-		
+
 		///Will use an image as background
 		bool useImageAsBackground;
 	};

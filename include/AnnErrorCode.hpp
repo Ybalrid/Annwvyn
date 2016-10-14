@@ -26,7 +26,7 @@ Indicate an irecuperable error with the renderer. Either during initialization o
 - Check other software (Graphics drivers)
 - Check log file for more information
 */
-#define ANN_ERR_INFILE 0x12F1D31 // Infi-del 
+#define ANN_ERR_INFILE 0x12F1D31 // Infi-del
 /*
 Indicate that the engine is unable to understand an Annwvyn file you tried to load
 - Check file path in your code
@@ -41,7 +41,7 @@ See log. Something gone wrong and don't have a specific error code.
 
 #define ANN_ERR_NOTINIT 0x207760D
 /*
-See log. Something that should have been initialized beforehand isn't here. 
+See log. Something that should have been initialized beforehand isn't here.
 If there isn't a log, you tried to use something relating ogre before Ogre initialization
 */
 

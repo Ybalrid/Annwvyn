@@ -31,5 +31,4 @@ namespace Annwvyn
 		static AnnDegree degree(float value);
 		static AnnRadian radian(float value);
 	};
-
 }

@@ -342,5 +342,6 @@
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />
     <None Include="..\..\TODO.md" />
+    <None Include="..\..\README.md" />
   </ItemGroup>
 </Project>

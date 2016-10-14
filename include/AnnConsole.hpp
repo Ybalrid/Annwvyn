@@ -38,23 +38,23 @@ namespace Annwvyn
 		///Set arbitrary the visibility state of the console
 		void setVisible(bool visibility);
 
-		///Toogle the console. 
+		///Toogle the console.
 		void toogle();
 
 		///True if text has been updated on the console and the console is visible.
 		bool needUpdate();
 
-		///Update the console by filling it with background texture then bliting text on it. 
+		///Update the console by filling it with background texture then bliting text on it.
 		///Can take some computing time depending on the size/resolution of the textures and buffer
 		void update();
 
 	private:
-		///This peice of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs 
-		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l',  bool wordwrap = true);
-		
+		///This peice of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
+		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true);
+
 		///True if content of the buffer has been modified
 		bool modified;
-		
+
 		///Array of 3D points to construct the render plane
 		AnnVect3 points[4];
 
@@ -70,19 +70,19 @@ namespace Annwvyn
 		///Node where the console is attached
 		Ogre::SceneNode* consoleNode;
 
-		///The actual texture of the dispaly 
+		///The actual texture of the dispaly
 		Ogre::TexturePtr texture;
 
 		///Position of the plane using the camera as reference
 		AnnVect3 offset;
 
 		///Background texutre, should be a random PNG file from the CORE resources
-		Ogre::TexturePtr background; 
+		Ogre::TexturePtr background;
 
-		///OpenGL Texture IDs, to use glCopyImageSubData to clone texture quickly. 
+		///OpenGL Texture IDs, to use glCopyImageSubData to clone texture quickly.
 		GLuint backgroundID, textureID;
 
-		///There's a small optimisation we can do on the way we copy a texture to another, but the opengl function is available on GL4.3+ hardware only. 
+		///There's a small optimisation we can do on the way we copy a texture to another, but the opengl function is available on GL4.3+ hardware only.
 		bool openGL43plus;
 
 		///The font object used, should be Vera Mono in true type format from the Gnome project, included in CORE resources

@@ -13,7 +13,7 @@
 #include <glew.h>
 #endif
 
-//We need to get low level access to Ogre's RenderSystem_GL 
+//We need to get low level access to Ogre's RenderSystem_GL
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
 #include <RenderSystems/GL/OgreGLTexture.h>
@@ -22,7 +22,6 @@
 #include "AnnTypes.h"
 
 #include "AnnHandController.hpp"
-
 
 class DLL OgreOpenVRRender : public OgreVRRender
 {
@@ -45,7 +44,7 @@ public:
 	///Initialize the OpenVR HMD
 	virtual void initVrHmd();
 
-	///Initialize additional rendering features 
+	///Initialize additional rendering features
 	virtual void initClientHmdRendering();
 
 	///Return true if the application should terminate
@@ -112,11 +111,11 @@ private:
 
 	///Take a Matrix34 from OpenVR and spew out an Ogre::Matrix4 that represent the same transform
 	inline Ogre::Matrix4 getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat);
-	
+
 	///Iterate through the list of events from SteamVR and call code that react to it
 	void processVREvents();
-	
-	///Process through the array of OpenVR tracked devices, get the data of the interesting ones (hand controllers) 
+
+	///Process through the array of OpenVR tracked devices, get the data of the interesting ones (hand controllers)
 	void processTrackedDevices();
 
 	///Reset the IPD displacement of the cameras according to the EyeToHeadTransform matrix
@@ -136,7 +135,7 @@ private:
 
 	///EyeCamera render texures
 	Ogre::TexturePtr rttTexture[2];
-	
+
 	///OpenGL "id" of the render textures
 	GLuint rttTextureGLID[2];
 
@@ -163,7 +162,7 @@ private:
 
 	///Geometry of an OpenGL texture
 	vr::VRTextureBounds_t GLBounds;
-	
+
 	///Timing marker
 	double then, now;
 
@@ -172,11 +171,11 @@ private:
 
 	///Transform that corespond to the HMD tracking
 	Ogre::Matrix4 hmdAbsoluteTransform;
-	
-	///Camera Rig that holds the 2 cameras on the same plane 
+
+	///Camera Rig that holds the 2 cameras on the same plane
 	Ogre::SceneNode* eyeRig;
 
-	///State of the "should quit" marker. If it goes to true, the game loop should stop 
+	///State of the "should quit" marker. If it goes to true, the game loop should stop
 	bool shouldQuitState;
 };
 

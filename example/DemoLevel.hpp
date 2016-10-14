@@ -38,7 +38,7 @@ public:
 		auto TextPane = make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, 18.f);
 		TextPane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
 		TextPane->setTextColor(AnnColor{ 0, 0, 0 });
-		TextPane->setPosition(StoneDemo0->getPosition() + StoneDemo0->getOrientation()*  AnnVect3{ 0, 2, -0.35 });
+		TextPane->setPosition(StoneDemo0->getPosition() + StoneDemo0->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
 		TextPane->setOrientation(StoneDemo0->getOrientation());
 		TextPane->update();
 		addManualMovableObject(TextPane);
@@ -56,7 +56,7 @@ public:
 		auto TestLevelText = make_shared<Ann3DTextPlane>(2.f, 1.f, "TestLevel\nA simple test level", 512, 18.f);
 		TestLevelText->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
 		TestLevelText->setTextColor(AnnColor{ 0, 0, 0 });
-		TestLevelText->setPosition(StoneTestLevel->getPosition() + StoneTestLevel->getOrientation()*  AnnVect3{ 0, 2, -0.35 });
+		TestLevelText->setPosition(StoneTestLevel->getPosition() + StoneTestLevel->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
 		TestLevelText->setOrientation(StoneTestLevel->getOrientation());
 		TestLevelText->update();
 		addManualMovableObject(TestLevelText);
@@ -65,7 +65,7 @@ public:
 		TestLevelTrigger->setThreshold(1.5f);
 		TestLevelTrigger->setPosition(StoneTestLevel->getPosition() + AnnVect3(0, 0.5f, 0));
 		testLevelTrig = TestLevelTrigger;
-		
+
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
@@ -114,7 +114,6 @@ public:
 private:
 	std::shared_ptr<AnnTriggerObject> demo0trig;
 	std::shared_ptr<AnnTriggerObject> testLevelTrig;
-
 };
 
 class Demo0 : LEVEL

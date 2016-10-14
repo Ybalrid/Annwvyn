@@ -26,7 +26,6 @@ std::shared_ptr<AnnEventListener> Annwvyn::AnnEventListener::getSharedListener()
 	return std::enable_shared_from_this<AnnEventListener>::shared_from_this();
 }
 
-
 AnnTextInputer::AnnTextInputer() :
 	listen(false)
 {
@@ -39,7 +38,7 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_BACK && !input.empty())
 		input.pop_back();
 	else
-		//Put typed char into the application 
+		//Put typed char into the application
 		input.push_back((char)arg.text);
 	return true;
 }
@@ -94,7 +93,7 @@ lastTimerCreated(0)
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 	InputManager = OIS::InputManager::createInputSystem(pl);
 
-	//Get the keyboard, mouse and joysticks objects 
+	//Get the keyboard, mouse and joysticks objects
 	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
 
@@ -171,7 +170,7 @@ void AnnEventManager::clearListenerList()
 	listeners.clear();
 }
 
-//l equals NULL by default 
+//l equals NULL by default
 void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 {
 	AnnDebug() << "Removing an event listener : " << l.get();
@@ -211,7 +210,7 @@ void AnnEventManager::processInput()
 			//if it's pressed
 			if (Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c])
 			{
-				//create a coresponding key event 
+				//create a coresponding key event
 				AnnKeyEvent e;
 				e.setCode((KeyCode::code)c);
 				e.setPressed();

@@ -43,7 +43,7 @@ public:
 	///Get the scene manager of the virtual world
 	Ogre::SceneManager* getSceneManager();
 
-	///Get the Ogre::Root object 
+	///Get the Ogre::Root object
 	Ogre::Root* getRoot();
 
 	///Get the RenderWidow that should display a debug render the VR view
@@ -58,7 +58,7 @@ public:
 	///Get frame update time from the VR renderer
 	double getUpdateTime();
 
-	///Configure the Ogre root engine. Will load all the ogre Plugins and componants we need. 
+	///Configure the Ogre root engine. Will load all the ogre Plugins and componants we need.
 	void getOgreConfig();
 
 	///Init Ogre, please provie the name of the output log file
@@ -79,7 +79,7 @@ public:
 	///Create the pair of cameras for the streo render;
 	virtual void initCameras() = 0;
 
-	///Initialize the Render To Texture rendering 
+	///Initialize the Render To Texture rendering
 	virtual void initRttRendering() = 0;
 
 	///Init the VR client rendering
@@ -112,7 +112,7 @@ public:
 	///Set the VR cameras near clipping plane distance. Please use SetNearClippingDistance instead
 	DEPRECATED virtual void setCamerasNearClippingDistance(float distance) { return updateProjectionMatrix(); }
 
-	///Set the distance from the viewpoint to the near clipping distance plane 
+	///Set the distance from the viewpoint to the near clipping distance plane
 	virtual void setNearClippingDistance(float distance);
 
 	///Set the VR cameras far clipping plane distance. Please use SetFarClippingDistance instead
@@ -122,7 +122,7 @@ public:
 	virtual void setFarClippingDistance(float distance);
 
 	///The projection matrix is generally given by the underlying VR api, generally, using the near/far clipping distances set in this class
-	/// \note this method is called by the set{Near/Far}ClippingDistance() automatically. 
+	/// \note this method is called by the set{Near/Far}ClippingDistance() automatically.
 	virtual void updateProjectionMatrix() = 0;
 
 	///(Optional) return true if audio has to come out from a specific audio device
@@ -134,7 +134,7 @@ public:
 	///The current position of the head center defined by the client library projected in World Space
 	OgrePose returnPose;
 
-	///She the asked debug view 
+	///She the asked debug view
 	virtual void showDebug(DebugMode mode) = 0;
 
 	///Get a naked array of hand controllers
@@ -153,7 +153,7 @@ protected:
 	///Ogre root object
 	Ogre::Root* root;
 
-	///Render window. VR isn't drawn to this window. A window is mandatory to init the RenderSystem. 
+	///Render window. VR isn't drawn to this window. A window is mandatory to init the RenderSystem.
 	Ogre::RenderWindow* window;
 
 	///Update Time
@@ -191,7 +191,6 @@ protected:
 
 	///Array of hand controller
 	std::shared_ptr<Annwvyn::AnnHandController> handControllers[MAX_CONTROLLER_NUMBER];
-
 };
 
 #endif

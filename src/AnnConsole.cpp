@@ -56,7 +56,7 @@ openGL43plus(false)
 	//Object compleate
 	displaySurface->end();
 
-	//create a node child to the camera here : 
+	//create a node child to the camera here :
 	consoleNode = AnnGetEngine()->getPlayerPovNode()->createChildSceneNode();
 
 	//attach The object
@@ -104,23 +104,22 @@ openGL43plus(false)
 
 	//To optimize texture copy, make sure to use the most efficient OpenGL method
 
-	
 	if (Ogre::Root::getSingleton().getRenderSystem()->getName()
 		== "OpenGL Rendering Subsystem")
 	{
 		backgroundID = static_cast<Ogre::GLTexture*>(background.get())->getGLID();
 		textureID = static_cast<Ogre::GLTexture*>(texture.get())->getGLID();
-		
+
 		// check if OpenGL version is > at 4.3
 		GLint major, minor;
 		glGetIntegerv(GL_MAJOR_VERSION, &major);
 		glGetIntegerv(GL_MINOR_VERSION, &minor);
-		
+
 		std::stringstream log;
 		log << "AnnConsolen constructor detected OpenGL version " << major << "." << minor;
 		AnnEngine::log(log.str());
 
-		if(openGL43plus = (major >= 4) && (minor >= 3))
+		if (openGL43plus = (major >= 4) && (minor >= 3))
 		{
 			AnnEngine::log("This version is 4.3 or greater. Texture copy optimisation enabled");
 		}
@@ -161,7 +160,6 @@ void AnnConsole::update()
 		content << buffer[i] << std::endl;
 	Ogre::String textToDisplay = content.str();
 
-
 	if (openGL43plus)
 		glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
 						   textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
@@ -171,7 +169,7 @@ void AnnConsole::update()
 		//background->copyToTexture(texture);
 		float w(texture->getBuffer()->getWidth());
 		float h(texture->getBuffer()->getHeight());
-		
+
 		auto texture_out = texture->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::HardwareBuffer::LockOptions::HBL_WRITE_ONLY);
 
 		w = background->getBuffer()->getWidth();
@@ -184,7 +182,6 @@ void AnnConsole::update()
 
 		background->getBuffer()->unlock();
 		texture->getBuffer()->unlock();
-
 	}
 
 	//Write text to texture
@@ -257,7 +254,6 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 			if (GlyphTexCoords[i].getWidth() > charwidth)
 				charwidth = GlyphTexCoords[i].getWidth();
 		}
-
 	}
 
 	size_t cursorX = 0;

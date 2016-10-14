@@ -23,7 +23,7 @@ shouldQuitState(false)
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
 
-	//I like to initialize everything to zero 
+	//I like to initialize everything to zero
 	rttTexture[left].setNull();
 	rttTexture[right].setNull();
 
@@ -121,7 +121,6 @@ void OgreOpenVRRender::initVrHmd()
 
 void OgreOpenVRRender::initClientHmdRendering()
 {
-
 	//Init GLEW here to be able to call OpenGL functions
 	Annwvyn::AnnDebug() << "Init GL Extension Wrangler";
 	GLenum err = glewInit();
@@ -134,7 +133,7 @@ void OgreOpenVRRender::initClientHmdRendering()
 	}
 	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 	setupDistrotion();
-	//Should init the device model things here if we want to display the vive controllers 
+	//Should init the device model things here if we want to display the vive controllers
 
 	//Declare the textures for SteamVR
 	vrTextures[left] = { (void*)rttTextureGLID[left], API, vr::ColorSpace_Gamma };
@@ -177,7 +176,7 @@ void OgreOpenVRRender::updateTracking()
 	now = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
 
-	//Wait for next frame pose 
+	//Wait for next frame pose
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	processTrackedDevices();
 
@@ -187,17 +186,17 @@ void OgreOpenVRRender::updateTracking()
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
 	//Update the monoscopic camera view
-	monoCam->setPosition(feetPosition 
-						 + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y 
+	monoCam->setPosition(feetPosition
+						 + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y
 						 + bodyOrientation * getTrackedHMDTranslation());
 	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Update the eye rig tracking to make the eyes match yours
-	eyeRig->setPosition(feetPosition 
+	eyeRig->setPosition(feetPosition
 						+ bodyOrientation * getTrackedHMDTranslation());
 	eyeRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
-	//Get the head reference back to the gameplay code 
+	//Get the head reference back to the gameplay code
 	returnPose.position = eyeRig->getPosition();
 	returnPose.orientation = eyeRig->getOrientation();
 }
@@ -333,7 +332,7 @@ void OgreOpenVRRender::initRttRendering()
 	rttViewports[left] = rttTexture[left]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left]);
 	rttViewports[right] = rttTexture[right]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right]);
 
-	//Do the same for the window 
+	//Do the same for the window
 	windowViewport = window->addViewport(monoCam);
 
 	//Make sure the default viewport background color is set for everything
@@ -342,7 +341,6 @@ void OgreOpenVRRender::initRttRendering()
 
 void OgreOpenVRRender::getProjectionMatrix()
 {
-	
 }
 
 void OgreOpenVRRender::updateProjectionMatrix()
@@ -370,7 +368,6 @@ inline vr::EVREye OgreOpenVRRender::getEye(oovrEyeType eye)
 	if (eye == left) return vr::Eye_Left;
 	return vr::Eye_Right;
 }
-
 
 void OgreOpenVRRender::setupDistrotion()
 {
@@ -434,15 +431,15 @@ void OgreOpenVRRender::processTrackedDevices()
 
 		//At this point, we know that "trackedDevice" is the index of a valid SteamVR hand controller. We can extract it's tracking information
 		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
-		
-		//Extract the pose from the transformation matrix 
+
+		//Extract the pose from the transformation matrix
 		Ogre::Vector3 position = transform.getTrans();
 		Ogre::Quaternion orientation = transform.extractQuaternion();
 
 		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
 		//controllerID 0 = left; 1 = right;
 
-		Annwvyn::AnnHandController::AnnHandControllerSide side; 
+		Annwvyn::AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
 			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
@@ -459,15 +456,14 @@ void OgreOpenVRRender::processTrackedDevices()
 				break;
 		}
 
-		// TOTO: get the buttons (stick, touchpad, whatever) states of this controller 
-
+		// TOTO: get the buttons (stick, touchpad, whatever) states of this controller
 
 		//Dinamically allocate the controller if the controller doesn't exist yet
 		if (!handControllers[controllerID])
 		{
 			handControllers[controllerID] = std::make_shared<Annwvyn::AnnHandController>
 				(smgr->getRootSceneNode()->createChildSceneNode(), controllerID, side);
-			
+
 			if (DEBUG) handControllers[controllerID]->attachModel(smgr->createEntity("gizmo.mesh"));
 		}
 

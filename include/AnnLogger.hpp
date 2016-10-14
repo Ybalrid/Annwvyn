@@ -23,13 +23,13 @@ namespace Annwvyn
 		{
 		public:
 			///Construct an AnnDebug buffer
-			AnnDebugBuff(){};
+			AnnDebugBuff() {};
 
 			///Will sync the buffer
-			~AnnDebugBuff(){pubsync();};
+			~AnnDebugBuff() { pubsync(); };
 
-			///Sync the buffer by performing an AnnEngine::log, clear it and return success. 
-			int sync(){AnnEngine::log(str()); str(""); return 0;};
+			///Sync the buffer by performing an AnnEngine::log, clear it and return success.
+			int sync() { AnnEngine::log(str()); str(""); return 0; };
 		};
 
 	public:

@@ -72,10 +72,9 @@ void OgreVRRender::initOgreRoot(std::string loggerName)
 	//Create the ogre root with standards Ogre configuration file
 	root = new Ogre::Root("", "ogre.cfg", loggerName.c_str());
 
-	//Set the log verbosity to "bore me" 
+	//Set the log verbosity to "bore me"
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LoggingLevel::LL_BOREME);
 }
-
 
 void OgreVRRender::getOgreConfig()
 {
