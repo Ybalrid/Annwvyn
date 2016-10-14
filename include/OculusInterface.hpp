@@ -18,7 +18,7 @@
 #include <Ogre.h>
 #define USE_OGRE
 
-///Comunicate with the Rift runtime (initialize OVR and get the info)
+///Communicate with the Rift runtime (initialize OVR and get the info)
 class DLL OculusInterface
 {
 public:
@@ -29,7 +29,7 @@ public:
 		right
 	};
 
-	///Construct an OculusInterface object. This create an Oculus Session for comunication with the Oculus Runtime
+	///Construct an OculusInterface object. This create an Oculus Session for communication with the Oculus Runtime
 	OculusInterface();
 
 	///Destructor of Oculus Interface

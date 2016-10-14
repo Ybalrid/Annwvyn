@@ -62,7 +62,7 @@ namespace Annwvyn
 		///Position of the object
 		AnnVect3 position;
 
-		///True if trigger triggerd
+		///True if trigger triggers
 		bool contactWithPlayer;
 
 		///State of the last frame
@@ -82,7 +82,7 @@ namespace Annwvyn
 	{
 	public:
 
-		///Construc a spherical trigger. The radius is set wiht setThreshold
+		///Construct a spherical trigger. The radius is set with setThreshold
 		AnnSphericalTriggerObject();
 
 		///GetThreshold distance
@@ -110,10 +110,10 @@ namespace Annwvyn
 
 	public:
 
-		///Create an aligned box trigger on the XYZ referencies
+		///Create an aligned box trigger on the XYZ references
 		AnnAlignedBoxTriggerObject();
 
-		///Set the volume dimentions
+		///Set the volume dimensions
 		/// \param x1 X minimal plane boundary
 		/// \param x2 X maximal plane boundary
 		/// \param y1 Y minimal plane boundary

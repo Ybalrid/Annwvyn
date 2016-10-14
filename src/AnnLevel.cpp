@@ -22,7 +22,7 @@ void AnnLevel::unload()
 	AnnGetAudioEngine()->stopBGM();
 	//Remove the sky
 	AnnGetSceneryManager()->removeSkyDome();
-	//Remove the ambiant lighting
+	//Remove the ambient lighting
 	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0, 0, 0));
 
 	//Remove the level lights

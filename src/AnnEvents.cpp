@@ -350,7 +350,7 @@ size_t AnnStickEvent::getNbAxis()
 
 bool AnnStickEvent::isPressed(ButtonId id)
 {
-	//if id is not a valid buton
+	//if id is not a valid button
 	if (id >= buttons.size()) return false;
 
 	for (ButtonId i(0); i < pressed.size(); i++)
@@ -360,7 +360,7 @@ bool AnnStickEvent::isPressed(ButtonId id)
 
 bool AnnStickEvent::isReleased(ButtonId id)
 {
-	//if id is not a valid buton
+	//if id is not a valid button
 	if (id >= buttons.size()) return false;
 
 	for (ButtonId i(0); i < released.size(); i++)

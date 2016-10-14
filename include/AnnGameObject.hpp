@@ -46,7 +46,7 @@ namespace Annwvyn
 		bool collisionState;
 	};
 
-	///An object that exist in the game. Graphicaly and Potentialy Physicialy
+	///An object that exist in the game. Graphically and Potentially Physically
 	class DLL AnnGameObject : public AnnAbstractMovable
 	{
 	public:
@@ -54,13 +54,13 @@ namespace Annwvyn
 		///Class constructor
 		AnnGameObject();
 
-		///Class Destructor. Virutal.
+		///Class Destructor. Virtual.
 		virtual ~AnnGameObject();
 
-		///Set position from spatial varaibles
-		/// \param x X componant of the position vector
-		/// \param y Y componant of the position vector
-		/// \param z Z componant of the position vector
+		///Set position from spatial variables
+		/// \param x X component of the position vector
+		/// \param y Y component of the position vector
+		/// \param z Z component of the position vector
 		void setPosition(float x, float y, float z);
 
 		///Set position from Vector 3D
@@ -68,26 +68,26 @@ namespace Annwvyn
 		void setPosition(AnnVect3 pos);
 
 		///Translate
-		/// \param x X componant of the translation vector
-		/// \param y Y componant of the translation vector
-		/// \param z Z componant of the translation vector
+		/// \param x X component of the translation vector
+		/// \param y Y component of the translation vector
+		/// \param z Z component of the translation vector
 		void translate(float x, float y, float z);
 
 		///Set orientation from Quaternion components
-		/// \param w W composant of a quaternion
-		/// \param x X composant of a quaternion
-		/// \param y Y composant of a quaternion
-		/// \param z Z composant of a quaternion
+		/// \param w W component of a quaternion
+		/// \param x X component of a quaternion
+		/// \param y Y component of a quaternion
+		/// \param z Z component of a quaternion
 		void setOrientation(float w, float x, float y, float z);
 
 		///Set Orientation from Quaternion
-		/// \param orient Quaternion for aboslute orientation
+		/// \param orient Quaternion for absolute orientation
 		void setOrientation(AnnQuaternion orient);
 
 		///Set scale
-		/// \param x X componant of the scale vector
-		/// \param y Y componant of the scale vector
-		/// \param z Z componant of the scale vector
+		/// \param x X component of the scale vector
+		/// \param y Y component of the scale vector
+		/// \param z Z component of the scale vector
 		void setScale(float x, float y, float z);
 
 		///Set scale from Vector 3D
@@ -113,13 +113,13 @@ namespace Annwvyn
 		/// \param otherObject The object we're counting the distance from
 		float getDistance(AnnGameObject* otherObject);
 
-		///Play a sond file
+		///Play a sound file
 		/// \param path Path to the audio file
 		/// \param loop If set to true, will play the sound in loop
 		/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
 		void playSound(std::string path, bool loop = false, float volume = 1.0f);
 
-		///collision handeling
+		///collision handling
 		std::vector<struct collisionTest*> getCollisionMask();
 
 		///Set all collisionState to false
@@ -143,11 +143,11 @@ namespace Annwvyn
 
 		///return the collisionState with the object from the collisionMask.
 		///if the object is not on the collisionMask, return false
-		/// \param Object the objet we want to know the current collision state
+		/// \param Object the object we want to know the current collision state
 		bool collideWith(AnnGameObject* Object);
 
-		// TODO create animlation state machine
-		///Set curently playing animation
+		// TODO create animation state machine
+		///Set currently playing animation
 		/// \param name Name of the animation as defined by the 3D entity
 		void setAnimation(const char name[]);
 
@@ -164,11 +164,11 @@ namespace Annwvyn
 		///Apply a physical force
 		void applyForce(AnnVect3 force);
 
-		///Apply a physical impultion
-		/// \param the impultion force
+		///Apply a physical impulsion
+		/// \param the impulsion force
 		void applyImpulse(AnnVect3 impulse);
 
-		///Set the linear speed of the objet
+		///Set the linear speed of the object
 		/// \param v The linear speed
 		void setLinearSpeed(AnnVect3 v);
 
@@ -193,7 +193,7 @@ namespace Annwvyn
 		std::string getID();
 
 	private:
-		///Make Annwvyn::AnnEngine acces these methods :
+		///Make Annwvyn::AnnEngine access these methods :
 		friend class AnnEngine;
 		friend class AnnGameObjectManager;
 
@@ -206,7 +206,7 @@ namespace Annwvyn
 		///For engine : set bullet world
 		void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
 
-		// TODO credate animatiln state machine
+		// TODO create animation state machine
 		///For engine : get elapsed time
 		void addAnimationTime(double offsetTime);
 
@@ -215,10 +215,10 @@ namespace Annwvyn
 
 	private:
 		/**
-		* You will certainly find strange to see that the Object does not cary a "position" vector.
-		* We use the position of the Ogre Node ro the Bullet body to align the object.
+		* You will certainly find strange to see that the Object does not carry a "position" vector.
+		* We use the position of the Ogre Node or the Bullet body to align the object.
 		*
-		* The reference is the position of the node. You can access it throug the getters/setters setPos() and getPos()
+		* The reference is the position of the node. You can access it through the getters/setters setPos() and getPos()
 		*
 		* Same is true with the Orientation. We use Ogre node
 		* TODO rework collision feedback system

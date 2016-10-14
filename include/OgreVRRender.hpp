@@ -128,7 +128,7 @@ public:
 	///(Optional) return true if audio has to come out from a specific audio device
 	virtual bool usesCustomAudioDevice() { return false; }
 
-	///(Optional) retrun the sub string to search on the audio device list to get the correct one
+	///(Optional) return the sub string to search on the audio device list to get the correct one
 	virtual std::string getAudioDeviceIdentifierSubString() { return std::string(""); }
 
 	///The current position of the head center defined by the client library projected in World Space

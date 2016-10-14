@@ -19,7 +19,7 @@ using namespace Annwvyn;
 
 AnnMain()
 {
-	//Only usefull on windows : Open a debug console to get stdout/stderr
+	//Only useful on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();
 
 	AnnInit("AnnTest");
@@ -31,7 +31,7 @@ AnnMain()
 	AnnGetVRRenderer()->recenter();
 
 	//load ressources
-	AnnGetResourceManager()->addFileLocation("media/environement");
+	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 	AnnGetResourceManager()->initResources();
 	AnnGetResourceManager()->loadGroup(AnnResourceManager::reservedResourceGroupName);

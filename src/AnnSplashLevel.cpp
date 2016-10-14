@@ -34,7 +34,7 @@ void AnnSplashLevel::load()
 	displaySurfaceTextureUniteState->setTexture(texture);
 
 	//Create manual object
-	AnnDebug() << "Creating the diplay \"plane\" for the splash";
+	AnnDebug() << "Creating the display \"plane\" for the splash";
 	auto smgr(AnnGetEngine()->getSceneManager());
 	CurvedPlane = smgr->createManualObject(generateRandomID());
 
@@ -98,10 +98,10 @@ void AnnSplashLevel::runLogic()
 		if (AnnGetEngine()->appVisibleInHMD())
 		{
 			AnnDebug() << "visible";
-			//This set the "startTime" variable, preventing this peice of code to be ran twice
+			//This set the "startTime" variable, preventing this piece of code to be ran twice
 			AnnDebug() << "Starting time at : " << AnnGetEngine()->getTimeFromStartUp();
 			startTime = AnnGetEngine()->getTimeFromStartUp();
-			//If you put some background music or sound for the splashscreen, we start it
+			//If you put some background music or sound for the splash-screen, we start it
 			if (hasBGM)
 				AnnGetAudioEngine()->playBGM(bgmPath);
 		}

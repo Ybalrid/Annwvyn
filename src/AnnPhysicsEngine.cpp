@@ -77,7 +77,7 @@ void AnnPhysicsEngine::createVirtualBodyShape()
 	assert(playerObject);
 	float radius(0.125f);
 
-	//remove the diameter of the two half spehre on top and bottom of the capsule
+	//remove the diameter of the two half sphere on top and bottom of the capsule
 	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
 }
 
@@ -100,7 +100,7 @@ void AnnPhysicsEngine::stepDebugDrawer()
 
 void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 {
-	// TOTO make a typedeff for getting off the uglyness here
+	// TOTO make a typedef for getting off the ugliness here
 	std::vector<struct collisionTest*> pairs;
 
 	//get all collision mask
@@ -117,7 +117,7 @@ void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 	for (auto pair : pairs)
 		pair->collisionState = false;
 
-	//process for each maniflod
+	//process for each manifold
 	int numManifolds = Dispatcher->getNumManifolds();
 
 	//m is manifold identifier

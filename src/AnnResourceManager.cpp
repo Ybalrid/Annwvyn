@@ -20,7 +20,7 @@ void AnnResourceManager::addZipLocation(const std::string& path, const std::stri
 void AnnResourceManager::addFileLocation(const std::string& path, const std::string& resourceGroupName)
 {
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
-	AnnDebug("Will load resources from Filesystem directory :");
+	AnnDebug("Will load resources from File-system directory :");
 	AnnDebug() << path;
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
 }

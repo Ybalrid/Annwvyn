@@ -67,7 +67,7 @@ std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 		//Create a string stream on the buffer
 		std::stringstream readStream(buffer);
 
-		//Getline permit you to specify the "endline" character. We use this to split the sting at the '=' in the file
+		//Getline permit you to specify the "end-line" character. We use this to split the sting at the '=' in the file
 		getline(readStream, key, '=');
 		getline(readStream, value);
 
@@ -92,7 +92,7 @@ fileWriter(nullptr)
 
 	AnnDebug() << "Path got from operating system : " << pathToUserDir;
 
-	//Forbiden characters in filename
+	//Forbidden characters in filename
 	charToEscape.push_back(' ');
 	charToEscape.push_back('&');
 	charToEscape.push_back('<');
@@ -105,7 +105,7 @@ fileWriter(nullptr)
 	charToEscape.push_back(':');
 	charToEscape.push_back('%');
 
-	//Forbiden charcters in text "key=value" file
+	//Forbidden characters in text "key=value" file
 	charToStrip.push_back('=');
 	charToStrip.push_back('\n');
 
@@ -270,7 +270,7 @@ void AnnSaveFileData::clearVectorValue(std::string key)
 
 void AnnSaveFileData::clearQuaternionValue(std::string key)
 {
-	//like vectors, quaternion have x, y, and z, compnant. they just add a 'w' one
+	//like vectors, quaternion have x, y, and z, component. they just add a 'w' one
 	clearValue(key + ".w"); clearVectorValue(key);
 }
 
@@ -301,7 +301,7 @@ int AnnSaveDataInterpretor::keyStringToInt(std::string key)
 
 AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(std::string key)
 {
-	//Get text data from teh dataObject return an invalid vector if the keyvalue wanted is not found
+	//Get text data from the dataObject return an invalid vector if the keyvalue wanted is not found
 	std::string x, y, z;
 	if ((x = dataObject->getValue(key + ".x")).empty()) return AnnVect3(false);
 	if ((y = dataObject->getValue(key + ".y")).empty()) return AnnVect3(false);
@@ -316,7 +316,7 @@ AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(std::string key)
 
 AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(std::string key)
 {
-	//Get text data from teh dataObject return an invalid quaternion if the keyvalue wanted is not found
+	//Get text data from the dataObject return an invalid quaternion if the keyvalue wanted is not found
 	std::string x, y, z, w;
 	if ((x = dataObject->getValue(key + ".x")).empty()) return AnnQuaternion(false);
 	if ((y = dataObject->getValue(key + ".y")).empty()) return AnnQuaternion(false);

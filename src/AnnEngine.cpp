@@ -52,7 +52,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		exit(ANN_ERR_MEMORY);
 	}
 
-	std::cerr << "HMD selection from command line routine retuned : " << hmdCommand << std::endl;
+	std::cerr << "HMD selection from command line routine returned : " << hmdCommand << std::endl;
 
 	//Select the correct OgreVRRender class to use :
 	if (hmdCommand == "OgreOculusRender"
@@ -86,8 +86,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	log("| Annwvyn Game Engine - Step into the Other World          |", false);
 	log("| Free/Libre C++ Game Engine designed for Virtual Reality  |", false);
 	log("|                                                          |", false);
-	log("| Copyright Arthur Brainvile (a.k.a. Ybalrid) 2013-2016    |", false);
-	log("| Distributed under the terms of the MIT licence agreement |", false);
+	log("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2016   |", false);
+	log("| Distributed under the terms of the MIT license agreement |", false);
 	log("|                                                          |", false);
 	log("| Visit http://annwvyn.org/ for more informations!         |", false);
 	log("| Version : " + getAnnwvynVersion(61 - 13 - 1) + "|", false);
@@ -114,7 +114,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	/*The wanted order is
 	- event happens (player input, timers...)
 	- physics is ticked (stuff move)
-	- audio is synced (sonds comes form where they should)
+	- audio is synced (sounds comes form where they should)
 	- then the game can redraw*/
 
 	physicsEngine = std::make_shared<AnnPhysicsEngine>(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers);
@@ -122,7 +122,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	SubSystemList.push_back(physicsEngine);
 	SubSystemList.push_back(audioEngine = std::make_shared< AnnAudioEngine>());
 
-	//These could be anywere
+	//These could be anywhere
 	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
 	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
 	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
@@ -138,12 +138,12 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 AnnEngine::~AnnEngine()
 {
-	//Some cute log messsages
+	//Some cute log messages
 	log("Game engine stopped. Subsystem are shutting down...");
 	log("Good luck with the real world now! :3");
 }
 
-//All theses getter are for encapsulation purpose. Calling them directly would make verry long lines of code. Note that there's a whole bunch of macro in AnnEngine.hpp to help with that
+//All theses getter are for encapsulation purpose. Calling them directly would make very long lines of code. Note that there's a whole bunch of macro in AnnEngine.hpp to help with that
 std::shared_ptr<AnnEventManager> AnnEngine::getEventManager()
 {
 	return eventManager;
@@ -194,7 +194,7 @@ std::shared_ptr<AnnPhysicsEngine> AnnEngine::getPhysicsEngine()
 	return physicsEngine;
 }
 
-//This is static, but actually needs Ogre to be running. So be carefull
+//This is static, but actually needs Ogre to be running. So be careful
 void AnnEngine::log(std::string message, bool flag)
 {
 	Ogre::String messageForLog;
@@ -241,8 +241,8 @@ bool AnnEngine::refresh()
 	player->engineUpdate(getFrameTime());
 
 	for (auto SubSystem : SubSystemList)
-		if (!SubSystem->needUpdate()) continue; //If doen't need update, swith to the next
-		else SubSystem->update();				//The "else" keyword is used to not put curly braces, by lazyness and by code style.
+		if (!SubSystem->needUpdate()) continue; //If doesn't need update, switch to the next
+		else SubSystem->update();				//The "else" keyword is used to not put curly braces, by laziness and by code style.
 
 	//Update camera from player
 		syncPov();
@@ -297,7 +297,7 @@ double AnnEngine::getFrameTime()
 	return updateTime;
 }
 
-//Raw position and orientaiton of the head in world space. This is usefull if you want to mess around with weird stuff. This has been bodged when I integrated a LEAP motion in that mess.
+//Raw position and orientation of the head in world space. This is useful if you want to mess around with weird stuff. This has been bodged when I integrated a LEAP motion in that mess.
 OgrePose AnnEngine::getHmdPose()
 {
 	if (renderer)
@@ -310,7 +310,7 @@ std::shared_ptr<AnnUserSubSystem> AnnEngine::registerUserSubSystem(std::shared_p
 	for (auto system : SubSystemList)
 		if (userSystem->name == system->name)
 		{
-			AnnDebug() << "A subsystem with the name " << userSystem->name << "is allready registered.";
+			AnnDebug() << "A subsystem with the name " << userSystem->name << "is already registered.";
 			return nullptr;
 		}
 	SubSystemList.push_back(userSystem);
@@ -356,7 +356,7 @@ void AnnEngine::openConsole()
 	//Redirect cerr to cout
 	std::cerr.rdbuf(std::cout.rdbuf());
 
-	SetConsoleTitle(L"Annwyn Debug Console");
+	SetConsoleTitle(L"Annwvyn Debug Console");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 
 #endif
@@ -365,12 +365,12 @@ void AnnEngine::openConsole()
 //Well, I may make the pointer to the onScreenConsole more accessible.
 void AnnEngine::toogleOnScreenConsole()
 {
-	if (onScreenConsole) onScreenConsole->toogle();
+	if (onScreenConsole) onScreenConsole->toggle();
 }
 
 bool AnnEngine::appVisibleInHMD()
 {
-	if (renderer->isVisibleInHmd() == true) // why "== true" ? Because at some point it was returning an ovrBool, wich is the boolean type of the oculus SDK that doesn't cast correctly to a C++ bool. YES. I DON'T KNOW HOW THEY MANAGED TO FFFF TAHT UP.
+	if (renderer->isVisibleInHmd() == true) // why "== true" ? Because at some point it was returning an ovrBool, witch is the boolean type of the oculus SDK that doesn't cast correctly to a C++ bool. YES. I DON'T KNOW HOW THEY MANAGED TO FFFF TAHT UP.
 		return true;
 	return false;
 }

@@ -22,7 +22,7 @@ namespace Annwvyn
 		AnnVect3(const Ogre::Vector3& v);
 		///Construct form 3 floats
 		AnnVect3(const float cx, const float cy, const float cz);
-		///Construct from an array of three ints
+		///Construct from an array of three inits
 		AnnVect3(const int coord[3]);
 		///Construct from an array of 3 float
 		AnnVect3(const float coord[3]);
@@ -34,7 +34,7 @@ namespace Annwvyn
 		///Only used to signify that this object contains corrupt data
 		AnnVect3(bool validState);
 
-		///Construc from bullet vector
+		///Construct from bullet vector
 		AnnVect3(btVector3& v);
 
 		///Return as bullet vector

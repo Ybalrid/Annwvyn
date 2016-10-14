@@ -16,7 +16,7 @@ OculusInterface::OculusInterface()
 	{
 		//Notify user
 		AnnDebug() << "Error: Cannot create Oculus Session";
-		//Debug HMD is now handeled by the configuration utility and the runtime.
+		//Debug HMD is now handled by the configuration utility and the runtime.
 		AnnDebug() << "Please make sure Oculus Home is installed on your system and "
 			" please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
 #ifdef _WIN32
@@ -45,13 +45,13 @@ OculusInterface::OculusInterface()
 
 OculusInterface::~OculusInterface()
 {
-	//Set the performance hud to Off
+	//Set the performance HUD to Off
 	ovr_SetInt(getSession(), "PerfHudMode", ovrPerfHud_Off);
 
 	AnnDebug() << "Shutdown OculusInterface object";
 	ovr_Destroy(getSession());
 	ovr_Shutdown();
-	AnnDebug("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
+	AnnDebug("LibOVR Shutdown... No longer can communicate with OculusService or oculusd...");
 }
 
 void OculusInterface::customReport()

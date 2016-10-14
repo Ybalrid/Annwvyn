@@ -29,9 +29,9 @@ namespace Annwvyn
 		AnnQuaternion(float cw, float cx, float cy, float cz);
 		///Construct from a rotation matrix 3x3
 		AnnQuaternion(const Ogre::Matrix3& rot);
-		///Construct from an angle around an abritrary axis
+		///Construct from an angle around an arbitrary axis
 		AnnQuaternion(const AnnRadian angle, AnnVect3 raxis);
-		///Constuct from a 3 axis base
+		///Construct from a 3 axis base
 		AnnQuaternion(const AnnVect3& xAxis, const AnnVect3& yAxis, const AnnVect3& zAxis);
 		///Construct from a vector array
 		AnnQuaternion(const AnnVect3* vectorArray);
@@ -51,7 +51,7 @@ namespace Annwvyn
 		///If true you can trust the data on this Quaternion
 		bool isValid();
 
-		///Used to say that the quaternion hasn't been retrived
+		///Used to say that the quaternion hasn't been retrieved
 		AnnQuaternion(bool validState);
 	private:
 		///Set valid to true

@@ -1,6 +1,6 @@
 /**
  * \file AnnErrorCode.hpp
- * \brief Define a serise of hex code as constant keywords to define error codes.
+ * \brief Define a series of hex code as constant keywords to define error codes.
  * \author A. Brainville (Ybalrid)
  */
 #ifndef ANN_ERROR_CODE
@@ -8,7 +8,7 @@
 
 #define ANN_ERR_CRITIC 0xDEAD60D // Dead God
 /*
-Indicate that the execution environement of the engine hasn't been about to be initialized
+Indicate that the execution environment of the engine hasn't been about to be initialized
 - Check log file
 */
 #define ANN_ERR_MEMORY 0xFAA760D // Fa_t God
@@ -20,7 +20,7 @@ Indicate that a memory error has been caused inside the engine
 */
 #define ANN_ERR_RENDER 0x5ADE60D // Sa_d God
 /*
-Indicate an irecuperable error with the renderer. Either during initialization or during rendering
+Indicate an irrecoverable error with the renderer. Either during initialization or during rendering
 - Check OVR runtime version
 - Check hardware (HMD plugged, Graphics card compatible)
 - Check other software (Graphics drivers)

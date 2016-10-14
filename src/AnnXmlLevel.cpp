@@ -30,7 +30,7 @@ resourceLocAdded(false)
 
 void AnnXmlLevel::load()
 {
-	//Get the parent directory of the file (all file path are in "unix style")
+	//Get the parent directory of the file (all file path are in "UNIX style")
 	std::string dirPath;
 	const size_t last_slash = xmlFilePath.rfind('/');
 	if (std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
@@ -71,7 +71,7 @@ void AnnXmlLevel::load()
 		element = level->FirstChildElement("ResourceLocations");
 		if (!element)
 		{
-			AnnDebug() << xmlFilePath << "Does not apear to have a 'ResourceLocations' section";
+			AnnDebug() << xmlFilePath << "Does not appear to have a 'ResourceLocations' section";
 		}
 		else
 		{
@@ -104,7 +104,7 @@ void AnnXmlLevel::load()
 		AnnDebug() << "Fond object to load";
 		float x, y, z, w;
 		std::string ID(gameObject->Attribute("ID"));
-		AnnDebug() << "Registred ID : " << ID;
+		AnnDebug() << "Registered ID : " << ID;
 		XMLElement* gameObjectData = gameObject->FirstChildElement("Entity");
 		if (gameObjectData)
 			entityName = (gameObjectData->Attribute("EntityName"));
@@ -143,7 +143,7 @@ void AnnXmlLevel::load()
 
 		XMLElement* physics = gameObject->FirstChildElement("Physics");
 		if (!physics) continue; //no physics section. not mandatory. just ignore
-		XMLElement* state = physics->FirstChildElement("Enabeled");
+		XMLElement* state = physics->FirstChildElement("Enabled");
 		if (!state) continue;
 		bool phy; state->QueryBoolText(&phy); if (!phy) continue;
 
@@ -157,7 +157,7 @@ void AnnXmlLevel::load()
 		phyInfo = physics->FirstChildElement("Shape");
 		if (!phyInfo) continue;
 		shape = phyInfo->GetText();
-		if (shape == "static") mass = 0; //this case is weird. Static stuff have allways been static, even with mass. Need to see if bullet has changed stuff
+		if (shape == "static") mass = 0; //this case is weird. Static stuff have always been static, even with mass. Need to see if bullet has changed stuff
 		constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
 
 		levelContent.push_back(constructedGameObject);

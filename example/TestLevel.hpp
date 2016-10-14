@@ -32,12 +32,12 @@ public:
 	void load()
 	{
 		AnnGetEventManager()->addListener(goBackListener = make_shared<GoBackToDemoHub>());
-		//Set some ambiant light
+		//Set some ambient light
 		AnnGetSceneryManager()->setAmbiantLight(AnnColor(.6f, .6f, .6f));
 
 		//We add our brand new 3D object
 		auto MyObject = addGameObject("MyObject.mesh");
-		MyObject->setPosition(5, 1, 0);//We put it 5 meters to the right, and 1 metter up...
+		MyObject->setPosition(5, 1, 0);//We put it 5 meters to the right, and 1 meter up...
 		//MyObject->setUpPhysics(); // <---- This activate the physics for the object as static geommetry
 		MyObject->setUpPhysics(100, convexShape); // <------- this activate the physics as a dynamic object. We need to tell the shape aproximation to use. and a mass in Kg
 
@@ -64,14 +64,14 @@ public:
 		S->playSound("media/monster.wav", true, 1);
 
 		//Add water
-		auto Water = addGameObject("environement/Water.mesh");
+		auto Water = addGameObject("environment/Water.mesh");
 
 		//Add the island
-		auto Island = addGameObject("environement/Island.mesh");
+		auto Island = addGameObject("environment/Island.mesh");
 		Island->setUpPhysics();
 
 		//Add the sign
-		auto Sign(addGameObject("environement/Sign.mesh"));
+		auto Sign(addGameObject("environment/Sign.mesh"));
 		Sign->setPosition(1, -0, -2);
 		Sign->setUpPhysics(0, phyShapeType::staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));

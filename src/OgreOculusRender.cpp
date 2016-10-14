@@ -40,7 +40,7 @@ OgreOculusRender::~OgreOculusRender()
 	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
 	delete Oculus;
 
-	//Clean the Ogre environement
+	//Clean the Ogre environment
 	root->destroySceneManager(debugSmgr);
 	root->destroySceneManager(smgr);
 
@@ -145,7 +145,7 @@ void OgreOculusRender::createWindow()
 	}
 
 	Ogre::NameValuePairList misc;
-	misc["vsync"] = "false"; //This vsync parameter has no scence in VR. The display is done by the Compositor
+	misc["vsync"] = "false"; //This vsync parameter has no sense in VR. The display is done by the Compositor
 	//misc["FSAA"] = std::to_string(AALevel);
 	misc["top"] = "0";
 	misc["left"] = "0";
@@ -166,8 +166,7 @@ void OgreOculusRender::initCameras()
 		exit(ANN_ERR_NOTINIT);
 	}
 	//Mono view camera
-	monoCam =
-		smgr->createCamera("monocam");
+	monoCam = smgr->createCamera("monocam");
 	monoCam->setAspectRatio(16.0 / 9.0);
 	monoCam->setAutoAspectRatio(false);
 	monoCam->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
@@ -233,7 +232,7 @@ void OgreOculusRender::initScene()
 	 *  This is a 4 vertices quad with a size of 16x9 units with it's origin in the center
 	 *  The quad got mapped square texture coordinates at each corner, covering the whole UV map
 	 *
-	 * The debugPlane is a perfect rectangle drawn by 2 polygons (tiangles). The position in object-space are defined as folowing
+	 * The debugPlane is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
 	 * on the "points" array :
 	 *  0 +---------------+ 2
 	 *    |           /   |
@@ -328,7 +327,7 @@ void OgreOculusRender::initRttRendering()
 	//Create the Oculus Mirror Texture
 	if (ovr_CreateMirrorTextureGL(Oculus->getSession(), &mirrorTextureDesc, &mirrorTexture) != ovrSuccess)
 	{
-		//If for some weird reason (stars alignment, dragons, northen gods, reaper invasion) we can't create the mirror texture
+		//If for some weird reason (stars alignment, dragons, northern gods, reaper invasion) we can't create the mirror texture
 		AnnDebug("Cannot create Oculus mirror texture");
 		exit(ANN_ERR_RENDER);
 	}
@@ -341,7 +340,7 @@ void OgreOculusRender::initRttRendering()
 	ogreMirrorTextureGLID = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("MirrorTex").getPointer())->getGLID();
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusRenderTextureGLID);
 
-	//Attach the camera of the debug render scene to a viewport on the actuall application window
+	//Attach the camera of the debug render scene to a viewport on the actual application window
 	debugViewport = window->addViewport(debugCam);
 	debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
 	debugTexturePlane->setTextureName("MirrorTex");
@@ -423,10 +422,6 @@ void OgreOculusRender::initClientHmdRendering()
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
 }
 
-void OgreOculusRender::calculateProjectionMatrix()
-{
-}
-
 void OgreOculusRender::updateProjectionMatrix()
 {
 	//The average human has 2 eyes, but for some reason there's an "ovrEye_Count" constant on the oculus library.
@@ -438,7 +433,7 @@ void OgreOculusRender::updateProjectionMatrix()
 												  farClippingDistance,
 												  0);
 
-		// TOTO: Matrix4 constuctor should be able to take proj.m to construct itself.
+		// TOTO Matrix4 constructor should be able to take proj.m to construct itself.
 		//Convert it to Ogre matrix
 		Ogre::Matrix4 OgreProj;
 		for (byte x(0); x < 4; x++)
@@ -530,7 +525,7 @@ void OgreOculusRender::updateTracking()
 		eyeCameras[eye]->setPosition
 		(feetPosition  //the "gameplay" position of player's avatar head
 
-		 + (eyeCameras[eye]->getOrientation() * Ogre::Vector3( //realword camera orientation + the
+		 + (eyeCameras[eye]->getOrientation() * Ogre::Vector3( //real-word camera orientation + the
 		 EyeRenderDesc[eye].HmdToEyeOffset.x, //view adjust vector.
 		 EyeRenderDesc[eye].HmdToEyeOffset.y, //The translations has to occur in function of the current head orientation.
 		 EyeRenderDesc[eye].HmdToEyeOffset.z) //That's why just multiply by the quaternion we just calculated.
@@ -557,7 +552,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 	//Select the current render texture
 	ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureSwapChain, &currentIndex);
 
-	//Update the relevent OpenGL IDs
+	//Update the relevant OpenGL IDs
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, currentIndex, &oculusRenderTextureGLID);
 	ovr_GetMirrorTextureBufferGL(Oculus->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
 

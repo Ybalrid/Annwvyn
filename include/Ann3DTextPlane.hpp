@@ -20,11 +20,11 @@ namespace Annwvyn
 		enum TextAlign { ALIGN_LEFT = 'l', ALIGN_CENTER = 'c', ALIGN_RIGHT = 'r' };
 
 		///Construct a 3D text plane. Need to provide a caption to auto render text
-		/// \param w Width in metter
-		/// \param h Height in metter
+		/// \param w Width in meter
+		/// \param h Height in meter
 		/// \param caption Caption
 		/// \param size Character size in typographic point
-		/// \param resolution Character "print" resolution in DPI. Thiw will influence the texture resolution
+		/// \param resolution Character "print" resolution in DPI. This will influence the texture resolution
 		/// \param font Your name of the font. To reuse a font configuration
 		/// \param fontTTF Name of the TTF file known by the resource manager
 		Ann3DTextPlane(float w, float h, std::string caption = "", int size = 128, float resolution = 96.0f, std::string font = "defaultFont", std::string fontTTF = "VeraMono.ttf");
@@ -36,7 +36,7 @@ namespace Annwvyn
 		/// \param newCaption the new text to display
 		void setCaption(std::string newCaption);
 
-		///The plane will auto-rerender at changes if set to true
+		///The plane will auto-re-render at changes if set to true
 		/// \param state If true, the text will be updated each time you change something
 		void setAutoUpdate(bool state);
 
@@ -66,7 +66,7 @@ namespace Annwvyn
 		AnnQuaternion getOrientation();
 
 		///Set margin
-		/// \param margin Margin in metters
+		/// \param margin Margin in meters
 		void setMargin(float margin);
 
 		///Set background image
@@ -80,13 +80,13 @@ namespace Annwvyn
 		///Fill the texture with transparent black
 		void clearTexture();
 
-		///Calculate the actuall vertex coordinates for the plane geometry
+		///Calculate the actual vertex coordinates for the plane geometry
 		void calculateVerticesForPlaneSize();
 
-		///Check if autoupdate is on. If so, call update
+		///Check if auto-update is on. If so, call update
 		void autoUpdateCheck();
 
-		///Generat a random string of leter of arbitrary lenght
+		///Generate a random string of letter of arbitrary length
 		std::string generateRandomString(size_t len = 15);
 
 		///Generate a random material name
@@ -113,10 +113,10 @@ namespace Annwvyn
 		///If true, next update call will update
 		bool needUpdating;
 
-		///Lenght of the random material name
+		///Length of the random material name
 		const size_t materialNameLen = 30;
 
-		///Name of the materail
+		///Name of the material
 		std::string materialName;
 
 		///Vertex buffer
@@ -143,7 +143,7 @@ namespace Annwvyn
 		///Size of the font, in points
 		int fontSize;
 
-		///Static convertions factor between Dot Per Inch and Dot Per Metters
+		///Static conversions factor between Dot Per Inch and Dot Per Meters
 		const float dpi2dpm = 0.0254f;
 
 		///DPI resolution of the rendered fonts
@@ -152,7 +152,7 @@ namespace Annwvyn
 		///Margin in pixels
 		unsigned int pixelMargin;
 
-		///Margin in metters
+		///Margin in meters
 		float margin;
 
 		///Will use an image as background
