@@ -412,7 +412,7 @@ void OgreOpenVRRender::processVREvents()
 	}
 }
 
-const bool DEBUG(false);
+const bool DEBUG(true);
 
 void OgreOpenVRRender::processTrackedDevices()
 {
