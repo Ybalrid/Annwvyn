@@ -28,7 +28,6 @@ AnnMain()
 	AnnGetEngine()->initPlayerPhysics();
 	AnnGetPhysicsEngine()->setDebugPhysics(false);
 	AnnGetEventManager()->useDefaultEventListener();
-	AnnGetVRRenderer()->recenter();
 
 	//load resources
 	AnnGetResourceManager()->addFileLocation("media/environment");
