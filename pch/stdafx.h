@@ -25,6 +25,10 @@
 #include <cassert>
 #include <limits>
 #include <memory>
+#include <array>
+#include <thread>
+#include <mutex>
+#include <random>
 
 //Object-Oriented Graphical Rendering Engine
 #include <Ogre.h>

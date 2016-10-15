@@ -387,7 +387,7 @@ namespace tinyxml2
 			return _nUntracked;
 		}
 
-		// This number is perf sensitive. 4k seems like a good tradeoff on my machine.
+		// This number is perf sensitive. 4k seems like a good trade-off on my machine.
 		// The test file is large, 170k.
 		// Release:		VS2010 gcc(no opt)
 		//		1k:		4000

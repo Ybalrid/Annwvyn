@@ -83,7 +83,7 @@ void OgreNoVRRender::updateTracking()
 	now = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
 
-	noVRCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y);
+	noVRCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
 	noVRCam->setOrientation(bodyOrientation);
 }
 
