@@ -44,6 +44,7 @@
 ///Do the initialization and graphical rendering for the Oculus Rift using Ogre
 class DLL OgreOculusRender : public OgreVRRender
 {
+	///OgreOculusRenderEyeType : prefer to use "left" and "right" instead of 0 and 1
 	enum oorEyeType
 	{
 		left,
@@ -196,12 +197,6 @@ private:
 	///Tracking state
 	ovrTrackingState ts;
 
-	///Orientation of the headset
-	ovrQuatf oculusOrient;
-
-	///Position of the headset
-	ovrVector3f oculusPos;
-
 	///Pointer to the layer to be submitted
 	ovrLayerHeader* layers;
 
@@ -216,6 +211,69 @@ private:
 
 	///Frame index of the current session status
 	unsigned long long int currentSessionStatusFrameIndex;
+
+	///Convert an ovrVector3f to an Ogre::Vector3
+	inline Ogre::Vector3 oculusToOgreVect3(const ovrVector3f& v);
+
+	///Convert an ovrQuatf to an Ogre::Quaternion
+	inline Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q);
+
+	/*
+	* This is a 4 vertices quad with a size of 16x9 units with it's origin in the center
+	* The quad got mapped square texture coordinates at each corner, covering the whole UV map
+	*
+	* The debugPlane is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
+	* on the "points" array :
+	*  0 +---------------+ 2
+	*    |           /   |
+	*    |        /      |
+	*    |     /         |
+	*    |  /            |
+	*  1 +----------------+ 3
+	* Texture coordinates are also mapped.
+	*/
+
+	///Dimensions of the debug plane
+	static constexpr const std::array<const float, 2> debugPlaneGeometry{ 16, 9 };
+
+	///Size of the debug plane, divided by 2
+	static constexpr const std::array<const float, 2> debugPlanHalfGeometry
+	{
+		debugPlaneGeometry[0] / 2.f,
+		debugPlaneGeometry[1] / 2.f
+	};
+
+	///List of the points that form the debug plane (a quad made of two triangles)
+	static constexpr const std::array<const std::array<const float, 3>, 4> debugPlaneVertexBuffer
+	{
+		{
+			{-debugPlanHalfGeometry[0], debugPlanHalfGeometry[1], 0},
+			{-debugPlanHalfGeometry[0], -debugPlanHalfGeometry[1], 0},
+			{debugPlanHalfGeometry[0], debugPlanHalfGeometry[1], 0},
+			{debugPlanHalfGeometry[0], -debugPlanHalfGeometry[1], 0},
+		}
+	};
+
+	///Texture coordinates to map a whole texture to the debug plane
+	static constexpr const std::array<const std::array< const float, 2>, 4> debugPlaneTextureCoord
+	{
+		{
+			{0, 0},
+			{0, 1},
+			{1, 0},
+			{1, 1}
+		}
+	};
+
+	///Index buffer of the debug plane
+	static constexpr const std::array<const uint8_t, 4>debugPlaneIndexBuffer{ 0, 1, 2, 3 };
+
+	///Return true if the array sizes of each buffer are constants
+	static constexpr bool debugPlaneSanityCheck()
+	{
+		return debugPlaneIndexBuffer.size() == debugPlaneVertexBuffer.size()
+			&& debugPlaneIndexBuffer.size() == debugPlaneTextureCoord.size();
+	}
 
 public:
 	///Position of the rift at the last frame

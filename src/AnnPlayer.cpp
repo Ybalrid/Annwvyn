@@ -143,6 +143,11 @@ float AnnPlayer::getEyesHeight()
 	return playerBody->eyeHeight;
 }
 
+AnnVect3 AnnPlayer::getEyeTranslation()
+{
+	return getEyesHeight() * AnnVect3::UNIT_Y;
+}
+
 float AnnPlayer::getTurnSpeed()
 {
 	return playerBody->turnSpeed;
