@@ -185,11 +185,11 @@ void OgreOpenVRRender::updateTracking()
 
 	//Update the monoscopic camera view
 	monoCam->setPosition(feetPosition
-						 + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y
+						 + Annwvyn::AnnGetPlayer()->getEyeTranslation()
 						 + bodyOrientation * getTrackedHMDTranslation());
 	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
-	//Update the eye rig tracking to make the eyes match yours
+	//Update the eye rig tracking to make the eyes match your
 	eyeRig->setPosition(feetPosition
 						+ bodyOrientation * getTrackedHMDTranslation());
 	eyeRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
@@ -295,7 +295,7 @@ void OgreOpenVRRender::initCameras()
 	monoCam = smgr->createCamera("mcam");
 	monoCam->setAspectRatio(16.0 / 9.0);
 	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y);
+	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
 	monoCam->setNearClipDistance(nearClippingDistance);
 	monoCam->setFarClipDistance(farClippingDistance);
 	monoCam->setFOVy(Ogre::Degree(90));
