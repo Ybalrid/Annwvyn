@@ -106,6 +106,9 @@ namespace Annwvyn
 		///Get the distance between foot-plane and eyes in meters
 		float getEyesHeight();
 
+		///Get a vector that correspond to the translation between the feet point and the eyes
+		AnnVect3 getEyeTranslation();
+
 		///Get walk-speed in meter/seconds
 		float getWalkSpeed();
 
