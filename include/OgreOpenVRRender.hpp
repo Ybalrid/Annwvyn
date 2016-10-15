@@ -89,7 +89,6 @@ public:
 	///Create the render targets
 	virtual void initRttRendering();
 
-
 	///Get the projection matrix from the OpenVR API and apply it to the cameras using the near/far clip planes distances
 	void updateProjectionMatrix();
 

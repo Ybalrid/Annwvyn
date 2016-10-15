@@ -579,10 +579,10 @@ void OgreOculusRender::renderAndSubmitFrame()
 		//Put the mirrored view available for Ogre if asked for
 		if (mirrorHMDView)
 			glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-								ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-								hmdSize.w, hmdSize.h, 1);
+							   ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
+							   hmdSize.w, hmdSize.h, 1);
 
-		//Update the window
+	   //Update the window
 		debugViewport->update();
 		window->update();
 	}
