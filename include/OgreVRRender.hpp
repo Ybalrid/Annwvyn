@@ -4,12 +4,14 @@
 #include "systemMacro.h"
 
 #include <string>
+#include <array>
 
 #include <Ogre.h>
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
 
-#define MAX_CONTROLLER_NUMBER 2
+/*#define MAX_CONTROLLER_NUMBER 2*/
+constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 
 ///A pose refer to the combination of a position and an orientation. It permit to define the placement of an object with 6DOF
 struct OgrePose
@@ -138,7 +140,7 @@ public:
 	virtual void showDebug(DebugMode mode) = 0;
 
 	///Get a naked array of hand controllers
-	std::shared_ptr<Annwvyn::AnnHandController>* getHandControllerArray();
+	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> getHandControllerArray();
 
 	///Get the size of the controller array
 	size_t getHanControllerArraySize();
@@ -181,7 +183,7 @@ protected:
 	Ogre::ColourValue backgroundColor;
 
 	///Cameras that have to be put where the user's eye is
-	Ogre::Camera* eyeCameras[2];
+	std::array<Ogre::Camera*, 2> eyeCameras;
 
 	///Counter of frames
 	unsigned long long int frameCounter;
@@ -190,7 +192,7 @@ protected:
 	Ogre::uint AALevel;
 
 	///Array of hand controller
-	std::shared_ptr<Annwvyn::AnnHandController> handControllers[MAX_CONTROLLER_NUMBER];
+	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> handControllers;
 };
 
 #endif

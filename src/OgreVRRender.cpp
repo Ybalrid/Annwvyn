@@ -25,11 +25,10 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	}
 	self = this;
 
-	eyeCameras[0] = nullptr;
-	eyeCameras[1] = nullptr;
-
-	handControllers[0] = nullptr;
-	handControllers[1] = nullptr;
+	for (auto& eyeCamera : eyeCameras)
+		eyeCamera = nullptr;
+	for (auto& handController : handControllers)
+		handController = nullptr;
 }
 
 OgreVRRender::~OgreVRRender()
@@ -92,7 +91,7 @@ void OgreVRRender::getOgreConfig()
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 }
 
-std::shared_ptr<Annwvyn::AnnHandController>* OgreVRRender::getHandControllerArray()
+std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> OgreVRRender::getHandControllerArray()
 {
 	return handControllers;
 }
