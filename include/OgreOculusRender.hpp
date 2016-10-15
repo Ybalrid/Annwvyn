@@ -21,6 +21,7 @@
 //C++ SDL Includes
 #include <iostream>
 #include <sstream>
+#include <array>
 
 //Accessing Oculus Rift through a class :
 #include "OculusInterface.hpp"
@@ -154,13 +155,16 @@ private:
 	Ogre::SceneNode* debugCamNode, *debugPlaneNode;
 
 	///Viewports on textures. Textures are separated. One viewport for each textures
-	Ogre::Viewport* vpts[2], *debugViewport;
+	std::array<Ogre::Viewport*, 2> vpts;
+
+	///Viewport for the debug window
+	Ogre::Viewport* debugViewport;
 
 	///Timing in seconds
 	double currentFrameDisplayTime, lastFrameDisplayTime;
 
 	///Render descriptor for each eye. Indexes are "left" and "right"
-	ovrEyeRenderDesc EyeRenderDesc[2];
+	std::array<ovrEyeRenderDesc, 2> EyeRenderDesc;
 
 	///Size of texture and headset
 	ovrSizei bufferSize, hmdSize;
@@ -184,7 +188,7 @@ private:
 	ovrTextureSwapChain textureSwapChain;
 
 	///offset between render center and camera (for IPD variation)
-	ovrVector3f offset[2];
+	std::array<ovrVector3f, 2> offset;
 
 	///Pose (position+orientation)
 	ovrPosef pose;

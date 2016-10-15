@@ -24,21 +24,16 @@ shouldQuitState(false)
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
 
 	//I like to initialize everything to zero
-	rttTexture[left].setNull();
-	rttTexture[right].setNull();
+	rttTexture.setNull();
+	rttTextureGLID = NULL;
 
-	rttTextureGLID[left] = NULL;
-	rttTextureGLID[right] = NULL;
-
-	rttViewports[left] = nullptr;
-	rttViewports[right] = nullptr;
-
-	vrTextures[left] = {};
-	vrTextures[right] = {};
-	GLBounds = {};
-
-	handControllers[left] = nullptr;
-	handControllers[right] = nullptr;
+	for (auto side : { left, right })
+	{
+		rttViewports[side] = nullptr;
+		handControllers[side] = nullptr;
+		vrTextures[side] = {};
+		GLBounds[side] = {};
+	}
 }
 
 OgreOpenVRRender::~OgreOpenVRRender()
@@ -47,8 +42,7 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	vr::VR_Shutdown();
 
 	//Need to forget Ogre's smart pointers
-	rttTexture[left].setNull();
-	rttTexture[right].setNull();
+	rttTexture.setNull();
 
 	//Destroy the main scene manager
 	root->destroySceneManager(smgr);
@@ -136,15 +130,18 @@ void OgreOpenVRRender::initClientHmdRendering()
 	//Should init the device model things here if we want to display the vive controllers
 
 	//Declare the textures for SteamVR
-	vrTextures[left] = { (void*)rttTextureGLID[left], API, vr::ColorSpace_Gamma };
-	vrTextures[right] = { (void*)rttTextureGLID[right], API, vr::ColorSpace_Gamma };
+	vrTextures[left] = { (void*)rttTextureGLID, API, vr::ColorSpace_Gamma };
 
 	//Set the OpenGL texture geometry
-	GLBounds = {};
-	GLBounds.uMin = 0;
-	GLBounds.uMax = 1;
-	GLBounds.vMin = 1;
-	GLBounds.vMax = 0;
+	GLBounds[left].uMin = 0;
+	GLBounds[left].uMax = 0.5f;
+	GLBounds[left].vMin = 1;
+	GLBounds[left].vMax = 0;
+
+	GLBounds[right].uMin = 0.5f;
+	GLBounds[right].uMax = 1;
+	GLBounds[right].vMin = 1;
+	GLBounds[right].vMax = 0;
 }
 
 bool OgreOpenVRRender::shouldQuit()
@@ -210,14 +207,15 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	root->_fireFrameRenderingQueued();
 
 	//Update each viewports
-	rttViewports[left]->update();
-	rttViewports[right]->update();
+	rttViewports[0]->update();
+	rttViewports[1]->update();
 	windowViewport->update();
 	window->update();
 
 	//Submit the textures to the SteamVR compositor
-	vr::VRCompositor()->Submit(getEye(left), &vrTextures[left], &GLBounds);
-	vr::VRCompositor()->Submit(getEye(right), &vrTextures[right], &GLBounds);
+
+	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures[0], &GLBounds[0]);
+	vr::VRCompositor()->Submit(vr::Eye_Right, &vrTextures[0], &GLBounds[1]);
 
 	//OMG WE RENDERED A FRAME!!! QUICK!!!! INCREMENT THE COUNTER!!!!!!!
 	frameCounter++;
@@ -310,6 +308,7 @@ void OgreOpenVRRender::initRttRendering()
 	//Get the render texture size recommended by the OpenVR API for the current Driver/Display
 	unsigned int w, h;
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
+	w *= 2;
 	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create theses textures in OpenGL and get their OpenGL ID
@@ -318,29 +317,20 @@ void OgreOpenVRRender::initRttRendering()
 	//We don't need to check that we're using OpenGL before doing this kind of cast:
 	Ogre::GLTextureManager* textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
 
-	//Left eye texture
-	rttTexture[left] = textureManager->createManual("RTT_TEX_L", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-													Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
-	rttTextureGLID[left] = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX_L").getPointer())->getGLID();
-
-	//Right eye texture
-	rttTexture[right] = textureManager->createManual("RTT_TEX_R", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-													 Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
-	rttTextureGLID[right] = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX_R").getPointer())->getGLID();
+	//shared texture
+	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+											  Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
+	rttTextureGLID = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX").getPointer())->getGLID();
 
 	//Create viewport for each cameras in each render texture
-	rttViewports[left] = rttTexture[left]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left]);
-	rttViewports[right] = rttTexture[right]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right]);
+	rttViewports[left] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
+	rttViewports[right] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
 
 	//Do the same for the window
 	windowViewport = window->addViewport(monoCam);
 
 	//Make sure the default viewport background color is set for everything
 	changeViewportBackgroundColor(backgroundColor);
-}
-
-void OgreOpenVRRender::getProjectionMatrix()
-{
 }
 
 void OgreOpenVRRender::updateProjectionMatrix()
@@ -426,8 +416,6 @@ void OgreOpenVRRender::processTrackedDevices()
 			continue;
 
 		//Get the controller ID; If we can't handle more devices, break;
-		Annwvyn::AnnHandControllerID controllerID{ trackedDevice - 1 };
-		if (controllerID > MAX_CONTROLLER_NUMBER) break;
 
 		//At this point, we know that "trackedDevice" is the index of a valid SteamVR hand controller. We can extract it's tracking information
 		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
@@ -439,38 +427,44 @@ void OgreOpenVRRender::processTrackedDevices()
 		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
 		//controllerID 0 = left; 1 = right;
 
+		Annwvyn::AnnHandControllerID controllerIndex{ 0 };
 		Annwvyn::AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
 			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
 				side = Annwvyn::AnnHandController::leftHandController;
+				controllerIndex = 0;
 				break;
 
 			case vr::ETrackedControllerRole::TrackedControllerRole_RightHand:
 				side = Annwvyn::AnnHandController::rightHandController;
+				controllerIndex = 1;
 				break;
 
 			case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:
 			default:
 				side = Annwvyn::AnnHandController::invalidHandController;
+				controllerIndex = MAX_CONTROLLER_NUMBER;
 				break;
 		}
+
+		if (controllerIndex > MAX_CONTROLLER_NUMBER) break;
 
 		// TOTO: get the buttons (stick, touch-pad, whatever) states of this controller
 
 		//Dynamically allocate the controller if the controller doesn't exist yet
-		if (!handControllers[controllerID])
+		if (!handControllers[controllerIndex])
 		{
-			handControllers[controllerID] = std::make_shared<Annwvyn::AnnHandController>
-				(smgr->getRootSceneNode()->createChildSceneNode(), controllerID, side);
+			handControllers[controllerIndex] = std::make_shared<Annwvyn::AnnHandController>
+				(smgr->getRootSceneNode()->createChildSceneNode(), (size_t)trackedDevice, side);
 
-			if (DEBUG) handControllers[controllerID]->attachModel(smgr->createEntity("gizmo.mesh"));
+			if (DEBUG) handControllers[controllerIndex]->attachModel(smgr->createEntity("gizmo.mesh"));
 		}
 
-		handControllers[controllerID]->setTrackedPosition(feetPosition + bodyOrientation * position);
-		handControllers[controllerID]->setTrackedOrientation(bodyOrientation * orientation);
-		handControllers[controllerID]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
-		handControllers[controllerID]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
+		handControllers[controllerIndex]->setTrackedPosition(feetPosition + bodyOrientation * position);
+		handControllers[controllerIndex]->setTrackedOrientation(bodyOrientation * orientation);
+		handControllers[controllerIndex]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
+		handControllers[controllerIndex]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
 	}
 }
 
@@ -486,9 +480,9 @@ inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::H
 {
 	return Ogre::Matrix4
 	{
-		mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[0][3],
-		mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[1][3],
-		mat.m[2][0], mat.m[2][1], mat.m[2][2], mat.m[2][3],
-		0.0f,		 0.0f,		  0.0f,		   1.0f
+		mat.m[0][0],	mat.m[0][1],	mat.m[0][2],	mat.m[0][3],
+		mat.m[1][0],	mat.m[1][1],	mat.m[1][2],	mat.m[1][3],
+		mat.m[2][0],	mat.m[2][1],	mat.m[2][2],	mat.m[2][3],
+		0.0f,			0.0f,			0.0f,			1.0f
 	};
 }
