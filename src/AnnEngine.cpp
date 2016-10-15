@@ -370,7 +370,7 @@ void AnnEngine::toogleOnScreenConsole()
 
 bool AnnEngine::appVisibleInHMD()
 {
-	if (renderer->isVisibleInHmd()) 
+	if (renderer->isVisibleInHmd())
 		return true;
 	return false;
 }

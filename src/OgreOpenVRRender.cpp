@@ -133,6 +133,7 @@ void OgreOpenVRRender::initClientHmdRendering()
 	vrTextures[left] = { (void*)rttTextureGLID, API, vr::ColorSpace_Gamma };
 
 	//Set the OpenGL texture geometry
+	//V axis is reversed, U between 0 and 0.5 is for the left eye, between 0.5 and 1 is for the right eye.
 	GLBounds[left].uMin = 0;
 	GLBounds[left].uMax = 0.5f;
 	GLBounds[left].vMin = 1;
@@ -295,8 +296,8 @@ void OgreOpenVRRender::initCameras()
 	monoCam->setAspectRatio(16.0 / 9.0);
 	monoCam->setAutoAspectRatio(false);
 	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y);
-	monoCam->setNearClipDistance(0.1);
-	monoCam->setFarClipDistance(4000);
+	monoCam->setNearClipDistance(nearClippingDistance);
+	monoCam->setFarClipDistance(farClippingDistance);
 	monoCam->setFOVy(Ogre::Degree(90));
 
 	//do NOT attach camera to this node...
@@ -336,20 +337,23 @@ void OgreOpenVRRender::initRttRendering()
 void OgreOpenVRRender::updateProjectionMatrix()
 {
 	//Get the couple of matrices
-	vr::HmdMatrix44_t prj[2] = {
+	std::array<vr::HmdMatrix44_t, 2> openVRProjectionMatrix
+	{
 		vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance, API),
-		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance, API) };
+		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance, API)
+	};
+
+	std::array<Ogre::Matrix4, 2> ogreProjectionMatrix{};
 
 	//Apply them to the camera
-	for (char eye(0); eye < 2; eye++)
+	for (auto eye : { left, right })
 	{
 		//Need to convert them to Ogre's object
-		Ogre::Matrix4 m;
-		for (char i(0); i < 4; i++) for (char j(0); j < 4; j++)
-			m[i][j] = prj[eye].m[i][j];
+		for (auto x : { 0, 1, 2, 3 }) for (auto y : { 0, 1, 2, 3 })
+			ogreProjectionMatrix[eye][x][y] = openVRProjectionMatrix[eye].m[x][y];
 
 		//Apply projection matrix
-		eyeCameras[eye]->setCustomProjectionMatrix(true, m);
+		eyeCameras[eye]->setCustomProjectionMatrix(true, ogreProjectionMatrix[eye]);
 	}
 }
 
@@ -415,18 +419,7 @@ void OgreOpenVRRender::processTrackedDevices()
 		if (!trackedPoses[trackedDevice].bPoseIsValid)
 			continue;
 
-		//Get the controller ID; If we can't handle more devices, break;
-
-		//At this point, we know that "trackedDevice" is the index of a valid SteamVR hand controller. We can extract it's tracking information
-		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
-
-		//Extract the pose from the transformation matrix
-		Ogre::Vector3 position = transform.getTrans();
-		Ogre::Quaternion orientation = transform.extractQuaternion();
-
-		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
-		//controllerID 0 = left; 1 = right;
-
+		//Extract basic information of the device, detect if they are left/right hands
 		Annwvyn::AnnHandControllerID controllerIndex{ 0 };
 		Annwvyn::AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
@@ -448,9 +441,19 @@ void OgreOpenVRRender::processTrackedDevices()
 				break;
 		}
 
-		if (controllerIndex > MAX_CONTROLLER_NUMBER) break;
+		//Detect if we can handle this controller
+		if (controllerIndex > MAX_CONTROLLER_NUMBER) continue;
 
-		// TOTO: get the buttons (stick, touch-pad, whatever) states of this controller
+		//Extract tracking information from the device
+		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
+
+		//Extract the pose from the transformation matrix
+		Ogre::Vector3 position = transform.getTrans();
+		Ogre::Quaternion orientation = transform.extractQuaternion();
+
+		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
+
+		// TOTO get the buttons (stick, touch-pad, whatever) states of this controller
 
 		//Dynamically allocate the controller if the controller doesn't exist yet
 		if (!handControllers[controllerIndex])
