@@ -21,9 +21,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="plugins.cfg" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="myLevel.hpp" />
     <ClInclude Include="pch\stdafx.h" />
   </ItemGroup>
