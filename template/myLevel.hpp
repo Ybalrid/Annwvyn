@@ -4,7 +4,7 @@
 #include <Annwvyn.h>
 using namespace Annwvyn;
 
-//Each level you can create hinerits
+//Each level you can create inherits
 //from AnnAbstractLevel
 class MyLevel : LEVEL
 {
