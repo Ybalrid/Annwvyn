@@ -244,7 +244,7 @@ bool AnnEngine::refresh()
 		if (!SubSystem->needUpdate()) continue; //If doesn't need update, switch to the next
 		else SubSystem->update();				//The "else" keyword is used to not put curly braces, by laziness and by code style.
 
-	//Update camera from player
+		//Update camera from player
 		syncPov();
 
 		//Update VR form real world
