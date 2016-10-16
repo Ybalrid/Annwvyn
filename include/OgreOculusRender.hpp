@@ -146,20 +146,8 @@ private:
 	///Object for getting informations from the Oculus Rift
 	OculusInterface* Oculus;
 
-	///Ogre Scene Manager
-	Ogre::SceneManager* debugSmgr;
-
-	///Additional camera objects
-	Ogre::Camera* debugCam, *monoCam;
-
-	///Nodes for the debug scene
-	Ogre::SceneNode* debugCamNode, *debugPlaneNode;
-
 	///Viewports on textures. Textures are separated. One viewport for each textures
 	std::array<Ogre::Viewport*, 2> vpts;
-
-	///Viewport for the debug window
-	Ogre::Viewport* debugViewport;
 
 	///Timing in seconds
 	double currentFrameDisplayTime, lastFrameDisplayTime;
@@ -175,9 +163,6 @@ private:
 
 	///OpenGL Texture ID of the render buffers
 	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureGLID, renderTextureGLID;
-
-	///Pointer to the debug plane manual material
-	Ogre::MaterialPtr DebugPlaneMaterial;
 
 	///If true, need to copy the mirrored buffer from Oculus to Ogre
 	static bool mirrorHMDView;
@@ -217,6 +202,21 @@ private:
 
 	///Convert an ovrQuatf to an Ogre::Quaternion
 	inline Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q);
+
+	///Viewport for the debug window
+	Ogre::Viewport* debugViewport;
+
+	///Ogre Scene Manager
+	Ogre::SceneManager* debugSmgr;
+
+	///Additional camera objects
+	Ogre::Camera* debugCam, *monoCam;
+
+	///Nodes for the debug scene
+	Ogre::SceneNode* debugCamNode, *debugPlaneNode;
+
+	///Pointer to the debug plane manual material
+	Ogre::MaterialPtr DebugPlaneMaterial;
 
 	/*
 	* This is a 4 vertices quad with a size of 16x9 units with it's origin in the center
