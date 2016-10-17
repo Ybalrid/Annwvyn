@@ -101,7 +101,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	renderer->initPipeline();
 	SceneManager = renderer->getSceneManager();
 
-	renderer->showDebug(OgreVRRender::DebugMode::MONOSCOPIC);
+	renderer->showDebug(OgreVRRender::DebugMode::RAW_BUFFER);
 
 	log("Setup Annwvyn's subsystems");
 

@@ -134,6 +134,7 @@ public:
 	void showDebug(DebugMode mode);
 
 private:
+
 	///Pointer to the renderer itself, re-casted as this class, not the parent
 	static OgreOculusRender* OculusSelf;
 

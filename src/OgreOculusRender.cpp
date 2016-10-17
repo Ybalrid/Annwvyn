@@ -156,7 +156,7 @@ void OgreOculusRender::createWindow()
 
 	Ogre::NameValuePairList misc;
 	misc["vsync"] = "false"; //This vsync parameter has no sense in VR. The display is done by the Compositor
-	//misc["FSAA"] = std::to_string(AALevel);
+	misc["FSAA"] = std::to_string(AALevel);
 	misc["top"] = "0";
 	misc["left"] = "0";
 	root->initialise(false);
@@ -277,6 +277,16 @@ void OgreOculusRender::initRttRendering()
 	//Calculate the render buffer size for both eyes
 	bufferSize.w = texSizeL.w + texSizeR.w;
 	bufferSize.h = max(texSizeL.h, texSizeR.h);
+
+	// HACK try to super sample by using a bigger texture
+	if (HACK_BigBufferAA)
+	{
+		if (AALevel / 2 > 0)
+		{
+			bufferSize.w *= AALevel / 2;
+			bufferSize.h *= AALevel / 2;
+		}
+	}
 	AnnDebug() << "Buffer texture size : " << bufferSize.w << " x " << bufferSize.h << " px";
 
 	//Define the creation option of the texture swap chain
@@ -300,11 +310,11 @@ void OgreOculusRender::initRttRendering()
 
 	//Create the Ogre equivalent of the texture as a render target for Ogre
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
-	Ogre::TexturePtr rtt_texture(textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-								 Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, false));
 
+	Ogre::TexturePtr rtt_texture(textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+								 Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, false/*, AALevel, std::to_string(AALevel)*/));
 	//Save the texture id for low-level GL call on the texture during render
-	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer(0, 0)->getRenderTarget();
+	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer()->getRenderTarget();
 	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
 	renderTextureGLID = gltex->getGLID();
 

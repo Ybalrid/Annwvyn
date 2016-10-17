@@ -22,6 +22,7 @@ AnnMain()
 	//Only useful on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();
 
+	OgreVRRender::HACK_BigBufferAA = true;
 	AnnInit("AnnTest");
 
 	//Init some player body parameters
