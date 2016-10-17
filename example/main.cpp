@@ -22,7 +22,8 @@ AnnMain()
 	//Only useful on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();
 
-	OgreVRRender::HACK_BigBufferAA = true;
+	OgreVRRender::UseSSAA = false;
+	OgreVRRender::setAntiAliasingLevel(8);
 	AnnInit("AnnTest");
 
 	//Init some player body parameters
@@ -30,7 +31,12 @@ AnnMain()
 	AnnGetPhysicsEngine()->setDebugPhysics(false);
 	AnnGetEventManager()->useDefaultEventListener();
 
-	//load resources
+	if (dynamic_cast<OgreOculusRender*>(AnnGetVRRenderer().get()))
+	{
+		AnnGetVRRenderer()->recenter();
+	}
+
+ //load resources
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 	AnnGetResourceManager()->initResources();

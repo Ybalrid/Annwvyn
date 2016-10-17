@@ -1,8 +1,21 @@
 #include "stdafx.h"
 #include "OgreVRRender.hpp"
 
-OgreVRRender* OgreVRRender::self = nullptr;
-bool OgreVRRender::HACK_BigBufferAA(false);
+uint8_t OgreVRRender::AALevel{ 4 };
+OgreVRRender* OgreVRRender::self{ nullptr };
+bool OgreVRRender::UseSSAA{ false };
+
+void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
+{
+	for (const auto& possibleAALevel : AvailableAALevel)
+		if (possibleAALevel == AA)
+		{
+			AALevel = AA;
+			if (self)
+				return self->changedAA();
+			break;
+		}
+}
 
 OgreVRRender::OgreVRRender(std::string windowName) :
 	root(nullptr),
@@ -17,8 +30,9 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	backgroundColor(0, 0.56f, 1),
 	name(windowName),
 	frameCounter(0),
-	AALevel(4)
+	rttEyes(nullptr)
 {
+	rttTexture.setNull();
 	if (self)
 	{
 		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialization. OgreOculusRender object already created.");
@@ -100,6 +114,11 @@ std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> O
 size_t OgreVRRender::getHanControllerArraySize()
 {
 	return MAX_CONTROLLER_NUMBER;
+}
+
+void OgreVRRender::changedAA()
+{
+	if (rttTexture.getPointer() && !UseSSAA) rttTexture->setFSAA(AALevel, "");
 }
 
 void OgreVRRender::setNearClippingDistance(float distance)

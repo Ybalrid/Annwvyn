@@ -50,6 +50,8 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	//Unload manually loaded plug-ins
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 
+	rttTexture.setNull();
+
 	//Destroy the root. Everything Ogre related that is remaining should be cleaned up by the root's destructor
 	delete root;
 }
@@ -210,6 +212,7 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	//Update each viewports
 	rttViewports[0]->update();
 	rttViewports[1]->update();
+	rttEyes->update();
 	windowViewport->update();
 	window->update();
 
@@ -311,12 +314,13 @@ void OgreOpenVRRender::initRttRendering()
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
 	w *= 2;
 
-	if (HACK_BigBufferAA)
+	if (UseSSAA)
 	{
 		if (AALevel / 2 > 0)
 		{
 			w *= AALevel / 2;
 			h *= AALevel / 2;
+			AALevel = 0;
 		}
 	}
 
@@ -330,7 +334,7 @@ void OgreOpenVRRender::initRttRendering()
 
 	//shared texture
 	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-											  Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
+											  Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma, AALevel);
 	rttTextureGLID = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX").getPointer())->getGLID();
 
 	//Create viewport for each cameras in each render texture
