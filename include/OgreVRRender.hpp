@@ -27,6 +27,8 @@ struct OgrePose
 class DLL OgreVRRender
 {
 public:
+	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
+	static bool HACK_BigBufferAA;
 
 	///Type of Debug render you can do
 	enum DebugMode
@@ -146,6 +148,7 @@ public:
 	size_t getHanControllerArraySize();
 
 protected:
+
 	///Singleton pointer
 	static OgreVRRender* self;
 

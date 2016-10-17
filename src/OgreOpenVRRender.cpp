@@ -310,6 +310,16 @@ void OgreOpenVRRender::initRttRendering()
 	unsigned int w, h;
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
 	w *= 2;
+
+	if (HACK_BigBufferAA)
+	{
+		if (AALevel / 2 > 0)
+		{
+			w *= AALevel / 2;
+			h *= AALevel / 2;
+		}
+	}
+
 	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create theses textures in OpenGL and get their OpenGL ID
