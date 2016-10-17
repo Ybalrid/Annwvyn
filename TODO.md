@@ -5,7 +5,7 @@ Fix the physics :
 
 TODO list : 
 
-- [ ] Pipeline the rendeing pass with a logic thread and a render thread
+- [ ] Pipeline the rendering pass with a logic thread and a render thread
 - [ ] Make the engine render a "loading screen" when loading resources/constructing levels
 - [x] Use anti aliasing
 - [ ] Handle hand-controller event via the Event Manager
