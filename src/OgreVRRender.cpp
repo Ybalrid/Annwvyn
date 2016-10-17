@@ -2,6 +2,7 @@
 #include "OgreVRRender.hpp"
 
 OgreVRRender* OgreVRRender::self = nullptr;
+bool OgreVRRender::HACK_BigBufferAA(false);
 
 OgreVRRender::OgreVRRender(std::string windowName) :
 	root(nullptr),
@@ -16,7 +17,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	backgroundColor(0, 0.56f, 1),
 	name(windowName),
 	frameCounter(0),
-	AALevel(16U)
+	AALevel(4)
 {
 	if (self)
 	{
