@@ -33,9 +33,10 @@ void OgreNoVRRender::createWindow()
 	misc["vsync"] = "true";
 	misc["top"] = "0";
 	misc["left"] = "0";
+	misc["FSAA"] = std::to_string(AALevel);
 	root->initialise(false);
 
-	float w(1920 / 2), h(1080 / 2);
+	const float w(1920 / 2), h(1080 / 2);
 
 	window = root->createRenderWindow(name, w, h, false, &misc);
 }
