@@ -4,9 +4,6 @@
 
 using namespace Annwvyn;
 
-//Forward definition of the listener class
-class DemoHubTriggerListener;
-
 class GoBackToDemoHub : LISTENER
 {
 public:
@@ -22,7 +19,8 @@ public:
 
 	virtual void StickEvent(AnnStickEvent e)
 	{
-		if (e.isPressed(8)) jumpToHub();
+		if (e.isXboxController() && e.isPressed(8))
+			jumpToHub();
 	}
 
 private:

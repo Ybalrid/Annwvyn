@@ -30,7 +30,8 @@ public:
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 	static bool UseSSAA;
 
-	///Set the antialaising level to AA if AA is
+	///Set the anti-aliasing level to AA if AA is part of the available values
+	/// \param AA the AA level to use.
 	static void setAntiAliasingLevel(const uint8_t AA);
 
 	///Type of Debug render you can do
@@ -111,22 +112,17 @@ public:
 	virtual void recenter() = 0;
 
 	///Change the color of the pixels when there is *nothing*
-	virtual void changeViewportBackgroundColor(Ogre::ColourValue) = 0;
+	/// \param color Color to use as background
+	virtual void changeViewportBackgroundColor(Ogre::ColourValue color) = 0;
 
 	///(Optional) Cycle through the client debug display if available.
 	virtual void cycleDebugHud() {};
 
-	///Set the VR cameras near clipping plane distance. Please use SetNearClippingDistance instead
-	DEPRECATED virtual void setCamerasNearClippingDistance(float distance) { return updateProjectionMatrix(); }
-
 	///Set the distance from the viewpoint to the near clipping distance plane
-	virtual void setNearClippingDistance(float distance);
-
-	///Set the VR cameras far clipping plane distance. Please use SetFarClippingDistance instead
-	DEPRECATED virtual void setCameraFarClippingDistance(float distance) { return updateProjectionMatrix(); }
+	void setNearClippingDistance(float distance);
 
 	///Set the distance from the viewpoint to the far clipping distance plane
-	virtual void setFarClippingDistance(float distance);
+	void setFarClippingDistance(float distance);
 
 	///The projection matrix is generally given by the underlying VR api, generally, using the near/far clipping distances set in this class
 	/// \note this method is called by the set{Near/Far}ClippingDistance() automatically.
@@ -200,6 +196,7 @@ protected:
 	///Render target that serve as intermediate buffer for the eyeCameras
 	Ogre::RenderTexture* rttEyes;
 
+	///The texture that is used to hold the render target
 	Ogre::TexturePtr rttTexture;
 
 	///Level of anti aliasing to use.
