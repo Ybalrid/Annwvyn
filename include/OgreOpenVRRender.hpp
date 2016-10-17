@@ -30,7 +30,6 @@ class DLL OgreOpenVRRender : public OgreVRRender
 	{
 		left, right
 	};
-
 public:
 	///Construct an OgreOpenVR object
 	OgreOpenVRRender(std::string windowName = "OgreOpenVRRender");

@@ -44,8 +44,9 @@ OgreOculusRender::~OgreOculusRender()
 	root->destroySceneManager(debugSmgr);
 	root->destroySceneManager(smgr);
 
-	//Set the material shared pointer to null. If not done, Ogre will crash.
+	//Release shared pointers from Ogre before deleting Root
 	DebugPlaneMaterial.setNull();
+	rttTexture.setNull();
 
 	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
@@ -279,13 +280,14 @@ void OgreOculusRender::initRttRendering()
 	bufferSize.h = max(texSizeL.h, texSizeR.h);
 
 	// HACK try to super sample by using a bigger texture
-	if (HACK_BigBufferAA)
+	if (UseSSAA)
 	{
 		if (AALevel / 2 > 0)
 		{
 			bufferSize.w *= AALevel / 2;
 			bufferSize.h *= AALevel / 2;
 		}
+		AALevel = 0;
 	}
 	AnnDebug() << "Buffer texture size : " << bufferSize.w << " x " << bufferSize.h << " px";
 
@@ -311,10 +313,12 @@ void OgreOculusRender::initRttRendering()
 	//Create the Ogre equivalent of the texture as a render target for Ogre
 	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
 
-	Ogre::TexturePtr rtt_texture(textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-								 Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, false/*, AALevel, std::to_string(AALevel)*/));
+	rttTexture = (textureManager->createManual("RttTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+				  Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel));
+
 	//Save the texture id for low-level GL call on the texture during render
-	Ogre::RenderTexture* rttEyes = rtt_texture->getBuffer()->getRenderTarget();
+	rttEyes = rttTexture->getBuffer()->getRenderTarget();
+
 	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("RttTex").getPointer());
 	renderTextureGLID = gltex->getGLID();
 
@@ -546,7 +550,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 	root->_fireFrameRenderingQueued();
 	vpts[left]->update();
 	vpts[right]->update();
-
+	rttEyes->update();
 	//Copy the rendered image to the Oculus Swap Texture
 	glCopyImageSubData(renderTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
 					   oculusRenderTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,

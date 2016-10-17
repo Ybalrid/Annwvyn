@@ -28,7 +28,10 @@ class DLL OgreVRRender
 {
 public:
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
-	static bool HACK_BigBufferAA;
+	static bool UseSSAA;
+
+	///Set the antialaising level to AA if AA is
+	static void setAntiAliasingLevel(const uint8_t AA);
 
 	///Type of Debug render you can do
 	enum DebugMode
@@ -149,6 +152,9 @@ public:
 
 protected:
 
+	///Called if AA level has been updated
+	void changedAA();
+
 	///Singleton pointer
 	static OgreVRRender* self;
 
@@ -191,11 +197,22 @@ protected:
 	///Counter of frames
 	unsigned long long int frameCounter;
 
-	///Anti Aliasing level
-	Ogre::uint AALevel;
+	///Render target that serve as intermediate buffer for the eyeCameras
+	Ogre::RenderTexture* rttEyes;
+
+	Ogre::TexturePtr rttTexture;
+
+	///Level of anti aliasing to use.
+	static uint8_t AALevel;
 
 	///Array of hand controller
 	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> handControllers;
+
+	///List of acceptable Anti Aliasing factors for the render buffer and window
+	static constexpr std::array<const uint8_t, 5> AvailableAALevel{ 0, 2, 4, 8, 16 };
+
+	///Name given to the texture manager for the eyeBuffer
+	static constexpr const char* const rttTextureName = { "RttTex" };
 };
 
 #endif
