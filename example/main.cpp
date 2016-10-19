@@ -60,6 +60,15 @@ AnnMain()
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
 			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	*/
+		AnnDebug() << "--------";
+		for (auto i : { 0,1 })
+			if (AnnGetVRRenderer()->getHandControllerArray()[i])
+				for (auto state : AnnGetVRRenderer()->getHandControllerArray()[i]->getButtonStateVector())
+					if (state)
+						AnnDebug() << "pressed";
+					else
+						AnnDebug() << "released";
+		system("cls");
 	} while (AnnGetEngine()->refresh());
 
 	AnnQuit();

@@ -27,8 +27,15 @@ shouldQuitState(false)
 	rttTexture.setNull();
 	rttTextureGLID = NULL;
 
+	buttonsToHandle.push_back(vr::k_EButton_System);
+	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
+	buttonsToHandle.push_back(vr::k_EButton_Grip);
+	buttonsToHandle.push_back(vr::k_EButton_A);
+
 	for (auto side : { left, right })
 	{
+		currentControllerButtonsPressed[side].resize(buttonsToHandle.size(), false);
+		lastControllerButtonsPressed[side].resize(buttonsToHandle.size(), false);
 		rttViewports[side] = nullptr;
 		handControllers[side] = nullptr;
 		vrTextures[side] = {};
@@ -336,6 +343,7 @@ void OgreOpenVRRender::initRttRendering()
 	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 											  Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma, AALevel);
 	rttTextureGLID = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX").getPointer())->getGLID();
+	rttEyes = rttTexture->getBuffer()->getRenderTarget();
 
 	//Create viewport for each cameras in each render texture
 	rttViewports[left] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
@@ -433,6 +441,8 @@ void OgreOpenVRRender::processTrackedDevices()
 		if (!trackedPoses[trackedDevice].bPoseIsValid)
 			continue;
 
+		//From here we know that "trackedDevice" is the device index of a valid controller that has been tracked by the system
+
 		//Extract basic information of the device, detect if they are left/right hands
 		Annwvyn::AnnHandControllerID controllerIndex{ 0 };
 		Annwvyn::AnnHandController::AnnHandControllerSide side;
@@ -468,7 +478,36 @@ void OgreOpenVRRender::processTrackedDevices()
 		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
 
 		// TOTO get the buttons (stick, touch-pad, whatever) states of this controller
+		vr::VRControllerState_t controllerState = {};
+		vrSystem->GetControllerState(trackedDevice, &controllerState);
 
+		auto axes = controllerState.rAxis;
+		//Available buttons are declared on this enum.
+		//vr::EVRButtonId;
+
+		const size_t numberOfAxes{ 3 };
+
+		const size_t axoffset = vr::k_EButton_Axis0;
+
+		//Extract axis values
+		const float TouchpadXNormalizedValue = axes[vr::EVRButtonId::k_EButton_SteamVR_Touchpad - axoffset].x;
+		const float TouchpadYNormalizedValue = axes[vr::EVRButtonId::k_EButton_SteamVR_Touchpad - axoffset].y;
+		const float TriggerNormalizedValue = axes[vr::EVRButtonId::k_EButton_SteamVR_Trigger - axoffset].x;
+
+		auto buttons = controllerState.ulButtonPressed;
+		std::vector<uint8_t> pressed, released;
+		for (uint8_t i(0); i < buttonsToHandle.size(); i++)
+		{
+			lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
+			if (buttons & vr::ButtonMaskFromId(buttonsToHandle[i]))
+				currentControllerButtonsPressed[side][i] = true;
+			if (currentControllerButtonsPressed[side][i] && !lastControllerButtonsPressed[side][i])
+				pressed.push_back(i);
+			if (!currentControllerButtonsPressed[side][i] && lastControllerButtonsPressed[side][i])
+				released.push_back(i);
+		}
+
+		//create or update controllers object
 		//Dynamically allocate the controller if the controller doesn't exist yet
 		if (!handControllers[controllerIndex])
 		{
@@ -482,6 +521,32 @@ void OgreOpenVRRender::processTrackedDevices()
 		handControllers[controllerIndex]->setTrackedOrientation(bodyOrientation * orientation);
 		handControllers[controllerIndex]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
 		handControllers[controllerIndex]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
+
+		auto axesVector = handControllers[controllerIndex]->getAxesVector();
+		//Axis map:
+		//0 -> Touchpad X
+		//1 -> Touchpad Y
+		//2 -> AnalogTrigger
+
+		bool allreadyUpdated(false);
+		if (axesVector.size() == 0)
+		{
+			axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad X", TouchpadXNormalizedValue });
+			axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad Y", TouchpadYNormalizedValue });
+			axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Trigger X", TriggerNormalizedValue });
+			allreadyUpdated = true;
+		}
+		if (axesVector.size() == 3 && !allreadyUpdated)
+		{
+			axesVector[0].updateValue(TouchpadXNormalizedValue);
+			axesVector[1].updateValue(TouchpadYNormalizedValue);
+			axesVector[2].updateValue(TriggerNormalizedValue);
+		}
+
+		//Assign the buttons
+		handControllers[controllerIndex]->getButtonStateVector() = currentControllerButtonsPressed[side];
+		handControllers[controllerIndex]->getPressedButtonsVector() = pressed;
+		handControllers[controllerIndex]->getReleasedButtonsVector() = released;
 	}
 }
 
