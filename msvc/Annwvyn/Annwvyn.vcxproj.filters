@@ -341,9 +341,11 @@
     <ClCompile Include="..\..\src\Ann3DTextPlane.cpp">
       <Filter>Annwvyn\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\AnnHandController.cpp" />
     <ClCompile Include="..\..\src\AnnUserSpaceSubSystem.cpp">
       <Filter>Annwvyn\SubSystems\UserDefined</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnHandController.cpp">
+      <Filter>Annwvyn\VrUtility\HandController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

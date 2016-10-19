@@ -1,5 +1,5 @@
 /**
-* * \file main.cpp
+* \file main.cpp
 * \brief test/demo program
 * \author Arthur Brainville
 *
