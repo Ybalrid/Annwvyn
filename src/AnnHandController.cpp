@@ -102,3 +102,42 @@ bool AnnHandController::isTracked()
 {
 	return tracked;
 }
+
+bool Annwvyn::AnnHandController::getState(uint8_t buttonIndex)
+{
+	return buttonsState[buttonIndex];
+}
+
+bool Annwvyn::AnnHandController::hasBeenPressed(uint8_t buttonIndex)
+{
+	for (auto button : pressedButtons)
+		if (button == buttonIndex) return true;
+	return false;
+}
+
+bool Annwvyn::AnnHandController::hasBeenReleased(uint8_t buttonIndex)
+{
+	for (auto button : releasedButtons)
+		if (button == buttonIndex) return true;
+	return false;
+}
+
+std::vector<AnnHandControllerAxis>& Annwvyn::AnnHandController::getAxesVector()
+{
+	return axes;
+}
+
+std::vector<bool>& Annwvyn::AnnHandController::getButtonStateVector()
+{
+	return buttonsState;
+}
+
+std::vector<uint8_t>& Annwvyn::AnnHandController::getPressedButtonsVector()
+{
+	return pressedButtons;
+}
+
+std::vector<uint8_t>& Annwvyn::AnnHandController::getReleasedButtonsVector()
+{
+	return releasedButtons;
+}

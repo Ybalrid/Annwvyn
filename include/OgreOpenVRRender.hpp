@@ -173,6 +173,10 @@ private:
 
 	///State of the "should quit" marker. If it goes to true, the game loop should stop
 	bool shouldQuitState;
+
+	std::vector<vr::EVRButtonId> buttonsToHandle;
+
+	std::array<std::vector<bool>, 2> currentControllerButtonsPressed, lastControllerButtonsPressed;
 };
 
 #endif

@@ -5,9 +5,53 @@
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 
+//Forward declaration of the renderer classes that manager VR controllers
+class OgreVRRender;
+class OgreOpenVRRender;
 namespace Annwvyn
 {
 	typedef size_t AnnHandControllerID;
+
+	class AnnHandControllerAxis
+	{
+	public:
+		AnnHandControllerAxis(const std::string& AxisName, float normalizedValue) :
+			name(AxisName),
+			value(0)
+		{
+			updateValue(normalizedValue);
+		}
+
+		AnnHandControllerAxis(const AnnHandControllerAxis& axis) = default;
+
+		const std::string getName() const
+		{
+			return name;
+		}
+
+		const float getValue() const
+		{
+			return value;
+		}
+	private:
+		friend class OgreVRRender;
+		friend class OgreOpenVRRender;
+
+		void updateValue(float normalizedValue)
+		{
+			if (isInRange(normalizedValue))
+				value = normalizedValue;
+		}
+
+		const bool isInRange(float v) const
+		{
+			return (v >= -1 && v <= 1);
+		}
+
+		std::string name;
+		float value;
+	};
+
 	class DLL AnnHandController
 	{
 	public:
@@ -62,7 +106,28 @@ namespace Annwvyn
 		///Return true if the hand controller object has revived updates from the tracking system
 		bool isTracked();
 
+		bool getState(uint8_t buttonIndex);
+
+		bool hasBeenPressed(uint8_t buttonIndex);
+
+		bool hasBeenReleased(uint8_t buttonIndex);
+
+		// TODO restrict access to theses getters, they return references that can be used to modify to classes attributes
+
+		///Get a reference to the axes vector
+		std::vector<AnnHandControllerAxis>& getAxesVector();
+
+		///Get a reference to the button state vector
+		std::vector<bool>& getButtonStateVector();
+
+		///Get a reference to the pressed event vector
+		std::vector<uint8_t>& getPressedButtonsVector();
+
+		///Get a reference to the released event vector
+		std::vector<uint8_t>& getReleasedButtonsVector();
+
 	private:
+
 		///ID of the controller, expect 1 or 2
 		AnnHandControllerID id;
 
@@ -83,5 +148,11 @@ namespace Annwvyn
 
 		///Linear velocity vector
 		AnnVect3 trackedLinearSpeed;
+
+		std::vector<AnnHandControllerAxis> axes;
+
+		std::vector<bool> buttonsState;
+
+		std::vector<uint8_t> pressedButtons, releasedButtons;
 	};
 }
