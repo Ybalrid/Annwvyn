@@ -29,7 +29,7 @@ AnnLevel
 	|			|
 	|			- Physics
 	|				| 
-	|				+ Enabeled [0/1]
+	|				+ Enabled [0/1]
 	|				| 
 	|				+ Shape [nameOfShape]
 	|				| 
