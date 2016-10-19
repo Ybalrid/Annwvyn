@@ -36,7 +36,7 @@ AnnMain()
 		AnnGetVRRenderer()->recenter();
 	}
 
- //load resources
+	//load resources
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 	AnnGetResourceManager()->initResources();

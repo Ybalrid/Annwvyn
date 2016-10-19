@@ -135,6 +135,9 @@ public:
 
 private:
 
+	///With of the unused pixel-band between the two eyes
+	int frontierWidth;
+
 	///Pointer to the renderer itself, re-casted as this class, not the parent
 	static OgreOculusRender* OculusSelf;
 
