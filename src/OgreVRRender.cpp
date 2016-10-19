@@ -116,6 +116,15 @@ size_t OgreVRRender::getHanControllerArraySize()
 	return MAX_CONTROLLER_NUMBER;
 }
 
+size_t OgreVRRender::getRecognizedControllerCount()
+{
+	auto count = size_t{ 0 };
+	for (auto handController : handControllers)
+		if (handController)
+			count++;
+	return count;
+}
+
 void OgreVRRender::changedAA()
 {
 	if (rttTexture.getPointer() && !UseSSAA) rttTexture->setFSAA(AALevel, "");
