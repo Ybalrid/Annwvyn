@@ -16,7 +16,7 @@ float AnnEventListener::trim(float v, float dz)
 	float abs(v);
 	if (v < 0) abs = -v;
 
-	//The test is done on the abs value. Return the actuall value, or 0 if under the deadzone
+	//The test is done on the abs value. Return the actual value, or 0 if under the dead-zone
 	if (abs >= dz) return v;
 	return 0.0f;
 }
@@ -25,7 +25,6 @@ std::shared_ptr<AnnEventListener> Annwvyn::AnnEventListener::getSharedListener()
 {
 	return std::enable_shared_from_this<AnnEventListener>::shared_from_this();
 }
-
 
 AnnTextInputer::AnnTextInputer() :
 	listen(false)
@@ -39,7 +38,7 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_BACK && !input.empty())
 		input.pop_back();
 	else
-		//Put typed char into the application 
+		//Put typed char into the application
 		input.push_back((char)arg.text);
 	return true;
 }
@@ -94,7 +93,7 @@ lastTimerCreated(0)
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 	InputManager = OIS::InputManager::createInputSystem(pl);
 
-	//Get the keyboard, mouse and joysticks objects 
+	//Get the keyboard, mouse and joysticks objects
 	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
 
@@ -146,7 +145,7 @@ void Annwvyn::AnnEventManager::useDefaultEventListener()
 	//Remove all event listeners
 	removeListener();
 
-	//If the event listenre isn't allready initialized, allocate one
+	//If the event listener isn't already initialized, allocate one
 	if (!defaultEventListener)
 		defaultEventListener = std::make_shared<AnnDefaultEventListener>();
 
@@ -171,7 +170,7 @@ void AnnEventManager::clearListenerList()
 	listeners.clear();
 }
 
-//l equals NULL by default 
+//l equals NULL by default
 void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 {
 	AnnDebug() << "Removing an event listener : " << l.get();
@@ -211,7 +210,7 @@ void AnnEventManager::processInput()
 			//if it's pressed
 			if (Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c])
 			{
-				//create a coresponding key event 
+				//create a corresponding key event
 				AnnKeyEvent e;
 				e.setCode((KeyCode::code)c);
 				e.setPressed();
@@ -224,7 +223,7 @@ void AnnEventManager::processInput()
 
 				previousKeyStates[c] = true;
 			}
-			else if (!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c]) //key not pressed atm
+			else if (!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c]) //key not pressed at the moment
 			{
 				//same thing
 				AnnKeyEvent e;
@@ -268,10 +267,10 @@ void AnnEventManager::processInput()
 		OIS::JoyStickState state(Joystick->stick->getJoyStickState());
 		AnnStickEvent e;
 
-		//Get all butons imediate data
+		//Get all buttons immediate data
 		e.buttons = state.mButtons;
 
-		//Get all axes imediate data
+		//Get all axes immediate data
 		for (int i(0); i < state.mAxes.size(); i++)
 		{
 			AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
@@ -280,7 +279,7 @@ void AnnEventManager::processInput()
 			e.axes.push_back(axis);
 		}
 
-		//The joystick state object allwas have 4 Pov but the AnnStickEvent has the number of Pov the stick has
+		//The joystick state object always have 4 Pov but the AnnStickEvent has the number of Pov the stick has
 		for (size_t i(0); i < Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV); i++)
 			e.povs.push_back(AnnStickPov(state.mPOV[i].direction));
 

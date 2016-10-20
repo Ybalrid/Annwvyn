@@ -23,7 +23,7 @@
 
 namespace Annwvyn
 {
-	///Class that abstract the physics engine initialisation and collision information querries for Annwvyn.
+	///Class that abstract the physics engine initialization and collision information queries for Annwvyn.
 	class DLL AnnPhysicsEngine : public AnnSubSystem
 	{
 	public:
@@ -37,26 +37,26 @@ namespace Annwvyn
 		///Add the player body to the dynamics world
 		void addPlayerPhysicalBodyToDynamicsWorld();
 
-		///Create player's rigidbody
-		void createPlayerPhysicalVirtualBody( Ogre::SceneNode* node);
+		///Create player's rigid-body
+		void createPlayerPhysicalVirtualBody(Ogre::SceneNode* node);
 
 		///Create player's body shape (a capsule)
 		void createVirtualBodyShape();
-		
+
 		///Pointer to the bullet's dynamics world
 		btDiscreteDynamicsWorld* getWorld();
-		
+
 		///Step the simulation
 		/// \param delta Interval in seconds that time has to be simulated
 		void step(float delta);
 
-		///Process the collision querry system
-		/// \param the objet list where to process collision querry
+		///Process the collision query system
+		/// \param the object list where to process collision query
 		void processCollisionTesting(AnnGameObjectList& object);
 
 		///Process triggers contact event
 		/// \param player The player object
-		/// \param triggers list where to process collision querry
+		/// \param triggers list where to process collision query
 		void processTriggersContacts();
 
 		///Remove a body from simulation
@@ -77,7 +77,7 @@ namespace Annwvyn
 	private:
 
 		friend class AnnEngine;
-		///Update by steping simulation by one frame time. Should be called only once, and only by AnnEngine
+		///Update by steeping simulation by one frame time. Should be called only once, and only by AnnEngine
 		void update();
 
 		btBroadphaseInterface* Broadphase;

@@ -1,7 +1,7 @@
 /**
 * \file AnnPlayerActuator.hpp
 * \brief Player Actuator permit to change the code run by the player class when updating player (position/rotation, etc)
-* The VR point of view is relative to the player object. 
+* The VR point of view is relative to the player object.
 * \author A. Brainville (Ybalrid)
 */
 #ifndef PLAYER_ACTUATOR
@@ -12,7 +12,7 @@ namespace Annwvyn
 {
 	class AnnPlayer;
 
-	///Callback class that permit you to define how physics is appliyed to the player.
+	///Callback class that permit you to define how physics is applied to the player.
 	class DLL AnnPlayerActuator
 	{
 	public:
@@ -32,7 +32,7 @@ namespace Annwvyn
 	public:
 		///Construct the default player actuator
 		AnnDefaultPlayerActuator();
-		///Allow gravity to pull the player to the ground while permiting the user to controll mouvement on the (XZ) plane
+		///Allow gravity to pull the player to the ground while permitting the user to control movement on the (XZ) plane
 		void actuate(float deltaTime);
 	};
 }

@@ -12,7 +12,8 @@ class DemoHub : LEVEL, LISTENER
 {
 public:
 
-	DemoHub() : constructLevel(), constructListener()
+	DemoHub() : constructLevel(), constructListener(),
+		panelDpi(18)
 	{
 	}
 
@@ -23,7 +24,7 @@ public:
 
 	void load()
 	{
-		//Register ourselve as event listener
+		//Register ourselves as event listener
 		AnnGetEventManager()->addListener(getSharedListener());
 
 		//Add static geometry
@@ -35,10 +36,10 @@ public:
 		StoneDemo0->setOrientation(AnnQuaternion(AnnDegree(45), AnnVect3::UNIT_Y));
 		StoneDemo0->setUpPhysics();
 
-		auto TextPane = make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, 18.f);
+		auto TextPane = make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, panelDpi);
 		TextPane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
 		TextPane->setTextColor(AnnColor{ 0, 0, 0 });
-		TextPane->setPosition(StoneDemo0->getPosition() + StoneDemo0->getOrientation()*  AnnVect3{ 0, 2, -0.35 });
+		TextPane->setPosition(StoneDemo0->getPosition() + StoneDemo0->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
 		TextPane->setOrientation(StoneDemo0->getOrientation());
 		TextPane->update();
 		addManualMovableObject(TextPane);
@@ -53,10 +54,10 @@ public:
 		StoneTestLevel->setOrientation(AnnQuaternion(AnnDegree(-45), AnnVect3::UNIT_Y));
 		StoneTestLevel->setUpPhysics();
 
-		auto TestLevelText = make_shared<Ann3DTextPlane>(2.f, 1.f, "TestLevel\nA simple test level", 512, 18.f);
+		auto TestLevelText = make_shared<Ann3DTextPlane>(2.f, 1.f, "TestLevel\nA simple test level", 512, panelDpi);
 		TestLevelText->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
 		TestLevelText->setTextColor(AnnColor{ 0, 0, 0 });
-		TestLevelText->setPosition(StoneTestLevel->getPosition() + StoneTestLevel->getOrientation()*  AnnVect3{ 0, 2, -0.35 });
+		TestLevelText->setPosition(StoneTestLevel->getPosition() + StoneTestLevel->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
 		TestLevelText->setOrientation(StoneTestLevel->getOrientation());
 		TestLevelText->update();
 		addManualMovableObject(TestLevelText);
@@ -65,7 +66,7 @@ public:
 		TestLevelTrigger->setThreshold(1.5f);
 		TestLevelTrigger->setPosition(StoneTestLevel->getPosition() + AnnVect3(0, 0.5f, 0));
 		testLevelTrig = TestLevelTrigger;
-		
+
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
@@ -114,7 +115,7 @@ public:
 private:
 	std::shared_ptr<AnnTriggerObject> demo0trig;
 	std::shared_ptr<AnnTriggerObject> testLevelTrig;
-
+	float panelDpi;
 };
 
 class Demo0 : LEVEL

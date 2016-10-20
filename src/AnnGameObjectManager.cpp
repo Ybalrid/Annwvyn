@@ -7,7 +7,6 @@ using namespace Annwvyn;
 
 AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
 {
-
 }
 
 void AnnGameObjectManager::update()
@@ -19,15 +18,13 @@ void AnnGameObjectManager::update()
 		gameObject->updateOpenAlPos();
 		gameObject->atRefresh();
 	}
-
 }
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char entityName[], std::shared_ptr<AnnGameObject> obj)
 {
+	AnnDebug("Creating a game object from the entity " + std::string(entityName));
 
-	AnnDebug("Creatig a game object from the entity " + std::string(entityName));
-	
-	// TOTO: either choose to throw an execption or quit the program. If it's true, there's a programing error. And "tomber en marche" is bad. 
+	// TOTO: either choose to throw an exception or quit the program. If it's true, there's a programing error. And "tomber en marche" is bad.
 	if (std::string(entityName).empty())
 	{
 		AnnDebug("Hey! what are you trying to do here? Please specify a non empty string for entityName !");
@@ -53,7 +50,6 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	return obj;
 }
 
-
 void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> object)
 {
 	AnnDebug() << "Removed object " << object.get();
@@ -64,7 +60,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 {
 	if (!node)
 	{
-		AnnDebug("Plese do not try to identify a NULL");
+		AnnDebug("Please do not try to identify a NULL");
 		return NULL;
 	}
 	AnnDebug() << "Trying to identify object at address " << (void*)node;
@@ -100,7 +96,6 @@ std::shared_ptr<AnnTriggerObject> Annwvyn::AnnGameObjectManager::createTriggerOb
 	return trigger;
 }
 
-
 void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
 {
 	Triggers.remove(trigger);
@@ -111,7 +106,7 @@ std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()
 	//Origin vector of the ray
 	AnnVect3 Orig(AnnGetEngine()->getHmdPose().position);
 
-	//Caltulate direction Vector of the ray to be the midpont camera optical axis
+	//Calculate direction Vector of the ray to be the midpoint camera optical axis
 	AnnVect3 LookAt(AnnQuaternion(AnnGetEngine()->getHmdPose().orientation).getAtVector());
 
 	//create ray
@@ -127,7 +122,7 @@ std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()
 	//read the result list
 	for (auto it(result.begin()); it != result.end(); it++)
 		if (it->movable && it->movable->getMovableType() == "Entity")
-			return AnnGetGameObjectManager()->getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode	
+			return AnnGetGameObjectManager()->getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode
 
 	return nullptr; //means that we don't know what the player is looking at.
 }

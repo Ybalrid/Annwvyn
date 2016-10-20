@@ -9,7 +9,7 @@
 #include "systemMacro.h"
 //The debug output is opened by the AnnEngine class
 #include "AnnEngine.hpp"
-//We need the standard string fromat to be accesible
+//We need the standard string format to be accessible
 #include <string>
 #include <iostream>
 namespace Annwvyn
@@ -23,13 +23,13 @@ namespace Annwvyn
 		{
 		public:
 			///Construct an AnnDebug buffer
-			AnnDebugBuff(){};
+			AnnDebugBuff() {};
 
 			///Will sync the buffer
-			~AnnDebugBuff(){pubsync();};
+			~AnnDebugBuff() { pubsync(); };
 
-			///Sync the buffer by performing an AnnEngine::log, clear it and return success. 
-			int sync(){AnnEngine::log(str()); str(""); return 0;};
+			///Sync the buffer by performing an AnnEngine::log, clear it and return success.
+			int sync() { AnnEngine::log(str()); str(""); return 0; };
 		};
 
 	public:

@@ -7,7 +7,7 @@ using namespace Annwvyn;
 
 bodyParams::bodyParams()
 {
-	//these parameters looks good for testing. Costumise them before initializing the physics!
+	//these parameters looks good for testing. Customize them before initializing the physics!
 	eyeHeight = 1.59f;
 	walkSpeed = 3;
 	turnSpeed = 0.15f;
@@ -34,21 +34,20 @@ AnnPlayer::AnnPlayer()
 	analogWalk = 0;
 	analogStraff = 0;
 	analogRotate = 0;
-	
+
 	standing = true;
 	updateTime = 0;
 	physics = false;
 
 	actuator = nullptr;
-	setActuator (new AnnDefaultPlayerActuator);
+	setActuator(new AnnDefaultPlayerActuator);
 
 	ignorePhysics = false;
-
 }
 
 void AnnPlayer::setActuator(AnnPlayerActuator* act)
 {
-	if(actuator) 
+	if (actuator)
 	{
 		delete actuator;
 		actuator = nullptr;
@@ -60,8 +59,6 @@ void AnnPlayer::setActuator(AnnPlayerActuator* act)
 
 AnnPlayer::~AnnPlayer()
 {
-
-
 	delete playerBody;
 }
 
@@ -87,19 +84,19 @@ void AnnPlayer::setHeadOrientation(AnnQuaternion Orientation)
 
 void AnnPlayer::setEyesHeight(float eyeHeight)
 {
-	if(!isLocked())
+	if (!isLocked())
 		playerBody->eyeHeight = eyeHeight;
 }
 
 void AnnPlayer::setWalkSpeed(float walk)
 {
-	if(!isLocked())
+	if (!isLocked())
 		playerBody->walkSpeed = walk;
 }
 
 void AnnPlayer::setTurnSpeed(float ts)
 {
-	if(!isLocked())
+	if (!isLocked())
 		playerBody->turnSpeed = ts;
 }
 
@@ -110,7 +107,7 @@ void AnnPlayer::setMass(float mass)
 
 void AnnPlayer::setShape(btCollisionShape* Shape)
 {
-	if(!isLocked())
+	if (!isLocked())
 		playerBody->Shape = Shape;
 	physics = true;
 }
@@ -144,6 +141,11 @@ float AnnPlayer::getWalkSpeed()
 float AnnPlayer::getEyesHeight()
 {
 	return playerBody->eyeHeight;
+}
+
+AnnVect3 AnnPlayer::getEyeTranslation()
+{
+	return getEyesHeight() * AnnVect3::UNIT_Y;
 }
 
 float AnnPlayer::getTurnSpeed()
@@ -183,19 +185,19 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
 {
-	applyRelativeBodyYaw(Ogre::Radian(- float(relValue) * getTurnSpeed() * updateTime));
+	applyRelativeBodyYaw(Ogre::Radian(-float(relValue) * getTurnSpeed() * updateTime));
 }
 
 AnnVect3 AnnPlayer::getTranslation()
 {
-	AnnVect3 translation (AnnVect3::ZERO);
-	if(walking[forward])
+	AnnVect3 translation(AnnVect3::ZERO);
+	if (walking[forward])
 		translation.z -= 1;
-	if(walking[backward])
+	if (walking[backward])
 		translation.z += 1;
-	if(walking[left])
+	if (walking[left])
 		translation.x -= 1;
-	if(walking[right])
+	if (walking[right])
 		translation.x += 1;
 
 	return translation.normalisedCopy();
@@ -213,8 +215,8 @@ AnnVect3 AnnPlayer::getAnalogTranslation()
 
 void AnnPlayer::applyAnalogYaw()
 {
-	//7 is the value that was more or less feeling good for me. 
-	applyRelativeBodyYaw(Ogre::Radian(- 7 * analogRotate * getTurnSpeed() * updateTime));
+	//7 is the value that was more or less feeling good for me.
+	applyRelativeBodyYaw(Ogre::Radian(-7 * analogRotate * getTurnSpeed() * updateTime));
 }
 
 float AnnPlayer::getRunFactor()
@@ -227,7 +229,7 @@ void AnnPlayer::resetPlayerPhysics()
 	if (!hasPhysics()) return;
 	AnnDebug("Reset player's physics");
 
-	//Remove the player's rigidbody from the world
+	//Remove the player's rigid-body from the world
 	AnnGetPhysicsEngine()->getWorld()->removeRigidBody(getBody());
 
 	//We don't need that body anymore...
@@ -247,7 +249,6 @@ void AnnPlayer::teleport(AnnVect3 position, AnnRadian orientation)
 	setPosition(position);
 	setOrientation(Ogre::Euler(orientation));
 	resetPlayerPhysics();
-
 }
 
 void Annwvyn::AnnPlayer::teleport(AnnVect3 position)
@@ -255,14 +256,12 @@ void Annwvyn::AnnPlayer::teleport(AnnVect3 position)
 	teleport(position, this->getOrientation().getYaw());
 }
 
-
-
 void AnnPlayer::engineUpdate(float deltaTime)
 {
-	if(ignorePhysics) return;
+	if (ignorePhysics) return;
 	updateTime = deltaTime;
 
-	if(getBody())
+	if (getBody())
 	{
 		applyAnalogYaw();
 		getBody()->activate();
@@ -270,7 +269,7 @@ void AnnPlayer::engineUpdate(float deltaTime)
 
 	//Tell the actuator to "act" on the player
 	actuator->actuate(deltaTime);
-	
+
 	//get back position data from physics engine
 	if (getBody())
 	{

@@ -5,7 +5,7 @@
 You need to overload at least the load() and runLogic() methods to create a level.
 To simplify level declaration, you can use the keyword "LEVEL" to mark inheritance and
 constructLevel() to call the constructor of the abstract class.
-This class also provide a 'simple, stupid' random string generator to set IDs to object automaticaly
+This class also provide a 'simple, stupid' random string generator to set IDs to object automatically
 * \author A. Brainville (Ybalrid)
 */
 
@@ -25,11 +25,11 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 
 namespace Annwvyn
 {
-	///Base class for all Levels. Is absrtract
+	///Base class for all Levels. Is abstract
 	class DLL AnnLevel
 	{
 	public:
-		///Construct the level 
+		///Construct the level
 		AnnLevel();
 
 		///Pure virtual methods that loads the level
@@ -42,7 +42,7 @@ namespace Annwvyn
 		virtual void unload();
 
 		///Run logic code from the level
-		virtual void runLogic() =0;
+		virtual void runLogic() = 0;
 
 	protected:
 		AnnGameObjectList levelContent;

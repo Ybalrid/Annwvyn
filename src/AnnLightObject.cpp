@@ -2,6 +2,7 @@
 #include "AnnLightObject.hpp"
 #include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
+
 using namespace Annwvyn;
 
 AnnLightObject::AnnLightObject(Ogre::Light* light) :

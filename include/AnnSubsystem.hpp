@@ -20,12 +20,11 @@ namespace Annwvyn
 		friend class AnnEngine;
 		///To be called by AnnEngine : update the subsystem for the next frame
 		virtual void update();
-		///To be called by AnnEngine : Return if the susbystem wants to be updated
+		///To be called by AnnEngine : Return if the subsystem wants to be updated
 		virtual bool needUpdate();
 
 		///Name of the subsystem
 		std::string name;
-
 	};
 }
 #endif //ANN_SUB_SYSTEM

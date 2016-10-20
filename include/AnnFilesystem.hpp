@@ -35,10 +35,10 @@ namespace Annwvyn
 	///Handle opening, writing and closing files
 	class DLL AnnFileWriter
 	{
-		public:
-		///Construct file writer object
+	public:
+	///Construct file writer object
 		AnnFileWriter();
-	
+
 		///Write the fileData to disc in the appropriate directory
 		void write(std::shared_ptr<AnnSaveFileData> dataToWrite);
 	};
@@ -56,11 +56,11 @@ namespace Annwvyn
 
 	class AnnSaveFileData;
 
-	///Manage where and how files will be wrote and read from the OS filesystem
+	///Manage where and how files will be wrote and read from the OS file-system
 	class DLL AnnFilesystemManager : public AnnSubSystem
 	{
 	public:
-		
+
 		///Construct FileSystem manager
 		AnnFilesystemManager(std::string title);
 
@@ -70,7 +70,7 @@ namespace Annwvyn
 		string getPathForFileName(string fileName);
 		///Get the path to the directory where save are read/written
 		string getSaveDirectoryFullPath();
-		
+
 		///Create the given directory (OS call)
 		static void createDirectory(string path);
 		///Create the save directory (should be done at least once)
@@ -79,12 +79,12 @@ namespace Annwvyn
 		///Create en empty SaveFileData Object for a specific file
 		std::shared_ptr<AnnSaveFileData> crateSaveFileDataObject(string filename);
 
-		///Get an allready existing SaveFileData object for this filename
+		///Get an already existing SaveFileData object for this filename
 		std::shared_ptr<AnnSaveFileData> getCachedSaveFileDataObject(string filename);
 		///Destroy this SaveFileData Object. Will loose cached data if this file didn't go through the FileWriter
 		DEPRECATED void destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
-		
+
 		///Get the FileReader object
 		std::shared_ptr<AnnFileReader> getFileReader();
 		///Get the FileWriter object
@@ -99,14 +99,13 @@ namespace Annwvyn
 	public:
 		static std::vector<char> charToEscape;
 		static std::vector<char> charToStrip;
-
 	};
-	
+
 	///Class that holds data to read or write
 	class DLL AnnSaveFileData
 	{
 	public:
-		///Private constructor of SaveFileData class. 
+		///Private constructor of SaveFileData class.
 		AnnSaveFileData(std::string name);
 
 		///Get the name of this file
@@ -117,7 +116,7 @@ namespace Annwvyn
 
 		///Set the value for this key (string)
 		void setValue(std::string key, std::string value);
-		///Set the value for this key (C syle const string)
+		///Set the value for this key (C style const string)
 		void setValue(std::string, const char* value);
 		///Set the value for this key (integer)
 		void setValue(std::string key, int value);
@@ -136,7 +135,7 @@ namespace Annwvyn
 		void clearQuaternionValue(std::string key);
 
 		///Return true if keys were manipulated but changes weren't wrote to disk yet
-		bool hasUnsavedChanges();	
+		bool hasUnsavedChanges();
 
 	private:
 		friend class AnnFileWriter;
@@ -149,37 +148,34 @@ namespace Annwvyn
 		bool changed;
 	};
 
-	///Interface class to switch from text to usefull data. 
+	///Interface class to switch from text to useful data.
 	class DLL AnnSaveDataInterpretor
 	{
-
 	//Inherit from this to use your saved data
 
 	public:
 		///FileInterpetor
 		AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data);
-		
+
 		///Get a float from this string
-		float stringToFloat(std::string text);	
+		float stringToFloat(std::string text);
 		///Get a int from this string
 		int stringToInt(std::string text);
-		///Extract a float from the dataobject stored at the given key
+		///Extract a float from the data-object stored at the given key
 		float keyStringToFloat(std::string key);
-		///Extract a int from the dataobject stored at the given key
+		///Extract a int from the data-object stored at the given key
 		int keyStringToInt(std::string key);
-		///Extract a Vector3 from the dataobject stored at the given key
+		///Extract a Vector3 from the data-object stored at the given key
 		AnnVect3 keyStringToVect3(std::string key);
-		///Extract a quaternion from the dataobject stored at the given key
+		///Extract a quaternion from the data-object stored at the given key
 		AnnQuaternion keyStringToQuaternion(std::string key);
 
 		///Overload this method with
-		virtual void extract() =0;
-	
+		virtual void extract() = 0;
+
 	protected:
 		std::shared_ptr<AnnSaveFileData> dataObject;
 	};
-
-
 }
 
 #endif

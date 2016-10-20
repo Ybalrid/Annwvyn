@@ -19,7 +19,7 @@ openGL43plus(false)
 	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
 
 	/*
-	* The displaySurface is a perfect rectangle drawn by 2 polygons (tiangles). The position in object-space are defined as folowing
+	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
 	* on the "points" array :
 	*  0 +---------------+ 2
 	*    |           /   |
@@ -42,9 +42,9 @@ openGL43plus(false)
 	textCoord[2] = AnnVect2(1, 0);
 	textCoord[3] = AnnVect2(1, 1);
 
-	//creatre the quad itself
+	//create the quad itself
 	displaySurface = AnnGetEngine()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
-	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);//Srip of triangle : Define a triangle then add them by points
+	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);//Strip of triangle : Define a triangle then add them by points
 
 	//Add the four vertices. This will directly describe two Triangles
 	for (char i(0); i < 4; i++)
@@ -53,10 +53,10 @@ openGL43plus(false)
 		displaySurface->textureCoord(textCoord[i]);
 	}
 
-	//Object compleate
+	//Object complete
 	displaySurface->end();
 
-	//create a node child to the camera here : 
+	//create a node child to the camera here :
 	consoleNode = AnnGetEngine()->getPlayerPovNode()->createChildSceneNode();
 
 	//attach The object
@@ -65,7 +65,7 @@ openGL43plus(false)
 	//set the player relative position
 	consoleNode->setPosition(offset + AnnGetPlayer()->getEyesHeight() * AnnVect3::UNIT_Y);
 
-	//Make sure the object is the last thing rendered (to be on top of everyting
+	//Make sure the object is the last thing rendered (to be on top of everything
 	//displaySurface->setRenderQueueGroup(Ogre::uint8(-1));
 	//Set the visibility state
 	consoleNode->setVisible(visibility);
@@ -85,9 +85,9 @@ openGL43plus(false)
 	font->setType(Ogre::FontType::FT_TRUETYPE);
 	font->setSource("VeraMono.ttf");
 	font->setTrueTypeResolution(96);
-	font->setTrueTypeSize(BASE / 32); //Size of font is relative to the size of the pixelbuffer (texture)
+	font->setTrueTypeSize(BASE / 32); //Size of font is relative to the size of the pixel-buffer (texture)
 
-	//Aspect ration of the console is 2:1. The actuall size of texture is 2*BASE x BASE
+	//Aspect ration of the console is 2:1. The actual size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
 	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_CORE", Ogre::TEX_TYPE_2D, 2 * BASE, BASE, Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
 	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
@@ -98,31 +98,30 @@ openGL43plus(false)
 
 	//Initialize the text buffer.
 	//CONSOLE_BUFFER is the number of lines to keep in memory and to load on the texture.
-	//Text is drawn from the 1st line. The number of line define how mani lines are visible on the console
+	//Text is drawn from the 1st line. The number of line define how main lines are visible on the console
 	for (size_t i(0); i < CONSOLE_BUFFER; i++)
 		buffer[i] = "";
 
 	//To optimize texture copy, make sure to use the most efficient OpenGL method
 
-	
 	if (Ogre::Root::getSingleton().getRenderSystem()->getName()
 		== "OpenGL Rendering Subsystem")
 	{
 		backgroundID = static_cast<Ogre::GLTexture*>(background.get())->getGLID();
 		textureID = static_cast<Ogre::GLTexture*>(texture.get())->getGLID();
-		
+
 		// check if OpenGL version is > at 4.3
 		GLint major, minor;
 		glGetIntegerv(GL_MAJOR_VERSION, &major);
 		glGetIntegerv(GL_MINOR_VERSION, &minor);
-		
+
 		std::stringstream log;
 		log << "AnnConsolen constructor detected OpenGL version " << major << "." << minor;
 		AnnEngine::log(log.str());
 
-		if(openGL43plus = (major >= 4) && (minor >= 3))
+		if (openGL43plus = (major >= 4) && (minor >= 3))
 		{
-			AnnEngine::log("This version is 4.3 or greater. Texture copy optimisation enabled");
+			AnnEngine::log("This version is 4.3 or greater. Texture copy optimization enabled");
 		}
 	}
 }
@@ -146,7 +145,7 @@ void AnnConsole::setVisible(bool state)
 	consoleNode->setVisible(visibility);
 }
 
-void AnnConsole::toogle()
+void AnnConsole::toggle()
 {
 	setVisible(!visibility);
 }
@@ -161,7 +160,6 @@ void AnnConsole::update()
 		content << buffer[i] << std::endl;
 	Ogre::String textToDisplay = content.str();
 
-
 	if (openGL43plus)
 		glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
 						   textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
@@ -171,7 +169,7 @@ void AnnConsole::update()
 		//background->copyToTexture(texture);
 		float w(texture->getBuffer()->getWidth());
 		float h(texture->getBuffer()->getHeight());
-		
+
 		auto texture_out = texture->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::HardwareBuffer::LockOptions::HBL_WRITE_ONLY);
 
 		w = background->getBuffer()->getWidth();
@@ -184,7 +182,6 @@ void AnnConsole::update()
 
 		background->getBuffer()->unlock();
 		texture->getBuffer()->unlock();
-
 	}
 
 	//Write text to texture
@@ -193,7 +190,7 @@ void AnnConsole::update()
 	 texture,																	//Texture
 	 Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
 	 Ogre::ColourValue::Black,															//Color
-	 'l',																		//Alignement
+	 'l',																		//Alignment
 	 false);																		//LineWrap
 }
 
@@ -257,7 +254,6 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 			if (GlyphTexCoords[i].getWidth() > charwidth)
 				charwidth = GlyphTexCoords[i].getWidth();
 		}
-
 	}
 
 	size_t cursorX = 0;

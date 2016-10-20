@@ -7,7 +7,7 @@
 ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
 ///(even if now I'm not using code from him anymore)
 ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
-///The website http://learnopengl.com/ for improving my (verry little at the time) understanding of OpenGL 
+///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
 
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
@@ -21,18 +21,19 @@
 //C++ SDL Includes
 #include <iostream>
 #include <sstream>
+#include <array>
 
-//Accessing Oculus Rift through a class : 
+//Accessing Oculus Rift through a class :
 #include "OculusInterface.hpp"
 
-//OS Specific build macro 
+//OS Specific build macro
 #include "systemMacro.h"
 #ifdef _WIN32
 #include <Windows.h>
 #include <glew.h>
 #endif
 
-//We need to get low level access to Ogre's RenderSystem_GL 
+//We need to get low level access to Ogre's RenderSystem_GL
 #include <RenderSystems/GL/OgreGLTextureManager.h>
 #include <RenderSystems/GL/OgreGLRenderSystem.h>
 #include <RenderSystems/GL/OgreGLTexture.h>
@@ -43,188 +44,249 @@
 ///Do the initialization and graphical rendering for the Oculus Rift using Ogre
 class DLL OgreOculusRender : public OgreVRRender
 {
+	///OgreOculusRenderEyeType : prefer to use "left" and "right" instead of 0 and 1
 	enum oorEyeType
 	{
 		left,
 		right
 	};
 
-    public:
-		///Construct the OgreOculusRender. Can only be called once
-        OgreOculusRender(std::string windowName = "OgreOculusRender");
+public:
+	///Construct the OgreOculusRender. Can only be called once
+	OgreOculusRender(std::string windowName = "OgreOculusRender");
 
-		///Class destructor
-        ~OgreOculusRender();
+	///Class destructor
+	~OgreOculusRender();
 
-		///Oculus runtime hint to quit
-		bool shouldQuit();
-		
-		///Oculus runtim hit to recenter
-		bool shouldRecenter();
+	///Oculus runtime hint to quit
+	bool shouldQuit();
 
-		///App not visible inside Oculus
-		bool isVisibleInHmd();
+	///Oculus runtime hint to recenter
+	bool shouldRecenter();
 
-		///Cycle through all Oculus Performance HUD available
-		void cycleDebugHud();
-		
-		///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
-		void updateTracking();
+	///App not visible inside Oculus
+	bool isVisibleInHmd();
 
-		///Render each texture buffer, copy contne to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
-		void renderAndSubmitFrame();
+	///Cycle through all Oculus Performance HUD available
+	void cycleDebugHud();
 
-		///Start Oculus and Ogre libraries.
-        void initVrHmd();
-        
-		///Create the RenderWindow
-        void createWindow();
+	///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
+	void updateTracking();
 
-		///Initialize the SceneManager for the aplication. 
-        void initScene();
+	///Render each texture buffer, copy content to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
+	void renderAndSubmitFrame();
 
-		///Initialise the camera for Stereo Render
-        void initCameras();
+	///Start Oculus and Ogre libraries.
+	void initVrHmd();
 
-		///Initialise the RTT Rendering System. Create two textures, two viewports and bind cameras on them.
-        void initRttRendering();
-        
-		///Init the Rift rendering. Configure Oculus SDK to use the two RTT textures created.
-		void initClientHmdRendering();
-		
-		///Print various informations about the cameras
-        void debugPrint();
+	///Create the RenderWindow
+	void createWindow();
 
-		///Get the timer
-        Ogre::Timer* getTimer();
+	///Initialize the SceneManager for the application.
+	void initScene();
 
-		///Recenter rift to default position.
-		void recenter();
+	///Initialize the camera for Stereo Render
+	void initCameras();
 
-		///Compute from OVR the correct projection matrix for the given clipping distance
-		void calculateProjectionMatrix();
-		virtual void updateProjectionMatrix();
+	///Initialize the RTT Rendering System. Create two textures, two viewports and bind cameras on them.
+	void initRttRendering();
 
+	///Init the Rift rendering. Configure Oculus SDK to use the two RTT textures created.
+	void initClientHmdRendering();
 
-		///change main viewport background color
-		void changeViewportBackgroundColor(Ogre::ColourValue color);
+	///Print various informations about the cameras
+	void debugPrint();
 
-		///Show in debug window what the camera are seeing
-		static void showRawView();
+	///Get the timer
+	Ogre::Timer* getTimer();
 
-		///Show in the debug window what the Oculus service send as mirrored view
-		static void showMirrorView();
+	///Recenter rift to default position.
+	void recenter();
 
-		///Show in the debug window a monoscopic view with a default Fov of 90°
-		static void showMonscopicView();
+	///Compute from OVR the correct projection matrix for the given clipping distance
+	virtual void updateProjectionMatrix();
 
-		///Get the status of the session
-		ovrSessionStatus getSessionStatus();
+	///change main viewport background color
+	void changeViewportBackgroundColor(Ogre::ColourValue color);
 
-		///Init the rendering pipeline
-		void initPipeline();
+	///Show in debug window what the camera are seeing
+	static void showRawView();
 
-		///The Oculus Rift has integrated audio
-		bool usesCustomAudioDevice();
+	///Show in the debug window what the Oculus service send as mirrored view
+	static void showMirrorView();
 
-		///The Oculus Rift integrated audio playback device will have "something (Rift Audio)" as a name
-		std::string getAudioDeviceIdentifierSubString();
+	///Show in the debug window a monoscopic view with a default Fov of 90°
+	static void showMonscopicView();
 
-		///Show the requested debug view
-		void showDebug(DebugMode mode);
+	///Get the status of the session
+	ovrSessionStatus getSessionStatus();
 
+	///Init the rendering pipeline
+	void initPipeline();
 
-	private:
-		///Pointer to the renderer itself, recasted as this class, not the parent
-		static OgreOculusRender* OculusSelf;
+	///The Oculus Rift has integrated audio
+	bool usesCustomAudioDevice();
 
-		///Set the Fov for the monoscopic view
-		void setMonoFov(float degreeFov);
-		
-		///Save content of the RenderTexture to the specified file. This verry slow operation is only usefull for debuging the renderer itself
-        void debugSaveToFile(const char path[]);
-		
-		///Object for getting informations from the Oculus Rift
-        OculusInterface* Oculus; 
+	///The Oculus Rift integrated audio playback device will have "something (Rift Audio)" as a name
+	std::string getAudioDeviceIdentifierSubString();
 
-		///Ogre Scene Manager
-        Ogre::SceneManager* debugSmgr;	
+	///Show the requested debug view
+	void showDebug(DebugMode mode);
 
-		///Additional camera objects
-        Ogre::Camera* debugCam, * monoCam; 
-		
-		///Nodes for the debug scene
-		Ogre::SceneNode* debugCamNode, * debugPlaneNode; 
+private:
 
-		///Vewports on textures. Textures are separated. One vieport for each textures
-        Ogre::Viewport* vpts[2], *debugViewport;
+	///With of the unused pixel-band between the two eyes
+	int frontierWidth;
 
-		///Timing in seconds 
-		double currentFrameDisplayTime, lastFrameDisplayTime;
+	///Pointer to the renderer itself, re-casted as this class, not the parent
+	static OgreOculusRender* OculusSelf;
 
-		///Render descriptor for each eye. Indexes are "left" and "right"
-        ovrEyeRenderDesc EyeRenderDesc[2];
+	///Set the Fov for the monoscopic view
+	void setMonoFov(float degreeFov);
 
-		///Size of texture and headset
-        ovrSizei bufferSize, hmdSize;
+	///Save content of the RenderTexture to the specified file. This very slow operation is only useful for debugging the renderer itself
+	void debugSaveToFile(const char path[]);
 
-		///Mirror texture 
-		ovrMirrorTexture mirrorTexture;
+	///Object for getting informations from the Oculus Rift
+	OculusInterface* Oculus;
 
-		///OpenGL Texture ID of the render buffers
-		GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureGLID, renderTextureGLID;
+	///Viewports on textures. Textures are separated. One viewport for each textures
+	std::array<Ogre::Viewport*, 2> vpts;
 
-		///Pointer to the debug plane manual material
-		Ogre::MaterialPtr DebugPlaneMaterial;
+	///Timing in seconds
+	double currentFrameDisplayTime, lastFrameDisplayTime;
 
-		///If true, need to copy the mirrored buffer from Oculus to Ogre
-		static bool mirrorHMDView;
+	///Render descriptor for each eye. Indexes are "left" and "right"
+	std::array<ovrEyeRenderDesc, 2> EyeRenderDesc;
 
-		///Compositing layer for the rendered scene
-		ovrLayerEyeFov layer;
+	///Size of texture and headset
+	ovrSizei bufferSize, hmdSize;
 
-		///GL texture set for the rendering
-		ovrTextureSwapChain textureSwapChain; 
+	///Mirror texture
+	ovrMirrorTexture mirrorTexture;
 
-		///offset between render center and camera (for IPD variation)
-		ovrVector3f offset[2];
+	///OpenGL Texture ID of the render buffers
+	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureGLID, renderTextureGLID;
 
-		///Pose (position+orientation) 
-		ovrPosef pose;
+	///If true, need to copy the mirrored buffer from Oculus to Ogre
+	static bool mirrorHMDView;
 
-		///Tracking state
-		ovrTrackingState ts;
+	///Compositing layer for the rendered scene
+	ovrLayerEyeFov layer;
 
-		///Orientation of the headset
-		ovrQuatf oculusOrient;
+	///GL texture set for the rendering
+	ovrTextureSwapChain textureSwapChain;
 
-		///Position of the headset
-		ovrVector3f oculusPos;
+	///offset between render center and camera (for IPD variation)
+	std::array<ovrVector3f, 2> offset;
 
-		///Pointer to the layer to be submited
-		ovrLayerHeader* layers;
+	///Pose (position+orientation)
+	ovrPosef pose;
 
-		///Staus of the current session
-		ovrSessionStatus sessionStatus;
+	///Tracking state
+	ovrTrackingState ts;
 
-		///State of the performance HUD
-		int perfHudMode;
+	///Pointer to the layer to be submitted
+	ovrLayerHeader* layers;
 
-		///Index of the current texture in the textureSwapChain
-		int currentIndex;
+	///Status of the current session
+	ovrSessionStatus sessionStatus;
 
-		///Frame index of the current session status
-		unsigned long long int currentSessionStatusFrameIndex;
+	///State of the performance HUD
+	int perfHudMode;
 
-    public:
-		///Position of the rift at the last frame
-        Ogre::Vector3 lastOculusPosition;
+	///Index of the current texture in the textureSwapChain
+	int currentIndex;
 
-		///Orientation of the rift at the last frame
-        Ogre::Quaternion lastOculusOrientation;
+	///Frame index of the current session status
+	unsigned long long int currentSessionStatusFrameIndex;
 
-		///Texture unit state of the debug plane
-		static Ogre::TextureUnitState* debugTexturePlane;
+	///Convert an ovrVector3f to an Ogre::Vector3
+	inline Ogre::Vector3 oculusToOgreVect3(const ovrVector3f& v);
 
+	///Convert an ovrQuatf to an Ogre::Quaternion
+	inline Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q);
+
+	///Viewport for the debug window
+	Ogre::Viewport* debugViewport;
+
+	///Ogre Scene Manager
+	Ogre::SceneManager* debugSmgr;
+
+	///Additional camera objects
+	Ogre::Camera* debugCam, *monoCam;
+
+	///Nodes for the debug scene
+	Ogre::SceneNode* debugCamNode, *debugPlaneNode;
+
+	///Pointer to the debug plane manual material
+	Ogre::MaterialPtr DebugPlaneMaterial;
+
+	/*
+	* This is a 4 vertices quad with a size of 16x9 units with it's origin in the center
+	* The quad got mapped square texture coordinates at each corner, covering the whole UV map
+	*
+	* The debugPlane is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
+	* on the "points" array :
+	*  0 +---------------+ 2
+	*    |           /   |
+	*    |        /      |
+	*    |     /         |
+	*    |  /            |
+	*  1 +----------------+ 3
+	* Texture coordinates are also mapped.
+	*/
+
+	///Dimensions of the debug plane
+	static constexpr const std::array<const float, 2> debugPlaneGeometry{ 16, 9 };
+
+	///Size of the debug plane, divided by 2
+	static constexpr const std::array<const float, 2> debugPlanHalfGeometry
+	{
+		debugPlaneGeometry[0] / 2.f,
+		debugPlaneGeometry[1] / 2.f
+	};
+
+	///List of the points that form the debug plane (a quad made of two triangles)
+	static constexpr const std::array<const std::array<const float, 3>, 4> debugPlaneVertexBuffer
+	{
+		{
+			{-debugPlanHalfGeometry[0], debugPlanHalfGeometry[1], 0},
+			{-debugPlanHalfGeometry[0], -debugPlanHalfGeometry[1], 0},
+			{debugPlanHalfGeometry[0], debugPlanHalfGeometry[1], 0},
+			{debugPlanHalfGeometry[0], -debugPlanHalfGeometry[1], 0},
+		}
+	};
+
+	///Texture coordinates to map a whole texture to the debug plane
+	static constexpr const std::array<const std::array< const float, 2>, 4> debugPlaneTextureCoord
+	{
+		{
+			{0, 0},
+			{0, 1},
+			{1, 0},
+			{1, 1}
+		}
+	};
+
+	///Index buffer of the debug plane
+	static constexpr const std::array<const uint8_t, 4>debugPlaneIndexBuffer{ 0, 1, 2, 3 };
+
+	///Return true if the array sizes of each buffer are constants
+	static constexpr bool debugPlaneSanityCheck()
+	{
+		return debugPlaneIndexBuffer.size() == debugPlaneVertexBuffer.size()
+			&& debugPlaneIndexBuffer.size() == debugPlaneTextureCoord.size();
+	}
+
+public:
+	///Position of the rift at the last frame
+	Ogre::Vector3 lastOculusPosition;
+
+	///Orientation of the rift at the last frame
+	Ogre::Quaternion lastOculusOrientation;
+
+	///Texture unit state of the debug plane
+	static Ogre::TextureUnitState* debugTexturePlane;
 };
 #endif //OGRE_OCULUS_RENDERER

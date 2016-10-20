@@ -7,7 +7,6 @@
 #ifndef ANNGAMEOBJECT
 #define ANNGAMEOBJECT
 
-
 #include "systemMacro.h"
 
 #include <string>
@@ -30,235 +29,233 @@
 
 namespace Annwvyn
 {
-    class DLL AnnGameObject;
+	class DLL AnnGameObject;
 	class DLL AnnGameObjectManager;
 
-	// TODO get rid of 
+	// TODO get rid of
 	///Simple collision state representation (pointer between 2 objects and a boolean)
-    struct collisionTest
-    {
-        ///The object tested
-        AnnGameObject* Object;
+	struct collisionTest
+	{
+		///The object tested
+		AnnGameObject* Object;
 
-        ///The base object
-        AnnGameObject* Receiver;
+		///The base object
+		AnnGameObject* Receiver;
 
-        ///Contact or not ? 
-        bool collisionState;
-    };
+		///Contact or not ?
+		bool collisionState;
+	};
 
-	///An object that exist in the game. Graphicaly and Potentialy Physicialy
-    class DLL AnnGameObject : public AnnAbstractMovable
-    {
-        public:
+	///An object that exist in the game. Graphically and Potentially Physically
+	class DLL AnnGameObject : public AnnAbstractMovable
+	{
+	public:
 
-            ///Class constructor 
-            AnnGameObject();
+		///Class constructor
+		AnnGameObject();
 
-            ///Class Destructor. Virutal.
-            virtual ~AnnGameObject();
+		///Class Destructor. Virtual.
+		virtual ~AnnGameObject();
 
-            ///Set position from spatial varaibles
-			/// \param x X componant of the position vector
-			/// \param y Y componant of the position vector
-			/// \param z Z componant of the position vector
-            void setPosition(float x, float y, float z);
+		///Set position from spatial variables
+		/// \param x X component of the position vector
+		/// \param y Y component of the position vector
+		/// \param z Z component of the position vector
+		void setPosition(float x, float y, float z);
 
-            ///Set position from Vector 3D
-			/// \param pos 3D position vector. Relative to scene root position
-            void setPosition(AnnVect3 pos);
+		///Set position from Vector 3D
+		/// \param pos 3D position vector. Relative to scene root position
+		void setPosition(AnnVect3 pos);
 
-            ///Translate
-			/// \param x X componant of the translation vector
-			/// \param y Y componant of the translation vector
-			/// \param z Z componant of the translation vector
-            void translate(float x, float y, float z);
-			
-            ///Set orientation from Quaternion components
-			/// \param w W composant of a quaternion
-			/// \param x X composant of a quaternion
-			/// \param y Y composant of a quaternion
-			/// \param z Z composant of a quaternion
-            void setOrientation(float w, float x, float y, float z);
+		///Translate
+		/// \param x X component of the translation vector
+		/// \param y Y component of the translation vector
+		/// \param z Z component of the translation vector
+		void translate(float x, float y, float z);
 
-            ///Set Orientation from Quaternion
-			/// \param orient Quaternion for aboslute orientation
-            void setOrientation(AnnQuaternion orient);
+		///Set orientation from Quaternion components
+		/// \param w W component of a quaternion
+		/// \param x X component of a quaternion
+		/// \param y Y component of a quaternion
+		/// \param z Z component of a quaternion
+		void setOrientation(float w, float x, float y, float z);
 
-            ///Set scale
-			/// \param x X componant of the scale vector
-			/// \param y Y componant of the scale vector
-			/// \param z Z componant of the scale vector
-            void setScale(float x, float y, float z);
+		///Set Orientation from Quaternion
+		/// \param orient Quaternion for absolute orientation
+		void setOrientation(AnnQuaternion orient);
 
-            ///Set scale from Vector 3D
-			/// \param scale Relative scaling factor
-            void setScale(AnnVect3 scale);
+		///Set scale
+		/// \param x X component of the scale vector
+		/// \param y Y component of the scale vector
+		/// \param z Z component of the scale vector
+		void setScale(float x, float y, float z);
 
-			///Get Position
-			AnnVect3 getPosition();
-			
-			///Get Orientation
-			AnnQuaternion getOrientation();
+		///Set scale from Vector 3D
+		/// \param scale Relative scaling factor
+		void setScale(AnnVect3 scale);
 
-            ///Get Ogre Node
-			Ogre::SceneNode* getNode();
+		///Get Position
+		AnnVect3 getPosition();
 
-			///Get Ogre Entity
-			Ogre::Entity* getEntity();
-			
-            ///Get Rigid Body
-            btRigidBody* getBody();
+		///Get Orientation
+		AnnQuaternion getOrientation();
 
-            ///Get distance from another object 
-			/// \param otherObject The object we're counting the distance from
-            float getDistance(AnnGameObject* otherObject);
+		///Get Ogre Node
+		Ogre::SceneNode* getNode();
 
-            ///Play a sond file
-			/// \param path Path to the audio file
-			/// \param loop If set to true, will play the sound in loop
-			/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
-            void playSound(std::string path, bool loop = false, float volume = 1.0f);
+		///Get Ogre Entity
+		Ogre::Entity* getEntity();
 
-            ///collision handeling
-            std::vector<struct collisionTest*> getCollisionMask();
+		///Get Rigid Body
+		btRigidBody* getBody();
 
-            ///Set all collisionState to false
-            void resetCollisionMask();
+		///Get distance from another object
+		/// \param otherObject The object we're counting the distance from
+		float getDistance(AnnGameObject* otherObject);
 
-            ///empty the vector
-            void cleanCollisionMask();
+		///Play a sound file
+		/// \param path Path to the audio file
+		/// \param loop If set to true, will play the sound in loop
+		/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
+		void playSound(std::string path, bool loop = false, float volume = 1.0f);
 
-            ///remove this object of the collisionMask
-			/// \param Object Object we don't want to know if we collide anymore
-            void stopGettingCollisionWith(AnnGameObject* Object);
+		///collision handling
+		std::vector<struct collisionTest*> getCollisionMask();
 
-            ///add this object to the collisionState
-			/// \param Object the object we want to know collision information
-            void testCollisionWith(AnnGameObject* Object);
+		///Set all collisionState to false
+		void resetCollisionMask();
 
-            ///change the collisionState
-			/// \param Object the object we are testing
-			/// \param collisionState the state of the collision. True if contact.
-            void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
+		///empty the vector
+		void cleanCollisionMask();
 
-            ///return the collisionState with the object from the collisionMask. 
-            ///if the object is not on the collisionMask, return false
-			/// \param Object the objet we want to know the current collision state
-            bool collideWith(AnnGameObject* Object);
+		///remove this object of the collisionMask
+		/// \param Object Object we don't want to know if we collide anymore
+		void stopGettingCollisionWith(AnnGameObject* Object);
 
-			// TODO create animlation state machine
-            ///Set curently playing animation
-			/// \param name Name of the animation as defined by the 3D entity
-            void setAnimation(const char name[]);
+		///add this object to the collisionState
+		/// \param Object the object we want to know collision information
+		void testCollisionWith(AnnGameObject* Object);
 
-			// TODO create animation state machine
-            ///Set if we want to play the animation
-			/// \param play the playing state we want to apply
-            void playAnimation(bool play = true);
+		///change the collisionState
+		/// \param Object the object we are testing
+		/// \param collisionState the state of the collision. True if contact.
+		void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
 
-			// TODO create animation state machine
-            ///Loop the animation ?
-			/// \param loop the looping state of the animation
-            void loopAnimation(bool loop = true);
+		///return the collisionState with the object from the collisionMask.
+		///if the object is not on the collisionMask, return false
+		/// \param Object the object we want to know the current collision state
+		bool collideWith(AnnGameObject* Object);
 
-            ///Apply a physical force            
-            void applyForce(AnnVect3 force);
+		// TODO create animation state machine
+		///Set currently playing animation
+		/// \param name Name of the animation as defined by the 3D entity
+		void setAnimation(const char name[]);
 
-            ///Apply a physical impultion
-			/// \param the impultion force
-            void applyImpulse(AnnVect3 impulse);
-			
-			///Set the linear speed of the objet
-			/// \param v The linear speed
-			void setLinearSpeed(AnnVect3 v);
+		// TODO create animation state machine
+		///Set if we want to play the animation
+		/// \param play the playing state we want to apply
+		void playAnimation(bool play = true);
 
-            ///Set up Physics 
-            /// \param mass The mass of the object
-			/// \param type The type of shape you want to define for the object
-			void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true);
+		// TODO create animation state machine
+		///Loop the animation ?
+		/// \param loop the looping state of the animation
+		void loopAnimation(bool loop = true);
 
-			///Make the object visible
-			void setVisible();
+		///Apply a physical force
+		void applyForce(AnnVect3 force);
 
-			///Make the object invisible
-			void setInvisible();
+		///Apply a physical impulsion
+		/// \param the impulsion force
+		void applyImpulse(AnnVect3 impulse);
 
-			///Get if object visible
-			bool isVisible();
+		///Set the linear speed of the object
+		/// \param v The linear speed
+		void setLinearSpeed(AnnVect3 v);
 
-			///Set the ID of the GameObject
-			void setID(std::string ID);
+		///Set up Physics
+		/// \param mass The mass of the object
+		/// \param type The type of shape you want to define for the object
+		void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true);
 
-			///Get the ID of the Object
-			std::string getID();
+		///Make the object visible
+		void setVisible();
 
-        private:
-            ///Make Annwvyn::AnnEngine acces these methods : 
-            friend class AnnEngine;
-			friend class AnnGameObjectManager;
+		///Make the object invisible
+		void setInvisible();
 
-            ///For engine : set node
-            void setNode(Ogre::SceneNode* node);
+		///Get if object visible
+		bool isVisible();
 
-            ///For engine : set Entity
-            void setEntity(Ogre::Entity* entity);
+		///Set the ID of the GameObject
+		void setID(std::string ID);
 
-            ///For engine : set bullet world
-            void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
+		///Get the ID of the Object
+		std::string getID();
 
-			// TODO credate animatiln state machine
-            ///For engine : get elapsed time
-            void addAnimationTime(double offsetTime);
+	private:
+		///Make Annwvyn::AnnEngine access these methods :
+		friend class AnnEngine;
+		friend class AnnGameObjectManager;
 
-            ///For engine : update OpenAL source position
-            void updateOpenAlPos();
+		///For engine : set node
+		void setNode(Ogre::SceneNode* node);
 
-        private:
-			/**
-			* You will certainly find strange to see that the Object does not cary a "position" vector.
-			* We use the position of the Ogre Node ro the Bullet body to align the object.
-			*
-			* The reference is the position of the node. You can access it throug the getters/setters setPos() and getPos()
-			*  
-			* Same is true with the Orientation. We use Ogre node
-			* TODO rework collision feedback system
-			*/
-			std::vector<collisionTest *> collisionMask;
+		///For engine : set Entity
+		void setEntity(Ogre::Entity* entity);
 
-            Ogre::SceneNode* Node;
-            Ogre::Entity* Entity;
+		///For engine : set bullet world
+		void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
 
-			// TODO create animation state machine 
-            bool animIsSetted;
-            bool animIsPlaying;
-            bool animIsLooping;
-			Ogre::AnimationState* anim;
+		// TODO create animation state machine
+		///For engine : get elapsed time
+		void addAnimationTime(double offsetTime);
 
+		///For engine : update OpenAL source position
+		void updateOpenAlPos();
 
-            btDiscreteDynamicsWorld* DynamicsWorld;
-            btCollisionShape* Shape;
-            btRigidBody* Body;
-            bool bulletReady;
+	private:
+		/**
+		* You will certainly find strange to see that the Object does not carry a "position" vector.
+		* We use the position of the Ogre Node or the Bullet body to align the object.
+		*
+		* The reference is the position of the node. You can access it through the getters/setters setPos() and getPos()
+		*
+		* Same is true with the Orientation. We use Ogre node
+		* TODO rework collision feedback system
+		*/
+		std::vector<collisionTest *> collisionMask;
 
-			///AnnAudioEngine audioSource;
-			std::shared_ptr<AnnAudioSource> audioSource;
+		Ogre::SceneNode* Node;
+		Ogre::Entity* Entity;
 
-			///Name of the object
-			std::string name;
-			std::string id;
+		// TODO create animation state machine
+		bool animIsSetted;
+		bool animIsPlaying;
+		bool animIsLooping;
+		Ogre::AnimationState* anim;
 
-			///True if the object is visible
-			bool visible;
-			BtOgre::RigidBodyState *state;
+		btDiscreteDynamicsWorld* DynamicsWorld;
+		btCollisionShape* Shape;
+		btRigidBody* Body;
+		bool bulletReady;
 
+		///AnnAudioEngine audioSource;
+		std::shared_ptr<AnnAudioSource> audioSource;
 
-        public:
-            ///Executed after object initialization
-            virtual void postInit(){return;}
+		///Name of the object
+		std::string name;
+		std::string id;
 
-            ///Executed at refresh time (each frames)
-            virtual void atRefresh(){return;}
-    };
+		///True if the object is visible
+		bool visible;
+		BtOgre::RigidBodyState *state;
+
+	public:
+		///Executed after object initialization
+		virtual void postInit() { return; }
+
+		///Executed at refresh time (each frames)
+		virtual void atRefresh() { return; }
+	};
 }
 #endif
