@@ -10,7 +10,7 @@ class DLL OgreNoVRRender : public OgreVRRender
 {
 public:
 	OgreNoVRRender(std::string winName = "OgreVRNoVRRender");
-	
+
 	virtual void initPipeline();
 	virtual void initVrHmd();
 	virtual void createWindow();
@@ -21,7 +21,7 @@ public:
 	virtual bool shouldQuit() { return false; }
 	virtual bool shouldRecenter() { return false; }
 	virtual bool isVisibleInHmd() { return true; }
-	
+
 	virtual void updateTracking();
 	virtual void renderAndSubmitFrame();
 	virtual void recenter();
@@ -40,4 +40,3 @@ private:
 };
 
 #endif //OGRE_NO_VR_RENDER
-

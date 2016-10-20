@@ -25,6 +25,10 @@
 #include <cassert>
 #include <limits>
 #include <memory>
+#include <array>
+#include <thread>
+#include <mutex>
+#include <random>
 
 //Object-Oriented Graphical Rendering Engine
 #include <Ogre.h>
@@ -35,7 +39,7 @@
 #include <OgreEntity.h>
 #include <OgreLight.h>
 #include <OgreMatrix3.h>
-//For the consosole, we use the font system of the Overlay
+//For the console, we use the font system of the Overlay
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 //We need to get access to the guts of the OpenGL RenderSystem
@@ -69,9 +73,8 @@
 #include <openvr.h>
 #include <openvr_capi.h>
 
-
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN 
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>

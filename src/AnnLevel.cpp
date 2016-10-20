@@ -22,9 +22,9 @@ void AnnLevel::unload()
 	AnnGetAudioEngine()->stopBGM();
 	//Remove the sky
 	AnnGetSceneryManager()->removeSkyDome();
-	//Remove the ambiant lighting
+	//Remove the ambient lighting
 	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0, 0, 0));
-	
+
 	//Remove the level lights
 	levelLightingIdMap.clear();
 	for (auto obj : levelLighting)
@@ -33,13 +33,13 @@ void AnnLevel::unload()
 
 	//Remove the level objects
 	levelContentIdMap.clear();
-	for(auto obj : levelContent)
+	for (auto obj : levelContent)
 		AnnGetGameObjectManager()->removeGameObject(obj);
 	levelContent.clear();
 
 	//Remove volumetric event triggers
 	levelTriggerIdMap.clear();
-	for(auto obj : levelTrigger)
+	for (auto obj : levelTrigger)
 		AnnGetGameObjectManager()->removeTriggerObject(obj);
 	levelTrigger.clear();
 
@@ -48,7 +48,7 @@ void AnnLevel::unload()
 
 std::shared_ptr<AnnLightObject> AnnLevel::addLightObject(std::string id)
 {
-	auto light (AnnGetGameObjectManager()->createLightObject());
+	auto light(AnnGetGameObjectManager()->createLightObject());
 	levelLighting.push_back(light);
 	levelLightingIdMap[id] = light;
 	return light;
@@ -68,7 +68,7 @@ void AnnLevel::addManualMovableObject(std::shared_ptr<AnnAbstractMovable> movabl
 	levelMovable.push_back(movable);
 }
 
-std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::shared_ptr<AnnTriggerObject> obj , std::string id)
+std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::shared_ptr<AnnTriggerObject> obj, std::string id)
 {
 	AnnGetGameObjectManager()->createTriggerObject(obj);
 	levelTrigger.push_back(obj);
@@ -81,8 +81,8 @@ std::string AnnLevel::generateRandomID(size_t len)
 	std::string id;
 	std::string buffer = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
 
-	for(size_t i(0); i < len; i++)
-		id+= buffer.substr(rand()%buffer.size(), 1);
+	for (size_t i(0); i < len; i++)
+		id += buffer.substr(rand() % buffer.size(), 1);
 
 	return id;
 }

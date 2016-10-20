@@ -11,7 +11,7 @@ AnnUserSubSystem::AnnUserSubSystem(std::string systemName) : AnnSubSystem(system
 
 void Annwvyn::AnnUserSubSystem::update()
 {
-	return; 
+	return;
 }
 
 bool Annwvyn::AnnUserSubSystem::needUpdate()

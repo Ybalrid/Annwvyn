@@ -1,7 +1,21 @@
 #include "stdafx.h"
 #include "OgreVRRender.hpp"
 
-OgreVRRender* OgreVRRender::self = nullptr;
+uint8_t OgreVRRender::AALevel{ 4 };
+OgreVRRender* OgreVRRender::self{ nullptr };
+bool OgreVRRender::UseSSAA{ false };
+
+void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
+{
+	for (const auto& possibleAALevel : AvailableAALevel)
+		if (possibleAALevel == AA)
+		{
+			AALevel = AA;
+			if (self)
+				return self->changedAA();
+			break;
+		}
+}
 
 OgreVRRender::OgreVRRender(std::string windowName) :
 	root(nullptr),
@@ -16,20 +30,20 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	backgroundColor(0, 0.56f, 1),
 	name(windowName),
 	frameCounter(0),
-	AALevel(16U)
+	rttEyes(nullptr)
 {
+	rttTexture.setNull();
 	if (self)
 	{
-		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialisation. OgreOculusRender object allready created.");
+		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialization. OgreOculusRender object already created.");
 		exit(ANN_ERR_RENDER);
 	}
 	self = this;
 
-	eyeCameras[0] = nullptr;
-	eyeCameras[1] = nullptr;
-
-	handControllers[0] = nullptr;
-	handControllers[1] = nullptr;
+	for (auto& eyeCamera : eyeCameras)
+		eyeCamera = nullptr;
+	for (auto& handController : handControllers)
+		handController = nullptr;
 }
 
 OgreVRRender::~OgreVRRender()
@@ -72,10 +86,9 @@ void OgreVRRender::initOgreRoot(std::string loggerName)
 	//Create the ogre root with standards Ogre configuration file
 	root = new Ogre::Root("", "ogre.cfg", loggerName.c_str());
 
-	//Set the log verbosity to "bore me" 
+	//Set the log verbosity to "bore me"
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LoggingLevel::LL_BOREME);
 }
-
 
 void OgreVRRender::getOgreConfig()
 {
@@ -93,7 +106,7 @@ void OgreVRRender::getOgreConfig()
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 }
 
-std::shared_ptr<Annwvyn::AnnHandController>* OgreVRRender::getHandControllerArray()
+std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> OgreVRRender::getHandControllerArray()
 {
 	return handControllers;
 }
@@ -101,6 +114,20 @@ std::shared_ptr<Annwvyn::AnnHandController>* OgreVRRender::getHandControllerArra
 size_t OgreVRRender::getHanControllerArraySize()
 {
 	return MAX_CONTROLLER_NUMBER;
+}
+
+size_t OgreVRRender::getRecognizedControllerCount()
+{
+	auto count = size_t{ 0 };
+	for (auto handController : handControllers)
+		if (handController)
+			count++;
+	return count;
+}
+
+void OgreVRRender::changedAA()
+{
+	if (rttTexture.getPointer() && !UseSSAA) rttTexture->setFSAA(AALevel, "");
 }
 
 void OgreVRRender::setNearClippingDistance(float distance)

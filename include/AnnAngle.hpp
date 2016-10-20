@@ -5,7 +5,7 @@
 
 namespace Annwvyn
 {
-	//Forward declaration of Radian class to permit to contruct a degree object from a radian one
+	//Forward declaration of Radian class to permit to construct a degree object from a radian one
 	class AnnRadian;
 	class DLL AnnDegree : public Ogre::Degree
 	{
@@ -31,5 +31,4 @@ namespace Annwvyn
 		static AnnDegree degree(float value);
 		static AnnRadian radian(float value);
 	};
-
 }

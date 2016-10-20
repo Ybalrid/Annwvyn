@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "AnnTriggerObject.hpp"
-#include "AnnLogger.hpp" 
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
@@ -49,8 +49,8 @@ void AnnSphericalTriggerObject::setThreshold(float newThreshold)
 }
 
 AnnSphericalTriggerObject::AnnSphericalTriggerObject() : AnnTriggerObject(),
-	threshold(1),
-	squaredThreshold()
+threshold(1),
+squaredThreshold()
 {
 }
 
@@ -60,12 +60,12 @@ bool AnnSphericalTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer>
 }
 
 AnnAlignedBoxTriggerObject::AnnAlignedBoxTriggerObject() : AnnTriggerObject(),
-	xMin(0),
-	xMax(0),
-	yMin(0),
-	yMax(0),
-	zMin(0),
-	zMax(0)
+xMin(0),
+xMax(0),
+yMin(0),
+yMax(0),
+zMin(0),
+zMax(0)
 {
 }
 
@@ -83,8 +83,8 @@ bool AnnAlignedBoxTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer
 {
 	AnnVect3 pos(player->getPosition());
 
-	if((pos.x >= xMin && pos.x <= xMax) && 
-		(pos.y >= yMin && pos.y <= yMax) && 
+	if ((pos.x >= xMin && pos.x <= xMax) &&
+		(pos.y >= yMin && pos.y <= yMax) &&
 		(pos.z >= zMin && pos.z <= zMax))
 		return true;
 	return false;

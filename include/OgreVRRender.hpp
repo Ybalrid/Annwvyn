@@ -4,20 +4,22 @@
 #include "systemMacro.h"
 
 #include <string>
+#include <array>
 
 #include <Ogre.h>
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
 
-#define MAX_CONTROLLER_NUMBER 2
+/*#define MAX_CONTROLLER_NUMBER 2*/
+constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 
-///A pose refer to the combinaison of a position and an orientation. It permit to define the placement of an object with 6DOF
+///A pose refer to the combination of a position and an orientation. It permit to define the placement of an object with 6DOF
 struct OgrePose
 {
 	///A 3D vector representing a position
 	Ogre::Vector3 position;
 
-	///A quaternion representiong an orientation
+	///A quaternion representing an orientation
 	Ogre::Quaternion orientation;
 };
 
@@ -25,6 +27,12 @@ struct OgrePose
 class DLL OgreVRRender
 {
 public:
+	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
+	static bool UseSSAA;
+
+	///Set the anti-aliasing level to AA if AA is part of the available values
+	/// \param AA the AA level to use.
+	static void setAntiAliasingLevel(const uint8_t AA);
 
 	///Type of Debug render you can do
 	enum DebugMode
@@ -43,7 +51,7 @@ public:
 	///Get the scene manager of the virtual world
 	Ogre::SceneManager* getSceneManager();
 
-	///Get the Ogre::Root object 
+	///Get the Ogre::Root object
 	Ogre::Root* getRoot();
 
 	///Get the RenderWidow that should display a debug render the VR view
@@ -58,10 +66,10 @@ public:
 	///Get frame update time from the VR renderer
 	double getUpdateTime();
 
-	///Configure the Ogre root engine. Will load all the ogre Plugins and componants we need. 
+	///Configure the Ogre root engine. Will load all the ogre Plug-ins and components we need.
 	void getOgreConfig();
 
-	///Init Ogre, please provie the name of the output log file
+	///Init Ogre, please provide the name of the output log file
 	void initOgreRoot(std::string loggerName);
 
 	///Init the VR rendering pipeline
@@ -76,10 +84,10 @@ public:
 	///Create the scene(s) manager(s) needed for the rendering
 	virtual void initScene() = 0;
 
-	///Create the pair of cameras for the streo render;
+	///Create the pair of cameras for the stereo render;
 	virtual void initCameras() = 0;
 
-	///Initialize the Render To Texture rendering 
+	///Initialize the Render To Texture rendering
 	virtual void initRttRendering() = 0;
 
 	///Init the VR client rendering
@@ -104,46 +112,48 @@ public:
 	virtual void recenter() = 0;
 
 	///Change the color of the pixels when there is *nothing*
-	virtual void changeViewportBackgroundColor(Ogre::ColourValue) = 0;
+	/// \param color Color to use as background
+	virtual void changeViewportBackgroundColor(Ogre::ColourValue color) = 0;
 
 	///(Optional) Cycle through the client debug display if available.
 	virtual void cycleDebugHud() {};
 
-	///Set the VR cameras near clipping plane distance. Please use SetNearClippingDistance instead
-	DEPRECATED virtual void setCamerasNearClippingDistance(float distance) { return updateProjectionMatrix(); }
-
-	///Set the distance from the viewpoint to the near clipping distance plane 
-	virtual void setNearClippingDistance(float distance);
-
-	///Set the VR cameras far clipping plane distance. Please use SetFarClippingDistance instead
-	DEPRECATED virtual void setCameraFarClippingDistance(float distance) { return updateProjectionMatrix(); }
+	///Set the distance from the viewpoint to the near clipping distance plane
+	void setNearClippingDistance(float distance);
 
 	///Set the distance from the viewpoint to the far clipping distance plane
-	virtual void setFarClippingDistance(float distance);
+	void setFarClippingDistance(float distance);
 
 	///The projection matrix is generally given by the underlying VR api, generally, using the near/far clipping distances set in this class
-	/// \note this method is called by the set{Near/Far}ClippingDistance() automatically. 
+	/// \note this method is called by the set{Near/Far}ClippingDistance() automatically.
 	virtual void updateProjectionMatrix() = 0;
 
 	///(Optional) return true if audio has to come out from a specific audio device
 	virtual bool usesCustomAudioDevice() { return false; }
 
-	///(Optional) retrun the sub string to search on the audio device list to get the correct one
+	///(Optional) return the sub string to search on the audio device list to get the correct one
 	virtual std::string getAudioDeviceIdentifierSubString() { return std::string(""); }
 
 	///The current position of the head center defined by the client library projected in World Space
 	OgrePose returnPose;
 
-	///She the asked debug view 
+	///She the asked debug view
 	virtual void showDebug(DebugMode mode) = 0;
 
 	///Get a naked array of hand controllers
-	std::shared_ptr<Annwvyn::AnnHandController>* getHandControllerArray();
+	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> getHandControllerArray();
 
 	///Get the size of the controller array
 	size_t getHanControllerArraySize();
 
+	///Return the number of non nullptr handControllers. Hand controllers are dynamically allocated by the VRRenderer if presents.
+	size_t getRecognizedControllerCount();
+
 protected:
+
+	///Called if AA level has been updated
+	void changedAA();
+
 	///Singleton pointer
 	static OgreVRRender* self;
 
@@ -153,7 +163,7 @@ protected:
 	///Ogre root object
 	Ogre::Root* root;
 
-	///Render window. VR isn't drawn to this window. A window is mandatory to init the RenderSystem. 
+	///Render window. VR isn't drawn to this window. A window is mandatory to init the RenderSystem.
 	Ogre::RenderWindow* window;
 
 	///Update Time
@@ -181,17 +191,28 @@ protected:
 	Ogre::ColourValue backgroundColor;
 
 	///Cameras that have to be put where the user's eye is
-	Ogre::Camera* eyeCameras[2];
+	std::array<Ogre::Camera*, 2> eyeCameras;
 
 	///Counter of frames
 	unsigned long long int frameCounter;
 
-	///Anti Aliasing level
-	Ogre::uint AALevel;
+	///Render target that serve as intermediate buffer for the eyeCameras
+	Ogre::RenderTexture* rttEyes;
+
+	///The texture that is used to hold the render target
+	Ogre::TexturePtr rttTexture;
+
+	///Level of anti aliasing to use.
+	static uint8_t AALevel;
 
 	///Array of hand controller
-	std::shared_ptr<Annwvyn::AnnHandController> handControllers[MAX_CONTROLLER_NUMBER];
+	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> handControllers;
 
+	///List of acceptable Anti Aliasing factors for the render buffer and window
+	static constexpr std::array<const uint8_t, 5> AvailableAALevel{ 0, 2, 4, 8, 16 };
+
+	///Name given to the texture manager for the eyeBuffer
+	static constexpr const char* const rttTextureName = { "RttTex" };
 };
 
 #endif

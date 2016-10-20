@@ -8,24 +8,30 @@ using namespace Annwvyn;
 
 OculusInterface::OculusInterface()
 {
+	AnnDebug() << "Init Oculus Interface object";
 	//Init Oculus Virtual Reality library
 	ovr_Initialize(nullptr);
+
+	//Declare this client to the Oculus service
+	stringstream clientIentifier;
+	clientIentifier << "EngineName: Annwvyn\n";
+	clientIentifier << "EngineVersion: " << AnnEngine::getAnnwvynVersion();
+	AnnDebug() << "Identifier string sent to the Oculus Service : \n" << clientIentifier.str();
+	ovr_IdentifyClient(clientIentifier.str().c_str());
 
 	//Attempt to create OVR session
 	if (ovr_Create(&session, &luid) != ovrSuccess)
 	{
 		//Notify user
 		AnnDebug() << "Error: Cannot create Oculus Session";
-		//Debug HMD is now handeled by the configuration utility and the runtime.
-		AnnDebug() << "Please make sure Oculus Home is installed on your system and "
+		//Debug HMD is now handled by the configuration utility and the runtime.
+		AnnDebug() << "Please make sure Oculus Home is installed on your system and"
 			" please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
-#ifdef _WIN32
-		MessageBox(NULL,
-			L"Please make sure Oculus Home is installed on your system\n"
-			L"and check HDMI and USB connection to your Rift and Tracker",
-			L"Error: Cannot create Oculus Session!",
-			MB_ICONERROR);
-#endif
+
+		displayWin32ErrorMessage(L"Error: Cannot create Oculus Session!",
+								 L"Please make sure Oculus Home is installed on your system\n"
+								 L"and check HDMI and USB connection to your Rift and Tracker");
+
 		//Cleanup
 		ovr_Shutdown();
 		//Return an error
@@ -41,33 +47,33 @@ OculusInterface::OculusInterface()
 
 	//Print to log all known information about the headset
 	customReport();
-
 }
 
 OculusInterface::~OculusInterface()
 {
-	//Set the performance hud to Off
+	//Set the performance HUD to Off
 	ovr_SetInt(getSession(), "PerfHudMode", ovrPerfHud_Off);
 
 	AnnDebug() << "Shutdown OculusInterface object";
 	ovr_Destroy(getSession());
 	ovr_Shutdown();
-	AnnDebug("LibOVR Shutdown... No longer can comunicate with OculusService or oculusd...");
+	AnnDebug("LibOVR Shutdown... No longer can communicate with OculusService");
 }
 
 void OculusInterface::customReport()
 {
-	//Print to the logger a bunch of information 
-	AnnDebug() << "===================================";
-	AnnDebug() << "Detected Oculus Rift VR Headset :";
+	//Print to the logger a bunch of information
+	AnnDebug() << "========================================================";
+	AnnDebug() << "OVR version " << ovr_GetVersionString();
+	AnnDebug() << "Detected the following Oculus Rift VR Headset :";
 	AnnDebug() << "Product name : " << hmdDesc.ProductName;
 	AnnDebug() << "Serial number : " << hmdDesc.SerialNumber;
 	AnnDebug() << "Manufacturer : " << hmdDesc.Manufacturer;
 	AnnDebug() << "Display Resolution : " << hmdDesc.Resolution.w << "x" << hmdDesc.Resolution.h;
-	AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate <<"Hz";
+	AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate << "Hz";
 	AnnDebug() << "Type of HMD identifier : " << hmdDesc.Type;
 	AnnDebug() << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor;
-	AnnDebug() << "===================================";
+	AnnDebug() << "========================================================";
 }
 
 ovrHmdDesc OculusInterface::getHmdDesc()
@@ -79,5 +85,3 @@ ovrSession OculusInterface::getSession()
 {
 	return session;
 }
-
-

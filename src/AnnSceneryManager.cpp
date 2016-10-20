@@ -12,36 +12,36 @@ renderer(rendererFromEngine)
 
 void AnnSceneryManager::setAmbiantLight(AnnColor color)
 {
-	AnnDebug() << "Setting the ambiant light to color " << color;
+	AnnDebug() << "Setting the ambient light to color " << color;
 	smgr->setAmbientLight(color.getOgreColor());
 }
 
 void AnnSceneryManager::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling)
 {
-	AnnDebug() << "Setting skydome from material" << materialName;
+	AnnDebug() << "Setting sky-dome from material" << materialName;
 	smgr->setSkyDome(activate, materialName, curvature, tiling);
 }
 
 void AnnSceneryManager::setSkyBoxMaterial(bool activate, const char materialName[], float distance, bool renderedFirst)
 {
-	AnnDebug() << "Setting skydome from material" << materialName;
+	AnnDebug() << "Setting sky-dome from material" << materialName;
 	smgr->setSkyBox(activate, materialName, distance, renderedFirst);
 }
 
 void AnnSceneryManager::setWorldBackgroundColor(AnnColor v)
 {
-	AnnDebug() << "Setting the backgroud world color " << v;
+	AnnDebug() << "Setting the background world color " << v;
 	renderer->changeViewportBackgroundColor(v.getOgreColor());
 }
 
 void AnnSceneryManager::removeSkyDome()
 {
-	AnnDebug("Disabeling skydome");
+	AnnDebug("Disabling sky-dome");
 	smgr->setSkyDomeEnabled(false);
 }
 
 void AnnSceneryManager::removeSkyBox()
 {
-	AnnDebug("Disabeling skybox");
+	AnnDebug("Disabling sky-box");
 	smgr->setSkyBoxEnabled(false);
 }

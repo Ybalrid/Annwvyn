@@ -12,11 +12,11 @@ AnnSubSystem::AnnSubSystem(std::string systemName) :
 
 AnnSubSystem::~AnnSubSystem()
 {
-	AnnDebug() << "*-*-*-* Stoping " << name << " SubSystem";
+	AnnDebug() << "*-*-*-* Stopping " << name << " SubSystem";
 }
 
 bool AnnSubSystem::needUpdate()
-{ 
+{
 	return true;
 }
 

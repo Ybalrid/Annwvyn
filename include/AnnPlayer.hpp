@@ -20,16 +20,16 @@
 #define DEFAULT_STARTING_ORIENT Ogre::Euler(0)
 namespace Annwvyn
 {
-	class AnnEngine; //predeclaration of AnnEngine
+	class AnnEngine; //pre-declaration of AnnEngine
 
-	///Parameters of the user's VirtualBody		
+	///Parameters of the user's VirtualBody
 	class DLL bodyParams
 	{
 		/**
-		* That class was a structure. It is keeped as a class with public attributes to keep compatibility with legacy code.
+		* That class was a structure. It is kept as a class with public attributes to keep compatibility with legacy code.
 		*/
 	public:
-		///Constructor that handle the default body parameters. 
+		///Constructor that handle the default body parameters.
 		bodyParams();
 
 		float eyeHeight;
@@ -48,9 +48,8 @@ namespace Annwvyn
 		AnnVect3 getHeadPosition() { return (FeetPosition + eyeHeight*AnnVect3::UNIT_Y); }
 	};
 
-	///Correspondance between array position and walk direction for the "walking" array
-	enum walkDirection{forward, backward, left, right};
-
+	///Correspondence between array position and walk direction for the "walking" array
+	enum walkDirection { forward, backward, left, right };
 
 	///class that represent the player. This is the user's "Virtual body" in the world. It's the object that you have to move and turn to explore the space.
 	class DLL AnnPlayer
@@ -69,7 +68,7 @@ namespace Annwvyn
 		bool isLocked();
 
 		///Set the position of the player. If physics is enabled you need to call  AnnEngine::resetPlayerPhysics() to recreate player's body.
-		/// \param Position 3D vector representing the position of the player (refernced by the point between his eyes)
+		/// \param Position 3D vector representing the position of the player (referenced by the point between his eyes)
 		void setPosition(AnnVect3 Position);
 
 		///Set body orientation
@@ -80,20 +79,20 @@ namespace Annwvyn
 		/// \param HeadOrientation A quaternion representing the orientation of the head
 		void setHeadOrientation(AnnQuaternion HeadOrientation);
 
-		///distance between footplane and eyes
-		/// \param eyeHeight floating point number in metter
+		///distance between foot-plane and eyes
+		/// \param eyeHeight floating point number in meter
 		void setEyesHeight(float eyeHeight);
 
-		///WalkSpeed, metters by second
+		///WalkSpeed, meters by second
 		/// \param walkSpeed The speed a the user is walking
 		void setWalkSpeed(float walkSpeed);
 
-		///Turnspeed
+		///Turn-speed
 		/// \param turnSpeed Angular speed that the user can turn his body
 		void setTurnSpeed(float turnSpeed);
 
 		///Mass in Kg
-		/// \param mass Mass of the player in Kg 
+		/// \param mass Mass of the player in Kg
 		void setMass(float mass);
 
 		///Bullet shape
@@ -104,13 +103,16 @@ namespace Annwvyn
 		/// \param The bullet rigid body used for simulating player's physics
 		void setBody(btRigidBody* Body);
 
-		///Get the distance between footplane and eyes in metters
+		///Get the distance between foot-plane and eyes in meters
 		float getEyesHeight();
 
-		///Get walkspeed in metter/seconds
+		///Get a vector that correspond to the translation between the feet point and the eyes
+		AnnVect3 getEyeTranslation();
+
+		///Get walk-speed in meter/seconds
 		float getWalkSpeed();
 
-		///Get turnspeed in rad/seconds
+		///Get turn-speed in rad/seconds
 		float getTurnSpeed();
 
 		///Get mass in Kg
@@ -119,7 +121,7 @@ namespace Annwvyn
 		///Get position vector
 		AnnVect3 getPosition();
 
-		///Get body orientation (euler vector)
+		///Get body orientation (Euler vector)
 		Ogre::Euler getOrientation();
 
 		///Get rigid body
@@ -128,18 +130,18 @@ namespace Annwvyn
 		///Get Shape
 		btCollisionShape* getShape();
 
-		///Apply a relative yaw transform to the player. Usefull to bind it to the mouse X axis for FPS-like gameplay.
-		/// \param angle Radian angle of the transformaton.
+		///Apply a relative yaw transform to the player. Useful to bind it to the mouse X axis for FPS-like gameplay.
+		/// \param angle Radian angle of the transformation.
 		void applyRelativeBodyYaw(Ogre::Radian angle);
 
 		///Apply the rotation from the mouse relative value
-		/// \param relValue Relative value in pixels of the mouse linear mouvement
+		/// \param relValue Relative value in pixels of the mouse linear movement
 		void applyMouseRelativeRotation(int relValue);
 
 		///Return true if physics has been initialized once
 		bool hasPhysics();
 
-		///Get the translation vector (normalised) from the walking state
+		///Get the translation vector (normalized) from the walking state
 		AnnVect3 getTranslation();
 
 		///Get the translation from analog joystick value
@@ -148,21 +150,21 @@ namespace Annwvyn
 		///Set the player actuator object
 		void setActuator(AnnPlayerActuator* act);
 
-		///Boolean false if the player can get orientation transformation from 
+		///Boolean false if the player can get orientation transformation from
 		bool standing;
 
 		///Get the ratio between walking and running speed
 		float getRunFactor();
 
-		///If the player is handeled throug the physics engine, this method will detach the rigidbody from the camera,
-		///remove it from the dynamics world, unalocate it from the memory and recreate it from scratch. This is usefull for
+		///If the player is handled through the physics engine, this method will detach the rigid-body from the camera,
+		///remove it from the dynamics world, de-allocate it from the memory and recreate it from scratch. This is useful for
 		///"teleporting" the player, for example if you need to reset his position.
 		void resetPlayerPhysics();
 
 		///Teleport the player to the given location, and get it facing the given direction
 		void teleport(AnnVect3 position, AnnRadian orientation);
 
-		///Teleport the player without touchning it's direction
+		///Teleport the player without touching it's direction
 		void teleport(AnnVect3 position);
 
 	protected:
@@ -175,7 +177,7 @@ namespace Annwvyn
 		///Give back the right to modify some parameters
 		void unlockParameters();
 
-		///Give Annwvyn::AnnEngine the rght to access private members
+		///Give Annwvyn::AnnEngine the right to access private members
 		friend class AnnEngine;
 		friend class AnnPhysicsEngine;
 
@@ -194,7 +196,7 @@ namespace Annwvyn
 		///Apply yaw from analog value
 		void applyAnalogYaw();
 
-		///time lengh of the frame 
+		///time length of the frame
 		double updateTime;
 
 		///Player body physics enabled
@@ -207,18 +209,17 @@ namespace Annwvyn
 
 		///Turning that off bypass the physics code. Cool for menu scene or weird manipulation of the player object
 		bool ignorePhysics;
-		
+
 		///Waling state. Forward Backward Left Right
 		bool walking[4];
 
-		///Runing state
+		///Running state
 		bool run;
 
 		//Analog values between -1 and 1
 		float analogWalk;
 		float analogStraff;
 		float analogRotate;
-	}; 
-
+	};
 }
 #endif //ANN_PLAYER

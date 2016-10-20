@@ -8,9 +8,6 @@
     <ClCompile Include="myLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="plugins.cfg" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="pch">
       <UniqueIdentifier>{c1a0ba64-1187-45fa-851f-c1410c34b7c2}</UniqueIdentifier>
     </Filter>

@@ -1,6 +1,6 @@
 /**
  * \file AnnColor.hpp
- * \brief Represent an RGBA color. Each chanel is stored as a float between 0 and 1
+ * \brief Represent an RGBA color. Each channel is stored as a float between 0 and 1
  * \author A. Brainville (Ybalrid)
  */
 
@@ -21,12 +21,12 @@ namespace Annwvyn
 		AnnColor(float red, float green, float blue, float alpha = 1.0f);
 		///Create a color object from a Ogre::ColourValue
 		AnnColor(const Ogre::ColourValue color);
-		///Create a color object form a referece to another color object
+		///Create a color object form a reference to another color object
 		AnnColor(const AnnColor& color);
 
 		///Return a Ogre::ColourValue from the internal color value
 		Ogre::ColourValue getOgreColor();
-		
+
 		///Return the red channel as an integer between 0 and 255
 		unsigned char getRedI();
 		///Return the blue channel as an integer between 0 and 255
@@ -36,13 +36,13 @@ namespace Annwvyn
 		///Return the alpha channel as an integer between 0 and 255
 		unsigned char getAlphaI();
 
-		///Get the red value as float 
+		///Get the red value as float
 		float getRed();
-		///Get the green value as float 
+		///Get the green value as float
 		float getGreen();
-		///Get blue red value as float 
+		///Get blue red value as float
 		float getBlue();
-		///Get alpha red value as float 
+		///Get alpha red value as float
 		float getAlpha();
 
 		///Set the red value
@@ -55,10 +55,10 @@ namespace Annwvyn
 		void setAlpha(float alpha);
 
 		///Prints color object description to output stream
-		DLL friend std::ostream& operator<<(std::ostream& out,const  AnnColor& color)
+		DLL friend std::ostream& operator<<(std::ostream& out, const  AnnColor& color)
 		{
 			out << "AnnColor("
-				<< color.r << ", " 
+				<< color.r << ", "
 				<< color.g << ", "
 				<< color.b << ", "
 				<< color.a << ")";
@@ -75,7 +75,5 @@ namespace Annwvyn
 		///Return true if f is inside interval [0;1]
 		bool isInFloatRange(float f);
 	};
-
-
 }
 #endif //ANNCOLOR

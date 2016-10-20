@@ -23,22 +23,17 @@ shouldQuitState(false)
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
 
-	//I like to initialize everything to zero 
-	rttTexture[left].setNull();
-	rttTexture[right].setNull();
+	//I like to initialize everything to zero
+	rttTexture.setNull();
+	rttTextureGLID = NULL;
 
-	rttTextureGLID[left] = NULL;
-	rttTextureGLID[right] = NULL;
-
-	rttViewports[left] = nullptr;
-	rttViewports[right] = nullptr;
-
-	vrTextures[left] = {};
-	vrTextures[right] = {};
-	GLBounds = {};
-
-	handControllers[left] = nullptr;
-	handControllers[right] = nullptr;
+	for (auto side : { left, right })
+	{
+		rttViewports[side] = nullptr;
+		handControllers[side] = nullptr;
+		vrTextures[side] = {};
+		GLBounds[side] = {};
+	}
 }
 
 OgreOpenVRRender::~OgreOpenVRRender()
@@ -47,14 +42,15 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	vr::VR_Shutdown();
 
 	//Need to forget Ogre's smart pointers
-	rttTexture[left].setNull();
-	rttTexture[right].setNull();
+	rttTexture.setNull();
 
 	//Destroy the main scene manager
 	root->destroySceneManager(smgr);
 
-	//Unload manually loaded plugins
+	//Unload manually loaded plug-ins
 	root->unloadPlugin("Plugin_OctreeSceneManager");
+
+	rttTexture.setNull();
 
 	//Destroy the root. Everything Ogre related that is remaining should be cleaned up by the root's destructor
 	delete root;
@@ -93,14 +89,14 @@ void OgreOpenVRRender::initVrHmd()
 		{
 			default:
 				displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
-										 L"Undescribed error when initalizing the OpenVR Render object");
+										 L"Non described error when initializing the OpenVR Render object");
 				exit(ANN_ERR_NOTINIT);
 
 			case vr::VRInitError_Init_HmdNotFound:
 			case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
 				displayWin32ErrorMessage(L"Error: cannot find HMD",
 										 L"OpenVR cannot find HMD.\n"
-										 L"Please install SteamVR and launchj it, and verrify HMD USB and HDMI connection");
+										 L"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
 				exit(ANN_ERR_CANTHMD);
 		}
 
@@ -121,7 +117,6 @@ void OgreOpenVRRender::initVrHmd()
 
 void OgreOpenVRRender::initClientHmdRendering()
 {
-
 	//Init GLEW here to be able to call OpenGL functions
 	Annwvyn::AnnDebug() << "Init GL Extension Wrangler";
 	GLenum err = glewInit();
@@ -134,18 +129,22 @@ void OgreOpenVRRender::initClientHmdRendering()
 	}
 	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 	setupDistrotion();
-	//Should init the device model things here if we want to display the vive controllers 
+	//Should init the device model things here if we want to display the vive controllers
 
 	//Declare the textures for SteamVR
-	vrTextures[left] = { (void*)rttTextureGLID[left], API, vr::ColorSpace_Gamma };
-	vrTextures[right] = { (void*)rttTextureGLID[right], API, vr::ColorSpace_Gamma };
+	vrTextures[left] = { (void*)rttTextureGLID, API, vr::ColorSpace_Gamma };
 
 	//Set the OpenGL texture geometry
-	GLBounds = {};
-	GLBounds.uMin = 0;
-	GLBounds.uMax = 1;
-	GLBounds.vMin = 1;
-	GLBounds.vMax = 0;
+	//V axis is reversed, U between 0 and 0.5 is for the left eye, between 0.5 and 1 is for the right eye.
+	GLBounds[left].uMin = 0;
+	GLBounds[left].uMax = 0.5f;
+	GLBounds[left].vMin = 1;
+	GLBounds[left].vMax = 0;
+
+	GLBounds[right].uMin = 0.5f;
+	GLBounds[right].uMax = 1;
+	GLBounds[right].vMin = 1;
+	GLBounds[right].vMax = 0;
 }
 
 bool OgreOpenVRRender::shouldQuit()
@@ -155,12 +154,12 @@ bool OgreOpenVRRender::shouldQuit()
 
 bool OgreOpenVRRender::shouldRecenter()
 {
-	return false; //Only usefull with the Oculus runtime
+	return false; //Only useful with the Oculus runtime
 }
 
 bool OgreOpenVRRender::isVisibleInHmd()
 {
-	return true; //Only usefull with the oculus runtime
+	return true; //Only useful with the oculus runtime
 }
 
 void OgreOpenVRRender::updateTracking()
@@ -177,7 +176,7 @@ void OgreOpenVRRender::updateTracking()
 	now = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
 
-	//Wait for next frame pose 
+	//Wait for next frame pose
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	processTrackedDevices();
 
@@ -187,17 +186,17 @@ void OgreOpenVRRender::updateTracking()
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
 	//Update the monoscopic camera view
-	monoCam->setPosition(feetPosition 
-						 + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y 
+	monoCam->setPosition(feetPosition
+						 + Annwvyn::AnnGetPlayer()->getEyeTranslation()
 						 + bodyOrientation * getTrackedHMDTranslation());
 	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
-	//Update the eye rig tracking to make the eyes match yours
-	eyeRig->setPosition(feetPosition 
+	//Update the eye rig tracking to make the eyes match your
+	eyeRig->setPosition(feetPosition
 						+ bodyOrientation * getTrackedHMDTranslation());
 	eyeRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
-	//Get the head reference back to the gameplay code 
+	//Get the head reference back to the gameplay code
 	returnPose.position = eyeRig->getPosition();
 	returnPose.orientation = eyeRig->getOrientation();
 }
@@ -207,18 +206,20 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	//Make Windows happy by pumping clearing it's event queue
 	Ogre::WindowEventUtilities::messagePump();
 
-	//Mark the fact that the frame rendering will hapen to Ogre (unlock the animation state updates for example)
+	//Mark the fact that the frame rendering will happen to Ogre (unlock the animation state updates for example)
 	root->_fireFrameRenderingQueued();
 
 	//Update each viewports
-	rttViewports[left]->update();
-	rttViewports[right]->update();
+	rttViewports[0]->update();
+	rttViewports[1]->update();
+	rttEyes->update();
 	windowViewport->update();
 	window->update();
 
 	//Submit the textures to the SteamVR compositor
-	vr::VRCompositor()->Submit(getEye(left), &vrTextures[left], &GLBounds);
-	vr::VRCompositor()->Submit(getEye(right), &vrTextures[right], &GLBounds);
+
+	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures[0], &GLBounds[0]);
+	vr::VRCompositor()->Submit(vr::Eye_Right, &vrTextures[0], &GLBounds[1]);
 
 	//OMG WE RENDERED A FRAME!!! QUICK!!!! INCREMENT THE COUNTER!!!!!!!
 	frameCounter++;
@@ -226,14 +227,14 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 
 void OgreOpenVRRender::recenter()
 {
-	//This should do. But the effecto of that commend doesn't look to affect a "seated" pose if you're actually standing
+	//This should do. But the effect of that commend doesn't look to affect a "seated" pose if you're actually standing
 	if (vrSystem) vrSystem->ResetSeatedZeroPose();
 }
 
 void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	backgroundColor = color;
-	//Eye camera virwports
+	//Eye camera viewports
 	for (char i(0); i < 2; i++) if (rttViewports[i])
 		rttViewports[i]->setBackgroundColour(backgroundColor);
 
@@ -253,7 +254,7 @@ void OgreOpenVRRender::createWindow()
 
 	//Basic window configuration
 	Ogre::NameValuePairList misc;
-	misc["vsync"] = "false"; //This vsync parameter has no scence in VR. The display is done by the Compositor
+	misc["vsync"] = "false"; //This vsync parameter has no scene in VR. The display is done by the Compositor
 	misc["top"] = "0";
 	misc["left"] = "0";
 
@@ -297,9 +298,9 @@ void OgreOpenVRRender::initCameras()
 	monoCam = smgr->createCamera("mcam");
 	monoCam->setAspectRatio(16.0 / 9.0);
 	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyesHeight() * Ogre::Vector3::UNIT_Y);
-	monoCam->setNearClipDistance(0.1);
-	monoCam->setFarClipDistance(4000);
+	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
+	monoCam->setNearClipDistance(nearClippingDistance);
+	monoCam->setFarClipDistance(farClippingDistance);
 	monoCam->setFOVy(Ogre::Degree(90));
 
 	//do NOT attach camera to this node...
@@ -308,60 +309,65 @@ void OgreOpenVRRender::initCameras()
 
 void OgreOpenVRRender::initRttRendering()
 {
-	//Get the render texture size recomended by the OpenVR API for the current Driver/Display
+	//Get the render texture size recommended by the OpenVR API for the current Driver/Display
 	unsigned int w, h;
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
-	Annwvyn::AnnDebug() << "Recomended Render Target Size : " << w << "x" << h;
+	w *= 2;
+
+	if (UseSSAA)
+	{
+		if (AALevel / 2 > 0)
+		{
+			w *= AALevel / 2;
+			h *= AALevel / 2;
+			AALevel = 0;
+		}
+	}
+
+	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create theses textures in OpenGL and get their OpenGL ID
 	//
-	//When the parent class *OgreVRRender* intialize Ogre, the OpenGL RenderSystem is loaded in hard.
+	//When the parent class *OgreVRRender* initialize Ogre, the OpenGL RenderSystem is loaded in hard.
 	//We don't need to check that we're using OpenGL before doing this kind of cast:
 	Ogre::GLTextureManager* textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
 
-	//Left eye texture
-	rttTexture[left] = textureManager->createManual("RTT_TEX_L", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-													Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
-	rttTextureGLID[left] = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX_L").getPointer())->getGLID();
-
-	//Right eye texture
-	rttTexture[right] = textureManager->createManual("RTT_TEX_R", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-													 Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma);
-	rttTextureGLID[right] = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX_R").getPointer())->getGLID();
+	//shared texture
+	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+											  Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma, AALevel);
+	rttTextureGLID = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX").getPointer())->getGLID();
 
 	//Create viewport for each cameras in each render texture
-	rttViewports[left] = rttTexture[left]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left]);
-	rttViewports[right] = rttTexture[right]->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right]);
+	rttViewports[left] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
+	rttViewports[right] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
 
-	//Do the same for the window 
+	//Do the same for the window
 	windowViewport = window->addViewport(monoCam);
 
 	//Make sure the default viewport background color is set for everything
 	changeViewportBackgroundColor(backgroundColor);
 }
 
-void OgreOpenVRRender::getProjectionMatrix()
-{
-	
-}
-
 void OgreOpenVRRender::updateProjectionMatrix()
 {
 	//Get the couple of matrices
-	vr::HmdMatrix44_t prj[2] = {
+	std::array<vr::HmdMatrix44_t, 2> openVRProjectionMatrix
+	{
 		vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance, API),
-		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance, API) };
+		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance, API)
+	};
+
+	std::array<Ogre::Matrix4, 2> ogreProjectionMatrix{};
 
 	//Apply them to the camera
-	for (char eye(0); eye < 2; eye++)
+	for (auto eye : { left, right })
 	{
 		//Need to convert them to Ogre's object
-		Ogre::Matrix4 m;
-		for (char i(0); i < 4; i++) for (char j(0); j < 4; j++)
-			m[i][j] = prj[eye].m[i][j];
+		for (auto x : { 0, 1, 2, 3 }) for (auto y : { 0, 1, 2, 3 })
+			ogreProjectionMatrix[eye][x][y] = openVRProjectionMatrix[eye].m[x][y];
 
 		//Apply projection matrix
-		eyeCameras[eye]->setCustomProjectionMatrix(true, m);
+		eyeCameras[eye]->setCustomProjectionMatrix(true, ogreProjectionMatrix[eye]);
 	}
 }
 
@@ -370,7 +376,6 @@ inline vr::EVREye OgreOpenVRRender::getEye(oovrEyeType eye)
 	if (eye == left) return vr::Eye_Left;
 	return vr::Eye_Right;
 }
-
 
 void OgreOpenVRRender::setupDistrotion()
 {
@@ -386,7 +391,7 @@ inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
 
 inline Ogre::Quaternion OgreOpenVRRender::getTrackedHMDOrieation()
 {
-	//Orientation/scale as quaternion (the matrix transfrom has no scale componant.
+	//Orientation/scale as quaternion (the matrix transform has no scale component.
 	return hmdAbsoluteTransform.extractQuaternion();
 }
 
@@ -428,59 +433,61 @@ void OgreOpenVRRender::processTrackedDevices()
 		if (!trackedPoses[trackedDevice].bPoseIsValid)
 			continue;
 
-		//Get the controller ID; If we can't handle more devices, break;
-		Annwvyn::AnnHandControllerID controllerID{ trackedDevice - 1 };
-		if (controllerID > MAX_CONTROLLER_NUMBER) break;
-
-		//At this point, we know that "trackedDevice" is the index of a valid SteamVR hand controller. We can extract it's tracking information
-		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
-		
-		//Extract the pose from the transformation matrix 
-		Ogre::Vector3 position = transform.getTrans();
-		Ogre::Quaternion orientation = transform.extractQuaternion();
-
-		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
-		//controllerID 0 = left; 1 = right;
-
-		Annwvyn::AnnHandController::AnnHandControllerSide side; 
+		//Extract basic information of the device, detect if they are left/right hands
+		Annwvyn::AnnHandControllerID controllerIndex{ 0 };
+		Annwvyn::AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
 			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
 				side = Annwvyn::AnnHandController::leftHandController;
+				controllerIndex = 0;
 				break;
 
 			case vr::ETrackedControllerRole::TrackedControllerRole_RightHand:
 				side = Annwvyn::AnnHandController::rightHandController;
+				controllerIndex = 1;
 				break;
 
 			case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:
 			default:
 				side = Annwvyn::AnnHandController::invalidHandController;
+				controllerIndex = MAX_CONTROLLER_NUMBER;
 				break;
 		}
 
-		// TOTO: get the buttons (stick, touchpad, whatever) states of this controller 
+		//Detect if we can handle this controller
+		if (controllerIndex > MAX_CONTROLLER_NUMBER) continue;
 
+		//Extract tracking information from the device
+		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
 
-		//Dinamically allocate the controller if the controller doesn't exist yet
-		if (!handControllers[controllerID])
+		//Extract the pose from the transformation matrix
+		Ogre::Vector3 position = transform.getTrans();
+		Ogre::Quaternion orientation = transform.extractQuaternion();
+
+		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
+
+		// TOTO get the buttons (stick, touch-pad, whatever) states of this controller
+
+		//Dynamically allocate the controller if the controller doesn't exist yet
+		if (!handControllers[controllerIndex])
 		{
-			handControllers[controllerID] = std::make_shared<Annwvyn::AnnHandController>
-				(smgr->getRootSceneNode()->createChildSceneNode(), controllerID, side);
-			
-			if (DEBUG) handControllers[controllerID]->attachModel(smgr->createEntity("gizmo.mesh"));
+			handControllers[controllerIndex] = std::make_shared<Annwvyn::AnnHandController>
+				(smgr->getRootSceneNode()->createChildSceneNode(), (size_t)trackedDevice, side);
+
+			if (DEBUG) handControllers[controllerIndex]->attachModel(smgr->createEntity("gizmo.mesh"));
 		}
 
-		handControllers[controllerID]->setTrackedPosition(feetPosition + bodyOrientation * position);
-		handControllers[controllerID]->setTrackedOrientation(bodyOrientation * orientation);
-		handControllers[controllerID]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
-		handControllers[controllerID]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
+		handControllers[controllerIndex]->setTrackedPosition(feetPosition + bodyOrientation * position);
+		handControllers[controllerIndex]->setTrackedOrientation(bodyOrientation * orientation);
+		handControllers[controllerIndex]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
+		handControllers[controllerIndex]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
 	}
 }
 
 void OgreOpenVRRender::handleIPDChange()
 {
-	//Get teh eyeToHeadTransform (they contain the IPD translation)
+	//Get the eyeToHeadTransform (they contain the IPD translation)
 	for (char i(0); i < 2; i++)
 		eyeCameras[i]->setPosition(getMatrix4FromSteamVRMatrix34(
 			vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i)))).getTrans());
@@ -490,9 +497,9 @@ inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::H
 {
 	return Ogre::Matrix4
 	{
-		mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[0][3],
-		mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[1][3],
-		mat.m[2][0], mat.m[2][1], mat.m[2][2], mat.m[2][3],
-		0.0f,		 0.0f,		  0.0f,		   1.0f
+		mat.m[0][0],	mat.m[0][1],	mat.m[0][2],	mat.m[0][3],
+		mat.m[1][0],	mat.m[1][1],	mat.m[1][2],	mat.m[1][3],
+		mat.m[2][0],	mat.m[2][1],	mat.m[2][2],	mat.m[2][3],
+		0.0f,			0.0f,			0.0f,			1.0f
 	};
 }
