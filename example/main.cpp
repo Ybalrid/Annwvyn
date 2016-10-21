@@ -62,13 +62,19 @@ AnnMain()
 			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	*/
 		AnnDebug() << "--------";
 		for (auto i : { 0,1 })
+		{
+			AnnDebug() << "Controller " << i;
 			if (AnnGetVRRenderer()->getHandControllerArray()[i])
+			{
 				for (auto state : AnnGetVRRenderer()->getHandControllerArray()[i]->getButtonStateVector())
 					if (state)
 						AnnDebug() << "pressed";
 					else
 						AnnDebug() << "released";
-		system("cls");
+				for (int j(0); j < AnnGetVRRenderer()->getHandControllerArray()[i]->getAxesVector().size(); j++)
+					AnnDebug() << "sitck" << AnnGetVRRenderer()->getHandControllerArray()[i]->getAxesVector()[j].getValue();
+			}
+		}
 	} while (AnnGetEngine()->refresh());
 
 	AnnQuit();

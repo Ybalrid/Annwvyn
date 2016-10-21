@@ -31,6 +31,12 @@ shouldQuitState(false)
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
 	buttonsToHandle.push_back(vr::k_EButton_Grip);
 	buttonsToHandle.push_back(vr::k_EButton_A);
+	buttonsToHandle.push_back(vr::k_EButton_SteamVR_Touchpad);
+	buttonsToHandle.push_back(vr::k_EButton_SteamVR_Trigger);
+	buttonsToHandle.push_back(vr::k_EButton_DPad_Up);
+	buttonsToHandle.push_back(vr::k_EButton_DPad_Down);
+	buttonsToHandle.push_back(vr::k_EButton_DPad_Left);
+	buttonsToHandle.push_back(vr::k_EButton_DPad_Right);
 
 	for (auto side : { left, right })
 	{
@@ -445,7 +451,7 @@ void OgreOpenVRRender::processTrackedDevices()
 
 		//Extract basic information of the device, detect if they are left/right hands
 		Annwvyn::AnnHandControllerID controllerIndex{ 0 };
-		Annwvyn::AnnHandController::AnnHandControllerSide side;
+		volatile Annwvyn::AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
 			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
@@ -466,7 +472,7 @@ void OgreOpenVRRender::processTrackedDevices()
 		}
 
 		//Detect if we can handle this controller
-		if (controllerIndex > MAX_CONTROLLER_NUMBER) continue;
+		if (controllerIndex >= MAX_CONTROLLER_NUMBER) continue;
 
 		//Extract tracking information from the device
 		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
@@ -499,8 +505,7 @@ void OgreOpenVRRender::processTrackedDevices()
 		for (uint8_t i(0); i < buttonsToHandle.size(); i++)
 		{
 			lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
-			if (buttons & vr::ButtonMaskFromId(buttonsToHandle[i]))
-				currentControllerButtonsPressed[side][i] = true;
+			currentControllerButtonsPressed[side][i] = (buttons & vr::ButtonMaskFromId(buttonsToHandle[i])) != 0;
 			if (currentControllerButtonsPressed[side][i] && !lastControllerButtonsPressed[side][i])
 				pressed.push_back(i);
 			if (!currentControllerButtonsPressed[side][i] && lastControllerButtonsPressed[side][i])
@@ -522,13 +527,13 @@ void OgreOpenVRRender::processTrackedDevices()
 		handControllers[controllerIndex]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
 		handControllers[controllerIndex]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
 
-		auto axesVector = handControllers[controllerIndex]->getAxesVector();
+		auto& axesVector = handControllers[controllerIndex]->getAxesVector();
 		//Axis map:
 		//0 -> Touchpad X
 		//1 -> Touchpad Y
 		//2 -> AnalogTrigger
 
-		bool allreadyUpdated(false);
+		volatile bool allreadyUpdated(false);
 		if (axesVector.size() == 0)
 		{
 			axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad X", TouchpadXNormalizedValue });
