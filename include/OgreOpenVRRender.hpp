@@ -114,6 +114,10 @@ private:
 	///Process through the array of OpenVR tracked devices, get the data of the interesting ones (hand controllers)
 	void processTrackedDevices();
 
+	void processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side);
+
+	void extractButtons(size_t side);
+
 	///Reset the IPD displacement of the cameras according to the EyeToHeadTransform matrix
 	void handleIPDChange();
 
@@ -173,6 +177,24 @@ private:
 
 	///State of the "should quit" marker. If it goes to true, the game loop should stop
 	bool shouldQuitState;
+
+	///IDs of buttons to handle
+	std::vector<vr::EVRButtonId> buttonsToHandle;
+
+	///Buffered button states
+	std::array<std::vector<bool>, 2> currentControllerButtonsPressed, lastControllerButtonsPressed;
+
+	///Dynamically sized containers for pressed/released events
+	std::vector<uint8_t> pressed, released;
+
+	///Structure to hold the current state of the controller. Have to pass a pointer to this to an OpenVR function
+	vr::VRControllerState_t controllerState;
+
+	///Constant values needed for extracting axis informations
+	const size_t numberOfAxes, axoffset;
+
+	///To hold axis values
+	float touchpadXNormalizedValue, touchpadYNormalizedValue, triggerNormalizedValue;
 };
 
 #endif
