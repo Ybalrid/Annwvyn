@@ -56,7 +56,7 @@ namespace Annwvyn
 	{
 	public:
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
-		enum AnnHandControllerSide { leftHandController, rightHandController, invalidHandController };
+		enum AnnHandControllerSide : size_t { leftHandController = 0, rightHandController = 1, invalidHandController = 2 };
 
 		///Construct a Controller object
 		AnnHandController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
