@@ -106,18 +106,32 @@ namespace Annwvyn
 		///Return true if the hand controller object has revived updates from the tracking system
 		bool isTracked();
 
+		///Get the state of the given button
+		///\param buttonIndex index of the button to test
 		bool getButtonState(uint8_t buttonIndex);
 
+		///Return the number of buttons
 		size_t getNbButton();
 
+		///Return true if the given button has been pressed during the frame
+		///\param buttonIndex index of the button to test
 		bool hasBeenPressed(uint8_t buttonIndex);
 
+		///Return false if the given button has been pressed during the frame
+		///\param buttonIndex index of the button to test
 		bool hasBeenReleased(uint8_t buttonIndex);
 
+		///Return the number of analog axis this controller has.
 		size_t getNbAxes();
-		AnnHandControllerAxis getAxis(size_t index);
+
+		///Get the axis object for each axis
+		///\param index Index of the axis you need
+		AnnHandControllerAxis& getAxis(size_t index);
 
 	private:
+
+		friend class OgreVRRender;
+		friend class OgreOpenVRRender;
 
 		///Get a reference to the axes vector
 		std::vector<AnnHandControllerAxis>& getAxesVector();
@@ -130,9 +144,6 @@ namespace Annwvyn
 
 		///Get a reference to the released event vector
 		std::vector<uint8_t>& getReleasedButtonsVector();
-
-		friend class OgreVRRender;
-		friend class OgreOpenVRRender;
 
 		///ID of the controller, expect 1 or 2
 		AnnHandControllerID id;
@@ -155,10 +166,16 @@ namespace Annwvyn
 		///Linear velocity vector
 		AnnVect3 trackedLinearSpeed;
 
+		///Axes vector
 		std::vector<AnnHandControllerAxis> axes;
 
+		///An invalid one to return a reference to if we can't return a valid axis
+		AnnHandControllerAxis invalidAxis;
+
+		///An array of the buttons states
 		std::vector<bool> buttonsState;
 
+		///buttons that has been pressed or released
 		std::vector<uint8_t> pressedButtons, releasedButtons;
 	};
 }
