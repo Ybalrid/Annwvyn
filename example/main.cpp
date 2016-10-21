@@ -52,29 +52,31 @@ AnnMain()
 	//ask the level manager to perform a jump to the first level
 	AnnGetLevelManager()->jumpToFirstLevel();
 
+	stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
 	do
 	{
+		controllerOut.str("");
 		/*//This is just for debugging stuff with the level manager
 		if(AnnGetEngine()->isKeyDown(OIS::KC_Q))
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
 			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	*/
-		AnnDebug() << "--------";
+
 		for (auto i : { 0,1 })
 		{
-			AnnDebug() << "Controller " << i;
-			if (AnnGetVRRenderer()->getHandControllerArray()[i])
+			controllerOut << "Controller " << i << ":";
+			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[i])
 			{
-				for (auto state : AnnGetVRRenderer()->getHandControllerArray()[i]->getButtonStateVector())
-					if (state)
-						AnnDebug() << "pressed";
-					else
-						AnnDebug() << "released";
-				for (int j(0); j < AnnGetVRRenderer()->getHandControllerArray()[i]->getAxesVector().size(); j++)
-					AnnDebug() << "sitck" << AnnGetVRRenderer()->getHandControllerArray()[i]->getAxesVector()[j].getValue();
+				for (uint8_t button(0); button < controller->getNbButton(); button++)
+					controllerOut << " " << controller->getButtonState(button);
+				for (size_t axis(0); axis < controller->getNbAxes(); axis++)
+					controllerOut << "axis" << axis << controller->getAxis(axis).getValue();
 			}
+			controllerOut << '\n';
 		}
+
+		AnnDebug() << controllerOut.str();
 	} while (AnnGetEngine()->refresh());
 
 	AnnQuit();

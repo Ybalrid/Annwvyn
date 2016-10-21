@@ -106,13 +106,18 @@ namespace Annwvyn
 		///Return true if the hand controller object has revived updates from the tracking system
 		bool isTracked();
 
-		bool getState(uint8_t buttonIndex);
+		bool getButtonState(uint8_t buttonIndex);
+
+		size_t getNbButton();
 
 		bool hasBeenPressed(uint8_t buttonIndex);
 
 		bool hasBeenReleased(uint8_t buttonIndex);
 
-		// TODO restrict access to theses getters, they return references that can be used to modify to classes attributes
+		size_t getNbAxes();
+		AnnHandControllerAxis getAxis(size_t index);
+
+	private:
 
 		///Get a reference to the axes vector
 		std::vector<AnnHandControllerAxis>& getAxesVector();
@@ -126,7 +131,8 @@ namespace Annwvyn
 		///Get a reference to the released event vector
 		std::vector<uint8_t>& getReleasedButtonsVector();
 
-	private:
+		friend class OgreVRRender;
+		friend class OgreOpenVRRender;
 
 		///ID of the controller, expect 1 or 2
 		AnnHandControllerID id;
