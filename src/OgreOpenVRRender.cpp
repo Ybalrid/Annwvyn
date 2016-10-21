@@ -27,16 +27,16 @@ shouldQuitState(false)
 	rttTexture.setNull();
 	rttTextureGLID = NULL;
 
-	buttonsToHandle.push_back(vr::k_EButton_System);
+	//buttonsToHandle.push_back(vr::k_EButton_System);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
 	buttonsToHandle.push_back(vr::k_EButton_Grip);
 	buttonsToHandle.push_back(vr::k_EButton_A);
 	buttonsToHandle.push_back(vr::k_EButton_SteamVR_Touchpad);
 	buttonsToHandle.push_back(vr::k_EButton_SteamVR_Trigger);
-	buttonsToHandle.push_back(vr::k_EButton_DPad_Up);
-	buttonsToHandle.push_back(vr::k_EButton_DPad_Down);
-	buttonsToHandle.push_back(vr::k_EButton_DPad_Left);
-	buttonsToHandle.push_back(vr::k_EButton_DPad_Right);
+	//buttonsToHandle.push_back(vr::k_EButton_DPad_Up);
+	//buttonsToHandle.push_back(vr::k_EButton_DPad_Down);
+	//buttonsToHandle.push_back(vr::k_EButton_DPad_Left);
+	//buttonsToHandle.push_back(vr::k_EButton_DPad_Right);
 
 	for (auto side : { left, right })
 	{
@@ -481,7 +481,7 @@ void OgreOpenVRRender::processTrackedDevices()
 		Ogre::Vector3 position = transform.getTrans();
 		Ogre::Quaternion orientation = transform.extractQuaternion();
 
-		if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
+		//if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
 
 		// TOTO get the buttons (stick, touch-pad, whatever) states of this controller
 		vr::VRControllerState_t controllerState = {};
