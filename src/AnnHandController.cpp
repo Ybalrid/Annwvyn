@@ -11,7 +11,8 @@ AnnHandController::AnnHandController(Ogre::SceneNode* handNode, AnnHandControlle
 	grabbed(nullptr),
 	tracked(false),
 	trackedAngularSpeed(AnnVect3::ZERO),
-	trackedLinearSpeed(AnnVect3::ZERO)
+	trackedLinearSpeed(AnnVect3::ZERO),
+	invalidAxis("INVALID", 0)
 {
 	std::cerr << "HandController ID : " << id << " created";
 	std::cerr << "For side : " << getSideAsString(side);
@@ -132,10 +133,10 @@ size_t Annwvyn::AnnHandController::getNbAxes()
 	return axes.size();
 }
 
-AnnHandControllerAxis Annwvyn::AnnHandController::getAxis(size_t index)
+AnnHandControllerAxis& Annwvyn::AnnHandController::getAxis(size_t index)
 {
 	if (index < axes.size()) return axes[index];
-	return AnnHandControllerAxis("INVALID", 0);
+	return invalidAxis;
 }
 
 std::vector<AnnHandControllerAxis>& Annwvyn::AnnHandController::getAxesVector()

@@ -18,7 +18,9 @@ then(0),
 now(0),
 hmdAbsoluteTransform({}),
 eyeRig(0),
-shouldQuitState(false)
+shouldQuitState(false),
+numberOfAxes{ 3 },
+axoffset{ vr::k_EButton_Axis0 }
 {
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
@@ -430,6 +432,80 @@ void OgreOpenVRRender::processVREvents()
 
 const bool DEBUG(true);
 
+void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side)
+{
+	//Extract tracking information from the device
+	Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[controllerDeviceIndex].mDeviceToAbsoluteTracking);
+	//Extract the pose from the transformation matrix
+	Ogre::Vector3 position = transform.getTrans();
+	Ogre::Quaternion orientation = transform.extractQuaternion();
+
+	//Get the state of the controller. The state contains the buttons and triggers data at the last sample
+	vrSystem->GetControllerState(controllerDeviceIndex, &controllerState);
+
+	//This will fill the buttons array
+	extractButtons(side);
+
+	//Extract axis values
+	touchpadXNormalizedValue = controllerState.rAxis[vr::EVRButtonId::k_EButton_SteamVR_Touchpad - axoffset].x;
+	touchpadYNormalizedValue = controllerState.rAxis[vr::EVRButtonId::k_EButton_SteamVR_Touchpad - axoffset].y;
+	triggerNormalizedValue = controllerState.rAxis[vr::EVRButtonId::k_EButton_SteamVR_Trigger - axoffset].x;
+
+	//create or update controllers object
+	//Dynamically allocate the controller if the controller doesn't exist yet
+	if (!handControllers[side])
+	{
+		handControllers[side] = std::make_shared<Annwvyn::AnnHandController>
+			(smgr->getRootSceneNode()->createChildSceneNode(), (size_t)controllerDeviceIndex, side);
+
+		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
+	}
+
+	auto handController = handControllers[side];
+	auto& axesVector = handController->getAxesVector();
+	//Axis map:
+	//0 -> Touchpad X
+	//1 -> Touchpad Y
+	//2 -> AnalogTrigger
+
+	if (axesVector.size() == 0)
+	{
+		axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad X", touchpadXNormalizedValue });
+		axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad Y", touchpadYNormalizedValue });
+		axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Trigger X", triggerNormalizedValue });
+	}
+
+	axesVector[0].updateValue(touchpadXNormalizedValue);
+	axesVector[1].updateValue(touchpadYNormalizedValue);
+	axesVector[2].updateValue(triggerNormalizedValue);
+
+	//Assign the buttons
+	handController->getButtonStateVector() = currentControllerButtonsPressed[side];
+	handController->getPressedButtonsVector() = pressed;
+	handController->getReleasedButtonsVector() = released;
+	handController->setTrackedPosition(feetPosition + bodyOrientation * position);
+	handController->setTrackedOrientation(bodyOrientation * orientation);
+	handController->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[controllerDeviceIndex].vVelocity.v));
+	handController->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[controllerDeviceIndex].vAngularVelocity.v));
+}
+
+void OgreOpenVRRender::extractButtons(size_t side)
+{
+	pressed.clear(); released.clear();
+	for (uint8_t i(0); i < buttonsToHandle.size(); i++)
+	{
+		lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
+		currentControllerButtonsPressed[side][i] = (controllerState.ulButtonPressed & vr::ButtonMaskFromId(buttonsToHandle[i])) != 0;
+		if (currentControllerButtonsPressed[side][i] && !lastControllerButtonsPressed[side][i])
+		{
+			pressed.push_back(i);
+			continue;
+		}
+		else if (!currentControllerButtonsPressed[side][i] && lastControllerButtonsPressed[side][i])
+			released.push_back(i);
+	}
+}
+
 void OgreOpenVRRender::processTrackedDevices()
 {
 	//Iterate through the possible trackedDeviceIndexes
@@ -438,20 +514,17 @@ void OgreOpenVRRender::processTrackedDevices()
 		 trackedDevice++)
 	{
 		//If the device is not connected, pass.
-		if (!vrSystem->IsTrackedDeviceConnected(trackedDevice))
-			continue;
 		//If the device is not recognized as a controller, pass
-		if (vrSystem->GetTrackedDeviceClass(trackedDevice) != vr::TrackedDeviceClass_Controller)
-			continue;
 		//If we don't have a valid pose of the controller, pass
-		if (!trackedPoses[trackedDevice].bPoseIsValid)
+		if (!vrSystem->IsTrackedDeviceConnected(trackedDevice)
+			|| vrSystem->GetTrackedDeviceClass(trackedDevice) != vr::TrackedDeviceClass_Controller
+			|| !trackedPoses[trackedDevice].bPoseIsValid)
 			continue;
 
 		//From here we know that "trackedDevice" is the device index of a valid controller that has been tracked by the system
-
 		//Extract basic information of the device, detect if they are left/right hands
 		Annwvyn::AnnHandControllerID controllerIndex{ 0 };
-		volatile Annwvyn::AnnHandController::AnnHandControllerSide side;
+		Annwvyn::AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
 			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
@@ -466,92 +539,10 @@ void OgreOpenVRRender::processTrackedDevices()
 
 			case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:
 			default:
-				side = Annwvyn::AnnHandController::invalidHandController;
-				controllerIndex = MAX_CONTROLLER_NUMBER;
-				break;
+				continue;
 		}
 
-		//Detect if we can handle this controller
-		if (controllerIndex >= MAX_CONTROLLER_NUMBER) continue;
-
-		//Extract tracking information from the device
-		Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[trackedDevice].mDeviceToAbsoluteTracking);
-
-		//Extract the pose from the transformation matrix
-		Ogre::Vector3 position = transform.getTrans();
-		Ogre::Quaternion orientation = transform.extractQuaternion();
-
-		//if (DEBUG) Annwvyn::AnnDebug() << "Controller " << trackedDevice << " pos : " << position << " orient : " << orientation;
-
-		// TOTO get the buttons (stick, touch-pad, whatever) states of this controller
-		vr::VRControllerState_t controllerState = {};
-		vrSystem->GetControllerState(trackedDevice, &controllerState);
-
-		auto axes = controllerState.rAxis;
-		//Available buttons are declared on this enum.
-		//vr::EVRButtonId;
-
-		const size_t numberOfAxes{ 3 };
-
-		const size_t axoffset = vr::k_EButton_Axis0;
-
-		//Extract axis values
-		const float TouchpadXNormalizedValue = axes[vr::EVRButtonId::k_EButton_SteamVR_Touchpad - axoffset].x;
-		const float TouchpadYNormalizedValue = axes[vr::EVRButtonId::k_EButton_SteamVR_Touchpad - axoffset].y;
-		const float TriggerNormalizedValue = axes[vr::EVRButtonId::k_EButton_SteamVR_Trigger - axoffset].x;
-
-		auto buttons = controllerState.ulButtonPressed;
-		std::vector<uint8_t> pressed, released;
-		for (uint8_t i(0); i < buttonsToHandle.size(); i++)
-		{
-			lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
-			currentControllerButtonsPressed[side][i] = (buttons & vr::ButtonMaskFromId(buttonsToHandle[i])) != 0;
-			if (currentControllerButtonsPressed[side][i] && !lastControllerButtonsPressed[side][i])
-				pressed.push_back(i);
-			if (!currentControllerButtonsPressed[side][i] && lastControllerButtonsPressed[side][i])
-				released.push_back(i);
-		}
-
-		//create or update controllers object
-		//Dynamically allocate the controller if the controller doesn't exist yet
-		if (!handControllers[controllerIndex])
-		{
-			handControllers[controllerIndex] = std::make_shared<Annwvyn::AnnHandController>
-				(smgr->getRootSceneNode()->createChildSceneNode(), (size_t)trackedDevice, side);
-
-			if (DEBUG) handControllers[controllerIndex]->attachModel(smgr->createEntity("gizmo.mesh"));
-		}
-
-		handControllers[controllerIndex]->setTrackedPosition(feetPosition + bodyOrientation * position);
-		handControllers[controllerIndex]->setTrackedOrientation(bodyOrientation * orientation);
-		handControllers[controllerIndex]->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vVelocity.v));
-		handControllers[controllerIndex]->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[trackedDevice].vAngularVelocity.v));
-
-		auto& axesVector = handControllers[controllerIndex]->getAxesVector();
-		//Axis map:
-		//0 -> Touchpad X
-		//1 -> Touchpad Y
-		//2 -> AnalogTrigger
-
-		volatile bool allreadyUpdated(false);
-		if (axesVector.size() == 0)
-		{
-			axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad X", TouchpadXNormalizedValue });
-			axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad Y", TouchpadYNormalizedValue });
-			axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Trigger X", TriggerNormalizedValue });
-			allreadyUpdated = true;
-		}
-		if (axesVector.size() == 3 && !allreadyUpdated)
-		{
-			axesVector[0].updateValue(TouchpadXNormalizedValue);
-			axesVector[1].updateValue(TouchpadYNormalizedValue);
-			axesVector[2].updateValue(TriggerNormalizedValue);
-		}
-
-		//Assign the buttons
-		handControllers[controllerIndex]->getButtonStateVector() = currentControllerButtonsPressed[side];
-		handControllers[controllerIndex]->getPressedButtonsVector() = pressed;
-		handControllers[controllerIndex]->getReleasedButtonsVector() = released;
+		processController(trackedDevice, side);
 	}
 }
 
