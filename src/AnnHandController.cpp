@@ -11,7 +11,8 @@ AnnHandController::AnnHandController(Ogre::SceneNode* handNode, AnnHandControlle
 	grabbed(nullptr),
 	tracked(false),
 	trackedAngularSpeed(AnnVect3::ZERO),
-	trackedLinearSpeed(AnnVect3::ZERO)
+	trackedLinearSpeed(AnnVect3::ZERO),
+	invalidAxis("INVALID", 0)
 {
 	std::cerr << "HandController ID : " << id << " created";
 	std::cerr << "For side : " << getSideAsString(side);
@@ -101,4 +102,59 @@ void AnnHandController::setTrackedAngularSpeed(AnnVect3 v)
 bool AnnHandController::isTracked()
 {
 	return tracked;
+}
+
+bool Annwvyn::AnnHandController::getButtonState(uint8_t buttonIndex)
+{
+	return buttonsState[buttonIndex];
+}
+
+size_t Annwvyn::AnnHandController::getNbButton()
+{
+	return buttonsState.size();
+}
+
+bool Annwvyn::AnnHandController::hasBeenPressed(uint8_t buttonIndex)
+{
+	for (auto button : pressedButtons)
+		if (button == buttonIndex) return true;
+	return false;
+}
+
+bool Annwvyn::AnnHandController::hasBeenReleased(uint8_t buttonIndex)
+{
+	for (auto button : releasedButtons)
+		if (button == buttonIndex) return true;
+	return false;
+}
+
+size_t Annwvyn::AnnHandController::getNbAxes()
+{
+	return axes.size();
+}
+
+AnnHandControllerAxis& Annwvyn::AnnHandController::getAxis(size_t index)
+{
+	if (index < axes.size()) return axes[index];
+	return invalidAxis;
+}
+
+std::vector<AnnHandControllerAxis>& Annwvyn::AnnHandController::getAxesVector()
+{
+	return axes;
+}
+
+std::vector<bool>& Annwvyn::AnnHandController::getButtonStateVector()
+{
+	return buttonsState;
+}
+
+std::vector<uint8_t>& Annwvyn::AnnHandController::getPressedButtonsVector()
+{
+	return pressedButtons;
+}
+
+std::vector<uint8_t>& Annwvyn::AnnHandController::getReleasedButtonsVector()
+{
+	return releasedButtons;
 }
