@@ -435,3 +435,14 @@ std::shared_ptr<AnnTriggerObject> AnnTriggerEvent::getSender()
 {
 	return sender;
 }
+
+Annwvyn::AnnHandControllerEvent::AnnHandControllerEvent() :
+	sender(nullptr)
+{
+	type = HAND_CONTROLLER;
+}
+
+AnnHandController* AnnHandControllerEvent::getController()
+{
+	return sender;
+}

@@ -59,7 +59,7 @@ namespace Annwvyn
 		enum AnnHandControllerSide : size_t { leftHandController = 0, rightHandController = 1, invalidHandController = 2 };
 
 		///Construct a Controller object
-		AnnHandController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
+		AnnHandController(std::string Type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
 
 		///Get the side type as a std::string
 		inline std::string getSideAsString(AnnHandControllerSide s);
@@ -128,10 +128,16 @@ namespace Annwvyn
 		///\param index Index of the axis you need
 		AnnHandControllerAxis& getAxis(size_t index);
 
+		AnnHandControllerSide getSide();
+
+		std::string getType();
+
 	private:
 
 		friend class OgreVRRender;
 		friend class OgreOpenVRRender;
+
+		std::string controllerType;
 
 		///Get a reference to the axes vector
 		std::vector<AnnHandControllerAxis>& getAxesVector();

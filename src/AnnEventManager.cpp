@@ -305,6 +305,22 @@ void AnnEventManager::processInput()
 				listener->StickEvent(e);
 	}
 
+	if (AnnGetVRRenderer()->getRecognizedControllerCount() > 0)
+	{
+		for (auto handController : AnnGetVRRenderer()->getHandControllerArray())
+		{
+			if (!handController) continue;
+			AnnHandControllerEvent e;
+			e.sender = handController.get();
+			e.populate();
+			if (e.getController()) e.validate();
+
+			for (auto& weak_listener : listeners)
+				if (auto listener = weak_listener.lock())
+					listener->HandControllerEvent(e);
+		}
+	}
+
 	for (auto& weak_listener : listeners)
 		if (auto listener = weak_listener.lock())
 			listener->tick();

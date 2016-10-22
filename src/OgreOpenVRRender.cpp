@@ -436,6 +436,7 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 {
 	//Extract tracking information from the device
 	Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[controllerDeviceIndex].mDeviceToAbsoluteTracking);
+
 	//Extract the pose from the transformation matrix
 	Ogre::Vector3 position = transform.getTrans();
 	Ogre::Quaternion orientation = transform.extractQuaternion();
@@ -456,7 +457,7 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	if (!handControllers[side])
 	{
 		handControllers[side] = std::make_shared<Annwvyn::AnnHandController>
-			(smgr->getRootSceneNode()->createChildSceneNode(), (size_t)controllerDeviceIndex, side);
+			("OpenVR Hand Controller", smgr->getRootSceneNode()->createChildSceneNode(), (size_t)controllerDeviceIndex, side);
 
 		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 	}

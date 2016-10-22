@@ -23,6 +23,12 @@ public:
 			jumpToHub();
 	}
 
+	virtual void HandControllerEvent(AnnHandControllerEvent e)
+	{
+		if (e.getController()->hasBeenPressed(3))
+			jumpToHub();
+	}
+
 private:
 	void jumpToHub()
 	{

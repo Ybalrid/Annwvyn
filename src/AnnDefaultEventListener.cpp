@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AnnEventManager.hpp"
 #include "AnnEngine.hpp"
-
+#include "AnnLogger.hpp"
 using namespace Annwvyn;
 
 AnnDefaultEventListener::AnnDefaultEventListener() : AnnEventListener(),
@@ -117,4 +117,18 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 		AnnGetEngine()->toogleOnScreenConsole();
 	if (e.isPressed(buttons[b_debug]))
 		AnnGetVRRenderer()->cycleDebugHud();
+}
+
+void Annwvyn::AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
+{
+	auto controller = e.getController();
+	if (controller->getSide() == AnnHandController::leftHandController)
+	{
+		player->analogStraff = controller->getAxis(0).getValue();
+		player->analogWalk = -controller->getAxis(1).getValue();
+	}
+	else if (controller->getSide() == AnnHandController::rightHandController)
+	{
+		player->analogRotate = controller->getAxis(0).getValue();
+	}
 }
