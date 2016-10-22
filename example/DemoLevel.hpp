@@ -73,7 +73,7 @@ public:
 
 		AnnGetSceneryManager()->setAmbiantLight(AnnColor(0.15f, 0.15f, 0.15f));
 
-		AnnGetPlayer()->teleport({ 0,1,0 }, 0);
+		AnnGetPlayer()->teleport({ 0, 1, 0 }, 0);
 	}
 
 	//Called at each frame
