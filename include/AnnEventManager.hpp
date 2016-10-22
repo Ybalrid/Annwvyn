@@ -34,7 +34,8 @@ namespace Annwvyn
 		NO_TYPE,
 		USER_INPUT,
 		TIMER_TIMEOUT,
-		TRIGGER_CONTACT
+		TRIGGER_CONTACT,
+		HAND_CONTROLLER
 	};
 	///An input event
 	class DLL AnnEvent
@@ -289,6 +290,17 @@ namespace Annwvyn
 		std::string vendor;
 		int stickID;
 	};
+	class AnnHandController;
+	class DLL AnnHandControllerEvent : public AnnEvent
+	{
+	public:
+		AnnHandControllerEvent();
+
+		AnnHandController* getController();
+	private:
+		friend class AnnEventManager;
+		AnnHandController* sender;
+	};
 
 	typedef int timerID;
 
@@ -344,6 +356,9 @@ namespace Annwvyn
 		virtual void TimeEvent(AnnTimeEvent e) { return; }
 		///Event from a trigger
 		virtual void TriggerEvent(AnnTriggerEvent e) { return; }
+		///Event from an HandController
+		virtual void HandControllerEvent(AnnHandControllerEvent e) { return; }
+
 		///This method is called at each frame. Useful for updating player's movement command for example
 		virtual void tick() { return; }
 		///Utility function for applying a dead-zone on a joystick axis
@@ -373,8 +388,10 @@ namespace Annwvyn
 		void KeyEvent(AnnKeyEvent e);
 		///Get events from the mouse
 		void MouseEvent(AnnMouseEvent e);
-		///GEt events from the joystick
+		///Get events from the joystick
 		void StickEvent(AnnStickEvent e);
+		///Get events from an hand controller
+		void HandControllerEvent(AnnHandControllerEvent e);
 
 		///Set all the key-codes for the controls
 		void setKeys(KeyCode::code fw,

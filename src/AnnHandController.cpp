@@ -3,7 +3,8 @@
 
 using namespace Annwvyn;
 
-AnnHandController::AnnHandController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
+AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
+	controllerType(type),
 	node(handNode),
 	id(controllerID),
 	side(controllerSide),
@@ -137,6 +138,16 @@ AnnHandControllerAxis& Annwvyn::AnnHandController::getAxis(size_t index)
 {
 	if (index < axes.size()) return axes[index];
 	return invalidAxis;
+}
+
+AnnHandController::AnnHandControllerSide Annwvyn::AnnHandController::getSide()
+{
+	return side;
+}
+
+std::string Annwvyn::AnnHandController::getType()
+{
+	return controllerType;
 }
 
 std::vector<AnnHandControllerAxis>& Annwvyn::AnnHandController::getAxesVector()
