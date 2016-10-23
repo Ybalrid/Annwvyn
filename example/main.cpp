@@ -52,18 +52,18 @@ AnnMain()
 	//ask the level manager to perform a jump to the first level
 	AnnGetLevelManager()->jumpToFirstLevel();
 
-	stringstream controllerOut;
+	//stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
 	do
 	{
-		controllerOut.str("");
+		//controllerOut.str("");
 		/*//This is just for debugging stuff with the level manager
 		if(AnnGetEngine()->isKeyDown(OIS::KC_Q))
 			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
 		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
 			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	*/
 
-		for (auto i : { 0,1 })
+		/*for (auto i : { 0,1 })
 		{
 			controllerOut << "Controller " << i << ":";
 			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[i])
@@ -76,7 +76,7 @@ AnnMain()
 			controllerOut << '\n';
 		}
 
-		AnnDebug() << controllerOut.str();
+		AnnDebug() << controllerOut.str();*/
 	} while (AnnGetEngine()->refresh());
 
 	AnnQuit();
