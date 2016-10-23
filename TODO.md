@@ -8,7 +8,7 @@ TODO list :
 - [ ] Pipeline the rendering pass with a logic thread and a render thread
 - [ ] Make the engine render a "loading screen" when loading resources/constructing levels
 - [x] Use anti aliasing
-- [ ] Handle hand-controller event via the Event Manager
+- [x] Handle hand-controller event via the Event Manager **very basic for now**
 
 Minor-level improvement:
 
