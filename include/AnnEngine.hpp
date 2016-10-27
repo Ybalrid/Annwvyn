@@ -78,7 +78,7 @@
 ///Get VRREnderer
 #define AnnGetVRRenderer() AnnGetEngine()->getVRRenderer()
 ///Get ScriptManager
-#define AnnGetScriptManager() AnnGetEngine()->getScriptManager();
+#define AnnGetScriptManager() AnnGetEngine()->getScriptManager()
 
 namespace Annwvyn
 {
