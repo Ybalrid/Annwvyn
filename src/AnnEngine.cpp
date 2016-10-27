@@ -126,13 +126,14 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
 	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
 	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
+	SubSystemList.push_back(scriptManager = std::make_shared<AnnScriptManager>());
 
 	renderer->initClientHmdRendering();
 	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();
 	vrRendererPovGameplayPlacement->setPosition(player->getPosition() +
 												AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 
-											//This subsystem need the vrRendererPovGameplayPlacement object to be initialized. And the Resource manager because it wants a font file and an image background
+	//This subsystem need the vrRendererPovGameplayPlacement object to be initialized. And the Resource manager because it wants a font file and an image background
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
 }
 
@@ -162,6 +163,11 @@ std::shared_ptr<AnnGameObjectManager> AnnEngine::getGameObjectManager()
 std::shared_ptr<AnnSceneryManager> AnnEngine::getSceneryManager()
 {
 	return sceneryManager;
+}
+
+std::shared_ptr<AnnScriptManager> AnnEngine::getScriptManager()
+{
+	return scriptManager;
 }
 
 std::shared_ptr<OgreVRRender> AnnEngine::getVRRenderer()
