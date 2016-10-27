@@ -22,7 +22,6 @@ AnnMain()
 	//Only useful on windows : Open a debug console to get stdout/stderr
 	AnnEngine::openConsole();
 
-	OgreVRRender::UseSSAA = false;
 	OgreVRRender::setAntiAliasingLevel(8);
 	AnnInit("AnnTest");
 
@@ -54,30 +53,7 @@ AnnMain()
 
 	//stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
-	do
-	{
-		//controllerOut.str("");
-		/*//This is just for debugging stuff with the level manager
-		if(AnnGetEngine()->isKeyDown(OIS::KC_Q))
-			AnnGetEngine()->getLevelManager()->unloadCurrentLevel();
-		if(AnnGetEngine()->isKeyDown(OIS::KC_E))
-			AnnGetEngine()->getLevelManager()->jumpToFirstLevel();	*/
-
-		/*for (auto i : { 0,1 })
-		{
-			controllerOut << "Controller " << i << ":";
-			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[i])
-			{
-				for (uint8_t button(0); button < controller->getNbButton(); button++)
-					controllerOut << " " << controller->getButtonState(button);
-				for (size_t axis(0); axis < controller->getNbAxes(); axis++)
-					controllerOut << "axis" << axis << controller->getAxis(axis).getValue();
-			}
-			controllerOut << '\n';
-		}
-
-		AnnDebug() << controllerOut.str();*/
-	} while (AnnGetEngine()->refresh());
+	AnnGetEngine()->startGameplayLoop();
 
 	AnnQuit();
 
