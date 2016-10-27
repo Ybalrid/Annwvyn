@@ -8,7 +8,7 @@ TODO list
 - [x] Use anti aliasing
 - [x] Handle hand-controller event via the Event Manager **very basic for now**
 - [ ] Integrate a scripting language for gameplay. Probably ChaiScript
-- [ ] Add an "engine configuration file" system. As a unix-like .conf file (or a windows like .ini file|unix file prefered for the sake of simplicity)
+- [ ] Add an "engine configuration file" system. As a UNIX-like .conf file (or a windows like .ini file|UNIX file preferred for the sake of simplicity)
 ______
 Upgrade the engine to Ogre 2.1
 -----
