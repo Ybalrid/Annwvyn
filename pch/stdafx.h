@@ -69,6 +69,13 @@
 #include <OVR_CAPI_GL.h>
 #include <Extras/OVR_Math.h>
 
+//Chaisript interpretor
+#pragma warning (disable : 4602)
+#include <chaiscript.hpp>
+#include <chaiscript_defines.hpp>
+#include <chaiscript_stdlib.hpp>
+#include <chaiscript_threading.hpp>
+
 //OpenVR (Valve/HTC Vive) API
 #include <openvr.h>
 #include <openvr_capi.h>

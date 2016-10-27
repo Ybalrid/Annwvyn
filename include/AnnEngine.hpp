@@ -43,6 +43,7 @@
 #include "AnnGameObject.hpp"
 #include "AnnGameObjectManager.hpp"
 #include "AnnSceneryManager.hpp"
+#include "AnnScriptManager.hpp"
 
 #include "AnnUserSpaceSubSystem.hpp"
 
@@ -74,8 +75,10 @@
 #define AnnGetGameObjectManager() AnnGetEngine()->getGameObjectManager()
 ///Get SceneryManager
 #define AnnGetSceneryManager() AnnGetEngine()->getSceneryManager()
-///GEt VRREnderer
+///Get VRREnderer
 #define AnnGetVRRenderer() AnnGetEngine()->getVRRenderer()
+///Get ScriptManager
+#define AnnGetScriptManager() AnnGetEngine()->getScriptManager();
 
 namespace Annwvyn
 {
@@ -156,6 +159,9 @@ namespace Annwvyn
 		///Get the SceneryManager
 		std::shared_ptr<AnnSceneryManager> getSceneryManager();
 
+		///Get the ScriptManager
+		std::shared_ptr<AnnScriptManager> getScriptManager();
+
 		///Get the VRRenderer
 		std::shared_ptr<OgreVRRender> getVRRenderer();
 
@@ -229,6 +235,8 @@ namespace Annwvyn
 		std::shared_ptr<AnnGameObjectManager> gameObjectManager;
 		///LevelManager
 		std::shared_ptr<AnnLevelManager> levelManager;
+		///ScriptManager
+		std::shared_ptr<AnnScriptManager> scriptManager;
 		///Player
 		std::shared_ptr<AnnPlayer> player;
 
