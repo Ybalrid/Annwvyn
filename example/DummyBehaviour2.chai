@@ -1,0 +1,12 @@
+class DummyBehaviour2
+{
+	def DummyBehaviour2()
+	{
+		AnnDebugLog("Dummy Behaviour constructed");
+	}
+
+	def update()
+	{
+		AnnDebugLog("Dummy Behaviour updated");
+	}
+}
