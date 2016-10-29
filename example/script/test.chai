@@ -34,3 +34,5 @@ print(someVector.x);
 
 var quat = AnnQuat(AnnRadian(3.14/2), AnnVect3(0,1,0));
 print((quat*vec).x);
+
+//SinbadTest.setOrientation(quat);

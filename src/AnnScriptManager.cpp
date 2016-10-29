@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnScriptManager.hpp"
 #include "AnnLogger.hpp"
+#include "AnnGameObject.hpp"
 
 using namespace Annwvyn;
 
@@ -123,12 +124,12 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Degree& d, Real f) {return d / f; }), "/");
 	chai.add(fun([](Degree& d, Real f) {d /= f; }), "/=");
 
-	chai.add(fun([](const Degree& d1, const Degree& d2) {d1 < d2; }), "<");
-	chai.add(fun([](const Degree& d1, const Degree& d2) {d1 > d2; }), ">");
-	chai.add(fun([](const Degree& d1, const Degree& d2) {d1 <= d2; }), "<=");
-	chai.add(fun([](const Degree& d1, const Degree& d2) {d1 >= d2; }), ">=");
-	chai.add(fun([](const Degree& d1, const Degree& d2) {d1 == d2; }), "==");
-	chai.add(fun([](const Degree& d1, const Degree& d2) {d1 != d2; }), "!=");
+	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 < d2; }), "<");
+	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 > d2; }), ">");
+	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 <= d2; }), "<=");
+	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 >= d2; }), ">=");
+	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 == d2; }), "==");
+	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 != d2; }), "!=");
 
 	chai.add(fun([](const Radian& d) {return +d; }), "+");
 	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 + d2; }), "+");
@@ -166,6 +167,34 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 * q2; }), "*");
 
 	//TODO Add to chai a way to access useful Annwvyn components
+	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
+	chai.add(fun([](std::shared_ptr<AnnGameObject> o, Ogre::Vector3 v) {o->setPosition(v); }), "setPosition");
+	chai.add(fun([](std::shared_ptr<AnnGameObject> o, Ogre::Quaternion q) {o->setOrientation(q); }), "setOrientation");
+	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Vector3 {return o->getPosition(); }), "getPosition");
+	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Quaternion {return o->getOrientation(); }), "getOrientation");
+
+	///*
+	auto obj = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh");
+	chai.add(var(obj), "SinbadTest");
+	try {
+		chai.eval("SinbadTest.setPosition(AnnVect3(1,1,1));");
+			chai.eval(R"(var position = SinbadTest.getPosition();
+print(position.x);
+print(position.y);
+print(position.z);
+var orientation = SinbadTest.getOrientation();
+print(orientation.x);
+print(orientation.y);
+print(orientation.z);
+print(orientation.w);
+)");
+	}
+	catch (const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << ee.pretty_print();
+	}
+	AnnDebug() << obj->getPosition();
+	//*/
 }
 
 Annwvyn::AnnBehaviourScript::AnnBehaviourScript() :
