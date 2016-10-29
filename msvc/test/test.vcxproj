@@ -178,6 +178,9 @@
     <ClInclude Include="..\..\example\TestLevel.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\example\script\test.chai" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
