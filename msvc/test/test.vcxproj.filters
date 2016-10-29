@@ -39,4 +39,7 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\example\script\test.chai" />
+  </ItemGroup>
 </Project>
