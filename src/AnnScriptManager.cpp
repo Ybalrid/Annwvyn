@@ -78,14 +78,39 @@ AnnBehaviourScript Annwvyn::AnnScriptManager::getBehaviourScript(const std::stri
 
 void Annwvyn::AnnScriptManager::registerApi()
 {
+	using namespace Ogre;
+	using namespace chaiscript;
 	//TODO Add to chai all the useful types (angles, vectors, quaternions...)
-	chai.add(chaiscript::user_type<AnnVect3>(), "AnnVect3");
-	chai.add(chaiscript::constructor<AnnVect3()>(), "AnnVect3");
-	chai.add(chaiscript::constructor<AnnVect3(const float, const float, const float)>(), "AnnVect3");
-	chai.add(chaiscript::constructor<AnnVect3(bool)>(), "AnnVect3");
-	chai.add(chaiscript::constructor<AnnVect3(const float[3])>(), "AnnVect3");
-	chai.add(chaiscript::constructor<AnnVect3(const AnnVect3&)>(), "AnnVect3");
-	//chai.add(chaiscript::fun<AnnVect3& (AnnVect3::*)(const AnnVect3&)>(&AnnVect3::operator=), "=");
+
+	//Base Class of AnnVect3
+	chai.add(chaiscript::user_type<Ogre::Vector3>(), "AnnVect3");
+	chai.add(chaiscript::constructor<Ogre::Vector3()>(), "AnnVect3");
+	chai.add(chaiscript::constructor<Ogre::Vector3(const float, const float, const float)>(), "AnnVect3");
+	chai.add(chaiscript::constructor<Ogre::Vector3(const float[3])>(), "AnnVect3");
+	chai.add(chaiscript::constructor<Ogre::Vector3(const Ogre::Vector3&)>(), "AnnVect");
+	//Public attributes. Thank the simulation authors, this is easy
+	chai.add(chaiscript::fun(&Ogre::Vector3::x), "x");
+	chai.add(chaiscript::fun(&Ogre::Vector3::y), "y");
+	chai.add(chaiscript::fun(&Ogre::Vector3::z), "z");
+
+	//the lambda here is a hack because I can't find a way to give chai operator= cleanly
+	chai.add(chaiscript::fun([](Ogre::Vector3& u, const Ogre::Vector3& v) {u = v; }), "=");
+
+	//This works here, that's weird than operator- and operator= don't want to
+	chai.add(chaiscript::fun<Ogre::Vector3>(&Ogre::Vector3::operator+), "+");
+	//There's multiple overloads of Ogre::Vector3::operator-. Easier to use a lambda here too
+	chai.add(chaiscript::fun([](const Ogre::Vector3& v) {return -v; }), "-");
+	chai.add(chaiscript::fun([](const Ogre::Vector3& v, Ogre::Vector3 w) {return v - w; }), "-");
+
+	//note to self, at this point, using lambdas seems easier than trying to bind the operator overloads to chaiscript operators
+	chai.add(chaiscript::fun([](const Ogre::Vector3& vector, Ogre::Real scalar) {return scalar*vector; }), "*");
+
+	//OMG, it just works now. I <3 Lambdas
+	chai.add(chaiscript::fun([](Ogre::Vector3& vector, Ogre::Real scalar) {vector *= scalar; }), "*=");
+
+	chai.add(user_type<Quaternion>(), "AnnQuat");
+	chai.add(constructor<Quaternion()>(), "AnnQuat");
+	chai.add(constructor<Quaternion(const float, const float, const float, const float)>(), "AnnQuat");
 
 	//TODO Add to chai a way to access useful Annwvyn components
 }
