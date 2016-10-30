@@ -1,15 +1,19 @@
 class DummyBehavior
 {
-	var GameObject;
+	var OwnerName;
 	def DummyBehavior(owner)
 	{
-		this.GameObject = owner;
+		this.OwnerName = owner;
 		AnnDebugLog("Dummy Behavior constructed");
+		print(this.OwnerName);
 	}
 
 	def update()
 	{
 		AnnDebugLog("Dummy Behavior updated");
-		this.GameObject.setPosition(this.GameObject.getPosition() + AnnVect3(0,0.1,0));
+
+		var Object := AnnGetGameObject(this.OwnerName);
+		AnnDebugLog(Object.getPosition());
+		AnnDebugLog(Object.getOrientation());
 	}
 }

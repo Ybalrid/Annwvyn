@@ -68,7 +68,13 @@ namespace Annwvyn
 		static constexpr const char* const logFromScript{ "Script - " };
 
 		//String constant for script loading and class initialization
-		static constexpr const char* const scriptTemplate{ "var ScriptInstance__OBJECT_SCRIPT_ID__ = __SCRIPT_NAME__(__SCRIPT_OWNER__);" };
+		static constexpr const char* const scriptTemplate{ R"(
+def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
+{
+	var ScriptInstance__OBJECT_SCRIPT_ID__ = __SCRIPT_NAME__(owner);
+	return ScriptInstance__OBJECT_SCRIPT_ID__;
+}
+)" };
 		static constexpr const char* const scriptNameMarker{ "__SCRIPT_NAME__" };
 		static constexpr const char* const scriptObjectID{ "__OBJECT_SCRIPT_ID__" };
 		static constexpr const char* const scriptOwnerMarker{ "__SCRIPT_OWNER__" };
