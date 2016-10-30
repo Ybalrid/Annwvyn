@@ -48,8 +48,11 @@ namespace Annwvyn
 		///Remove the object from the engine
 		void removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger);
 
-		///Get the AnnObject the player is looking at
+		///Get the AnnGameObject the player is looking at
 		std::shared_ptr<AnnGameObject> playerLookingAt(); //physics
+
+		///Get an AnnGameObject for the required string;
+		std::shared_ptr<AnnGameObject> getObjectFromID(std::string idString);
 
 	private:
 		friend class AnnEngine;

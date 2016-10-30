@@ -99,6 +99,7 @@ public:
 	void runLogic()
 	{
 		//AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
+		//AnnDebug() << AnnGetGameObjectManager()->getObjectFromID("SuperSinbad")->getPosition();
 	}
 
 private:
