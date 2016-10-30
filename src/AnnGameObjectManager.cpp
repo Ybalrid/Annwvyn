@@ -130,3 +130,8 @@ std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()
 
 	return nullptr; //means that we don't know what the player is looking at.
 }
+
+std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::getObjectFromID(std::string idString)
+{
+	return identifiedObjects[idString];
+}
