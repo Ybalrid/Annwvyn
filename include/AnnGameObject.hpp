@@ -192,6 +192,9 @@ namespace Annwvyn
 		///Get the ID of the Object
 		std::string getID();
 
+		///
+		std::string getName();
+
 	private:
 		///Make Annwvyn::AnnEngine access these methods :
 		friend class AnnEngine;

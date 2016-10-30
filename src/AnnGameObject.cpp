@@ -416,3 +416,8 @@ std::string AnnGameObject::getID()
 {
 	return id;
 }
+
+std::string Annwvyn::AnnGameObject::getName()
+{
+	return name;
+}

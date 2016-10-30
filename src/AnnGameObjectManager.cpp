@@ -5,6 +5,8 @@
 
 using namespace Annwvyn;
 
+unsigned long long AnnGameObjectManager::id;
+
 AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
 {
 }
@@ -20,17 +22,9 @@ void AnnGameObjectManager::update()
 	}
 }
 
-std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char entityName[], std::shared_ptr<AnnGameObject> obj)
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char entityName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
 {
 	AnnDebug("Creating a game object from the entity " + std::string(entityName));
-
-	// TOTO: either choose to throw an exception or quit the program. If it's true, there's a programing error. And "tomber en marche" is bad.
-	if (std::string(entityName).empty())
-	{
-		AnnDebug("Hey! what are you trying to do here? Please specify a non empty string for entityName !");
-		obj = nullptr;
-		return nullptr;
-	}
 
 	Ogre::Entity* ent = AnnGetEngine()->getSceneManager()->createEntity(entityName);
 	Ogre::SceneNode* node = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
@@ -47,6 +41,15 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 	AnnDebug() << "The object " << entityName << " has been created. Annwvyn memory address " << obj;
 
+	if (identifier.empty())
+	{
+		//id will be unic to every non-identified object;
+		identifier = entityName + id++;
+	}
+
+	obj->name = identifier;
+	identifiedObjects[identifier] = obj;
+
 	return obj;
 }
 
@@ -54,6 +57,7 @@ void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> objec
 {
 	AnnDebug() << "Removed object " << object.get();
 	Objects.remove(object);
+	identifiedObjects.erase(object->getName());
 }
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode* node)

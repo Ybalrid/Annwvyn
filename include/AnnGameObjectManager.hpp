@@ -25,7 +25,8 @@ namespace Annwvyn
 		///Create a game object form the name of an entity.
 		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
 		/// \param object An instance of an empty AnnGameObject. Useful for creating object of inherited class
-		std::shared_ptr<AnnGameObject> createGameObject(const char entityName[], std::shared_ptr<AnnGameObject> object = std::make_shared<AnnGameObject>()); //object factory
+		std::shared_ptr<AnnGameObject> createGameObject(const char entityName[], std::string identifier = "", std::shared_ptr<AnnGameObject> object = std::make_shared<AnnGameObject>()); //object factory
+
 		///Remove object from the manager. Object will be destroyed when no more references are in scope
 		/// \param object the object to remove
 		void removeGameObject(std::shared_ptr<AnnGameObject> object);
@@ -59,6 +60,11 @@ namespace Annwvyn
 		std::list<std::shared_ptr<AnnLightObject>> Lights;
 		///Dynamic container for Game objects present in engine
 		std::list<std::shared_ptr<AnnGameObject>> Objects;
+
+		///objects mapped to ID strings
+		std::unordered_map<std::string, std::shared_ptr<AnnGameObject>> identifiedObjects;
+
+		static unsigned long long id;
 	};
 }
 
