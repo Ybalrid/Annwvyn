@@ -23,6 +23,7 @@
 //Annwvyn
 #include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
+#include "AnnScriptManager.hpp"
 
 #include "AnnAbstractMovable.hpp"
 #pragma warning(default:4996)
@@ -99,6 +100,9 @@ namespace Annwvyn
 
 		///Get Orientation
 		AnnQuaternion getOrientation();
+
+		///Get scale
+		AnnVect3 getScale();
 
 		///Get Ogre Node
 		Ogre::SceneNode* getNode();

@@ -64,6 +64,8 @@ public:
 		levelContent.push_back(S);
 		S->playSound("media/monster.wav", true, 1);
 
+		SinbadScript = AnnGetScriptManager()->getBehaviorScript("DummyBehavior", S.get());
+
 		//Add water
 		auto Water = addGameObject("environment/Water.mesh");
 
@@ -100,11 +102,14 @@ public:
 	{
 		//AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
 		//AnnDebug() << AnnGetGameObjectManager()->getObjectFromID("SuperSinbad")->getPosition();
+		SinbadScript->update();
 	}
 
 private:
 	std::shared_ptr<GoBackToDemoHub> goBackListener;
 	//std::shared_ptr<Ann3DTextPlane> text;
+
+	std::shared_ptr<AnnBehaviorScript> SinbadScript;
 };
 
 class PhysicsDebugLevel : LEVEL

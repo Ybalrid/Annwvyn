@@ -1,0 +1,15 @@
+class DummyBehavior
+{
+	var GameObject;
+	def DummyBehavior(owner)
+	{
+		this.GameObject = owner;
+		AnnDebugLog("Dummy Behavior constructed");
+	}
+
+	def update()
+	{
+		AnnDebugLog("Dummy Behavior updated");
+		this.GameObject.setPosition(this.GameObject.getPosition() + AnnVect3(0,0.1,0));
+	}
+}

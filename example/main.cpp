@@ -53,24 +53,11 @@ AnnMain()
 
 	AnnGetScriptManager()->evalFile("script/test.chai");
 
-	auto dummyBehaviourScript = AnnGetScriptManager()->getBehaviourScript("DummyBehaviour");
-	if (dummyBehaviourScript.isValid())
-	{
-		dummyBehaviourScript.update();
-	}
-
-	auto dummyBehaviourScript2 = AnnGetScriptManager()->getBehaviourScript("DummyBehaviour2");
-	if (dummyBehaviourScript2.isValid())
-	{
-		dummyBehaviourScript2.update();
-	}
 	//stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
 	//AnnGetEngine()->startGameplayLoop();
 	do
 	{
-		dummyBehaviourScript.update();
-		dummyBehaviourScript2.update();
 	} while (AnnGetEngine()->refresh());
 
 	AnnQuit();
