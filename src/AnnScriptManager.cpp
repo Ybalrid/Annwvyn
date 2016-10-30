@@ -13,7 +13,10 @@ chai(chaiscript::Std_Lib::library())
 	AnnDebug() << "Initialized ChaiScript Std_Lib";
 	chai.add(chaiscript::fun([](const std::string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(chaiscript::fun([](const Ogre::Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Vector2& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(chaiscript::fun([](const Ogre::Quaternion& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 
 	registerApi();
 
@@ -202,29 +205,6 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Vector3 {return o->getScale(); }), "getScale");
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o, const std::string& s) {o->playSound(s); }), "playSound");
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o, const std::string& s) {o->playSound(s, true); }), "playSoundLoop");
-
-	/*
-	auto obj = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh");
-	chai.add(var(obj), "SinbadTest");
-	try {
-		chai.eval("SinbadTest.setPosition(AnnVect3(1,1,1));");
-		chai.eval(R"(var position = SinbadTest.getPosition();
-print(position.x);
-print(position.y);
-print(position.z);
-var orientation = SinbadTest.getOrientation();
-print(orientation.x);
-print(orientation.y);
-print(orientation.z);
-print(orientation.w);
-)");
-	}
-	catch (const chaiscript::exception::eval_error& ee)
-	{
-		AnnDebug() << ee.pretty_print();
-	}
-	AnnDebug() << obj->getPosition();
-	*/
 
 	chai.add(fun([](std::string id) { return AnnGetGameObjectManager()->getObjectFromID(id); }), "AnnGetGameObject");
 }
