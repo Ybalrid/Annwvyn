@@ -2,6 +2,8 @@
 #include "AnnScriptManager.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGameObject.hpp"
+#include "AnnGameObjectManager.hpp"
+#include "AnnEngine.hpp"
 
 using namespace Annwvyn;
 
@@ -10,14 +12,23 @@ chai(chaiscript::Std_Lib::library())
 {
 	AnnDebug() << "Initialized ChaiScript Std_Lib";
 	chai.add(chaiscript::fun([](const std::string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Quaternion& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+
+	registerApi();
 
 	AnnDebug() << "Using ChaiScript version : " << chai.version();
 
-	chai.eval(R"(
-	AnnDebugLog("Log function added to ChaiScript");
+	try
+	{
+		chai.eval(R"(
+	AnnDebugLog("AnnDebugLog() from chaiscript will be prefixed with \"Script - \"");
 	)");
-
-	registerApi();
+	}
+	catch (const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << logFromScript << ee.pretty_print();
+	}
 }
 
 bool Annwvyn::AnnScriptManager::evalFile(const std::string & file)
@@ -61,17 +72,22 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 
 		std::string ChaiCode{ scriptTemplate };
 		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
+		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
-		ChaiCode.replace(ChaiCode.find(std::string(scriptOwnerMarker)), scriptOwnerMarkerLen, ownerTag);
+		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
+		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
+		//ChaiCode.replace(ChaiCode.find(std::string(scriptOwnerMarker)), scriptOwnerMarkerLen, ownerTag);
 
 		//This will create a global instance of the class in the ChaiScript global space
 		chai.eval(ChaiCode);
+		auto creatorFunction = chai.eval<std::function<chaiscript::Boxed_Value(std::string)>>("create" + scriptName + std::to_string(ID));
 
 		//Now we need to get some hook to call the update on the file
 		return std::make_shared<AnnBehaviorScript>(
 			scriptName,
 			chai.eval<std::function<void(chaiscript::Boxed_Value&)>>("update"),
-			chai.eval(std::string(scriptInstanceMarker) + std::to_string(ID))
+			//chai.eval(std::string(scriptInstanceMarker) + std::to_string(ID))
+			creatorFunction(owner->getName())
 			);
 	}
 	catch (const chaiscript::exception::file_not_found_error& fnfe)
@@ -97,7 +113,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(constructor<Vector3()>(), "AnnVect3");
 	chai.add(constructor<Vector3(const float, const float, const float)>(), "AnnVect3");
 	chai.add(constructor<Vector3(const float[3])>(), "AnnVect3");
-	chai.add(constructor<Vector3(const Vector3&)>(), "AnnVect");
+	chai.add(constructor<Vector3(const Vector3&)>(), "AnnVect3");
 	// (x,y,z)
 	chai.add(fun(&Vector3::x), "x");
 	chai.add(fun(&Vector3::y), "y");
@@ -162,11 +178,11 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 != d2; }), "!=");
 
 	//Quaternions
-	chai.add(user_type<Quaternion>(), "AnnQuat");
-	chai.add(constructor<Quaternion()>(), "AnnQuat");
-	chai.add(constructor<Quaternion(const float, const float, const float, const float)>(), "AnnQuat");
-	chai.add(constructor<Quaternion(Radian, Vector3)>(), "AnnQuat");
-	chai.add(constructor<Quaternion(Vector3, Vector3, Vector3)>(), "AnnQuat");
+	chai.add(user_type<Quaternion>(), "AnnQuaternion");
+	chai.add(constructor<Quaternion()>(), "AnnQuaternion");
+	chai.add(constructor<Quaternion(const float, const float, const float, const float)>(), "AnnQuaternion");
+	chai.add(constructor<Quaternion(Radian, Vector3)>(), "AnnQuaternion");
+	chai.add(constructor<Quaternion(Vector3, Vector3, Vector3)>(), "AnnQuaternion");
 	chai.add(fun(&Quaternion::x), "x");
 	chai.add(fun(&Quaternion::y), "y");
 	chai.add(fun(&Quaternion::z), "z");
@@ -209,6 +225,8 @@ print(orientation.w);
 	}
 	AnnDebug() << obj->getPosition();
 	*/
+
+	chai.add(fun([](std::string id) { return AnnGetGameObjectManager()->getObjectFromID(id); }), "AnnGetGameObject");
 }
 
 Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :
