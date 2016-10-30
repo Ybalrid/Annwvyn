@@ -41,5 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\example\script\test.chai" />
+    <None Include="..\..\example\DummyBehavior.chai" />
   </ItemGroup>
 </Project>

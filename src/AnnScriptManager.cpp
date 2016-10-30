@@ -41,7 +41,7 @@ bool Annwvyn::AnnScriptManager::evalFile(const std::string & file)
 
 AnnScriptManager::AnnScriptID AnnScriptManager::ID{ 0 };
 
-AnnBehaviourScript Annwvyn::AnnScriptManager::getBehaviourScript(const std::string & scriptName)
+std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(const std::string & scriptName, AnnGameObject* owner)
 {
 	std::string file{ scriptName + scriptExtension };
 
@@ -51,19 +51,28 @@ AnnBehaviourScript Annwvyn::AnnScriptManager::getBehaviourScript(const std::stri
 		chai.use(file);
 
 		ID++;
+
+		std::string ownerTag;
+		if (owner)
+		{
+			ownerTag = scriptOwnerPrefix + std::to_string(ID);
+			chai.add_global(chaiscript::var(owner), ownerTag);
+		}
+
 		std::string ChaiCode{ scriptTemplate };
 		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
+		ChaiCode.replace(ChaiCode.find(std::string(scriptOwnerMarker)), scriptOwnerMarkerLen, ownerTag);
 
 		//This will create a global instance of the class in the ChaiScript global space
 		chai.eval(ChaiCode);
 
 		//Now we need to get some hook to call the update on the file
-		return AnnBehaviourScript(
+		return std::make_shared<AnnBehaviorScript>(
 			scriptName,
 			chai.eval<std::function<void(chaiscript::Boxed_Value&)>>("update"),
 			chai.eval(std::string(scriptInstanceMarker) + std::to_string(ID))
-		);
+			);
 	}
 	catch (const chaiscript::exception::file_not_found_error& fnfe)
 	{
@@ -74,7 +83,7 @@ AnnBehaviourScript Annwvyn::AnnScriptManager::getBehaviourScript(const std::stri
 		AnnDebug() << ee.pretty_print();
 	}
 
-	return AnnBehaviourScript();
+	return std::make_shared<AnnBehaviorScript>();
 }
 
 void Annwvyn::AnnScriptManager::registerApi()
@@ -168,17 +177,22 @@ void Annwvyn::AnnScriptManager::registerApi()
 
 	//TODO Add to chai a way to access useful Annwvyn components
 	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
+	chai.add(constructor<AnnGameObject(const AnnGameObject&)>(), "AnnGameObject");
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o, Ogre::Vector3 v) {o->setPosition(v); }), "setPosition");
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o, Ogre::Quaternion q) {o->setOrientation(q); }), "setOrientation");
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Vector3 {return o->getPosition(); }), "getPosition");
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Quaternion {return o->getOrientation(); }), "getOrientation");
+	chai.add(fun([](std::shared_ptr<AnnGameObject> o, Ogre::Vector3 v) {o->setScale(v); }), "setScale");
+	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Vector3 {return o->getScale(); }), "getScale");
+	chai.add(fun([](std::shared_ptr<AnnGameObject> o, const std::string& s) {o->playSound(s); }), "playSound");
+	chai.add(fun([](std::shared_ptr<AnnGameObject> o, const std::string& s) {o->playSound(s, true); }), "playSoundLoop");
 
-	///*
+	/*
 	auto obj = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh");
 	chai.add(var(obj), "SinbadTest");
 	try {
 		chai.eval("SinbadTest.setPosition(AnnVect3(1,1,1));");
-			chai.eval(R"(var position = SinbadTest.getPosition();
+		chai.eval(R"(var position = SinbadTest.getPosition();
 print(position.x);
 print(position.y);
 print(position.z);
@@ -194,16 +208,16 @@ print(orientation.w);
 		AnnDebug() << ee.pretty_print();
 	}
 	AnnDebug() << obj->getPosition();
-	//*/
+	*/
 }
 
-Annwvyn::AnnBehaviourScript::AnnBehaviourScript() :
+Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :
 	valid(false)
 
 {
 }
 
-Annwvyn::AnnBehaviourScript::AnnBehaviourScript(std::string scriptName, std::function<void(chaiscript::Boxed_Value&)> updateHook, chaiscript::Boxed_Value chaisriptInstance) :
+Annwvyn::AnnBehaviorScript::AnnBehaviorScript(std::string scriptName, std::function<void(chaiscript::Boxed_Value&)> updateHook, chaiscript::Boxed_Value chaisriptInstance) :
 	valid(true),
 	name(scriptName),
 	callUpdateOnScriptInstance(updateHook),
@@ -211,12 +225,25 @@ Annwvyn::AnnBehaviourScript::AnnBehaviourScript(std::string scriptName, std::fun
 {
 }
 
-void Annwvyn::AnnBehaviourScript::update()
+Annwvyn::AnnBehaviorScript::AnnBehaviorScript(const AnnBehaviorScript & script) :
+	valid(script.valid),
+	name(script.name),
+	ScriptObjectInstance(script.ScriptObjectInstance)
+{
+	callUpdateOnScriptInstance = (script.callUpdateOnScriptInstance);
+}
+
+AnnBehaviorScript Annwvyn::AnnBehaviorScript::operator=(const AnnBehaviorScript & script)
+{
+	return script;
+}
+
+void Annwvyn::AnnBehaviorScript::update()
 {
 	callUpdateOnScriptInstance(ScriptObjectInstance);
 }
 
-bool Annwvyn::AnnBehaviourScript::isValid()
+bool Annwvyn::AnnBehaviorScript::isValid()
 {
 	return valid;
 }

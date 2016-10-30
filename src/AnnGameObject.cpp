@@ -153,6 +153,11 @@ AnnQuaternion AnnGameObject::getOrientation()
 	return AnnQuaternion::IDENTITY;
 }
 
+AnnVect3 Annwvyn::AnnGameObject::getScale()
+{
+	return Node->getScale();
+}
+
 void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 {
 	Node = newNode;
