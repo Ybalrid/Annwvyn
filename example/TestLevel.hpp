@@ -22,6 +22,7 @@ public:
 	void atRefresh()
 	{
 		//AnnDebug() << "Sinbad position is : " << getPosition();
+		//AnnDebug() << getName();
 	}
 };
 
@@ -59,7 +60,7 @@ public:
 		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5f* AnnVect3::NEGATIVE_UNIT_Z);
 
 		//Create objects and register them as content of the level
-		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", std::make_shared<Sinbad>());
+		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "SuperSinbad", std::make_shared<Sinbad>());
 		levelContent.push_back(S);
 		S->playSound("media/monster.wav", true, 1);
 
