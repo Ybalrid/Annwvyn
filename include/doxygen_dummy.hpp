@@ -9,4 +9,7 @@ namespace std
   ///standard unique pointer from the <memory> header. Dummy redefiniton.
   template<class T> class unique_ptr{ T* dummy };
   
+  ///C++ standard string
+  class string{};
+  
 }

@@ -99,7 +99,7 @@ void AnnGameObject::translate(float x, float y, float z)
 	//Bullet
 	if (Body)
 		Body->translate(btVector3(x, y, z));
-		//OpenAL
+	//OpenAL
 	auto currentPosition = Node->getPosition();
 	updateOpenAlPos();
 }

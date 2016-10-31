@@ -8,30 +8,13 @@
 using namespace Annwvyn;
 
 AnnScriptManager::AnnScriptManager() : AnnSubSystem("ScriptManager"),
+//Initialize with compiled-in Std_Lib
 chai(chaiscript::Std_Lib::library())
 {
 	AnnDebug() << "Initialized ChaiScript Std_Lib";
-	chai.add(chaiscript::fun([](const std::string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Vector2& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Quaternion& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-
 	registerApi();
 
 	AnnDebug() << "Using ChaiScript version : " << chai.version();
-
-	try
-	{
-		chai.eval(R"(
-	AnnDebugLog("AnnDebugLog() from chaiscript will be prefixed with \"Script - \"");
-	)");
-	}
-	catch (const chaiscript::exception::eval_error& ee)
-	{
-		AnnDebug() << logFromScript << ee.pretty_print();
-	}
 }
 
 bool Annwvyn::AnnScriptManager::evalFile(const std::string & file)
@@ -64,13 +47,15 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 		//Evaluate the file containing the script class if unknown to ChaiScript yet
 		chai.use(file);
 
+		//Increment ID
 		ID++;
 
-		std::string ownerTag;
+		std::string ownerTag{ "" };
+
+		//Not giving an owner to a script that wants an owner, or calling an owner to a script that
 		if (owner)
 		{
-			ownerTag = scriptOwnerPrefix + std::to_string(ID);
-			chai.add_global(chaiscript::var(owner), ownerTag);
+			ownerTag = owner->getName();
 		}
 
 		std::string ChaiCode{ scriptTemplate };
@@ -79,7 +64,6 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
-		//ChaiCode.replace(ChaiCode.find(std::string(scriptOwnerMarker)), scriptOwnerMarkerLen, ownerTag);
 
 		//This will create a global instance of the class in the ChaiScript global space
 		chai.eval(ChaiCode);
@@ -90,9 +74,11 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 			scriptName,
 			chai.eval<std::function<void(chaiscript::Boxed_Value&)>>("update"),
 			//chai.eval(std::string(scriptInstanceMarker) + std::to_string(ID))
-			creatorFunction(owner->getName())
+			creatorFunction(ownerTag)
 			);
 	}
+
+	// FIXME I genuinely don't know if we should crash the game or just display an error about a missing or missformed script
 	catch (const chaiscript::exception::file_not_found_error& fnfe)
 	{
 		AnnDebug() << fileErrorPrefix << fnfe.what();
@@ -102,6 +88,7 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 		AnnDebug() << ee.pretty_print();
 	}
 
+	//The user should test if this script is "valid" or not. And should not do it in a looop, obviously
 	return std::make_shared<AnnBehaviorScript>();
 }
 
@@ -109,9 +96,12 @@ void Annwvyn::AnnScriptManager::registerApi()
 {
 	using namespace Ogre;
 	using namespace chaiscript;
-	//TODO Add to chai all the useful types (angles, vectors, quaternions...)
 
-	// 3D vector
+	;
+
+		//TODO Add to chai all the useful types (angles, vectors, quaternions...)
+
+		// 3D vector
 	chai.add(user_type<Vector3>(), "AnnVect3");
 	chai.add(constructor<Vector3()>(), "AnnVect3");
 	chai.add(constructor<Vector3(const float, const float, const float)>(), "AnnVect3");
@@ -213,7 +203,19 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o, const std::string& s) {o->playSound(s); }), "playSound");
 	chai.add(fun([](std::shared_ptr<AnnGameObject> o, const std::string& s) {o->playSound(s, true); }), "playSoundLoop");
 
+	//Engine API
+
 	chai.add(fun([](std::string id) { return AnnGetGameObjectManager()->getObjectFromID(id); }), "AnnGetGameObject");
+
+	chai.add(fun([](Annwvyn::level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
+
+	//Register an accessors to the engine's log
+	chai.add(chaiscript::fun([](const std::string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Vector2& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Quaternion& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(chaiscript::fun([](const Ogre::Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog")
 }
 
 Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :

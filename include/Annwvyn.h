@@ -16,6 +16,14 @@
  *
  * Annwvyn is a free and Open-Source Virtual reality development framework.
  *
+ * This site document the whole API of the engine, both internal and external.
+ * Some of the files used here aren't really part of the engine. Anything called doxygen_<something>.hpp
+ * exist just for making Doxygen generate stuff.
+ *
+ * If you are looking for the Scripting API, Annwvyn::ChaiScriptAPIDoc is the namespace you should
+ * look for. Theses are C++ functions prototypes that match the Script functions you can
+ * call, with comments.
+ *
  * <em>The project is under constant development and there isn't yet any stable
  * release available. It comes without any warranty and is distributed under the
  * terms of the MIT License agreement. Full copy of the license is available on the
