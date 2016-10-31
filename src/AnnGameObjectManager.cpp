@@ -43,7 +43,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 	if (identifier.empty())
 	{
-		//id will be unic to every non-identified object;
+		//id will be unique to every non-identified object;
 		identifier = entityName + id++;
 	}
 
