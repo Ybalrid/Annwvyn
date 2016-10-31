@@ -128,6 +128,13 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Vector3& v, Vector3 w) {return v - w; }), "-");
 	chai.add(fun([](const Vector3& vector, Real scalar) {return scalar*vector; }), "*");
 	chai.add(fun([](Vector3& vector, Real scalar) {vector *= scalar; }), "*=");
+	chai.add(fun([](Vector3& vector, Real scalar) {vector /= scalar; }), "/=");
+	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 == v2; }), "==");
+	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 != v2; }), "!=");
+	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 < v2; }), "<");
+	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 > v2; }), ">");
+	chai.add(fun([](const Vector3& v) {return v.normalisedCopy(); }), "normalizedCopy");
+
 	// conditional operators
 
 	//Angles
@@ -147,7 +154,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Degree& d1, const Radian& d2) { return d1 - d2; }), "-");
 	chai.add(fun([](Degree& d1, const Degree& d2) {d1 -= d2; }), "-=");
 	chai.add(fun([](Degree& d1, const Radian& d2) {d1 -= d2; }), "-=");
-	chai.add(fun([](const Degree& d, Real f) {return d*f; }), "*");
+	chai.add(fun([](const Degree& d, Real f) {return d * f; }), "*");
 	chai.add(fun([](Degree& d, Real f) {d *= f; }), "*=");
 	chai.add(fun([](const Degree& d, Real f) {return d / f; }), "/");
 	chai.add(fun([](Degree& d, Real f) {d /= f; }), "/=");
@@ -168,7 +175,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Radian& d1, const Degree& d2) { return d1 - d2; }), "-");
 	chai.add(fun([](Radian& d1, const Radian& d2) {d1 -= d2; }), "-=");
 	chai.add(fun([](Radian& d1, const Degree& d2) {d1 -= d2; }), "-=");
-	chai.add(fun([](const Radian& d, Real f) {return d*f; }), "*");
+	chai.add(fun([](const Radian& d, Real f) {return d * f; }), "*");
 	chai.add(fun([](Radian& d, Real f) {d *= f; }), "*=");
 	chai.add(fun([](const Radian& d, Real f) {return d / f; }), "/");
 	chai.add(fun([](Radian& d, Real f) {d /= f; }), "/=");
@@ -226,9 +233,9 @@ Annwvyn::AnnBehaviorScript::AnnBehaviorScript(std::string scriptName, std::funct
 Annwvyn::AnnBehaviorScript::AnnBehaviorScript(const AnnBehaviorScript & script) :
 	valid(script.valid),
 	name(script.name),
-	ScriptObjectInstance(script.ScriptObjectInstance)
+	ScriptObjectInstance(script.ScriptObjectInstance),
+	callUpdateOnScriptInstance(script.callUpdateOnScriptInstance)
 {
-	callUpdateOnScriptInstance = (script.callUpdateOnScriptInstance);
 }
 
 AnnBehaviorScript Annwvyn::AnnBehaviorScript::operator=(const AnnBehaviorScript & script)
