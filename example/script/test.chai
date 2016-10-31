@@ -4,12 +4,8 @@ AnnDebugLog("Try to create a Vect3");
 
 var vec = AnnVect3(3,2,1);
 var vec2 = AnnVect3(1, 2, 3);
-
 var vec3 = vec + vec2;
-
-print(vec3.x);
-print(vec3.y);
-print(vec3.z);
+AnnDebugLog(vec3);
 
 AnnDebugLog("If you can see 4 4 4 above, it means that chaiscript can add vectors now");
 var vec4 = -vec3;
@@ -17,22 +13,19 @@ print(vec4.x);
 AnnDebugLog("should see -4");
 
 var vec5 = vec3 - vec3;
-print(vec5.x);
+AnnDebugLog(vec5);
 AnnDebugLog("should see O");
 
 vec5 = vec;
-print(vec5.x)
-AnnDebugLog("should see 3");
+AnnDebugLog(vec5);
 
 var someVector = AnnVect3(1,1,1);
 someVector = someVector * 4.5;
 
-print(someVector.x);
+AnnDebugLog(someVector);
 
 someVector *= 2;
-print(someVector.x);
+AnnDebugLog(someVector);
 
-var quat = AnnQuat(AnnRadian(3.14/2), AnnVect3(0,1,0));
-print((quat*vec).x);
-
-//SinbadTest.setOrientation(quat);
+var quat = AnnQuaternion(AnnRadian(3.14/2), AnnVect3(0,1,0));
+AnnDebugLog(quat*vec);
