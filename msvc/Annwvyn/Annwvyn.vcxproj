@@ -217,6 +217,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\BtOgreExtras.h" />
     <ClInclude Include="..\..\include\BtOgreGP.h" />
     <ClInclude Include="..\..\include\BtOgrePG.h" />
+    <ClInclude Include="..\..\include\doxygen_scriptapi.hpp" />
     <ClInclude Include="..\..\include\euler.h" />
     <ClInclude Include="..\..\include\OculusInterface.hpp" />
     <ClInclude Include="..\..\include\OgreOculusRender.hpp" />
