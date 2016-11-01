@@ -101,6 +101,10 @@ void Annwvyn::AnnScriptManager::registerApi()
 	//TODO Add to chai all the useful types (angles, vectors, quaternions...)
 
 	// 3D vector
+
+	chai.add(var(&Math::PI), "PI");
+	chai.add(var(&Math::HALF_PI), "HALF_PI");
+
 	chai.add(user_type<Vector3>(), "AnnVect3");
 	chai.add(constructor<Vector3()>(), "AnnVect3");
 	chai.add(constructor<Vector3(const float, const float, const float)>(), "AnnVect3");
@@ -215,6 +219,28 @@ void Annwvyn::AnnScriptManager::registerApi()
 
 	chai.add(fun([](const Quaternion& q, const Vector3 v) {return q * v; }), "*");
 	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 * q2; }), "*");
+	chai.add(fun([](const Quaternion& q, const Real& scalar) {return q * scalar; }), "*");
+	chai.add(fun([](const Quaternion& q, size_t i) {return q[i]; }), "[]");
+	chai.add(fun([](Quaternion& q1, const Quaternion& q2) { q1 = q2; }), "=");
+	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 + q2; }), "+");
+	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 - q2; }), "-");
+	chai.add(fun([](const Quaternion& q) {return -q; }), "-");
+
+	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 == q2; }), "==");
+	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 != q2; }), "!=");
+
+	chai.add(fun([](const Quaternion& q) {return q.xAxis(); }), "xAxis");
+	chai.add(fun([](const Quaternion& q) {return q.yAxis(); }), "yAxis");
+	chai.add(fun([](const Quaternion& q) {return q.zAxis(); }), "zAxis");
+
+	chai.add(fun([](const Quaternion& q) { return q.getRoll(); }), "getRoll");
+	chai.add(fun([](const Quaternion& q) { return q.getPitch(); }), "getPitch");
+	chai.add(fun([](const Quaternion& q) { return q.getYaw(); }), "getYaw");
+
+	chai.add(fun([](const Quaternion& q) {return q.isNaN(); }), "isNaN");
+
+	chai.add(var(&Quaternion::ZERO), "AnnQuaternion_ZERO");
+	chai.add(var(&Quaternion::IDENTITY), "AnnQuaternion_IDENTITY");
 
 	//TODO Add to chai a way to access useful Annwvyn components
 	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
