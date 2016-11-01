@@ -17,104 +17,26 @@ chai(chaiscript::Std_Lib::library())
 	AnnDebug() << "Using ChaiScript version : " << chai.version();
 }
 
-bool Annwvyn::AnnScriptManager::evalFile(const std::string & file)
-{
-	try
-	{
-		chai.eval_file(file);
-	}
-	catch (const chaiscript::exception::file_not_found_error& fnfe)
-	{
-		AnnDebug() << fileErrorPrefix << fnfe.what();
-		return false;
-	}
-	catch (const chaiscript::exception::eval_error& ee)
-	{
-		AnnDebug() << fileErrorPrefix << ee.pretty_print();
-		return false;
-	}
-	return true;
-}
-
-AnnScriptManager::AnnScriptID AnnScriptManager::ID{ 0 };
-
-std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(const std::string & scriptName, AnnGameObject* owner)
-{
-	std::string file{ scriptName + scriptExtension };
-
-	try
-	{
-		//Evaluate the file containing the script class if unknown to ChaiScript yet
-		chai.use(file);
-
-		//Increment ID
-		ID++;
-
-		std::string ownerTag{ "" };
-
-		//Not giving an owner to a script that wants an owner, or calling an owner to a script that
-		if (owner)
-		{
-			ownerTag = owner->getName();
-		}
-
-		std::string ChaiCode{ scriptTemplate };
-		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
-		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
-		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
-		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
-		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
-
-		//This will create a global instance of the class in the ChaiScript global space
-		chai.eval(ChaiCode);
-		auto creatorFunction = chai.eval<std::function<chaiscript::Boxed_Value(std::string)>>("create" + scriptName + std::to_string(ID));
-
-		//Now we need to get some hook to call the update on the file
-		return std::make_shared<AnnBehaviorScript>(
-			scriptName,
-			chai.eval<std::function<void(chaiscript::Boxed_Value&)>>("update"),
-			//chai.eval(std::string(scriptInstanceMarker) + std::to_string(ID))
-			creatorFunction(ownerTag)
-			);
-	}
-
-	// FIXME I genuinely don't know if we should crash the game or just display an error about a missing or miss-formed script
-	catch (const chaiscript::exception::file_not_found_error& fnfe)
-	{
-		AnnDebug() << fileErrorPrefix << fnfe.what();
-	}
-	catch (const chaiscript::exception::eval_error& ee)
-	{
-		AnnDebug() << ee.pretty_print();
-	}
-
-	//The user should test if this script is "valid" or not. And should not do it in a loop, obviously
-	return std::make_shared<AnnBehaviorScript>();
-}
-
 void Annwvyn::AnnScriptManager::registerApi()
 {
 	using namespace Ogre;
 	using namespace chaiscript;
 	using namespace std;
 
-	//TODO Add to chai all the useful types (angles, vectors, quaternions...)
-
-	// 3D vector
+	// TODO Add to chai all the useful types (angles, vectors, quaternions...)
 
 	chai.add(var(&Math::PI), "PI");
 	chai.add(var(&Math::HALF_PI), "HALF_PI");
 
+	// 3D vector
 	chai.add(user_type<Vector3>(), "AnnVect3");
 	chai.add(constructor<Vector3()>(), "AnnVect3");
 	chai.add(constructor<Vector3(const float, const float, const float)>(), "AnnVect3");
 	chai.add(constructor<Vector3(const float[3])>(), "AnnVect3");
 	chai.add(constructor<Vector3(const Vector3&)>(), "AnnVect3");
-	// (x,y,z)
 	chai.add(fun(&Vector3::x), "x");
 	chai.add(fun(&Vector3::y), "y");
 	chai.add(fun(&Vector3::z), "z");
-	// arithmetic operators
 	chai.add(fun([](Vector3& u, const Vector3& v) {u = v; }), "=");
 	chai.add(fun([](Vector3& u, const Real s) {u = s; }), "=");
 	chai.add(fun<Vector3>(&Vector3::operator+), "+");
@@ -163,7 +85,6 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(constructor<Degree(Real)>(), "AnnDegree");
 	chai.add(constructor<Radian(const Degree&)>(), "AnnRadian");
 	chai.add(constructor<Degree(const Radian&)>(), "AnnDegree");
-
 	chai.add(fun([](const Degree& d) {return +d; }), "+");
 	chai.add(fun([](const Degree& d1, const Degree& d2) {return d1 + d2; }), "+");
 	chai.add(fun([](const Degree& d1, const Radian& d2) {return d1 + d2; }), "+");
@@ -177,14 +98,12 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](Degree& d, Real f) {d *= f; }), "*=");
 	chai.add(fun([](const Degree& d, Real f) {return d / f; }), "/");
 	chai.add(fun([](Degree& d, Real f) {d /= f; }), "/=");
-
 	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 < d2; }), "<");
 	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 > d2; }), ">");
 	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 <= d2; }), "<=");
 	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 >= d2; }), ">=");
 	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 == d2; }), "==");
 	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 != d2; }), "!=");
-
 	chai.add(fun([](const Radian& d) {return +d; }), "+");
 	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 + r2; }), "+");
 	chai.add(fun([](const Radian& r1, const Degree& r2) {return r1 + r2; }), "+");
@@ -198,7 +117,6 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](Radian& d, Real f) {d *= f; }), "*=");
 	chai.add(fun([](const Radian& d, Real f) {return d / f; }), "/");
 	chai.add(fun([](Radian& d, Real f) {d /= f; }), "/=");
-
 	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 < r2; }), "<");
 	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 > r2; }), ">");
 	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 <= r2; }), "<=");
@@ -216,7 +134,6 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun(&Quaternion::y), "y");
 	chai.add(fun(&Quaternion::z), "z");
 	chai.add(fun(&Quaternion::w), "w");
-
 	chai.add(fun([](const Quaternion& q, const Vector3 v) {return q * v; }), "*");
 	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 * q2; }), "*");
 	chai.add(fun([](const Quaternion& q, const Real& scalar) {return q * scalar; }), "*");
@@ -225,20 +142,15 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 + q2; }), "+");
 	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 - q2; }), "-");
 	chai.add(fun([](const Quaternion& q) {return -q; }), "-");
-
 	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 == q2; }), "==");
 	chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 != q2; }), "!=");
-
 	chai.add(fun([](const Quaternion& q) {return q.xAxis(); }), "xAxis");
 	chai.add(fun([](const Quaternion& q) {return q.yAxis(); }), "yAxis");
 	chai.add(fun([](const Quaternion& q) {return q.zAxis(); }), "zAxis");
-
 	chai.add(fun([](const Quaternion& q) { return q.getRoll(); }), "getRoll");
 	chai.add(fun([](const Quaternion& q) { return q.getPitch(); }), "getPitch");
 	chai.add(fun([](const Quaternion& q) { return q.getYaw(); }), "getYaw");
-
 	chai.add(fun([](const Quaternion& q) {return q.isNaN(); }), "isNaN");
-
 	chai.add(var(&Quaternion::ZERO), "AnnQuaternion_ZERO");
 	chai.add(var(&Quaternion::IDENTITY), "AnnQuaternion_IDENTITY");
 
@@ -254,27 +166,38 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](shared_ptr<AnnGameObject> o, const string& s) {o->playSound(s); }), "playSound");
 	chai.add(fun([](shared_ptr<AnnGameObject> o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
 
+	//Color
 	chai.add(user_type<AnnColor>(), "AnnColor");
 	chai.add(constructor<AnnColor(float, float, float, float)>(), "AnnColor");
 	chai.add(constructor<AnnColor(const ColourValue&)>(), "AnnColor");
+	// HACK copy constructor and operator= of AnnColor is broken
 	//chai.add(constructor<AnnColor(const AnnColor&)>, "AnnColor");
+	chai.add(fun([](AnnColor& c1, AnnColor& c2)
+	{
+		c1.setRed(c2.getRed());
+		c1.setGreen(c2.getGreen());
+		c1.setBlue(c2.getBlue());
+		c1.setAlpha(c2.getAlpha());
+	}), "=");
 	chai.add(fun([](AnnColor& color) {return color.getRed(); }), "getRed");
 	chai.add(fun([](AnnColor& color) {return color.getGreen(); }), "getGreen");
 	chai.add(fun([](AnnColor& color) {return color.getBlue(); }), "getBlue");
 	chai.add(fun([](AnnColor& color) {return color.getAlpha(); }), "getAlpha");
-
 	chai.add(fun([](AnnColor& color, float value) {return color.setRed(value); }), "setRed");
 	chai.add(fun([](AnnColor& color, float value) {return color.setGreen(value); }), "setGreen");
 	chai.add(fun([](AnnColor& color, float value) {return color.setBlue(value); }), "setBlue");
 	chai.add(fun([](AnnColor& color, float value) {return color.setAlpha(value); }), "setAlpha");
 
-	////Engine API
-
+	//Object getter
 	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getObjectFromID(id); }), "AnnGetGameObject");
-
+	//Level jumper
 	chai.add(fun([](Annwvyn::level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
+	//Changing the color of the background
+	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setWorldBackgroundColor(color); }), "AnnSetWorldBackgroundColor");
+	//Change the ambient lighting
+	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setAmbientLight(color); }), "AnnSetAmbientLight");
 
-	////Register an accessors to the engine's log
+	//Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Vector2& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
@@ -284,10 +207,92 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const AnnColor& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 }
 
+bool Annwvyn::AnnScriptManager::evalFile(const std::string & file)
+{
+	try
+	{
+		chai.eval_file(file);
+	}
+	catch (const chaiscript::exception::file_not_found_error& fnfe)
+	{
+		AnnDebug() << fileErrorPrefix << fnfe.what();
+		return false;
+	}
+	catch (const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << fileErrorPrefix << ee.pretty_print();
+		return false;
+	}
+	return true;
+}
+
+AnnScriptManager::AnnScriptID AnnScriptManager::ID{ 0 };
+
+std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(const std::string & scriptName, AnnGameObject* owner)
+{
+	std::string file{ scriptName + scriptExtension };
+
+	try
+	{
+		//Evaluate the file containing the script class if unknown to ChaiScript yet
+		chai.use(file);
+
+		//Increment ID
+		ID++;
+
+		std::string ownerTag{ "" };
+
+		//Not giving an owner to a script that wants an owner, or calling an owner to a script that
+		if (owner)
+		{
+			ownerTag = owner->getName();
+		}
+
+		//This may looks odd but it's good enough for what we're doing:
+		//Copy the template of the init code to a string
+		std::string ChaiCode{ scriptTemplate };
+		//Replace the tags with the actual values, one by one
+		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
+		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
+		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
+		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
+		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
+
+		//This will add a global function in ChaiScript, that will create and return the script instance
+		chai.eval(ChaiCode);
+		//Get a way to call this function
+		auto creatorFunction = chai.eval<std::function<chaiscript::Boxed_Value(std::string)>>("create" + scriptName + std::to_string(ID));
+
+		//Now we need to get some hook to call the update on the file
+		return std::make_shared<AnnBehaviorScript>(
+			scriptName,
+			//Function to call to update the script
+			chai.eval<std::function<void(chaiscript::Boxed_Value&)>>("update"),
+			//This return the ScriptInstance, as a Boxed_Value. We're only interested at calling something on
+			//this object, so don't need to try to unbox it. It's literally a black box for us
+			creatorFunction(ownerTag)
+			);
+	}
+
+	// TODO I genuinely don't know if we should crash the game or just display an error about a missing or miss-formed script
+	catch (const chaiscript::exception::file_not_found_error& fnfe)
+	{
+		AnnDebug() << fileErrorPrefix << fnfe.what();
+	}
+	catch (const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << ee.pretty_print();
+	}
+
+	//The user should test if this script is "valid" or not. And should not do it in a loop, obviously
+	return std::make_shared<AnnBehaviorScript>();
+}
+
 Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :
 	valid(false)
 
 {
+	AnnDebug() << "Invalid script object created";
 }
 
 Annwvyn::AnnBehaviorScript::AnnBehaviorScript(std::string scriptName, std::function<void(chaiscript::Boxed_Value&)> updateHook, chaiscript::Boxed_Value chaisriptInstance) :

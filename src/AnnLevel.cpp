@@ -24,7 +24,7 @@ void AnnLevel::unload()
 	AnnGetSceneryManager()->removeSkyDome();
 	//Remove the ambient lighting
 	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0, 0, 0));
-	//Restore the default gravit
+	//Restore the default gravity
 	AnnGetPhysicsEngine()->resetGravity();
 
 	//Remove the level lights

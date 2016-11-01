@@ -27,5 +27,11 @@ AnnDebugLog(someVector);
 someVector *= 2;
 AnnDebugLog(someVector);
 
-var quat = AnnQuaternion(AnnRadian(3.14/2), AnnVect3(0,1,0));
+var quat = AnnQuaternion(AnnRadian(HALF_PI), AnnVect3(0,1,0));
 AnnDebugLog(quat*vec);
+
+var color = AnnColor(1,0,0,1);
+AnnDebugLog(color);
+
+//AnnSetWorldBackgroundColor(color);
+//AnnSetAmbientLight(AnnColor(0,1,0,1));
