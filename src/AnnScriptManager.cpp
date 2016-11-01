@@ -96,12 +96,11 @@ void Annwvyn::AnnScriptManager::registerApi()
 {
 	using namespace Ogre;
 	using namespace chaiscript;
+	using namespace std;
 
-	;
+	//TODO Add to chai all the useful types (angles, vectors, quaternions...)
 
-		//TODO Add to chai all the useful types (angles, vectors, quaternions...)
-
-		// 3D vector
+	// 3D vector
 	chai.add(user_type<Vector3>(), "AnnVect3");
 	chai.add(constructor<Vector3()>(), "AnnVect3");
 	chai.add(constructor<Vector3(const float, const float, const float)>(), "AnnVect3");
@@ -113,19 +112,45 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun(&Vector3::z), "z");
 	// arithmetic operators
 	chai.add(fun([](Vector3& u, const Vector3& v) {u = v; }), "=");
+	chai.add(fun([](Vector3& u, const Real s) {u = s; }), "=");
 	chai.add(fun<Vector3>(&Vector3::operator+), "+");
 	chai.add(fun([](const Vector3& v) {return -v; }), "-");
 	chai.add(fun([](const Vector3& v, Vector3 w) {return v - w; }), "-");
+	chai.add(fun([](const Vector3& v, const Real w) {return v - w; }), "-");
+	chai.add(fun([](const Real& v, const Vector3& w) {return v - w; }), "-");
 	chai.add(fun([](const Vector3& vector, Real scalar) {return scalar*vector; }), "*");
+	chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1*v2; }), "*");
+	chai.add(fun([](const Vector3& vector, Real scalar) {return scalar / vector; }), "/");
+	chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1 / v2; }), "/");
+	chai.add(fun([](Vector3& u, Vector3 v) {u *= v; }), "*=");
+	chai.add(fun([](Vector3& u, Vector3 v) {u /= v; }), "/=");
+	chai.add(fun([](Vector3& u, Vector3 v) {u += v; }), "+=");
+	chai.add(fun([](Vector3& u, Vector3 v) {u -= v; }), "-=");
 	chai.add(fun([](Vector3& vector, Real scalar) {vector *= scalar; }), "*=");
 	chai.add(fun([](Vector3& vector, Real scalar) {vector /= scalar; }), "/=");
+	chai.add(fun([](Vector3& vector, Real scalar) {vector += scalar; }), "+=");
+	chai.add(fun([](Vector3& vector, Real scalar) {vector -= scalar; }), "-=");
 	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 == v2; }), "==");
 	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 != v2; }), "!=");
 	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 < v2; }), "<");
 	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 > v2; }), ">");
-	chai.add(fun([](const Vector3& v) {return v.normalisedCopy(); }), "normalizedCopy");
-
-	// conditional operators
+	chai.add(fun([](const Vector3& v, const size_t i) {return v[i]; }), "[]");
+	chai.add(fun([](Vector3& u, Vector3 v) {u.swap(v); }), "swap");
+	chai.add(fun([](const Vector3& v) {return v.length(); }), "length");
+	chai.add(fun([](const Vector3& v) {return v.normalisedCopy(); }), "normalisedCopy");
+	chai.add(fun([](const Vector3& v) {return v.squaredLength(); }), "squaredLength");
+	chai.add(fun([](const Vector3& v) {return v.perpendicular(); }), "perpendicular");
+	chai.add(fun([](const Vector3& v) {return v.primaryAxis(); }), "primaryAxis");
+	chai.add(fun([](const Vector3& v) {return v.isZeroLength(); }), "isZeroLength");
+	chai.add(fun([](const Vector3& v) {return v.isNaN(); }), "isNaN");
+	chai.add(fun([](Vector3& v) {return v.normalise(); }), "normalise");
+	chai.add(var(&Vector3::UNIT_X), "AnnVect3_UNIT_X");
+	chai.add(var(&Vector3::UNIT_Y), "AnnVect3_UNIT_Y");
+	chai.add(var(&Vector3::UNIT_Z), "AnnVect3_UNIT_Z");
+	chai.add(var(&Vector3::NEGATIVE_UNIT_X), "AnnVect3_NEGATIVE_UNIT_X");
+	chai.add(var(&Vector3::NEGATIVE_UNIT_Y), "AnnVect3_NEGATIVE_UNIT_Y");
+	chai.add(var(&Vector3::NEGATIVE_UNIT_Z), "AnnVect3_NEGATIVE_UNIT_Z");
+	chai.add(var(&Vector3::UNIT_SCALE), "AnnVect3_UNIT_SCALE");
 
 	//Angles
 	chai.add(user_type<Radian>(), "AnnRadian");
@@ -194,28 +219,28 @@ void Annwvyn::AnnScriptManager::registerApi()
 	//TODO Add to chai a way to access useful Annwvyn components
 	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
 	chai.add(constructor<AnnGameObject(const AnnGameObject&)>(), "AnnGameObject");
-	chai.add(fun([](std::shared_ptr<AnnGameObject> o, Ogre::Vector3 v) {o->setPosition(v); }), "setPosition");
-	chai.add(fun([](std::shared_ptr<AnnGameObject> o, Ogre::Quaternion q) {o->setOrientation(q); }), "setOrientation");
-	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Vector3 {return o->getPosition(); }), "getPosition");
-	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Quaternion {return o->getOrientation(); }), "getOrientation");
-	chai.add(fun([](std::shared_ptr<AnnGameObject> o, Ogre::Vector3 v) {o->setScale(v); }), "setScale");
-	chai.add(fun([](std::shared_ptr<AnnGameObject> o) -> Ogre::Vector3 {return o->getScale(); }), "getScale");
-	chai.add(fun([](std::shared_ptr<AnnGameObject> o, const std::string& s) {o->playSound(s); }), "playSound");
-	chai.add(fun([](std::shared_ptr<AnnGameObject> o, const std::string& s) {o->playSound(s, true); }), "playSoundLoop");
+	chai.add(fun([](shared_ptr<AnnGameObject> o, Vector3 v) {o->setPosition(v); }), "setPosition");
+	chai.add(fun([](shared_ptr<AnnGameObject> o, Quaternion q) {o->setOrientation(q); }), "setOrientation");
+	chai.add(fun([](shared_ptr<AnnGameObject> o) -> Vector3 {return o->getPosition(); }), "getPosition");
+	chai.add(fun([](shared_ptr<AnnGameObject> o) -> Quaternion {return o->getOrientation(); }), "getOrientation");
+	chai.add(fun([](shared_ptr<AnnGameObject> o, Vector3 v) {o->setScale(v); }), "setScale");
+	chai.add(fun([](shared_ptr<AnnGameObject> o) -> Vector3 {return o->getScale(); }), "getScale");
+	chai.add(fun([](shared_ptr<AnnGameObject> o, const string& s) {o->playSound(s); }), "playSound");
+	chai.add(fun([](shared_ptr<AnnGameObject> o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
 
 	//Engine API
 
-	chai.add(fun([](std::string id) { return AnnGetGameObjectManager()->getObjectFromID(id); }), "AnnGetGameObject");
+	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getObjectFromID(id); }), "AnnGetGameObject");
 
 	chai.add(fun([](Annwvyn::level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
 
 	//Register an accessors to the engine's log
-	chai.add(chaiscript::fun([](const std::string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Vector2& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Quaternion& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(chaiscript::fun([](const Ogre::Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog")
+	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(fun([](const Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(fun([](const Vector2& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(fun([](const Quaternion& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(fun([](const Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(fun([](const Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 }
 
 Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :
