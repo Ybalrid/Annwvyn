@@ -52,8 +52,6 @@ But, if you really want to build the engine yourself, here's a simple guide how 
 - Open Annwvyn/msvc/Annwvyn/Annwvyn.sln with Visual studio
 - Make sure the IDE is set to build in "release" "x64" mode
 - hit Ctrl+Shift+B
-- Open Annwvyn/msvc/test/test.sln
-- hit Ctrl+Shift+B
 - You need to copy a bunch of .dll in the "example" (and template) directories. You can do this automatically by launching the "getLibs.bat" scripts
     - Ogre  
         - OgreMain.dll
@@ -70,7 +68,7 @@ But, if you really want to build the engine yourself, here's a simple guide how 
     - OpenVR API client
         - openvr_api.dll
 
-If you have an Oculus Rift plugged in (or in Debug HMD mode), or a Vive with SteamVR open you can launch example/test.exe now
+If you have an Oculus Rift plugged in (or in Debug HMD mode), or a Vive with SteamVR open you can launch the example program via the HMD_launcher.bat scripts in the example directory. (using the one that correspond to your hardware)
 
 
 Using the engine
