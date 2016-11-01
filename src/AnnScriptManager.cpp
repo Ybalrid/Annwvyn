@@ -156,7 +156,8 @@ void Annwvyn::AnnScriptManager::registerApi()
 
 	//TODO Add to chai a way to access useful Annwvyn components
 	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
-	chai.add(constructor<AnnGameObject(const AnnGameObject&)>(), "AnnGameObject");
+	//Copy constructor for AnnGameObject? probably not a really good idea in retrospective
+	//chai.add(constructor<AnnGameObject(const AnnGameObject&)>(), "AnnGameObject");
 	chai.add(fun([](shared_ptr<AnnGameObject> o, Vector3 v) {o->setPosition(v); }), "setPosition");
 	chai.add(fun([](shared_ptr<AnnGameObject> o, Quaternion q) {o->setOrientation(q); }), "setOrientation");
 	chai.add(fun([](shared_ptr<AnnGameObject> o) -> Vector3 {return o->getPosition(); }), "getPosition");
