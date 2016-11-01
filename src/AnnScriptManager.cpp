@@ -78,7 +78,7 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 			);
 	}
 
-	// FIXME I genuinely don't know if we should crash the game or just display an error about a missing or missformed script
+	// FIXME I genuinely don't know if we should crash the game or just display an error about a missing or miss-formed script
 	catch (const chaiscript::exception::file_not_found_error& fnfe)
 	{
 		AnnDebug() << fileErrorPrefix << fnfe.what();
@@ -88,7 +88,7 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 		AnnDebug() << ee.pretty_print();
 	}
 
-	//The user should test if this script is "valid" or not. And should not do it in a looop, obviously
+	//The user should test if this script is "valid" or not. And should not do it in a loop, obviously
 	return std::make_shared<AnnBehaviorScript>();
 }
 
@@ -135,7 +135,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 < v2; }), "<");
 	chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 > v2; }), ">");
 	chai.add(fun([](const Vector3& v, const size_t i) {return v[i]; }), "[]");
-	chai.add(fun([](Vector3& u, Vector3 v) {u.swap(v); }), "swap");
+	chai.add(fun([](Vector3& u, Vector3& v) {u.swap(v); }), "swap");
 	chai.add(fun([](const Vector3& v) {return v.length(); }), "length");
 	chai.add(fun([](const Vector3& v) {return v.normalisedCopy(); }), "normalisedCopy");
 	chai.add(fun([](const Vector3& v) {return v.squaredLength(); }), "squaredLength");
@@ -182,25 +182,25 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 != d2; }), "!=");
 
 	chai.add(fun([](const Radian& d) {return +d; }), "+");
-	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 + d2; }), "+");
-	chai.add(fun([](const Radian& d1, const Degree& d2) {return d1 + d2; }), "+");
-	chai.add(fun([](Radian& d1, const Radian& d2) {d1 += d2; }), "+=");
+	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 + r2; }), "+");
+	chai.add(fun([](const Radian& r1, const Degree& r2) {return r1 + r2; }), "+");
+	chai.add(fun([](Radian& r1, const Radian& r2) {r1 += r2; }), "+=");
 	chai.add(fun([](const Radian& d) {return -d; }), "-");
-	chai.add(fun([](const Radian& d1, const Radian& d2) { return d1 - d2; }), "-");
-	chai.add(fun([](const Radian& d1, const Degree& d2) { return d1 - d2; }), "-");
-	chai.add(fun([](Radian& d1, const Radian& d2) {d1 -= d2; }), "-=");
-	chai.add(fun([](Radian& d1, const Degree& d2) {d1 -= d2; }), "-=");
+	chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 - r2; }), "-");
+	chai.add(fun([](const Radian& r1, const Degree& r2) { return r1 - r2; }), "-");
+	chai.add(fun([](Radian& r1, const Radian& r2) {r1 -= r2; }), "-=");
+	chai.add(fun([](Radian& r1, const Degree& r2) {r1 -= r2; }), "-=");
 	chai.add(fun([](const Radian& d, Real f) {return d * f; }), "*");
 	chai.add(fun([](Radian& d, Real f) {d *= f; }), "*=");
 	chai.add(fun([](const Radian& d, Real f) {return d / f; }), "/");
 	chai.add(fun([](Radian& d, Real f) {d /= f; }), "/=");
 
-	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 < d2; }), "<");
-	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 > d2; }), ">");
-	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 <= d2; }), "<=");
-	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 >= d2; }), ">=");
-	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 == d2; }), "==");
-	chai.add(fun([](const Radian& d1, const Radian& d2) {return d1 != d2; }), "!=");
+	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 < r2; }), "<");
+	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 > r2; }), ">");
+	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 <= r2; }), "<=");
+	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 >= r2; }), ">=");
+	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 == r2; }), "==");
+	chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 != r2; }), "!=");
 
 	//Quaternions
 	chai.add(user_type<Quaternion>(), "AnnQuaternion");
@@ -228,19 +228,34 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](shared_ptr<AnnGameObject> o, const string& s) {o->playSound(s); }), "playSound");
 	chai.add(fun([](shared_ptr<AnnGameObject> o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
 
-	//Engine API
+	chai.add(user_type<AnnColor>(), "AnnColor");
+	chai.add(constructor<AnnColor(float, float, float, float)>(), "AnnColor");
+	chai.add(constructor<AnnColor(const ColourValue&)>(), "AnnColor");
+	//chai.add(constructor<AnnColor(const AnnColor&)>, "AnnColor");
+	chai.add(fun([](AnnColor& color) {return color.getRed(); }), "getRed");
+	chai.add(fun([](AnnColor& color) {return color.getGreen(); }), "getGreen");
+	chai.add(fun([](AnnColor& color) {return color.getBlue(); }), "getBlue");
+	chai.add(fun([](AnnColor& color) {return color.getAlpha(); }), "getAlpha");
+
+	chai.add(fun([](AnnColor& color, float value) {return color.setRed(value); }), "setRed");
+	chai.add(fun([](AnnColor& color, float value) {return color.setGreen(value); }), "setGreen");
+	chai.add(fun([](AnnColor& color, float value) {return color.setBlue(value); }), "setBlue");
+	chai.add(fun([](AnnColor& color, float value) {return color.setAlpha(value); }), "setAlpha");
+
+	////Engine API
 
 	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getObjectFromID(id); }), "AnnGetGameObject");
 
 	chai.add(fun([](Annwvyn::level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
 
-	//Register an accessors to the engine's log
+	////Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Vector2& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Quaternion& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(fun([](const AnnColor& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 }
 
 Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :
