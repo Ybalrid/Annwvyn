@@ -36,6 +36,14 @@ namespace Annwvyn
 		/// \param c Color to log
 		void AnnDebugLog(const AnnColor& c);
 
+		///ScritpFunciton: Set the world's background color
+		/// \param c Color
+		void AnnSetWorldBackgroundColor(const AnnColor& c);
+
+		///ScriptFunction: Set the value of the ambient lighting
+		/// \param c Color
+		void AnnSetAmbientLight(const AnnColor& c);
+
 		///ScriptFunction: get a GameObject from it's ID
 		/// \param id The string ID of the object you want
 		std::shared_ptr<AnnGameObject> AnnGetGameObject(std::string id);

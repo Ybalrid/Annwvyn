@@ -10,7 +10,7 @@ renderer(rendererFromEngine)
 {
 }
 
-void AnnSceneryManager::setAmbiantLight(AnnColor color)
+void AnnSceneryManager::setAmbientLight(AnnColor color)
 {
 	AnnDebug() << "Setting the ambient light to color " << color;
 	smgr->setAmbientLight(color.getOgreColor());

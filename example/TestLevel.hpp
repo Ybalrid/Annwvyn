@@ -34,7 +34,7 @@ public:
 	{
 		AnnGetEventManager()->addListener(goBackListener = make_shared<GoBackToDemoHub>());
 		//Set some ambient light
-		AnnGetSceneryManager()->setAmbiantLight(AnnColor(.6f, .6f, .6f));
+		AnnGetSceneryManager()->setAmbientLight(AnnColor(.6f, .6f, .6f));
 
 		//We add our brand new 3D object
 		auto MyObject = addGameObject("MyObject.mesh");

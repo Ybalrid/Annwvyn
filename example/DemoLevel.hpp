@@ -71,7 +71,7 @@ public:
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
 
-		AnnGetSceneryManager()->setAmbiantLight(AnnColor(0.15f, 0.15f, 0.15f));
+		AnnGetSceneryManager()->setAmbientLight(AnnColor(0.15f, 0.15f, 0.15f));
 
 		AnnGetPlayer()->teleport({ 0, 1, 0 }, 0);
 	}
