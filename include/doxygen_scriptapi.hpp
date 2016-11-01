@@ -16,21 +16,25 @@ namespace Annwvyn
 		///ScriptFunction: Log a string
 		/// \param s String to log
 		void AnnDebugLog(const std::string& s);
-		///ScriptFunction: Log a string
+		///ScriptFunction: Log a 2D vector
 		/// \param v Vector to log
 		void AnnDebugLog(const Ogre::Vector2& v);
-		///ScriptFunction: Log a string
+		///ScriptFunction: Log a 3D vector
 		/// \param v Vector to log
 		void AnnDebugLog(const Ogre::Vector3& v);
-		///ScriptFunction: Log a string
+		///ScriptFunction: Log a Quaternion
 		/// \param q Quaternion to log
 		void AnnDebugLog(const Ogre::Quaternion& q);
-		///ScriptFunction: Log a string
+		///ScriptFunction: Log an angle in Radian
 		/// \param a Angle to log
 		void AnnDebugLog(const Ogre::Radian& a);
-		///ScriptFunction: Log a string
+		///ScriptFunction: Log an angle in Degree
 		/// \param a Angle to log
 		void AnnDebugLog(const Ogre::Degree& a);
+
+		///ScriptFunction: Log a color
+		/// \param c Color to log
+		void AnnDebugLog(const AnnColor& c);
 
 		///ScriptFunction: get a GameObject from it's ID
 		/// \param id The string ID of the object you want
