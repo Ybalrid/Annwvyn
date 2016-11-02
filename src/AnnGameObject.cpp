@@ -11,10 +11,10 @@ AnnGameObject::AnnGameObject() :
 	Shape(nullptr),
 	state(nullptr),
 	anim(nullptr),
+	audioSource(nullptr),
 	animIsLooping(false),
 	animIsPlaying(false),
-	animIsSetted(false),
-	audioSource(nullptr)
+	animIsSetted(false)
 {
 }
 
@@ -71,12 +71,6 @@ void Annwvyn::AnnGameObject::callUpdateOnScripts()
 void AnnGameObject::setPosition(float x, float y, float z)
 {
 	setPosition(AnnVect3{ x,y,z });
-
-	/*
-	*Position of object have to be the same in each part of the engine
-	*(graphics, physics, audio)
-	*/
-	//change BulletPosition
 }
 
 void AnnGameObject::translate(float x, float y, float z)
@@ -256,28 +250,22 @@ void AnnGameObject::updateCollisionStateWith(AnnGameObject* Object, bool updated
 
 void AnnGameObject::cleanCollisionMask()
 {
-	for (size_t i = 0; i < collisionMask.size(); i++)
-	{
-		delete collisionMask[i];
-		collisionMask.erase(collisionMask.begin() + i);
-	}
+	for (auto cm : collisionMask)
+		delete cm;
+	collisionMask.clear();
 }
 
 void AnnGameObject::resetCollisionMask()
 {
-	for (size_t i = 0; i < collisionMask.size(); i++)
-		collisionMask[i]->collisionState = false;
+	for (auto cm : collisionMask) cm->collisionState = false;
 }
 
 void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 {
-	if (Object == this) return; //Explain me how I can collide with myself o.O
-
 	struct collisionTest* tester = new collisionTest;
 
 	tester->collisionState = false;
 	tester->Object = Object;
-
 	tester->Receiver = this;
 
 	collisionMask.push_back(tester);
@@ -285,12 +273,12 @@ void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 
 void AnnGameObject::stopGettingCollisionWith(AnnGameObject* Object)
 {
-	for (size_t i = 0; i < collisionMask.size(); i++)
-		if (collisionMask[i]->Object == Object)
-		{
-			delete(collisionMask[i]);
-			collisionMask[i] = nullptr;
-		}
+	auto query = std::find_if(collisionMask.begin(), collisionMask.end(),
+							  [=](collisionTest* test) {return test->Object == Object; });
+
+	if (query == collisionMask.end()) return;
+	delete *query;
+	collisionMask.erase(query);
 }
 
 void AnnGameObject::setAnimation(const char animationName[])

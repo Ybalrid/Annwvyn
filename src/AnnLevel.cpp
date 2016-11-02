@@ -34,7 +34,6 @@ void AnnLevel::unload()
 	levelLighting.clear();
 
 	//Remove the level objects
-//	levelContentIdMap.clear()
 	for (auto obj : levelContent)
 		AnnGetGameObjectManager()->removeGameObject(obj);
 	levelContent.clear();

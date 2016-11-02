@@ -4,7 +4,6 @@
 #include "AnnEngine.hpp"
 
 using namespace Annwvyn;
-
 unsigned long long AnnGameObjectManager::id;
 
 AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
@@ -61,20 +60,14 @@ void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> objec
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode* node)
 {
-	if (!node)
-	{
-		AnnDebug("Please do not try to identify a NULL");
-		return NULL;
-	}
 	AnnDebug() << "Trying to identify object at address " << (void*)node;
 
-	//This methods only test memory address
-	for (auto object : Objects)
-		if ((void*)object->getNode() == (void*)node)
-			return object;
-	AnnDebug() << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
+	auto result = std::find_if(Objects.begin(), Objects.end(), [&](shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
+	if (result != Objects.end())
+		return *result;
 
-	return NULL;
+	AnnDebug() << "The Scene Node" << (void*)node << " doesn't belong to any AnnGameObject";
+	return nullptr;
 }
 
 void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> light)
