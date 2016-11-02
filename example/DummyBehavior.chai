@@ -1,11 +1,15 @@
 class DummyBehavior
 {
 	var OwnerName;
+
+	var OwnerRef
 	def DummyBehavior(owner)
 	{
 		this.OwnerName = owner;
 		AnnDebugLog("Dummy Behavior constructed");
 		print(this.OwnerName);
+
+		this.OwnerRef := AnnGetGameObject(this.OwnerName);
 	}
 
 	def update()

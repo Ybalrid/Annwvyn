@@ -95,6 +95,8 @@ public:
 	void unload()
 	{
 		AnnGetEventManager()->removeListener(goBackListener);
+		//Lose ownership of the script
+		SinbadScript.reset();
 		AnnLevel::unload();
 	}
 

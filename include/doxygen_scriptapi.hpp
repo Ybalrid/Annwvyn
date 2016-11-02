@@ -49,6 +49,11 @@ namespace Annwvyn
 		/// \param c Color
 		void AnnSetAmbientLight(const AnnColor& c);
 
+		///ScriptFunction: Create a game object. Will be added to the level if a level is running
+		/// \param mesh Mesh to use
+		/// \param objectName Name that the object will bear
+		void AnnCreateGameObject(std::string& mesh, const std::string& objectName);
+
 		///ScriptFunction: get a GameObject from it's ID
 		/// \param id The string ID of the object you want
 		std::shared_ptr<AnnGameObject> AnnGetGameObject(std::string id);

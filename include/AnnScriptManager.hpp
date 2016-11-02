@@ -21,6 +21,8 @@ namespace Annwvyn
 		///Copy constructor
 		AnnBehaviorScript(const AnnBehaviorScript& script);
 
+		~AnnBehaviorScript();
+
 		///Assign operator
 		AnnBehaviorScript operator=(const AnnBehaviorScript& script);
 
