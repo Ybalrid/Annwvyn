@@ -136,11 +136,13 @@ public:
 		MyObject->setPosition({ 0, 1,-5 });
 		MyObject->setUpPhysics(200, convexShape);
 
+		auto objectQueryFromNode = AnnGetGameObjectManager()->getFromNode(MyObject->getNode());
+
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		Sun->setDirection({ 0,1,-0.75 });
+		Sun->setDirection({ 0, 1, -0.75 });
 
-		AnnGetPlayer()->teleport({ 0,1,0 }, 0);
+		AnnGetPlayer()->teleport({ 0, 1, 0 }, 0);
 	}
 
 	void unload()
