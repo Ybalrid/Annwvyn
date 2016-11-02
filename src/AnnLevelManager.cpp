@@ -100,12 +100,10 @@ void Annwvyn::AnnLevelManager::addToCurrentLevel(std::shared_ptr<AnnGameObject> 
 {
 	if (!current || !obj) return;
 	current->levelContent.push_back(obj);
-	current->levelContentIdMap[obj->getName()] = obj;
 }
 
 void Annwvyn::AnnLevelManager::removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj)
 {
 	if (!current || !obj) return;
 	current->levelContent.remove(obj);
-	current->levelContentIdMap.erase(obj->getName());
 }

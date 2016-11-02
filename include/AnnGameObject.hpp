@@ -190,17 +190,11 @@ namespace Annwvyn
 		///Make the object invisible
 		void setInvisible();
 
-		///Get if object visible
-		bool isVisible();
-
-		///Set the ID of the GameObject
-		void setID(std::string ID);
-
-		///Get the ID of the Object
-		std::string getID();
-
-		///
+		///Return the name of the object
 		std::string getName();
+
+		///Attach a script to this object
+		void attachScript(const std::string& scriptName);
 
 	private:
 		///Make Annwvyn::AnnEngine access these methods :
@@ -212,9 +206,6 @@ namespace Annwvyn
 
 		///For engine : set Entity
 		void setEntity(Ogre::Entity* entity);
-
-		///For engine : set bullet world
-		void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
 
 		// TODO create animation state machine
 		///For engine : get elapsed time
@@ -244,21 +235,19 @@ namespace Annwvyn
 		bool animIsLooping;
 		Ogre::AnimationState* anim;
 
-		btDiscreteDynamicsWorld* DynamicsWorld;
 		btCollisionShape* Shape;
 		btRigidBody* Body;
-		bool bulletReady;
 
 		///AnnAudioEngine audioSource;
 		std::shared_ptr<AnnAudioSource> audioSource;
 
 		///Name of the object
 		std::string name;
-		std::string id;
 
 		///True if the object is visible
-		bool visible;
 		BtOgre::RigidBodyState *state;
+
+		std::vector<std::shared_ptr<AnnBehaviorScript>> scripts;
 
 	public:
 		///Executed after object initialization
@@ -266,6 +255,9 @@ namespace Annwvyn
 
 		///Executed at refresh time (each frames)
 		virtual void atRefresh() { return; }
+
+		///Call the update methods of all the script present in the scripts container
+		void callUpdateOnScripts();
 	};
 }
 #endif
