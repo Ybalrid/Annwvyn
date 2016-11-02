@@ -23,7 +23,7 @@ void AnnLevel::unload()
 	//Remove the sky
 	AnnGetSceneryManager()->removeSkyDome();
 	//Remove the ambient lighting
-	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0, 0, 0));
+	AnnGetSceneryManager()->setAmbientLight(AnnColor(0, 0, 0));
 	//Restore the default gravity
 	AnnGetPhysicsEngine()->resetGravity();
 

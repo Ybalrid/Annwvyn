@@ -212,6 +212,11 @@ void Annwvyn::AnnScriptManager::registerApi()
 	}
 	), "AnnRemoveGameObject");
 
+	///Change the gravity
+	chai.add(fun([](const Vector3& gravity) {AnnGetPhysicsEngine()->changeGravity(gravity); }), "AnnChangeGravity");
+	///Restore the default gravity vector
+	chai.add(fun([]() {AnnGetPhysicsEngine()->resetGravity(); }), "AnnRestoreGravity");
+
 	//Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");

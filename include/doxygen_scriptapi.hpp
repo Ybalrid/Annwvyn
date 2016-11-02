@@ -62,6 +62,13 @@ namespace Annwvyn
 		/// \param id The string ID of the object you want
 		std::shared_ptr<AnnGameObject> AnnGetGameObject(std::string id);
 
+		///ScriptFunction: set the gravity vector
+		/// \param gravity The vector to use as `g`
+		void AnnChangeGravity(const Ogre::Vector3& gravity);
+
+		///ScriptFunction: restore the gravity vector
+		void AnnRestoreGravity(void);
+
 		///ScriptFunction: Jump the level manager to another level
 		/// \param id The ID number of the level
 		void AnnJumpLevel(Annwvyn::level_id id);
