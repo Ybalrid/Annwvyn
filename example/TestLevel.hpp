@@ -97,19 +97,18 @@ public:
 		AnnGetEventManager()->removeListener(goBackListener);
 		//Lose ownership of the script
 		SinbadScript.reset();
+
+		//Do the normal unloading
 		AnnLevel::unload();
 	}
 
 	void runLogic()
 	{
-		//AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
-		//AnnDebug() << AnnGetGameObjectManager()->getObjectFromID("SuperSinbad")->getPosition();
 		SinbadScript->update();
 	}
 
 private:
 	std::shared_ptr<GoBackToDemoHub> goBackListener;
-	//std::shared_ptr<Ann3DTextPlane> text;
 
 	std::shared_ptr<AnnBehaviorScript> SinbadScript;
 };
