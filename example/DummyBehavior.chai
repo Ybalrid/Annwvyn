@@ -1,11 +1,16 @@
 class DummyBehavior
 {
 	var OwnerRef
+	var count
+	var otherCount;
 	def DummyBehavior(ownerTag)
 	{
+		this.count = 0;
+		this.otherCount = 0;
 		AnnDebugLog("Dummy Behavior constructed");
 		print(ownerTag);
 		this.OwnerRef := AnnGetGameObject(ownerTag);
+
 	}
 
 	def update()
@@ -14,5 +19,38 @@ class DummyBehavior
 
 		AnnDebugLog(this.OwnerRef.getPosition());
 		AnnDebugLog(this.OwnerRef.getOrientation());
+
+		++this.otherCount;
+		if(this.otherCount > 60)
+		{
+			this.otherCount = 0;
+
+			this.count = ++this.count;
+			if(this.count >= 2)
+			{
+				this.count = 0;
+			}
+
+			var vect;
+			if(this.count == 0)
+			{
+				vect = AnnVect3(-1, 0, 0);
+			}
+			if(this.count == 1)
+			{
+				vect = AnnVect3(0, 0, -1);
+			}
+			if(this.count == 2)
+			{
+				vect = AnnVect3(1, 0, 0);
+			}
+			if(this.count == 3)
+			{
+				vect = AnnVect3(0, 0, 1);
+			}
+
+			AnnChangeGravity(vect);
+		}
+
 	}
 }
