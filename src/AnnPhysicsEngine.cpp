@@ -13,7 +13,8 @@ CollisionConfiguration(nullptr),
 Solver(nullptr),
 DynamicsWorld(nullptr),
 debugDrawer(nullptr),
-playerRigidBodyState(nullptr)
+playerRigidBodyState(nullptr),
+defaultGravity(0, -9.81f, 0)
 {
 	//Initialize the Bullet world
 	Broadphase = new btDbvtBroadphase();
@@ -24,7 +25,7 @@ playerRigidBodyState(nullptr)
 	AnnDebug() << "btDiscreteDynamicsWorld instantiated";
 
 	//Set gravity vector
-	DynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+	DynamicsWorld->setGravity(defaultGravity.getBtVector());
 	AnnDebug("Gravity vector = (0, -9.81f, 0)");
 
 	debugPhysics = false;//by default
@@ -198,6 +199,11 @@ void AnnPhysicsEngine::processTriggersContacts()
 void AnnPhysicsEngine::changeGravity(AnnVect3 gravity)
 {
 	DynamicsWorld->setGravity(gravity.getBtVector());
+}
+
+void Annwvyn::AnnPhysicsEngine::resetGravity()
+{
+	changeGravity(defaultGravity);
 }
 
 void AnnPhysicsEngine::update()

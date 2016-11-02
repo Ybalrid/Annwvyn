@@ -74,6 +74,9 @@ namespace Annwvyn
 		///Change the gravity vector
 		void changeGravity(AnnVect3 gravity);
 
+		///Restore the default gravity
+		void resetGravity();
+
 	private:
 
 		friend class AnnEngine;
@@ -98,6 +101,8 @@ namespace Annwvyn
 		AnnGameObjectList& gameObjects;
 		AnnTriggerObjectList& triggerObjects;
 		std::shared_ptr<AnnPlayer> playerObject;
+
+		AnnVect3 defaultGravity;
 	};
 }
 
