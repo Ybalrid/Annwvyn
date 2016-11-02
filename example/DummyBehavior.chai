@@ -1,23 +1,18 @@
 class DummyBehavior
 {
-	var OwnerName;
-
 	var OwnerRef
-	def DummyBehavior(owner)
+	def DummyBehavior(ownerTag)
 	{
-		this.OwnerName = owner;
 		AnnDebugLog("Dummy Behavior constructed");
-		print(this.OwnerName);
-
-		this.OwnerRef := AnnGetGameObject(this.OwnerName);
+		print(ownerTag);
+		this.OwnerRef := AnnGetGameObject(ownerTag);
 	}
 
 	def update()
 	{
 		AnnDebugLog("Dummy Behavior updated");
 
-		var Object := AnnGetGameObject(this.OwnerName);
-		AnnDebugLog(Object.getPosition());
-		AnnDebugLog(Object.getOrientation());
+		AnnDebugLog(this.OwnerRef.getPosition());
+		AnnDebugLog(this.OwnerRef.getOrientation());
 	}
 }

@@ -65,6 +65,8 @@ public:
 		S->playSound("media/monster.wav", true, 1);
 
 		SinbadScript = AnnGetScriptManager()->getBehaviorScript("DummyBehavior", S.get());
+		//S->getBody()->setMassProps(0.0001f, btVector3(0,0,0));
+		AnnGetPhysicsEngine()->changeGravity(btVector3(0, 0, 0));
 
 		//Add water
 		auto Water = addGameObject("environment/Water.mesh");
