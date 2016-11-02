@@ -23,7 +23,7 @@ AnnGameObject::AnnGameObject() :
 
 AnnGameObject::~AnnGameObject()
 {
-	AnnDebug() << "Destructing game object !";
+	AnnDebug() << "Destructing game object " << getName() << " !";
 	//Clean OpenAL de-aloc
 	if (AnnGetAudioEngine())
 		AnnGetAudioEngine()->removeSource(audioSource);

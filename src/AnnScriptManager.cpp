@@ -156,8 +156,6 @@ void Annwvyn::AnnScriptManager::registerApi()
 
 	//TODO Add to chai a way to access useful Annwvyn components
 	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
-	//Copy constructor for AnnGameObject? probably not a really good idea in retrospective
-	//chai.add(constructor<AnnGameObject(const AnnGameObject&)>(), "AnnGameObject");
 	chai.add(fun([](shared_ptr<AnnGameObject> o, Vector3 v) {o->setPosition(v); }), "setPosition");
 	chai.add(fun([](shared_ptr<AnnGameObject> o, Quaternion q) {o->setOrientation(q); }), "setOrientation");
 	chai.add(fun([](shared_ptr<AnnGameObject> o) -> Vector3 {return o->getPosition(); }), "getPosition");
@@ -197,6 +195,24 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setWorldBackgroundColor(color); }), "AnnSetWorldBackgroundColor");
 	//Change the ambient lighting
 	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setAmbientLight(color); }), "AnnSetAmbientLight");
+	//Create a GameObject form ChaiScript
+	chai.add(fun([](const std::string& mesh, const std::string& objectName)
+			 -> void
+	{
+		AnnGetLevelManager()->addToCurrentLevel
+		(
+			AnnGetGameObjectManager()->createGameObject(mesh.c_str(), objectName)
+		);
+	}), "AnnCreateGameObject");
+	//Remove object
+	chai.add(fun([](const std::string& objectName)
+			 -> void
+	{
+		auto obj = AnnGetGameObjectManager()->getObjectFromID(objectName);
+		if (!obj) return void();
+		AnnGetGameObjectManager()->removeGameObject(obj);
+	}
+	), "AnnRemoveGameObject");
 
 	//Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
@@ -245,9 +261,7 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 
 		//Not giving an owner to a script that wants an owner, or calling an owner to a script that
 		if (owner)
-		{
 			ownerTag = owner->getName();
-		}
 
 		//This may looks odd but it's good enough for what we're doing:
 		//Copy the template of the init code to a string
@@ -312,6 +326,11 @@ Annwvyn::AnnBehaviorScript::AnnBehaviorScript(const AnnBehaviorScript & script) 
 {
 }
 
+Annwvyn::AnnBehaviorScript::~AnnBehaviorScript()
+{
+	AnnDebug() << "Destructing " << name << "Script";
+}
+
 AnnBehaviorScript Annwvyn::AnnBehaviorScript::operator=(const AnnBehaviorScript & script)
 {
 	return script;
@@ -319,7 +338,7 @@ AnnBehaviorScript Annwvyn::AnnBehaviorScript::operator=(const AnnBehaviorScript 
 
 void Annwvyn::AnnBehaviorScript::update()
 {
-	callUpdateOnScriptInstance(ScriptObjectInstance);
+	callUpdateOnScript();
 }
 
 bool Annwvyn::AnnBehaviorScript::isValid()

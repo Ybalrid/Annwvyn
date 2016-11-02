@@ -45,6 +45,7 @@ namespace Annwvyn
 		virtual void runLogic() = 0;
 
 	protected:
+		friend class AnnLevelManager;
 		AnnGameObjectList levelContent;
 		AnnLightList levelLighting;
 		AnnTriggerObjectList levelTrigger;

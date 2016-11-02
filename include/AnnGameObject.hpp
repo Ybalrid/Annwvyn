@@ -54,6 +54,8 @@ namespace Annwvyn
 
 		///Class constructor
 		AnnGameObject();
+
+		///Deleted AnnGameObject Copy Constructor
 		AnnGameObject(const AnnGameObject&) = delete;
 
 		///Class Destructor. Virtual.

@@ -35,3 +35,18 @@ AnnDebugLog(color);
 
 //AnnSetWorldBackgroundColor(color);
 //AnnSetAmbientLight(AnnColor(0,1,0,1));
+
+
+//Super dupper important : NEVER EVER HOLD A REFERENCE TO A GAME OBJECT IN THIS GLOBAL SPACE !!!
+//This is why we're using a "testStuff" function here.
+
+def testStuff()
+{
+	AnnCreateGameObject("Sinbad.mesh", "SinbadByScript");
+	var object := AnnGetGameObject("SinbadByScript");
+	object.setScale(AnnVect3(0.1,0.1,0.1));
+	object.setPosition(AnnVect3(0,1,0));
+	AnnRemoveGameObject("SinbadByScript");
+}
+
+testStuff();
