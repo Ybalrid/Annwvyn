@@ -51,7 +51,7 @@ namespace Annwvyn
 		///Get the AnnGameObject the player is looking at
 		std::shared_ptr<AnnGameObject> playerLookingAt(); //physics
 
-		///Get an AnnGameObject for the required string;
+		///Get an AnnGameObject for the required string; return nullptr if object cannot be found
 		std::shared_ptr<AnnGameObject> getObjectFromID(std::string idString);
 
 	private:

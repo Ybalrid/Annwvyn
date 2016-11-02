@@ -133,5 +133,9 @@ std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()
 
 std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::getObjectFromID(std::string idString)
 {
-	return identifiedObjects[idString];
+//	return identifiedObjects[idString];
+	auto object = identifiedObjects.find(idString);
+	if (object != identifiedObjects.end())
+		return object->second;
+	return nullptr;
 }

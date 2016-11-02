@@ -197,7 +197,6 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setAmbientLight(color); }), "AnnSetAmbientLight");
 	//Create a GameObject form ChaiScript
 	chai.add(fun([](const std::string& mesh, const std::string& objectName)
-			 -> void
 	{
 		AnnGetLevelManager()->addToCurrentLevel
 		(
@@ -206,10 +205,9 @@ void Annwvyn::AnnScriptManager::registerApi()
 	}), "AnnCreateGameObject");
 	//Remove object
 	chai.add(fun([](const std::string& objectName)
-			 -> void
 	{
 		auto obj = AnnGetGameObjectManager()->getObjectFromID(objectName);
-		if (!obj) return void();
+		if (!obj) return;
 		AnnGetGameObjectManager()->removeGameObject(obj);
 	}
 	), "AnnRemoveGameObject");
