@@ -63,8 +63,7 @@ public:
 		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "SuperSinbad", std::make_shared<Sinbad>());
 		levelContent.push_back(S);
 		S->playSound("media/monster.wav", true, 1);
-
-		SinbadScript = AnnGetScriptManager()->getBehaviorScript("DummyBehavior", S.get());
+		S->attachScript("DummyBehavior");
 
 		//Add water
 		auto Water = addGameObject("environment/Water.mesh");
@@ -95,8 +94,6 @@ public:
 	void unload()
 	{
 		AnnGetEventManager()->removeListener(goBackListener);
-		//Lose ownership of the script
-		SinbadScript.reset();
 
 		//Do the normal unloading
 		AnnLevel::unload();
@@ -104,13 +101,10 @@ public:
 
 	void runLogic()
 	{
-		SinbadScript->update();
 	}
 
 private:
 	std::shared_ptr<GoBackToDemoHub> goBackListener;
-
-	std::shared_ptr<AnnBehaviorScript> SinbadScript;
 };
 
 class PhysicsDebugLevel : LEVEL

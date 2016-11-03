@@ -7,6 +7,8 @@ class DummyBehavior
 		this.otherCount = 0;
 		AnnDebugLog("Dummy Behavior constructed");
 		print(ownerTag);
+
+		//I have to manage the fact that holding a reference to this object don't mess up the object deletion
 		this.OwnerRef := AnnGetGameObject(ownerTag);
 
 	}
