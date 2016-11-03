@@ -41,7 +41,7 @@ public:
 		MyObject->setPosition(5, 1, 0);//We put it 5 meters to the right, and 1 meter up...
 		//MyObject->setUpPhysics(); // <---- This activate the physics for the object as static geometry
 		MyObject->setUpPhysics(100, convexShape); // <------- this activate the physics as a dynamic object. We need to tell the shape approximation to use. and a mass in Kg
-
+		MyObject->attachScript("DummyBehavior");
 		//The shape approximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
 
 		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Accent test: 'é' Hello, Virtual World!\nthis is one line only one line only", 128, 96.0f, "LibSerif", "LiberationSerif-regular.ttf");
