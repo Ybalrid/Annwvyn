@@ -1,6 +1,6 @@
 class DummyBehavior
 {
-	var OwnerRef
+	attr OwnerRef
 	def DummyBehavior(ownerTag)
 	{
 		this.count = 0;
@@ -9,6 +9,7 @@ class DummyBehavior
 		print(ownerTag);
 
 		//I have to manage the fact that holding a reference to this object don't mess up the object deletion
+		//Hey, it works now! :-D
 		this.OwnerRef := AnnGetGameObject(ownerTag);
 
 	}
