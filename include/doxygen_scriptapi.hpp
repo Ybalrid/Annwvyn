@@ -60,7 +60,7 @@ namespace Annwvyn
 
 		///ScriptFunction: get a GameObject from it's ID
 		/// \param id The string ID of the object you want
-		std::shared_ptr<AnnGameObject> AnnGetGameObject(std::string id);
+		AnnGameObject* AnnGetGameObject(std::string id);
 
 		///ScriptFunction: set the gravity vector
 		/// \param gravity The vector to use as `g`
