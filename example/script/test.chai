@@ -49,4 +49,4 @@ def testStuff()
 	AnnRemoveGameObject("SinbadByScript");
 }
 
-testStuff();
+//testStuff();

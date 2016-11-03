@@ -156,14 +156,14 @@ void Annwvyn::AnnScriptManager::registerApi()
 
 	//TODO Add to chai a way to access useful Annwvyn components
 	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
-	chai.add(fun([](shared_ptr<AnnGameObject> o, Vector3 v) {o->setPosition(v); }), "setPosition");
-	chai.add(fun([](shared_ptr<AnnGameObject> o, Quaternion q) {o->setOrientation(q); }), "setOrientation");
-	chai.add(fun([](shared_ptr<AnnGameObject> o) -> Vector3 {return o->getPosition(); }), "getPosition");
-	chai.add(fun([](shared_ptr<AnnGameObject> o) -> Quaternion {return o->getOrientation(); }), "getOrientation");
-	chai.add(fun([](shared_ptr<AnnGameObject> o, Vector3 v) {o->setScale(v); }), "setScale");
-	chai.add(fun([](shared_ptr<AnnGameObject> o) -> Vector3 {return o->getScale(); }), "getScale");
-	chai.add(fun([](shared_ptr<AnnGameObject> o, const string& s) {o->playSound(s); }), "playSound");
-	chai.add(fun([](shared_ptr<AnnGameObject> o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
+	chai.add(fun([](AnnGameObject* o, Vector3 v) {o->setPosition(v); }), "setPosition");
+	chai.add(fun([](AnnGameObject* o, Quaternion q) {o->setOrientation(q); }), "setOrientation");
+	chai.add(fun([](AnnGameObject* o) -> Vector3 {return o->getPosition(); }), "getPosition");
+	chai.add(fun([](AnnGameObject* o) -> Quaternion {return o->getOrientation(); }), "getOrientation");
+	chai.add(fun([](AnnGameObject* o, Vector3 v) {o->setScale(v); }), "setScale");
+	chai.add(fun([](AnnGameObject* o) -> Vector3 {return o->getScale(); }), "getScale");
+	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s); }), "playSound");
+	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
 
 	//Color
 	chai.add(user_type<AnnColor>(), "AnnColor");
@@ -188,7 +188,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](AnnColor& color, float value) {return color.setAlpha(value); }), "setAlpha");
 
 	//Object getter
-	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getObjectFromID(id); }), "AnnGetGameObject");
+	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getObjectFromID(id).get(); }), "AnnGetGameObject");
 	//Level jumper
 	chai.add(fun([](Annwvyn::level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
 	//Changing the color of the background
@@ -341,7 +341,15 @@ AnnBehaviorScript Annwvyn::AnnBehaviorScript::operator=(const AnnBehaviorScript 
 
 void Annwvyn::AnnBehaviorScript::update()
 {
-	callUpdateOnScript();
+	try
+	{
+		callUpdateOnScript();
+	}
+	catch (const chaiscript::exception::eval_error& ee)
+	{
+		std::cerr << "Update script - " << ee.pretty_print();
+		//will not crash here.
+	}
 }
 
 bool Annwvyn::AnnBehaviorScript::isValid()
