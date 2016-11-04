@@ -81,6 +81,7 @@ namespace Annwvyn
 		std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> callTriggerEventOnScriptInstance;
 		std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> callHandControllertOnScriptInstance;
 
+		bool cannotKey, cannotMouse, cannotStick, cannotTime, cannotTrigger, cannotHand;
 		///Just call the update on the instance
 		inline void callUpdateOnScript() { callUpdateOnScriptInstance(ScriptObjectInstance); }
 	};
