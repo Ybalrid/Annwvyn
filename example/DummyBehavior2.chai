@@ -12,6 +12,6 @@ class DummyBehavior2
 
 	def KeyEvent(event)
 	{
-		AnnDebugLog("Some key event hapened");
+		AnnDebugLog("Some key event happened");
 	}
 }
