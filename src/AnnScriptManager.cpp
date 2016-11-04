@@ -401,7 +401,13 @@ Annwvyn::AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
 	callStickEventOnScriptInstance(StickEventHook),
 	callTriggerEventOnScriptInstance(TriggerEventHook),
 	callHandControllertOnScriptInstance(HandControllertHook),
-	ScriptObjectInstance(chaisriptInstance)
+	ScriptObjectInstance(chaisriptInstance),
+	cannotKey(false),
+	cannotMouse(false),
+	cannotStick(false),
+	cannotTime(false),
+	cannotTrigger(false),
+	cannotHand(false)
 {
 }
 
@@ -456,58 +462,58 @@ void Annwvyn::AnnBehaviorScript::KeyEvent(AnnKeyEvent e)
 {
 	try
 	{
-		if (callKeyEventOnScriptInstance)
+		if (callKeyEventOnScriptInstance && !cannotKey)
 			callKeyEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) {}
+	catch (const chaiscript::exception::dispatch_error&) { cannotKey = true; }
 }
 
 void Annwvyn::AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
 {
 	try
 	{
-		if (callMouseEventOnScriptInstance)
+		if (callMouseEventOnScriptInstance && !cannotMouse)
 			callMouseEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) {}
+	catch (const chaiscript::exception::dispatch_error&) { cannotMouse = true; }
 }
 
 void Annwvyn::AnnBehaviorScript::StickEvent(AnnStickEvent e)
 {
 	try
 	{
-		if (callStickEventOnScriptInstance)
+		if (callStickEventOnScriptInstance && !cannotStick)
 			callStickEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) {}
+	catch (const chaiscript::exception::dispatch_error&) { cannotStick = true; }
 }
 
 void Annwvyn::AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
 {
 	try
 	{
-		if (callTimeEventOnScriptInstance)
+		if (callTimeEventOnScriptInstance && !cannotTime)
 			callTimeEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) {}
+	catch (const chaiscript::exception::dispatch_error&) { cannotTime = true; }
 }
 
 void Annwvyn::AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
 {
 	try
 	{
-		if (callTriggerEventOnScriptInstance)
+		if (callTriggerEventOnScriptInstance && cannotTrigger)
 			callTriggerEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) {}
+	catch (const chaiscript::exception::dispatch_error&) { cannotTrigger = true; }
 }
 
 void Annwvyn::AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
 {
 	try
 	{
-		if (callHandControllertOnScriptInstance)
+		if (callHandControllertOnScriptInstance && cannotHand)
 			callHandControllertOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) {}
+	catch (const chaiscript::exception::dispatch_error&) { cannotHand = true; }
 }
