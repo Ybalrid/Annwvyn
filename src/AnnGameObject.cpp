@@ -132,16 +132,12 @@ void AnnGameObject::setScale(float x, float y, float z)
 
 AnnVect3 AnnGameObject::getPosition()
 {
-	if (Node != nullptr)
-		return Node->getPosition();
-	return AnnVect3::ZERO;
+	return Node->getPosition();
 }
 
 AnnQuaternion AnnGameObject::getOrientation()
 {
-	if (Node != nullptr)
-		return Node->getOrientation();
-	return AnnQuaternion::IDENTITY;
+	return Node->getOrientation();
 }
 
 AnnVect3 Annwvyn::AnnGameObject::getScale()
@@ -161,7 +157,6 @@ void AnnGameObject::setEntity(Ogre::Entity* newEntity)
 
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
-	if (!Node || !Entity) return;
 	//init shape converter
 	BtOgre::StaticMeshToShapeConverter converter(Entity);
 
