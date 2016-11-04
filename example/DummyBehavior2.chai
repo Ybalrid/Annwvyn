@@ -1,0 +1,17 @@
+class DummyBehavior2
+{
+	def DummyBehavior2(ownerTag)
+	{
+		AnnDebugLog("Dummy Behavior constructed");
+	}
+
+	def update()
+	{
+		//AnnDebugLog("Dummy Behavior updated");
+	}
+
+	def KeyEvent(event)
+	{
+		AnnDebugLog("Some key event hapened");
+	}
+}

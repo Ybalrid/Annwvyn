@@ -5,18 +5,27 @@
 
 #include "systemMacro.h"
 #include "AnnSubsystem.hpp"
+#include "AnnEventManager.hpp"
 
 namespace Annwvyn
 {
 	class AnnGameObject;
-	class DLL AnnBehaviorScript
+	class DLL AnnBehaviorScript : LISTENER
 	{
 	public:
 		///Invalid script constructor
 		AnnBehaviorScript();
 
 		///Callable script constructor
-		AnnBehaviorScript(std::string name, std::function<void(chaiscript::Boxed_Value&)> updateHook, chaiscript::Boxed_Value chaisriptInstance);
+		AnnBehaviorScript(std::string name,
+						  std::function<void(chaiscript::Boxed_Value&)> updateHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
+						  chaiscript::Boxed_Value chaisriptInstance);
 
 		///Copy constructor
 		AnnBehaviorScript(const AnnBehaviorScript& script);
@@ -33,6 +42,25 @@ namespace Annwvyn
 		///Return true if the script is valid. If the object is in a state where this returns false, calling "update" on it will crash
 		bool isValid();
 
+		///register this object as an event listener
+		void registerAsListener();
+
+		///unregister this object as an event listener
+		void unregisterAsListener();
+
+		///Event from the keyboard
+		void KeyEvent(AnnKeyEvent e);
+		///Event from the mouse
+		void MouseEvent(AnnMouseEvent e);
+		///Event for a Joystick
+		void StickEvent(AnnStickEvent e);
+		///Event from a timer
+		void TimeEvent(AnnTimeEvent e);
+		///Event from a trigger
+		void TriggerEvent(AnnTriggerEvent e);
+		///Event from an HandController
+		void HandControllerEvent(AnnHandControllerEvent e);
+
 	private:
 		///Validity state of this object. Cannot change.
 		const bool valid;
@@ -45,6 +73,13 @@ namespace Annwvyn
 
 		///The "update" function. ChaiScript "object.update()" is like calling "update(object)"
 		std::function<void(chaiscript::Boxed_Value&)> callUpdateOnScriptInstance;
+
+		std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> callKeyEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> callMouseEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> callStickEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> callTimeEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> callTriggerEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> callHandControllertOnScriptInstance;
 
 		///Just call the update on the instance
 		inline void callUpdateOnScript() { callUpdateOnScriptInstance(ScriptObjectInstance); }
@@ -120,5 +155,15 @@ def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
 
 		///Static counter that will be incremented at each script creation
 		static AnnScriptID ID;
+
+		///To create the event hooks for the scripts :
+		std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> callKeyEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> callMouseEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> callStickEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> callTimeEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> callTriggerEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> callHandControllertOnScriptInstance;
+
+		void tryAndGetEventHooks();
 	};
 }

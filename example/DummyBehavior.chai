@@ -16,10 +16,12 @@ class DummyBehavior
 
 	def update()
 	{
-		AnnDebugLog("Dummy Behavior updated");
+		//AnnDebugLog("Dummy Behavior updated");
 
-		AnnDebugLog(this.OwnerRef.getPosition());
-		AnnDebugLog(this.OwnerRef.getOrientation());
+		/*AnnDebugLog(this.OwnerRef.getPosition());
+		AnnDebugLog(this.OwnerRef.getOrientation());*/
+
+		//this.methodThatDontExist();
 
 	}
 }

@@ -217,6 +217,14 @@ void Annwvyn::AnnScriptManager::registerApi()
 	///Restore the default gravity vector
 	chai.add(fun([]() {AnnGetPhysicsEngine()->resetGravity(); }), "AnnRestoreGravity");
 
+	///Add the types of the event representation object
+	chai.add(user_type<AnnKeyEvent>(), "AnnKeyEvent");
+	chai.add(user_type<AnnMouseEvent>(), "AnnMouseEvent");
+	chai.add(user_type<AnnStickEvent>(), "AnnStickEvent");
+	chai.add(user_type<AnnTimeEvent>(), "AnnTimeEvent");
+	chai.add(user_type<AnnKeyEvent>(), "AnnTriggerEvent");
+	chai.add(user_type<AnnKeyEvent>(), "AnnHandControllerEvent");
+
 	//Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
@@ -225,6 +233,58 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const AnnColor& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+}
+
+void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
+{
+	try
+	{
+		callKeyEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)>>("KeyEvent");
+	}
+	catch (const chaiscript::exception::eval_error&)
+	{
+		callKeyEventOnScriptInstance = nullptr;
+	}
+	try
+	{
+		callMouseEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)>>("MouseEvent");
+	}
+	catch (const chaiscript::exception::eval_error&)
+	{
+		callMouseEventOnScriptInstance = nullptr;
+	}
+	try
+	{
+		callStickEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)>>("StickEvent");
+	}
+	catch (const chaiscript::exception::eval_error&)
+	{
+		callStickEventOnScriptInstance = nullptr;
+	}
+	try
+	{
+		callTimeEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)>>("TimeEvent");
+	}
+	catch (const chaiscript::exception::eval_error&)
+	{
+		callTimeEventOnScriptInstance = nullptr;
+	}
+	try
+	{
+		callTriggerEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)>>("TriggerEvent");
+	}
+	catch (const chaiscript::exception::eval_error&)
+	{
+		callTriggerEventOnScriptInstance = nullptr;
+	}
+	try
+	{
+		callHandControllertOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)>>("HandControllerEvent");
+	}
+	catch (const chaiscript::exception::eval_error&)
+	{
+		callHandControllertOnScriptInstance = nullptr;
+	}
 }
 
 bool Annwvyn::AnnScriptManager::evalFile(const std::string & file)
@@ -276,6 +336,8 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 
+		tryAndGetEventHooks();
+
 		//This will add a global function in ChaiScript, that will create and return the script instance
 		chai.eval(ChaiCode);
 		//Get a way to call this function
@@ -286,6 +348,15 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 			scriptName,
 			//Function to call to update the script
 			chai.eval<std::function<void(chaiscript::Boxed_Value&)>>("update"),
+
+			//Eventual event hooks
+			callKeyEventOnScriptInstance,
+			callMouseEventOnScriptInstance,
+			callStickEventOnScriptInstance,
+			callTimeEventOnScriptInstance,
+			callTriggerEventOnScriptInstance,
+			callHandControllertOnScriptInstance,
+
 			//This return the ScriptInstance, as a Boxed_Value. We're only interested at calling something on
 			//this object, so don't need to try to unbox it. It's literally a black box for us
 			creatorFunction(ownerTag)
@@ -313,10 +384,23 @@ Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :
 	AnnDebug() << "Invalid script object created";
 }
 
-Annwvyn::AnnBehaviorScript::AnnBehaviorScript(std::string scriptName, std::function<void(chaiscript::Boxed_Value&)> updateHook, chaiscript::Boxed_Value chaisriptInstance) :
+Annwvyn::AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
+											  std::function<void(chaiscript::Boxed_Value&)> updateHook,
+											  std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
+											  std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
+											  std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+											  std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
+											  std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
+											  std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
+											  chaiscript::Boxed_Value chaisriptInstance) : constructListener(),
 	valid(true),
 	name(scriptName),
 	callUpdateOnScriptInstance(updateHook),
+	callKeyEventOnScriptInstance(KeyEventHook),
+	callMouseEventOnScriptInstance(MouseEventHook),
+	callStickEventOnScriptInstance(StickEventHook),
+	callTriggerEventOnScriptInstance(TriggerEventHook),
+	callHandControllertOnScriptInstance(HandControllertHook),
 	ScriptObjectInstance(chaisriptInstance)
 {
 }
@@ -355,4 +439,75 @@ void Annwvyn::AnnBehaviorScript::update()
 bool Annwvyn::AnnBehaviorScript::isValid()
 {
 	return valid;
+}
+
+void Annwvyn::AnnBehaviorScript::registerAsListener()
+{
+	AnnGetEventManager()->addListener(getSharedListener());
+}
+
+void Annwvyn::AnnBehaviorScript::unregisterAsListener()
+{
+	AnnDebug() << "Unregistering ourself has event listener";
+	AnnGetEventManager()->removeListener(getSharedListener());
+}
+
+void Annwvyn::AnnBehaviorScript::KeyEvent(AnnKeyEvent e)
+{
+	try
+	{
+		if (callKeyEventOnScriptInstance)
+			callKeyEventOnScriptInstance(ScriptObjectInstance, e);
+	}
+	catch (const chaiscript::exception::dispatch_error&) {}
+}
+
+void Annwvyn::AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
+{
+	try
+	{
+		if (callMouseEventOnScriptInstance)
+			callMouseEventOnScriptInstance(ScriptObjectInstance, e);
+	}
+	catch (const chaiscript::exception::dispatch_error&) {}
+}
+
+void Annwvyn::AnnBehaviorScript::StickEvent(AnnStickEvent e)
+{
+	try
+	{
+		if (callStickEventOnScriptInstance)
+			callStickEventOnScriptInstance(ScriptObjectInstance, e);
+	}
+	catch (const chaiscript::exception::dispatch_error&) {}
+}
+
+void Annwvyn::AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
+{
+	try
+	{
+		if (callTimeEventOnScriptInstance)
+			callTimeEventOnScriptInstance(ScriptObjectInstance, e);
+	}
+	catch (const chaiscript::exception::dispatch_error&) {}
+}
+
+void Annwvyn::AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
+{
+	try
+	{
+		if (callTriggerEventOnScriptInstance)
+			callTriggerEventOnScriptInstance(ScriptObjectInstance, e);
+	}
+	catch (const chaiscript::exception::dispatch_error&) {}
+}
+
+void Annwvyn::AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
+{
+	try
+	{
+		if (callHandControllertOnScriptInstance)
+			callHandControllertOnScriptInstance(ScriptObjectInstance, e);
+	}
+	catch (const chaiscript::exception::dispatch_error&) {}
 }
