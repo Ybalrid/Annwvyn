@@ -20,11 +20,12 @@ AnnGameObject::AnnGameObject() :
 
 AnnGameObject::~AnnGameObject()
 {
+	for (auto script : scripts) script->unregisterAsListener();
+
 	AnnDebug() << "Destructing game object " << getName() << " !";
 	//Clean OpenAL de-aloc
 	if (AnnGetAudioEngine())
 		AnnGetAudioEngine()->removeSource(audioSource);
-	AnnDebug() << "Tidy my physics !";
 
 	if (AnnGetPhysicsEngine())
 		AnnGetPhysicsEngine()->removeRigidBody(Body);
@@ -360,4 +361,5 @@ void Annwvyn::AnnGameObject::attachScript(const std::string & scriptName)
 	auto script = AnnGetScriptManager()->getBehaviorScript(scriptName, this);
 	if (script->isValid())
 		scripts.push_back(script);
+	script->registerAsListener();
 }
