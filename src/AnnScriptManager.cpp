@@ -224,6 +224,18 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(user_type<AnnTimeEvent>(), "AnnTimeEvent");
 	chai.add(user_type<AnnKeyEvent>(), "AnnTriggerEvent");
 	chai.add(user_type<AnnKeyEvent>(), "AnnHandControllerEvent");
+	chai.add(user_type<AnnMouseAxis>(), "AnnMouseAxis");
+	chai.add(user_type<MouseAxisId>(), "MouseAxisId");
+	chai.add(user_type<MouseButtonId>(), "MouseButtonId");
+
+	chai.add(fun([](AnnKeyEvent e) {return e.isPressed(); }), "isPressed");
+	chai.add(fun([](AnnKeyEvent e) {return e.isReleased(); }), "isReleased");
+	chai.add(fun([](AnnKeyEvent e) {return e.getKey(); }), "getKey");
+
+	chai.add(fun([](AnnMouseEvent e, /*MouseAxisId*/const int a) {return e.getAxis(MouseAxisId(a)); }), "getAxis");
+	chai.add(fun([](AnnMouseEvent e, /*MouseButtonId*/const int b) {return e.getButtonState(MouseButtonId(b)); }), "getButtonState");
+	chai.add(fun([](AnnMouseAxis a) {return a.getRelValue(); }), "getRelValue");
+	chai.add(fun([](AnnMouseAxis a) {return a.getAbsValue(); }), "getAbsValue");
 
 	//Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
@@ -233,6 +245,10 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const AnnColor& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+	chai.add(fun([](KeyCode::code c) {AnnDebug() << "keycode:" << c; }), "AnnDebugLog");
+	chai.add(fun([](MouseAxisId c) {AnnDebug() << "mouseAxis:" << c; }), "AnnDebugLog");
+	chai.add(fun([](bool b) {std::string s("true"); if (!b) s = "false"; AnnDebug() << "bool:" << s; }), "AnnDebugLog");
+	chai.add(fun([](int i) {AnnDebug() << "int:" << i; }), "AnnDebugLog");
 }
 
 void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
@@ -466,6 +482,7 @@ void Annwvyn::AnnBehaviorScript::KeyEvent(AnnKeyEvent e)
 			callKeyEventOnScriptInstance(ScriptObjectInstance, e);
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotKey = true; }
+	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
 void Annwvyn::AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
@@ -476,6 +493,7 @@ void Annwvyn::AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
 			callMouseEventOnScriptInstance(ScriptObjectInstance, e);
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotMouse = true; }
+	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
 void Annwvyn::AnnBehaviorScript::StickEvent(AnnStickEvent e)
@@ -486,6 +504,7 @@ void Annwvyn::AnnBehaviorScript::StickEvent(AnnStickEvent e)
 			callStickEventOnScriptInstance(ScriptObjectInstance, e);
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotStick = true; }
+	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
 void Annwvyn::AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
@@ -496,6 +515,7 @@ void Annwvyn::AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
 			callTimeEventOnScriptInstance(ScriptObjectInstance, e);
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotTime = true; }
+	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
 void Annwvyn::AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
@@ -506,6 +526,7 @@ void Annwvyn::AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
 			callTriggerEventOnScriptInstance(ScriptObjectInstance, e);
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotTrigger = true; }
+	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
 void Annwvyn::AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
@@ -516,4 +537,5 @@ void Annwvyn::AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
 			callHandControllertOnScriptInstance(ScriptObjectInstance, e);
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotHand = true; }
+	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
