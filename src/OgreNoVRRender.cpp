@@ -86,6 +86,9 @@ void OgreNoVRRender::updateTracking()
 
 	noVRCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
 	noVRCam->setOrientation(bodyOrientation);
+
+	returnPose.position = noVRCam->getPosition();
+	returnPose.orientation = noVRCam->getOrientation();
 }
 
 void OgreNoVRRender::renderAndSubmitFrame()
