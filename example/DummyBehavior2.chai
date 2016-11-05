@@ -13,5 +13,34 @@ class DummyBehavior2
 	def KeyEvent(event)
 	{
 		AnnDebugLog("Some key event happened");
+		AnnDebugLog(event.getKey())
+		if(event.isPressed())
+		{
+			AnnDebugLog("Pressed()");
+		}
+		else if(event.isReleased())
+		{
+			AnnDebugLog("Released()");
+		}
+	}
+
+	def MouseEvent(event)
+	{
+		AnnDebugLog("Some Mouse event happened");
+		//AnnDebugLog("left button")
+		AnnDebugLog(event.getButtonState(0));
+		//AnnDebugLog("right button")
+		AnnDebugLog(event.getButtonState(1));
+		//
+		AnnDebugLog(event.getButtonState(2));
+
+		auto x = event.getAxis(0);
+		auto y = event.getAxis(1);
+		auto z = event.getAxis(2);
+
+		AnnDebugLog(x.getRelValue());
+		AnnDebugLog(y.getRelValue());
+		AnnDebugLog(z.getRelValue());
+
 	}
 }
