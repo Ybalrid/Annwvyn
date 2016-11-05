@@ -212,12 +212,12 @@ void Annwvyn::AnnScriptManager::registerApi()
 	}
 	), "AnnRemoveGameObject");
 
-	///Change the gravity
+	//Change the gravity
 	chai.add(fun([](const Vector3& gravity) {AnnGetPhysicsEngine()->changeGravity(gravity); }), "AnnChangeGravity");
-	///Restore the default gravity vector
+	//Restore the default gravity vector
 	chai.add(fun([]() {AnnGetPhysicsEngine()->resetGravity(); }), "AnnRestoreGravity");
 
-	///Add the types of the event representation object
+	//Add the types of the event representation object
 	chai.add(user_type<AnnKeyEvent>(), "AnnKeyEvent");
 	chai.add(user_type<AnnMouseEvent>(), "AnnMouseEvent");
 	chai.add(user_type<AnnStickEvent>(), "AnnStickEvent");
@@ -227,6 +227,8 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(user_type<AnnMouseAxis>(), "AnnMouseAxis");
 	chai.add(user_type<MouseAxisId>(), "MouseAxisId");
 	chai.add(user_type<MouseButtonId>(), "MouseButtonId");
+	chai.add(user_type<AnnStickAxis>(), "AnnStickAxis");
+	chai.add(user_type<AnnStickPov>(), "AnnStickPov");
 
 	chai.add(fun([](AnnKeyEvent e) {return e.isPressed(); }), "isPressed");
 	chai.add(fun([](AnnKeyEvent e) {return e.isReleased(); }), "isReleased");
@@ -236,6 +238,31 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](AnnMouseEvent e, /*MouseButtonId*/const int b) {return e.getButtonState(MouseButtonId(b)); }), "getButtonState");
 	chai.add(fun([](AnnMouseAxis a) {return a.getRelValue(); }), "getRelValue");
 	chai.add(fun([](AnnMouseAxis a) {return a.getAbsValue(); }), "getAbsValue");
+
+	chai.add(fun([](AnnStickEvent e) {return e.getNbButtons(); }), "getNbButtons");
+	chai.add(fun([](AnnStickEvent e) {return e.getNbAxis(); }), "getNbAxis");
+	chai.add(fun([](AnnStickEvent e) {return e.getNbPov(); }), "getNbPov");
+	chai.add(fun([](AnnStickEvent e) {return e.getVendor(); }), "getVendoor");
+	chai.add(fun([](AnnStickEvent e) {return e.getStickID(); }), "getStickID");
+	chai.add(fun([](AnnStickEvent e) {return e.isXboxController(); }), "isXboxController");
+	chai.add(fun([](AnnStickEvent e, const int i) {return e.isPressed(i); }), "isPressed");
+	chai.add(fun([](AnnStickEvent e, const int i) {return e.isReleased(i); }), "isReleased");
+	chai.add(fun([](AnnStickEvent e, const int i) {return e.isDown(i); }), "isDown");
+	chai.add(fun([](AnnStickEvent e, const int i) {return e.getAxis(i); }), "getAxis");
+	chai.add(fun([](AnnStickEvent e, const int i) {return e.getPov(i); }), "getPov");
+
+	chai.add(fun([](AnnStickPov pov) {return pov.getNorth(); }), "getNorth");
+	chai.add(fun([](AnnStickPov pov) {return pov.getSouth(); }), "getSouth");
+	chai.add(fun([](AnnStickPov pov) {return pov.getEast(); }), "getEast");
+	chai.add(fun([](AnnStickPov pov) {return pov.getWest(); }), "getWest");
+	chai.add(fun([](AnnStickPov pov) {return pov.getNorthEast(); }), "getNorthEast");
+	chai.add(fun([](AnnStickPov pov) {return pov.getNorthWest(); }), "getNorthWest");
+	chai.add(fun([](AnnStickPov pov) {return pov.getSouthEast(); }), "getSouthEast");
+	chai.add(fun([](AnnStickPov pov) {return pov.getSouthWest(); }), "getSouthWest");
+
+	chai.add(fun([](AnnStickAxis a) {return a.getAxisId(); }), "getAxisId");
+	chai.add(fun([](AnnStickAxis a) {return a.getRelValue(); }), "getRelValue");
+	chai.add(fun([](AnnStickAxis a) {return a.getAbsValue(); }), "getAbsValue");
 
 	//Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
@@ -249,6 +276,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](MouseAxisId c) {AnnDebug() << "mouseAxis:" << c; }), "AnnDebugLog");
 	chai.add(fun([](bool b) {std::string s("true"); if (!b) s = "false"; AnnDebug() << "bool:" << s; }), "AnnDebugLog");
 	chai.add(fun([](int i) {AnnDebug() << "int:" << i; }), "AnnDebugLog");
+	chai.add(fun([](float f) {AnnDebug() << "float:" << f; }), "AnnDebugLog");
 }
 
 void Annwvyn::AnnScriptManager::tryAndGetEventHooks()

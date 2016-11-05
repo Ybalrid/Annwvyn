@@ -83,7 +83,7 @@ public:
 		levelTrigger.push_back(t);
 
 		//Put some music here
-		AnnGetAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg", 0.4);
+		//AnnGetAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg", 0.4);
 
 		//Place the starting point
 		AnnGetPlayer()->setPosition(AnnVect3::ZERO);

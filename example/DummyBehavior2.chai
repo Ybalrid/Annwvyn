@@ -13,12 +13,12 @@ class DummyBehavior2
 	def KeyEvent(event)
 	{
 		AnnDebugLog("Some key event happened");
-		AnnDebugLog(event.getKey())
+		AnnDebugLog(event.getKey())//Value is int... 
 		if(event.isPressed())
 		{
 			AnnDebugLog("Pressed()");
 		}
-		else if(event.isReleased())
+		else if(event.isReleased())//Useless, just to show
 		{
 			AnnDebugLog("Released()");
 		}
