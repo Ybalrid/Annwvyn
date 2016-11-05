@@ -213,13 +213,13 @@ namespace Annwvyn
 		///Get the left (west) state
 		bool getWest();
 
-		///Get the north&&east state
+		///Get the north && east state
 		bool getNorthEast();
-		///Get the south&&east state
+		///Get the south && east state
 		bool getSouthEast();
-		///Get the north&&west state
+		///Get the north && west state
 		bool getNorthWest();
-		///Get the south&&west state
+		///Get the south && west state
 		bool getSouthWest();
 
 		///Return true if nothing is pressed on the POV controller
@@ -329,6 +329,9 @@ namespace Annwvyn
 		///Return true if if there's collision
 		bool getContactStatus();
 		///Pointer to the trigger that have sent this event
+
+		// TODO don't use a shared ptr here
+
 		std::shared_ptr<AnnTriggerObject> getSender();
 	private:
 		friend class AnnEventManager;
@@ -569,6 +572,7 @@ namespace Annwvyn
 		///Process triggers
 		void processTriggerEvents();
 
+		// TODO get rid of the shared pointer here
 		///Register trigger event for next triggerProcess by the engine
 		void spatialTrigger(std::shared_ptr<AnnTriggerObject> sender);
 

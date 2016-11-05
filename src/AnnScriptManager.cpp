@@ -222,13 +222,14 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(user_type<AnnMouseEvent>(), "AnnMouseEvent");
 	chai.add(user_type<AnnStickEvent>(), "AnnStickEvent");
 	chai.add(user_type<AnnTimeEvent>(), "AnnTimeEvent");
-	chai.add(user_type<AnnKeyEvent>(), "AnnTriggerEvent");
-	chai.add(user_type<AnnKeyEvent>(), "AnnHandControllerEvent");
+	chai.add(user_type<AnnTriggerEvent>(), "AnnTriggerEvent");
+	chai.add(user_type<AnnHandControllerEvent>(), "AnnHandControllerEvent");
 	chai.add(user_type<AnnMouseAxis>(), "AnnMouseAxis");
 	chai.add(user_type<MouseAxisId>(), "MouseAxisId");
 	chai.add(user_type<MouseButtonId>(), "MouseButtonId");
 	chai.add(user_type<AnnStickAxis>(), "AnnStickAxis");
 	chai.add(user_type<AnnStickPov>(), "AnnStickPov");
+	chai.add(user_type<timerID>(), "timerID");
 
 	chai.add(fun([](AnnKeyEvent e) {return e.isPressed(); }), "isPressed");
 	chai.add(fun([](AnnKeyEvent e) {return e.isReleased(); }), "isReleased");
@@ -264,6 +265,12 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](AnnStickAxis a) {return a.getRelValue(); }), "getRelValue");
 	chai.add(fun([](AnnStickAxis a) {return a.getAbsValue(); }), "getAbsValue");
 
+	chai.add(fun([](AnnTimeEvent t) {return t.getID(); }), "getID");
+
+	// TODO Trigger needs to be fixed. Shared pointer problem here
+
+	// TODO the hand controller event interface is not finished
+
 	//Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
@@ -281,6 +288,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 
 void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
 {
+	//Forgive me.
 	try
 	{
 		callKeyEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)>>("KeyEvent");
@@ -289,6 +297,8 @@ void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
 	{
 		callKeyEventOnScriptInstance = nullptr;
 	}
+
+	//Yes. I'm doing this.
 	try
 	{
 		callMouseEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)>>("MouseEvent");
@@ -297,6 +307,8 @@ void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
 	{
 		callMouseEventOnScriptInstance = nullptr;
 	}
+
+	//Yes, there's 6 of them
 	try
 	{
 		callStickEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)>>("StickEvent");
@@ -305,6 +317,8 @@ void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
 	{
 		callStickEventOnScriptInstance = nullptr;
 	}
+
+	//And yes, it's probable that something will be thrown, unless a script already have this function
 	try
 	{
 		callTimeEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)>>("TimeEvent");
@@ -313,6 +327,8 @@ void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
 	{
 		callTimeEventOnScriptInstance = nullptr;
 	}
+
+	//And it's also possible than the result is not usable with this script and will throw later at eval time
 	try
 	{
 		callTriggerEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)>>("TriggerEvent");
@@ -321,6 +337,8 @@ void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
 	{
 		callTriggerEventOnScriptInstance = nullptr;
 	}
+
+	//Like I said. Please forgive me.
 	try
 	{
 		callHandControllertOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)>>("HandControllerEvent");
@@ -380,6 +398,7 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 
+		//This is the ugly bit.
 		tryAndGetEventHooks();
 
 		//This will add a global function in ChaiScript, that will create and return the script instance
