@@ -119,7 +119,7 @@ namespace Annwvyn
 		///Prefix for debug print called from a script
 		static constexpr const char* const logFromScript{ "Script - " };
 
-		///String constant for script loading and class initialization
+		///String constant for script loading and class initialization. This is a bit of ChaiScript code to bootstrap a behavior script
 		static constexpr const char* const scriptTemplate
 		{
 R"(

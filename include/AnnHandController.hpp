@@ -10,48 +10,46 @@ class OgreVRRender;
 class OgreOpenVRRender;
 namespace Annwvyn
 {
-	typedef size_t AnnHandControllerID;
+	///ID of an hand controller is the index of an array. using size_t s
+	using AnnHandControllerID = size_t;
 
+	///Represent the axis of an hand controller
 	class AnnHandControllerAxis
 	{
 	public:
-		AnnHandControllerAxis(const std::string& AxisName, float normalizedValue) :
-			name(AxisName),
-			value(0)
-		{
-			updateValue(normalizedValue);
-		}
 
+		/// \brief Create an AnnHandControllerAxis object
+		/// \param AxisName Name of the axis
+		/// \param normalizedValue initial value
+		AnnHandControllerAxis(const std::string& AxisName, float normalizedValue);
+
+		///Default copy constructor. We are just a float and a string
 		AnnHandControllerAxis(const AnnHandControllerAxis& axis) = default;
 
-		const std::string getName() const
-		{
-			return name;
-		}
+		///Name of the axis
+		std::string getName() const;
 
-		const float getValue() const
-		{
-			return value;
-		}
+		///Analog value between -1 and 1. Some trigger inputs are from 0 to 1 only.
+		float getValue() const;
+
 	private:
 		friend class OgreVRRender;
 		friend class OgreOpenVRRender;
 
-		void updateValue(float normalizedValue)
-		{
-			if (isInRange(normalizedValue))
-				value = normalizedValue;
-		}
+		///Change the value of the string.
+		void updateValue(float normalizedValue);
 
-		const bool isInRange(float v) const
-		{
-			return (v >= -1 && v <= 1);
-		}
+		///Return true if the value v is acceptable
+		static bool isInRange(float v);
 
+		///Name of the axis
 		std::string name;
+
+		///Value of the axis
 		float value;
 	};
 
+	///Represent an hand controller tracked by the VR system and that the user is actively using. Contains position, orientation, buttons and analog inputs
 	class DLL AnnHandController
 	{
 	public:
@@ -62,7 +60,7 @@ namespace Annwvyn
 		AnnHandController(std::string Type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
 
 		///Get the side type as a std::string
-		inline std::string getSideAsString(AnnHandControllerSide s);
+		static std::string getSideAsString(AnnHandControllerSide s);
 
 		///Attach a 3D model to the hand. Previously attached model will be detached
 		void attachModel(Ogre::Entity* handModel);
@@ -128,8 +126,10 @@ namespace Annwvyn
 		///\param index Index of the axis you need
 		AnnHandControllerAxis& getAxis(size_t index);
 
+		///Get the "hand side" of this particular controller
 		AnnHandControllerSide getSide();
 
+		///Get the type of the controller. Can be anything. Expect stuff like "Vive Controller" or "Oculus Touch Controller"
 		std::string getType();
 
 	private:
@@ -137,6 +137,7 @@ namespace Annwvyn
 		friend class OgreVRRender;
 		friend class OgreOpenVRRender;
 
+		///Type of the controller, Can be string like "Vive controller" or "Oculus Touch Controller"
 		std::string controllerType;
 
 		///Get a reference to the axes vector
