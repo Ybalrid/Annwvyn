@@ -105,67 +105,67 @@ bool AnnHandController::isTracked()
 	return tracked;
 }
 
-bool Annwvyn::AnnHandController::getButtonState(uint8_t buttonIndex)
+bool AnnHandController::getButtonState(uint8_t buttonIndex)
 {
 	return buttonsState[buttonIndex];
 }
 
-size_t Annwvyn::AnnHandController::getNbButton()
+size_t AnnHandController::getNbButton()
 {
 	return buttonsState.size();
 }
 
-bool Annwvyn::AnnHandController::hasBeenPressed(uint8_t buttonIndex)
+bool AnnHandController::hasBeenPressed(uint8_t buttonIndex)
 {
 	for (auto button : pressedButtons)
 		if (button == buttonIndex) return true;
 	return false;
 }
 
-bool Annwvyn::AnnHandController::hasBeenReleased(uint8_t buttonIndex)
+bool AnnHandController::hasBeenReleased(uint8_t buttonIndex)
 {
 	for (auto button : releasedButtons)
 		if (button == buttonIndex) return true;
 	return false;
 }
 
-size_t Annwvyn::AnnHandController::getNbAxes()
+size_t AnnHandController::getNbAxes()
 {
 	return axes.size();
 }
 
-AnnHandControllerAxis& Annwvyn::AnnHandController::getAxis(size_t index)
+AnnHandControllerAxis& AnnHandController::getAxis(size_t index)
 {
 	if (index < axes.size()) return axes[index];
 	return invalidAxis;
 }
 
-AnnHandController::AnnHandControllerSide Annwvyn::AnnHandController::getSide()
+AnnHandController::AnnHandControllerSide AnnHandController::getSide()
 {
 	return side;
 }
 
-std::string Annwvyn::AnnHandController::getType()
+std::string AnnHandController::getType()
 {
 	return controllerType;
 }
 
-std::vector<AnnHandControllerAxis>& Annwvyn::AnnHandController::getAxesVector()
+std::vector<AnnHandControllerAxis>& AnnHandController::getAxesVector()
 {
 	return axes;
 }
 
-std::vector<bool>& Annwvyn::AnnHandController::getButtonStateVector()
+std::vector<bool>& AnnHandController::getButtonStateVector()
 {
 	return buttonsState;
 }
 
-std::vector<uint8_t>& Annwvyn::AnnHandController::getPressedButtonsVector()
+std::vector<uint8_t>& AnnHandController::getPressedButtonsVector()
 {
 	return pressedButtons;
 }
 
-std::vector<uint8_t>& Annwvyn::AnnHandController::getReleasedButtonsVector()
+std::vector<uint8_t>& AnnHandController::getReleasedButtonsVector()
 {
 	return releasedButtons;
 }
