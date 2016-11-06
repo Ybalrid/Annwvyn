@@ -209,7 +209,7 @@ namespace Annwvyn
 			AnnColor(float r, float g, float b, float a);
 			///Construct with a color from Ogre
 			AnnColor(const Ogre::ColourValue& c);
-			///Asign another color to this one
+			///Assign another color to this one
 			AnnColor operator=(AnnColor& c);
 
 			///Get Red as [0;1] float

@@ -65,7 +65,7 @@ namespace Annwvyn
 		AnnKeyEvent();
 	public:
 		///Get the key involved in that event
-		Annwvyn::KeyCode::code getKey();
+		KeyCode::code getKey();
 
 		///Return true if it's a key press. Key event are debounced.
 		bool isPressed();
@@ -76,7 +76,7 @@ namespace Annwvyn
 	private:
 		friend class AnnEventManager;
 		///Code of the key this event relate to
-		Annwvyn::KeyCode::code key;
+		KeyCode::code key;
 		///Pressed state
 		bool pressed;
 		///Released state
