@@ -169,3 +169,20 @@ std::vector<uint8_t>& Annwvyn::AnnHandController::getReleasedButtonsVector()
 {
 	return releasedButtons;
 }
+
+AnnHandControllerAxis::AnnHandControllerAxis(const std::string& AxisName, float normalizedValue) :
+	name(AxisName),
+	value(0) {
+	updateValue(normalizedValue);
+}
+
+std::string AnnHandControllerAxis::getName() const { return name; }
+float AnnHandControllerAxis::getValue() const { return value; }
+
+void AnnHandControllerAxis::updateValue(float normalizedValue)
+{
+	if (isInRange(normalizedValue))
+		value = normalizedValue;
+}
+
+bool AnnHandControllerAxis::isInRange(float v) { return (v >= -1 && v <= 1); }
