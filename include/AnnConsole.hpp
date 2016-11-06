@@ -43,11 +43,11 @@ namespace Annwvyn
 		void toggle();
 
 		///True if text has been updated on the console and the console is visible.
-		bool needUpdate();
+		bool needUpdate() override;
 
 		///Update the console by filling it with background texture then blitting text on it.
 		///Can take some computing time depending on the size/resolution of the textures and buffer
-		void update();
+		void update() override;
 
 	private:
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs

@@ -24,10 +24,10 @@ namespace Annwvyn
 		AnnXmlLevel(std::string path);
 
 		///load the level by reading the XML file
-		void load();
+		void load() override;
 
 		///Run the logic on this level. You can overload this at will ! *\o/*
-		virtual void runLogic();
+		void runLogic() override;
 
 	private:
 		///Path of the XML file

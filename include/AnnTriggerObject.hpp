@@ -30,16 +30,16 @@ namespace Annwvyn
 
 		///Set position form Vector 3D
 		/// \param pos 3D vector positioning the object
-		virtual void setPosition(AnnVect3 pos);
+		void setPosition(AnnVect3 pos) override;
 
 		///Does nothing
-		virtual void setOrientation(AnnQuaternion orient) { return; }
+		void setOrientation(AnnQuaternion orient) override { return; }
 
 		///Get position
-		virtual AnnVect3 getPosition();
+		AnnVect3 getPosition() override;
 
 		///Does nothing
-		virtual AnnQuaternion getOrientation() { return AnnQuaternion::IDENTITY; }
+		AnnQuaternion getOrientation() override { return AnnQuaternion::IDENTITY; }
 
 		///Get contact information
 		bool getContactInformation();
@@ -95,7 +95,7 @@ namespace Annwvyn
 	private:
 
 		///implement the test on player position
-		bool computeVolumetricTest(std::shared_ptr<AnnPlayer> player);
+		bool computeVolumetricTest(std::shared_ptr<AnnPlayer> player) override;
 
 		///Distance where the trigger is triggered
 		float threshold;
@@ -125,7 +125,7 @@ namespace Annwvyn
 	private:
 
 		///implement the test on player position
-		bool computeVolumetricTest(std::shared_ptr <AnnPlayer> player);
+		bool computeVolumetricTest(std::shared_ptr <AnnPlayer> player) override;
 
 		///Boundaries values. All defaults to 0
 		float xMin, xMax, yMin, yMax, zMin, zMax;

@@ -81,7 +81,7 @@ namespace Annwvyn
 
 		friend class AnnEngine;
 		///Update by steeping simulation by one frame time. Should be called only once, and only by AnnEngine
-		void update();
+		void update() override;
 
 		btBroadphaseInterface* Broadphase;
 		btDefaultCollisionConfiguration* CollisionConfiguration;

@@ -20,7 +20,7 @@ namespace Annwvyn
 		AnnGameObjectManager();
 
 		///Update from the game engine
-		virtual void update();
+		void update() override;
 
 		///Create a game object form the name of an entity.
 		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager

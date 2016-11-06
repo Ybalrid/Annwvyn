@@ -11,26 +11,26 @@ class DLL OgreNoVRRender : public OgreVRRender
 public:
 	OgreNoVRRender(std::string winName = "OgreVRNoVRRender");
 
-	virtual void initPipeline();
-	virtual void initVrHmd();
-	virtual void createWindow();
-	virtual void initScene();
-	virtual void initCameras();
-	virtual void initRttRendering();
-	virtual void initClientHmdRendering();
-	virtual bool shouldQuit() { return false; }
-	virtual bool shouldRecenter() { return false; }
-	virtual bool isVisibleInHmd() { return true; }
+	void initPipeline() override;
+	void initVrHmd() override;
+	void createWindow() override;
+	void initScene() override;
+	void initCameras() override;
+	void initRttRendering() override;
+	void initClientHmdRendering() override;
+	bool shouldQuit() override { return false; }
+	bool shouldRecenter() override { return false; }
+	bool isVisibleInHmd() override { return true; }
 
-	virtual void updateTracking();
-	virtual void renderAndSubmitFrame();
-	virtual void recenter();
+	void updateTracking() override;
+	void renderAndSubmitFrame() override;
+	void recenter() override;
 
-	virtual void changeViewportBackgroundColor(Ogre::ColourValue);
+	void changeViewportBackgroundColor(Ogre::ColourValue) override;
 
-	virtual void showDebug(DebugMode mode);
+	void showDebug(DebugMode mode) override;
 
-	virtual void updateProjectionMatrix();
+	void updateProjectionMatrix() override;
 
 private:
 	static OgreNoVRRender* noVRself;

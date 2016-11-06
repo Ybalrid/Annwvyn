@@ -51,19 +51,19 @@ namespace Annwvyn
 		void update();
 
 		///Set the position of the plane
-		void setPosition(AnnVect3 p);
+		void setPosition(AnnVect3 p) override;
 
 		///Set the orient of the plane
-		void setOrientation(AnnQuaternion q);
+		void setOrientation(AnnQuaternion q) override;
 
 		///Set the text alignment mode
 		void setTextAlign(TextAlign talign);
 
 		///Get the position of the plane
-		AnnVect3 getPosition();
+		AnnVect3 getPosition() override;
 
 		///Get the orientation
-		AnnQuaternion getOrientation();
+		AnnQuaternion getOrientation() override;
 
 		///Set margin
 		/// \param margin Margin in meters
