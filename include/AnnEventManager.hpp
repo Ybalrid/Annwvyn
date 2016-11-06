@@ -332,11 +332,11 @@ namespace Annwvyn
 
 		// TODO don't use a shared ptr here
 
-		std::shared_ptr<AnnTriggerObject> getSender();
+		AnnTriggerObject* getSender();
 	private:
 		friend class AnnEventManager;
 		bool contact;
-		std::shared_ptr<AnnTriggerObject> sender;
+		AnnTriggerObject* sender;
 	};
 
 	///Base class for all event listener

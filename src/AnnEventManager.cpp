@@ -371,8 +371,8 @@ void AnnEventManager::processTimers()
 
 void AnnEventManager::processTriggerEvents()
 {
-	for (auto triggerIterator = triggerEventBuffer.begin(); triggerIterator != triggerEventBuffer.end(); triggerIterator++)
-		for (auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); listenerIterator++)
+	for (auto triggerIterator = triggerEventBuffer.begin(); triggerIterator != triggerEventBuffer.end(); ++triggerIterator)
+		for (auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); ++listenerIterator)
 		{
 			(*triggerIterator).validate();
 			if (auto listener = (*listenerIterator).lock())
@@ -384,7 +384,7 @@ void AnnEventManager::processTriggerEvents()
 void AnnEventManager::spatialTrigger(std::shared_ptr<AnnTriggerObject> sender)
 {
 	AnnTriggerEvent e;
-	e.sender = sender;
+	e.sender = sender.get();
 	e.contact = sender->getContactInformation();
 	e.populate();
 	triggerEventBuffer.push_back(e);
