@@ -16,8 +16,6 @@ AnnLevelManager::~AnnLevelManager()
 {
 	AnnGetEngine()->log("Deleting the Level Manager. Destroying every level known by the Level Manager before.");
 	//clear the levels
-	/*for(auto it = levelList.begin(); it != levelList.end(); it++)
-		delete *it;*/
 	levelList.clear();
 }
 
@@ -27,6 +25,7 @@ void AnnLevelManager::jump(level_id levelId)
 
 	if (!(levelId < levelList.size())) return;
 
+	//Deferred level jump
 	if (!jumpRequested)
 	{
 		jumpRequested = true;
@@ -34,15 +33,12 @@ void AnnLevelManager::jump(level_id levelId)
 		return;
 	}
 
-	if (jumpRequested)
-	{
-		jumpRequested = false;
-		jumpTo = 0;
-		if (current)
-			current->unload();
-		current = levelList[levelId];
-		current->load();
-	}
+	jumpRequested = false;
+	jumpTo = 0;
+	if (current)
+		current->unload();
+	current = levelList[levelId];
+	current->load();
 }
 
 void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
@@ -58,7 +54,6 @@ void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
 void AnnLevelManager::addLevel(std::shared_ptr<AnnLevel> level)
 {
 	AnnDebug() << "Adding level " << level << "to LevelManager";
-	if (!level) return;
 	levelList.push_back(level);
 }
 
@@ -94,4 +89,16 @@ std::shared_ptr<AnnLevel> AnnLevelManager::getLevelByIndex(level_id id)
 {
 	if (id >= levelList.size()) return nullptr;
 	return levelList[id];
+}
+
+void Annwvyn::AnnLevelManager::addToCurrentLevel(std::shared_ptr<AnnGameObject> obj)
+{
+	if (!current || !obj) return;
+	current->levelContent.push_back(obj);
+}
+
+void Annwvyn::AnnLevelManager::removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj)
+{
+	if (!current || !obj) return;
+	current->levelContent.remove(obj);
 }

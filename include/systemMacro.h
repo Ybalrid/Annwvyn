@@ -1,3 +1,4 @@
+#pragma once
 /**
  * \file systemMacro.h
  * \brief file that permit to handle differences between operating systems

@@ -4,7 +4,6 @@
 #include "AnnEngine.hpp"
 
 using namespace Annwvyn;
-
 unsigned long long AnnGameObjectManager::id;
 
 AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
@@ -19,37 +18,36 @@ void AnnGameObjectManager::update()
 		gameObject->addAnimationTime(AnnGetEngine()->getFrameTime());
 		gameObject->updateOpenAlPos();
 		gameObject->atRefresh();
+		gameObject->callUpdateOnScripts();
 	}
 }
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char entityName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
 {
 	AnnDebug("Creating a game object from the entity " + std::string(entityName));
-
-	Ogre::Entity* ent = AnnGetEngine()->getSceneManager()->createEntity(entityName);
-	Ogre::SceneNode* node = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+	auto smgr{ AnnGetEngine()->getSceneManager() };
+	Ogre::Entity* ent = smgr->createEntity(entityName);
+	Ogre::SceneNode* node = smgr->getRootSceneNode()->createChildSceneNode();
 
 	node->attachObject(ent);
 	obj->setNode(node);
 	obj->setEntity(ent);
 	obj->audioSource = AnnGetAudioEngine()->createSource();
-	if (AnnGetPhysicsEngine())
-		obj->setBulletDynamicsWorld(AnnGetPhysicsEngine()->getWorld());
-	obj->postInit(); //Run post init directives
 
-	Objects.push_back(shared_ptr<AnnGameObject>(obj)); //keep addreAnnDebug() in list
-
-	AnnDebug() << "The object " << entityName << " has been created. Annwvyn memory address " << obj;
-
+	//id will be unique to every non-identified object.
+	//The identifier name can be empty, meaning that we have to figure out an unique name.
+	//In that case we will append to the entity name + a number that will always be incremented.
 	if (identifier.empty())
-	{
-		//id will be unic to every non-identified object;
-		identifier = entityName + id++;
-	}
+		identifier = entityName + ++id;
+
+	AnnDebug() << "The object " << identifier << " has been created. Annwvyn memory address " << obj;
+	AnnDebug() << "This object take " << sizeof(*(obj.get())) << " bytes";
 
 	obj->name = identifier;
 	identifiedObjects[identifier] = obj;
+	Objects.push_back(shared_ptr<AnnGameObject>(obj)); //keep addreAnnDebug() in list
 
+	obj->postInit();
 	return obj;
 }
 
@@ -62,20 +60,14 @@ void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> objec
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode* node)
 {
-	if (!node)
-	{
-		AnnDebug("Please do not try to identify a NULL");
-		return NULL;
-	}
 	AnnDebug() << "Trying to identify object at address " << (void*)node;
 
-	//This methods only test memory address
-	for (auto object : Objects)
-		if ((void*)object->getNode() == (void*)node)
-			return object;
-	AnnDebug() << "The object " << (void*)node << " doesn't belong to any AnnGameObject";
+	auto result = std::find_if(Objects.begin(), Objects.end(), [&](shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
+	if (result != Objects.end())
+		return *result;
 
-	return NULL;
+	AnnDebug() << "The Scene Node" << (void*)node << " doesn't belong to any AnnGameObject";
+	return nullptr;
 }
 
 void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> light)
@@ -133,5 +125,8 @@ std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()
 
 std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::getObjectFromID(std::string idString)
 {
-	return identifiedObjects[idString];
+	auto object = identifiedObjects.find(idString);
+	if (object != identifiedObjects.end())
+		return object->second;
+	return nullptr;
 }

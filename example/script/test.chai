@@ -1,0 +1,52 @@
+AnnDebugLog("Hello from a user defined ChaiScript script!");
+
+AnnDebugLog("Try to create a Vect3");
+
+var vec = AnnVect3(3,2,1);
+var vec2 = AnnVect3(1, 2, 3);
+var vec3 = vec + vec2;
+AnnDebugLog(vec3);
+
+AnnDebugLog("If you can see 4 4 4 above, it means that chaiscript can add vectors now");
+var vec4 = -vec3;
+print(vec4.x);
+AnnDebugLog("should see -4");
+
+var vec5 = vec3 - vec3;
+AnnDebugLog(vec5);
+AnnDebugLog("should see O");
+
+vec5 = vec;
+AnnDebugLog(vec5);
+
+var someVector = AnnVect3(1,1,1);
+someVector = someVector * 4.5;
+
+AnnDebugLog(someVector);
+
+someVector *= 2;
+AnnDebugLog(someVector);
+
+var quat = AnnQuaternion(AnnRadian(HALF_PI), AnnVect3(0,1,0));
+AnnDebugLog(quat*vec);
+
+var color = AnnColor(1,0,0,1);
+AnnDebugLog(color);
+
+//AnnSetWorldBackgroundColor(color);
+//AnnSetAmbientLight(AnnColor(0,1,0,1));
+
+
+//Super dupper important : NEVER EVER HOLD A REFERENCE TO A GAME OBJECT IN THIS GLOBAL SPACE !!!
+//This is why we're using a "testStuff" function here.
+
+def testStuff()
+{
+	AnnCreateGameObject("Sinbad.mesh", "SinbadByScript");
+	var object := AnnGetGameObject("SinbadByScript");
+	object.setScale(AnnVect3(0.1,0.1,0.1));
+	object.setPosition(AnnVect3(0,1,0));
+	AnnRemoveGameObject("SinbadByScript");
+}
+
+//testStuff();

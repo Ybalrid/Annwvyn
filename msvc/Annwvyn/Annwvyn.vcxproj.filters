@@ -100,6 +100,12 @@
     <Filter Include="Annwvyn\VrUtility\HandController">
       <UniqueIdentifier>{85fcb2e7-8e5d-4c8d-967f-74ab74619a14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Annwvyn\SubSystems\Scripting">
+      <UniqueIdentifier>{0097925f-0001-4acc-bb76-30a9b16f7fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Documentation">
+      <UniqueIdentifier>{acd85170-7ba3-4dab-bedc-4dc36a00df20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\euler.h">
@@ -234,6 +240,12 @@
     <ClInclude Include="..\..\include\AnnHandController.hpp">
       <Filter>Annwvyn\VrUtility\HandController</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnScriptManager.hpp">
+      <Filter>Annwvyn\SubSystems\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\doxygen_scriptapi.hpp">
+      <Filter>_Documentation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -346,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnHandController.cpp">
       <Filter>Annwvyn\VrUtility\HandController</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnScriptManager.cpp">
+      <Filter>Annwvyn\SubSystems\Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

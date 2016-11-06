@@ -51,6 +51,8 @@ AnnMain()
 	//ask the level manager to perform a jump to the first level
 	AnnGetLevelManager()->jumpToFirstLevel();
 
+	AnnGetScriptManager()->evalFile("script/test.chai");
+
 	//stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
 	AnnGetEngine()->startGameplayLoop();

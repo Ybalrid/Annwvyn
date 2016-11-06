@@ -19,8 +19,12 @@ debugPlaneNode(nullptr),
 debugViewport(nullptr),
 layers(nullptr),
 lastFrameDisplayTime(0),
+mirrorTexture{ nullptr },
+oculusMirrorTextureGLID{ 0 },
+ogreMirrorTextureGLID{ 0 },
+oculusRenderTextureGLID{ 0 },
 currentFrameDisplayTime(0),
-textureSwapChain(0),
+textureSwapChain(nullptr),
 currentIndex(0),
 currentSessionStatusFrameIndex(0),
 perfHudMode(ovrPerfHud_Off),
@@ -123,13 +127,6 @@ inline Ogre::Vector3 OgreOculusRender::oculusToOgreVect3(const ovrVector3f & v)
 inline Ogre::Quaternion OgreOculusRender::oculusToOgreQuat(const ovrQuatf & q)
 {
 	return Ogre::Quaternion{ q.w, q.x, q.y, q.z };
-}
-
-Ogre::Timer* OgreOculusRender::getTimer()
-{
-	if (root)
-		return root->getTimer();
-	return nullptr;
 }
 
 void OgreOculusRender::recenter()

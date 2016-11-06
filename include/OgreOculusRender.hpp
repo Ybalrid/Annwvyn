@@ -59,55 +59,52 @@ public:
 	~OgreOculusRender();
 
 	///Oculus runtime hint to quit
-	bool shouldQuit();
+	bool shouldQuit() override;
 
 	///Oculus runtime hint to recenter
-	bool shouldRecenter();
+	bool shouldRecenter() override;
 
 	///App not visible inside Oculus
-	bool isVisibleInHmd();
+	bool isVisibleInHmd() override;
 
 	///Cycle through all Oculus Performance HUD available
-	void cycleDebugHud();
+	void cycleDebugHud() override;
 
 	///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
-	void updateTracking();
+	void updateTracking() override;
 
 	///Render each texture buffer, copy content to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
-	void renderAndSubmitFrame();
+	void renderAndSubmitFrame() override;
 
 	///Start Oculus and Ogre libraries.
-	void initVrHmd();
+	void initVrHmd() override;
 
 	///Create the RenderWindow
-	void createWindow();
+	void createWindow() override;
 
 	///Initialize the SceneManager for the application.
-	void initScene();
+	void initScene() override;
 
 	///Initialize the camera for Stereo Render
-	void initCameras();
+	void initCameras() override;
 
 	///Initialize the RTT Rendering System. Create two textures, two viewports and bind cameras on them.
-	void initRttRendering();
+	void initRttRendering() override;
 
 	///Init the Rift rendering. Configure Oculus SDK to use the two RTT textures created.
-	void initClientHmdRendering();
+	void initClientHmdRendering() override;
 
 	///Print various informations about the cameras
 	void debugPrint();
 
-	///Get the timer
-	Ogre::Timer* getTimer();
-
 	///Recenter rift to default position.
-	void recenter();
+	void recenter() override;
 
 	///Compute from OVR the correct projection matrix for the given clipping distance
-	virtual void updateProjectionMatrix();
+	void updateProjectionMatrix() override;
 
 	///change main viewport background color
-	void changeViewportBackgroundColor(Ogre::ColourValue color);
+	void changeViewportBackgroundColor(Ogre::ColourValue color) override;
 
 	///Show in debug window what the camera are seeing
 	static void showRawView();
@@ -122,16 +119,16 @@ public:
 	ovrSessionStatus getSessionStatus();
 
 	///Init the rendering pipeline
-	void initPipeline();
+	void initPipeline() override;
 
 	///The Oculus Rift has integrated audio
-	bool usesCustomAudioDevice();
+	bool usesCustomAudioDevice() override;
 
 	///The Oculus Rift integrated audio playback device will have "something (Rift Audio)" as a name
-	std::string getAudioDeviceIdentifierSubString();
+	std::string getAudioDeviceIdentifierSubString() override;
 
 	///Show the requested debug view
-	void showDebug(DebugMode mode);
+	void showDebug(DebugMode mode) override;
 
 private:
 

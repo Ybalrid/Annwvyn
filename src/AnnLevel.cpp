@@ -23,8 +23,8 @@ void AnnLevel::unload()
 	//Remove the sky
 	AnnGetSceneryManager()->removeSkyDome();
 	//Remove the ambient lighting
-	AnnGetSceneryManager()->setAmbiantLight(AnnColor(0, 0, 0));
-	//Restore the default gravit
+	AnnGetSceneryManager()->setAmbientLight(AnnColor(0, 0, 0));
+	//Restore the default gravity
 	AnnGetPhysicsEngine()->resetGravity();
 
 	//Remove the level lights
@@ -34,7 +34,6 @@ void AnnLevel::unload()
 	levelLighting.clear();
 
 	//Remove the level objects
-	levelContentIdMap.clear();
 	for (auto obj : levelContent)
 		AnnGetGameObjectManager()->removeGameObject(obj);
 	levelContent.clear();
@@ -56,12 +55,10 @@ std::shared_ptr<AnnLightObject> AnnLevel::addLightObject(std::string id)
 	return light;
 }
 
-std::shared_ptr<AnnGameObject> AnnLevel::addGameObject(std::string entityName, std::string id)
+std::shared_ptr<AnnGameObject> AnnLevel::addGameObject(std::string entityName, std::string objectName)
 {
-	auto object(AnnGetGameObjectManager()->createGameObject(entityName.c_str()));
-	object->setID(id);
+	auto object(AnnGetGameObjectManager()->createGameObject(entityName.c_str(), objectName));
 	levelContent.push_back(object);
-	levelContentIdMap[id] = object;
 	return object;
 }
 
