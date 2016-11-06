@@ -69,7 +69,7 @@ namespace Annwvyn
 
 		///Set position from Vector 3D
 		/// \param pos 3D position vector. Relative to scene root position
-		void setPosition(AnnVect3 pos);
+		void setPosition(AnnVect3 pos) override;
 
 		///Translate
 		/// \param x X component of the translation vector
@@ -86,7 +86,7 @@ namespace Annwvyn
 
 		///Set Orientation from Quaternion
 		/// \param orient Quaternion for absolute orientation
-		void setOrientation(AnnQuaternion orient);
+		void setOrientation(AnnQuaternion orient) override;
 
 		///Set scale
 		/// \param x X component of the scale vector
@@ -99,10 +99,10 @@ namespace Annwvyn
 		void setScale(AnnVect3 scale);
 
 		///Get Position
-		AnnVect3 getPosition();
+		AnnVect3 getPosition() override;
 
 		///Get Orientation
-		AnnQuaternion getOrientation();
+		AnnQuaternion getOrientation() override;
 
 		///Get scale
 		AnnVect3 getScale();
@@ -214,7 +214,6 @@ namespace Annwvyn
 		///For engine : update OpenAL source position
 		void updateOpenAlPos();
 
-	private:
 		/**
 		* You will certainly find strange to see that the Object does not carry a "position" vector.
 		* We use the position of the Ogre Node or the Bullet body to align the object.
@@ -251,10 +250,10 @@ namespace Annwvyn
 
 	public:
 		///Executed after object initialization
-		virtual void postInit() { return; }
+		virtual void postInit() { }
 
 		///Executed at refresh time (each frames)
-		virtual void atRefresh() { return; }
+		virtual void atRefresh() { }
 
 		///Call the update methods of all the script present in the scripts container
 		void callUpdateOnScripts();

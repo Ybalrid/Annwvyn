@@ -64,7 +64,7 @@ void AnnGameObject::updateOpenAlPos()
 	audioSource->setPositon(getPosition());
 }
 
-void Annwvyn::AnnGameObject::callUpdateOnScripts()
+void AnnGameObject::callUpdateOnScripts()
 {
 	for (auto script : scripts) script->update();
 }
@@ -81,7 +81,6 @@ void AnnGameObject::translate(float x, float y, float z)
 	//Bullet
 	if (Body) Body->translate(btVector3(x, y, z));
 	//OpenAL
-	auto currentPosition = Node->getPosition();
 	updateOpenAlPos();
 }
 
@@ -140,7 +139,7 @@ AnnQuaternion AnnGameObject::getOrientation()
 	return Node->getOrientation();
 }
 
-AnnVect3 Annwvyn::AnnGameObject::getScale()
+AnnVect3 AnnGameObject::getScale()
 {
 	return Node->getScale();
 }
@@ -258,7 +257,7 @@ void AnnGameObject::resetCollisionMask()
 
 void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 {
-	struct collisionTest* tester = new collisionTest;
+	auto tester = new collisionTest;
 
 	tester->collisionState = false;
 	tester->Object = Object;
@@ -351,7 +350,7 @@ std::string Annwvyn::AnnGameObject::getName()
 	return name;
 }
 
-void Annwvyn::AnnGameObject::attachScript(const std::string & scriptName)
+void AnnGameObject::attachScript(const std::string & scriptName)
 {
 	auto script = AnnGetScriptManager()->getBehaviorScript(scriptName, this);
 	if (script->isValid())
