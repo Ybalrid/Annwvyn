@@ -347,6 +347,8 @@ namespace Annwvyn
 		//You need to subclass it to create an EventListener
 
 	public:
+		virtual ~AnnEventListener();
+
 		///Construct a listener
 		AnnEventListener();
 		///Event from the keyboard
@@ -388,13 +390,13 @@ namespace Annwvyn
 		///Construct the default listener
 		AnnDefaultEventListener();
 		///Get events from keyboards
-		void KeyEvent(AnnKeyEvent e);
+		void KeyEvent(AnnKeyEvent e) override;
 		///Get events from the mouse
-		void MouseEvent(AnnMouseEvent e);
+		void MouseEvent(AnnMouseEvent e) override;
 		///Get events from the joystick
-		void StickEvent(AnnStickEvent e);
+		void StickEvent(AnnStickEvent e) override;
 		///Get events from an hand controller
-		void HandControllerEvent(AnnHandControllerEvent e);
+		void HandControllerEvent(AnnHandControllerEvent e) override;
 
 		///Set all the key-codes for the controls
 		void setKeys(KeyCode::code fw,
@@ -480,9 +482,9 @@ namespace Annwvyn
 		///Object for text input
 		AnnTextInputer();
 		///Callback key press method
-		virtual bool keyPressed(const OIS::KeyEvent &arg);
+		bool keyPressed(const OIS::KeyEvent &arg) override;
 		///Callback key released method
-		virtual bool keyReleased(const OIS::KeyEvent &arg);
+		bool keyReleased(const OIS::KeyEvent &arg) override;
 		///Return the "input" string object
 		std::string getInput();
 		///Permit you to change the content of the input method
@@ -564,7 +566,7 @@ namespace Annwvyn
 		friend class AnnPhysicsEngine;
 
 		///Engine call for refreshing the event system
-		void update();
+		void update() override;
 		///Process user inputs
 		void processInput();
 		///Process timers

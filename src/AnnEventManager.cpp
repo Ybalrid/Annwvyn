@@ -212,7 +212,7 @@ void AnnEventManager::processInput()
 			{
 				//create a corresponding key event
 				AnnKeyEvent e;
-				e.setCode((KeyCode::code)c);
+				e.setCode(KeyCode::code(c));
 				e.setPressed();
 				e.populate();
 				e.validate();
@@ -227,7 +227,7 @@ void AnnEventManager::processInput()
 			{
 				//same thing
 				AnnKeyEvent e;
-				e.setCode((KeyCode::code)c);
+				e.setCode(KeyCode::code(c));
 				e.setReleased();
 				e.populate();
 				e.validate();
@@ -394,3 +394,5 @@ size_t AnnEventManager::getNbStick()
 {
 	return Joysticks.size();
 }
+
+AnnEventListener::~AnnEventListener() {}
