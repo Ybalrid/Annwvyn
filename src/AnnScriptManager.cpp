@@ -243,7 +243,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](AnnStickEvent e) {return e.getNbButtons(); }), "getNbButtons");
 	chai.add(fun([](AnnStickEvent e) {return e.getNbAxis(); }), "getNbAxis");
 	chai.add(fun([](AnnStickEvent e) {return e.getNbPov(); }), "getNbPov");
-	chai.add(fun([](AnnStickEvent e) {return e.getVendor(); }), "getVendoor");
+	chai.add(fun([](AnnStickEvent e) {return e.getVendor(); }), "getVendor");
 	chai.add(fun([](AnnStickEvent e) {return e.getStickID(); }), "getStickID");
 	chai.add(fun([](AnnStickEvent e) {return e.isXboxController(); }), "isXboxController");
 	chai.add(fun([](AnnStickEvent e, const int i) {return e.isPressed(i); }), "isPressed");
@@ -303,11 +303,11 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](const AnnColor& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-	chai.add(fun([](KeyCode::code c) {AnnDebug() << "keycode:" << c; }), "AnnDebugLog");
-	chai.add(fun([](MouseAxisId c) {AnnDebug() << "mouseAxis:" << c; }), "AnnDebugLog");
-	chai.add(fun([](bool b) {std::string s("true"); if (!b) s = "false"; AnnDebug() << "bool:" << s; }), "AnnDebugLog");
-	chai.add(fun([](int i) {AnnDebug() << "int:" << i; }), "AnnDebugLog");
-	chai.add(fun([](float f) {AnnDebug() << "float:" << f; }), "AnnDebugLog");
+	chai.add(fun([](KeyCode::code c) {AnnDebug() << logFromScript << "keycode:" << c; }), "AnnDebugLog");
+	chai.add(fun([](MouseAxisId c) {AnnDebug() << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
+	chai.add(fun([](bool b) {std::string s("true"); if (!b) s = "false"; AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
+	chai.add(fun([](int i) {AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
+	chai.add(fun([](float f) {AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
 }
 
 void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
