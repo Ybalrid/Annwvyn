@@ -12,8 +12,8 @@ class DummyBehavior2
 
 	def KeyEvent(event)
 	{
-		AnnDebugLog("Some key event happened");
-		AnnDebugLog(event.getKey())//Value is int... 
+		AnnDebugLog("Some keyboard event happened");
+		AnnDebugLog(event.getKey())//Value is int. The KeyCode::code enum isn't exposed to ChaiScript
 		if(event.isPressed())
 		{
 			AnnDebugLog("Pressed()");
@@ -31,15 +31,19 @@ class DummyBehavior2
 		AnnDebugLog(event.getButtonState(0));
 		//AnnDebugLog("right button")
 		AnnDebugLog(event.getButtonState(1));
-		//
+		//AnnDebugLog("middle mouse button")
 		AnnDebugLog(event.getButtonState(2));
+		//prev/next and other buttons most mice don't have are accessible too...
 
 		auto x = event.getAxis(0);
 		auto y = event.getAxis(1);
 		auto z = event.getAxis(2);
 
+		//Horizontal axis, in ints "pixels"
 		AnnDebugLog(x.getRelValue());
+		//Vertical
 		AnnDebugLog(y.getRelValue());
+		//Scroll wheel. Not in "lines" as expected, but as +/- 120 pixels
 		AnnDebugLog(z.getRelValue());
 
 	}
