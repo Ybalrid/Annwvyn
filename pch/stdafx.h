@@ -1,3 +1,5 @@
+#pragma once
+
 //Remove some visual studio stupidity
 #pragma warning (disable : 4244)
 

@@ -77,7 +77,7 @@ namespace Annwvyn
 
 		bool cannotKey, cannotMouse, cannotStick, cannotTime, cannotTrigger, cannotHand;
 		///Just call the update on the instance
-		inline void callUpdateOnScript() { callUpdateOnScriptInstance(ScriptObjectInstance); }
+		void callUpdateOnScript() { callUpdateOnScriptInstance(ScriptObjectInstance); }
 	};
 
 	///Script Manager, serve as an interface between ChaiScript and the rest of the engine

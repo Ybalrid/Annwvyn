@@ -22,7 +22,7 @@ public:
 		AnnDebug() << "Demo hub destructed!";
 	}
 
-	void load()
+	void load() override
 	{
 		//Register ourselves as event listener
 		AnnGetEventManager()->addListener(getSharedListener());
@@ -77,31 +77,31 @@ public:
 	}
 
 	//Called at each frame
-	void runLogic()
+	void runLogic() override
 	{
 	}
 
-	void unload()
+	void unload() override
 	{
 		//Unregister the listener
 		AnnGetEventManager()->removeListener(getSharedListener());
 		AnnLevel::unload();
 	}
 
-	void TriggerEvent(AnnTriggerEvent e)
+	void TriggerEvent(AnnTriggerEvent e) override
 	{
 		if (e.getContactStatus())
 			jumpToLevelTriggeredBy(e.getSender());
 	}
 
-	void jumpToLevelTriggeredBy(std::shared_ptr<AnnTriggerObject> trigger)
+	void jumpToLevelTriggeredBy(AnnTriggerObject* trigger)
 	{
-		if (demo0trig == trigger)
+		if (demo0trig.get() == trigger)
 		{
 			AnnGetLevelManager()->jump(getDemo(0));
 			return;
 		}
-		if (testLevelTrig == trigger)
+		if (testLevelTrig.get() == trigger)
 		{
 			AnnGetLevelManager()->jump(getDemo(1));
 		}
@@ -126,7 +126,7 @@ public:
 	{
 	}
 
-	void load()
+	void load() override
 	{
 		AnnGetEventManager()->addListener(goBackListener = make_shared<GoBackToDemoHub>());
 		auto Ground = addGameObject("Ground.mesh");
@@ -145,7 +145,7 @@ public:
 		AnnGetPlayer()->teleport({ 0, 1, 0 }, 0);
 	}
 
-	void unload()
+	void unload() override
 	{
 		AnnGetEventManager()->removeListener(goBackListener);
 		goBackListener.reset();
@@ -157,8 +157,7 @@ public:
 	{
 	}
 
-	void runLogic()
-	{
+	void runLogic() override {
 	}
 
 private:

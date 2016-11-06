@@ -267,7 +267,8 @@ void Annwvyn::AnnScriptManager::registerApi()
 
 	chai.add(fun([](AnnTimeEvent t) {return t.getID(); }), "getID");
 
-	// TODO Trigger needs to be fixed. They "own" a shared pointer to the sender. ew...
+	chai.add(fun([](AnnTriggerEvent e) {return e.getContactStatus(); }), "getContactStatus");
+	chai.add(fun([](AnnTriggerEvent e) {return e.getSender(); }), "getSender");
 
 	// TODO the hand controller event interface is not finished
 	chai.add(user_type<AnnHandController>(), "AnnHandController");
@@ -275,6 +276,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(user_type<AnnHandController::AnnHandControllerSide>(), "AnnHandControllerSide");
 	chai.add(var(AnnHandController::AnnHandControllerSide::leftHandController), "leftHandController");
 	chai.add(var(AnnHandController::AnnHandControllerSide::rightHandController), "rightHandController");
+	chai.add(var(AnnHandController::AnnHandControllerSide::invalidHandController), "invalidHandController");
 
 	// HACK I'm exposing a pointer to the controller for now. This will be encapsulated after
 	//we have access to Oculus's hand controllers (December 2016...)
