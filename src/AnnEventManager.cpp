@@ -137,7 +137,7 @@ AnnEventManager::~AnnEventManager()
 	Joysticks.clear();
 }
 
-void Annwvyn::AnnEventManager::useDefaultEventListener()
+void AnnEventManager::useDefaultEventListener()
 {
 	AnnDebug("Reconfiguring the engine to use the default event listener");
 	AnnDebug("This unregister any current listener in use!");
@@ -153,7 +153,7 @@ void Annwvyn::AnnEventManager::useDefaultEventListener()
 	addListener(defaultEventListener);
 }
 
-std::shared_ptr<AnnEventListener> Annwvyn::AnnEventManager::getDefaultEventListener()
+std::shared_ptr<AnnEventListener> AnnEventManager::getDefaultEventListener()
 {
 	return defaultEventListener;
 }
@@ -178,9 +178,9 @@ void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 
 	auto iterator = listeners.begin();
 	while (iterator != listeners.end())
-		if (((*iterator).lock()) && (*iterator).lock().get() == l.get())
+		if ((*iterator).lock() && (*iterator).lock().get() == l.get())
 			iterator = listeners.erase(iterator);
-		else iterator++;
+		else ++iterator;
 }
 
 void AnnEventManager::update()
@@ -212,7 +212,7 @@ void AnnEventManager::processInput()
 			{
 				//create a corresponding key event
 				AnnKeyEvent e;
-				e.setCode((KeyCode::code)c);
+				e.setCode(KeyCode::code(c));
 				e.setPressed();
 				e.populate();
 				e.validate();
@@ -227,7 +227,7 @@ void AnnEventManager::processInput()
 			{
 				//same thing
 				AnnKeyEvent e;
-				e.setCode((KeyCode::code)c);
+				e.setCode(KeyCode::code(c));
 				e.setReleased();
 				e.populate();
 				e.validate();
@@ -243,7 +243,7 @@ void AnnEventManager::processInput()
 
 	if (Mouse)
 	{
-		OIS::MouseState state(Mouse->getMouseState());
+		auto state(Mouse->getMouseState());
 
 		AnnMouseEvent e;
 
@@ -264,14 +264,14 @@ void AnnEventManager::processInput()
 
 	for (auto Joystick : Joysticks)
 	{
-		OIS::JoyStickState state(Joystick->stick->getJoyStickState());
+		auto state(Joystick->stick->getJoyStickState());
 		AnnStickEvent e;
 
 		//Get all buttons immediate data
 		e.buttons = state.mButtons;
 
 		//Get all axes immediate data
-		for (int i(0); i < state.mAxes.size(); i++)
+		for (auto i(0); i < state.mAxes.size(); i++)
 		{
 			AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
 			if (state.mAxes[i].absOnly)
@@ -394,3 +394,5 @@ size_t AnnEventManager::getNbStick()
 {
 	return Joysticks.size();
 }
+
+AnnEventListener::~AnnEventListener() {}

@@ -5,29 +5,27 @@
 using namespace Annwvyn;
 
 AnnGameObject::AnnGameObject() :
-	Node(NULL),
-	Entity(NULL),
-	bulletReady(false),
-	DynamicsWorld(NULL),
-	Body(NULL),
-	Shape(NULL),
-	anim(NULL),
+	Node(nullptr),
+	Entity(nullptr),
+	Body(nullptr),
+	Shape(nullptr),
+	state(nullptr),
+	anim(nullptr),
+	audioSource(nullptr),
 	animIsLooping(false),
 	animIsPlaying(false),
-	animIsSetted(false),
-	visible(true),
-	audioSource(nullptr),
-	state(nullptr)
+	animIsSetted(false)
 {
 }
 
 AnnGameObject::~AnnGameObject()
 {
-	AnnDebug() << "Destructing game object !";
+	for (auto script : scripts) script->unregisterAsListener();
+
+	AnnDebug() << "Destructing game object " << getName() << " !";
 	//Clean OpenAL de-aloc
 	if (AnnGetAudioEngine())
 		AnnGetAudioEngine()->removeSource(audioSource);
-	AnnDebug() << "Tidy my physics !";
 
 	if (AnnGetPhysicsEngine())
 		AnnGetPhysicsEngine()->removeRigidBody(Body);
@@ -66,30 +64,14 @@ void AnnGameObject::updateOpenAlPos()
 	audioSource->setPositon(getPosition());
 }
 
+void AnnGameObject::callUpdateOnScripts()
+{
+	for (auto script : scripts) script->update();
+}
+
 void AnnGameObject::setPosition(float x, float y, float z)
 {
-	if (Node == NULL)
-		return;
-
-	AnnVect3 newPosition(x, y, z);
-
-	/*
-	*Position of object have to be the same in each part of the engine
-	*(graphics, physics, audio)
-	*/
-	//change BulletPosition
-	if (bulletReady)
-	{
-		auto currentPosition = Node->getPosition();
-		Body->translate(btVector3(x - currentPosition.x,
-						y - currentPosition.y,
-						z - currentPosition.z));
-	}
-	//change OgrePosition
-	Node->setPosition(x, y, z);
-
-	//change OpenAL Source Position
-	audioSource->setPositon(newPosition);
+	setPosition(AnnVect3{ x,y,z });
 }
 
 void AnnGameObject::translate(float x, float y, float z)
@@ -97,16 +79,25 @@ void AnnGameObject::translate(float x, float y, float z)
 	//Ogre
 	Node->translate(x, y, z);
 	//Bullet
-	if (Body)
-		Body->translate(btVector3(x, y, z));
-		//OpenAL
-	auto currentPosition = Node->getPosition();
+	if (Body) Body->translate(btVector3(x, y, z));
+	//OpenAL
 	updateOpenAlPos();
 }
 
 void AnnGameObject::setPosition(AnnVect3 pos)
 {
-	setPosition(pos.x, pos.y, pos.z);
+	if (Body)
+	{
+		auto currentPosition = Node->getPosition();
+		Body->translate(btVector3(pos.x - currentPosition.x,
+						pos.y - currentPosition.y,
+						pos.z - currentPosition.z));
+	}
+	//change OgrePosition
+	Node->setPosition(pos);
+
+	//change OpenAL Source Position
+	audioSource->setPositon(pos);
 }
 
 void AnnGameObject::setOrientation(float w, float x, float y, float z)
@@ -117,11 +108,10 @@ void AnnGameObject::setOrientation(float w, float x, float y, float z)
 void AnnGameObject::setOrientation(AnnQuaternion orient)
 {
 	//Ogre3D
-	if (Node != NULL)
-		Node->setOrientation(orient);
+	Node->setOrientation(orient);
 
 	//bullet
-	if (Body != NULL)
+	if (Body)
 	{
 		btTransform t = Body->getCenterOfMassTransform();
 		t.setRotation(orient.getBtQuaternion());
@@ -141,16 +131,17 @@ void AnnGameObject::setScale(float x, float y, float z)
 
 AnnVect3 AnnGameObject::getPosition()
 {
-	if (Node != NULL)
-		return Node->getPosition();
-	return AnnVect3::ZERO;
+	return Node->getPosition();
 }
 
 AnnQuaternion AnnGameObject::getOrientation()
 {
-	if (Node != NULL)
-		return Node->getOrientation();
-	return AnnQuaternion::IDENTITY;
+	return Node->getOrientation();
+}
+
+AnnVect3 AnnGameObject::getScale()
+{
+	return Node->getScale();
 }
 
 void AnnGameObject::setNode(Ogre::SceneNode* newNode)
@@ -163,24 +154,12 @@ void AnnGameObject::setEntity(Ogre::Entity* newEntity)
 	Entity = newEntity;
 }
 
-void AnnGameObject::setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld)
-{
-	DynamicsWorld = dynamicsWorld;
-}
-
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
-	//check if everything is OK
-	if (DynamicsWorld == NULL)
-		return;
-	if (Node == NULL)
-		return;
-	if (Entity == NULL)
-		return;
-
 	//init shape converter
 	BtOgre::StaticMeshToShapeConverter converter(Entity);
 
+	// TODO put this thing inside the Physics engine
 	//create the correct shape
 	switch (type)
 	{
@@ -208,47 +187,20 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 			return;
 	}
 
-	if (Shape == NULL)
-	{
-		AnnDebug() << "Error: The shape hasn't been created";
-		return;
-	}
-
 	AnnVect3 scale = getNode()->getScale();
 	Shape->setLocalScaling(scale.getBtVector());
 
 	btVector3 inertia;
-
-	if (mass != 0)
-		Shape->calculateLocalInertia(mass, inertia);
-	else
-		inertia = btVector3(0, 0, 0); //No influence. But mass zero objects are static
+	Shape->calculateLocalInertia(mass, inertia);
 
 	//create rigidBody from shape
-	if (!Body)
-	{
-		state = new BtOgre::RigidBodyState(Node);
-		Body = new btRigidBody(mass, state, Shape, inertia);
-	}
+	state = new BtOgre::RigidBodyState(Node);
+	Body = new btRigidBody(mass, state, Shape, inertia);
 
-	if (Body)
-	{
-		if (colideWithPlayer)
-		{
-			DynamicsWorld->addRigidBody(Body, MASK(1), MASK(0) | MASK(1));
-		}
-		else
-		{
-			DynamicsWorld->addRigidBody(Body, MASK(1), MASK(1));
-		}
-	}
-	else
-	{
-		AnnDebug() << "Error: RigidBody hasn't been created";
-		return; //Unable to create the physical representation
-	}
-
-	bulletReady = true;
+	short bulletMask = MASK(0) | MASK(1);
+	if (!colideWithPlayer)
+		bulletMask = MASK(1);
+	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, MASK(1), bulletMask);
 }
 
 Ogre::SceneNode* AnnGameObject::getNode()
@@ -293,28 +245,22 @@ void AnnGameObject::updateCollisionStateWith(AnnGameObject* Object, bool updated
 
 void AnnGameObject::cleanCollisionMask()
 {
-	for (size_t i = 0; i < collisionMask.size(); i++)
-	{
-		delete collisionMask[i];
-		collisionMask.erase(collisionMask.begin() + i);
-	}
+	for (auto cm : collisionMask)
+		delete cm;
+	collisionMask.clear();
 }
 
 void AnnGameObject::resetCollisionMask()
 {
-	for (size_t i = 0; i < collisionMask.size(); i++)
-		collisionMask[i]->collisionState = false;
+	for (auto cm : collisionMask) cm->collisionState = false;
 }
 
 void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 {
-	if (Object == this) return; //Explain me how I can collide with myself o.O
-
-	struct collisionTest* tester = new collisionTest;
+	auto tester = new collisionTest;
 
 	tester->collisionState = false;
 	tester->Object = Object;
-
 	tester->Receiver = this;
 
 	collisionMask.push_back(tester);
@@ -322,13 +268,12 @@ void AnnGameObject::testCollisionWith(AnnGameObject* Object)
 
 void AnnGameObject::stopGettingCollisionWith(AnnGameObject* Object)
 {
-	if (!Object) return;
-	for (size_t i = 0; i < collisionMask.size(); i++)
-		if (collisionMask[i]->Object == Object)
-		{
-			delete(collisionMask[i]);
-			collisionMask[i] = NULL;
-		}
+	auto query = std::find_if(collisionMask.begin(), collisionMask.end(),
+							  [=](collisionTest* test) {return test->Object == Object; });
+
+	if (query == collisionMask.end()) return;
+	delete *query;
+	collisionMask.erase(query);
 }
 
 void AnnGameObject::setAnimation(const char animationName[])
@@ -340,11 +285,11 @@ void AnnGameObject::setAnimation(const char animationName[])
 		animIsSetted = false;
 		animIsLooping = false;
 		animIsPlaying = false;
-		anim = NULL;
+		anim = nullptr;
 	}
 
 	anim = Entity->getAnimationState(animationName);
-	if (anim != NULL)
+	if (anim != nullptr)
 		animIsSetted = true;
 }
 
@@ -386,38 +331,29 @@ void AnnGameObject::applyForce(AnnVect3 force)
 
 void AnnGameObject::setLinearSpeed(AnnVect3 v)
 {
-	if (bulletReady)
+	if (Body)
 		Body->setLinearVelocity(v.getBtVector());
 }
 
 void AnnGameObject::setVisible()
 {
-	visible = true;
 	getNode()->setVisible(true);
 }
 
 void AnnGameObject::setInvisible()
 {
-	visible = false;
 	getNode()->setVisible(false);
-}
-
-bool AnnGameObject::isVisible()
-{
-	return visible;
-}
-
-void AnnGameObject::setID(std::string ID)
-{
-	id = ID;
-}
-
-std::string AnnGameObject::getID()
-{
-	return id;
 }
 
 std::string Annwvyn::AnnGameObject::getName()
 {
 	return name;
+}
+
+void AnnGameObject::attachScript(const std::string & scriptName)
+{
+	auto script = AnnGetScriptManager()->getBehaviorScript(scriptName, this);
+	if (script->isValid())
+		scripts.push_back(script);
+	script->registerAsListener();
 }

@@ -26,7 +26,7 @@ defaultGravity(0, -9.81f, 0)
 
 	//Set gravity vector
 	DynamicsWorld->setGravity(defaultGravity.getBtVector());
-	AnnDebug("Gravity vector = (0, -9.81f, 0)");
+	AnnDebug() << "Gravity vector " << defaultGravity;
 
 	debugPhysics = false;//by default
 	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld);

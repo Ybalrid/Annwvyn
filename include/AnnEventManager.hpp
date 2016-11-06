@@ -65,7 +65,7 @@ namespace Annwvyn
 		AnnKeyEvent();
 	public:
 		///Get the key involved in that event
-		Annwvyn::KeyCode::code getKey();
+		KeyCode::code getKey();
 
 		///Return true if it's a key press. Key event are debounced.
 		bool isPressed();
@@ -76,7 +76,7 @@ namespace Annwvyn
 	private:
 		friend class AnnEventManager;
 		///Code of the key this event relate to
-		Annwvyn::KeyCode::code key;
+		KeyCode::code key;
 		///Pressed state
 		bool pressed;
 		///Released state
@@ -213,13 +213,13 @@ namespace Annwvyn
 		///Get the left (west) state
 		bool getWest();
 
-		///Get the north&&east state
+		///Get the north && east state
 		bool getNorthEast();
-		///Get the south&&east state
+		///Get the south && east state
 		bool getSouthEast();
-		///Get the north&&west state
+		///Get the north && west state
 		bool getNorthWest();
-		///Get the south&&west state
+		///Get the south && west state
 		bool getSouthWest();
 
 		///Return true if nothing is pressed on the POV controller
@@ -329,6 +329,9 @@ namespace Annwvyn
 		///Return true if if there's collision
 		bool getContactStatus();
 		///Pointer to the trigger that have sent this event
+
+		// TODO don't use a shared ptr here
+
 		std::shared_ptr<AnnTriggerObject> getSender();
 	private:
 		friend class AnnEventManager;
@@ -344,6 +347,8 @@ namespace Annwvyn
 		//You need to subclass it to create an EventListener
 
 	public:
+		virtual ~AnnEventListener();
+
 		///Construct a listener
 		AnnEventListener();
 		///Event from the keyboard
@@ -385,13 +390,13 @@ namespace Annwvyn
 		///Construct the default listener
 		AnnDefaultEventListener();
 		///Get events from keyboards
-		void KeyEvent(AnnKeyEvent e);
+		void KeyEvent(AnnKeyEvent e) override;
 		///Get events from the mouse
-		void MouseEvent(AnnMouseEvent e);
+		void MouseEvent(AnnMouseEvent e) override;
 		///Get events from the joystick
-		void StickEvent(AnnStickEvent e);
+		void StickEvent(AnnStickEvent e) override;
 		///Get events from an hand controller
-		void HandControllerEvent(AnnHandControllerEvent e);
+		void HandControllerEvent(AnnHandControllerEvent e) override;
 
 		///Set all the key-codes for the controls
 		void setKeys(KeyCode::code fw,
@@ -477,9 +482,9 @@ namespace Annwvyn
 		///Object for text input
 		AnnTextInputer();
 		///Callback key press method
-		virtual bool keyPressed(const OIS::KeyEvent &arg);
+		bool keyPressed(const OIS::KeyEvent &arg) override;
 		///Callback key released method
-		virtual bool keyReleased(const OIS::KeyEvent &arg);
+		bool keyReleased(const OIS::KeyEvent &arg) override;
 		///Return the "input" string object
 		std::string getInput();
 		///Permit you to change the content of the input method
@@ -561,7 +566,7 @@ namespace Annwvyn
 		friend class AnnPhysicsEngine;
 
 		///Engine call for refreshing the event system
-		void update();
+		void update() override;
 		///Process user inputs
 		void processInput();
 		///Process timers
@@ -569,6 +574,7 @@ namespace Annwvyn
 		///Process triggers
 		void processTriggerEvents();
 
+		// TODO get rid of the shared pointer here
 		///Register trigger event for next triggerProcess by the engine
 		void spatialTrigger(std::shared_ptr<AnnTriggerObject> sender);
 

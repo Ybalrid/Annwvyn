@@ -53,7 +53,8 @@ namespace Annwvyn
 
 		///Set the ambient light
 		/// \param v the color of the light
-		void setAmbiantLight(AnnColor color);
+		void setAmbientLight(AnnColor color);
+		DEPRECATED void setAmbiantLight(AnnColor color) { setAmbientLight(color); }
 
 	private:
 		///Scene manager created by the VR renderer

@@ -23,6 +23,7 @@
 //Annwvyn
 #include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
+#include "AnnScriptManager.hpp"
 
 #include "AnnAbstractMovable.hpp"
 #pragma warning(default:4996)
@@ -54,6 +55,9 @@ namespace Annwvyn
 		///Class constructor
 		AnnGameObject();
 
+		///Deleted AnnGameObject Copy Constructor
+		AnnGameObject(const AnnGameObject&) = delete;
+
 		///Class Destructor. Virtual.
 		virtual ~AnnGameObject();
 
@@ -65,7 +69,7 @@ namespace Annwvyn
 
 		///Set position from Vector 3D
 		/// \param pos 3D position vector. Relative to scene root position
-		void setPosition(AnnVect3 pos);
+		void setPosition(AnnVect3 pos) override;
 
 		///Translate
 		/// \param x X component of the translation vector
@@ -82,7 +86,7 @@ namespace Annwvyn
 
 		///Set Orientation from Quaternion
 		/// \param orient Quaternion for absolute orientation
-		void setOrientation(AnnQuaternion orient);
+		void setOrientation(AnnQuaternion orient) override;
 
 		///Set scale
 		/// \param x X component of the scale vector
@@ -95,10 +99,13 @@ namespace Annwvyn
 		void setScale(AnnVect3 scale);
 
 		///Get Position
-		AnnVect3 getPosition();
+		AnnVect3 getPosition() override;
 
 		///Get Orientation
-		AnnQuaternion getOrientation();
+		AnnQuaternion getOrientation() override;
+
+		///Get scale
+		AnnVect3 getScale();
 
 		///Get Ogre Node
 		Ogre::SceneNode* getNode();
@@ -165,7 +172,7 @@ namespace Annwvyn
 		void applyForce(AnnVect3 force);
 
 		///Apply a physical impulsion
-		/// \param the impulsion force
+		/// \param impulse the impulsion force
 		void applyImpulse(AnnVect3 impulse);
 
 		///Set the linear speed of the object
@@ -183,17 +190,11 @@ namespace Annwvyn
 		///Make the object invisible
 		void setInvisible();
 
-		///Get if object visible
-		bool isVisible();
-
-		///Set the ID of the GameObject
-		void setID(std::string ID);
-
-		///Get the ID of the Object
-		std::string getID();
-
-		///
+		///Return the name of the object
 		std::string getName();
+
+		///Attach a script to this object
+		void attachScript(const std::string& scriptName);
 
 	private:
 		///Make Annwvyn::AnnEngine access these methods :
@@ -206,9 +207,6 @@ namespace Annwvyn
 		///For engine : set Entity
 		void setEntity(Ogre::Entity* entity);
 
-		///For engine : set bullet world
-		void setBulletDynamicsWorld(btDiscreteDynamicsWorld* dynamicsWorld);
-
 		// TODO create animation state machine
 		///For engine : get elapsed time
 		void addAnimationTime(double offsetTime);
@@ -216,7 +214,6 @@ namespace Annwvyn
 		///For engine : update OpenAL source position
 		void updateOpenAlPos();
 
-	private:
 		/**
 		* You will certainly find strange to see that the Object does not carry a "position" vector.
 		* We use the position of the Ogre Node or the Bullet body to align the object.
@@ -237,28 +234,29 @@ namespace Annwvyn
 		bool animIsLooping;
 		Ogre::AnimationState* anim;
 
-		btDiscreteDynamicsWorld* DynamicsWorld;
 		btCollisionShape* Shape;
 		btRigidBody* Body;
-		bool bulletReady;
 
 		///AnnAudioEngine audioSource;
 		std::shared_ptr<AnnAudioSource> audioSource;
 
 		///Name of the object
 		std::string name;
-		std::string id;
 
 		///True if the object is visible
-		bool visible;
 		BtOgre::RigidBodyState *state;
+
+		std::vector<std::shared_ptr<AnnBehaviorScript>> scripts;
 
 	public:
 		///Executed after object initialization
-		virtual void postInit() { return; }
+		virtual void postInit() { }
 
 		///Executed at refresh time (each frames)
-		virtual void atRefresh() { return; }
+		virtual void atRefresh() { }
+
+		///Call the update methods of all the script present in the scripts container
+		void callUpdateOnScripts();
 	};
 }
 #endif

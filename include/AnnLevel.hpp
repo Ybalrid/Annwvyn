@@ -45,13 +45,13 @@ namespace Annwvyn
 		virtual void runLogic() = 0;
 
 	protected:
+		friend class AnnLevelManager;
 		AnnGameObjectList levelContent;
 		AnnLightList levelLighting;
 		AnnTriggerObjectList levelTrigger;
 
 		std::list<std::shared_ptr<Annwvyn::AnnAbstractMovable>> levelMovable;
 
-		std::unordered_map<std::string, std::shared_ptr<AnnGameObject> > levelContentIdMap;
 		std::unordered_map<std::string, std::shared_ptr<AnnLightObject> > levelLightingIdMap;
 		std::unordered_map<std::string, std::shared_ptr<AnnTriggerObject> > levelTriggerIdMap;
 
@@ -62,8 +62,9 @@ namespace Annwvyn
 		std::shared_ptr<AnnTriggerObject> addTrggerObject(std::shared_ptr<AnnTriggerObject> obj = std::make_shared<AnnSphericalTriggerObject>(), std::string id = noID);
 
 		///Add a Game object to the level
-		std::shared_ptr<AnnGameObject> addGameObject(std::string entityName, std::string id = noID);
+		std::shared_ptr<AnnGameObject> addGameObject(std::string entityName, std::string name = noID);
 
+		///Add a manual game b
 		void addManualMovableObject(std::shared_ptr<AnnAbstractMovable> movable);
 
 		///Name of the level
