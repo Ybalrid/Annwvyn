@@ -38,58 +38,58 @@ public:
 	virtual ~OgreOpenVRRender();
 
 	///Initialize the rendering pipeline
-	virtual void initPipeline();
+	void initPipeline() override;
 
 	///Initialize the OpenVR HMD
-	virtual void initVrHmd();
+	void initVrHmd() override;
 
 	///Initialize additional rendering features
-	virtual void initClientHmdRendering();
+	void initClientHmdRendering() override;
 
 	///Return true if the application should terminate
-	virtual bool shouldQuit();
+	bool shouldQuit() override;
 
 	///Return true if the application should recenter
-	virtual bool shouldRecenter();
+	bool shouldRecenter() override;
 
 	///Return true if the app can be view in the HMD
-	virtual bool isVisibleInHmd();
+	bool isVisibleInHmd() override;
 
 	///Update the tracking state of the HMD (and possibly other tracked objects)
-	virtual void updateTracking();
+	void updateTracking() override;
 
 	///Render each frames
-	virtual void renderAndSubmitFrame();
+	void renderAndSubmitFrame() override;
 
 	///Recenter the tracking origin
-	virtual void recenter();
+	void recenter() override;
 
 	///Change the background color of every viewport on the rendering pipeline
-	virtual void changeViewportBackgroundColor(Ogre::ColourValue color);
+	void changeViewportBackgroundColor(Ogre::ColourValue color) override;
 
 	///Return true if this VR system has an integrated audio device
-	virtual bool usesCustomAudioDevice() { return false; }
+	bool usesCustomAudioDevice() override { return false; }
 
 	///Return the substr that can help identify the correct audio device to use
-	virtual std::string getAudioDeviceIdentifierSubString() { return ""; }
+	std::string getAudioDeviceIdentifierSubString() override { return ""; }
 
 	///Change the debug window mode
-	virtual void showDebug(DebugMode mode);
+	void showDebug(DebugMode mode) override;
 
 	///Create a window. Even if we do "off screen rendering", that's a vital part of how Ogre does stuff.
-	virtual void createWindow();
+	void createWindow() override;
 
 	///Create and initialize the scene managers
-	virtual void initScene();
+	void initScene() override;
 
 	///Create and initialize the cameras
-	virtual void initCameras();
+	void initCameras() override;
 
 	///Create the render targets
-	virtual void initRttRendering();
+	void initRttRendering() override;
 
 	///Get the projection matrix from the OpenVR API and apply it to the cameras using the near/far clip planes distances
-	void updateProjectionMatrix();
+	void updateProjectionMatrix() override;
 
 	///Get a "vr::EVREye" from an "oovrEyeType"
 	inline vr::EVREye getEye(oovrEyeType eye);

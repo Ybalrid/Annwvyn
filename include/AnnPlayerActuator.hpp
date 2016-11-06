@@ -33,7 +33,7 @@ namespace Annwvyn
 		///Construct the default player actuator
 		AnnDefaultPlayerActuator();
 		///Allow gravity to pull the player to the ground while permitting the user to control movement on the (XZ) plane
-		void actuate(float deltaTime);
+		void actuate(float deltaTime) override;
 	};
 }
 

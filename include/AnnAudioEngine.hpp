@@ -148,7 +148,7 @@ namespace Annwvyn
 		///For engine : update listener Orientation
 		friend class Annwvyn::AnnEngine;
 
-		void update();
+		void update() override;
 
 	private:
 		///Detect playback devices from the device enumeration string

@@ -29,7 +29,10 @@ namespace Annwvyn
 			~AnnDebugBuff() { pubsync(); };
 
 			///Sync the buffer by performing an AnnEngine::log, clear it and return success.
-			int sync() { AnnEngine::log(str()); str(""); return 0; };
+			int sync() override
+			{
+				AnnEngine::log(str()); str(""); return 0;
+			};
 		};
 
 	public:

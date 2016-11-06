@@ -11,26 +11,27 @@ Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
 OgreOculusRender* OgreOculusRender::OculusSelf = nullptr;
 
 OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
-debugSmgr(nullptr),
-Oculus(nullptr),
-debugCam(nullptr),
-debugCamNode(nullptr),
-debugPlaneNode(nullptr),
-debugViewport(nullptr),
-layers(nullptr),
-lastFrameDisplayTime(0),
+frontierWidth{ 100 },
+Oculus{ nullptr },
+currentFrameDisplayTime{ 0 },
+lastFrameDisplayTime{ 0 },
 mirrorTexture{ nullptr },
 oculusMirrorTextureGLID{ 0 },
 ogreMirrorTextureGLID{ 0 },
 oculusRenderTextureGLID{ 0 },
-currentFrameDisplayTime(0),
-textureSwapChain(nullptr),
-currentIndex(0),
-currentSessionStatusFrameIndex(0),
-perfHudMode(ovrPerfHud_Off),
-lastOculusPosition(feetPosition),
-lastOculusOrientation(bodyOrientation),
-frontierWidth(100)
+renderTextureGLID{ 0 },
+textureSwapChain{ nullptr },
+layers{ nullptr },
+perfHudMode{ ovrPerfHud_Off },
+currentIndex{ 0 },
+currentSessionStatusFrameIndex{ 0 },
+debugViewport{ nullptr },
+debugSmgr{ nullptr },
+debugCam{ nullptr },
+debugCamNode{ nullptr },
+debugPlaneNode{ nullptr },
+lastOculusPosition{ feetPosition },
+lastOculusOrientation{ bodyOrientation }
 {
 	for (auto vpt : vpts)
 		vpt = nullptr;
@@ -90,7 +91,7 @@ void OgreOculusRender::cycleDebugHud()
 void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	//save the color then apply it to each viewport
-	backgroundColor = (color);
+	backgroundColor = color;
 
 	//Render buffers
 	for (auto eye : { left, right })
@@ -239,7 +240,7 @@ void OgreOculusRender::initScene()
 	debugPlaneNode->setPosition(0, 0, -1);
 
 	//Create a manual object
-	Ogre::ManualObject* debugPlane = debugSmgr->createManualObject("DebugPlane");
+	auto debugPlane = debugSmgr->createManualObject("DebugPlane");
 
 	//Create a manual material and add a texture unit state to the default pass
 	DebugPlaneMaterial = Ogre::MaterialManager::getSingleton().create("DebugPlaneMaterial", "General", true);
@@ -268,19 +269,20 @@ void OgreOculusRender::initRttRendering()
 {
 	//Init GLEW here to be able to call OpenGL functions
 	AnnDebug() << "Init GL Extension Wrangler";
-	const GLenum err = glewInit();
+	const auto err = glewInit();
 	if (err != GLEW_OK)
 	{
-		AnnDebug("Failed to glewTnit(), error : " + std::string{ (char*)glewGetString(err) });
+		AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
 		exit(ANN_ERR_RENDER);
 	}
 	AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
 
 	//Get texture size from ovr with the maximal FOV for each eye
-	const ovrSizei texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);
-	const ovrSizei texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right], 1.f);
+	const auto texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);
+	const auto texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right], 1.f);
 
-	//Calculate the render buffer size for both eyes. The width of the frontier is the number of unused pixel between the two eye buffer. Apparently, keeping them glued together make some slight bleeding.
+	//Calculate the render buffer size for both eyes. The width of the frontier is the number of unused pixel between the two eye buffer.
+	//Apparently, keeping them glued together make some slight bleeding.
 	bufferSize.w = texSizeL.w + texSizeR.w + frontierWidth;
 	bufferSize.h = max(texSizeL.h, texSizeR.h);
 
@@ -511,6 +513,7 @@ void OgreOculusRender::showDebug(DebugMode mode)
 			return showMirrorView();
 		case MONOSCOPIC:
 			return showMonscopicView();
+		default: break;
 	}
 }
 

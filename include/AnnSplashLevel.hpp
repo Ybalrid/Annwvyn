@@ -21,13 +21,13 @@ namespace Annwvyn
 		AnnSplashLevel(Ogre::String splashTexture, std::shared_ptr<AnnLevel> nextLevel = nullptr, float timeoutTime = 10);
 
 		///Load the level. This create a manual material and a manual object to present the splash image
-		void load();
+		void load() override;
 
 		///Run the logic of the splash screen. This will check for the time and jump to next level if timeout
-		void runLogic();
+		void runLogic() override;
 
 		///Clean up the manually allocated object
-		void unload();
+		void unload() override;
 
 		///Set the background music
 		void setBGM(std::string path, bool preload = true);

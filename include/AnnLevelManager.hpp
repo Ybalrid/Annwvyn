@@ -44,7 +44,7 @@ namespace Annwvyn
 		void jumpToFirstLevel();
 
 		///Run level logic
-		void update();
+		void update() override;
 
 		///Unload the level currently running
 		void unloadCurrentLevel();

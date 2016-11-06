@@ -19,7 +19,7 @@ namespace Annwvyn
 		AnnSceneryManager(std::shared_ptr<OgreVRRender> renderer);
 
 		///This subsystem doesn't need to be updated
-		bool needUpdate() { return false; }
+		bool needUpdate() override { return false; }
 
 		///Set the ogre material for the sky-dome with params
 		/// \param activate if true put a sky-dome
