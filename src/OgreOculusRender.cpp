@@ -6,13 +6,14 @@
 using namespace Annwvyn;
 
 //Static class members
-bool OgreOculusRender::mirrorHMDView(true);
-Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane(nullptr);
-OgreOculusRender* OgreOculusRender::OculusSelf = nullptr;
+bool OgreOculusRender::mirrorHMDView{ true };
+Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane{ nullptr };
+OgreOculusRender* OgreOculusRender::OculusSelf{ nullptr };
 
 OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 frontierWidth{ 100 },
 Oculus{ nullptr },
+vpts{ {nullptr, nullptr} },
 currentFrameDisplayTime{ 0 },
 lastFrameDisplayTime{ 0 },
 mirrorTexture{ nullptr },
@@ -28,14 +29,12 @@ currentSessionStatusFrameIndex{ 0 },
 debugViewport{ nullptr },
 debugSmgr{ nullptr },
 debugCam{ nullptr },
+monoCam{ nullptr },
 debugCamNode{ nullptr },
 debugPlaneNode{ nullptr },
 lastOculusPosition{ feetPosition },
 lastOculusOrientation{ bodyOrientation }
 {
-	for (auto vpt : vpts)
-		vpt = nullptr;
-	monoCam = nullptr;
 	OculusSelf = static_cast<OgreOculusRender*>(self);
 }
 
@@ -138,7 +137,6 @@ void OgreOculusRender::recenter()
 void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
-	if (Oculus) delete Oculus;
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
@@ -588,7 +586,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 	ovr_CommitTextureSwapChain(Oculus->getSession(), textureSwapChain);
 	ovr_SubmitFrame(Oculus->getSession(), frameCounter, nullptr, &layers, 1);
 
-	//Update the render mirrored view
+	//Update the render debug view if the window is visible
 	if (window->isVisible())
 	{
 		//Put the mirrored view available for Ogre if asked for
@@ -601,6 +599,4 @@ void OgreOculusRender::renderAndSubmitFrame()
 		debugViewport->update();
 		window->update();
 	}
-	//Pause
-	Sleep(1);
 }

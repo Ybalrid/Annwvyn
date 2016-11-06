@@ -1,5 +1,5 @@
 /**
- * \file OgreOculusRenderer.hpp
+ * \file OgreOculusRender.hpp
  * \brief Initialize the Oculus Rendering pipeline, then render the main scene and submit it to Oculus Compositor
  * \author A. Brainville (Ybalrid)
  */
@@ -142,7 +142,7 @@ private:
 	void setMonoFov(float degreeFov);
 
 	///Save content of the RenderTexture to the specified file. This very slow operation is only useful for debugging the renderer itself
-	void debugSaveToFile(const char path[]);
+	static void debugSaveToFile(const char path[]);
 
 	///Object for getting informations from the Oculus Rift
 	OculusInterface* Oculus;
@@ -199,10 +199,10 @@ private:
 	unsigned long long int currentSessionStatusFrameIndex;
 
 	///Convert an ovrVector3f to an Ogre::Vector3
-	inline Ogre::Vector3 oculusToOgreVect3(const ovrVector3f& v);
+	static Ogre::Vector3 oculusToOgreVect3(const ovrVector3f& v);
 
 	///Convert an ovrQuatf to an Ogre::Quaternion
-	inline Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q);
+	static Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q);
 
 	///Viewport for the debug window
 	Ogre::Viewport* debugViewport;
