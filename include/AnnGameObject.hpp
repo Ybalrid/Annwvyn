@@ -172,7 +172,7 @@ namespace Annwvyn
 		void applyForce(AnnVect3 force);
 
 		///Apply a physical impulsion
-		/// \param the impulsion force
+		/// \param impulse the impulsion force
 		void applyImpulse(AnnVect3 impulse);
 
 		///Set the linear speed of the object

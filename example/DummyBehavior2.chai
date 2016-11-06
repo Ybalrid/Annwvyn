@@ -45,6 +45,20 @@ class DummyBehavior2
 		AnnDebugLog(y.getRelValue());
 		//Scroll wheel. Not in "lines" as expected, but as +/- 120 pixels
 		AnnDebugLog(z.getRelValue());
+	}
 
+	def StickEvent(event)
+	{
+		AnnDebugLog("Some Controller event!");
+		AnnDebugLog(event.getVendor());
+
+		for(var i = 0; i < event.getNbAxis(); ++i)
+		{
+			AnnDebugLog(event.getAxis(i).getAbsValue());
+		}
+		for(var i = 0; i < event.getNbButtons(); ++i)
+		{
+			AnnDebugLog(event.isDown(i));
+		}
 	}
 }
