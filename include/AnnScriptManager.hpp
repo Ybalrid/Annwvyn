@@ -28,13 +28,13 @@ namespace Annwvyn
 						  chaiscript::Boxed_Value chaisriptInstance);
 
 		///Script destructor
-		~AnnBehaviorScript();
+		virtual ~AnnBehaviorScript();
 
 		///Call this to call the "update" of the script
 		void update();
 
 		///Return true if the script is valid. If the object is in a state where this returns false, calling "update" on it will crash
-		bool isValid();
+		bool isValid() const;
 
 		///register this object as an event listener
 		void registerAsListener();
@@ -43,17 +43,17 @@ namespace Annwvyn
 		void unregisterAsListener();
 
 		///Event from the keyboard
-		void KeyEvent(AnnKeyEvent e);
+		void KeyEvent(AnnKeyEvent e) override;
 		///Event from the mouse
-		void MouseEvent(AnnMouseEvent e);
+		void MouseEvent(AnnMouseEvent e) override;
 		///Event for a Joystick
-		void StickEvent(AnnStickEvent e);
+		void StickEvent(AnnStickEvent e) override;
 		///Event from a timer
-		void TimeEvent(AnnTimeEvent e);
+		void TimeEvent(AnnTimeEvent e) override;
 		///Event from a trigger
-		void TriggerEvent(AnnTriggerEvent e);
+		void TriggerEvent(AnnTriggerEvent e) override;
 		///Event from an HandController
-		void HandControllerEvent(AnnHandControllerEvent e);
+		void HandControllerEvent(AnnHandControllerEvent e) override;
 
 	private:
 		///Validity state of this object. Cannot change.
@@ -91,10 +91,10 @@ namespace Annwvyn
 		AnnScriptManager();
 
 		///This subsystem doesn't need to be updated
-		bool needUpdate() { return false; };
+		bool needUpdate() override { return false; }
 
 		///This method does nothing
-		void update() { return; }
+		void update() override {}
 
 		///Evaluate a file. Exceptions internally catches with messages in the log. Return true or false depending on errors
 		bool evalFile(const std::string& file);

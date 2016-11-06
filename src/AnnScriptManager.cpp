@@ -396,7 +396,7 @@ AnnScriptManager::AnnScriptID AnnScriptManager::ID{ 0 };
 
 std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(const std::string & scriptName, AnnGameObject* owner)
 {
-	std::string file{ scriptName + scriptExtension };
+	auto file{ scriptName + scriptExtension };
 
 	try
 	{
@@ -406,7 +406,7 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 		//Increment ID
 		ID++;
 
-		std::string ownerTag{ "" };
+		string ownerTag{ "" };
 
 		//Not giving an owner to a script that wants an owner, or calling an owner to a script that
 		if (owner)
@@ -465,30 +465,35 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 }
 
 Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :
-	valid(false)
-
+	valid(false),
+	cannotKey(false),
+	cannotMouse(false),
+	cannotStick(false),
+	cannotTime(false),
+	cannotTrigger(false),
+	cannotHand(false)
 {
 	AnnDebug() << "Invalid script object created";
 }
 
-Annwvyn::AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
-											  std::function<void(chaiscript::Boxed_Value&)> updateHook,
-											  std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
-											  std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
-											  std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
-											  std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
-											  std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
-											  std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
-											  chaiscript::Boxed_Value chaisriptInstance) : constructListener(),
+AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
+									 std::function<void(chaiscript::Boxed_Value&)> updateHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
+									 chaiscript::Boxed_Value chaisriptInstance) : constructListener(),
 	valid(true),
 	name(scriptName),
+	ScriptObjectInstance(chaisriptInstance),
 	callUpdateOnScriptInstance(updateHook),
 	callKeyEventOnScriptInstance(KeyEventHook),
 	callMouseEventOnScriptInstance(MouseEventHook),
 	callStickEventOnScriptInstance(StickEventHook),
 	callTriggerEventOnScriptInstance(TriggerEventHook),
 	callHandControllertOnScriptInstance(HandControllertHook),
-	ScriptObjectInstance(chaisriptInstance),
 	cannotKey(false),
 	cannotMouse(false),
 	cannotStick(false),
@@ -516,7 +521,7 @@ void Annwvyn::AnnBehaviorScript::update()
 	}
 }
 
-bool Annwvyn::AnnBehaviorScript::isValid()
+bool Annwvyn::AnnBehaviorScript::isValid() const
 {
 	return valid;
 }
