@@ -267,9 +267,33 @@ void Annwvyn::AnnScriptManager::registerApi()
 
 	chai.add(fun([](AnnTimeEvent t) {return t.getID(); }), "getID");
 
-	// TODO Trigger needs to be fixed. Shared pointer problem here
+	// TODO Trigger needs to be fixed. They "own" a shared pointer to the sender. ew...
 
 	// TODO the hand controller event interface is not finished
+	chai.add(user_type<AnnHandController>(), "AnnHandController");
+	chai.add(user_type<AnnHandControllerAxis>(), "AnnHandControllerAxis");
+	chai.add(user_type<AnnHandController::AnnHandControllerSide>(), "AnnHandControllerSide");
+	chai.add(var(AnnHandController::AnnHandControllerSide::leftHandController), "leftHandController");
+	chai.add(var(AnnHandController::AnnHandControllerSide::rightHandController), "rightHandController");
+
+	// HACK I'm exposing a pointer to the controller for now. This will be encapsulated after
+	//we have access to Oculus's hand controllers (December 2016...)
+	chai.add(fun([](AnnHandControllerEvent e) {return e.getController(); }), "getController");
+
+	chai.add(fun([](AnnHandController* c) {return c->getWorldPosition(); }), "getWorldPosition");
+	chai.add(fun([](AnnHandController* c) {return c->getWorldOrientation(); }), "getWorldOrientation");
+	chai.add(fun([](AnnHandController* c) {return c->getLinearSpeed(); }), "getLinearSpeed");
+	chai.add(fun([](AnnHandController* c) {return c->getAngularSpeed(); }), "getAngularSpeed");
+	chai.add(fun([](AnnHandController* c) {return c->getPointingDirection(); }), "getPointingDirection");
+	chai.add(fun([](AnnHandController* c) {return c->getNbAxes(); }), "getNbAxes");
+	chai.add(fun([](AnnHandController* c) {return c->getNbButton(); }), "getNbButton");
+	chai.add(fun([](AnnHandController* c) {return c->isTracked(); }), "isTracked");
+	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->getButtonState(i); }), "getButtonState");
+	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->getAxis(i); }), "getAxis");
+	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->hasBeenPressed(i); }), "hasBeenPressed");
+	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->hasBeenReleased(i); }), "hasBeenReleased");
+
+	//There's capacitive touch surfaces and haptic feedback that aren't available right now on the AnnHandController class
 
 	//Register an accessors to the engine's log
 	chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
@@ -474,22 +498,9 @@ Annwvyn::AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
 {
 }
 
-Annwvyn::AnnBehaviorScript::AnnBehaviorScript(const AnnBehaviorScript & script) :
-	valid(script.valid),
-	name(script.name),
-	ScriptObjectInstance(script.ScriptObjectInstance),
-	callUpdateOnScriptInstance(script.callUpdateOnScriptInstance)
-{
-}
-
 Annwvyn::AnnBehaviorScript::~AnnBehaviorScript()
 {
 	AnnDebug() << "Destructing " << name << "Script";
-}
-
-AnnBehaviorScript Annwvyn::AnnBehaviorScript::operator=(const AnnBehaviorScript & script)
-{
-	return script;
 }
 
 void Annwvyn::AnnBehaviorScript::update()

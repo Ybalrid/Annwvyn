@@ -27,14 +27,8 @@ namespace Annwvyn
 						  std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
 						  chaiscript::Boxed_Value chaisriptInstance);
 
-		///Copy constructor
-		AnnBehaviorScript(const AnnBehaviorScript& script);
-
 		///Script destructor
 		~AnnBehaviorScript();
-
-		///Assign operator
-		AnnBehaviorScript operator=(const AnnBehaviorScript& script);
 
 		///Call this to call the "update" of the script
 		void update();
