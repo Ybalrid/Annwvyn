@@ -183,7 +183,7 @@ namespace Annwvyn
 		void startGameplayLoop();
 
 		///Toggle the display of the in-engine console
-		void toogleOnScreenConsole();
+		static void toogleOnScreenConsole();
 
 		///Return true if the app is visible inside the head mounted display
 		bool appVisibleInHMD();

@@ -72,7 +72,7 @@ void AnnLevelManager::update()
 void AnnLevelManager::unloadCurrentLevel()
 {
 	if (current) current->unload();
-	current = NULL;
+	current = nullptr;
 }
 
 std::shared_ptr<AnnLevel> AnnLevelManager::getLastLevelLoaded()

@@ -7,7 +7,7 @@ using namespace Annwvyn;
 AnnConsole::AnnConsole() : AnnSubSystem("OnScreenConsole"),
 modified(false),
 visibility(false),
-consoleNode(NULL),
+consoleNode(nullptr),
 offset(0, 0.125f, -0.75f),
 openGL43plus(false)
 {
@@ -361,7 +361,7 @@ stop:
 	destBuffer->unlock();
 
 	// Free the memory allocated for the textureBuffer
-	free(textureBuffer); textureBuffer = 0;
+	free(textureBuffer); textureBuffer = nullptr;
 }
 
 bool AnnConsole::needUpdate()
