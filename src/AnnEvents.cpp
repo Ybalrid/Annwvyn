@@ -420,7 +420,8 @@ bool AnnTimer::isTimeout()
 	return false;
 }
 
-AnnTriggerEvent::AnnTriggerEvent() : AnnEvent()
+AnnTriggerEvent::AnnTriggerEvent() : AnnEvent(),
+sender{ nullptr }
 {
 	type = TRIGGER_CONTACT;
 	contact = false;
@@ -436,7 +437,7 @@ AnnTriggerObject* AnnTriggerEvent::getSender()
 	return sender;
 }
 
-Annwvyn::AnnHandControllerEvent::AnnHandControllerEvent() :
+AnnHandControllerEvent::AnnHandControllerEvent() :
 	sender(nullptr)
 {
 	type = HAND_CONTROLLER;

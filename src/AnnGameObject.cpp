@@ -345,7 +345,7 @@ void AnnGameObject::setInvisible()
 	getNode()->setVisible(false);
 }
 
-std::string Annwvyn::AnnGameObject::getName()
+std::string AnnGameObject::getName()
 {
 	return name;
 }

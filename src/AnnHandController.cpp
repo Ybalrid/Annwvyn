@@ -5,11 +5,11 @@ using namespace Annwvyn;
 
 AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
 	controllerType(type),
-	node(handNode),
 	id(controllerID),
 	side(controllerSide),
-	model(nullptr),
+	node(handNode),
 	grabbed(nullptr),
+	model(nullptr),
 	tracked(false),
 	trackedAngularSpeed(AnnVect3::ZERO),
 	trackedLinearSpeed(AnnVect3::ZERO),
