@@ -9,7 +9,7 @@ using namespace Annwvyn;
 class Sinbad : public AnnGameObject
 {
 public:
-	void postInit()
+	void postInit() override
 	{
 		setPosition(0, 0, -5);
 		setScale(0.2f, 0.2f, 0.2f);
@@ -19,7 +19,7 @@ public:
 		setUpPhysics(40, boxShape);
 	}
 
-	void atRefresh()
+	void atRefresh() override
 	{
 		//AnnDebug() << "Sinbad position is : " << getPosition();
 		//AnnDebug() << getName();
@@ -30,7 +30,7 @@ class TestLevel : LEVEL
 {
 public:
 	///Construct the Level :
-	void load()
+	void load() override
 	{
 		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
 		//Set some ambient light
@@ -91,7 +91,7 @@ public:
 		AnnGetPlayer()->resetPlayerPhysics();
 	}
 
-	void unload()
+	void unload() override
 	{
 		AnnGetEventManager()->removeListener(goBackListener);
 
@@ -99,7 +99,7 @@ public:
 		AnnLevel::unload();
 	}
 
-	void runLogic()
+	void runLogic() override
 	{
 	}
 
@@ -109,7 +109,7 @@ private:
 
 class PhysicsDebugLevel : LEVEL
 {
-	void load()
+	void load() override
 	{
 		AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(0, 0, 0));
 		AnnGetPhysicsEngine()->getWorld()->setGravity(btVector3(0, 0, 0));
@@ -117,8 +117,7 @@ class PhysicsDebugLevel : LEVEL
 		AnnGetPlayer()->resetPlayerPhysics();
 	}
 
-	void runLogic()
-	{
+	void runLogic() override {
 		AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
 	}
 };
