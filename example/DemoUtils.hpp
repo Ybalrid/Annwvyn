@@ -11,19 +11,19 @@ public:
 	{
 	}
 
-	virtual void KeyEvent(AnnKeyEvent e)
+	void KeyEvent(AnnKeyEvent e) override
 	{
 		if (e.isPressed() && e.getKey() == KeyCode::space)
 			jumpToHub();
 	}
 
-	virtual void StickEvent(AnnStickEvent e)
+	void StickEvent(AnnStickEvent e) override
 	{
 		if (e.isXboxController() && e.isPressed(8))
 			jumpToHub();
 	}
 
-	virtual void HandControllerEvent(AnnHandControllerEvent e)
+	void HandControllerEvent(AnnHandControllerEvent e) override
 	{
 		if (e.getController()->hasBeenPressed(3))
 			jumpToHub();
