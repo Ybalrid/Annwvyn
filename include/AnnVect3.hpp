@@ -19,7 +19,7 @@ namespace Annwvyn
 		//Call of Ogre::Vector3 constructors
 		AnnVect3();
 		///Construct from a Ogre::Vector3
-		AnnVect3(const Ogre::Vector3& v);
+		AnnVect3(const Vector3& v);
 		///Construct form 3 floats
 		AnnVect3(const float cx, const float cy, const float cz);
 		///Construct from an array of three inits

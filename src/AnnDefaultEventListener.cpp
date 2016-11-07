@@ -55,9 +55,9 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	if (e.getKey() == backward)
 		player->walking[walkDirection::backward] = e.isPressed();
 	if (e.getKey() == straffleft)
-		player->walking[walkDirection::left] = e.isPressed();
+		player->walking[left] = e.isPressed();
 	if (e.getKey() == straffright)
-		player->walking[walkDirection::right] = e.isPressed();
+		player->walking[right] = e.isPressed();
 	if (e.getKey() == run)
 		player->run = e.isPressed();
 
@@ -119,7 +119,7 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 		AnnGetVRRenderer()->cycleDebugHud();
 }
 
-void Annwvyn::AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
+void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
 	auto controller = e.getController();
 	if (controller->getSide() == AnnHandController::leftHandController)

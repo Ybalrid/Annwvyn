@@ -24,7 +24,7 @@ namespace Annwvyn
 		//Call of Ogre::Quaternion constructor
 		AnnQuaternion();
 		///Construct form an Ogre Quaternion
-		AnnQuaternion(const Ogre::Quaternion& q);
+		AnnQuaternion(const Quaternion& q);
 		///Construct from 4 float WXYZ
 		AnnQuaternion(float cw, float cx, float cy, float cz);
 		///Construct from a rotation matrix 3x3

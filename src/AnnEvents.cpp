@@ -9,7 +9,7 @@ AnnEvent::AnnEvent() :
 	rejected(false),
 	unpopulated(true),
 	valid(false),
-	type(AnnEventType::NO_TYPE)
+	type(NO_TYPE)
 {
 }
 
@@ -64,7 +64,7 @@ bool AnnKeyEvent::isReleased()
 	return released;
 }
 
-Annwvyn::KeyCode::code AnnKeyEvent::getKey()
+KeyCode::code AnnKeyEvent::getKey()
 {
 	return key;
 }
@@ -72,7 +72,7 @@ Annwvyn::KeyCode::code AnnKeyEvent::getKey()
 //---------------------------------------MOUSE
 AnnMouseAxis::AnnMouseAxis()
 {
-	setAxis(MouseAxisId::invalidAxis);
+	setAxis(invalidAxis);
 	setRelValue(0);
 	setAbsValue(0);
 }
@@ -116,7 +116,7 @@ int AnnMouseAxis::getAbsValue()
 
 AnnMouseEvent::AnnMouseEvent() : AnnEvent()
 {
-	for (size_t i(0); i < MouseButtonId::nbButtons; i++)
+	for (size_t i(0); i < nbButtons; i++)
 		buttonsStatus[i] = false;
 
 	type = USER_INPUT;
@@ -124,9 +124,9 @@ AnnMouseEvent::AnnMouseEvent() : AnnEvent()
 
 bool AnnMouseEvent::getButtonState(MouseButtonId id)
 {
-	if (id == MouseButtonId::invalidButton) return false;
+	if (id == invalidButton) return false;
 
-	if ((int)id < (int)MouseButtonId::nbButtons)
+	if ((int)id < (int)nbButtons)
 		return buttonsStatus[id];
 
 	return false;
@@ -134,23 +134,23 @@ bool AnnMouseEvent::getButtonState(MouseButtonId id)
 
 AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
 {
-	if (id == MouseAxisId::invalidAxis) return AnnMouseAxis(MouseAxisId::invalidAxis, 0, 0);
+	if (id == invalidAxis) return AnnMouseAxis(invalidAxis, 0, 0);
 
-	if ((int)id < (int)MouseAxisId::nbAxes)
+	if ((int)id < (int)nbAxes)
 		return axes[id];
 
-	return AnnMouseAxis(MouseAxisId::invalidAxis, 0, 0);
+	return AnnMouseAxis(invalidAxis, 0, 0);
 }
 
 void AnnMouseEvent::setButtonStatus(MouseButtonId id, bool value)
 {
-	if ((int)id < (int)MouseButtonId::nbButtons)
+	if ((int)id < (int)nbButtons)
 		buttonsStatus[id] = value;
 }
 
 void AnnMouseEvent::setAxisInformation(MouseAxisId id, AnnMouseAxis information)
 {
-	if ((int)id < (int)MouseAxisId::nbAxes)
+	if ((int)id < (int)nbAxes)
 		axes[id] = information;
 }
 

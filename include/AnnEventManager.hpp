@@ -145,8 +145,8 @@ namespace Annwvyn
 		AnnMouseAxis getAxis(MouseAxisId id);
 
 	private:
-		AnnMouseAxis axes[MouseAxisId::nbAxes];
-		bool buttonsStatus[MouseButtonId::nbButtons];
+		AnnMouseAxis axes[nbAxes];
+		bool buttonsStatus[nbButtons];
 
 		friend class AnnEventManager;
 
@@ -595,7 +595,7 @@ namespace Annwvyn
 		std::array<bool, KeyCode::SIZE> previousKeyStates;
 
 		///Array for remembering the button states at last update
-		std::array<bool, MouseButtonId::nbButtons> previousMouseButtonStates;
+		std::array<bool, nbButtons> previousMouseButtonStates;
 
 		///Dynamically sized array for remembering the joystick button state at last update
 		timerID lastTimerCreated;

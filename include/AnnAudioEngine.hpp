@@ -146,7 +146,7 @@ namespace Annwvyn
 		void updateListenerOrient(AnnQuaternion orient);
 
 		///For engine : update listener Orientation
-		friend class Annwvyn::AnnEngine;
+		friend class AnnEngine;
 
 		void update() override;
 

@@ -3,23 +3,23 @@
 
 using namespace Annwvyn;
 
-AnnVect3::AnnVect3() : Ogre::Vector3() { init(); }
+AnnVect3::AnnVect3() : Vector3() { init(); }
 
-AnnVect3::AnnVect3(const Ogre::Vector3& v) : Ogre::Vector3(v) { init(); }
+AnnVect3::AnnVect3(const Vector3& v) : Vector3(v) { init(); }
 
-AnnVect3::AnnVect3(const float cx, const float cy, const float cz) : Ogre::Vector3(cx, cy, cz) { init(); }
+AnnVect3::AnnVect3(const float cx, const float cy, const float cz) : Vector3(cx, cy, cz) { init(); }
 
-AnnVect3::AnnVect3(const int coord[3]) : Ogre::Vector3(coord) { init(); }
+AnnVect3::AnnVect3(const int coord[3]) : Vector3(coord) { init(); }
 
-AnnVect3::AnnVect3(const float coord[3]) : Ogre::Vector3(coord) { init(); }
+AnnVect3::AnnVect3(const float coord[3]) : Vector3(coord) { init(); }
 
-AnnVect3::AnnVect3(float* const r) : Ogre::Vector3(r) { init(); }
+AnnVect3::AnnVect3(float* const r) : Vector3(r) { init(); }
 
-AnnVect3::AnnVect3(const float s) : Ogre::Vector3(s) { init(); }
+AnnVect3::AnnVect3(const float s) : Vector3(s) { init(); }
 
-AnnVect3::AnnVect3(btVector3& v) : Ogre::Vector3(v.x(), v.y(), v.z()) { init(); }
+AnnVect3::AnnVect3(btVector3& v) : Vector3(v.x(), v.y(), v.z()) { init(); }
 
-AnnVect3::AnnVect3(bool validState) : Ogre::Vector3() { init(); valid = validState; }
+AnnVect3::AnnVect3(bool validState) : Vector3() { init(); valid = validState; }
 
 void AnnVect3::init()
 {

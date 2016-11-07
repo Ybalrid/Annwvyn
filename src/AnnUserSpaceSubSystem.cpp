@@ -9,12 +9,12 @@ AnnUserSubSystem::AnnUserSubSystem(std::string systemName) : AnnSubSystem(system
 	AnnDebug() << "^^^^^ This system is user defined.";
 }
 
-void Annwvyn::AnnUserSubSystem::update()
+void AnnUserSubSystem::update()
 {
 	return;
 }
 
-bool Annwvyn::AnnUserSubSystem::needUpdate()
+bool AnnUserSubSystem::needUpdate()
 {
 	return false;
 }

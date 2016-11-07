@@ -5,7 +5,7 @@
 using namespace Annwvyn;
 using namespace std;
 
-void WriteToTexture(const std::string &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true)
+void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true)
 {
 	using namespace Ogre;
 
@@ -189,7 +189,7 @@ stop:
 	free(buffer); buffer = 0;
 }
 
-Annwvyn::Ann3DTextPlane::Ann3DTextPlane(float w, float h, std::string str, int size, float resolution, std::string fName, std::string TTF) :
+Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float resolution, string fName, string TTF) :
 	width(w),
 	height(h),
 	resolutionFactor(resolution),
@@ -287,7 +287,7 @@ Ann3DTextPlane::~Ann3DTextPlane()
 
 	Ogre::MaterialManager::getSingleton().remove(materialName);
 
-	std::string textureName = texture->getName();
+	string textureName = texture->getName();
 	Ogre::TextureManager::getSingleton().remove(textureName);
 
 	if (!bgTexture.isNull())
@@ -300,14 +300,14 @@ Ann3DTextPlane::~Ann3DTextPlane()
 	node = nullptr;
 }
 
-void Annwvyn::Ann3DTextPlane::setCaption(std::string newCaption)
+void Ann3DTextPlane::setCaption(string newCaption)
 {
 	caption = newCaption;
 	needUpdating = true;
 	autoUpdateCheck();
 }
 
-void Annwvyn::Ann3DTextPlane::setAutoUpdate(bool state)
+void Ann3DTextPlane::setAutoUpdate(bool state)
 {
 	autoUpdate = state;
 }
@@ -351,7 +351,7 @@ void Ann3DTextPlane::createMaterial()
 	renderPlaneTextureUnitState->setTexture(texture);
 }
 
-void Annwvyn::Ann3DTextPlane::autoUpdateCheck()
+void Ann3DTextPlane::autoUpdateCheck()
 {
 	if (autoUpdate) update();
 }
@@ -361,15 +361,15 @@ void Ann3DTextPlane::generateMaterialName()
 	materialName = generateRandomString(materialNameLen);
 }
 
-std::string Ann3DTextPlane::generateRandomString(size_t len)
+string Ann3DTextPlane::generateRandomString(size_t len)
 {
-	std::string s;
-	std::string textSpace("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	string s;
+	string textSpace("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	for (size_t i(0); i < len; i++) s += textSpace[rand() % textSpace.length()];
 	return s;
 }
 
-void Annwvyn::Ann3DTextPlane::setTextColor(AnnColor color)
+void Ann3DTextPlane::setTextColor(AnnColor color)
 {
 	textColor.setRed(color.getRed());
 	textColor.setGreen(color.getGreen());
@@ -378,7 +378,7 @@ void Annwvyn::Ann3DTextPlane::setTextColor(AnnColor color)
 	autoUpdateCheck();
 }
 
-void Annwvyn::Ann3DTextPlane::setBackgroundColor(AnnColor color)
+void Ann3DTextPlane::setBackgroundColor(AnnColor color)
 {
 	bgColor.setRed(color.getRed());
 	bgColor.setGreen(color.getGreen());
@@ -388,24 +388,24 @@ void Annwvyn::Ann3DTextPlane::setBackgroundColor(AnnColor color)
 	autoUpdateCheck();
 }
 
-void Annwvyn::Ann3DTextPlane::update()
+void Ann3DTextPlane::update()
 {
 	if (!needUpdating) return;
 	renderText();
 	needUpdating = false;
 }
 
-void Annwvyn::Ann3DTextPlane::setPosition(AnnVect3 p)
+void Ann3DTextPlane::setPosition(AnnVect3 p)
 {
 	node->setPosition(p);
 }
 
-void Annwvyn::Ann3DTextPlane::setOrientation(AnnQuaternion q)
+void Ann3DTextPlane::setOrientation(AnnQuaternion q)
 {
 	node->setOrientation(q);
 }
 
-void Annwvyn::Ann3DTextPlane::setTextAlign(TextAlign talign)
+void Ann3DTextPlane::setTextAlign(TextAlign talign)
 {
 	align = talign;
 }
@@ -422,7 +422,7 @@ AnnQuaternion Ann3DTextPlane::getOrientation()
 	return AnnQuaternion();
 }
 
-void Annwvyn::Ann3DTextPlane::setMargin(float m)
+void Ann3DTextPlane::setMargin(float m)
 {
 	margin = m;
 	pixelMargin = resolutionFactor*margin;
@@ -431,7 +431,7 @@ void Annwvyn::Ann3DTextPlane::setMargin(float m)
 	autoUpdateCheck();
 }
 
-void Annwvyn::Ann3DTextPlane::setBackgroundImage(std::string imgName)
+void Ann3DTextPlane::setBackgroundImage(string imgName)
 {
 	bgTexture = Ogre::TextureManager::getSingleton().load(imgName, "ANNWVYN_CORE");
 	useImageAsBackground = true;

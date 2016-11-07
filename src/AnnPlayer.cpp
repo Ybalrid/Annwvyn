@@ -251,7 +251,7 @@ void AnnPlayer::teleport(AnnVect3 position, AnnRadian orientation)
 	resetPlayerPhysics();
 }
 
-void Annwvyn::AnnPlayer::teleport(AnnVect3 position)
+void AnnPlayer::teleport(AnnVect3 position)
 {
 	teleport(position, this->getOrientation().getYaw());
 }

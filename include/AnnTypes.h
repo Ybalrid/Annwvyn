@@ -36,7 +36,7 @@ namespace Annwvyn
 	typedef std::list<std::shared_ptr<AnnLightObject> > AnnLightList;
 
 	///Because sometimes, after one byte you're full...
-	typedef std::uint8_t byte;
+	typedef uint8_t byte;
 
 	///Name of the objects physical shapes
 	///Theses shapes are available to create objects's rigid body for the physics

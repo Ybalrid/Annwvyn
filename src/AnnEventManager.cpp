@@ -21,9 +21,9 @@ float AnnEventListener::trim(float v, float dz)
 	return 0.0f;
 }
 
-std::shared_ptr<AnnEventListener> Annwvyn::AnnEventListener::getSharedListener()
+std::shared_ptr<AnnEventListener> AnnEventListener::getSharedListener()
 {
-	return std::enable_shared_from_this<AnnEventListener>::shared_from_this();
+	return shared_from_this();
 }
 
 AnnTextInputer::AnnTextInputer() :
@@ -90,7 +90,7 @@ lastTimerCreated(0)
 	std::stringstream windowHndStr; windowHndStr << windowHnd;
 
 	//Configure and create the input system
-	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+	pl.insert(make_pair(std::string("WINDOW"), windowHndStr.str()));
 	InputManager = OIS::InputManager::createInputSystem(pl);
 
 	//Get the keyboard, mouse and joysticks objects
@@ -247,12 +247,12 @@ void AnnEventManager::processInput()
 
 		AnnMouseEvent e;
 
-		for (size_t i(0); i < MouseButtonId::nbButtons; i++)
+		for (size_t i(0); i < nbButtons; i++)
 			e.setButtonStatus(MouseButtonId(i), state.buttonDown(OIS::MouseButtonID(i)));
 
-		e.setAxisInformation(MouseAxisId::X, AnnMouseAxis(MouseAxisId::X, state.X.rel, state.X.abs));
-		e.setAxisInformation(MouseAxisId::Y, AnnMouseAxis(MouseAxisId::Y, state.Y.rel, state.Y.abs));
-		e.setAxisInformation(MouseAxisId::Z, AnnMouseAxis(MouseAxisId::Z, state.Z.rel, state.Z.abs));
+		e.setAxisInformation(X, AnnMouseAxis(X, state.X.rel, state.X.abs));
+		e.setAxisInformation(Y, AnnMouseAxis(Y, state.Y.rel, state.Y.abs));
+		e.setAxisInformation(Z, AnnMouseAxis(Z, state.Z.rel, state.Z.abs));
 
 		e.populate();
 		e.validate();

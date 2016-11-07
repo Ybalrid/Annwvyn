@@ -201,7 +201,7 @@ void AnnPhysicsEngine::changeGravity(AnnVect3 gravity)
 	DynamicsWorld->setGravity(gravity.getBtVector());
 }
 
-void Annwvyn::AnnPhysicsEngine::resetGravity()
+void AnnPhysicsEngine::resetGravity()
 {
 	changeGravity(defaultGravity);
 }
