@@ -323,7 +323,7 @@ std::shared_ptr<AnnUserSubSystem> AnnEngine::registerUserSubSystem(std::shared_p
 	return userSystem;
 }
 
-std::shared_ptr<AnnSubSystem> Annwvyn::AnnEngine::getSubSystemByName(std::string name)
+std::shared_ptr<AnnSubSystem> AnnEngine::getSubSystemByName(std::string name)
 {
 	for (auto subsystem : SubSystemList)
 		if (subsystem->name == name)
@@ -340,7 +340,7 @@ bool AnnEngine::isUserSubSystem(std::shared_ptr<AnnSubSystem> subsystem)
 	return false;
 }
 
-void Annwvyn::AnnEngine::removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem)
+void AnnEngine::removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem)
 {
 	SubSystemList.remove(subsystem);
 }

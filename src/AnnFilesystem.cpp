@@ -5,15 +5,15 @@
 using namespace Annwvyn;
 using namespace std;
 
-std::vector<char> AnnFilesystemManager::charToEscape;
-std::vector<char> AnnFilesystemManager::charToStrip;
+vector<char> AnnFilesystemManager::charToEscape;
+vector<char> AnnFilesystemManager::charToStrip;
 
 AnnFileWriter::AnnFileWriter()
 {
 	AnnDebug() << "FileWriter instantiated";
 }
 
-void AnnFileWriter::write(std::shared_ptr<AnnSaveFileData> data)
+void AnnFileWriter::write(shared_ptr<AnnSaveFileData> data)
 {
 	//Create the resources needed for the write operation
 	auto fsmanager(AnnGetFileSystemManager());
@@ -39,7 +39,7 @@ AnnFileReader::AnnFileReader()
 	AnnDebug() << "FileReader instantiated";
 }
 
-std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
+shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 {
 	AnnDebug() << "Reading file " << fileName << " to memory";
 
@@ -65,7 +65,7 @@ std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 		if (buffer.empty()) continue;
 
 		//Create a string stream on the buffer
-		std::stringstream readStream(buffer);
+		stringstream readStream(buffer);
 
 		//Getline permit you to specify the "end-line" character. We use this to split the sting at the '=' in the file
 		getline(readStream, key, '=');
@@ -79,7 +79,7 @@ std::shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 	return fileData;
 }
 
-AnnFilesystemManager::AnnFilesystemManager(std::string title) : AnnSubSystem("FilesystemManager"),
+AnnFilesystemManager::AnnFilesystemManager(string title) : AnnSubSystem("FilesystemManager"),
 fileReader(nullptr),
 fileWriter(nullptr)
 {
@@ -109,8 +109,8 @@ fileWriter(nullptr)
 	charToStrip.push_back('=');
 	charToStrip.push_back('\n');
 
-	fileWriter = std::make_shared<AnnFileWriter>();
-	fileReader = std::make_shared<AnnFileReader>();
+	fileWriter = make_shared<AnnFileWriter>();
+	fileReader = make_shared<AnnFileReader>();
 
 	setSaveDirectoryName(title);
 }
@@ -148,24 +148,24 @@ void AnnFilesystemManager::createSaveDirectory()
 	createDirectory(getSaveDirectoryFullPath());
 }
 
-void AnnFilesystemManager::destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data)
+void AnnFilesystemManager::destroySaveFileDataObject(shared_ptr<AnnSaveFileData> data)
 {
 	releaseSaveFileDataObject(data);
 }
 
-void AnnFilesystemManager::releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data)
+void AnnFilesystemManager::releaseSaveFileDataObject(shared_ptr<AnnSaveFileData> data)
 {
 	cachedData.remove(data);
 }
 
-std::shared_ptr<AnnSaveFileData> AnnFilesystemManager::crateSaveFileDataObject(string filename)
+shared_ptr<AnnSaveFileData> AnnFilesystemManager::crateSaveFileDataObject(string filename)
 {
 	auto data = make_shared<AnnSaveFileData>(filename);
 	cachedData.push_back(data);
 	return data;
 }
 
-std::shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
+shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
 {
 	for (auto dataObject : cachedData)
 		if (dataObject->getFilename() == filename)
@@ -173,12 +173,12 @@ std::shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObje
 	return nullptr;
 }
 
-std::shared_ptr<AnnFileReader> AnnFilesystemManager::getFileReader()
+shared_ptr<AnnFileReader> AnnFilesystemManager::getFileReader()
 {
 	return fileReader;
 }
 
-std::shared_ptr<AnnFileWriter> AnnFilesystemManager::getFileWriter()
+shared_ptr<AnnFileWriter> AnnFilesystemManager::getFileWriter()
 {
 	return fileWriter;
 }
@@ -195,12 +195,12 @@ bool AnnSaveFileData::hasUnsavedChanges()
 	return changed;
 }
 
-std::string AnnSaveFileData::getFilename()
+string AnnSaveFileData::getFilename()
 {
 	return fileName;
 }
 
-std::string AnnSaveFileData::getValue(std::string key)
+string AnnSaveFileData::getValue(string key)
 {
 	//if key exist:
 	if (storedTextData.find(key) != storedTextData.end())
@@ -209,7 +209,7 @@ std::string AnnSaveFileData::getValue(std::string key)
 	return "";
 }
 
-void AnnSaveFileData::setValue(std::string key, std::string value)
+void AnnSaveFileData::setValue(string key, string value)
 {
 	for (auto achar : AnnFilesystemManager::charToStrip)
 	{
@@ -220,29 +220,29 @@ void AnnSaveFileData::setValue(std::string key, std::string value)
 	changed = true;
 }
 
-void AnnSaveFileData::setValue(std::string key, int value)
+void AnnSaveFileData::setValue(string key, int value)
 {
-	std::stringstream sstream;
+	stringstream sstream;
 	sstream << value;
 	setValue(key, sstream.str());
 }
 
-void AnnSaveFileData::setValue(std::string key, float value)
+void AnnSaveFileData::setValue(string key, float value)
 {
-	std::stringstream sstream;
-	sstream.precision(2 + std::numeric_limits<float>::max_digits10);
-	sstream << std::fixed << value;
+	stringstream sstream;
+	sstream.precision(2 + numeric_limits<float>::max_digits10);
+	sstream << fixed << value;
 	setValue(key, sstream.str());
 }
 
-void AnnSaveFileData::setValue(std::string key, AnnVect3 vector)
+void AnnSaveFileData::setValue(string key, AnnVect3 vector)
 {
 	setValue(key + ".x", vector.x);
 	setValue(key + ".y", vector.y);
 	setValue(key + ".z", vector.z);
 }
 
-void AnnSaveFileData::setValue(std::string key, AnnQuaternion quaternion)
+void AnnSaveFileData::setValue(string key, AnnQuaternion quaternion)
 {
 	setValue(key + ".x", quaternion.x);
 	setValue(key + ".y", quaternion.y);
@@ -250,59 +250,59 @@ void AnnSaveFileData::setValue(std::string key, AnnQuaternion quaternion)
 	setValue(key + ".w", quaternion.w);
 }
 
-void AnnSaveFileData::setValue(std::string key, const char* value)
+void AnnSaveFileData::setValue(string key, const char* value)
 {
-	setValue(key, std::string(value));
+	setValue(key, string(value));
 }
 
-void AnnSaveFileData::clearValue(std::string key)
+void AnnSaveFileData::clearValue(string key)
 {
 	storedTextData.erase(key);
 	changed = true;
 }
 
-void AnnSaveFileData::clearVectorValue(std::string key)
+void AnnSaveFileData::clearVectorValue(string key)
 {
 	clearValue(key + ".x");
 	clearValue(key + ".y");
 	clearValue(key + ".z");
 }
 
-void AnnSaveFileData::clearQuaternionValue(std::string key)
+void AnnSaveFileData::clearQuaternionValue(string key)
 {
 	//like vectors, quaternion have x, y, and z, component. they just add a 'w' one
 	clearValue(key + ".w"); clearVectorValue(key);
 }
 
-AnnSaveDataInterpretor::AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data) :
+AnnSaveDataInterpretor::AnnSaveDataInterpretor(shared_ptr<AnnSaveFileData> data) :
 	dataObject(data)
 {
 }
 
-float AnnSaveDataInterpretor::stringToFloat(std::string text)
+float AnnSaveDataInterpretor::stringToFloat(string text)
 {
-	return std::stof(text);
+	return stof(text);
 }
 
-int AnnSaveDataInterpretor::stringToInt(std::string text)
+int AnnSaveDataInterpretor::stringToInt(string text)
 {
-	return std::stoi(text);
+	return stoi(text);
 }
 
-float AnnSaveDataInterpretor::keyStringToFloat(std::string key)
+float AnnSaveDataInterpretor::keyStringToFloat(string key)
 {
 	return stringToFloat(dataObject->getValue(key));
 }
 
-int AnnSaveDataInterpretor::keyStringToInt(std::string key)
+int AnnSaveDataInterpretor::keyStringToInt(string key)
 {
 	return stringToInt(dataObject->getValue(key));
 }
 
-AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(std::string key)
+AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(string key)
 {
 	//Get text data from the dataObject return an invalid vector if the keyvalue wanted is not found
-	std::string x, y, z;
+	string x, y, z;
 	if ((x = dataObject->getValue(key + ".x")).empty()) return AnnVect3(false);
 	if ((y = dataObject->getValue(key + ".y")).empty()) return AnnVect3(false);
 	if ((z = dataObject->getValue(key + ".z")).empty()) return AnnVect3(false);
@@ -314,10 +314,10 @@ AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(std::string key)
 		stringToFloat(z));
 }
 
-AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(std::string key)
+AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(string key)
 {
 	//Get text data from the dataObject return an invalid quaternion if the keyvalue wanted is not found
-	std::string x, y, z, w;
+	string x, y, z, w;
 	if ((x = dataObject->getValue(key + ".x")).empty()) return AnnQuaternion(false);
 	if ((y = dataObject->getValue(key + ".y")).empty()) return AnnQuaternion(false);
 	if ((z = dataObject->getValue(key + ".z")).empty()) return AnnQuaternion(false);

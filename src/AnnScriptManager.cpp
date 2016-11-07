@@ -17,7 +17,7 @@ chai(chaiscript::Std_Lib::library())
 	AnnDebug() << "Using ChaiScript version : " << chai.version();
 }
 
-void Annwvyn::AnnScriptManager::registerApi()
+void AnnScriptManager::registerApi()
 {
 	using namespace Ogre;
 	using namespace chaiscript;
@@ -190,13 +190,13 @@ void Annwvyn::AnnScriptManager::registerApi()
 	//Object getter
 	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getObjectFromID(id).get(); }), "AnnGetGameObject");
 	//Level jumper
-	chai.add(fun([](Annwvyn::level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
+	chai.add(fun([](level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
 	//Changing the color of the background
 	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setWorldBackgroundColor(color); }), "AnnSetWorldBackgroundColor");
 	//Change the ambient lighting
 	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setAmbientLight(color); }), "AnnSetAmbientLight");
 	//Create a GameObject form ChaiScript
-	chai.add(fun([](const std::string& mesh, const std::string& objectName)
+	chai.add(fun([](const string& mesh, const string& objectName)
 	{
 		AnnGetLevelManager()->addToCurrentLevel
 		(
@@ -204,7 +204,7 @@ void Annwvyn::AnnScriptManager::registerApi()
 		);
 	}), "AnnCreateGameObject");
 	//Remove object
-	chai.add(fun([](const std::string& objectName)
+	chai.add(fun([](const string& objectName)
 	{
 		auto obj = AnnGetGameObjectManager()->getObjectFromID(objectName);
 		if (!obj) return;
@@ -307,12 +307,12 @@ void Annwvyn::AnnScriptManager::registerApi()
 	chai.add(fun([](const AnnColor& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 	chai.add(fun([](KeyCode::code c) {AnnDebug() << logFromScript << "keycode:" << c; }), "AnnDebugLog");
 	chai.add(fun([](MouseAxisId c) {AnnDebug() << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
-	chai.add(fun([](bool b) {std::string s("true"); if (!b) s = "false"; AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
+	chai.add(fun([](bool b) {string s("true"); if (!b) s = "false"; AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
 	chai.add(fun([](int i) {AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
 	chai.add(fun([](float f) {AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
 }
 
-void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
+void AnnScriptManager::tryAndGetEventHooks()
 {
 	//Forgive me.
 	try
@@ -375,7 +375,7 @@ void Annwvyn::AnnScriptManager::tryAndGetEventHooks()
 	}
 }
 
-bool Annwvyn::AnnScriptManager::evalFile(const std::string & file)
+bool AnnScriptManager::evalFile(const std::string & file)
 {
 	try
 	{
@@ -396,7 +396,7 @@ bool Annwvyn::AnnScriptManager::evalFile(const std::string & file)
 
 AnnScriptManager::AnnScriptID AnnScriptManager::ID{ 0 };
 
-std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(const std::string & scriptName, AnnGameObject* owner)
+std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std::string & scriptName, AnnGameObject* owner)
 {
 	auto file{ scriptName + scriptExtension };
 
@@ -466,7 +466,7 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 	return std::make_shared<AnnBehaviorScript>();
 }
 
-Annwvyn::AnnBehaviorScript::AnnBehaviorScript() :
+AnnBehaviorScript::AnnBehaviorScript() :
 	valid(false),
 	cannotKey(false),
 	cannotMouse(false),
@@ -505,12 +505,12 @@ AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
 {
 }
 
-Annwvyn::AnnBehaviorScript::~AnnBehaviorScript()
+AnnBehaviorScript::~AnnBehaviorScript()
 {
 	AnnDebug() << "Destructing " << name << "Script";
 }
 
-void Annwvyn::AnnBehaviorScript::update()
+void AnnBehaviorScript::update()
 {
 	try
 	{
@@ -523,23 +523,23 @@ void Annwvyn::AnnBehaviorScript::update()
 	}
 }
 
-bool Annwvyn::AnnBehaviorScript::isValid() const
+bool AnnBehaviorScript::isValid() const
 {
 	return valid;
 }
 
-void Annwvyn::AnnBehaviorScript::registerAsListener()
+void AnnBehaviorScript::registerAsListener()
 {
 	AnnGetEventManager()->addListener(getSharedListener());
 }
 
-void Annwvyn::AnnBehaviorScript::unregisterAsListener()
+void AnnBehaviorScript::unregisterAsListener()
 {
 	AnnDebug() << "Unregistering ourself has event listener";
 	AnnGetEventManager()->removeListener(getSharedListener());
 }
 
-void Annwvyn::AnnBehaviorScript::KeyEvent(AnnKeyEvent e)
+void AnnBehaviorScript::KeyEvent(AnnKeyEvent e)
 {
 	try
 	{
@@ -550,7 +550,7 @@ void Annwvyn::AnnBehaviorScript::KeyEvent(AnnKeyEvent e)
 	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
-void Annwvyn::AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
+void AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
 {
 	try
 	{
@@ -561,7 +561,7 @@ void Annwvyn::AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
 	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
-void Annwvyn::AnnBehaviorScript::StickEvent(AnnStickEvent e)
+void AnnBehaviorScript::StickEvent(AnnStickEvent e)
 {
 	try
 	{
@@ -572,7 +572,7 @@ void Annwvyn::AnnBehaviorScript::StickEvent(AnnStickEvent e)
 	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
-void Annwvyn::AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
+void AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
 {
 	try
 	{
@@ -583,7 +583,7 @@ void Annwvyn::AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
 	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
-void Annwvyn::AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
+void AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
 {
 	try
 	{
@@ -594,7 +594,7 @@ void Annwvyn::AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
 	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
 
-void Annwvyn::AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
+void AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
 {
 	try
 	{

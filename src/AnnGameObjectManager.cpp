@@ -75,7 +75,7 @@ void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> lig
 	Lights.remove(light);
 }
 
-std::shared_ptr<AnnLightObject> Annwvyn::AnnGameObjectManager::createLightObject()
+std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject()
 {
 	AnnDebug("Creating a light");
 	auto Light = std::make_shared<AnnLightObject>(AnnGetEngine()->getSceneManager()->createLight());
@@ -84,7 +84,7 @@ std::shared_ptr<AnnLightObject> Annwvyn::AnnGameObjectManager::createLightObject
 	return Light;
 }
 
-std::shared_ptr<AnnTriggerObject> Annwvyn::AnnGameObjectManager::createTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
+std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
 {
 	AnnDebug("Creating a trigger object");
 	Triggers.push_back(trigger);
@@ -97,7 +97,7 @@ void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject>
 	Triggers.remove(trigger);
 }
 
-std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt()
 {
 	//Origin vector of the ray
 	AnnVect3 Orig(AnnGetEngine()->getHmdPose().position);
@@ -123,7 +123,7 @@ std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::playerLookingAt()
 	return nullptr; //means that we don't know what the player is looking at.
 }
 
-std::shared_ptr<AnnGameObject> Annwvyn::AnnGameObjectManager::getObjectFromID(std::string idString)
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::getObjectFromID(std::string idString)
 {
 	auto object = identifiedObjects.find(idString);
 	if (object != identifiedObjects.end())

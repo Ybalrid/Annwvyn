@@ -98,7 +98,7 @@ std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t
 void OgreOpenVRRender::initVrHmd()
 {
 	//Initialize OpenVR
-	vrSystem = vr::VR_Init(&hmdError, vr::EVRApplicationType::VRApplication_Scene);
+	vrSystem = VR_Init(&hmdError, vr::EVRApplicationType::VRApplication_Scene);
 	if (hmdError != vr::VRInitError_None) //Check for errors
 		switch (hmdError)
 		{
@@ -496,7 +496,7 @@ void OgreOpenVRRender::extractButtons(size_t side)
 	for (uint8_t i(0); i < buttonsToHandle.size(); i++)
 	{
 		lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
-		currentControllerButtonsPressed[side][i] = (controllerState.ulButtonPressed & vr::ButtonMaskFromId(buttonsToHandle[i])) != 0;
+		currentControllerButtonsPressed[side][i] = (controllerState.ulButtonPressed & ButtonMaskFromId(buttonsToHandle[i])) != 0;
 		if (currentControllerButtonsPressed[side][i] && !lastControllerButtonsPressed[side][i])
 		{
 			pressed.push_back(i);

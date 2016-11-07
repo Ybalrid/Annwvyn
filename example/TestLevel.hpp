@@ -16,7 +16,7 @@ public:
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
-		setUpPhysics(40, phyShapeType::boxShape);
+		setUpPhysics(40, boxShape);
 	}
 
 	void atRefresh()
@@ -75,7 +75,7 @@ public:
 		//Add the sign
 		auto Sign(addGameObject("environment/Sign.mesh"));
 		Sign->setPosition(1, -0, -2);
-		Sign->setUpPhysics(0, phyShapeType::staticShape);
+		Sign->setUpPhysics(0, staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
 		auto t(AnnGetGameObjectManager()->createTriggerObject(std::make_shared<AnnAlignedBoxTriggerObject>()));

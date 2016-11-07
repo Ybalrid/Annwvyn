@@ -18,7 +18,7 @@ AnnLightObject::~AnnLightObject()
 		AnnGetEngine()->getSceneManager()->destroyLight(light);
 }
 
-AnnLightObject::LightTypes Annwvyn::AnnLightObject::getLightTypeFromString(std::string ltype)
+AnnLightObject::LightTypes AnnLightObject::getLightTypeFromString(std::string ltype)
 {
 	if (ltype == "Point") return ANN_LIGHT_POINT;
 	if (ltype == "Spotlight") return ANN_LIGHT_SPOTLIGHT;
@@ -36,27 +36,27 @@ void AnnLightObject::setDirection(AnnVect3 direction)
 	light->setDirection(direction);
 }
 
-void AnnLightObject::setType(AnnLightObject::LightTypes type)
+void AnnLightObject::setType(LightTypes type)
 {
 	light->setType(Ogre::Light::LightTypes(type));
 }
 
-void Annwvyn::AnnLightObject::setDiffuseColor(AnnColor color)
+void AnnLightObject::setDiffuseColor(AnnColor color)
 {
 	light->setDiffuseColour(color.getOgreColor());
 }
 
-void Annwvyn::AnnLightObject::setSpecularColor(AnnColor color)
+void AnnLightObject::setSpecularColor(AnnColor color)
 {
 	light->setSpecularColour(color.getOgreColor());
 }
 
-AnnColor Annwvyn::AnnLightObject::getDiffuseColor()
+AnnColor AnnLightObject::getDiffuseColor()
 {
 	return AnnColor(light->getDiffuseColour());
 }
 
-AnnColor Annwvyn::AnnLightObject::getSpecularColor()
+AnnColor AnnLightObject::getSpecularColor()
 {
 	return AnnColor(light->getSpecularColour());
 }

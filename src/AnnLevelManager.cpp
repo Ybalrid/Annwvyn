@@ -91,13 +91,13 @@ std::shared_ptr<AnnLevel> AnnLevelManager::getLevelByIndex(level_id id)
 	return levelList[id];
 }
 
-void Annwvyn::AnnLevelManager::addToCurrentLevel(std::shared_ptr<AnnGameObject> obj)
+void AnnLevelManager::addToCurrentLevel(std::shared_ptr<AnnGameObject> obj)
 {
 	if (!current || !obj) return;
 	current->levelContent.push_back(obj);
 }
 
-void Annwvyn::AnnLevelManager::removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj)
+void AnnLevelManager::removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj)
 {
 	if (!current || !obj) return;
 	current->levelContent.remove(obj);

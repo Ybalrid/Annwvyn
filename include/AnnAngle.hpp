@@ -13,7 +13,7 @@ namespace Annwvyn
 		AnnDegree(float angle);
 		AnnDegree(AnnRadian angle);
 		AnnDegree(Ogre::Radian angle);
-		AnnDegree(Ogre::Degree angle);
+		AnnDegree(Degree angle);
 	};
 
 	class DLL AnnRadian : public Ogre::Radian
@@ -22,7 +22,7 @@ namespace Annwvyn
 		AnnRadian(float angle);
 		AnnRadian(AnnDegree angle);
 		AnnRadian(Ogre::Degree angle);
-		AnnRadian(Ogre::Radian angle);
+		AnnRadian(Radian angle);
 	};
 
 	class DLL AnnAngle

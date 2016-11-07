@@ -68,7 +68,7 @@ void AnnResourceManager::initResources()
 	AnnDebug("Resources initialized");
 }
 
-void Annwvyn::AnnResourceManager::loadGroup(const std::string & groupName)
+void AnnResourceManager::loadGroup(const std::string & groupName)
 {
 	Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(groupName);
 }

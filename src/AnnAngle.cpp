@@ -3,15 +3,15 @@
 
 using namespace Annwvyn;
 
-AnnDegree::AnnDegree(float angle) : Ogre::Degree(angle) {}
-AnnDegree::AnnDegree(AnnRadian angle) : Ogre::Degree(angle) {}
-AnnDegree::AnnDegree(Ogre::Radian angle) : Ogre::Degree(angle) {}
-AnnDegree::AnnDegree(Ogre::Degree angle) : Ogre::Degree(angle) {}
+AnnDegree::AnnDegree(float angle) : Degree(angle) {}
+AnnDegree::AnnDegree(AnnRadian angle) : Degree(angle) {}
+AnnDegree::AnnDegree(Ogre::Radian angle) : Degree(angle) {}
+AnnDegree::AnnDegree(Degree angle) : Degree(angle) {}
 
-AnnRadian::AnnRadian(float angle) : Ogre::Radian(angle) {}
-AnnRadian::AnnRadian(AnnDegree angle) : Ogre::Radian(angle) {}
-AnnRadian::AnnRadian(Ogre::Degree angle) : Ogre::Radian(angle) {}
-AnnRadian::AnnRadian(Ogre::Radian angle) : Ogre::Radian(angle) {}
+AnnRadian::AnnRadian(float angle) : Radian(angle) {}
+AnnRadian::AnnRadian(AnnDegree angle) : Radian(angle) {}
+AnnRadian::AnnRadian(Ogre::Degree angle) : Radian(angle) {}
+AnnRadian::AnnRadian(Radian angle) : Radian(angle) {}
 
 AnnDegree AnnAngle::degree(float value)
 {

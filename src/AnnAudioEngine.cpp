@@ -378,7 +378,7 @@ void AnnAudioSource::stop()
 	alSourceStop(source);
 }
 
-void Annwvyn::AnnAudioSource::changeSound(std::string path)
+void AnnAudioSource::changeSound(std::string path)
 {
 	if (path.empty()) return;
 	bufferName = path;

@@ -33,7 +33,7 @@ AnnGameObject::~AnnGameObject()
 	if (Body) delete Body;
 	if (Shape)
 	{
-		if (Shape->getShapeType() == BroadphaseNativeTypes::TRIANGLE_MESH_SHAPE_PROXYTYPE)
+		if (Shape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
 			delete static_cast<btBvhTriangleMeshShape*>(Shape)->getMeshInterface();
 		delete Shape;
 	}

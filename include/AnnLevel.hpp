@@ -50,7 +50,7 @@ namespace Annwvyn
 		AnnLightList levelLighting;
 		AnnTriggerObjectList levelTrigger;
 
-		std::list<std::shared_ptr<Annwvyn::AnnAbstractMovable>> levelMovable;
+		std::list<std::shared_ptr<AnnAbstractMovable>> levelMovable;
 
 		std::unordered_map<std::string, std::shared_ptr<AnnLightObject> > levelLightingIdMap;
 		std::unordered_map<std::string, std::shared_ptr<AnnTriggerObject> > levelTriggerIdMap;
