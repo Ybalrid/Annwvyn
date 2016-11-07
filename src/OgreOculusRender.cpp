@@ -93,7 +93,7 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 	backgroundColor = color;
 
 	//Render buffers
-	for (auto eye : { left, right })
+	for (auto eye : eyeUpdateOrder)
 		if (vpts[eye])
 			vpts[eye]->setBackgroundColour(backgroundColor);
 
@@ -104,7 +104,7 @@ void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 
 void OgreOculusRender::debugPrint()
 {
-	for (auto eye : { left, right })
+	for (auto eye : eyeUpdateOrder)
 	{
 		AnnDebug() << "eyeCamera " << eye << " " << eyeCameras[eye]->getPosition();
 		AnnDebug() << eyeCameras[eye]->getOrientation();
@@ -457,11 +457,11 @@ void OgreOculusRender::updateProjectionMatrix()
 	std::array<Ogre::Matrix4, 2> ogreProjectionMatrix{};
 
 	//For each eye
-	for (const auto& eye : { left, right })
+	for (const auto& eye : eyeUpdateOrder)
 	{
 		//Traverse the 4x4 matrix
-		for (auto x : { 0, 1, 2, 3 })
-			for (auto y : { 0, 1, 2, 3 })
+		for (const auto x : quadIndexBuffer)
+			for (const auto y : quadIndexBuffer)
 				//put the number where it should
 				ogreProjectionMatrix[eye][x][y] = oculusProjectionMatrix[eye].M[x][y];
 
@@ -540,7 +540,7 @@ void OgreOculusRender::updateTracking()
 	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
 
 	//Apply pose to the two cameras
-	for (auto eye : { left, right })
+	for (auto eye : eyeUpdateOrder)
 	{
 		eyeCameras[eye]->setOrientation(bodyOrientation * oculusToOgreQuat(pose.Orientation));
 		eyeCameras[eye]->setPosition(feetPosition
@@ -550,7 +550,7 @@ void OgreOculusRender::updateTracking()
 	}
 
 	//Update the pose for gameplay purposes
-	returnPose.position = (feetPosition + AnnGetPlayer()->getEyeTranslation()) + bodyOrientation * oculusToOgreVect3(pose.Position);
+	returnPose.position = feetPosition + AnnGetPlayer()->getEyeTranslation() + bodyOrientation * oculusToOgreVect3(pose.Position);
 	returnPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
 	monoCam->setPosition(returnPose.position);
 	monoCam->setOrientation(returnPose.orientation);

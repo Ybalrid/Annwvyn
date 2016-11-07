@@ -74,7 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>../../example/</OutDir>
+    <OutDir>..\..\example</OutDir>
     <IntDir>./objects/</IntDir>
     <TargetName>test</TargetName>
   </PropertyGroup>
@@ -182,6 +182,7 @@
     <None Include="..\..\example\DummyBehavior.chai" />
     <None Include="..\..\example\DummyBehavior2.chai" />
     <None Include="..\..\example\script\test.chai" />
+    <None Include="..\Annwvyn\Activity1.nvact" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

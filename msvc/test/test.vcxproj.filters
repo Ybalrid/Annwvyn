@@ -43,5 +43,6 @@
     <None Include="..\..\example\script\test.chai" />
     <None Include="..\..\example\DummyBehavior.chai" />
     <None Include="..\..\example\DummyBehavior2.chai" />
+    <None Include="..\Annwvyn\Activity1.nvact" />
   </ItemGroup>
 </Project>

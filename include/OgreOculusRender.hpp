@@ -268,6 +268,9 @@ private:
 
 	///Index buffer of the debug plane
 	static constexpr const std::array<const uint8_t, 4>debugPlaneIndexBuffer{ 0, 1, 2, 3 };
+	static constexpr const std::array<const uint8_t, 4>quadIndexBuffer{ 0, 1, 2, 3 };
+
+	static constexpr const std::array<const oorEyeType, 2> eyeUpdateOrder{ {left, right} };
 
 	///Return true if the array sizes of each buffer are constants
 	static constexpr bool debugPlaneSanityCheck()
