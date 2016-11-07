@@ -32,7 +32,7 @@ public:
 	///Construct the Level :
 	void load()
 	{
-		AnnGetEventManager()->addListener(goBackListener = make_shared<GoBackToDemoHub>());
+		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
 		//Set some ambient light
 		AnnGetSceneryManager()->setAmbientLight(AnnColor(.6f, .6f, .6f));
 

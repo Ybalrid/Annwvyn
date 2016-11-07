@@ -26,8 +26,6 @@
 #include "AnnQuaternion.hpp"
 #include "AnnSubsystem.hpp"
 
-using namespace std;
-
 namespace Annwvyn
 {
 	class AnnSaveFileData;
@@ -51,7 +49,7 @@ namespace Annwvyn
 		AnnFileReader();
 
 		///read the asked file and return a new AnnSaveFileData*
-		std::shared_ptr<AnnSaveFileData> read(string filename);
+		std::shared_ptr<AnnSaveFileData> read(std::string filename);
 	};
 
 	class AnnSaveFileData;
@@ -65,22 +63,22 @@ namespace Annwvyn
 		AnnFilesystemManager(std::string title);
 
 		///Set the name of the app directory
-		void setSaveDirectoryName(string name);
+		void setSaveDirectoryName(std::string name);
 		///Get the path to the file name
-		string getPathForFileName(string fileName);
+		std::string getPathForFileName(std::string fileName);
 		///Get the path to the directory where save are read/written
-		string getSaveDirectoryFullPath();
+		std::string getSaveDirectoryFullPath();
 
 		///Create the given directory (OS call)
-		static void createDirectory(string path);
+		static void createDirectory(std::string path);
 		///Create the save directory (should be done at least once)
 		void createSaveDirectory();
 
 		///Create en empty SaveFileData Object for a specific file
-		std::shared_ptr<AnnSaveFileData> crateSaveFileDataObject(string filename);
+		std::shared_ptr<AnnSaveFileData> crateSaveFileDataObject(std::string filename);
 
 		///Get an already existing SaveFileData object for this filename
-		std::shared_ptr<AnnSaveFileData> getCachedSaveFileDataObject(string filename);
+		std::shared_ptr<AnnSaveFileData> getCachedSaveFileDataObject(std::string filename);
 		///Destroy this SaveFileData Object. Will loose cached data if this file didn't go through the FileWriter
 		DEPRECATED void destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
@@ -91,8 +89,8 @@ namespace Annwvyn
 		std::shared_ptr<AnnFileWriter> getFileWriter();
 
 	private:
-		string saveDirectoryName;
-		string pathToUserDir;
+		std::string saveDirectoryName;
+		std::string pathToUserDir;
 		std::shared_ptr<AnnFileWriter> fileWriter;
 		std::shared_ptr<AnnFileReader> fileReader;
 		std::list<std::shared_ptr<AnnSaveFileData>> cachedData;

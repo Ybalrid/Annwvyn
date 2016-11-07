@@ -36,7 +36,7 @@ public:
 		StoneDemo0->setOrientation(AnnQuaternion(AnnDegree(45), AnnVect3::UNIT_Y));
 		StoneDemo0->setUpPhysics();
 
-		auto TextPane = make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, panelDpi);
+		auto TextPane = std::make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, panelDpi);
 		TextPane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
 		TextPane->setTextColor(AnnColor{ 0, 0, 0 });
 		TextPane->setPosition(StoneDemo0->getPosition() + StoneDemo0->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
@@ -44,7 +44,7 @@ public:
 		TextPane->update();
 		addManualMovableObject(TextPane);
 
-		auto Demo0Trigger = static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
+		auto Demo0Trigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
 		Demo0Trigger->setThreshold(1.5f);
 		Demo0Trigger->setPosition(StoneDemo0->getPosition() + AnnVect3(0, 0.5f, 0));
 		demo0trig = Demo0Trigger;
@@ -54,7 +54,7 @@ public:
 		StoneTestLevel->setOrientation(AnnQuaternion(AnnDegree(-45), AnnVect3::UNIT_Y));
 		StoneTestLevel->setUpPhysics();
 
-		auto TestLevelText = make_shared<Ann3DTextPlane>(2.f, 1.f, "TestLevel\nA simple test level", 512, panelDpi);
+		auto TestLevelText = std::make_shared<Ann3DTextPlane>(2.f, 1.f, "TestLevel\nA simple test level", 512, panelDpi);
 		TestLevelText->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
 		TestLevelText->setTextColor(AnnColor{ 0, 0, 0 });
 		TestLevelText->setPosition(StoneTestLevel->getPosition() + StoneTestLevel->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
@@ -62,7 +62,7 @@ public:
 		TestLevelText->update();
 		addManualMovableObject(TestLevelText);
 
-		auto TestLevelTrigger = static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
+		auto TestLevelTrigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
 		TestLevelTrigger->setThreshold(1.5f);
 		TestLevelTrigger->setPosition(StoneTestLevel->getPosition() + AnnVect3(0, 0.5f, 0));
 		testLevelTrig = TestLevelTrigger;
@@ -128,7 +128,7 @@ public:
 
 	void load() override
 	{
-		AnnGetEventManager()->addListener(goBackListener = make_shared<GoBackToDemoHub>());
+		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
 		auto Ground = addGameObject("Ground.mesh");
 		Ground->setUpPhysics();
 
@@ -161,5 +161,5 @@ public:
 	}
 
 private:
-	shared_ptr<GoBackToDemoHub> goBackListener;
+	std::shared_ptr<GoBackToDemoHub> goBackListener;
 };

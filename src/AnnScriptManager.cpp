@@ -408,7 +408,7 @@ std::shared_ptr<AnnBehaviorScript> Annwvyn::AnnScriptManager::getBehaviorScript(
 		//Increment ID
 		ID++;
 
-		string ownerTag{ "" };
+		std::string ownerTag{ "" };
 
 		//Not giving an owner to a script that wants an owner, or calling an owner to a script that
 		if (owner)
