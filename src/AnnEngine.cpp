@@ -4,7 +4,7 @@
 
 using namespace Annwvyn;
 
-AnnEngine* AnnEngine::singleton(NULL);
+AnnEngine* AnnEngine::singleton(nullptr);
 
 //Log is static. Therefore this has to be static too to be able to write to it.
 std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
@@ -355,6 +355,7 @@ void AnnEngine::openConsole()
 	{
 		//put stdout on this console;
 #pragma warning(disable:4996) //Okay, so for some reason, freopen is "bad" because potentially dangerous. However, since I'm passing static strings here, unless you go hack the DLL, I don't know what harm you can do.
+		// ReSharper disable once CppDeprecatedEntity
 		freopen("CONOUT$", "w", stdout);
 #pragma warning(default:4996)
 	}

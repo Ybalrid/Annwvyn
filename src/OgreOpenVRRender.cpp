@@ -17,7 +17,7 @@ windowViewport(nullptr),
 then(0),
 now(0),
 hmdAbsoluteTransform({}),
-eyeRig(0),
+eyeRig(nullptr),
 shouldQuitState(false),
 numberOfAxes{ 3 },
 axoffset{ vr::k_EButton_Axis0 }
@@ -27,7 +27,7 @@ axoffset{ vr::k_EButton_Axis0 }
 
 	//I like to initialize everything to zero
 	rttTexture.setNull();
-	rttTextureGLID = NULL;
+	rttTextureGLID = 0;
 
 	//buttonsToHandle.push_back(vr::k_EButton_System);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
@@ -82,9 +82,9 @@ void OgreOpenVRRender::initPipeline()
 }
 
 //This function is from VALVe
-std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = NULL)
+std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = nullptr)
 {
-	uint32_t unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, NULL, 0, peError);
+	uint32_t unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, nullptr, 0, peError);
 	if (unRequiredBufferLen == 0)
 		return "";
 

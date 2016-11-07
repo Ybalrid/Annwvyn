@@ -186,7 +186,7 @@ stop:
 	destBuffer->unlock();
 
 	// Free the memory allocated for the buffer
-	free(buffer); buffer = 0;
+	free(buffer); buffer = nullptr;
 }
 
 Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float resolution, string fName, string TTF) :

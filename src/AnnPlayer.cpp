@@ -14,8 +14,8 @@ bodyParams::bodyParams()
 	mass = 80.0f;
 	FeetPosition = AnnVect3(0, 0, 10);
 	HeadOrientation = AnnQuaternion(1, 0, 0, 0);
-	Shape = NULL;
-	Body = NULL;
+	Shape = nullptr;
+	Body = nullptr;
 	runFactor = 3;
 }
 
@@ -236,7 +236,7 @@ void AnnPlayer::resetPlayerPhysics()
 	delete getBody();
 
 	//prevent memory access to unallocated address
-	setBody(NULL);
+	setBody(nullptr);
 
 	//Put everything back in order
 	AnnGetEngine()->syncPov();

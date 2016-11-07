@@ -61,13 +61,13 @@ bool AnnAudioEngine::initOpenAL()
 {
 	//Open audio playback device
 	//Check if OpenAL support device enumeration extension here
-	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
+	if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
 		&& AnnGetVRRenderer()->usesCustomAudioDevice())
 	{
 		AnnDebug() << "This implementation of OpenAL support Audio Device enumeration, and the current VR renderer hint to use a specific audio device.";
 		AnnDebug() << "VR device uses this identifier substring : " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString();
 		//Get the list of all devices
-		detectPlaybackDevices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER));
+		detectPlaybackDevices(alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER));
 
 		//Iterate through the name of each device and check if we can find the substring the renderer ask for
 		for (auto& deviceName : detectedDevices)
@@ -81,12 +81,12 @@ bool AnnAudioEngine::initOpenAL()
 			}
 	}
 	//If no device has been set above :
-	if (!Device) Device = alcOpenDevice(NULL);
+	if (!Device) Device = alcOpenDevice(nullptr);
 	if (!Device)
 		return false;
 
 	//Create context
-	Context = alcCreateContext(Device, NULL);
+	Context = alcCreateContext(Device, nullptr);
 	if (!Context)
 		return false;
 
@@ -108,8 +108,7 @@ void AnnAudioEngine::shutdownOpenAL()
 	alDeleteSources(1, &bgm);
 
 	//Stop and delete other audio sources
-	for (auto source : AudioSources)
-		source = nullptr;
+	AudioSources.clear();
 
 	//Delete the BGM buffer if it has been initialized
 	if (alIsBuffer(bgmBuffer) == AL_TRUE)
@@ -120,7 +119,7 @@ void AnnAudioEngine::shutdownOpenAL()
 		alDeleteBuffers(1, &buffer.second);
 
 	//Close the AL environment
-	alcMakeContextCurrent(NULL);
+	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(Context);
 	alcCloseDevice(Device);
 	alGetError();//Purge pending error.

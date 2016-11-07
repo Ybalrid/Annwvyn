@@ -139,7 +139,7 @@ string AnnFilesystemManager::getSaveDirectoryFullPath()
 void AnnFilesystemManager::createDirectory(string path)
 {
 #ifdef WIN32
-	CreateDirectory(wstring(path.begin(), path.end()).c_str(), NULL);
+	CreateDirectory(wstring(path.begin(), path.end()).c_str(), nullptr);
 #endif
 }
 
