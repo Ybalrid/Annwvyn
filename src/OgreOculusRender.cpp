@@ -282,7 +282,7 @@ void OgreOculusRender::initRttRendering()
 	//Calculate the render buffer size for both eyes. The width of the frontier is the number of unused pixel between the two eye buffer.
 	//Apparently, keeping them glued together make some slight bleeding.
 	bufferSize.w = texSizeL.w + texSizeR.w + frontierWidth;
-	bufferSize.h = max(texSizeL.h, texSizeR.h);
+	bufferSize.h = std::max(texSizeL.h, texSizeR.h);
 
 	//To use SSAA, just make the buffer bigger
 	if (UseSSAA)

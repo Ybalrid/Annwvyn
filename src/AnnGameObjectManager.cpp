@@ -45,7 +45,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 	obj->name = identifier;
 	identifiedObjects[identifier] = obj;
-	Objects.push_back(shared_ptr<AnnGameObject>(obj)); //keep addreAnnDebug() in list
+	Objects.push_back(std::shared_ptr<AnnGameObject>(obj)); //keep addreAnnDebug() in list
 
 	obj->postInit();
 	return obj;
@@ -62,7 +62,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 {
 	AnnDebug() << "Trying to identify object at address " << (void*)node;
 
-	auto result = std::find_if(Objects.begin(), Objects.end(), [&](shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
+	auto result = std::find_if(Objects.begin(), Objects.end(), [&](std::shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
 	if (result != Objects.end())
 		return *result;
 

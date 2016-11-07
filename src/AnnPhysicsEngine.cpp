@@ -4,7 +4,7 @@
 
 using namespace Annwvyn;
 
-AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode, shared_ptr<AnnPlayer> player, AnnGameObjectList & objects, AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode, std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects, AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
 playerObject(player),
 gameObjects(objects),
 triggerObjects(triggers),
