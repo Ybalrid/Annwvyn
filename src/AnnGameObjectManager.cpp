@@ -8,6 +8,8 @@ unsigned long long AnnGameObjectManager::id;
 
 AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
 {
+	//There will only be one manager, set the id to 0
+	id = 0;
 }
 
 void AnnGameObjectManager::update()
@@ -38,7 +40,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	//The identifier name can be empty, meaning that we have to figure out an unique name.
 	//In that case we will append to the entity name + a number that will always be incremented.
 	if (identifier.empty())
-		identifier = entityName + ++id;
+		identifier = entityName + std::to_string(++id);
 
 	AnnDebug() << "The object " << identifier << " has been created. Annwvyn memory address " << obj;
 	AnnDebug() << "This object take " << sizeof(*(obj.get())) << " bytes";
@@ -104,10 +106,10 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 	auto hmdPosition{ AnnVect3(AnnGetEngine()->getHmdPose().position) };
 
 	//Calculate direction Vector of the ray to be the midpoint camera optical axis
-	auto LookAt{ AnnQuaternion(AnnGetEngine()->getHmdPose().orientation).getAtVector() };
+	auto rayDirection{ AnnQuaternion(AnnGetEngine()->getHmdPose().orientation).getAtVector() };
 
 	//create ray
-	Ogre::Ray ray(hmdPosition, LookAt);
+	Ogre::Ray ray(hmdPosition, rayDirection);
 
 	//create query
 	auto raySceneQuery(AnnGetEngine()->getSceneManager()->createRayQuery(ray));
@@ -118,16 +120,17 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 	auto& results(raySceneQuery->execute());
 
 	//read the result list
-	auto result = std::find_if(results.begin(), results.end(),
-							   [](const Ogre::RaySceneQueryResultEntry& entry)
+	auto result = std::find_if(results.begin(), results.end(), [](const Ogre::RaySceneQueryResultEntry& entry)
 	{
 		if (entry.movable && entry.movable->getMovableType() == "Entity") return true;
 		return false;
 	});
 
+	//If can't find it? return nullptr
 	if (result == results.end())
 		return nullptr; //means that we don't know what the player is looking at.
 
+	//We got access to the node, we want the object
 	return getFromNode(result->movable->getParentSceneNode());
 }
 
