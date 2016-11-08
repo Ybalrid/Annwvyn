@@ -33,20 +33,6 @@ namespace Annwvyn
 	class DLL AnnGameObject;
 	class DLL AnnGameObjectManager;
 
-	// TODO get rid of
-	///Simple collision state representation (pointer between 2 objects and a boolean)
-	struct collisionTest
-	{
-		///The object tested
-		AnnGameObject* Object;
-
-		///The base object
-		AnnGameObject* Receiver;
-
-		///Contact or not ?
-		bool collisionState;
-	};
-
 	///An object that exist in the game. Graphically and Potentially Physically
 	class DLL AnnGameObject : public AnnAbstractMovable
 	{
@@ -221,9 +207,7 @@ namespace Annwvyn
 		* The reference is the position of the node. You can access it through the getters/setters setPos() and getPos()
 		*
 		* Same is true with the Orientation. We use Ogre node
-		* TODO rework collision feedback system
 		*/
-		std::vector<collisionTest *> collisionMask;
 
 		Ogre::SceneNode* Node;
 		Ogre::Entity* Entity;

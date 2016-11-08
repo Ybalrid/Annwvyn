@@ -101,58 +101,6 @@ void AnnPhysicsEngine::stepDebugDrawer()
 
 void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
 {
-	// TOTO make a typedef for getting off the ugliness here
-	std::vector<struct collisionTest*> pairs;
-
-	//get all collision mask
-	auto objectIteartor(objects.begin());
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		std::vector<struct collisionTest*> onThisObject = (*objectIteartor++)->getCollisionMask();
-
-		for (size_t j = 0; j < onThisObject.size(); j++)
-			pairs.push_back(onThisObject[j]);
-	}
-
-	//Reset the value before extracting data
-	for (auto pair : pairs)
-		pair->collisionState = false;
-
-	//process for each manifold
-	int numManifolds = Dispatcher->getNumManifolds();
-
-	//m is manifold identifier
-	for (int m(0); m < numManifolds; m++)
-	{
-		btPersistentManifold* contactManifold =
-			DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(m);
-
-		const btCollisionObject* obA = (btCollisionObject*)contactManifold->getBody0();
-		const btCollisionObject* obB = (btCollisionObject*)contactManifold->getBody1();
-
-		//Just get the address of the collision objects
-		void* pair1 = (void*)obA;
-		void* pair2 = (void*)obB;
-
-		//for each known pair on the collision feedback system
-		for (size_t p = 0; p < pairs.size(); p++)
-		{
-			//Get the bodies from the manifold
-			void* body1 = (void*)pairs[p]->Object->getBody();
-			void* body2 = (void*)pairs[p]->Receiver->getBody();
-
-			//If there is a collision in either way
-			if ((pair1 == body1 && pair2 == body2) ||
-				(pair2 == body1 && pair1 == body2))
-			{
-				if (contactManifold->getNumContacts() > 0)
-					pairs[p]->collisionState = true;
-				else
-					pairs[p]->collisionState = false;
-				break;
-			}
-		}
-	}
 }
 
 void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
