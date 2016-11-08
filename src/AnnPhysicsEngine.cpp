@@ -173,6 +173,8 @@ void AnnPhysicsEngine::initPlayerPhysics(Ogre::SceneNode* node)
 void AnnPhysicsEngine::setDebugPhysics(bool state)
 {
 	debugPhysics = state;
+	debugDrawer->setDebugMode(int(state));
+	debugDrawer->step();
 }
 
 void AnnPhysicsEngine::processTriggersContacts()
@@ -213,3 +215,5 @@ void AnnPhysicsEngine::update()
 	stepDebugDrawer();
 	step(AnnGetEngine()->getFrameTime());
 }
+
+void AnnPhysicsEngine::toggleDebugPhysics() { setDebugPhysics(!debugPhysics); }

@@ -27,7 +27,6 @@ AnnMain()
 
 	//Init some player body parameters
 	AnnGetEngine()->initPlayerPhysics();
-	AnnGetPhysicsEngine()->setDebugPhysics(false);
 	AnnGetEventManager()->useDefaultEventListener();
 
 	if (dynamic_cast<OgreOculusRender*>(AnnGetVRRenderer().get()))

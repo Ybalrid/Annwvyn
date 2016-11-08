@@ -28,8 +28,8 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 {
 	AnnDebug("Creating a game object from the entity " + std::string(entityName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
-	Ogre::Entity* ent = smgr->createEntity(entityName);
-	Ogre::SceneNode* node = smgr->getRootSceneNode()->createChildSceneNode();
+	auto ent = smgr->createEntity(entityName);
+	auto node = smgr->getRootSceneNode()->createChildSceneNode();
 
 	node->attachObject(ent);
 	obj->setNode(node);
@@ -43,11 +43,11 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 		identifier = entityName + std::to_string(++id);
 
 	AnnDebug() << "The object " << identifier << " has been created. Annwvyn memory address " << obj;
-	AnnDebug() << "This object take " << sizeof(*(obj.get())) << " bytes";
+	AnnDebug() << "This object take " << sizeof *obj.get() << " bytes";
 
 	obj->name = identifier;
 	identifiedObjects[identifier] = obj;
-	Objects.push_back(std::shared_ptr<AnnGameObject>(obj)); //keep addreAnnDebug() in list
+	Objects.push_back(std::shared_ptr<AnnGameObject>(obj));
 
 	obj->postInit();
 	return obj;
