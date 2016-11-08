@@ -139,6 +139,10 @@ namespace tinyxml2
 
 	void StrPair::TransferTo(StrPair* other)
 	{
+		// PATCH prevent dereferencing a nullptr here
+		if (!other) return;
+		// PATCH
+
 		if (this == other) {
 			return;
 		}
@@ -1715,9 +1719,9 @@ namespace tinyxml2
 			TIXMLASSERT(_attributePool.CurrentAllocs() == _attributePool.Untracked());
 			TIXMLASSERT(_textPool.CurrentAllocs() == _textPool.Untracked());
 			TIXMLASSERT(_commentPool.CurrentAllocs() == _commentPool.Untracked());
-		}
-#endif
 	}
+#endif
+}
 
 	XMLElement* XMLDocument::NewElement(const char* name)
 	{
@@ -1778,7 +1782,7 @@ namespace tinyxml2
 		FILE* fp = fopen(filepath, mode);
 #endif
 		return fp;
-	}
+		}
 
 	void XMLDocument::DeleteNode(XMLNode* node) {
 		TIXMLASSERT(node);
@@ -2300,4 +2304,4 @@ namespace tinyxml2
 		PushUnknown(unknown.Value());
 		return true;
 	}
-}   // namespace tinyxml2
+	}   // namespace tinyxml2

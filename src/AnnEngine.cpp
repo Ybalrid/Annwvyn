@@ -246,21 +246,21 @@ bool AnnEngine::refresh()
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(getFrameTime());
 
-	for (auto SubSystem : SubSystemList)
-		if (!SubSystem->needUpdate()) continue; //If doesn't need update, switch to the next
-		else SubSystem->update();				//The "else" keyword is used to not put curly braces, by laziness and by code style.
+	for (auto& SubSystem : SubSystemList)
+		if (SubSystem->needUpdate())	//If doesn't need update, switch to the next
+			SubSystem->update();		//The "else" keyword is used to not put curly braces, by laziness and by code style.
 
-		//Update camera from player
-		syncPov();
+	//Update camera from player
+	syncPov();
 
-		//Update VR form real world
-		renderer->updateTracking();
+	//Update VR form real world
+	renderer->updateTracking();
 
-		//Update view
-		renderer->renderAndSubmitFrame();
+	//Update view
+	renderer->renderAndSubmitFrame();
 
-		//Don't laugh
-		return !requestStop();
+	//Don't laugh
+	return !requestStop();
 }
 
 //This just move a node where the other node is. Yes I know about parenting. I had reasons to do it that way, but I forgot.
@@ -346,8 +346,9 @@ void AnnEngine::removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem)
 }
 
 //Because Windows and the Win32 platform sucks.
-void AnnEngine::openConsole()
+bool AnnEngine::openConsole()
 {
+	auto state{ true };
 #ifdef _WIN32
 
 	//Allocate a console for this app
@@ -356,7 +357,8 @@ void AnnEngine::openConsole()
 		//put stdout on this console;
 #pragma warning(disable:4996) //Okay, so for some reason, freopen is "bad" because potentially dangerous. However, since I'm passing static strings here, unless you go hack the DLL, I don't know what harm you can do.
 		// ReSharper disable once CppDeprecatedEntity
-		freopen("CONOUT$", "w", stdout);
+		auto f = freopen("CONOUT$", "w", stdout);
+		if (!f) state = false;
 #pragma warning(default:4996)
 	}
 
@@ -367,6 +369,7 @@ void AnnEngine::openConsole()
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 
 #endif
+	return state;
 }
 
 //Well, I may make the pointer to the onScreenConsole more accessible.

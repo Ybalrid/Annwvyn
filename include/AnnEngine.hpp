@@ -128,7 +128,7 @@ namespace Annwvyn
 		///Open a console and redirect standard output to it.
 		///This is only effective on Windows. There is no other
 		///simple way to access the standard io on a Win32 application
-		static void openConsole();
+		static bool openConsole();
 
 		///Get ogre scene manager
 		Ogre::SceneManager* getSceneManager(); //scene or graphics
