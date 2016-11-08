@@ -60,13 +60,14 @@ void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> objec
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode* node)
 {
-	AnnDebug() << "Trying to identify object at address " << (void*)node;
+	AnnDebug() << "Trying to identify object at address " << static_cast<void*>(node);
 
-	auto result = std::find_if(Objects.begin(), Objects.end(), [&](std::shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
+	auto result = std::find_if(Objects.begin(), Objects.end(),
+							   [&](std::shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
 	if (result != Objects.end())
 		return *result;
 
-	AnnDebug() << "The Scene Node" << (void*)node << " doesn't belong to any AnnGameObject";
+	AnnDebug() << "The Scene Node" << static_cast<void*>(node) << " doesn't belong to any AnnGameObject";
 	return nullptr;
 }
 
@@ -116,9 +117,10 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt()
 	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
 
 	//read the result list
-	for (auto it(result.begin()); it != result.end(); it++)
+	// TODO use range-for and not old for(begin; end; ++). Or better std::find_if
+	for (auto it(result.begin()); it != result.end(); ++it)
 		if (it->movable && it->movable->getMovableType() == "Entity")
-			return AnnGetGameObjectManager()->getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode
+			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode
 
 	return nullptr; //means that we don't know what the player is looking at.
 }
