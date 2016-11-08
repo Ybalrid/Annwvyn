@@ -87,7 +87,7 @@ namespace Annwvyn
 		void autoUpdateCheck();
 
 		///Generate a random string of letter of arbitrary length
-		std::string generateRandomString(size_t len = 15);
+		static std::string generateRandomString(size_t len = 15);
 
 		///Generate a random material name
 		void generateMaterialName();

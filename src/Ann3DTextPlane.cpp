@@ -17,7 +17,7 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 	if (!font->isLoaded())
 		font->load();
 
-	TexturePtr fontTexture = (TexturePtr)TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName());
+	TexturePtr fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
 
 	HardwarePixelBufferSharedPtr fontBuffer = fontTexture->getBuffer();
 	HardwarePixelBufferSharedPtr destBuffer = destTexture->getBuffer();
@@ -28,7 +28,7 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 
 	// create a buffer
 	size_t nBuffSize = fontBuffer->getSizeInBytes();
-	uint8* buffer = (uint8*)calloc(nBuffSize, sizeof(uint8));
+	uint8* buffer = static_cast<uint8*>(calloc(nBuffSize, sizeof(uint8)));
 
 	// create pixel box using the copy of the buffer
 	PixelBox fontPb(fontBuffer->getWidth(), fontBuffer->getHeight(), fontBuffer->getDepth(), fontBuffer->getFormat(), buffer);
@@ -67,7 +67,7 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 		}
 	}
 
-	size_t spacewidth(0);
+	size_t spacewidth;
 	//get the size of the glyph '0'
 	glypheTexRect = font->getGlyphTexCoords('0');
 	Box spaceBox;
@@ -76,7 +76,7 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 	spacewidth = spaceBox.getWidth();
 
 	//if not mono-spaced
-	if (spacewidth != charwidth) spacewidth = (size_t)((float)spacewidth*(0.5f));
+	if (spacewidth != charwidth) spacewidth = size_t(float(spacewidth) * 0.5f);
 
 //	Annwvyn::AnnDebug() << "Width of a space : " << space-width;
 
@@ -211,19 +211,19 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 		AnnDebug() << "No caption yet";
 	else
 		AnnDebug() << "caption : " << caption.c_str();
+
 	if (fontName.empty())
 	{
 		AnnDebug() << "You need set a font to initialize a text render plane";
 		exit(ANN_ERR_NOTINIT);
 	}
-	else
-		AnnDebug() << "font : " << fontName;
 
+	AnnDebug() << "font : " << fontName;
 	needUpdating = true;
 
 	resolutionFactor /= dpi2dpm;
 	AnnDebug() << "Resolution factor in dot per meters " << resolutionFactor;
-	AnnDebug() << "Texture resolution is : " << (size_t)(w*resolutionFactor) << "x" << (size_t)(h*resolutionFactor);
+	AnnDebug() << "Texture resolution is : " << size_t(w * resolutionFactor) << "x" << size_t(h * resolutionFactor);
 	AnnDebug() << "Font resolution in DPI is : " << dpi;
 
 	calculateVerticesForPlaneSize();
@@ -252,6 +252,7 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 	if (!fontName.empty())
 	{
 		//Be sure that the font manager exist, if not, instantiate one (singleton)
+		// ReSharper disable once CppNonReclaimedResourceAcquisition - Resource cleared by Ogre itself.
 		if (!Ogre::FontManager::getSingletonPtr()) new Ogre::FontManager();
 
 		//Attempt to retrieve the font
@@ -449,6 +450,7 @@ void Ann3DTextPlane::clearTexture()
 {
 	if (useImageAsBackground)
 	{
+		//Clear the texture with the content of the background
 		bgTexture->copyToTexture(texture);
 	}
 	else
