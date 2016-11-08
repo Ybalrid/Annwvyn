@@ -77,6 +77,8 @@ namespace Annwvyn
 		///Restore the default gravity
 		void resetGravity();
 
+		void toggleDebugPhysics();
+
 	private:
 
 		friend class AnnEngine;

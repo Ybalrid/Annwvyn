@@ -84,6 +84,9 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		case KeyCode::f3:
 			AnnGetVRRenderer()->showDebug(OgreVRRender::MONOSCOPIC);
 			break;
+		case KeyCode::f5:
+			AnnGetPhysicsEngine()->toggleDebugPhysics();
+		default: break;
 	}
 }
 
