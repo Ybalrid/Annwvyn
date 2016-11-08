@@ -50,7 +50,7 @@ namespace Annwvyn
 		void removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger);
 
 		///Get the AnnGameObject the player is looking at
-		std::shared_ptr<AnnGameObject> playerLookingAt(); //physics
+		std::shared_ptr<AnnGameObject> playerLookingAt(unsigned short limit = 5); //physics
 
 		///Get an AnnGameObject for the required string; return nullptr if object cannot be found
 		std::shared_ptr<AnnGameObject> getObjectFromID(std::string idString);

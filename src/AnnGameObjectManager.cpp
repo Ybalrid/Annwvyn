@@ -98,31 +98,37 @@ void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject>
 	Triggers.remove(trigger);
 }
 
-std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt()
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned short limit)
 {
-	//Origin vector of the ray
-	AnnVect3 Orig(AnnGetEngine()->getHmdPose().position);
+	//Origin vector of the ray is the HMD pose position
+	auto hmdPosition{ AnnVect3(AnnGetEngine()->getHmdPose().position) };
 
 	//Calculate direction Vector of the ray to be the midpoint camera optical axis
-	AnnVect3 LookAt(AnnQuaternion(AnnGetEngine()->getHmdPose().orientation).getAtVector());
+	auto LookAt{ AnnQuaternion(AnnGetEngine()->getHmdPose().orientation).getAtVector() };
 
 	//create ray
-	Ogre::Ray ray(Orig, LookAt);
+	Ogre::Ray ray(hmdPosition, LookAt);
 
 	//create query
-	Ogre::RaySceneQuery* raySceneQuery(AnnGetEngine()->getSceneManager()->createRayQuery(ray));
-	raySceneQuery->setSortByDistance(true);
+	auto raySceneQuery(AnnGetEngine()->getSceneManager()->createRayQuery(ray));
+	//Sort by distance. Nearest is first. Limit to `limit` results.
+	raySceneQuery->setSortByDistance(true, limit);
 
 	//execute and get the results
-	Ogre::RaySceneQueryResult& result(raySceneQuery->execute());
+	auto& results(raySceneQuery->execute());
 
 	//read the result list
-	// TODO use range-for and not old for(begin; end; ++). Or better std::find_if
-	for (auto it(result.begin()); it != result.end(); ++it)
-		if (it->movable && it->movable->getMovableType() == "Entity")
-			return getFromNode(it->movable->getParentSceneNode());//Get the AnnGameObject that is attached to this SceneNode
+	auto result = std::find_if(results.begin(), results.end(),
+							   [](const Ogre::RaySceneQueryResultEntry& entry)
+	{
+		if (entry.movable && entry.movable->getMovableType() == "Entity") return true;
+		return false;
+	});
 
-	return nullptr; //means that we don't know what the player is looking at.
+	if (result == results.end())
+		return nullptr; //means that we don't know what the player is looking at.
+
+	return getFromNode(result->movable->getParentSceneNode());
 }
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::getObjectFromID(std::string idString)

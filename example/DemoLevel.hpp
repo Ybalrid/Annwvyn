@@ -157,7 +157,17 @@ public:
 	{
 	}
 
-	void runLogic() override {
+	void runLogic() override
+	{
+		auto object = AnnGetGameObjectManager()->playerLookingAt();
+		if (object)
+		{
+			AnnDebug() << "looking at " << object->getName();
+		}
+		else
+		{
+			AnnDebug() << "No object";
+		}
 	}
 
 private:
