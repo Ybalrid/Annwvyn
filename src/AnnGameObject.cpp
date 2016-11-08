@@ -223,59 +223,6 @@ btRigidBody* AnnGameObject::getBody()
 	return Body;
 }
 
-std::vector<struct collisionTest*> AnnGameObject::getCollisionMask()
-{
-	return collisionMask;
-}
-
-bool AnnGameObject::collideWith(AnnGameObject* Object)
-{
-	for (size_t i = 0; i < collisionMask.size(); i++)
-		if (collisionMask[i]->Object == Object)
-			return collisionMask[i]->collisionState;
-	return false;
-}
-
-void AnnGameObject::updateCollisionStateWith(AnnGameObject* Object, bool updatedState)
-{
-	for (size_t i = 0; i < collisionMask.size(); i++)
-		if (collisionMask[i]->Object == Object)
-			collisionMask[i]->collisionState = updatedState;
-}
-
-void AnnGameObject::cleanCollisionMask()
-{
-	for (auto cm : collisionMask)
-		delete cm;
-	collisionMask.clear();
-}
-
-void AnnGameObject::resetCollisionMask()
-{
-	for (auto cm : collisionMask) cm->collisionState = false;
-}
-
-void AnnGameObject::testCollisionWith(AnnGameObject* Object)
-{
-	auto tester = new collisionTest;
-
-	tester->collisionState = false;
-	tester->Object = Object;
-	tester->Receiver = this;
-
-	collisionMask.push_back(tester);
-}
-
-void AnnGameObject::stopGettingCollisionWith(AnnGameObject* Object)
-{
-	auto query = std::find_if(collisionMask.begin(), collisionMask.end(),
-							  [=](collisionTest* test) {return test->Object == Object; });
-
-	if (query == collisionMask.end()) return;
-	delete *query;
-	collisionMask.erase(query);
-}
-
 void AnnGameObject::setAnimation(const char animationName[])
 {
 	if (animIsSetted)
