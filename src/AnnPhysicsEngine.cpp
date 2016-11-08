@@ -17,11 +17,11 @@ playerRigidBodyState(nullptr),
 defaultGravity(0, -9.81f, 0)
 {
 	//Initialize the Bullet world
-	Broadphase = new btDbvtBroadphase();
-	CollisionConfiguration = new btDefaultCollisionConfiguration();
-	Dispatcher = new btCollisionDispatcher(CollisionConfiguration);
-	Solver = new btSequentialImpulseConstraintSolver();
-	DynamicsWorld = new btDiscreteDynamicsWorld(Dispatcher, Broadphase, Solver, CollisionConfiguration);
+	Broadphase = std::make_unique<btDbvtBroadphase>();
+	CollisionConfiguration = std::make_unique<btDefaultCollisionConfiguration>();
+	Dispatcher = std::make_unique<btCollisionDispatcher>(CollisionConfiguration.get());
+	Solver = std::make_unique<btSequentialImpulseConstraintSolver>();
+	DynamicsWorld = std::make_unique<btDiscreteDynamicsWorld>(Dispatcher.get(), Broadphase.get(), Solver.get(), CollisionConfiguration.get());
 	AnnDebug() << "btDiscreteDynamicsWorld instantiated";
 
 	//Set gravity vector
@@ -29,18 +29,18 @@ defaultGravity(0, -9.81f, 0)
 	AnnDebug() << "Gravity vector " << defaultGravity;
 
 	debugPhysics = false;//by default
-	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld);
+	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get());
 	DynamicsWorld->setDebugDrawer(debugDrawer);
 }
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
 {
-	delete DynamicsWorld;
+	/*delete DynamicsWorld;
 	delete Broadphase;
 	delete CollisionConfiguration;
 	delete Dispatcher;
 	delete Solver;
-	delete debugDrawer;
+	delete debugDrawer;*/
 }
 
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld()
@@ -84,7 +84,7 @@ void AnnPhysicsEngine::createVirtualBodyShape()
 
 btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld()
 {
-	return DynamicsWorld;
+	return DynamicsWorld.get();
 }
 
 void AnnPhysicsEngine::step(float delta)

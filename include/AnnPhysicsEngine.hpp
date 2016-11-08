@@ -9,6 +9,8 @@
 
 #include "systemMacro.h"
 
+#include <memory>
+
 //Bullet
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
@@ -19,6 +21,7 @@
 #include "BtOgreExtras.h"
 
 #include "AnnEngine.hpp"
+
 //#include "AnnSubsytem.hpp"
 
 namespace Annwvyn
@@ -85,13 +88,13 @@ namespace Annwvyn
 		///Update by steeping simulation by one frame time. Should be called only once, and only by AnnEngine
 		void update() override;
 
-		btBroadphaseInterface* Broadphase;
-		btDefaultCollisionConfiguration* CollisionConfiguration;
-		btCollisionDispatcher* Dispatcher;
-		btSequentialImpulseConstraintSolver* Solver;
+		std::unique_ptr<btBroadphaseInterface> Broadphase;
+		std::unique_ptr<btDefaultCollisionConfiguration> CollisionConfiguration;
+		std::unique_ptr<btCollisionDispatcher> Dispatcher;
+		std::unique_ptr<btSequentialImpulseConstraintSolver> Solver;
 
 		//Bullet Dynamics World
-		btDiscreteDynamicsWorld* DynamicsWorld;
+		std::unique_ptr<btDiscreteDynamicsWorld> DynamicsWorld;
 
 		///Should use the debug drawer
 		bool debugPhysics;
