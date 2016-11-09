@@ -35,7 +35,9 @@ namespace Annwvyn
 		USER_INPUT,
 		TIMER_TIMEOUT,
 		TRIGGER_CONTACT,
-		HAND_CONTROLLER
+		HAND_CONTROLLER,
+		COLLISION,
+		PLAYER_COLLISION
 	};
 	///An input event
 	class DLL AnnEvent
@@ -320,6 +322,50 @@ namespace Annwvyn
 		timerID tID;
 	};
 
+	class AnnGameObject;
+
+	class DLL AnnCollisionEvent : public AnnEvent
+	{
+	public:
+		AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second) : AnnEvent(),
+			a{ first },
+			b{ second }
+		{
+			type = COLLISION;
+		}
+
+		bool hasObject(AnnGameObject* obj)
+		{
+			if (obj == a || obj == b)
+				return true;
+			return false;
+		}
+
+		AnnGameObject* getA() { return a; };
+		AnnGameObject* getB() { return b; };
+	private:
+		AnnGameObject* a;
+		AnnGameObject* b;
+	};
+
+	class DLL AnnPlayerCollisionEvent : public AnnEvent
+	{
+	public:
+		AnnPlayerCollisionEvent(AnnGameObject* collided) : AnnEvent(),
+			col{ collided }
+		{
+			type = PLAYER_COLLISION;
+		}
+
+		AnnGameObject* getObject()
+		{
+			return col;
+		}
+
+	private:
+		AnnGameObject* col;
+	};
+
 	///Trigger in/out event
 	class DLL AnnTriggerEvent : public AnnEvent
 	{
@@ -363,6 +409,10 @@ namespace Annwvyn
 		virtual void TriggerEvent(AnnTriggerEvent e) { return; }
 		///Event from an HandController
 		virtual void HandControllerEvent(AnnHandControllerEvent e) { return; }
+		///Event from detected collisions
+		virtual void CollisionEvent(AnnCollisionEvent e) { return; }
+		///Event from detected player collisions
+		virtual void PlayerCollisionEvent(AnnPlayerCollisionEvent e) { return; }
 
 		///This method is called at each frame. Useful for updating player's movement command for example
 		virtual void tick() { return; }
@@ -574,9 +624,14 @@ namespace Annwvyn
 		///Process triggers
 		void processTriggerEvents();
 
+		void processCollisionEvents();
+
 		// TODO get rid of the shared pointer here
 		///Register trigger event for next triggerProcess by the engine
 		void spatialTrigger(std::shared_ptr<AnnTriggerObject> sender);
+
+		void detectedCollision(void* a, void* b);
+		void playerCollision(void* object);
 
 		///OIS Event Manager
 		OIS::InputManager *InputManager;
@@ -611,6 +666,9 @@ namespace Annwvyn
 
 		///Default event listener
 		std::shared_ptr<AnnDefaultEventListener> defaultEventListener;
+
+		std::vector<std::pair<void*, void*>> collisionBuffer;
+		std::vector<AnnGameObject*> playerCollisionBuffer;
 
 		StickAxisId xboxID;
 		bool knowXbox;

@@ -164,6 +164,7 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnGameObject* o) -> Vector3 {return o->getScale(); }), "getScale");
 	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s); }), "playSound");
 	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
+	chai.add(fun([](AnnGameObject* o) {return o->getName(); }), "getName");
 
 	//Color
 	chai.add(user_type<AnnColor>(), "AnnColor");
@@ -230,6 +231,8 @@ void AnnScriptManager::registerApi()
 	chai.add(user_type<AnnStickAxis>(), "AnnStickAxis");
 	chai.add(user_type<AnnStickPov>(), "AnnStickPov");
 	chai.add(user_type<timerID>(), "timerID");
+	chai.add(user_type<AnnCollisionEvent>(), "AnnCollisionEvent");
+	chai.add(user_type<AnnPlayerCollisionEvent>(), "AnnPlayerCollisionEvent");
 
 	chai.add(fun([](AnnKeyEvent e) {return e.isPressed(); }), "isPressed");
 	chai.add(fun([](AnnKeyEvent e) {return e.isReleased(); }), "isReleased");
@@ -294,6 +297,14 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->getAxis(i); }), "getAxis");
 	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->hasBeenPressed(i); }), "hasBeenPressed");
 	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->hasBeenReleased(i); }), "hasBeenReleased");
+
+	chai.add(fun([](AnnPlayerCollisionEvent e) {return e.getObject(); }), "getObject");
+	chai.add(fun([](AnnPlayerCollisionEvent e) {return e.getObject()->getName(); }), "getObjectName");
+
+	chai.add(fun([](AnnCollisionEvent e) {return e.getA(); }), "getAObject");
+	chai.add(fun([](AnnCollisionEvent e) {return e.getB(); }), "getBObject");
+	chai.add(fun([](AnnCollisionEvent e) {return e.getA()->getName(); }), "getAObjectName");
+	chai.add(fun([](AnnCollisionEvent e) {return e.getB()->getName(); }), "getBObjectName");
 
 	//There's capacitive touch surfaces and haptic feedback that aren't available right now on the AnnHandController class
 
@@ -373,6 +384,22 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callHandControllertOnScriptInstance = nullptr;
 	}
+	try
+	{
+		callCollisionEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)>>("CollisionEvent");
+	}
+	catch (const chaiscript::exception::eval_error&)
+	{
+		callCollisionEventOnScriptInstance = nullptr;
+	}
+	try
+	{
+		callPlayerCollisionEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)>>("PlayerCollisionEvent");
+	}
+	catch (const chaiscript::exception::eval_error&)
+	{
+		callPlayerCollisionEventOnScriptInstance = nullptr;
+	}
 }
 
 bool AnnScriptManager::evalFile(const std::string & file)
@@ -445,7 +472,8 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 			callTimeEventOnScriptInstance,
 			callTriggerEventOnScriptInstance,
 			callHandControllertOnScriptInstance,
-
+			callCollisionEventOnScriptInstance,
+			callPlayerCollisionEventOnScriptInstance,
 			//This return the ScriptInstance, as a Boxed_Value. We're only interested at calling something on
 			//this object, so don't need to try to unbox it. It's literally a black box for us
 			creatorFunction(ownerTag)
@@ -473,7 +501,9 @@ AnnBehaviorScript::AnnBehaviorScript() :
 	cannotStick(false),
 	cannotTime(false),
 	cannotTrigger(false),
-	cannotHand(false)
+	cannotHand(false),
+	cannotCollision{ false },
+	cannotPlayerCollision{ false }
 {
 	AnnDebug() << "Invalid script object created";
 }
@@ -486,6 +516,8 @@ AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
 									 std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
 									 std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
 									 std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
 									 chaiscript::Boxed_Value chaisriptInstance) : constructListener(),
 	valid(true),
 	name(scriptName),
@@ -494,16 +526,18 @@ AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
 	callKeyEventOnScriptInstance(KeyEventHook),
 	callMouseEventOnScriptInstance(MouseEventHook),
 	callStickEventOnScriptInstance(StickEventHook),
+	callTimeEventOnScriptInstance{ TimeEventHook },
 	callTriggerEventOnScriptInstance(TriggerEventHook),
 	callHandControllertOnScriptInstance(HandControllertHook),
+	callCollisionEventOnScriptInstance(CollisionEventHook),
+	callPlayerCollisionEventOnScriptInstance(PlayerCollisionEventHook),
 	cannotKey(false),
 	cannotMouse(false),
 	cannotStick(false),
 	cannotTime(false),
 	cannotTrigger(false),
-	cannotHand(false)
-{
-}
+	cannotHand(false), cannotCollision{ false },
+	cannotPlayerCollision{ false } {}
 
 AnnBehaviorScript::~AnnBehaviorScript()
 {
@@ -587,7 +621,7 @@ void AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
 {
 	try
 	{
-		if (callTriggerEventOnScriptInstance && cannotTrigger)
+		if (callTriggerEventOnScriptInstance && !cannotTrigger)
 			callTriggerEventOnScriptInstance(ScriptObjectInstance, e);
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotTrigger = true; }
@@ -598,9 +632,31 @@ void AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
 {
 	try
 	{
-		if (callHandControllertOnScriptInstance && cannotHand)
+		if (callHandControllertOnScriptInstance && !cannotHand)
 			callHandControllertOnScriptInstance(ScriptObjectInstance, e);
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotHand = true; }
+	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+}
+
+void AnnBehaviorScript::CollisionEvent(AnnCollisionEvent e)
+{
+	try
+	{
+		if (callCollisionEventOnScriptInstance && !cannotCollision)
+			callCollisionEventOnScriptInstance(ScriptObjectInstance, e);
+	}
+	catch (const chaiscript::exception::dispatch_error&) { cannotCollision = true; }
+	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+}
+void AnnBehaviorScript::PlayerCollisionEvent(AnnPlayerCollisionEvent e)
+{
+	//AnnDebug() << "player collision on script...";
+	try
+	{
+		if (callPlayerCollisionEventOnScriptInstance && !cannotPlayerCollision)
+			callPlayerCollisionEventOnScriptInstance(ScriptObjectInstance, e);
+	}
+	catch (const chaiscript::exception::dispatch_error&) { cannotPlayerCollision = true; }
 	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }

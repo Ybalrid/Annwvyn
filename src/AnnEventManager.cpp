@@ -185,9 +185,10 @@ void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 
 void AnnEventManager::update()
 {
+	processCollisionEvents();
 	processInput();
-	processTimers();
 	processTriggerEvents();
+	processTimers();
 }
 
 unsigned int JoystickBuffer::idcounter = 0;
@@ -381,6 +382,40 @@ void AnnEventManager::processTriggerEvents()
 	triggerEventBuffer.clear();
 }
 
+void AnnEventManager::processCollisionEvents()
+{
+	for (auto weakListener : listeners)
+		if (auto listener = weakListener.lock())
+		{
+			for (auto& collisionPair : collisionBuffer)
+			{
+				AnnCollisionEvent e
+				{
+					static_cast<AnnGameObject*>(collisionPair.first),
+					static_cast<AnnGameObject*>(collisionPair.second)
+				};
+
+				e.populate();
+				e.validate();
+
+				listener->CollisionEvent(e);
+			}
+
+			for (auto playerCollision : playerCollisionBuffer)
+			{
+				AnnPlayerCollisionEvent e{ playerCollision };
+
+				e.populate();
+				e.validate();
+
+				listener->PlayerCollisionEvent(e);
+			}
+		}
+
+	collisionBuffer.clear();
+	playerCollisionBuffer.clear();
+}
+
 void AnnEventManager::spatialTrigger(std::shared_ptr<AnnTriggerObject> sender)
 {
 	AnnTriggerEvent e;
@@ -395,4 +430,23 @@ size_t AnnEventManager::getNbStick()
 	return Joysticks.size();
 }
 
-AnnEventListener::~AnnEventListener() {}
+AnnEventListener::~AnnEventListener()
+{
+}
+
+void AnnEventManager::detectedCollision(void* a, void* b)
+{
+	//The only body that doesn't have an "userPointer" set is the Player's rigidbody.
+	//If one of the pair is null, it's a player collision that has been detected on this manifold.
+	//Not an object-object collision
+	if (!a) return playerCollision(b);
+	if (!b) return playerCollision(a);
+
+	//push the object-object collision in the buffer
+	collisionBuffer.push_back(std::make_pair(a, b));
+}
+
+void AnnEventManager::playerCollision(void* object)
+{
+	playerCollisionBuffer.push_back(static_cast<AnnGameObject*>(object));
+}

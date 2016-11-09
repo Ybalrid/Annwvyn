@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnPhysicsEngine.hpp"
 #include "AnnLogger.hpp"
+#include "../../../../Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/scoped_allocator"
 
 using namespace Annwvyn;
 
@@ -76,7 +77,7 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 void AnnPhysicsEngine::createVirtualBodyShape()
 {
 	assert(playerObject);
-	float radius(0.125f);
+	auto radius(0.125f);
 
 	//remove the diameter of the two half sphere on top and bottom of the capsule
 	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
@@ -99,58 +100,17 @@ void AnnPhysicsEngine::stepDebugDrawer()
 		debugDrawer->step();
 }
 
-void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
+void AnnPhysicsEngine::processCollisionTesting()
 {
-	// TOTO make a typedef for getting off the ugliness here
-	std::vector<struct collisionTest*> pairs;
-
-	//get all collision mask
-	auto objectIteartor(objects.begin());
-	for (size_t i = 0; i < objects.size(); i++)
+	auto eventManager = AnnGetEventManager();
+	auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
+	for (auto i{ 0 }; i < nbManifold; ++i)
 	{
-		std::vector<struct collisionTest*> onThisObject = (*objectIteartor++)->getCollisionMask();
-
-		for (size_t j = 0; j < onThisObject.size(); j++)
-			pairs.push_back(onThisObject[j]);
-	}
-
-	//Reset the value before extracting data
-	for (auto pair : pairs)
-		pair->collisionState = false;
-
-	//process for each manifold
-	int numManifolds = Dispatcher->getNumManifolds();
-
-	//m is manifold identifier
-	for (int m(0); m < numManifolds; m++)
-	{
-		btPersistentManifold* contactManifold =
-			DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(m);
-
-		const btCollisionObject* obA = (btCollisionObject*)contactManifold->getBody0();
-		const btCollisionObject* obB = (btCollisionObject*)contactManifold->getBody1();
-
-		//Just get the address of the collision objects
-		void* pair1 = (void*)obA;
-		void* pair2 = (void*)obB;
-
-		//for each known pair on the collision feedback system
-		for (size_t p = 0; p < pairs.size(); p++)
+		auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		if (contactManifold->getNumContacts() > 0)
 		{
-			//Get the bodies from the manifold
-			void* body1 = (void*)pairs[p]->Object->getBody();
-			void* body2 = (void*)pairs[p]->Receiver->getBody();
-
-			//If there is a collision in either way
-			if ((pair1 == body1 && pair2 == body2) ||
-				(pair2 == body1 && pair1 == body2))
-			{
-				if (contactManifold->getNumContacts() > 0)
-					pairs[p]->collisionState = true;
-				else
-					pairs[p]->collisionState = false;
-				break;
-			}
+			eventManager->detectedCollision(contactManifold->getBody0()->getUserPointer(),
+											contactManifold->getBody1()->getUserPointer());
 		}
 	}
 }
@@ -192,8 +152,8 @@ void AnnPhysicsEngine::processTriggersContacts()
 			current->setContactInformation(false);
 		}
 
-		if ((!current->lastFrameContactWithPlayer && current->contactWithPlayer)
-			|| (current->lastFrameContactWithPlayer && !current->contactWithPlayer))
+		if (!current->lastFrameContactWithPlayer && current->contactWithPlayer
+			|| current->lastFrameContactWithPlayer && !current->contactWithPlayer)
 			AnnGetEventManager()->spatialTrigger(current);
 	}
 }
@@ -210,10 +170,13 @@ void AnnPhysicsEngine::resetGravity()
 
 void AnnPhysicsEngine::update()
 {
-	processCollisionTesting(gameObjects);
 	processTriggersContacts();
 	stepDebugDrawer();
 	step(AnnGetEngine()->getFrameTime());
+	processCollisionTesting();
 }
 
-void AnnPhysicsEngine::toggleDebugPhysics() { setDebugPhysics(!debugPhysics); }
+void AnnPhysicsEngine::toggleDebugPhysics()
+{
+	setDebugPhysics(!debugPhysics);
+}

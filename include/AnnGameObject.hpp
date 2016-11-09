@@ -33,20 +33,6 @@ namespace Annwvyn
 	class DLL AnnGameObject;
 	class DLL AnnGameObjectManager;
 
-	// TODO get rid of
-	///Simple collision state representation (pointer between 2 objects and a boolean)
-	struct collisionTest
-	{
-		///The object tested
-		AnnGameObject* Object;
-
-		///The base object
-		AnnGameObject* Receiver;
-
-		///Contact or not ?
-		bool collisionState;
-	};
-
 	///An object that exist in the game. Graphically and Potentially Physically
 	class DLL AnnGameObject : public AnnAbstractMovable
 	{
@@ -126,33 +112,6 @@ namespace Annwvyn
 		/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
 		void playSound(std::string path, bool loop = false, float volume = 1.0f);
 
-		///collision handling
-		std::vector<struct collisionTest*> getCollisionMask();
-
-		///Set all collisionState to false
-		void resetCollisionMask();
-
-		///empty the vector
-		void cleanCollisionMask();
-
-		///remove this object of the collisionMask
-		/// \param Object Object we don't want to know if we collide anymore
-		void stopGettingCollisionWith(AnnGameObject* Object);
-
-		///add this object to the collisionState
-		/// \param Object the object we want to know collision information
-		void testCollisionWith(AnnGameObject* Object);
-
-		///change the collisionState
-		/// \param Object the object we are testing
-		/// \param collisionState the state of the collision. True if contact.
-		void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
-
-		///return the collisionState with the object from the collisionMask.
-		///if the object is not on the collisionMask, return false
-		/// \param Object the object we want to know the current collision state
-		bool collideWith(AnnGameObject* Object);
-
 		// TODO create animation state machine
 		///Set currently playing animation
 		/// \param name Name of the animation as defined by the 3D entity
@@ -221,9 +180,7 @@ namespace Annwvyn
 		* The reference is the position of the node. You can access it through the getters/setters setPos() and getPos()
 		*
 		* Same is true with the Orientation. We use Ogre node
-		* TODO rework collision feedback system
 		*/
-		std::vector<collisionTest *> collisionMask;
 
 		Ogre::SceneNode* Node;
 		Ogre::Entity* Entity;
