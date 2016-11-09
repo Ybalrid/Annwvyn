@@ -144,7 +144,7 @@ public:
 	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> getHandControllerArray();
 
 	///Get the size of the controller array
-	size_t getHanControllerArraySize();
+	static size_t getHanControllerArraySize();
 
 	///Return the number of non nullptr handControllers. Hand controllers are dynamically allocated by the VRRenderer if presents.
 	size_t getRecognizedControllerCount();

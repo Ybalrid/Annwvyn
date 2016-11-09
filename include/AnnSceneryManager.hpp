@@ -25,7 +25,7 @@ namespace Annwvyn
 		/// \param activate if true put a sky-dome
 		/// \param materialName name of a material known from the Ogre Resource group manager
 		/// \param curvature curvature of the texture
-		/// \param tilling tilling of the texture
+		/// \param tiling tilling of the texture
 		void setSkyDomeMaterial(bool activate,
 								const char materialName[],
 								float curvature = 2.0f,
@@ -42,7 +42,7 @@ namespace Annwvyn
 							   bool renderedFirst = true);
 
 						   ///Set the view-ports background color
-						   /// \param v background color
+						   /// \param color background color
 		void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56f, 1));
 
 		///Remove the sky dome
@@ -52,7 +52,7 @@ namespace Annwvyn
 		void removeSkyBox();
 
 		///Set the ambient light
-		/// \param v the color of the light
+		/// \param color the color of the light
 		void setAmbientLight(AnnColor color);
 		DEPRECATED void setAmbiantLight(AnnColor color) { setAmbientLight(color); }
 

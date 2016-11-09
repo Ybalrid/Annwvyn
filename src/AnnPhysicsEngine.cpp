@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "AnnPhysicsEngine.hpp"
 #include "AnnLogger.hpp"
-#include "../../../../Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/scoped_allocator"
 
 using namespace Annwvyn;
 

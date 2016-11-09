@@ -20,7 +20,10 @@ hmdAbsoluteTransform({}),
 eyeRig(nullptr),
 shouldQuitState(false),
 numberOfAxes{ 3 },
-axoffset{ vr::k_EButton_Axis0 }
+axoffset{ vr::k_EButton_Axis0 },
+touchpadXNormalizedValue{ 0 },
+touchpadYNormalizedValue{ 0 },
+triggerNormalizedValue{ 0 }
 {
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
@@ -139,7 +142,7 @@ void OgreOpenVRRender::initClientHmdRendering()
 	{
 		Annwvyn::AnnDebug("Failed to glewTnit()\n\
 						  Cannot call manual OpenGL\n\
-						  Error Code : " + (unsigned int)err);
+						  Error Code : " + static_cast<unsigned int>(err));
 		exit(ANN_ERR_RENDER);
 	}
 	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
@@ -147,7 +150,7 @@ void OgreOpenVRRender::initClientHmdRendering()
 	//Should init the device model things here if we want to display the vive controllers
 
 	//Declare the textures for SteamVR
-	vrTextures[left] = { (void*)rttTextureGLID, API, vr::ColorSpace_Gamma };
+	vrTextures[left] = { reinterpret_cast<void*>(rttTextureGLID), API, vr::ColorSpace_Gamma };
 
 	//Set the OpenGL texture geometry
 	//V axis is reversed, U between 0 and 0.5 is for the left eye, between 0.5 and 1 is for the right eye.
@@ -427,6 +430,7 @@ void OgreOpenVRRender::processVREvents()
 		case vr::VREvent_IpdChanged:
 			handleIPDChange();
 			break;
+		default: break;
 	}
 }
 
@@ -457,7 +461,7 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	if (!handControllers[side])
 	{
 		handControllers[side] = std::make_shared<Annwvyn::AnnHandController>
-			("OpenVR Hand Controller", smgr->getRootSceneNode()->createChildSceneNode(), (size_t)controllerDeviceIndex, side);
+			("OpenVR Hand Controller", smgr->getRootSceneNode()->createChildSceneNode(), size_t(controllerDeviceIndex), side);
 
 		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 	}
@@ -524,18 +528,15 @@ void OgreOpenVRRender::processTrackedDevices()
 
 		//From here we know that "trackedDevice" is the device index of a valid controller that has been tracked by the system
 		//Extract basic information of the device, detect if they are left/right hands
-		Annwvyn::AnnHandControllerID controllerIndex{ 0 };
 		Annwvyn::AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
 			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
 				side = Annwvyn::AnnHandController::leftHandController;
-				controllerIndex = 0;
 				break;
 
 			case vr::ETrackedControllerRole::TrackedControllerRole_RightHand:
 				side = Annwvyn::AnnHandController::rightHandController;
-				controllerIndex = 1;
 				break;
 
 			case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:

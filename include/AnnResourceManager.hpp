@@ -48,6 +48,8 @@ namespace Annwvyn
 
 		///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
 		void addDefaultResourceLocation();
+
+		Ogre::ResourceGroupManager* RGM;
 	};
 }
 

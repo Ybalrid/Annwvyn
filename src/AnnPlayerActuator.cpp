@@ -52,3 +52,5 @@ void AnnDefaultPlayerActuator::actuate(float delta)
 		player->getBody()->setCenterOfMassTransform(Transform);
 	}
 }
+
+AnnPlayerActuator::~AnnPlayerActuator() {}

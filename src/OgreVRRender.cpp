@@ -18,17 +18,17 @@ void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
 }
 
 OgreVRRender::OgreVRRender(std::string windowName) :
-	root(nullptr),
 	smgr(nullptr),
+	root(nullptr),
 	window(nullptr),
 	updateTime(0),
-	feetPosition(0, 0, 10),
-	bodyOrientation(Ogre::Quaternion::IDENTITY),
 	nearClippingDistance(0.1f),
 	farClippingDistance(500.0f),
+	feetPosition(0, 0, 10),
+	bodyOrientation(Ogre::Quaternion::IDENTITY),
+	name(windowName),
 	headNode(nullptr),
 	backgroundColor(0, 0.56f, 1),
-	name(windowName),
 	frameCounter(0),
 	rttEyes(nullptr)
 {

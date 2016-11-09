@@ -73,7 +73,7 @@ namespace Annwvyn
 		///Return f*MAX8BIT
 		unsigned char f2i(float f);
 		///Return true if f is inside interval [0;1]
-		bool isInFloatRange(float f);
+		static bool isInFloatRange(float f);
 	};
 }
 #endif //ANNCOLOR

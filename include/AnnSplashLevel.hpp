@@ -1,5 +1,5 @@
 /**
-* \file AnnSplashLever.hpp
+* \file AnnSplashLevel.hpp
 * \brief Scene (level) to put a splashing logo
 * \author A. Brainville (Ybalrid)
 */

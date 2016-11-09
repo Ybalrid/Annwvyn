@@ -191,19 +191,19 @@ stop:
 }
 
 Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float resolution, string fName, string TTF) :
+	fontName(fName),
+	fontTTF(TTF),
+	caption(str),
 	width(w),
 	height(h),
 	resolutionFactor(resolution),
-	dpi(resolution),
-	caption(str),
-	fontName(fName),
-	fontTTF(TTF),
 	textColor(AnnColor(1, 0, 0)),
 	bgColor(AnnColor(0, 0, 0, 0)),
 	autoUpdate(false),
 	fontSize(size),
-	margin(0),
+	dpi(resolution),
 	pixelMargin(0),
+	margin(0),
 	useImageAsBackground(false)
 {
 	AnnDebug() << "3D Text plane created";
