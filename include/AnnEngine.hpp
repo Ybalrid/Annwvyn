@@ -120,7 +120,7 @@ namespace Annwvyn
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generally 'OIS::KC_X' where X is the key you want.
 		/// key an OIS key code
-		inline bool isKeyDown(OIS::KeyCode key); //event
+		bool isKeyDown(OIS::KeyCode key); //event
 
 		///Get ogre camera scene node
 		Ogre::SceneNode* getPlayerPovNode();
@@ -177,7 +177,7 @@ namespace Annwvyn
 		bool refresh(); //engine main loop
 
 		///Set the POV node to the AnnPlayer gameplay defined position/orientation of the player's body
-		inline void syncPov();
+		void syncPov();
 
 		///This start the render loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();

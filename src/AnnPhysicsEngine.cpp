@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnPhysicsEngine.hpp"
 #include "AnnLogger.hpp"
+#include "../../../../Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/scoped_allocator"
 
 using namespace Annwvyn;
 
@@ -76,7 +77,7 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 void AnnPhysicsEngine::createVirtualBodyShape()
 {
 	assert(playerObject);
-	float radius(0.125f);
+	auto radius(0.125f);
 
 	//remove the diameter of the two half sphere on top and bottom of the capsule
 	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
@@ -99,8 +100,19 @@ void AnnPhysicsEngine::stepDebugDrawer()
 		debugDrawer->step();
 }
 
-void AnnPhysicsEngine::processCollisionTesting(AnnGameObjectList& objects)
+void AnnPhysicsEngine::processCollisionTesting()
 {
+	auto eventManager = AnnGetEventManager();
+	auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
+	for (auto i{ 0 }; i < nbManifold; ++i)
+	{
+		auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		if (contactManifold->getNumContacts() > 0)
+		{
+			eventManager->detectedCollision(contactManifold->getBody0()->getUserPointer(),
+											contactManifold->getBody1()->getUserPointer());
+		}
+	}
 }
 
 void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
@@ -140,8 +152,8 @@ void AnnPhysicsEngine::processTriggersContacts()
 			current->setContactInformation(false);
 		}
 
-		if ((!current->lastFrameContactWithPlayer && current->contactWithPlayer)
-			|| (current->lastFrameContactWithPlayer && !current->contactWithPlayer))
+		if (!current->lastFrameContactWithPlayer && current->contactWithPlayer
+			|| current->lastFrameContactWithPlayer && !current->contactWithPlayer)
 			AnnGetEventManager()->spatialTrigger(current);
 	}
 }
@@ -158,10 +170,13 @@ void AnnPhysicsEngine::resetGravity()
 
 void AnnPhysicsEngine::update()
 {
-	processCollisionTesting(gameObjects);
 	processTriggersContacts();
 	stepDebugDrawer();
 	step(AnnGetEngine()->getFrameTime());
+	processCollisionTesting();
 }
 
-void AnnPhysicsEngine::toggleDebugPhysics() { setDebugPhysics(!debugPhysics); }
+void AnnPhysicsEngine::toggleDebugPhysics()
+{
+	setDebugPhysics(!debugPhysics);
+}
