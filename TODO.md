@@ -1,6 +1,6 @@
 Fix the physics
 ---------------
-- [ ] Rework the collision feedback system. 
+- [x] Rework the collision feedback system. 
 - [ ] Re-implement trigger system with Bullet
 
 ____
@@ -9,7 +9,7 @@ TODO list
 ---------
 - [x] Use anti aliasing
 - [x] Handle hand-controller event via the Event Manager **very basic for now**
-- [ ] Integrate a scripting language for gameplay. Probably ChaiScript
+- [x] Integrate a scripting language for gameplay. Probably ChaiScript
 - [ ] Add an "engine configuration file" system. As a UNIX-like .conf file (or a windows like .ini file|UNIX file preferred for the sake of simplicity)
 
 ____
