@@ -119,7 +119,7 @@ openGL43plus(false)
 		log << "AnnConsolen constructor detected OpenGL version " << major << "." << minor;
 		AnnEngine::log(log.str());
 
-		if (openGL43plus = (major >= 4) && (minor >= 3))
+		if ((openGL43plus = (major >= 4) && (minor >= 3)))
 		{
 			AnnEngine::log("This version is 4.3 or greater. Texture copy optimization enabled");
 		}
@@ -292,6 +292,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 							case ' ': wordwidth = charwidth; ++l; break;
 							case '\t': wordwidth = charwidth * 3; ++l; break;
 							case '\n': l = str.size();
+							default: break;
 						}
 
 						if (wordwrap)
@@ -361,7 +362,7 @@ stop:
 	destBuffer->unlock();
 
 	// Free the memory allocated for the textureBuffer
-	free(textureBuffer); textureBuffer = nullptr;
+	free(textureBuffer);
 }
 
 bool AnnConsole::needUpdate()
