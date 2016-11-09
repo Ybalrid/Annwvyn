@@ -104,7 +104,6 @@ namespace Annwvyn
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
-		/// \param fs the fullscreen state of the application. set it to false may help when developing with VS debugger on one screen
 		AnnEngine(const char title[], std::string hmdCommand);
 
 		///Class destructor. Do clean up stuff.
@@ -120,7 +119,7 @@ namespace Annwvyn
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generally 'OIS::KC_X' where X is the key you want.
 		/// key an OIS key code
-		inline bool isKeyDown(OIS::KeyCode key); //event
+		bool isKeyDown(OIS::KeyCode key); //event
 
 		///Get ogre camera scene node
 		Ogre::SceneNode* getPlayerPovNode();
@@ -177,7 +176,7 @@ namespace Annwvyn
 		bool refresh(); //engine main loop
 
 		///Set the POV node to the AnnPlayer gameplay defined position/orientation of the player's body
-		inline void syncPov();
+		void syncPov();
 
 		///This start the render loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();

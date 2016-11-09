@@ -54,6 +54,7 @@ AnnMain()
 
 	//stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
+
 	AnnGetEngine()->startGameplayLoop();
 
 	AnnQuit();

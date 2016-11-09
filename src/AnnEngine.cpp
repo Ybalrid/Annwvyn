@@ -117,9 +117,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	- audio is synced (sounds comes form where they should)
 	- then the game can redraw*/
 
-	physicsEngine = std::make_shared<AnnPhysicsEngine>(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers);
+	SubSystemList.push_back(physicsEngine = std::make_shared<AnnPhysicsEngine>(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers));
 	SubSystemList.push_back(eventManager = std::make_shared< AnnEventManager>(renderer->getWindow()));
-	SubSystemList.push_back(physicsEngine);
 	SubSystemList.push_back(audioEngine = std::make_shared< AnnAudioEngine>());
 
 	//These could be anywhere

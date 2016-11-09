@@ -281,8 +281,8 @@ void AnnAudioEngine::updateListenerPos(AnnVect3 pos)
 
 void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 {
-	Ogre::Vector3 At = orient.getAtVector(); // Direction object facing
-	Ogre::Vector3 Up = orient.getUpVector(); // Up Vector
+	auto At = orient.getAtVector(); // Direction object facing
+	auto Up = orient.getUpVector(); // Up Vector
 
 	ALfloat Orientation[] = { At.x, At.y, At.z,
 							Up.x, Up.y, Up.z };

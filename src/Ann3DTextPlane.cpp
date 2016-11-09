@@ -116,6 +116,7 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 							case ' ': wordwidth = spacewidth; ++l; break;
 							case '\t': wordwidth = charwidth * 3; ++l; break;
 							case '\n': l = str.size();
+							default: break;
 						}
 
 						if (wordwrap)
@@ -186,7 +187,7 @@ stop:
 	destBuffer->unlock();
 
 	// Free the memory allocated for the buffer
-	free(buffer); buffer = nullptr;
+	free(buffer);
 }
 
 Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float resolution, string fName, string TTF) :
