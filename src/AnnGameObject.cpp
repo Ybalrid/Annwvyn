@@ -196,6 +196,7 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	//create rigidBody from shape
 	state = new BtOgre::RigidBodyState(Node);
 	Body = new btRigidBody(mass, state, Shape, inertia);
+	Body->setUserPointer(this);
 
 	short bulletMask = MASK(0) | MASK(1);
 	if (!colideWithPlayer)

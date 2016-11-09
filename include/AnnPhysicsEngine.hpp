@@ -54,12 +54,9 @@ namespace Annwvyn
 		void step(float delta);
 
 		///Process the collision query system
-		/// \param the object list where to process collision query
-		void processCollisionTesting(AnnGameObjectList& object);
+		void processCollisionTesting();
 
 		///Process triggers contact event
-		/// \param player The player object
-		/// \param triggers list where to process collision query
 		void processTriggersContacts();
 
 		///Remove a body from simulation

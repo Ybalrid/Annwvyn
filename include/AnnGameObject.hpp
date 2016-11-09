@@ -112,33 +112,6 @@ namespace Annwvyn
 		/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
 		void playSound(std::string path, bool loop = false, float volume = 1.0f);
 
-		///collision handling
-		std::vector<struct collisionTest*> getCollisionMask();
-
-		///Set all collisionState to false
-		void resetCollisionMask();
-
-		///empty the vector
-		void cleanCollisionMask();
-
-		///remove this object of the collisionMask
-		/// \param Object Object we don't want to know if we collide anymore
-		void stopGettingCollisionWith(AnnGameObject* Object);
-
-		///add this object to the collisionState
-		/// \param Object the object we want to know collision information
-		void testCollisionWith(AnnGameObject* Object);
-
-		///change the collisionState
-		/// \param Object the object we are testing
-		/// \param collisionState the state of the collision. True if contact.
-		void updateCollisionStateWith(AnnGameObject* Object, bool collisionState);
-
-		///return the collisionState with the object from the collisionMask.
-		///if the object is not on the collisionMask, return false
-		/// \param Object the object we want to know the current collision state
-		bool collideWith(AnnGameObject* Object);
-
 		// TODO create animation state machine
 		///Set currently playing animation
 		/// \param name Name of the animation as defined by the 3D entity
