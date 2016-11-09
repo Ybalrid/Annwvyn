@@ -153,7 +153,7 @@ namespace Annwvyn
 			///Get the ID number of this controller
 			unsigned int getSitckID();
 
-			///Return true if this controller is an xbox controller. Usefull for oculus rift games...
+			///Return true if this controller is an xbox controller. Useful for oculus rift games...
 			bool isXboxController();
 
 			///Is button `i` pressed
@@ -258,6 +258,34 @@ namespace Annwvyn
 
 			///Play a sound
 			void playSound(std::string name, bool loop = true);
+		};
+
+		///Collision between 2 game objects
+		class AnnCollisionEvent
+		{
+		public:
+			///Get the 1st object in the pair
+			AnnGameObject* getAObject();
+
+			///Get the 2nd object in the pair
+			AnnGameObject* getBObject();
+
+			///Get the name of 1st object
+			std::string getAObjectName();
+
+			///Get the name of 2nd object
+			std::string getBObjectName();
+		};
+
+		///Collision between the player and a game object
+		class AnnPlayerCollisionEvent
+		{
+		public:
+			///Get the object that collided with the player
+			AnnGameObject* getObject();
+
+			///Get the name of the object that collided with the player
+			std::string getObjectName();
 		};
 
 		///Value of Pi

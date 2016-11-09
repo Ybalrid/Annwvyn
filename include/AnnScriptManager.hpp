@@ -57,9 +57,9 @@ namespace Annwvyn
 		void TriggerEvent(AnnTriggerEvent e) override;
 		///Event from an HandController
 		void HandControllerEvent(AnnHandControllerEvent e) override;
-
+		///Event from the collision between 2 game objects
 		void CollisionEvent(AnnCollisionEvent e) override;
-
+		///Event from the collision between the player and a game object
 		void PlayerCollisionEvent(AnnPlayerCollisionEvent e) override;
 
 	private:
