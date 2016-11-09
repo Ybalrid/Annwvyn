@@ -299,6 +299,10 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->hasBeenReleased(i); }), "hasBeenReleased");
 
 	chai.add(fun([](AnnPlayerCollisionEvent e) {return e.getObject(); }), "getObject");
+	chai.add(fun([](AnnPlayerCollisionEvent e) {return e.getObject()->getName(); }), "getObjectName");
+
+	chai.add(fun([](AnnCollisionEvent e) {return e.getA(); }), "getAObject");
+	chai.add(fun([](AnnCollisionEvent e) {return e.getB(); }), "getBObject");
 	chai.add(fun([](AnnCollisionEvent e) {return e.getA()->getName(); }), "getAObjectName");
 	chai.add(fun([](AnnCollisionEvent e) {return e.getB()->getName(); }), "getBObjectName");
 
