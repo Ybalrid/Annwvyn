@@ -436,9 +436,13 @@ AnnEventListener::~AnnEventListener()
 
 void AnnEventManager::detectedCollision(void* a, void* b)
 {
+	//The only body that doesn't have an "userPointer" set is the Player's rigidbody.
+	//If one of the pair is null, it's a player collision that has been detected on this manifold.
+	//Not an object-object collision
 	if (!a) return playerCollision(b);
 	if (!b) return playerCollision(a);
 
+	//push the object-object collision in the buffer
 	collisionBuffer.push_back(std::make_pair(a, b));
 }
 
