@@ -9,7 +9,8 @@ OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
 noVRCam(nullptr),
 noVRViewport(nullptr),
 then(0),
-now(0)
+now(0),
+running(true)
 {
 	noVRself = dynamic_cast<OgreNoVRRender*>(self);
 }
@@ -94,6 +95,12 @@ void OgreNoVRRender::updateTracking()
 void OgreNoVRRender::renderAndSubmitFrame()
 {
 	Ogre::WindowEventUtilities::messagePump();
+	if (window->isClosed())
+	{
+		running = false;
+		return;
+	}
+
 	root->_fireFrameRenderingQueued();
 	noVRViewport->update();
 	window->update();

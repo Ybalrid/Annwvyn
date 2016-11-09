@@ -18,7 +18,7 @@ public:
 	void initCameras() override;
 	void initRttRendering() override;
 	void initClientHmdRendering() override;
-	bool shouldQuit() override { return false; }
+	bool shouldQuit() override { return !running; }
 	bool shouldRecenter() override { return false; }
 	bool isVisibleInHmd() override { return true; }
 
@@ -37,6 +37,7 @@ private:
 	Ogre::Camera* noVRCam;
 	Ogre::Viewport* noVRViewport;
 	double then, now;
+	bool running;
 };
 
 #endif //OGRE_NO_VR_RENDER

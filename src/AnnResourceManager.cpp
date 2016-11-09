@@ -5,7 +5,7 @@
 using namespace Annwvyn;
 
 AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager"),
-RGM{ Ogre::ResourceGroupManager::getSingletonPtr() }
+ResourceGroupManager{ Ogre::ResourceGroupManager::getSingletonPtr() }
 {
 	addDefaultResourceLocation();
 }
@@ -15,7 +15,7 @@ void AnnResourceManager::addZipLocation(const std::string& path, const std::stri
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
 	AnnDebug("Will load resources from Zip archive :");
 	AnnDebug() << path;
-	RGM->addResourceLocation(path, "Zip", resourceGroupName);
+	ResourceGroupManager->addResourceLocation(path, "Zip", resourceGroupName);
 }
 
 void AnnResourceManager::addFileLocation(const std::string& path, const std::string& resourceGroupName)
@@ -23,15 +23,15 @@ void AnnResourceManager::addFileLocation(const std::string& path, const std::str
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
 	AnnDebug("Will load resources from File-system directory :");
 	AnnDebug() << path;
-	RGM->addResourceLocation(path, "FileSystem", resourceGroupName);
+	ResourceGroupManager->addResourceLocation(path, "FileSystem", resourceGroupName);
 }
 
 void AnnResourceManager::addDefaultResourceLocation()
 {
 	AnnDebug("Adding Annwvyn CORE resource locations");
-	RGM->addResourceLocation("media/CORE.zip", "Zip", reservedResourceGroupName);
-	RGM->addResourceLocation("media", "FileSystem", reservedResourceGroupName, true);
-	RGM->initialiseResourceGroup(reservedResourceGroupName);
+	ResourceGroupManager->addResourceLocation("media/CORE.zip", "Zip", reservedResourceGroupName);
+	ResourceGroupManager->addResourceLocation("media", "FileSystem", reservedResourceGroupName, true);
+	ResourceGroupManager->initialiseResourceGroup(reservedResourceGroupName);
 }
 
 void AnnResourceManager::loadReseourceFile(const char path[])
@@ -57,7 +57,7 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 		{
 			typeName = i->first;
 			archName = i->second;
-			RGM->addResourceLocation(archName, typeName, secName);
+			ResourceGroupManager->addResourceLocation(archName, typeName, secName);
 		}
 	}
 }
@@ -65,13 +65,13 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 void AnnResourceManager::initResources()
 {
 	//addDefaultResourceLocaton();
-	RGM->initialiseAllResourceGroups();
+	ResourceGroupManager->initialiseAllResourceGroups();
 	AnnDebug("Resources initialized");
 }
 
 void AnnResourceManager::loadGroup(const std::string & groupName)
 {
-	RGM->loadResourceGroup(groupName);
+	ResourceGroupManager->loadResourceGroup(groupName);
 }
 
 void AnnResourceManager::refuseResource(const std::string& resourceName, const std::string& group)

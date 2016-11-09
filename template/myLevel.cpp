@@ -22,7 +22,7 @@ void MyLevel::load()
 	//zenith sunlight
 	light->setDirection(AnnVect3(0, -1, 0));
 
-	AnnGetSceneryManager()->setAmbiantLight(AnnColor(.5, .5, .5));
+	AnnGetSceneryManager()->setAmbientLight(AnnColor(.5, .5, .5));
 }
 
 void MyLevel::runLogic()

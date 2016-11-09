@@ -30,12 +30,6 @@ namespace Annwvyn
 		///Load in memory the content of the specified group
 		void loadGroup(const std::string& groupName);
 
-		///Deprecated. Use addZipLocation instead
-		DEPRECATED void loadZip(const char path[], const char resourceGroupName[] = defaultResourceGroupName) { return addZipLocation(path, resourceGroupName); }
-
-		///Deprecated. Use addFileLocation instead
-		DEPRECATED void loadDir(const char path[], const char resourceGroupName[] = defaultResourceGroupName) { return addFileLocation(path, resourceGroupName); }
-
 		///Name of the default resource group
 		static constexpr const char* const defaultResourceGroupName = "Annwvyn_UserDefined_Group";
 
@@ -49,7 +43,8 @@ namespace Annwvyn
 		///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
 		void addDefaultResourceLocation();
 
-		Ogre::ResourceGroupManager* RGM;
+		///Pointer to the resource group manager. We cache the address to prevent calling a static method all the time
+		Ogre::ResourceGroupManager* ResourceGroupManager;
 	};
 }
 

@@ -138,8 +138,8 @@ namespace Annwvyn
 }
 
 ///Annwvyn initialization macro
-#define AnnInit(AppName) new AnnEngine(AppName, detectedHMD)
-#define AnnQuit() delete AnnGetEngine()
+#define AnnInit(AppName) auto GameEngine = std::make_unique<AnnEngine>(AppName, detectedHMD)
+#define AnnQuit() GameEngine.reset(nullptr)
 
 //===================Application Entry-point definition=================//
 /*Main definition :
