@@ -17,22 +17,6 @@
 using namespace std;
 using namespace Annwvyn;
 
-class VerboseCollision : LISTENER
-{
-public:
-	void CollisionEvent(AnnCollisionEvent e) override
-	{
-		AnnDebug() << "Collision between " << e.getA() << " and " << e.getB();
-		AnnDebug() << "with names " << e.getA()->getName() << " and " << e.getB()->getName();
-	}
-
-	void PlayerCollisionEvent(AnnPlayerCollisionEvent e) override
-	{
-		AnnDebug() << "Player Collision with " << e.getObject();
-		AnnDebug() << "That bear the name : " << e.getObject()->getName();
-	}
-};
-
 AnnMain()
 {
 	//Only useful on windows : Open a debug console to get stdout/stderr
@@ -71,14 +55,7 @@ AnnMain()
 	//stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
 
-	auto verboseCollide = make_shared<VerboseCollision>();
-
-	AnnGetEventManager()->addListener(verboseCollide);
-
 	AnnGetEngine()->startGameplayLoop();
-
-	AnnGetEventManager()->removeListener(verboseCollide);
-	verboseCollide.reset();
 
 	AnnQuit();
 
