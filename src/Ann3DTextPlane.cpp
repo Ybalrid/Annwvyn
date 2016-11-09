@@ -289,7 +289,7 @@ Ann3DTextPlane::~Ann3DTextPlane()
 
 	Ogre::MaterialManager::getSingleton().remove(materialName);
 
-	string textureName = texture->getName();
+	auto textureName = texture->getName();
 	Ogre::TextureManager::getSingleton().remove(textureName);
 
 	if (!bgTexture.isNull())
@@ -442,9 +442,19 @@ void Ann3DTextPlane::setBackgroundImage(string imgName)
 void Ann3DTextPlane::renderText()
 {
 	clearTexture();
-	WriteToTexture(caption, texture, Ogre::Image::Box(pixelMargin, pixelMargin, width*resolutionFactor - pixelMargin, height*resolutionFactor - pixelMargin), font.getPointer(), textColor.getOgreColor(), align, true);
+	WriteToTexture(caption,
+				   texture,
+
+				   Ogre::Image::Box(pixelMargin, pixelMargin,
+				   width * resolutionFactor - pixelMargin,
+				   height * resolutionFactor - pixelMargin),
+
+				   font.getPointer(),
+				   textColor.getOgreColor(),
+				   align,
+				   true);
+
 	needUpdating = false;
-	//texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("", "textDebug.png");
 }
 
 void Ann3DTextPlane::clearTexture()
@@ -456,12 +466,12 @@ void Ann3DTextPlane::clearTexture()
 	}
 	else
 	{
-		Ogre::HardwarePixelBufferSharedPtr textureBuffer = texture->getBuffer();
-		const Ogre::uint32 w = textureBuffer->getWidth();
-		const Ogre::uint32 h = textureBuffer->getHeight();
+		auto textureBuffer = texture->getBuffer();
+		const auto w = textureBuffer->getWidth();
+		const auto h = textureBuffer->getHeight();
 
 		Ogre::Image::Box imageBox(0, 0, w, h);
-		Ogre::PixelBox pixelBox = textureBuffer->lock(imageBox, Ogre::HardwareBuffer::HBL_NORMAL);
+		auto pixelBox = textureBuffer->lock(imageBox, Ogre::HardwareBuffer::HBL_NORMAL);
 
 		for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
 			pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
