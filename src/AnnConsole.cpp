@@ -6,10 +6,10 @@ using namespace Annwvyn;
 
 AnnConsole::AnnConsole() : AnnSubSystem("OnScreenConsole"),
 modified(false),
-visibility(false),
 consoleNode(nullptr),
 offset(0, 0.125f, -0.75f),
-openGL43plus(false)
+openGL43plus(false),
+visibility(false)
 {
 	//Define the custom material
 	Ogre::MaterialPtr Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
@@ -206,7 +206,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	if (!font->isLoaded())
 		font->load();
 
-	TexturePtr fontTexture = (TexturePtr)TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName());
+	TexturePtr fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
 
 	HardwarePixelBufferSharedPtr fontBuffer = fontTexture->getBuffer();
 	HardwarePixelBufferSharedPtr destBuffer = destTexture->getBuffer();
@@ -217,7 +217,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 
 	// create a textureBuffer
 	size_t nBuffSize = fontBuffer->getSizeInBytes();
-	uint8* textureBuffer = (uint8*)calloc(nBuffSize, sizeof(uint8));
+	uint8* textureBuffer = static_cast<uint8*>(calloc(nBuffSize, sizeof(uint8)));
 
 	// create pixel box using the copy of the textureBuffer
 	PixelBox fontPb(fontBuffer->getWidth(), fontBuffer->getHeight(), fontBuffer->getDepth(), fontBuffer->getFormat(), textureBuffer);

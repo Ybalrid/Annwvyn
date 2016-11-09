@@ -152,7 +152,6 @@ void AnnXmlLevel::load()
 		XMLElement* phyInfo = physics->FirstChildElement("Mass");
 		if (!phyInfo) continue;
 		phyInfo->QueryFloatText(&mass);
-		phyInfo = nullptr;
 
 		phyInfo = physics->FirstChildElement("Shape");
 		if (!phyInfo) continue;

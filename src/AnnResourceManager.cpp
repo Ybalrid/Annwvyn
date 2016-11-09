@@ -4,7 +4,8 @@
 
 using namespace Annwvyn;
 
-AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager")
+AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager"),
+RGM{ Ogre::ResourceGroupManager::getSingletonPtr() }
 {
 	addDefaultResourceLocation();
 }
@@ -14,7 +15,7 @@ void AnnResourceManager::addZipLocation(const std::string& path, const std::stri
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
 	AnnDebug("Will load resources from Zip archive :");
 	AnnDebug() << path;
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "Zip", resourceGroupName);
+	RGM->addResourceLocation(path, "Zip", resourceGroupName);
 }
 
 void AnnResourceManager::addFileLocation(const std::string& path, const std::string& resourceGroupName)
@@ -22,15 +23,15 @@ void AnnResourceManager::addFileLocation(const std::string& path, const std::str
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
 	AnnDebug("Will load resources from File-system directory :");
 	AnnDebug() << path;
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path, "FileSystem", resourceGroupName);
+	RGM->addResourceLocation(path, "FileSystem", resourceGroupName);
 }
 
 void AnnResourceManager::addDefaultResourceLocation()
 {
 	AnnDebug("Adding Annwvyn CORE resource locations");
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media/CORE.zip", "Zip", reservedResourceGroupName);
-	Ogre::ResourceGroupManager::getSingleton().addResourceLocation("media", "FileSystem", reservedResourceGroupName, true);
-	Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(reservedResourceGroupName);
+	RGM->addResourceLocation("media/CORE.zip", "Zip", reservedResourceGroupName);
+	RGM->addResourceLocation("media", "FileSystem", reservedResourceGroupName, true);
+	RGM->initialiseResourceGroup(reservedResourceGroupName);
 }
 
 void AnnResourceManager::loadReseourceFile(const char path[])
@@ -56,7 +57,7 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 		{
 			typeName = i->first;
 			archName = i->second;
-			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
+			RGM->addResourceLocation(archName, typeName, secName);
 		}
 	}
 }
@@ -64,13 +65,13 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 void AnnResourceManager::initResources()
 {
 	//addDefaultResourceLocaton();
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	RGM->initialiseAllResourceGroups();
 	AnnDebug("Resources initialized");
 }
 
 void AnnResourceManager::loadGroup(const std::string & groupName)
 {
-	Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(groupName);
+	RGM->loadResourceGroup(groupName);
 }
 
 void AnnResourceManager::refuseResource(const std::string& resourceName, const std::string& group)

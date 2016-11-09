@@ -122,7 +122,7 @@ namespace Annwvyn
 		void stopBGM();
 
 		///Get the last error message that occurred in-engine
-		const std::string getLastError();
+		std::string getLastError();
 
 		///Create an audio source
 		std::shared_ptr<AnnAudioSource> createSource();

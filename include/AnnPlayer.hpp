@@ -100,7 +100,7 @@ namespace Annwvyn
 		void setShape(btCollisionShape* Shape);
 
 		///Bullet RIGID body
-		/// \param The bullet rigid body used for simulating player's physics
+		/// \param Body The bullet rigid body used for simulating player's physics
 		void setBody(btRigidBody* Body);
 
 		///Get the distance between foot-plane and eyes in meters

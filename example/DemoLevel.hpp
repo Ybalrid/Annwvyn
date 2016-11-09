@@ -107,7 +107,7 @@ public:
 		}
 	}
 
-	level_id getDemo(level_id id)
+	static level_id getDemo(level_id id)
 	{
 		return 1 + id;
 	}

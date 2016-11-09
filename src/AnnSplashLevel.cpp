@@ -6,14 +6,14 @@
 using namespace Annwvyn;
 
 AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, std::shared_ptr<AnnLevel> nextLevel, float timeoutTime) : constructLevel(),
-next(nextLevel),
 timeout(timeoutTime * 1000),
 currentTime(0),
 startTime(-1),
+next(nextLevel),
+CurvedPlane{ nullptr },
+Splash{ nullptr },
 splashImage(resourceName),
-hasBGM(false)
-{
-}
+hasBGM(false) {}
 
 void AnnSplashLevel::load()
 {

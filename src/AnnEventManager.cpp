@@ -39,7 +39,7 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 		input.pop_back();
 	else
 		//Put typed char into the application
-		input.push_back((char)arg.text);
+		input.push_back(char(arg.text));
 	return true;
 }
 
@@ -77,9 +77,9 @@ void AnnTextInputer::setInput(std::string content)
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) : AnnSubSystem("EventManager"),
 Keyboard(nullptr),
 Mouse(nullptr),
+lastTimerCreated(0),
 defaultEventListener(nullptr),
-knowXbox(false),
-lastTimerCreated(0)
+knowXbox(false)
 {
 	//Init all bool array to false
 	for (auto& keyState : previousKeyStates) keyState = false;
@@ -110,7 +110,7 @@ lastTimerCreated(0)
 			|| Joystick->vendor().find("XBOX") != std::string::npos)
 		{
 			knowXbox = true;
-			xboxID = (StickAxisId)Joystick->getID();
+			xboxID = StickAxisId(Joystick->getID());
 			AnnDebug() << "Detected Xbox controller at ID " << xboxID;
 		}
 	}

@@ -38,7 +38,7 @@ namespace Annwvyn
 		AnnFileWriter();
 
 		///Write the fileData to disc in the appropriate directory
-		void write(std::shared_ptr<AnnSaveFileData> dataToWrite);
+		static void write(std::shared_ptr<AnnSaveFileData> dataToWrite);
 	};
 
 	///Handle opening, reading and closing files
@@ -152,6 +152,7 @@ namespace Annwvyn
 	//Inherit from this to use your saved data
 
 	public:
+		virtual ~AnnSaveDataInterpretor();
 		///FileInterpetor
 		AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data);
 

@@ -126,7 +126,7 @@ bool AnnMouseEvent::getButtonState(MouseButtonId id)
 {
 	if (id == invalidButton) return false;
 
-	if ((int)id < (int)nbButtons)
+	if (int(id) < int(nbButtons))
 		return buttonsStatus[id];
 
 	return false;
@@ -136,7 +136,7 @@ AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
 {
 	if (id == invalidAxis) return AnnMouseAxis(invalidAxis, 0, 0);
 
-	if ((int)id < (int)nbAxes)
+	if (int(id) < int(nbAxes))
 		return axes[id];
 
 	return AnnMouseAxis(invalidAxis, 0, 0);
@@ -144,13 +144,13 @@ AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
 
 void AnnMouseEvent::setButtonStatus(MouseButtonId id, bool value)
 {
-	if ((int)id < (int)nbButtons)
+	if (int(id) < int(nbButtons))
 		buttonsStatus[id] = value;
 }
 
 void AnnMouseEvent::setAxisInformation(MouseAxisId id, AnnMouseAxis information)
 {
-	if ((int)id < (int)nbAxes)
+	if (int(id) < int(nbAxes))
 		axes[id] = information;
 }
 

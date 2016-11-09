@@ -92,7 +92,7 @@ public:
 	void updateProjectionMatrix() override;
 
 	///Get a "vr::EVREye" from an "oovrEyeType"
-	inline vr::EVREye getEye(oovrEyeType eye);
+	static inline vr::EVREye getEye(oovrEyeType eye);
 
 	///Setup the distortion rendering. Apparently this is actually not needed. Even if the official sample does it. This function is a placeholder
 	void setupDistrotion();
@@ -106,7 +106,7 @@ private:
 	inline Ogre::Quaternion getTrackedHMDOrieation();
 
 	///Take a Matrix34 from OpenVR and spew out an Ogre::Matrix4 that represent the same transform
-	inline Ogre::Matrix4 getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat);
+	static inline Ogre::Matrix4 getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat);
 
 	///Iterate through the list of events from SteamVR and call code that react to it
 	void processVREvents();

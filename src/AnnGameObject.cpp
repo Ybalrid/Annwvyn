@@ -7,14 +7,14 @@ using namespace Annwvyn;
 AnnGameObject::AnnGameObject() :
 	Node(nullptr),
 	Entity(nullptr),
-	Body(nullptr),
-	Shape(nullptr),
-	state(nullptr),
-	anim(nullptr),
-	audioSource(nullptr),
-	animIsLooping(false),
+	animIsSetted(false),
 	animIsPlaying(false),
-	animIsSetted(false)
+	animIsLooping(false),
+	anim(nullptr),
+	Shape(nullptr),
+	Body(nullptr),
+	audioSource(nullptr),
+	state(nullptr)
 {
 }
 

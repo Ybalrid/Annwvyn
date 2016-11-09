@@ -16,6 +16,7 @@ namespace Annwvyn
 	class DLL AnnPlayerActuator
 	{
 	public:
+		virtual ~AnnPlayerActuator();
 		///Construct a player actuator
 		AnnPlayerActuator();
 

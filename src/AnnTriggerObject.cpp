@@ -5,9 +5,9 @@
 using namespace Annwvyn;
 
 AnnTriggerObject::AnnTriggerObject() :
-	contactWithPlayer(false),
 	position(Ogre::Vector3(0, 0, 0)),
-	lastFrameContactWithPlayer(0)
+	contactWithPlayer(false),
+	lastFrameContactWithPlayer(false)
 {
 }
 

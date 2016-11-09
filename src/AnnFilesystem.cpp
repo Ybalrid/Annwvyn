@@ -80,13 +80,15 @@ shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
 }
 
 AnnFilesystemManager::AnnFilesystemManager(string title) : AnnSubSystem("FilesystemManager"),
-fileReader(nullptr),
-fileWriter(nullptr)
+fileWriter(nullptr),
+fileReader(nullptr)
 {
 	//get from the OS the user's personal directory
 #ifdef WIN32
 #pragma warning (disable : 4996) //Remove warning at usage of function "getenv"
+	// ReSharper disable CppDeprecatedEntity
 	pathToUserDir = getenv("USERPROFILE");
+	// ReSharper restore CppDeprecatedEntity
 #pragma warning (default : 4996)
 #endif
 
@@ -330,3 +332,5 @@ AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(string key)
 		stringToFloat(y),
 		stringToFloat(z));
 }
+
+AnnSaveDataInterpretor::~AnnSaveDataInterpretor() {}
