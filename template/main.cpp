@@ -12,7 +12,7 @@ using namespace Annwvyn;
 AnnMain() //The application entry point is "AnnMain()". return type int.
 {
 	//Initialize the engine
-	//AnnEngine::openConsole();//optional : open console
+	AnnEngine::openConsole();//optional : open console
 	AnnInit("NameOfApp");
 
 	//Call physics initialization for the player body:

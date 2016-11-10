@@ -154,14 +154,14 @@ namespace Annwvyn
 #include "windows.h"
 
 ///Application entry point
-#define AnnMain() int AnnwvynStart();\
-std::string detectedHMD;\
-INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)\
-{\
-	detectedHMD = Annwvyn::getHMDFromCmdLine(static_cast<const char*>(strCmdLine));\
-	Annwvyn::preStart();\
-	return AnnwvynStart();\
-}\
+#define AnnMain() int AnnwvynStart();																\
+std::string detectedHMD;																			\
+INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)								\
+{																									\
+	detectedHMD = Annwvyn::getHMDFromCmdLine(static_cast<const char*>(strCmdLine));					\
+	Annwvyn::preStart();																			\
+	return AnnwvynStart();																			\
+}																									\
 int AnnwvynStart()
 
 #else

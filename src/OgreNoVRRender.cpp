@@ -76,6 +76,8 @@ void OgreNoVRRender::initClientHmdRendering()
 	return;
 }
 
+bool OgreNoVRRender::shouldQuit() { return !running; }
+
 void OgreNoVRRender::updateTracking()
 {
 	feetPosition = headNode->getPosition();
@@ -130,4 +132,14 @@ void OgreNoVRRender::updateProjectionMatrix()
 	//Here we don't use a custom projection matrix. Just tell the Ogre Camera to use the current near/far clip planes
 	noVRCam->setNearClipDistance(nearClippingDistance);
 	noVRCam->setFarClipDistance(farClippingDistance);
+}
+
+bool OgreNoVRRender::shouldRecenter()
+{
+	return false;
+}
+
+bool OgreNoVRRender::isVisibleInHmd()
+{
+	return true;
 }
