@@ -10,8 +10,8 @@ class MyLevel : LEVEL
 {
 public:
 	MyLevel();
-	void load();
-	void runLogic();
+	void load() override;
+	void runLogic() override;
 };
 
 #endif //MY_LEVEL
