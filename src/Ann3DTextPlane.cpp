@@ -343,11 +343,11 @@ void Ann3DTextPlane::createMaterial()
 	generateMaterialName();
 	AnnDebug() << "materialName : " << materialName;
 
-	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create(materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true);
-	Ogre::Pass* materialPass = material.getPointer()->getTechnique(0)->getPass(0);
+	auto material = Ogre::MaterialManager::getSingleton().create(materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true);
+	auto materialPass = material.getPointer()->getTechnique(0)->getPass(0);
 	materialPass->setCullingMode(Ogre::CullingMode::CULL_NONE);
 	materialPass->setAlphaRejectSettings(Ogre::CompareFunction::CMPF_EQUAL, 255, true);
-	Ogre::TextureUnitState* renderPlaneTextureUnitState = materialPass->createTextureUnitState();
+	auto renderPlaneTextureUnitState = materialPass->createTextureUnitState();
 
 	texture = Ogre::TextureManager::getSingleton().createManual(generateRandomString(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, width * resolutionFactor, height * resolutionFactor, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET);
 	renderPlaneTextureUnitState->setTexture(texture);

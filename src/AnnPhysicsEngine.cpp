@@ -35,12 +35,6 @@ defaultGravity(0, -9.81f, 0)
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
 {
-	/*delete DynamicsWorld;
-	delete Broadphase;
-	delete CollisionConfiguration;
-	delete Dispatcher;
-	delete Solver;
-	delete debugDrawer;*/
 }
 
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld()
