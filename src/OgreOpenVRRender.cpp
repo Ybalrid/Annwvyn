@@ -87,12 +87,13 @@ void OgreOpenVRRender::initPipeline()
 //This function is from VALVe
 std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = nullptr)
 {
-	uint32_t unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, nullptr, 0, peError);
+	auto unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, nullptr, 0, peError);
 	if (unRequiredBufferLen == 0)
 		return "";
 
-	char *pchBuffer = new char[unRequiredBufferLen];
-	unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, pchBuffer, unRequiredBufferLen, peError);
+	auto pchBuffer = new char[unRequiredBufferLen];
+	/*unRequiredBufferLen = */
+	pHmd->GetStringTrackedDeviceProperty(unDevice, prop, pchBuffer, unRequiredBufferLen, peError);
 	std::string sResult = pchBuffer;
 	delete[] pchBuffer;
 	return sResult;
@@ -348,7 +349,7 @@ void OgreOpenVRRender::initRttRendering()
 	//
 	//When the parent class *OgreVRRender* initialize Ogre, the OpenGL RenderSystem is loaded in hard.
 	//We don't need to check that we're using OpenGL before doing this kind of cast:
-	Ogre::GLTextureManager* textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
+	auto textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
 
 	//shared texture
 	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -439,11 +440,11 @@ const bool DEBUG(true);
 void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side)
 {
 	//Extract tracking information from the device
-	Ogre::Matrix4 transform = getMatrix4FromSteamVRMatrix34(trackedPoses[controllerDeviceIndex].mDeviceToAbsoluteTracking);
+	auto transform = getMatrix4FromSteamVRMatrix34(trackedPoses[controllerDeviceIndex].mDeviceToAbsoluteTracking);
 
 	//Extract the pose from the transformation matrix
-	Ogre::Vector3 position = transform.getTrans();
-	Ogre::Quaternion orientation = transform.extractQuaternion();
+	auto position = transform.getTrans();
+	auto orientation = transform.extractQuaternion();
 
 	//Get the state of the controller. The state contains the buttons and triggers data at the last sample
 	vrSystem->GetControllerState(controllerDeviceIndex, &controllerState);
@@ -514,7 +515,7 @@ void OgreOpenVRRender::extractButtons(size_t side)
 void OgreOpenVRRender::processTrackedDevices()
 {
 	//Iterate through the possible trackedDeviceIndexes
-	for (vr::TrackedDeviceIndex_t trackedDevice = vr::k_unTrackedDeviceIndex_Hmd + 1;
+	for (auto trackedDevice = vr::k_unTrackedDeviceIndex_Hmd + 1;
 		 trackedDevice < vr::k_unMaxTrackedDeviceCount;
 		 trackedDevice++)
 	{

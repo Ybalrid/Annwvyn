@@ -24,13 +24,13 @@ void AnnSplashLevel::load()
 
 	//Create manual material
 	AnnDebug() << "Creating a material with no culling, now lighting, and the wanted texture";
-	Ogre::MaterialPtr Console = Ogre::MaterialManager::getSingleton().create("Splash", "General", true);
-	Ogre::Technique* technique = Console.getPointer()->getTechnique(0);
-	Ogre::Pass* pass = technique->getPass(0);
+	auto Console = Ogre::MaterialManager::getSingleton().create("Splash", "General", true);
+	auto technique = Console.getPointer()->getTechnique(0);
+	auto pass = technique->getPass(0);
 	pass->setLightingEnabled(false);
 	pass->setCullingMode(Ogre::CullingMode::CULL_NONE);
-	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
-	Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().load(splashImage, "General");
+	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
+	auto texture = Ogre::TextureManager::getSingleton().load(splashImage, "General");
 	displaySurfaceTextureUniteState->setTexture(texture);
 
 	//Create manual object
@@ -40,8 +40,8 @@ void AnnSplashLevel::load()
 
 	CurvedPlane->begin("Splash", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 
-	const float CurveC(1);
-	const float CurveB(CurveC / 4);
+	const auto CurveC(1.f);
+	const auto CurveB(CurveC / 4);
 	//10 vertex:
 	//1
 	CurvedPlane->position(-2, -2, CurveC);

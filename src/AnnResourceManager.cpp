@@ -39,7 +39,7 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 	/*from ogre wiki : load the given resource file*/
 	Ogre::ConfigFile configFile;
 	configFile.load(path);
-	Ogre::ConfigFile::SectionIterator seci = configFile.getSectionIterator();
+	auto seci = configFile.getSectionIterator();
 	Ogre::String secName, typeName, archName;
 	while (seci.hasMoreElements())
 	{
@@ -47,16 +47,15 @@ void AnnResourceManager::loadReseourceFile(const char path[])
 
 		if (secName == reservedResourceGroupName)
 		{
-			refuseResource("*Did not read file*", secName);
+			refuseResource("*Did not read form file*", secName);
 			continue;
 		}
 
-		Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
-		Ogre::ConfigFile::SettingsMultiMap::iterator i;
-		for (i = settings->begin(); i != settings->end(); ++i)
+		auto settings = seci.getNext();
+		for (const auto& setting : *settings)
 		{
-			typeName = i->first;
-			archName = i->second;
+			typeName = setting.first;
+			archName = setting.second;
 			ResourceGroupManager->addResourceLocation(archName, typeName, secName);
 		}
 	}
