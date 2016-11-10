@@ -18,9 +18,9 @@ public:
 	void initCameras() override;
 	void initRttRendering() override;
 	void initClientHmdRendering() override;
-	bool shouldQuit() override { return !running; }
-	bool shouldRecenter() override { return false; }
-	bool isVisibleInHmd() override { return true; }
+	bool shouldQuit() override;
+	bool shouldRecenter() override;
+	bool isVisibleInHmd() override;
 
 	void updateTracking() override;
 	void renderAndSubmitFrame() override;
