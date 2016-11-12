@@ -34,7 +34,7 @@ void AnnResourceManager::addDefaultResourceLocation()
 	ResourceGroupManager->initialiseResourceGroup(reservedResourceGroupName);
 }
 
-void AnnResourceManager::loadReseourceFile(const char path[])
+void AnnResourceManager::loadReseourceFile(const std::string& path)
 {
 	/*from ogre wiki : load the given resource file*/
 	Ogre::ConfigFile configFile;
