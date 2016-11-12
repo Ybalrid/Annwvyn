@@ -1,7 +1,7 @@
 For building the engine, you need to link :
 
 Ogre 1.9.x 
-Bullet >= 2.8
+Bullet >= 2.85
 OpenAL lattest available should work
 libsndfile lattest available should work
 libOVR 1.9 from the Oculus developer center
