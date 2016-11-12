@@ -11,7 +11,7 @@
 //Keep track of engine version here
 #define ANN_MAJOR 0
 #define ANN_MINOR 2
-#define ANN_PATCH 5.1
+#define ANN_PATCH 6
 #define ANN_EXPERIMENTAL true
 
 #include "systemMacro.h"
