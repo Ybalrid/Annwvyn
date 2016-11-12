@@ -21,6 +21,7 @@ void AnnSplashLevel::load()
 	AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
 	AnnGetPlayer()->ignorePhysics = true;
 	AnnGetPlayer()->setOrientation(Ogre::Euler(0, 0, 0));
+	AnnGetPhysicsEngine()->changeGravity(AnnVect3::ZERO);
 
 	//Create manual material
 	AnnDebug() << "Creating a material with no culling, now lighting, and the wanted texture";
@@ -109,15 +110,9 @@ void AnnSplashLevel::runLogic()
 	}
 
 	//Run the following only if you set a "next" level to jump to
-	if (auto nextLevel = next.lock())
-		if (nextLevel)
-		{
-			//test if the splash has timed out
-			currentTime = AnnGetEngine()->getTimeFromStartUp();
-			if (currentTime - startTime > timeout)
-				//Jump to the next
-				AnnGetEngine()->getLevelManager()->jump(nextLevel);
-		}
+	if (auto nextLevel = next.lock() &&
+		AnnGetEngine()->getTimeFromStartUp() - startTime > timeout)
+		AnnGetEngine()->getLevelManager()->jump(nextLevel);
 }
 
 void AnnSplashLevel::unload()

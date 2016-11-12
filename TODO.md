@@ -10,17 +10,17 @@ TODO list
 - [x] Use anti aliasing
 - [x] Handle hand-controller event via the Event Manager **very basic for now**
 - [x] Integrate a scripting language for gameplay. Probably ChaiScript
-- [ ] Add an "engine configuration file" system. As a UNIX-like .conf file (or a windows like .ini file|UNIX file preferred for the sake of simplicity)
+- <del>[ ] Add an "engine configuration file" system. As a UNIX-like .conf file (or a windows like .ini file|UNIX file preferred for the sake of simplicity)</del>
 
 ____
 
 Upgrade the engine to Ogre 2.1
 -----
-  - [ ] Use the compositor to do stereo rendering with RTT
-  - [ ] Integrate the HLMS shader library to the core resources of the engine 
-  - [ ] Convert every existing material to the HLMS
-  - [ ] Find a acceptable work-flow to export HLMS PBS materials from Blender
-  - [ ] Make a acceptable work-flow to export Ogre V2 binary mesh format from Blender
+- [ ] Use the compositor to do stereo rendering with RTT
+- [ ] Integrate the HLMS shader library to the core resources of the engine 
+- [ ] Convert every existing material to the HLMS
+- [ ] Find a acceptable work-flow to export HLMS PBS materials from Blender
+- [ ] Make a acceptable work-flow to export Ogre V2 binary mesh format from Blender
 
 ____
 
