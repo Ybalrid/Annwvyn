@@ -25,18 +25,10 @@ namespace Annwvyn
 			AnnDebugBuff() {};
 
 			///Will sync the buffer
-			~AnnDebugBuff()
-			{
-				pubsync();
-			};
+			~AnnDebugBuff();;
 
 			///Sync the buffer by performing an AnnEngine::log, clear it and return success.
-			int sync() override
-			{
-				AnnEngine::log(str());
-				str("");
-				return 0;
-			};
+			int sync() override;;
 		};
 
 	public:
