@@ -52,6 +52,7 @@ namespace Annwvyn
 
 		std::list<std::shared_ptr<AnnAbstractMovable>> levelMovable;
 
+		// TODO Give this storage facility to the Game Object manager
 		std::unordered_map<std::string, std::shared_ptr<AnnLightObject> > levelLightingIdMap;
 		std::unordered_map<std::string, std::shared_ptr<AnnTriggerObject> > levelTriggerIdMap;
 

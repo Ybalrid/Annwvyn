@@ -79,8 +79,8 @@ namespace Annwvyn
 
 		///Get an already existing SaveFileData object for this filename
 		std::shared_ptr<AnnSaveFileData> getCachedSaveFileDataObject(std::string filename);
+
 		///Destroy this SaveFileData Object. Will loose cached data if this file didn't go through the FileWriter
-		DEPRECATED void destroySaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 
 		///Get the FileReader object

@@ -150,11 +150,6 @@ void AnnFilesystemManager::createSaveDirectory()
 	createDirectory(getSaveDirectoryFullPath());
 }
 
-void AnnFilesystemManager::destroySaveFileDataObject(shared_ptr<AnnSaveFileData> data)
-{
-	releaseSaveFileDataObject(data);
-}
-
 void AnnFilesystemManager::releaseSaveFileDataObject(shared_ptr<AnnSaveFileData> data)
 {
 	cachedData.remove(data);
