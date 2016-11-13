@@ -292,7 +292,7 @@ void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 
 void AnnAudioEngine::update()
 {
-	OgrePose pose = AnnGetEngine()->getHmdPose();
+	auto pose = AnnGetEngine()->getHmdPose();
 	updateListenerPos(pose.position);
 	updateListenerOrient(pose.orientation);
 }
@@ -309,10 +309,6 @@ std::shared_ptr<AnnAudioSource> AnnAudioEngine::createSource(std::string path)
 	return source;
 }
 
-void AnnAudioEngine::destroySource(std::shared_ptr<AnnAudioSource> source)
-{
-	removeSource(source);
-}
 void AnnAudioEngine::removeSource(std::shared_ptr<AnnAudioSource> source)
 {
 	AudioSources.remove(source);

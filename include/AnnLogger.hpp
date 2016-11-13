@@ -17,7 +17,6 @@ namespace Annwvyn
 	///Open an output stream to the engine log
 	class DLL AnnDebug : public std::ostream
 	{
-	private:
 		///Nested buffer class. Write the stings to the engine log.
 		class AnnDebugBuff : public std::stringbuf
 		{
@@ -26,12 +25,17 @@ namespace Annwvyn
 			AnnDebugBuff() {};
 
 			///Will sync the buffer
-			~AnnDebugBuff() { pubsync(); };
+			~AnnDebugBuff()
+			{
+				pubsync();
+			};
 
 			///Sync the buffer by performing an AnnEngine::log, clear it and return success.
 			int sync() override
 			{
-				AnnEngine::log(str()); str(""); return 0;
+				AnnEngine::log(str());
+				str("");
+				return 0;
 			};
 		};
 

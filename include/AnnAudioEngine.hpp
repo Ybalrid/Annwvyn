@@ -130,7 +130,7 @@ namespace Annwvyn
 		///Create an audio source and attach (and load if necessary) buffer from audio file
 		std::shared_ptr<AnnAudioSource> createSource(std::string path);
 
-		DEPRECATED void destroySource(std::shared_ptr<AnnAudioSource> source);
+		///Remove an audio source frop the engine
 		void removeSource(std::shared_ptr<AnnAudioSource> source);
 
 		///Write last error text to the log
@@ -148,9 +148,9 @@ namespace Annwvyn
 		///For engine : update listener Orientation
 		friend class AnnEngine;
 
+		///Update the listener
 		void update() override;
 
-	private:
 		///Detect playback devices from the device enumeration string
 		void detectPlaybackDevices(const char *list);
 

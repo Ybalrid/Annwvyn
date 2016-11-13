@@ -39,7 +39,6 @@ namespace Annwvyn
 		void setVisible(bool visibility);
 
 		///Toggle the console.
-		DEPRECATED void toogle() { return toggle(); }
 		void toggle();
 
 		///True if text has been updated on the console and the console is visible.

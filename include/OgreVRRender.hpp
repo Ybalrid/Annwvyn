@@ -10,7 +10,6 @@
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
 
-/*#define MAX_CONTROLLER_NUMBER 2*/
 constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 
 ///A pose refer to the combination of a position and an orientation. It permit to define the placement of an object with 6DOF
