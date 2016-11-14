@@ -32,7 +32,7 @@ Installation
 
 First, please install Visual Studio 2015 (the community version is free) from Microsoft.
 
-Then, go get the SDK installer here http://annwvyn.org/?static1/download and run it. 
+Then, go get the SDK installer here http://annwvyn.org/?static2/download and run it. 
 If near the end of the installer, a CMD window open asking about setting up environment variables, say yes.
 
 After that, if you need to update the engine to the current master branch, see the "Updating the engine" section below.
