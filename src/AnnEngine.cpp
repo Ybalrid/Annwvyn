@@ -246,8 +246,8 @@ bool AnnEngine::refresh()
 	player->engineUpdate(getFrameTime());
 
 	for (auto& SubSystem : SubSystemList)
-		if (SubSystem->needUpdate())	//If doesn't need update, switch to the next
-			SubSystem->update();		//The "else" keyword is used to not put curly braces, by laziness and by code style.
+		if (SubSystem->needUpdate())
+			SubSystem->update();
 
 	//Update camera from player
 	syncPov();

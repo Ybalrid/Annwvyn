@@ -3,8 +3,6 @@ class DummyBehavior
 	attr OwnerRef
 	def DummyBehavior(ownerTag)
 	{
-		this.count = 0;
-		this.otherCount = 0;
 		AnnDebugLog("Dummy Behavior constructed");
 		print(ownerTag);
 
