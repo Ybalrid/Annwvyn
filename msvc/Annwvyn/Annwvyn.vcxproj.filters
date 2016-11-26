@@ -367,6 +367,5 @@
     <None Include="Main Class Diagram.cd" />
     <None Include="..\..\TODO.md" />
     <None Include="..\..\README.md" />
-    <None Include="Activity1.nvact" />
   </ItemGroup>
 </Project>
