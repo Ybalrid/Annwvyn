@@ -21,6 +21,7 @@ Upgrade the engine to Ogre 2.1
 - [ ] Convert every existing material to the HLMS
 - [ ] Find a acceptable work-flow to export HLMS PBS materials from Blender
 - [ ] Make a acceptable work-flow to export Ogre V2 binary mesh format from Blender
+- [ ] BtOgre will not work with Ogre 2.1 as is. Fix that or ditch it. 
 
 ____
 
