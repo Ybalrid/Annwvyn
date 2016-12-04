@@ -165,7 +165,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\..\AL\openal-soft\build\Release;..\..\..\bullet3\lib\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\OIS_ReleaseDll;..\..\..\OgreSDK\boost\lib;..\..\..\OgreSDK\lib\Release\opt;..\..\..\OgreSDK\lib\Release;..\..\..\OculusSDK\LibOVR\Lib\Windows\x64\Release\VS2015\;..\..\..\glew\lib\Release\x64;..\..\..\openvr\lib\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;RenderSystem_GL.lib;OIS.lib;Setupapi.lib;LibOVR.lib;openvr_api.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;OIS.lib;Setupapi.lib;LibOVR.lib;openvr_api.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>

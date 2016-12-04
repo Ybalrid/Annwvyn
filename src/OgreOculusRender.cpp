@@ -140,7 +140,7 @@ void OgreOculusRender::initVrHmd()
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
-	updateTime = 1.0 / static_cast<double>(Oculus->getHmdDesc().DisplayRefreshRate);
+	updateTime = 1.0 / double(Oculus->getHmdDesc().DisplayRefreshRate);
 }
 
 void OgreOculusRender::createWindow()
@@ -317,18 +317,13 @@ void OgreOculusRender::initRttRendering()
 	}
 
 	//Create the Ogre equivalent of the texture as a render target for Ogre
-	Ogre::GLTextureManager* textureManager(static_cast<Ogre::GLTextureManager*>(Ogre::GLTextureManager::getSingletonPtr()));
+	auto textureManager{ Ogre::GLTextureManager::getSingletonPtr() };
 
 	//Create the texture within the Ogre Texture Manager
 	rttTexture = (textureManager->createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 				  Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel));
 
-	//Save the texture id for low-level GL call on the texture during render
-	rttEyes = rttTexture->getBuffer()->getRenderTarget();
-
-	//Extract OpenGL id of this texture
-	Ogre::GLTexture* gltex = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName(rttTextureName).getPointer());
-	renderTextureGLID = gltex->getGLID();
+	rttTexture->getCustomAttribute("GLID", &renderTextureGLID);
 
 	//Calculate the actual width of the desired image on the texture in a % of the width of the buffer (as a float between 0 to 1)
 	float proportionalWidth = static_cast<float>((bufferSize.w - frontierWidth / 2) / 2) / static_cast<float>(bufferSize.w);
@@ -360,7 +355,8 @@ void OgreOculusRender::initRttRendering()
 									Ogre::TEX_TYPE_2D, hmdSize.w, hmdSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 
 	//Save the GL texture id for updating the mirror texture
-	ogreMirrorTextureGLID = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("MirrorTex").getPointer())->getGLID();
+//	ogreMirrorTextureGLID = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("MirrorTex").getPointer())->getGLID();
+	mirror_texture->getCustomAttribute("GLID", &ogreMirrorTextureGLID);
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusRenderTextureGLID);
 
 	//Attach the camera of the debug render scene to a viewport on the actual application window
@@ -594,6 +590,8 @@ void OgreOculusRender::renderAndSubmitFrame()
 			glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
 							   ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
 							   hmdSize.w, hmdSize.h, 1);
+
+		//std::cerr << (void*)glCopyImageSubData;
 
 		//Update the window
 		debugViewport->update();
