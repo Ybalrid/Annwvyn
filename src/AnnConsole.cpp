@@ -75,7 +75,10 @@ visibility(false)
 	{
 		//Create a FontManager
 		std::cerr << "FontManager not usable yet. Initializing a new FontManager" << std::endl;
+		// ReSharper disable CppNonReclaimedResourceAcquisition
+		// Reason : Ogre will cleanup the FontManager when cleaning root.
 		new Ogre::FontManager();
+		// ReSharper restore CppNonReclaimedResourceAcquisition
 	}
 
 	//Create a manual font
@@ -107,8 +110,8 @@ visibility(false)
 	if (Ogre::Root::getSingleton().getRenderSystem()->getName()
 		== "OpenGL Rendering Subsystem")
 	{
-		backgroundID = static_cast<Ogre::GLTexture*>(background.get())->getGLID();
-		textureID = static_cast<Ogre::GLTexture*>(texture.get())->getGLID();
+		background->getCustomAttribute("GLID", &backgroundID);
+		texture->getCustomAttribute("GLID", &textureID);
 
 		// check if OpenGL version is > at 4.3
 		GLint major, minor;

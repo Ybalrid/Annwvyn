@@ -354,7 +354,7 @@ void OgreOpenVRRender::initRttRendering()
 	//shared texture
 	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 											  Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma, AALevel);
-	rttTextureGLID = static_cast<Ogre::GLTexture*>(textureManager->getByName("RTT_TEX").getPointer())->getGLID();
+	rttTexture->getCustomAttribute("GLID", &rttTextureGLID);
 	rttEyes = rttTexture->getBuffer()->getRenderTarget();
 
 	//Create viewport for each cameras in each render texture

@@ -213,8 +213,9 @@ void AnnEngine::log(std::string message, bool flag)
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 
 	messageForLog += message;
-	Ogre::LogManager::getSingleton().logMessage(messageForLog);
-	if (onScreenConsole != nullptr)
+	if (Ogre::LogManager::getSingletonPtr())
+		Ogre::LogManager::getSingleton().logMessage(messageForLog);
+	if (onScreenConsole)
 		onScreenConsole->append(message);
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
@@ -293,7 +294,7 @@ unsigned long AnnEngine::getTimeFromStartUp()
 
 double AnnEngine::getTimeFromStartupSeconds()
 {
-	return static_cast<double>(getTimeFromStartUp()) / 1000.0;
+	return double(getTimeFromStartUp()) / 1000.0;
 }
 
 //the delta time of the last frame, not the current one
