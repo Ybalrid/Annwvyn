@@ -330,6 +330,7 @@ void OgreOculusRender::initRttRendering()
 	AnnDebug() << proportionalWidth;
 
 	//Create viewports on the texture to render the eyeCameras
+	rttEyes = rttTexture->getBuffer()->getRenderTarget();
 	vpts[left] = rttEyes->addViewport(eyeCameras[left], 0, 0, 0, proportionalWidth);
 	vpts[right] = rttEyes->addViewport(eyeCameras[right], 1, 1.f - proportionalWidth, 0, proportionalWidth);
 
