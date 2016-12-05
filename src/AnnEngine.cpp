@@ -21,7 +21,7 @@ std::string AnnEngine::getAnnwvynVersion(long long int padding)
 	if (ANN_EXPERIMENTAL)
 		version << "-experimental";
 	padding -= version.str().length();
-	for (int i(0); i < padding; i++)
+	for (long long int i(0); i < padding; i++)
 		version << " ";
 	return version.str();
 }
@@ -112,8 +112,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
 
 	/*The wanted order is
-	- event happens (player input, timers...)
 	- physics is ticked (stuff move)
+	- event happens (player input, timers...)
 	- audio is synced (sounds comes form where they should)
 	- then the game can redraw*/
 
@@ -355,7 +355,7 @@ bool AnnEngine::openConsole()
 	if (AllocConsole())
 	{
 		//put stdout on this console;
-#pragma warning(disable:4996) //Okay, so for some reason, freopen is "bad" because potentially dangerous. However, since I'm passing static strings here, unless you go hack the DLL, I don't know what harm you can do.
+#pragma warning(disable:4996)
 		// ReSharper disable once CppDeprecatedEntity
 		auto f = freopen("CONOUT$", "w", stdout);
 		if (!f) state = false;
@@ -366,7 +366,11 @@ bool AnnEngine::openConsole()
 	std::cerr.rdbuf(std::cout.rdbuf());
 
 	SetConsoleTitle(L"Annwvyn Debug Console");
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+							FOREGROUND_BLUE |
+							FOREGROUND_GREEN |
+							FOREGROUND_RED |
+							FOREGROUND_INTENSITY);
 
 #endif
 	return state;

@@ -122,7 +122,7 @@ visibility(false)
 		log << "AnnConsolen constructor detected OpenGL version " << major << "." << minor;
 		AnnEngine::log(log.str());
 
-		if ((openGL43plus = (major >= 4) && (minor >= 3)))
+		if ((openGL43plus = major >= 4 && minor >= 3))
 		{
 			AnnEngine::log("This version is 4.3 or greater. Texture copy optimization enabled");
 		}
@@ -180,7 +180,7 @@ void AnnConsole::update()
 
 		auto background_in = background->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::HardwareBuffer::LockOptions::HBL_READ_ONLY);
 
-		for (int y(0); y < h; ++y) for (int x(0); x < w; ++x)
+		for (auto y(0); y < h; ++y) for (auto x(0); x < w; ++x)
 			texture_out.setColourAt(background_in.getColourAt(x, y, 0), x, y, 0);
 
 		background->getBuffer()->unlock();
