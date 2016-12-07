@@ -48,7 +48,7 @@ lastOculusOrientation{ bodyOrientation }
 	touchControllersButtons[right][3] = ovrButton_RThumb;
 
 	//Initialize the vector<bool>s that will hold the processed button states
-	for (auto side : { left, right })
+	for (const auto side : { left, right })
 	{
 		currentControllerButtonsPressed[side].resize(touchControllersButtons[side].size(), false);
 		lastControllerButtonsPressed[side].resize(touchControllersButtons[side].size(), false);
@@ -158,6 +158,10 @@ void OgreOculusRender::initVrHmd()
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 	updateTime = 1.0 / double(Oculus->getHmdDesc().DisplayRefreshRate);
+	float playerEyeHeight = ovr_GetFloat(Oculus->getSession(), "EyeHeight", -1.0f);
+	AnnDebug() << "Player eye height : " << playerEyeHeight << "m";
+	if (playerEyeHeight != -1.0f) AnnGetPlayer()->setEyesHeight(playerEyeHeight);
+	AnnDebug() << "Eye leveling translation : " << AnnGetPlayer()->getEyeTranslation();
 }
 
 void OgreOculusRender::createWindow()
@@ -373,7 +377,6 @@ void OgreOculusRender::initRttRendering()
 									Ogre::TEX_TYPE_2D, hmdSize.w, hmdSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 
 	//Save the GL texture id for updating the mirror texture
-//	ogreMirrorTextureGLID = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("MirrorTex").getPointer())->getGLID();
 	mirror_texture->getCustomAttribute("GLID", &ogreMirrorTextureGLID);
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusRenderTextureGLID);
 
@@ -612,13 +615,12 @@ void OgreOculusRender::renderAndSubmitFrame()
 							   ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
 							   hmdSize.w, hmdSize.h, 1);
 
-		//std::cerr << (void*)glCopyImageSubData;
-
 		//Update the window
 		debugViewport->update();
 		window->update();
 	}
 }
+
 //TODO get rid of this boolean
 bool DEBUG(true);
 void OgreOculusRender::updateTouchControllers()
@@ -631,7 +633,7 @@ void OgreOculusRender::updateTouchControllers()
 	handPoses[left] = ts.HandPoses[ovrHand_Left];
 	handPoses[right] = ts.HandPoses[ovrHand_Right];
 
-	for (auto side : { left, right })
+	for (const auto side : { left, right })
 	{
 		if (!handControllers[side])
 		{
@@ -655,12 +657,6 @@ void OgreOculusRender::updateTouchControllers()
 		axesVector[1].updateValue(inputState.Thumbstick[side].y);
 		axesVector[2].updateValue(inputState.IndexTrigger[side]);
 		axesVector[3].updateValue(inputState.HandTrigger[side]);
-
-		//Buttons :
-		//A or X = 0
-		//B or Y = 1
-		//Start = 2 on left hand
-		//Thumbstick clicked = 3
 
 		//Clear the events
 		pressed.clear(); released.clear();
