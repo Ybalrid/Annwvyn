@@ -207,6 +207,12 @@ protected:
 	///Array of hand controller
 	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> handControllers;
 
+	///Buffered button states
+	std::array<std::vector<bool>, 2> currentControllerButtonsPressed, lastControllerButtonsPressed;
+
+	///Dynamically sized containers for pressed/released events
+	std::vector<uint8_t> pressed, released;
+
 	///List of acceptable Anti Aliasing factors for the render buffer and window
 	static constexpr std::array<const uint8_t, 5> AvailableAALevel{ 0, 2, 4, 8, 16 };
 
