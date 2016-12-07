@@ -37,10 +37,21 @@ lastOculusOrientation{ bodyOrientation }
 {
 	OculusSelf = static_cast<OgreOculusRender*>(self);
 
+	//List of bitmask for each buttons as we will test them
+	touchControllersButtons[left][0] = ovrButton_X;
+	touchControllersButtons[left][1] = ovrButton_Y;
+	touchControllersButtons[left][2] = ovrButton_Enter;
+	touchControllersButtons[left][3] = ovrButton_LThumb;
+	touchControllersButtons[right][0] = ovrButton_A;
+	touchControllersButtons[right][1] = ovrButton_B;
+	touchControllersButtons[right][2] = 0; //This button is the Oculus Dashboard button. Be false all the time
+	touchControllersButtons[right][3] = ovrButton_RThumb;
+
+	//Initialize the vector<bool>s that will hold the processed button states
 	for (auto side : { left, right })
 	{
-		currentControllerButtonsPressed[side].resize(4, false);
-		lastControllerButtonsPressed[side].resize(4, false);
+		currentControllerButtonsPressed[side].resize(touchControllersButtons[side].size(), false);
+		lastControllerButtonsPressed[side].resize(touchControllersButtons[side].size(), false);
 	}
 }
 
@@ -651,33 +662,23 @@ void OgreOculusRender::updateTouchControllers()
 		//Start = 2 on left hand
 		//Thumbstick clicked = 3
 
-		for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
-		{
-			lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
-		}
-
-		if (side == left)
-		{
-			currentControllerButtonsPressed[side][0] = (inputState.Buttons & ovrButton_X) != 0;
-			currentControllerButtonsPressed[side][1] = (inputState.Buttons & ovrButton_Y) != 0;
-			currentControllerButtonsPressed[side][2] = (inputState.Buttons & ovrButton_Enter) != 0;
-			currentControllerButtonsPressed[side][3] = (inputState.Buttons & ovrButton_LThumb) != 0;
-		}
-		else
-		{
-			currentControllerButtonsPressed[side][0] = (inputState.Buttons & ovrButton_A) != 0;
-			currentControllerButtonsPressed[side][1] = (inputState.Buttons & ovrButton_B) != 0;
-			currentControllerButtonsPressed[side][2] = false;
-			currentControllerButtonsPressed[side][3] = (inputState.Buttons & ovrButton_RThumb) != 0;
-		}
-
+		//Clear the events
 		pressed.clear(); released.clear();
 		for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
+		{
+			//Save the current polled state as the last one
+			lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
+			//Get the current state of the button
+			currentControllerButtonsPressed[side][i] = (inputState.Buttons & touchControllersButtons[side][i]) != 0;
+
+			//Detect pressed/released event and add it to the list
 			if (!lastControllerButtonsPressed[side][i] && currentControllerButtonsPressed[side][i])
 				pressed.push_back(uint8_t(i));
 			else if (lastControllerButtonsPressed[side][i] && !currentControllerButtonsPressed[side][i])
 				released.push_back(uint8_t(i));
+		}
 
+		//Set all the data on the controller
 		handController->getButtonStateVector() = currentControllerButtonsPressed[side];
 		handController->getPressedButtonsVector() = pressed;
 		handController->getReleasedButtonsVector() = released;

@@ -179,6 +179,8 @@ private:
 	std::array<ovrPoseStatef, 2> handPoses;
 	ovrInputState inputState;
 
+	std::array<std::array < int32_t, 4>, 2> touchControllersButtons;
+
 	///Tracking state
 	ovrTrackingState ts;
 
