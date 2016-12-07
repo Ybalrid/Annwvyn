@@ -36,6 +36,11 @@ lastOculusPosition{ feetPosition },
 lastOculusOrientation{ bodyOrientation }
 {
 	OculusSelf = static_cast<OgreOculusRender*>(self);
+
+	currentControllerButtonsPressed[left].resize(4, false);
+	currentControllerButtonsPressed[right].resize(4, false);
+	lastControllerButtonsPressed[left].resize(4, false);
+	lastControllerButtonsPressed[right].resize(4, false);
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -534,6 +539,9 @@ void OgreOculusRender::updateTracking()
 
 	//Get the pose
 	pose = ts.HeadPose.ThePose;
+
+	updateTouchControllers();
+
 	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
 
 	//Apply pose to the two cameras
@@ -597,5 +605,84 @@ void OgreOculusRender::renderAndSubmitFrame()
 		//Update the window
 		debugViewport->update();
 		window->update();
+	}
+}
+//TODO get rid of this boolean
+bool DEBUG(true);
+void OgreOculusRender::updateTouchControllers()
+{
+	//Get the controller state
+	if (OVR_FAILURE(ovr_GetInputState(Oculus->getSession(), ovrControllerType_Active, &inputState))) return;
+	//Check if there's Oculus Touch Data on this thing
+	if (!(inputState.ControllerType & ovrControllerType_Touch)) return;
+
+	handPoses[left] = ts.HandPoses[ovrHand_Left];
+	handPoses[right] = ts.HandPoses[ovrHand_Right];
+
+	for (auto side : { left, right })
+	{
+		if (!handControllers[side])
+		{
+			handControllers[side] = std::make_shared<AnnHandController>
+				("Oculus Touch And Controller", smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
+			if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
+		}
+
+		auto handController = handControllers[side];
+		auto& axesVector = handController->getAxesVector();
+
+		if (axesVector.size() == 0)
+		{
+			axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
+			axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
+			axesVector.push_back(AnnHandControllerAxis{ "Trigger X", inputState.IndexTrigger[side] });
+			axesVector.push_back(AnnHandControllerAxis{ "Griptrigger X", inputState.HandTrigger[side] });
+		}
+
+		axesVector[0].updateValue(inputState.Thumbstick[side].x);
+		axesVector[1].updateValue(inputState.Thumbstick[side].y);
+		axesVector[2].updateValue(inputState.IndexTrigger[side]);
+		axesVector[3].updateValue(inputState.HandTrigger[side]);
+
+		//Buttons :
+		//A or X = 0
+		//B or Y = 1
+		//Thumbstick clicked = 3
+		//Start = 4 on left hand
+
+		for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
+		{
+			lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
+		}
+
+		if (side == left)
+		{
+			currentControllerButtonsPressed[side][0] = (inputState.Buttons & ovrButton_X) != 0;
+			currentControllerButtonsPressed[side][1] = (inputState.Buttons & ovrButton_Y) != 0;
+			currentControllerButtonsPressed[side][2] = (inputState.Buttons & ovrButton_Enter) != 0;
+			currentControllerButtonsPressed[side][3] = (inputState.Buttons & ovrButton_LThumb) != 0;
+		}
+		else
+		{
+			currentControllerButtonsPressed[side][0] = (inputState.Buttons & ovrButton_A) != 0;
+			currentControllerButtonsPressed[side][1] = (inputState.Buttons & ovrButton_B) != 0;
+			currentControllerButtonsPressed[side][2] = false;
+			currentControllerButtonsPressed[side][3] = (inputState.Buttons & ovrButton_RThumb) != 0;
+		}
+
+		pressed.clear(); released.clear();
+		for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
+			if (!lastControllerButtonsPressed[side][i] && currentControllerButtonsPressed[side][i])
+				pressed.push_back(uint8_t(i));
+			else if (lastControllerButtonsPressed[side][i] && !currentControllerButtonsPressed[side][i])
+				released.push_back(uint8_t(i));
+
+		handController->getButtonStateVector() = currentControllerButtonsPressed[side];
+		handController->getPressedButtonsVector() = pressed;
+		handController->getReleasedButtonsVector() = released;
+		handController->setTrackedPosition(feetPosition + AnnGetPlayer()->getEyeTranslation() + bodyOrientation * oculusToOgreVect3(handPoses[side].ThePose.Position));
+		handController->setTrackedOrientation(bodyOrientation * oculusToOgreQuat(handPoses[side].ThePose.Orientation));
+		handController->setTrackedAngularSpeed(oculusToOgreVect3(handPoses[side].AngularVelocity));
+		handController->setTrackedLinearSpeed(oculusToOgreVect3(handPoses[side].LinearVelocity));
 	}
 }
