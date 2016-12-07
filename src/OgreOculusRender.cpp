@@ -37,10 +37,11 @@ lastOculusOrientation{ bodyOrientation }
 {
 	OculusSelf = static_cast<OgreOculusRender*>(self);
 
-	currentControllerButtonsPressed[left].resize(4, false);
-	currentControllerButtonsPressed[right].resize(4, false);
-	lastControllerButtonsPressed[left].resize(4, false);
-	lastControllerButtonsPressed[right].resize(4, false);
+	for (auto side : { left, right })
+	{
+		currentControllerButtonsPressed[side].resize(4, false);
+		lastControllerButtonsPressed[side].resize(4, false);
+	}
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -647,8 +648,8 @@ void OgreOculusRender::updateTouchControllers()
 		//Buttons :
 		//A or X = 0
 		//B or Y = 1
+		//Start = 2 on left hand
 		//Thumbstick clicked = 3
-		//Start = 4 on left hand
 
 		for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
 		{
