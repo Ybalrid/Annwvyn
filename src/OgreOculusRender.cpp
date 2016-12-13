@@ -36,6 +36,23 @@ lastOculusPosition{ feetPosition },
 lastOculusOrientation{ bodyOrientation }
 {
 	OculusSelf = static_cast<OgreOculusRender*>(self);
+
+	//List of bitmask for each buttons as we will test them
+	touchControllersButtons[left][0] = ovrButton_X;
+	touchControllersButtons[left][1] = ovrButton_Y;
+	touchControllersButtons[left][2] = ovrButton_Enter;
+	touchControllersButtons[left][3] = ovrButton_LThumb;
+	touchControllersButtons[right][0] = ovrButton_A;
+	touchControllersButtons[right][1] = ovrButton_B;
+	touchControllersButtons[right][2] = 0; //This button is the Oculus Dashboard button. Be false all the time
+	touchControllersButtons[right][3] = ovrButton_RThumb;
+
+	//Initialize the vector<bool>s that will hold the processed button states
+	for (const auto side : { left, right })
+	{
+		currentControllerButtonsPressed[side].resize(touchControllersButtons[side].size(), false);
+		lastControllerButtonsPressed[side].resize(touchControllersButtons[side].size(), false);
+	}
 }
 
 OgreOculusRender::~OgreOculusRender()
@@ -141,6 +158,10 @@ void OgreOculusRender::initVrHmd()
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 	updateTime = 1.0 / double(Oculus->getHmdDesc().DisplayRefreshRate);
+	float playerEyeHeight = ovr_GetFloat(Oculus->getSession(), "EyeHeight", -1.0f);
+	AnnDebug() << "Player eye height : " << playerEyeHeight << "m";
+	if (playerEyeHeight != -1.0f) AnnGetPlayer()->setEyesHeight(playerEyeHeight);
+	AnnDebug() << "Eye leveling translation : " << AnnGetPlayer()->getEyeTranslation();
 }
 
 void OgreOculusRender::createWindow()
@@ -173,6 +194,9 @@ void OgreOculusRender::initCameras()
 		AnnDebug() << "Cannot init cameras before having the scene(s) manager(s) in place";
 		exit(ANN_ERR_NOTINIT);
 	}
+
+	//TODO use a node-based camera rig like it's done on the OpenVR code
+
 	//Mono view camera
 	monoCam = smgr->createCamera("monocam");
 	monoCam->setAspectRatio(16.0 / 9.0);
@@ -356,7 +380,6 @@ void OgreOculusRender::initRttRendering()
 									Ogre::TEX_TYPE_2D, hmdSize.w, hmdSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 
 	//Save the GL texture id for updating the mirror texture
-//	ogreMirrorTextureGLID = static_cast<Ogre::GLTexture*>(Ogre::GLTextureManager::getSingleton().getByName("MirrorTex").getPointer())->getGLID();
 	mirror_texture->getCustomAttribute("GLID", &ogreMirrorTextureGLID);
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusRenderTextureGLID);
 
@@ -529,11 +552,14 @@ void OgreOculusRender::updateTracking()
 							  currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter),
 							  ovrTrue);
 
+	updateTouchControllers();
+
 	//Calculate delta between last and this frame
 	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
 
 	//Get the pose
 	pose = ts.HeadPose.ThePose;
+
 	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
 
 	//Apply pose to the two cameras
@@ -572,8 +598,10 @@ void OgreOculusRender::renderAndSubmitFrame()
 	rttEyes->update();
 
 	//Copy the rendered image to the Oculus Swap Texture
-	glCopyImageSubData(renderTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-					   oculusRenderTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
+	glCopyImageSubData(renderTextureGLID, GL_TEXTURE_2D,
+					   0, 0, 0, 0,
+					   oculusRenderTextureGLID, GL_TEXTURE_2D,
+					   0, 0, 0, 0,
 					   bufferSize.w, bufferSize.h, 1);
 
 	//Get the rendering layer
@@ -587,15 +615,83 @@ void OgreOculusRender::renderAndSubmitFrame()
 	if (window->isVisible())
 	{
 		//Put the mirrored view available for Ogre if asked for
-		if (mirrorHMDView)
-			glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-							   ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-							   hmdSize.w, hmdSize.h, 1);
+		if (mirrorHMDView) glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D,
+											  0, 0, 0, 0,
+											  ogreMirrorTextureGLID, GL_TEXTURE_2D,
+											  0, 0, 0, 0,
+											  hmdSize.w, hmdSize.h, 1);
 
-		//std::cerr << (void*)glCopyImageSubData;
-
-		//Update the window
+					   //Update the window
 		debugViewport->update();
 		window->update();
+	}
+}
+
+//TODO get rid of this boolean
+bool DEBUG(true);
+void OgreOculusRender::updateTouchControllers()
+{
+	//Get the controller state
+	if (OVR_FAILURE(ovr_GetInputState(Oculus->getSession(), ovrControllerType_Active, &inputState))) return;
+	//Check if there's Oculus Touch Data on this thing
+	if (!(inputState.ControllerType & ovrControllerType_Touch)) return;
+
+	for (const auto side : { left, right })
+	{
+		//If it's the first time we have access data on this hand controller, instantiate the object
+		if (!handControllers[side])
+		{
+			handControllers[side] = std::make_shared<AnnHandController>
+				("Oculus Touch And Controller", smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
+			if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
+		}
+
+		//Extract the hand pose from the tracking state
+		handPoses[side] = ts.HandPoses[side];
+
+		//Get the controller
+		auto handController = handControllers[side];
+
+		//Set axis informations
+		//TODO clean taht thing up by putting it in the controller initialization instead of testing the size
+		auto& axesVector = handController->getAxesVector();
+		if (axesVector.size() == 0)
+		{
+			axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
+			axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
+			axesVector.push_back(AnnHandControllerAxis{ "Trigger X", inputState.IndexTrigger[side] });
+			axesVector.push_back(AnnHandControllerAxis{ "Griptrigger X", inputState.HandTrigger[side] });
+		}
+
+		//Update the values of the axes
+		axesVector[0].updateValue(inputState.Thumbstick[side].x);
+		axesVector[1].updateValue(inputState.Thumbstick[side].y);
+		axesVector[2].updateValue(inputState.IndexTrigger[side]);
+		axesVector[3].updateValue(inputState.HandTrigger[side]);
+
+		//Extract button states and deduce press/released events
+		pressed.clear(); released.clear();
+		for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
+		{
+			//Save the current polled state as the last one
+			lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
+			//Get the current state of the button
+			currentControllerButtonsPressed[side][i] = (inputState.Buttons & touchControllersButtons[side][i]) != 0;
+
+			//Detect pressed/released event and add it to the list
+			if (!lastControllerButtonsPressed[side][i] && currentControllerButtonsPressed[side][i])
+				pressed.push_back(uint8_t(i));
+			else if (lastControllerButtonsPressed[side][i] && !currentControllerButtonsPressed[side][i])
+				released.push_back(uint8_t(i));
+		}
+
+		//Set all the data on the controller
+		handController->getButtonStateVector() = currentControllerButtonsPressed[side];
+		handController->getPressedButtonsVector() = pressed;
+		handController->getReleasedButtonsVector() = released;
+		handController->setTrackedPosition(feetPosition + AnnGetPlayer()->getEyeTranslation() + bodyOrientation * oculusToOgreVect3(handPoses[side].ThePose.Position));
+		handController->setTrackedOrientation(bodyOrientation * oculusToOgreQuat(handPoses[side].ThePose.Orientation));
+		handController->setTrackedAngularSpeed(oculusToOgreVect3(handPoses[side].AngularVelocity));
+		handController->setTrackedLinearSpeed(oculusToOgreVect3(handPoses[side].LinearVelocity));
 	}
 }
