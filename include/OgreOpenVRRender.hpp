@@ -176,12 +176,6 @@ private:
 	///IDs of buttons to handle
 	std::vector<vr::EVRButtonId> buttonsToHandle;
 
-	///Buffered button states
-	std::array<std::vector<bool>, 2> currentControllerButtonsPressed, lastControllerButtonsPressed;
-
-	///Dynamically sized containers for pressed/released events
-	std::vector<uint8_t> pressed, released;
-
 	///Structure to hold the current state of the controller. Have to pass a pointer to this to an OpenVR function
 	vr::VRControllerState_t controllerState;
 

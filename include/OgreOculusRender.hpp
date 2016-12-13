@@ -127,6 +127,8 @@ public:
 
 private:
 
+	void updateTouchControllers();
+
 	///With of the unused pixel-band between the two eyes
 	int frontierWidth;
 
@@ -174,6 +176,10 @@ private:
 
 	///Pose (position+orientation)
 	ovrPosef pose;
+	std::array<ovrPoseStatef, 2> handPoses;
+	ovrInputState inputState;
+
+	std::array<std::array < int32_t, 4>, 2> touchControllersButtons;
 
 	///Tracking state
 	ovrTrackingState ts;
