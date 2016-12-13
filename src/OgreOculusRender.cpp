@@ -194,6 +194,9 @@ void OgreOculusRender::initCameras()
 		AnnDebug() << "Cannot init cameras before having the scene(s) manager(s) in place";
 		exit(ANN_ERR_NOTINIT);
 	}
+
+	//TODO use a node-based camera rig like it's done on the OpenVR code
+
 	//Mono view camera
 	monoCam = smgr->createCamera("monocam");
 	monoCam->setAspectRatio(16.0 / 9.0);
@@ -549,13 +552,13 @@ void OgreOculusRender::updateTracking()
 							  currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter),
 							  ovrTrue);
 
+	updateTouchControllers();
+
 	//Calculate delta between last and this frame
 	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
 
 	//Get the pose
 	pose = ts.HeadPose.ThePose;
-
-	updateTouchControllers();
 
 	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
 
@@ -595,8 +598,10 @@ void OgreOculusRender::renderAndSubmitFrame()
 	rttEyes->update();
 
 	//Copy the rendered image to the Oculus Swap Texture
-	glCopyImageSubData(renderTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-					   oculusRenderTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
+	glCopyImageSubData(renderTextureGLID, GL_TEXTURE_2D,
+					   0, 0, 0, 0,
+					   oculusRenderTextureGLID, GL_TEXTURE_2D,
+					   0, 0, 0, 0,
 					   bufferSize.w, bufferSize.h, 1);
 
 	//Get the rendering layer
@@ -610,12 +615,13 @@ void OgreOculusRender::renderAndSubmitFrame()
 	if (window->isVisible())
 	{
 		//Put the mirrored view available for Ogre if asked for
-		if (mirrorHMDView)
-			glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-							   ogreMirrorTextureGLID, GL_TEXTURE_2D, 0, 0, 0, 0,
-							   hmdSize.w, hmdSize.h, 1);
+		if (mirrorHMDView) glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D,
+											  0, 0, 0, 0,
+											  ogreMirrorTextureGLID, GL_TEXTURE_2D,
+											  0, 0, 0, 0,
+											  hmdSize.w, hmdSize.h, 1);
 
-		//Update the window
+					   //Update the window
 		debugViewport->update();
 		window->update();
 	}
@@ -630,11 +636,9 @@ void OgreOculusRender::updateTouchControllers()
 	//Check if there's Oculus Touch Data on this thing
 	if (!(inputState.ControllerType & ovrControllerType_Touch)) return;
 
-	handPoses[left] = ts.HandPoses[ovrHand_Left];
-	handPoses[right] = ts.HandPoses[ovrHand_Right];
-
 	for (const auto side : { left, right })
 	{
+		//If it's the first time we have access data on this hand controller, instantiate the object
 		if (!handControllers[side])
 		{
 			handControllers[side] = std::make_shared<AnnHandController>
@@ -642,9 +646,15 @@ void OgreOculusRender::updateTouchControllers()
 			if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 		}
 
-		auto handController = handControllers[side];
-		auto& axesVector = handController->getAxesVector();
+		//Extract the hand pose from the tracking state
+		handPoses[side] = ts.HandPoses[side];
 
+		//Get the controller
+		auto handController = handControllers[side];
+
+		//Set axis informations
+		//TODO clean taht thing up by putting it in the controller initialization instead of testing the size
+		auto& axesVector = handController->getAxesVector();
 		if (axesVector.size() == 0)
 		{
 			axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
@@ -653,12 +663,13 @@ void OgreOculusRender::updateTouchControllers()
 			axesVector.push_back(AnnHandControllerAxis{ "Griptrigger X", inputState.HandTrigger[side] });
 		}
 
+		//Update the values of the axes
 		axesVector[0].updateValue(inputState.Thumbstick[side].x);
 		axesVector[1].updateValue(inputState.Thumbstick[side].y);
 		axesVector[2].updateValue(inputState.IndexTrigger[side]);
 		axesVector[3].updateValue(inputState.HandTrigger[side]);
 
-		//Clear the events
+		//Extract button states and deduce press/released events
 		pressed.clear(); released.clear();
 		for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
 		{
