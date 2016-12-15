@@ -63,9 +63,11 @@ namespace Annwvyn
 		void removeRigidBody(btRigidBody* body);
 
 		///Init player's body physical simulation
-		void initPlayerPhysics(Ogre::SceneNode* cameraNode);
+		DEPRECATED		void initPlayerPhysics(Ogre::SceneNode* cameraNode) { initPlayerStandingPhysics(cameraNode); }
+		void initPlayerStandingPhysics(Ogre::SceneNode* playerAnchorNode);
+		void initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode);
 
-		///Set the debug drawer state
+				///Set the debug drawer state
 		void setDebugPhysics(bool state);
 
 		///Step the debug drawing for the physical representation

@@ -13,7 +13,7 @@ bodyParams::bodyParams()
 	turnSpeed = 0.15f;
 	mass = 80.0f;
 	FeetPosition = AnnVect3(0, 0, 10);
-	HeadOrientation = AnnQuaternion(1, 0, 0, 0);
+	HeadOrientation = AnnQuaternion::IDENTITY;
 	Shape = nullptr;
 	Body = nullptr;
 	runFactor = 3;
@@ -181,6 +181,7 @@ Ogre::Euler AnnPlayer::getOrientation()
 void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 {
 	playerBody->Orientation.yaw(angle);
+	AnnDebug() << "player body yaw set to :" << angle << "rad";
 }
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
@@ -216,7 +217,9 @@ AnnVect3 AnnPlayer::getAnalogTranslation()
 void AnnPlayer::applyAnalogYaw()
 {
 	//7 is the value that was more or less feeling good for me.
-	applyRelativeBodyYaw(Ogre::Radian(-7 * analogRotate * getTurnSpeed() * updateTime));
+	float  value = -7 * analogRotate * getTurnSpeed() * updateTime;
+	AnnDebug() << "computed value : " << value;
+	applyRelativeBodyYaw(Ogre::Radian(value));
 }
 
 float AnnPlayer::getRunFactor()
@@ -258,24 +261,40 @@ void AnnPlayer::teleport(AnnVect3 position)
 
 void AnnPlayer::engineUpdate(float deltaTime)
 {
-	if (ignorePhysics) return;
 	updateTime = deltaTime;
-
-	if (getBody())
+	switch (mode)
 	{
-		applyAnalogYaw();
-		getBody()->activate();
-	}
+		case AnnPlayerMode::STANDING:
+			if (ignorePhysics) return;
 
-	//Tell the actuator to "act" on the player
-	actuator->actuate(deltaTime);
+			if (getBody())
+			{
+				applyAnalogYaw();
+				getBody()->activate();
+			}
 
-	//get back position data from physics engine
-	if (getBody())
-	{
-		setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) -
-					AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation()) *
-					AnnVect3(0, getEyesHeight() / 2, 0));
+			//Tell the actuator to "act" on the player
+			actuator->actuate(deltaTime);
+
+			//get back position data from physics engine
+			if (getBody())
+			{
+				setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) -
+							AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation()) *
+							AnnVect3(0, getEyesHeight() / 2, 0));
+			}
+			break;
+
+		case AnnPlayerMode::ROOMSCALE:
+			AnnDebug() << "Player roomscale update";
+			AnnDebug() << "Value of analog rotate : " << analogRotate;
+			applyAnalogYaw();
+
+			//RoomReferenceNode->translate(getWalkSpeed() * (getTranslation() + getAnalogTranslation()));
+			playerBody->FeetPosition += updateTime*getWalkSpeed()* (playerBody->Orientation.toQuaternion()*(getTranslation() + getAnalogTranslation()));
+			break;
+
+		default:break;
 	}
 }
 
@@ -283,3 +302,10 @@ bool AnnPlayer::hasPhysics()
 {
 	return physics;
 }
+
+void AnnPlayer::setMode(AnnPlayerMode playerMode)
+{
+	mode = playerMode;
+}
+
+void AnnPlayer::setRoomRefNode(Ogre::SceneNode* node) { RoomReferenceNode = node; }
