@@ -115,12 +115,13 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
 		DynamicsWorld->removeRigidBody(body);
 }
 
-void AnnPhysicsEngine::initPlayerPhysics(Ogre::SceneNode* node)
+void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)
 {
 	AnnDebug() << "Initializing player's physics " << playerObject->getMass() << "Kg ~" << playerObject->getEyesHeight();
 	createVirtualBodyShape();
 	createPlayerPhysicalVirtualBody(node);
 	addPlayerPhysicalBodyToDynamicsWorld();
+	playerObject->setMode(STANDING);
 }
 
 void AnnPhysicsEngine::setDebugPhysics(bool state)
@@ -172,4 +173,10 @@ void AnnPhysicsEngine::update()
 void AnnPhysicsEngine::toggleDebugPhysics()
 {
 	setDebugPhysics(!debugPhysics);
+}
+
+void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode)
+{
+	playerObject->setMode(ROOMSCALE);
+	playerObject->setRoomRefNode(playerAnchorNode);
 }

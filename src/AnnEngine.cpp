@@ -224,7 +224,7 @@ void AnnEngine::log(std::string message, bool flag)
 //Don't ask me why this is not part of the Physics engine. Actually it just calls something on the physics engine. Will be probably deleted in the future.
 void AnnEngine::initPlayerPhysics()
 {
-	physicsEngine->initPlayerPhysics(vrRendererPovGameplayPlacement);
+	initPlayerStandingPhysics();
 }
 
 //Need to be redone.
@@ -387,4 +387,14 @@ bool AnnEngine::appVisibleInHMD()
 	if (renderer->isVisibleInHmd())
 		return true;
 	return false;
+}
+
+void AnnEngine::initPlayerStandingPhysics()
+{
+	physicsEngine->initPlayerStandingPhysics(vrRendererPovGameplayPlacement);
+}
+
+void AnnEngine::initPlayerRoomscalePhysics()
+{
+	physicsEngine->initPlayerRoomscalePhysics(vrRendererPovGameplayPlacement);
 }
