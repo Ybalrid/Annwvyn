@@ -56,6 +56,7 @@ namespace Annwvyn
 	class DLL AnnPlayer
 	{
 	public:
+
 		///Construct the player object
 		AnnPlayer();
 
@@ -172,6 +173,8 @@ namespace Annwvyn
 		void setMode(AnnPlayerMode playerMode);
 
 		void setRoomRefNode(Ogre::SceneNode* node);
+
+		void reground(float YvalueForGround);
 
 	protected:
 

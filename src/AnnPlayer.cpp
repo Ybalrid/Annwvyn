@@ -181,7 +181,7 @@ Ogre::Euler AnnPlayer::getOrientation()
 void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 {
 	playerBody->Orientation.yaw(angle);
-	AnnDebug() << "player body yaw set to :" << angle << "rad";
+	//AnnDebug() << "player body yaw set to :" << angle << "rad";
 }
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
@@ -218,7 +218,7 @@ void AnnPlayer::applyAnalogYaw()
 {
 	//7 is the value that was more or less feeling good for me.
 	float  value = -7 * analogRotate * getTurnSpeed() * updateTime;
-	AnnDebug() << "computed value : " << value;
+	//AnnDebug() << "computed value : " << value;
 	applyRelativeBodyYaw(Ogre::Radian(value));
 }
 
@@ -286,8 +286,8 @@ void AnnPlayer::engineUpdate(float deltaTime)
 			break;
 
 		case AnnPlayerMode::ROOMSCALE:
-			AnnDebug() << "Player roomscale update";
-			AnnDebug() << "Value of analog rotate : " << analogRotate;
+			//AnnDebug() << "Player roomscale update";
+			//AnnDebug() << "Value of analog rotate : " << analogRotate;
 			applyAnalogYaw();
 
 			//RoomReferenceNode->translate(getWalkSpeed() * (getTranslation() + getAnalogTranslation()));
@@ -309,3 +309,7 @@ void AnnPlayer::setMode(AnnPlayerMode playerMode)
 }
 
 void AnnPlayer::setRoomRefNode(Ogre::SceneNode* node) { RoomReferenceNode = node; }
+void AnnPlayer::reground(float YvalueForGround)
+{
+	playerBody->FeetPosition.y = YvalueForGround;
+}
