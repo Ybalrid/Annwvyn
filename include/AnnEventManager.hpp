@@ -457,6 +457,8 @@ namespace Annwvyn
 					 KeyCode::code sr,
 					 KeyCode::code jmp,
 					 KeyCode::code rn);
+		enum turnStickMode { NORMAL, WHEEL };
+		turnStickMode turnMode;
 
 	protected:
 		///W by default
@@ -477,7 +479,7 @@ namespace Annwvyn
 		///value used for trimming low joysticks value
 		float deadzone;
 		float wheelStickSensitivity;
-		int maxWheelAngle;
+		float maxWheelAngle, minWheelAngle;
 		float stickCurrentAngleDegree;
 		float computedWheelValue;
 		///Axes
