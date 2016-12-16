@@ -175,6 +175,8 @@ namespace Annwvyn
 		void setRoomRefNode(Ogre::SceneNode* node);
 
 		void reground(float YvalueForGround);
+		void reground(AnnVect3 pointOnGround);
+		void regroundOnPhysicsBody(float lenght = 1000, AnnVect3 preoffset = AnnVect3::ZERO);
 
 	protected:
 
