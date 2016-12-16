@@ -181,7 +181,6 @@ Ogre::Euler AnnPlayer::getOrientation()
 void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 {
 	playerBody->Orientation.yaw(angle);
-	//AnnDebug() << "player body yaw set to :" << angle << "rad";
 }
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
@@ -218,7 +217,6 @@ void AnnPlayer::applyAnalogYaw()
 {
 	//7 is the value that was more or less feeling good for me.
 	float  value = -7 * analogRotate * getTurnSpeed() * updateTime;
-	//AnnDebug() << "computed value : " << value;
 	applyRelativeBodyYaw(Ogre::Radian(value));
 }
 
@@ -264,7 +262,7 @@ void AnnPlayer::engineUpdate(float deltaTime)
 	updateTime = deltaTime;
 	switch (mode)
 	{
-		case AnnPlayerMode::STANDING:
+		case STANDING:
 			if (ignorePhysics) return;
 
 			if (getBody())
@@ -285,13 +283,12 @@ void AnnPlayer::engineUpdate(float deltaTime)
 			}
 			break;
 
-		case AnnPlayerMode::ROOMSCALE:
-			//AnnDebug() << "Player roomscale update";
-			//AnnDebug() << "Value of analog rotate : " << analogRotate;
+		case ROOMSCALE:
 			applyAnalogYaw();
 
-			//RoomReferenceNode->translate(getWalkSpeed() * (getTranslation() + getAnalogTranslation()));
-			playerBody->FeetPosition += updateTime*getWalkSpeed()* (playerBody->Orientation.toQuaternion()*(getTranslation() + getAnalogTranslation()));
+			playerBody->FeetPosition += updateTime*getWalkSpeed() *
+				(playerBody->Orientation.toQuaternion() *
+				(getTranslation() + getAnalogTranslation()));
 			break;
 
 		default:break;
@@ -308,8 +305,36 @@ void AnnPlayer::setMode(AnnPlayerMode playerMode)
 	mode = playerMode;
 }
 
-void AnnPlayer::setRoomRefNode(Ogre::SceneNode* node) { RoomReferenceNode = node; }
+void AnnPlayer::setRoomRefNode(Ogre::SceneNode* node)
+{
+	RoomReferenceNode = node;
+}
+
 void AnnPlayer::reground(float YvalueForGround)
 {
+	if (mode != ROOMSCALE) return;
 	playerBody->FeetPosition.y = YvalueForGround;
+	AnnDebug() << "Re-grounding to Y=" << YvalueForGround;
+}
+
+void AnnPlayer::reground(AnnVect3 pointOnGround)
+{
+	reground(pointOnGround.y);
+}
+
+void AnnPlayer::regroundOnPhysicsBody(float length, AnnVect3 preoffset)
+{
+	if (mode != ROOMSCALE) return;
+	AnnVect3 rayOrigin{ playerBody->FeetPosition + preoffset };
+	AnnVect3 rayEndPoint{ rayOrigin + length * AnnVect3::NEGATIVE_UNIT_Y };
+
+	btCollisionWorld::ClosestRayResultCallback rayGroundingCallback(rayOrigin.getBtVector(),
+																	rayEndPoint.getBtVector());
+
+	AnnGetPhysicsEngine()->getWorld()->rayTest(rayOrigin.getBtVector(),
+											   rayEndPoint.getBtVector(),
+											   rayGroundingCallback);
+
+	if (rayGroundingCallback.hasHit())
+		reground(rayGroundingCallback.m_hitPointWorld);
 }

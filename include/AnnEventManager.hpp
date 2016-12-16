@@ -446,7 +446,7 @@ namespace Annwvyn
 		void MouseEvent(AnnMouseEvent e) override;
 		///Get events from the joystick
 		void StickEvent(AnnStickEvent e) override;
-		void reclampDegreeToPositiveRange(float& degree);
+		static void reclampDegreeToPositiveRange(float& degree);
 		///Get events from an hand controller
 		void HandControllerEvent(AnnHandControllerEvent e) override;
 
