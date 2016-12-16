@@ -2,6 +2,7 @@
 #include "AnnEventManager.hpp"
 #include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
+
 using namespace Annwvyn;
 
 AnnDefaultEventListener::AnnDefaultEventListener() : AnnEventListener(),
@@ -11,9 +12,11 @@ straffleft(KeyCode::a),
 straffright(KeyCode::d),
 jump(KeyCode::space),
 run(KeyCode::lshift),
-recenter(KeyCode::f12)
+recenter(KeyCode::f12),
+wheelStickSensitivity{ 0.66f }
 {
-	//Use 1st analog stick for displacement
+	maxWheelAngle = 15;
+//Use 1st analog stick for displacement
 	axes[ax_walk] = 0;
 	axes[ax_straff] = 1;
 	//Use second analog stick for horizontal rotation
@@ -122,6 +125,8 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 		AnnGetVRRenderer()->cycleDebugHud();
 }
 
+void AnnDefaultEventListener::reclampDegreeToPositiveRange(float& degree) { if (degree < 0) degree = 360.0f + degree; }
+
 void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
 	auto controller = e.getController();
@@ -129,9 +134,31 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 	{
 		player->analogStraff = controller->getAxis(0).getValue();
 		player->analogWalk = -controller->getAxis(1).getValue();
+
+		if (controller->getType() == "Oculus Touch")
+		{
+			if (controller->hasBeenPressed(2))
+				AnnGetVRRenderer()->recenter();
+		}
 	}
 	else if (controller->getSide() == AnnHandController::rightHandController)
 	{
-		player->analogRotate = controller->getAxis(0).getValue();
+		//player->analogRotate = controller->getAxis(0).getValue();
+
+		//If we take the stick values as coordinate in the trigonometric plan, this will give the angle
+		stickCurrentAngleDegree = AnnRadian(std::atan2(controller->getAxis(1).getValue(), controller->getAxis(0).getValue())).valueDegrees();
+		//Change range from [-180; +180] to [0; 360]
+		reclampDegreeToPositiveRange(stickCurrentAngleDegree);
+
+		//Detect the relative angle between 2 frames
+		computedWheelValue = lastAngle - stickCurrentAngleDegree;
+		//If value is too high it's either that you completed a full turn or there's a glitch in the input data, ignore.
+		if (computedWheelValue > maxWheelAngle || computedWheelValue < -maxWheelAngle) computedWheelValue = 0;
+		if (stickCurrentAngleDegree == 0) computedWheelValue = 0;
+
+		player->analogRotate = wheelStickSensitivity * computedWheelValue;
+		lastAngle = stickCurrentAngleDegree;
+
+		AnnDebug() << "RightStick " << stickCurrentAngleDegree;
 	}
 }

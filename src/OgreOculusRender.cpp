@@ -642,7 +642,7 @@ void OgreOculusRender::updateTouchControllers()
 		if (!handControllers[side])
 		{
 			handControllers[side] = std::make_shared<AnnHandController>
-				("Oculus Touch And Controller", smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
+				("Oculus Touch", smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
 			if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 		}
 
