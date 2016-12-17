@@ -126,20 +126,19 @@ void AnnPhysicsEngine::processTriggersContacts()
 {
 	for (auto trigger : triggerObjects)
 	{
-		auto current(trigger);
-		if (current->computeVolumetricTest(playerObject))
+		if (trigger->computeVolumetricTest(playerObject))
 		{
-			current->setContactInformation(true);
-			current->atContact();
+			trigger->setContactInformation(true);
+			trigger->atContact();
 		}
 		else
 		{
-			current->setContactInformation(false);
+			trigger->setContactInformation(false);
 		}
 
-		if (!current->lastFrameContactWithPlayer && current->contactWithPlayer
-			|| current->lastFrameContactWithPlayer && !current->contactWithPlayer)
-			AnnGetEventManager()->spatialTrigger(current);
+		if (!trigger->lastFrameContactWithPlayer && trigger->contactWithPlayer
+			|| trigger->lastFrameContactWithPlayer && !trigger->contactWithPlayer)
+			AnnGetEventManager()->spatialTrigger(trigger);
 	}
 }
 
