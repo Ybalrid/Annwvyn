@@ -174,8 +174,13 @@ namespace Annwvyn
 
 		void setRoomRefNode(Ogre::SceneNode* node);
 
+		///Put the reference point for the roomscale VR at Y altitude
 		void reground(float YvalueForGround);
+
+		///call reground(pointOnGround.y);
 		void reground(AnnVect3 pointOnGround);
+
+		///Shoot a ray form the player to relative -Y. If it hits a rigidbody, call reground() on the impact position
 		void regroundOnPhysicsBody(float lenght = 1000, AnnVect3 preoffset = AnnVect3::ZERO);
 
 	protected:
