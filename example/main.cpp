@@ -26,13 +26,17 @@ AnnMain()
 	AnnInit("AnnTest");
 
 	//Init some player body parameters
-	AnnGetEngine()->initPlayerPhysics();
-	AnnGetEventManager()->useDefaultEventListener();
+	//AnnGetEngine()->initPlayerStandingPhysics();
+	AnnGetEngine()->initPlayerRoomscalePhysics();
 
+	/*
 	if (dynamic_cast<OgreOculusRender*>(AnnGetVRRenderer().get()))
 	{
 		AnnGetVRRenderer()->recenter();
 	}
+	*/
+
+	AnnGetEventManager()->useDefaultEventListener();
 
 	//load resources
 	AnnGetResourceManager()->addFileLocation("media/environment");

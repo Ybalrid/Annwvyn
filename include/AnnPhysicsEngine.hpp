@@ -44,7 +44,7 @@ namespace Annwvyn
 		void createPlayerPhysicalVirtualBody(Ogre::SceneNode* node);
 
 		///Create player's body shape (a capsule)
-		void createVirtualBodyShape();
+		void createVirtualBodyShape(float radius = 0.125f);
 
 		///Pointer to the bullet's dynamics world
 		btDiscreteDynamicsWorld* getWorld();
@@ -62,8 +62,10 @@ namespace Annwvyn
 		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body);
 
-		///Init player's body physical simulation
-		void initPlayerPhysics(Ogre::SceneNode* cameraNode);
+		///Do not use anymore, choose to call initPlayerStandingPhysics, or initPlayerRoomscalePhysics.
+		DEPRECATED	void initPlayerPhysics(Ogre::SceneNode* cameraNode) { initPlayerStandingPhysics(cameraNode); }
+		void initPlayerStandingPhysics(Ogre::SceneNode* playerAnchorNode);
+		void initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode);
 
 		///Set the debug drawer state
 		void setDebugPhysics(bool state);
@@ -77,6 +79,7 @@ namespace Annwvyn
 		///Restore the default gravity
 		void resetGravity();
 
+		///Toggle the debug physics overlay
 		void toggleDebugPhysics();
 
 	private:
@@ -90,7 +93,7 @@ namespace Annwvyn
 		std::unique_ptr<btCollisionDispatcher> Dispatcher;
 		std::unique_ptr<btSequentialImpulseConstraintSolver> Solver;
 
-		//Bullet Dynamics World
+		///Bullet Dynamics World
 		std::unique_ptr<btDiscreteDynamicsWorld> DynamicsWorld;
 
 		///Should use the debug drawer

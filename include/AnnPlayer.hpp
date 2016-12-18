@@ -20,6 +20,7 @@
 #define DEFAULT_STARTING_ORIENT Ogre::Euler(0)
 namespace Annwvyn
 {
+	enum AnnPlayerMode { STANDING, ROOMSCALE };
 	class AnnEngine; //pre-declaration of AnnEngine
 
 	///Parameters of the user's VirtualBody
@@ -55,6 +56,7 @@ namespace Annwvyn
 	class DLL AnnPlayer
 	{
 	public:
+
 		///Construct the player object
 		AnnPlayer();
 
@@ -167,12 +169,28 @@ namespace Annwvyn
 		///Teleport the player without touching it's direction
 		void teleport(AnnVect3 position);
 
+		///Set the player mode between standing and roomscale;
+		void setMode(AnnPlayerMode playerMode);
+
+		void setRoomRefNode(Ogre::SceneNode* node);
+
+		///Put the reference point for the roomscale VR at Y altitude
+		void reground(float YvalueForGround);
+
+		///call reground(pointOnGround.y);
+		void reground(AnnVect3 pointOnGround);
+
+		///Shoot a ray form the player to relative -Y. If it hits a rigidbody, call reground() on the impact position
+		void regroundOnPhysicsBody(float lenght = 1000, AnnVect3 preoffset = AnnVect3::ZERO);
+
 	protected:
 
 		///Object that keep body parameters (= legacy structure)
 		bodyParams* playerBody;
 
 	private:
+
+		AnnPlayerMode mode;
 
 		///Give back the right to modify some parameters
 		void unlockParameters();
@@ -204,6 +222,8 @@ namespace Annwvyn
 
 		///PlayerActuator to use
 		AnnPlayerActuator* actuator;
+
+		Ogre::SceneNode* RoomReferenceNode;
 
 	public:
 
