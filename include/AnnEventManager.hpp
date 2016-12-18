@@ -11,6 +11,7 @@
 
 #include <array>
 #include <memory>
+#include <valarray>
 
 //This also include OIS
 #include "AnnKeyCode.h"
@@ -445,6 +446,7 @@ namespace Annwvyn
 		void MouseEvent(AnnMouseEvent e) override;
 		///Get events from the joystick
 		void StickEvent(AnnStickEvent e) override;
+		static void reclampDegreeToPositiveRange(float& degree);
 		///Get events from an hand controller
 		void HandControllerEvent(AnnHandControllerEvent e) override;
 
@@ -455,6 +457,8 @@ namespace Annwvyn
 					 KeyCode::code sr,
 					 KeyCode::code jmp,
 					 KeyCode::code rn);
+		enum turnStickMode { NORMAL, WHEEL };
+		turnStickMode turnMode;
 
 	protected:
 		///W by default
@@ -474,12 +478,18 @@ namespace Annwvyn
 
 		///value used for trimming low joysticks value
 		float deadzone;
+		float wheelStickSensitivity;
+		float maxWheelAngle, minWheelAngle;
+		float stickCurrentAngleDegree;
+		float computedWheelValue;
 		///Axes
 		enum { ax_walk, ax_straff, ax_rotate, ax_size };
 		StickAxisId axes[ax_size];
 		///Buttons
 		enum { b_jump, b_run, b_console, b_debug, b_size };
 		ButtonId buttons[b_size];
+
+		float lastAngle;
 	};
 
 	///Internal utility class that represent a timer

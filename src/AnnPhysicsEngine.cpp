@@ -4,17 +4,20 @@
 
 using namespace Annwvyn;
 
-AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode, std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects, AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
-playerObject(player),
-gameObjects(objects),
-triggerObjects(triggers),
-Broadphase(nullptr),
-CollisionConfiguration(nullptr),
-Solver(nullptr),
-DynamicsWorld(nullptr),
-debugDrawer(nullptr),
-playerRigidBodyState(nullptr),
-defaultGravity(0, -9.81f, 0)
+AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
+								   std::shared_ptr<AnnPlayer> player,
+								   AnnGameObjectList & objects,
+								   AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+	Broadphase(nullptr),
+	CollisionConfiguration(nullptr),
+	Solver(nullptr),
+	DynamicsWorld(nullptr),
+	debugDrawer(nullptr),
+	playerRigidBodyState(nullptr),
+	gameObjects(objects),
+	triggerObjects(triggers),
+	playerObject(player),
+	defaultGravity(0, -9.81f, 0)
 {
 	//Initialize the Bullet world
 	Broadphase = std::make_unique<btDbvtBroadphase>();
@@ -39,18 +42,15 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
 
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
-	assert(playerObject->getBody());
-	// TOTO define name for the bullet's collision masks
+	// TODO define name for the bullet's collision masks
 	DynamicsWorld->addRigidBody(playerObject->getBody(), MASK(0), MASK(1));
 }
 
 void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 {
 	AnnDebug() << "createPlayerPhysicalVirtualBody";
-	//Player need to have a shape (capsule)
-	assert(playerObject->getShape());
 
-	//Create a rigid body state through BtOgre
+	//Create (new) a rigid body state through BtOgre
 	if (playerRigidBodyState) delete playerRigidBodyState;
 	playerRigidBodyState = new BtOgre::RigidBodyState(node);
 
@@ -67,11 +67,8 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 	playerObject->setBody(body);
 }
 
-void AnnPhysicsEngine::createVirtualBodyShape()
+void AnnPhysicsEngine::createVirtualBodyShape(float radius)
 {
-	assert(playerObject);
-	auto radius(0.125f);
-
 	//remove the diameter of the two half sphere on top and bottom of the capsule
 	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
 }
@@ -83,7 +80,6 @@ btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld()
 
 void AnnPhysicsEngine::step(float delta)
 {
-	//AnnDebug() << "sepSimulation with delta = " << delta;
 	DynamicsWorld->stepSimulation(delta, 10, 1.0f / 240.0f);
 }
 
@@ -95,16 +91,13 @@ void AnnPhysicsEngine::stepDebugDrawer()
 
 void AnnPhysicsEngine::processCollisionTesting()
 {
-	auto eventManager = AnnGetEventManager();
 	auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
 	for (auto i{ 0 }; i < nbManifold; ++i)
 	{
 		auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		if (contactManifold->getNumContacts() > 0)
-		{
-			eventManager->detectedCollision(contactManifold->getBody0()->getUserPointer(),
-											contactManifold->getBody1()->getUserPointer());
-		}
+			AnnGetEventManager()->detectedCollision(contactManifold->getBody0()->getUserPointer(),
+													contactManifold->getBody1()->getUserPointer());
 	}
 }
 
@@ -113,14 +106,6 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
 	AnnDebug() << "Removing " << body << " Form physics simulation";
 	if (body)
 		DynamicsWorld->removeRigidBody(body);
-}
-
-void AnnPhysicsEngine::initPlayerPhysics(Ogre::SceneNode* node)
-{
-	AnnDebug() << "Initializing player's physics " << playerObject->getMass() << "Kg ~" << playerObject->getEyesHeight();
-	createVirtualBodyShape();
-	createPlayerPhysicalVirtualBody(node);
-	addPlayerPhysicalBodyToDynamicsWorld();
 }
 
 void AnnPhysicsEngine::setDebugPhysics(bool state)
@@ -134,20 +119,10 @@ void AnnPhysicsEngine::processTriggersContacts()
 {
 	for (auto trigger : triggerObjects)
 	{
-		auto current(trigger);
-		if (current->computeVolumetricTest(playerObject))
-		{
-			current->setContactInformation(true);
-			current->atContact();
-		}
-		else
-		{
-			current->setContactInformation(false);
-		}
-
-		if (!current->lastFrameContactWithPlayer && current->contactWithPlayer
-			|| current->lastFrameContactWithPlayer && !current->contactWithPlayer)
-			AnnGetEventManager()->spatialTrigger(current);
+		trigger->setContactInformation(trigger->computeVolumetricTest(playerObject));
+		if (!trigger->lastFrameContactWithPlayer && trigger->contactWithPlayer ||
+			trigger->lastFrameContactWithPlayer && !trigger->contactWithPlayer)
+			AnnGetEventManager()->spatialTrigger(trigger);
 	}
 }
 
@@ -172,4 +147,22 @@ void AnnPhysicsEngine::update()
 void AnnPhysicsEngine::toggleDebugPhysics()
 {
 	setDebugPhysics(!debugPhysics);
+}
+
+void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode)
+{
+	playerObject->setMode(ROOMSCALE);
+	AnnDebug() << "Initializing player's physics in roomscale mode";
+	AnnDebug() << "Player can walk around";
+	playerObject->setRoomRefNode(playerAnchorNode);
+}
+
+void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)
+{
+	playerObject->setMode(STANDING);
+	AnnDebug() << "Initializing player's physics  in standing mode";
+	AnnDebug() << "Capsule rigidbody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
+	createVirtualBodyShape();
+	createPlayerPhysicalVirtualBody(node);
+	addPlayerPhysicalBodyToDynamicsWorld();
 }

@@ -31,6 +31,7 @@
 #include <thread>
 #include <mutex>
 #include <random>
+#include <valarray>
 
 //Object-Oriented Graphical Rendering Engine
 #include <Ogre.h>

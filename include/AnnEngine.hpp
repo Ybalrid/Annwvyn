@@ -167,7 +167,10 @@ namespace Annwvyn
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 
 		///Init the physics model
-		void initPlayerPhysics(); //physics on player
+		DEPRECATED void initPlayerPhysics(); //physics on player
+		void initPlayerStandingPhysics();
+
+		void initPlayerRoomscalePhysics();
 
 		///Return true if the game want to terminate the program
 		bool requestStop(); //engine
