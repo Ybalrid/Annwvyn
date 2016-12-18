@@ -16,7 +16,7 @@ recenter(KeyCode::f12),
 deadzone{ 1 / 10 },
 wheelStickSensitivity{ 6.0f / 5.0f },
 maxWheelAngle{ 10 },
-minWheelAngle{ 0.75 },
+minWheelAngle{ 0.25f },
 stickCurrentAngleDegree{ 0 },
 computedWheelValue{ 0 },
 turnMode{ WHEEL },
@@ -144,9 +144,9 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 			player->analogWalk = -controller->getAxis(1).getValue();
 
 			//TODO use an hashing system to prevent string compare here
-			if (controller->getType() == "Oculus Touch")
+			if (controller->hasBeenPressed(2))
 			{
-				if (controller->hasBeenPressed(2))
+				if (controller->getType() == "Oculus Touch")
 					AnnGetVRRenderer()->recenter();
 			}
 			break;
