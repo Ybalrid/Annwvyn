@@ -4,17 +4,20 @@
 
 using namespace Annwvyn;
 
-AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode, std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects, AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
-playerObject(player),
-gameObjects(objects),
-triggerObjects(triggers),
-Broadphase(nullptr),
-CollisionConfiguration(nullptr),
-Solver(nullptr),
-DynamicsWorld(nullptr),
-debugDrawer(nullptr),
-playerRigidBodyState(nullptr),
-defaultGravity(0, -9.81f, 0)
+AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
+								   std::shared_ptr<AnnPlayer> player,
+								   AnnGameObjectList & objects,
+								   AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+	Broadphase(nullptr),
+	CollisionConfiguration(nullptr),
+	Solver(nullptr),
+	DynamicsWorld(nullptr),
+	debugDrawer(nullptr),
+	playerRigidBodyState(nullptr),
+	gameObjects(objects),
+	triggerObjects(triggers),
+	playerObject(player),
+	defaultGravity(0, -9.81f, 0)
 {
 	//Initialize the Bullet world
 	Broadphase = std::make_unique<btDbvtBroadphase>();
@@ -129,6 +132,7 @@ void AnnPhysicsEngine::processTriggersContacts()
 		if (trigger->computeVolumetricTest(playerObject))
 		{
 			trigger->setContactInformation(true);
+			//TODO remove that. Contact are dealt with on the event manager
 			trigger->atContact();
 		}
 		else
@@ -136,8 +140,8 @@ void AnnPhysicsEngine::processTriggersContacts()
 			trigger->setContactInformation(false);
 		}
 
-		if (!trigger->lastFrameContactWithPlayer && trigger->contactWithPlayer
-			|| trigger->lastFrameContactWithPlayer && !trigger->contactWithPlayer)
+		if (!trigger->lastFrameContactWithPlayer && trigger->contactWithPlayer ||
+			trigger->lastFrameContactWithPlayer && !trigger->contactWithPlayer)
 			AnnGetEventManager()->spatialTrigger(trigger);
 	}
 }
@@ -177,7 +181,7 @@ void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)
 {
 	playerObject->setMode(STANDING);
 	AnnDebug() << "Initializing player's physics  in standing mode";
-	AnnDebug() << "Capsule rigidbody : " << playerObject->getMass() << "Kg ~" << playerObject->getEyesHeight();
+	AnnDebug() << "Capsule rigidbody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
 	createVirtualBodyShape();
 	createPlayerPhysicalVirtualBody(node);
 	addPlayerPhysicalBodyToDynamicsWorld();
