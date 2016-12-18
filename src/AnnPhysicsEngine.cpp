@@ -80,7 +80,6 @@ btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld()
 
 void AnnPhysicsEngine::step(float delta)
 {
-	//AnnDebug() << "sepSimulation with delta = " << delta;
 	DynamicsWorld->stepSimulation(delta, 10, 1.0f / 240.0f);
 }
 
