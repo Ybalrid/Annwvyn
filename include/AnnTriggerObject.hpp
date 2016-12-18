@@ -44,6 +44,9 @@ namespace Annwvyn
 		///Get contact information
 		bool getContactInformation();
 
+		///When contact happened
+		virtual void atContact() { return; }
+
 	private:
 
 		///For engine : Set contact state
@@ -57,8 +60,6 @@ namespace Annwvyn
 		friend class AnnGameObjectManager;
 		friend class AnnPhysicsEngine;
 
-	private:
-
 		///Position of the object
 		AnnVect3 position;
 
@@ -67,11 +68,6 @@ namespace Annwvyn
 
 		///State of the last frame
 		bool lastFrameContactWithPlayer;
-
-	private:
-
-		///When contact happened
-		virtual void atContact() { return; }
 
 		///After initialization
 		virtual void postInit() { return; }
