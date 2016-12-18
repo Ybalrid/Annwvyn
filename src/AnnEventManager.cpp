@@ -106,8 +106,8 @@ knowXbox(false)
 		AnnDebug() << "Detected joystick : " << Joystick->vendor();
 
 		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)
-		if (Joystick->vendor().find("Xbox") != std::string::npos
-			|| Joystick->vendor().find("XBOX") != std::string::npos)
+		if (Joystick->vendor().find("Xbox") != std::string::npos ||
+			Joystick->vendor().find("XBOX") != std::string::npos)
 		{
 			knowXbox = true;
 			xboxID = StickAxisId(Joystick->getID());
@@ -378,6 +378,7 @@ void AnnEventManager::processTriggerEvents()
 			(*triggerIterator).validate();
 			if (auto listener = (*listenerIterator).lock())
 				listener->TriggerEvent(*triggerIterator);
+			(*triggerIterator).getSender()->atContact();
 		}
 	triggerEventBuffer.clear();
 }

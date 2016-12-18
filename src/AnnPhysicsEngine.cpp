@@ -42,18 +42,15 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
 
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld()
 {
-	assert(playerObject->getBody());
-	// TOTO define name for the bullet's collision masks
+	// TODO define name for the bullet's collision masks
 	DynamicsWorld->addRigidBody(playerObject->getBody(), MASK(0), MASK(1));
 }
 
 void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 {
 	AnnDebug() << "createPlayerPhysicalVirtualBody";
-	//Player need to have a shape (capsule)
-	assert(playerObject->getShape());
 
-	//Create a rigid body state through BtOgre
+	//Create (new) a rigid body state through BtOgre
 	if (playerRigidBodyState) delete playerRigidBodyState;
 	playerRigidBodyState = new BtOgre::RigidBodyState(node);
 
@@ -70,11 +67,8 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 	playerObject->setBody(body);
 }
 
-void AnnPhysicsEngine::createVirtualBodyShape()
+void AnnPhysicsEngine::createVirtualBodyShape(float radius)
 {
-	assert(playerObject);
-	auto radius(0.125f);
-
 	//remove the diameter of the two half sphere on top and bottom of the capsule
 	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
 }
@@ -98,16 +92,13 @@ void AnnPhysicsEngine::stepDebugDrawer()
 
 void AnnPhysicsEngine::processCollisionTesting()
 {
-	auto eventManager = AnnGetEventManager();
 	auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
 	for (auto i{ 0 }; i < nbManifold; ++i)
 	{
 		auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		if (contactManifold->getNumContacts() > 0)
-		{
-			eventManager->detectedCollision(contactManifold->getBody0()->getUserPointer(),
-											contactManifold->getBody1()->getUserPointer());
-		}
+			AnnGetEventManager()->detectedCollision(contactManifold->getBody0()->getUserPointer(),
+													contactManifold->getBody1()->getUserPointer());
 	}
 }
 
@@ -129,17 +120,7 @@ void AnnPhysicsEngine::processTriggersContacts()
 {
 	for (auto trigger : triggerObjects)
 	{
-		if (trigger->computeVolumetricTest(playerObject))
-		{
-			trigger->setContactInformation(true);
-			//TODO remove that. Contact are dealt with on the event manager
-			trigger->atContact();
-		}
-		else
-		{
-			trigger->setContactInformation(false);
-		}
-
+		trigger->setContactInformation(trigger->computeVolumetricTest(playerObject));
 		if (!trigger->lastFrameContactWithPlayer && trigger->contactWithPlayer ||
 			trigger->lastFrameContactWithPlayer && !trigger->contactWithPlayer)
 			AnnGetEventManager()->spatialTrigger(trigger);
