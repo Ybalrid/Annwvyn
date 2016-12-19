@@ -6,20 +6,20 @@
 using namespace Annwvyn;
 
 AnnDefaultEventListener::AnnDefaultEventListener() : AnnEventListener(),
-forward(KeyCode::w),
-backward(KeyCode::s),
-straffleft(KeyCode::a),
-straffright(KeyCode::d),
-jump(KeyCode::space),
-run(KeyCode::lshift),
-recenter(KeyCode::f12),
+turnMode{ WHEEL },
+forward{ KeyCode::w },
+backward{ KeyCode::s },
+straffleft{ KeyCode::a },
+straffright{ KeyCode::d },
+jump{ KeyCode::space },
+run{ KeyCode::lshift },
+recenter{ KeyCode::f12 },
 deadzone{ 1 / 10 },
 wheelStickSensitivity{ 6.0f / 5.0f },
 maxWheelAngle{ 10 },
 minWheelAngle{ 0.25f },
 stickCurrentAngleDegree{ 0 },
 computedWheelValue{ 0 },
-turnMode{ WHEEL },
 lastAngle{ 0 }
 {
 	//Use 1st analog stick for displacement
