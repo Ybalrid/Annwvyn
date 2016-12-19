@@ -256,6 +256,8 @@ bool AnnEngine::refresh()
 	//Update VR form real world
 	renderer->updateTracking();
 
+	onScreenConsole->syncConsolePosition();
+
 	//Update view
 	renderer->renderAndSubmitFrame();
 

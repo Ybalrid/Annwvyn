@@ -17,6 +17,8 @@
 using namespace std;
 using namespace Annwvyn;
 
+bool isRoomscale{ true };
+
 AnnMain()
 {
 	//Only useful on windows : Open a debug console to get stdout/stderr
@@ -26,15 +28,17 @@ AnnMain()
 	AnnInit("AnnTest");
 
 	//Init some player body parameters
-	//AnnGetEngine()->initPlayerStandingPhysics();
-	AnnGetEngine()->initPlayerRoomscalePhysics();
+	if (isRoomscale)
+		AnnGetEngine()->initPlayerRoomscalePhysics();
+	else
+		AnnGetEngine()->initPlayerStandingPhysics();
 
-	/*
-	if (dynamic_cast<OgreOculusRender*>(AnnGetVRRenderer().get()))
-	{
-		AnnGetVRRenderer()->recenter();
-	}
-	*/
+		/*
+		if (dynamic_cast<OgreOculusRender*>(AnnGetVRRenderer().get()))
+		{
+			AnnGetVRRenderer()->recenter();
+		}
+		*/
 
 	AnnGetEventManager()->useDefaultEventListener();
 
