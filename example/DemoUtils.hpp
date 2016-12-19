@@ -26,10 +26,17 @@ public:
 	void HandControllerEvent(AnnHandControllerEvent e) override
 	{
 		if (e.getController()->hasBeenPressed(3))
-			jumpToHub();
+			switch (e.getController()->getSide())
+			{
+				default:break;
+				case AnnHandController::leftHandController:
+					jumpToHub();
+					break;
+			}
 	}
 
 private:
+	// ReSharper disable once CppMemberFunctionMayBeStatic
 	void jumpToHub()
 	{
 		AnnGetLevelManager()->jumpToFirstLevel();

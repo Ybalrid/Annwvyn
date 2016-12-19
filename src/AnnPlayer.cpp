@@ -314,6 +314,7 @@ void AnnPlayer::reground(float YvalueForGround)
 {
 	if (mode != ROOMSCALE) return;
 	playerBody->FeetPosition.y = YvalueForGround;
+
 	AnnDebug() << "Re-grounding to Y=" << YvalueForGround;
 }
 

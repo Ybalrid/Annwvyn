@@ -28,7 +28,7 @@ public:
 		AnnGetEventManager()->addListener(getSharedListener());
 
 		//Add static geometry
-		auto Ground = addGameObject("Ground.mesh");
+		auto Ground = addGameObject("floorplane.mesh");
 		Ground->setUpPhysics();
 
 		auto StoneDemo0 = addGameObject("DemoStone.mesh");
@@ -81,7 +81,11 @@ public:
 	//Called at each frame
 	void runLogic() override
 	{
-		AnnDebug() << AnnGetEngine()->getPlayerPovNode()->getPosition();
+		auto povPos{ AnnGetEngine()->getPlayerPovNode()->getPosition() };
+		auto headPos{ AnnGetVRRenderer()->returnPose.position };
+		AnnDebug() << "player pov node position" << povPos;
+		AnnDebug() << "headset Position " << headPos;
+		AnnDebug() << "y offset : " << headPos.y - povPos.y;
 	}
 
 	void unload() override

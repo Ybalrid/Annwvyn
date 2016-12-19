@@ -155,6 +155,7 @@ void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	Oculus = new OculusInterface();
+	ovr_SetTrackingOriginType(Oculus->getSession(), ovrTrackingOrigin_FloorLevel);
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 	updateTime = 1.0 / double(Oculus->getHmdDesc().DisplayRefreshRate);
@@ -569,11 +570,11 @@ void OgreOculusRender::updateTracking()
 		eyeCameras[eye]->setPosition(feetPosition
 									 + (eyeCameras[eye]->getOrientation() * oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset)
 									 + bodyOrientation * oculusToOgreVect3(pose.Position)
-									 + AnnGetPlayer()->getEyeTranslation()));
+		/*+ AnnGetPlayer()->getEyeTranslation()*/));
 	}
 
 	//Update the pose for gameplay purposes
-	returnPose.position = feetPosition + AnnGetPlayer()->getEyeTranslation() + bodyOrientation * oculusToOgreVect3(pose.Position);
+	returnPose.position = feetPosition + /*AnnGetPlayer()->getEyeTranslation() +*/ bodyOrientation * oculusToOgreVect3(pose.Position);
 	returnPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
 	monoCam->setPosition(returnPose.position);
 	monoCam->setOrientation(returnPose.orientation);
@@ -689,7 +690,7 @@ void OgreOculusRender::updateTouchControllers()
 		handController->getButtonStateVector() = currentControllerButtonsPressed[side];
 		handController->getPressedButtonsVector() = pressed;
 		handController->getReleasedButtonsVector() = released;
-		handController->setTrackedPosition(feetPosition + AnnGetPlayer()->getEyeTranslation() + bodyOrientation * oculusToOgreVect3(handPoses[side].ThePose.Position));
+		handController->setTrackedPosition(feetPosition + /*AnnGetPlayer()->getEyeTranslation() + */bodyOrientation * oculusToOgreVect3(handPoses[side].ThePose.Position));
 		handController->setTrackedOrientation(bodyOrientation * oculusToOgreQuat(handPoses[side].ThePose.Orientation));
 		handController->setTrackedAngularSpeed(oculusToOgreVect3(handPoses[side].AngularVelocity));
 		handController->setTrackedLinearSpeed(oculusToOgreVect3(handPoses[side].LinearVelocity));

@@ -15,9 +15,9 @@ jump{ KeyCode::space },
 run{ KeyCode::lshift },
 recenter{ KeyCode::f12 },
 deadzone{ 1 / 10 },
-wheelStickSensitivity{ 6.0f / 5.0f },
-maxWheelAngle{ 10 },
-minWheelAngle{ 0.25f },
+wheelStickSensitivity{ 6.0f / 8.0f },
+maxWheelAngle{ 45 },
+minWheelAngle{ 0.5f },
 stickCurrentAngleDegree{ 0 },
 computedWheelValue{ 0 },
 lastAngle{ 0 }
@@ -135,6 +135,7 @@ void AnnDefaultEventListener::reclampDegreeToPositiveRange(float& degree)
 void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
 	auto controller = e.getController();
+	AnnVect2 analog{ controller->getAxis(0).getValue(), controller->getAxis(1).getValue() };
 	switch (controller->getSide())
 	{
 		default:break;
@@ -147,17 +148,22 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 			if (controller->hasBeenPressed(2))
 			{
 				if (controller->getType() == "Oculus Touch")
-					AnnGetVRRenderer()->recenter();
+					AnnGetEngine()->toogleOnScreenConsole();
 			}
 			break;
 		}
 		case AnnHandController::rightHandController:
 		{
+			if (controller->hasBeenPressed(3))
+				AnnGetVRRenderer()->recenter();
 			switch (turnMode)
 			{
 				default: case WHEEL:
 					//If we take the stick values as coordinate in the trigonometric plan, this will give the angle
-					stickCurrentAngleDegree = AnnRadian(std::atan2(controller->getAxis(1).getValue(), controller->getAxis(0).getValue())).valueDegrees();
+
+					///AnnDebug() << analog.squaredLength();
+
+					stickCurrentAngleDegree = AnnRadian(std::atan2(analog.y, analog.x)).valueDegrees();
 					//Change range from [-180; +180] to [0; 360]
 					reclampDegreeToPositiveRange(stickCurrentAngleDegree);
 
@@ -166,7 +172,8 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 					//If value is too high it's either that you completed a full turn or there's a glitch in the input data, ignore.
 					if (stickCurrentAngleDegree == 0 ||
 						std::abs(computedWheelValue) > maxWheelAngle ||
-						std::abs(computedWheelValue) < minWheelAngle)
+						std::abs(computedWheelValue) < minWheelAngle ||
+						analog.squaredLength() < 0.8f)
 						computedWheelValue = 0;
 
 					player->analogRotate = wheelStickSensitivity * computedWheelValue;
