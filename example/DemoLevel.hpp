@@ -81,6 +81,7 @@ public:
 	//Called at each frame
 	void runLogic() override
 	{
+		AnnDebug() << AnnGetEngine()->getPlayerPovNode()->getPosition();
 	}
 
 	void unload() override

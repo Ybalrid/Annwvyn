@@ -57,7 +57,7 @@ visibility(false)
 	displaySurface->end();
 
 	//create a node child to the camera here :
-	consoleNode = AnnGetEngine()->getPlayerPovNode()->createChildSceneNode();
+	consoleNode = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 
 	//attach The object
 	consoleNode->attachObject(displaySurface);
@@ -155,6 +155,11 @@ void AnnConsole::toggle()
 
 void AnnConsole::update()
 {
+	//std::stringstream toLog;
+	//toLog << "Console Position " << consoleNode->getPosition();
+	//toLog << "Console DerivedPosition" << consoleNode->_getDerivedPosition();
+	//AnnEngine::log(toLog.str());
+
 	//Updated
 	modified = false;
 	//Get the content of the buffer into a static string
@@ -368,7 +373,18 @@ stop:
 	free(textureBuffer);
 }
 
+void AnnConsole::syncConsolePosition()
+{
+	auto targetPosition = AnnGetVRRenderer()->returnPose.position + AnnGetVRRenderer()->returnPose.orientation*offset;
+	auto targetOrientaiton = AnnGetVRRenderer()->returnPose.orientation;
+
+	consoleNode->setPosition(targetPosition);
+	consoleNode->setOrientation(targetOrientaiton);
+}
+
 bool AnnConsole::needUpdate()
 {
+	syncConsolePosition();
+
 	return modified && visibility;
 }
