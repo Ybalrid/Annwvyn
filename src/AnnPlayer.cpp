@@ -5,7 +5,8 @@
 
 using namespace Annwvyn;
 
-bodyParams::bodyParams()
+bodyParams::bodyParams() :
+	RoomBase{ FeetPosition }
 {
 	//these parameters looks good for testing. Customize them before initializing the physics!
 	eyeHeight = 1.59f;
@@ -184,13 +185,11 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 		playerBody->Orientation.yaw(angle);
 	else if (mode == ROOMSCALE)
 	{
-		if (angle.valueRadians() == 0) return;
-
 		//Projection of the headset world position on the ground plane. we are turning around this point.
 		AnnVect3 basePoint
 		{
 			AnnGetVRRenderer()->returnPose.position.x,
-			playerBody->FeetPosition.y,
+			playerBody->RoomBase.y,
 			AnnGetVRRenderer()->returnPose.position.z
 		};
 
@@ -198,13 +197,13 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 		//AnnDebug() << "basepoint " << basePoint;
 
 		playerBody->Orientation.yaw(angle);
-		AnnVect3 displacement = playerBody->FeetPosition - basePoint;
+		AnnVect3 displacement = playerBody->RoomBase - basePoint;
 		//AnnDebug() << "displacement :" << displacement;
-		playerBody->FeetPosition -= displacement;
+		playerBody->RoomBase -= displacement;
 
 		AnnQuaternion rotation(angle, AnnVect3::UNIT_Y);
 		displacement = rotation*displacement;
-		playerBody->FeetPosition += displacement;
+		playerBody->RoomBase += displacement;
 
 		//AnnDebug() << "displacement :" << displacement;
 	}
@@ -313,7 +312,7 @@ void AnnPlayer::engineUpdate(float deltaTime)
 		case ROOMSCALE:
 			applyAnalogYaw();
 
-			playerBody->FeetPosition += updateTime*getWalkSpeed() *
+			playerBody->RoomBase += updateTime*getWalkSpeed() *
 				(playerBody->Orientation.toQuaternion() *
 				(getTranslation() + getAnalogTranslation()));
 			break;
