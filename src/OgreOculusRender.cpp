@@ -217,6 +217,7 @@ void OgreOculusRender::initCameras()
 
 	//do NOT attach camera to this node...
 	headNode = smgr->getRootSceneNode()->createChildSceneNode();
+	roomNode = headNode->createChildSceneNode();
 }
 
 void OgreOculusRender::setMonoFov(float degreeFov)

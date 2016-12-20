@@ -33,13 +33,6 @@ AnnMain()
 	else
 		AnnGetEngine()->initPlayerStandingPhysics();
 
-		/*
-		if (dynamic_cast<OgreOculusRender*>(AnnGetVRRenderer().get()))
-		{
-			AnnGetVRRenderer()->recenter();
-		}
-		*/
-
 	AnnGetEventManager()->useDefaultEventListener();
 
 	//load resources
