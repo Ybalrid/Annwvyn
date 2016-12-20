@@ -234,6 +234,7 @@ void OgreOculusRender::initScene()
 	if (!root) exit(ANN_ERR_NOTINIT);
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
+	//smgr->setDisplaySceneNodes(true);
 
 	//We are done with the main scene. The "smgr" Scene Manager will handle the actual VR world.
 	//To easily display the debug view, we will create a "debugSmgr" scene just for re-projecting the textures to the window

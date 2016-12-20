@@ -180,7 +180,34 @@ Ogre::Euler AnnPlayer::getOrientation()
 
 void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 {
-	playerBody->Orientation.yaw(angle);
+	if (mode == STANDING)
+		playerBody->Orientation.yaw(angle);
+	else if (mode == ROOMSCALE)
+	{
+		if (angle.valueRadians() == 0) return;
+
+		//Projection of the headset world position on the ground plane. we are turning around this point.
+		AnnVect3 basePoint
+		{
+			AnnGetVRRenderer()->returnPose.position.x,
+			playerBody->FeetPosition.y,
+			AnnGetVRRenderer()->returnPose.position.z
+		};
+
+		//AnnDebug() << "angle : " << angle;
+		//AnnDebug() << "basepoint " << basePoint;
+
+		playerBody->Orientation.yaw(angle);
+		AnnVect3 displacement = playerBody->FeetPosition - basePoint;
+		//AnnDebug() << "displacement :" << displacement;
+		playerBody->FeetPosition -= displacement;
+
+		AnnQuaternion rotation(angle, AnnVect3::UNIT_Y);
+		displacement = rotation*displacement;
+		playerBody->FeetPosition += displacement;
+
+		//AnnDebug() << "displacement :" << displacement;
+	}
 }
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
@@ -308,6 +335,9 @@ void AnnPlayer::setMode(AnnPlayerMode playerMode)
 void AnnPlayer::setRoomRefNode(Ogre::SceneNode* node)
 {
 	RoomReferenceNode = node;
+	/*auto gizmo = node->createChildSceneNode();
+	gizmo->attachObject(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
+	gizmo->setScale(4, 4, 4);*/
 }
 
 void AnnPlayer::reground(float YvalueForGround)
