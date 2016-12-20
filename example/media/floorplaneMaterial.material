@@ -8,8 +8,8 @@ material floorplaneMaterial
     {
         pass floorplaneMaterial
         {
-            ambient 0.20190073549747467 0.0 0.16949303448200226 1.0
-            diffuse 0.16152059080482406 0.0 0.13559442960611623 1.0
+            ambient 1.0 1.0 1.0 1.0
+            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
@@ -36,6 +36,8 @@ material floorplaneMaterial
                 tex_address_mode wrap
                 scale 1.0 1.0
                 colour_op modulate
+				filtering anisotropic
+				max_anisotropy 8
             }
         }
     }

@@ -185,6 +185,7 @@ protected:
 
 	///Node that represent the head base. Move this in 3D to move the viewpoint
 	Ogre::SceneNode* headNode;
+	Ogre::SceneNode* roomNode;
 
 	///background color of viewports
 	Ogre::ColourValue backgroundColor;
