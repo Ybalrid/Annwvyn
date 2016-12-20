@@ -81,11 +81,11 @@ public:
 	//Called at each frame
 	void runLogic() override
 	{
-		auto povPos{ AnnGetEngine()->getPlayerPovNode()->getPosition() };
-		auto headPos{ AnnGetVRRenderer()->returnPose.position };
-		AnnDebug() << "player pov node position" << povPos;
-		AnnDebug() << "headset Position " << headPos;
-		AnnDebug() << "y offset : " << headPos.y - povPos.y;
+		//auto povPos{ AnnGetEngine()->getPlayerPovNode()->getPosition() };
+		//auto headPos{ AnnGetVRRenderer()->returnPose.position };
+		//AnnDebug() << "player pov node position" << povPos;
+		//AnnDebug() << "headset Position " << headPos;
+		//AnnDebug() << "y offset : " << headPos.y - povPos.y;
 	}
 
 	void unload() override
