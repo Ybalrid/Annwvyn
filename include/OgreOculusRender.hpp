@@ -127,6 +127,9 @@ public:
 
 private:
 
+	void initializeHandObjects(const OgreOculusRender::oorEyeType side);
+	void initializeControllerAxes(const OgreOculusRender::oorEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
+	void ProcessButtonStates(const OgreOculusRender::oorEyeType side);
 	void updateTouchControllers();
 
 	///With of the unused pixel-band between the two eyes
