@@ -39,6 +39,7 @@ namespace Annwvyn
 		float turnSpeed;
 		float mass;
 		AnnVect3 FeetPosition;
+		AnnVect3& RoomBase;
 		Ogre::Euler Orientation;
 		AnnQuaternion HeadOrientation;
 

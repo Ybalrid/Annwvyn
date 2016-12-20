@@ -101,6 +101,7 @@ public:
 
 	void runLogic() override
 	{
+		AnnGetPlayer()->regroundOnPhysicsBody(1000, { 0,100,0 });
 	}
 
 private:
