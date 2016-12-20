@@ -155,13 +155,16 @@ void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	Oculus = new OculusInterface();
-	ovr_SetTrackingOriginType(Oculus->getSession(), ovrTrackingOrigin_FloorLevel);
 	hmdSize = Oculus->getHmdDesc().Resolution;
-	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
 	updateTime = 1.0 / double(Oculus->getHmdDesc().DisplayRefreshRate);
-	float playerEyeHeight = ovr_GetFloat(Oculus->getSession(), "EyeHeight", -1.0f);
-	AnnDebug() << "Player eye height : " << playerEyeHeight << "m";
+
+	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
+	ovr_SetTrackingOriginType(Oculus->getSession(), ovrTrackingOrigin_FloorLevel);
+
+	auto playerEyeHeight = ovr_GetFloat(Oculus->getSession(), "EyeHeight", -1.0f);
 	if (playerEyeHeight != -1.0f) AnnGetPlayer()->setEyesHeight(playerEyeHeight);
+
+	AnnDebug() << "Player eye height : " << playerEyeHeight << "m";
 	AnnDebug() << "Eye leveling translation : " << AnnGetPlayer()->getEyeTranslation();
 }
 
@@ -632,6 +635,42 @@ void OgreOculusRender::renderAndSubmitFrame()
 
 //TODO get rid of this boolean
 bool DEBUG(true);
+
+void OgreOculusRender::initializeHandObjects(const OgreOculusRender::oorEyeType side) {
+	//If it's the first time we have access data on this hand controller, instantiate the object
+	if (!handControllers[side])
+	{
+		handControllers[side] = std::make_shared<AnnHandController>
+			("Oculus Touch", smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
+		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
+	}
+}
+
+void OgreOculusRender::initializeControllerAxes(const OgreOculusRender::oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector) {
+	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
+	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
+	axesVector.push_back(AnnHandControllerAxis{ "Trigger X", inputState.IndexTrigger[side] });
+	axesVector.push_back(AnnHandControllerAxis{ "Griptrigger X", inputState.HandTrigger[side] });
+}
+
+void OgreOculusRender::ProcessButtonStates(const OgreOculusRender::oorEyeType side) {
+	//Extract button states and deduce press/released events
+	pressed.clear(); released.clear();
+	for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
+	{
+		//Save the current polled state as the last one
+		lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
+		//Get the current state of the button
+		currentControllerButtonsPressed[side][i] = (inputState.Buttons & touchControllersButtons[side][i]) != 0;
+
+		//Detect pressed/released event and add it to the list
+		if (!lastControllerButtonsPressed[side][i] && currentControllerButtonsPressed[side][i])
+			pressed.push_back(uint8_t(i));
+		else if (lastControllerButtonsPressed[side][i] && !currentControllerButtonsPressed[side][i])
+			released.push_back(uint8_t(i));
+	}
+}
+
 void OgreOculusRender::updateTouchControllers()
 {
 	//Get the controller state
@@ -641,13 +680,7 @@ void OgreOculusRender::updateTouchControllers()
 
 	for (const auto side : { left, right })
 	{
-		//If it's the first time we have access data on this hand controller, instantiate the object
-		if (!handControllers[side])
-		{
-			handControllers[side] = std::make_shared<AnnHandController>
-				("Oculus Touch", smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
-			if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
-		}
+		initializeHandObjects(side);
 
 		//Extract the hand pose from the tracking state
 		handPoses[side] = ts.HandPoses[side];
@@ -656,15 +689,9 @@ void OgreOculusRender::updateTouchControllers()
 		auto handController = handControllers[side];
 
 		//Set axis informations
-		//TODO clean taht thing up by putting it in the controller initialization instead of testing the size
 		auto& axesVector = handController->getAxesVector();
 		if (axesVector.size() == 0)
-		{
-			axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
-			axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
-			axesVector.push_back(AnnHandControllerAxis{ "Trigger X", inputState.IndexTrigger[side] });
-			axesVector.push_back(AnnHandControllerAxis{ "Griptrigger X", inputState.HandTrigger[side] });
-		}
+			initializeControllerAxes(side, axesVector);
 
 		//Update the values of the axes
 		axesVector[0].updateValue(inputState.Thumbstick[side].x);
@@ -672,21 +699,7 @@ void OgreOculusRender::updateTouchControllers()
 		axesVector[2].updateValue(inputState.IndexTrigger[side]);
 		axesVector[3].updateValue(inputState.HandTrigger[side]);
 
-		//Extract button states and deduce press/released events
-		pressed.clear(); released.clear();
-		for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
-		{
-			//Save the current polled state as the last one
-			lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
-			//Get the current state of the button
-			currentControllerButtonsPressed[side][i] = (inputState.Buttons & touchControllersButtons[side][i]) != 0;
-
-			//Detect pressed/released event and add it to the list
-			if (!lastControllerButtonsPressed[side][i] && currentControllerButtonsPressed[side][i])
-				pressed.push_back(uint8_t(i));
-			else if (lastControllerButtonsPressed[side][i] && !currentControllerButtonsPressed[side][i])
-				released.push_back(uint8_t(i));
-		}
+		ProcessButtonStates(side);
 
 		//Set all the data on the controller
 		handController->getButtonStateVector() = currentControllerButtonsPressed[side];
