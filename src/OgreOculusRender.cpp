@@ -76,23 +76,17 @@ OgreOculusRender::~OgreOculusRender()
 
 bool OgreOculusRender::shouldQuit()
 {
-	if (getSessionStatus().ShouldQuit == ovrTrue)
-		return true;
-	return false;
+	return getSessionStatus().ShouldQuit == ovrTrue;
 }
 
 bool OgreOculusRender::shouldRecenter()
 {
-	if (getSessionStatus().ShouldRecenter == ovrTrue)
-		return true;
-	return false;
+	return getSessionStatus().ShouldRecenter == ovrTrue;
 }
 
 bool OgreOculusRender::isVisibleInHmd()
 {
-	if (getSessionStatus().IsVisible == ovrTrue)
-		return true;
-	return false;
+	return getSessionStatus().IsVisible == ovrTrue;
 }
 
 void OgreOculusRender::cycleDebugHud()
@@ -574,12 +568,11 @@ void OgreOculusRender::updateTracking()
 		eyeCameras[eye]->setOrientation(bodyOrientation * oculusToOgreQuat(pose.Orientation));
 		eyeCameras[eye]->setPosition(feetPosition
 									 + (eyeCameras[eye]->getOrientation() * oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset)
-									 + bodyOrientation * oculusToOgreVect3(pose.Position)
-		/*+ AnnGetPlayer()->getEyeTranslation()*/));
+									 + bodyOrientation * oculusToOgreVect3(pose.Position)));
 	}
 
 	//Update the pose for gameplay purposes
-	returnPose.position = feetPosition + /*AnnGetPlayer()->getEyeTranslation() +*/ bodyOrientation * oculusToOgreVect3(pose.Position);
+	returnPose.position = feetPosition + bodyOrientation * oculusToOgreVect3(pose.Position);
 	returnPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
 	monoCam->setPosition(returnPose.position);
 	monoCam->setOrientation(returnPose.orientation);
@@ -587,7 +580,7 @@ void OgreOculusRender::updateTracking()
 
 void OgreOculusRender::renderAndSubmitFrame()
 {
-	//Ogre's documentation ask for this function to be called once per frame
+	//Process window's message queue
 	Ogre::WindowEventUtilities::messagePump();
 
 	//Select the current render texture
@@ -601,7 +594,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 	root->_fireFrameRenderingQueued();
 	vpts[left]->update();
 	vpts[right]->update();
-	rttEyes->update();
+	rttEyes->update(); //This will resolve the sampling for the anti-aliasing of the texture
 
 	//Copy the rendered image to the Oculus Swap Texture
 	glCopyImageSubData(renderTextureGLID, GL_TEXTURE_2D,
@@ -627,7 +620,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 											  0, 0, 0, 0,
 											  hmdSize.w, hmdSize.h, 1);
 
-					   //Update the window
+		//Update the window
 		debugViewport->update();
 		window->update();
 	}
@@ -650,7 +643,7 @@ void OgreOculusRender::initializeControllerAxes(const OgreOculusRender::oorEyeTy
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
 	axesVector.push_back(AnnHandControllerAxis{ "Trigger X", inputState.IndexTrigger[side] });
-	axesVector.push_back(AnnHandControllerAxis{ "Griptrigger X", inputState.HandTrigger[side] });
+	axesVector.push_back(AnnHandControllerAxis{ "GripTrigger X", inputState.HandTrigger[side] });
 }
 
 void OgreOculusRender::ProcessButtonStates(const OgreOculusRender::oorEyeType side) {
@@ -705,7 +698,7 @@ void OgreOculusRender::updateTouchControllers()
 		handController->getButtonStateVector() = currentControllerButtonsPressed[side];
 		handController->getPressedButtonsVector() = pressed;
 		handController->getReleasedButtonsVector() = released;
-		handController->setTrackedPosition(feetPosition + /*AnnGetPlayer()->getEyeTranslation() + */bodyOrientation * oculusToOgreVect3(handPoses[side].ThePose.Position));
+		handController->setTrackedPosition(feetPosition + bodyOrientation * oculusToOgreVect3(handPoses[side].ThePose.Position));
 		handController->setTrackedOrientation(bodyOrientation * oculusToOgreQuat(handPoses[side].ThePose.Orientation));
 		handController->setTrackedAngularSpeed(oculusToOgreVect3(handPoses[side].AngularVelocity));
 		handController->setTrackedLinearSpeed(oculusToOgreVect3(handPoses[side].LinearVelocity));
