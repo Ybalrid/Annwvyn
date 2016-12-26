@@ -60,10 +60,12 @@ namespace Annwvyn
 	///Main engine class. Creating an instance of this class make the engine start.
 	class DLL AnnEngine
 	{
-		//It's more or less a singleton, and will be the only one in the engine architecture.
-		//You can instantiate it like a normal class and bypass the idea of a singleton completely.
-		//This is the base class of the whole engine, the idea is more or less the one described in the
-		//"solutions to use a singleton for everything" in this article http://gameprogrammingpatterns.com/singleton.html
+		//It's more or less a singleton, and will be the only one in the engine
+		//architecture. You can instantiate it like a normal class and bypass the
+		//idea of a singleton completely. This is the base class of the whole
+		//engine, the idea is more or less the one described in the "solutions to
+		//use a singleton for everything" in this article
+		//http://gameprogrammingpatterns.com/singleton.html
 
 	private:
 		///the singleton address itself is stored here
@@ -190,6 +192,10 @@ namespace Annwvyn
 		void removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem);
 
 	private:
+
+		static WORD consoleGreen;
+		static WORD consoleYellow;
+		static WORD consoleWhite;
 
 		///VR renderer
 		std::shared_ptr<OgreVRRender> renderer;

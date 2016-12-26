@@ -34,7 +34,7 @@ namespace Annwvyn
 	class DLL AnnFileWriter
 	{
 	public:
-	///Construct file writer object
+		///Construct file writer object
 		AnnFileWriter();
 
 		///Write the fileData to disc in the appropriate directory
