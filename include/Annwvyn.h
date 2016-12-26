@@ -74,6 +74,8 @@
 #include <list>
 #include <unordered_map>
 #include <cstring>
+#include <chrono>
+#include <ctime>
 
 //Annwvyn classes
 #include "AnnEngine.hpp"
@@ -136,12 +138,42 @@ namespace Annwvyn
 
 	inline void preStart()
 	{
+#ifdef ANNWVYN_DEVEL
+		AnnEngine::openConsole();
+		std::cout << "ANNWVYN DEVEL\n";
+		std::cout << "Console output enabeled";
+#endif
+	}
+
+	inline void postQuit()
+	{
+#ifdef ANNWVYN_DEVEL
+		std::stringstream filename;
+		filename << "AnnwvynDevel-";
+		auto t = time(nullptr);
+		struct tm now; localtime_s(&now, &t);
+		filename
+			<< now.tm_year + 1900 << '-'
+			<< now.tm_mon + 1 << '-'
+			<< now.tm_mday << '-'
+			<< now.tm_hour << '-'
+			<< now.tm_min << '-'
+			<< now.tm_sec << ".log";
+
+		auto src{ std::ifstream("Annwvyn.log", std::ios::binary) };
+		auto dst{ std::ofstream(filename.str(), std::ios::binary) };
+
+		dst << "Annwvyn DEVEL LOG\n" << std::endl;
+
+		dst << src.rdbuf();
+
+#endif
 	}
 }
 
 ///Annwvyn initialization macro
 #define AnnInit(AppName) auto GameEngine = std::make_unique<AnnEngine>(AppName, detectedHMD)
-#define AnnQuit() GameEngine.reset(nullptr)
+#define AnnQuit() GameEngine.reset(nullptr); Annwvyn::postQuit();
 
 //===================Application Entry-point definition=================//
 /*Main definition :
