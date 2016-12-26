@@ -141,7 +141,7 @@ namespace Annwvyn
 #ifdef ANNWVYN_DEVEL
 		AnnEngine::openConsole();
 		std::cout << "ANNWVYN DEVEL\n";
-		std::cout << "Console output enabeled";
+		std::cout << "Console output enabled\n";
 #endif
 	}
 
