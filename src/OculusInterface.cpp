@@ -25,8 +25,8 @@ OculusInterface::OculusInterface()
 		//Notify user
 		AnnDebug() << "Error: Cannot create Oculus Session";
 		//Debug HMD is now handled by the configuration utility and the runtime.
-		AnnDebug() << "Please make sure Oculus Home is installed on your system and"
-			" please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
+		AnnDebug() << "Please make sure Oculus Home is installed on your system and "
+			"please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
 
 		displayWin32ErrorMessage(L"Error: Cannot create Oculus Session!",
 								 L"Please make sure Oculus Home is installed on your system\n"

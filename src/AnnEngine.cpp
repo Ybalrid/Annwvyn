@@ -8,6 +8,9 @@ AnnEngine* AnnEngine::singleton(nullptr);
 
 //Log is static. Therefore this has to be static too to be able to write to it.
 std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
+WORD AnnEngine::consoleGreen(0);
+WORD AnnEngine::consoleYellow(0);
+WORD AnnEngine::consoleWhite(0);
 
 AnnEngine* AnnEngine::Instance()
 {
@@ -52,9 +55,10 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		exit(ANN_ERR_MEMORY);
 	}
 
-	std::cerr << "HMD selection from command line routine returned : " << hmdCommand << std::endl;
+	std::cerr << "HMD selection from command line routine returned : "
+		<< hmdCommand << std::endl;
 
-	//Select the correct OgreVRRender class to use :
+		//Select the correct OgreVRRender class to use :
 	if (hmdCommand == "OgreOculusRender"
 		|| hmdCommand == "OgreDefaultRender")
 		renderer = std::make_shared<OgreOculusRender>(title);
@@ -65,16 +69,21 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	else
 	{
-		displayWin32ErrorMessage(L"Error: Cannot understand VR System you want to use!",
-								 L"This program can be used with multiple VR solution.\n"
-								 L"The executable should be launched via a dedicated launcher.\n"
-								 L"If you're trying to launch it by hand, please check if your command line parameter is correct!\n\n"
-								 L"Available command line parameter : \n"
-								 L"\t-rift\n"
-								 L"\t-vive\n"
-								 L"\nIf you don't specify anything, the default system will be used (here it's the Oculus Rift)\n"
-								 L"If you don't have (or can't use) VR Hardware, you can launch with -noVR.\n"
-								 L"This will display the image on a simple window without attempting to talk to VR hardware"
+		displayWin32ErrorMessage(
+			L"Error: Cannot understand VR System you want to use!",
+			L"This program can be used with multiple VR solution.\n"
+			L"The executable should be launched via a dedicated launcher.\n"
+			L"If you're trying to launch it by hand, please check if your"
+			L"command line parameter is correct!\n\n"
+			L"Available command line parameter : \n"
+			L"\t-rift\n"
+			L"\t-vive\n"
+			L"\nIf you don't specify anything, the default system will be used"
+			L"(here it's the Oculus Rift)\n"
+			L"If you don't have (or can't use) VR Hardware, you can launch with"
+			L"-noVR.\n"
+			L"This will display the image on a simple window without attempting"
+			L"to talk to VR hardware"
 		);
 		exit(ANN_ERR_CANTHMD);
 	}
@@ -106,34 +115,69 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	log("Setup Annwvyn's subsystems");
 
 	//Element on this list will be updated in order by the engine each frame
-	SubSystemList.push_back(levelManager = std::make_shared<AnnLevelManager>());
-	SubSystemList.push_back(gameObjectManager = std::make_shared<AnnGameObjectManager>());
+	SubSystemList.push_back(levelManager =
+							std::make_shared<AnnLevelManager>());
+	SubSystemList.push_back(gameObjectManager =
+							std::make_shared<AnnGameObjectManager>());
 
-	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
+						//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
 
-	/*The wanted order is
-	- physics is ticked (stuff move)
-	- event happens (player input, timers...)
-	- audio is synced (sounds comes form where they should)
-	- then the game can redraw*/
+						/*The wanted order is
+						- physics is ticked (stuff move)
+						- event happens (player input, timers...)
+						- audio is synced (sounds comes form where they should)
+						- then the game can redraw*/
 
-	SubSystemList.push_back(physicsEngine = std::make_shared<AnnPhysicsEngine>(getSceneManager()->getRootSceneNode(), player, gameObjectManager->Objects, gameObjectManager->Triggers));
-	SubSystemList.push_back(eventManager = std::make_shared< AnnEventManager>(renderer->getWindow()));
-	SubSystemList.push_back(audioEngine = std::make_shared< AnnAudioEngine>());
+	SubSystemList.push_back
+	(physicsEngine = std::make_shared<AnnPhysicsEngine>(
+		getSceneManager()->getRootSceneNode(),
+		player,
+		gameObjectManager->Objects,
+		gameObjectManager->Triggers));
+
+	SubSystemList.push_back
+	(eventManager = std::make_shared< AnnEventManager>
+		(renderer->getWindow()));
+
+	SubSystemList.push_back
+	(audioEngine = std::make_shared< AnnAudioEngine>());
 
 	//These could be anywhere
-	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
-	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
-	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
-	SubSystemList.push_back(scriptManager = std::make_shared<AnnScriptManager>());
+	SubSystemList.push_back
+	(filesystemManager = std::make_shared<AnnFilesystemManager>
+		(title));
+
+	SubSystemList.push_back
+	(resourceManager = std::make_shared<AnnResourceManager>());
+
+	SubSystemList.push_back
+	(sceneryManager = std::make_shared<AnnSceneryManager>
+		(renderer));
+
+	SubSystemList.push_back
+	(scriptManager = std::make_shared<AnnScriptManager>());
 
 	renderer->initClientHmdRendering();
 	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();
 	vrRendererPovGameplayPlacement->setPosition(player->getPosition() +
-												AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
+												AnnVect3(0.0f,
+												player->getEyesHeight(),
+												0.0f));
 
-	//This subsystem need the vrRendererPovGameplayPlacement object to be initialized. And the Resource manager because it wants a font file and an image background
+//This subsystem need the vrRendererPovGameplayPlacement object to be
+//initialized. And the Resource manager because it wants a font file and an
+//image background
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
+
+	consoleGreen = FOREGROUND_GREEN |
+		FOREGROUND_INTENSITY;
+	consoleYellow = FOREGROUND_GREEN |
+		FOREGROUND_RED |
+		FOREGROUND_INTENSITY;
+	consoleWhite = FOREGROUND_RED |
+		FOREGROUND_GREEN |
+		FOREGROUND_BLUE |
+		FOREGROUND_INTENSITY;
 }
 
 AnnEngine::~AnnEngine()
@@ -143,7 +187,9 @@ AnnEngine::~AnnEngine()
 	log("Good luck with the real world now! :3");
 }
 
-//All theses getter are for encapsulation purpose. Calling them directly would make very long lines of code. Note that there's a whole bunch of macro in AnnEngine.hpp to help with that
+//All theses getter are for encapsulation purpose. Calling them directly would
+//make very long lines of code. Note that there's a whole bunch of macro in
+//AnnEngine.hpp to help with that
 std::shared_ptr<AnnEventManager> AnnEngine::getEventManager()
 {
 	return eventManager;
@@ -206,22 +252,24 @@ void AnnEngine::log(std::string message, bool flag)
 
 	if (flag)
 	{
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleYellow);
 		messageForLog += "Annwvyn - ";
 	}
 	else
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
 
 	messageForLog += message;
 	if (Ogre::LogManager::getSingletonPtr())
 		Ogre::LogManager::getSingleton().logMessage(messageForLog);
+
 	if (onScreenConsole)
 		onScreenConsole->append(message);
 
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
 }
 
-//Don't ask me why this is not part of the Physics engine. Actually it just calls something on the physics engine. Will be probably deleted in the future.
+//Don't ask me why this is not part of the Physics engine. Actually it just
+//calls something on the physics engine. Will be probably deleted in the future.
 void AnnEngine::initPlayerPhysics()
 {
 	initPlayerStandingPhysics();
@@ -239,10 +287,12 @@ bool AnnEngine::requestStop()
 	return false;
 }
 
-//This is the most important function of the whole project. It's the heartbeat of the game or app using this engine.
+// This is the most important function of the whole project. It's the heartbeat
+// of the game or app using this engine.
 bool AnnEngine::refresh()
 {
-	//Get the rendering delta time (should be roughly equals to 1/desiredFramerate in seconds)
+	// Get the rendering delta time (should be roughly equals to
+	// 1/desiredFramerate in seconds)
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(getFrameTime());
 
@@ -265,11 +315,14 @@ bool AnnEngine::refresh()
 	return !requestStop();
 }
 
-//This just move a node where the other node is. Yes I know about parenting. I had reasons to do it that way, but I forgot.
+// This just move a node where the other node is. Yes I know about parenting.
+// I had reasons to do it that way, but I forgot.
 inline void AnnEngine::syncPov()
 {
-	vrRendererPovGameplayPlacement->setPosition(player->getPosition());
-	vrRendererPovGameplayPlacement->setOrientation(player->getOrientation().toQuaternion());
+	vrRendererPovGameplayPlacement->setPosition(
+		player->getPosition());
+	vrRendererPovGameplayPlacement->setOrientation(
+		player->getOrientation().toQuaternion());
 }
 
 //Bad. Don't use. Register an event listener and use the KeyEvent callback.
@@ -305,7 +358,9 @@ double AnnEngine::getFrameTime()
 	return updateTime;
 }
 
-//Raw position and orientation of the head in world space. This is useful if you want to mess around with weird stuff. This has been bodged when I integrated a LEAP motion in that mess.
+// Raw position and orientation of the head in world space. This is useful if
+// you want to mess around with weird stuff. This has been bodged when I
+// integrated a LEAP motion in that mess.
 OgrePose AnnEngine::getHmdPose()
 {
 	if (renderer)
@@ -313,12 +368,16 @@ OgrePose AnnEngine::getHmdPose()
 	return OgrePose();
 }
 
-std::shared_ptr<AnnUserSubSystem> AnnEngine::registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem)
+std::shared_ptr<AnnUserSubSystem>
+AnnEngine::registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem)
 {
 	for (auto system : SubSystemList)
 		if (userSystem->name == system->name)
 		{
-			AnnDebug() << "A subsystem with the name " << userSystem->name << "is already registered.";
+			AnnDebug() << "A subsystem with the name "
+				<< userSystem->name
+				<< "is already registered.";
+
 			return nullptr;
 		}
 	SubSystemList.push_back(userSystem);
@@ -369,10 +428,7 @@ bool AnnEngine::openConsole()
 
 	SetConsoleTitle(L"Annwvyn Debug Console");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-							FOREGROUND_BLUE |
-							FOREGROUND_GREEN |
-							FOREGROUND_RED |
-							FOREGROUND_INTENSITY);
+							consoleWhite);
 
 #endif
 	return state;
