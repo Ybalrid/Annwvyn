@@ -2,6 +2,7 @@
 #include "OgreNoVRRender.hpp"
 
 #include "AnnLogger.hpp"
+#include "AnnGetter.hpp"
 
 OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
 

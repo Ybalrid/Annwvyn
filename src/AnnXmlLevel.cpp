@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnXmlLevel.hpp"
 #include "AnnLogger.hpp"
+#include "AnnGetter.hpp"
 
 using namespace tinyxml2;
 using namespace Annwvyn;
