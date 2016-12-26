@@ -21,6 +21,8 @@
 #include <list>
 #include <memory>
 
+#include <functional>
+
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
 
@@ -54,31 +56,6 @@
 
 //Get the deprecated warnings
 #pragma warning(default:4996)
-
-///Easy access to AnnEnigine instance
-#define AnnGetEngine() AnnEngine::Instance()
-///Get audio
-#define AnnGetAudioEngine() AnnGetEngine()->getAudioEngine()
-///Get physics
-#define AnnGetPhysicsEngine() AnnGetEngine()->getPhysicsEngine()
-///Get FileManager
-#define AnnGetFileSystemManager() AnnGetEngine()->getFileSystemManager()
-///Get LevelManager
-#define AnnGetLevelManager() AnnGetEngine()->getLevelManager()
-///Get EventManager
-#define AnnGetEventManager() AnnGetEngine()->getEventManager()
-///Get PlayerObject
-#define AnnGetPlayer() AnnGetEngine()->getPlayer()
-///Get ResourceManager
-#define AnnGetResourceManager() AnnGetEngine()->getResourceManager()
-///Get GameObjectManager
-#define AnnGetGameObjectManager() AnnGetEngine()->getGameObjectManager()
-///Get SceneryManager
-#define AnnGetSceneryManager() AnnGetEngine()->getSceneryManager()
-///Get VRREnderer
-#define AnnGetVRRenderer() AnnGetEngine()->getVRRenderer()
-///Get ScriptManager
-#define AnnGetScriptManager() AnnGetEngine()->getScriptManager()
 
 namespace Annwvyn
 {

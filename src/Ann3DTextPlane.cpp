@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Ann3DTextPlane.hpp"
 #include "AnnLogger.hpp"
+#include "AnnGetter.hpp"
 
 using namespace Annwvyn;
 using namespace std;

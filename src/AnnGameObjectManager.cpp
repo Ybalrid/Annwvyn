@@ -2,6 +2,7 @@
 #include "AnnGameObjectManager.hpp"
 #include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
+#include "AnnGetter.hpp"
 
 using namespace Annwvyn;
 unsigned long long AnnGameObjectManager::id;

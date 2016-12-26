@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AnnPhysicsEngine.hpp"
 #include "AnnLogger.hpp"
-
+#include "AnnGetter.hpp"
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,

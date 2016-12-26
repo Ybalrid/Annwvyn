@@ -2,6 +2,7 @@
 #include "AnnSplashLevel.hpp"
 #include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
+#include "AnnGetter.hpp"
 
 using namespace Annwvyn;
 

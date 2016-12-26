@@ -96,6 +96,8 @@
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
 
+#include "AnnGetter.hpp"
+
 ///Namespace containing the totality of Annwvyn components
 namespace Annwvyn
 {

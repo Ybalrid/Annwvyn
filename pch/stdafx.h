@@ -32,6 +32,7 @@
 #include <mutex>
 #include <random>
 #include <valarray>
+#include <functional>
 
 //Object-Oriented Graphical Rendering Engine
 #include <Ogre.h>
@@ -78,6 +79,7 @@
 #include <chaiscript_defines.hpp>
 #include <chaiscript_stdlib.hpp>
 #include <chaiscript_threading.hpp>
+#pragma warning (default: 4602)
 
 //OpenVR (Valve/HTC Vive) API
 #include <openvr.h>

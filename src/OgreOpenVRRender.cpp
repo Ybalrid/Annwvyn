@@ -2,6 +2,7 @@
 #include "OgreOpenVRRender.hpp"
 #include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
+#include "AnnGetter.hpp"
 
 OgreOpenVRRender* OgreOpenVRRender::OpenVRSelf(nullptr);
 

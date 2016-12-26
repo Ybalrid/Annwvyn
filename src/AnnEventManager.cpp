@@ -2,6 +2,7 @@
 #include "AnnEventManager.hpp"
 #include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
+#include "AnnGetter.hpp"
 
 using namespace Annwvyn;
 
