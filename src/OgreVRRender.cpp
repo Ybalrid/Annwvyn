@@ -36,7 +36,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	if (self)
 	{
 		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialization. OgreOculusRender object already created.");
-		exit(ANN_ERR_RENDER);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CRITIC) + "Cannot create more than one OgreVRRenderer object!");
 	}
 	self = this;
 
@@ -93,7 +93,7 @@ void OgreVRRender::initOgreRoot(std::string loggerName)
 void OgreVRRender::getOgreConfig()
 {
 	//Ogre as to be initialized
-	if (!root) exit(ANN_ERR_NOTINIT);
+	if (!root) throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Need to initialize Ogre::Root before loading system configuration");
 
 	//Load OgrePlugins
 	root->loadPlugin("RenderSystem_GL");

@@ -165,11 +165,12 @@ void OgreOculusRender::initVrHmd()
 
 void OgreOculusRender::createWindow()
 {
-	if (!root) exit(ANN_ERR_NOTINIT);
+	if (!root)
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Tried to create a window while Ogre wasn't initialized");
 	if (!Oculus)
 	{
 		AnnDebug() << "Please initialize the OculusInterface before creating window";
-		exit(ANN_ERR_NOTINIT);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Oculus Renderer need the oculus interface to be running before attempting window creation");
 	}
 
 	Ogre::NameValuePairList misc;
@@ -188,12 +189,6 @@ void OgreOculusRender::createWindow()
 
 void OgreOculusRender::initCameras()
 {
-	if (!smgr)
-	{
-		AnnDebug() << "Cannot init cameras before having the scene(s) manager(s) in place";
-		exit(ANN_ERR_NOTINIT);
-	}
-
 	//TODO use a node-based camera rig like it's done on the OpenVR code
 
 	//Mono view camera
@@ -226,10 +221,10 @@ void OgreOculusRender::setMonoFov(float degreeFov)
 void OgreOculusRender::initScene()
 {
 	//Get if the complied buffer are correct
-	if (!debugPlaneSanityCheck()) exit(ANN_ERR_CRITIC);
+	if (!debugPlaneSanityCheck())
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Sanity check failed, check the static buffer in OgreOculusRender.hpp");
 
 	//Create the scene manager for the engine
-	if (!root) exit(ANN_ERR_NOTINIT);
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
 	//smgr->setDisplaySceneNodes(true);
@@ -292,6 +287,8 @@ void OgreOculusRender::initRttRendering()
 {
 	//Init GLEW here to be able to call OpenGL functions
 	AnnDebug() << "Init GL Extension Wrangler";
+
+	//TODO move that to the parent class.
 	const auto err = glewInit();
 	if (err != GLEW_OK)
 	{
@@ -338,7 +335,7 @@ void OgreOculusRender::initRttRendering()
 	{
 		//If we can't get the textures, there is no point trying more.
 		AnnDebug("Cannot create Oculus OpenGL SwapChain");
-		exit(ANN_ERR_RENDER);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Cannot create Oculus OpenGL swapchain");
 	}
 
 	//Create the Ogre equivalent of the texture as a render target for Ogre
@@ -373,7 +370,7 @@ void OgreOculusRender::initRttRendering()
 	{
 		//If for some weird reason (stars alignment, dragons, northern gods, reaper invasion) we can't create the mirror texture
 		AnnDebug("Cannot create Oculus mirror texture");
-		exit(ANN_ERR_RENDER);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Cannot create Oculus mirror texture");
 	}
 
 	//Create the Ogre equivalent of this buffer
