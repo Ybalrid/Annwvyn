@@ -21,8 +21,6 @@
 #include <list>
 #include <memory>
 
-#include <functional>
-
 //Graphic rendering system for the rift
 #include "OgreOculusRender.hpp"
 
