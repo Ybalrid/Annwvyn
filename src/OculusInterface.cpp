@@ -39,7 +39,7 @@ OculusInterface::OculusInterface()
 		//Destroy Ogre
 		delete Ogre::Root::getSingletonPtr();
 		//Stop program
-		exit(ANN_ERR_CRITIC);
+		throw runtime_error("Error : " + to_string(ANN_ERR_CRITIC) + "Unable to create an Oculus session");
 	}
 
 	//Fill the hmdDesc structure

@@ -52,7 +52,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
-		exit(ANN_ERR_MEMORY);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_MEMORY) + "Can't create 2 instances of AnnEngine");
 	}
 
 	std::cerr << "HMD selection from command line routine returned : "
@@ -85,7 +85,9 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 			L"This will display the image on a simple window without attempting"
 			L"to talk to VR hardware"
 		);
-		exit(ANN_ERR_CANTHMD);
+		//exit(ANN_ERR_CANTHMD)
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CANTHMD)
+								 + "Can't find an HMD to use");
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");

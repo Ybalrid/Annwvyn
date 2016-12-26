@@ -72,9 +72,8 @@ void OgreNoVRRender::initClientHmdRendering()
 	if (error != GLEW_OK)
 	{
 		Annwvyn::AnnDebug() << "failed to glew init";
-		exit(ANN_ERR_RENDER);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Failed to load OpenGL functions with GLEW");
 	}
-	return;
 }
 
 bool OgreNoVRRender::shouldQuit() { return !running; }
