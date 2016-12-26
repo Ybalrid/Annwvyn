@@ -48,6 +48,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 
 OgreVRRender::~OgreVRRender()
 {
+	self = nullptr;
 }
 
 Ogre::SceneManager* OgreVRRender::getSceneManager()
