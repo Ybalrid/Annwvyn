@@ -21,9 +21,6 @@ bool isRoomscale{ true };
 
 AnnMain()
 {
-	//Only useful on windows : Open a debug console to get stdout/stderr
-	AnnEngine::openConsole();
-
 	OgreVRRender::setAntiAliasingLevel(8);
 	AnnInit("AnnTest");
 
