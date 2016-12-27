@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "OgreVRRender.hpp"
+#include "AnnGetter.hpp"
 
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
@@ -142,4 +143,28 @@ void OgreVRRender::setFarClippingDistance(float distance)
 {
 	farClippingDistance = distance;
 	updateProjectionMatrix();
+}
+
+void OgreVRRender::initCameras()
+{
+	cameraRig = smgr->getRootSceneNode()->createChildSceneNode("CameraRig");
+
+	eyeCameras[0] = smgr->createCamera("lcam");
+	eyeCameras[0]->setAutoAspectRatio(true);
+	cameraRig->attachObject(eyeCameras[0]);
+
+	eyeCameras[1] = smgr->createCamera("rcam");
+	eyeCameras[1]->setAutoAspectRatio(true);
+	cameraRig->attachObject(eyeCameras[1]);
+
+	monoCam = smgr->createCamera("mcam");
+	monoCam->setAspectRatio(16.0 / 9.0);
+	monoCam->setAutoAspectRatio(false);
+	monoCam->setNearClipDistance(nearClippingDistance);
+	monoCam->setFarClipDistance(farClippingDistance);
+	monoCam->setFOVy(Ogre::Degree(90));
+	cameraRig->attachObject(monoCam);
+
+	//do NOT attach camera to this node...
+	headNode = smgr->getRootSceneNode()->createChildSceneNode();
 }

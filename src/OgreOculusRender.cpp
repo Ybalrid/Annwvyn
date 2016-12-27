@@ -188,28 +188,8 @@ void OgreOculusRender::createWindow()
 
 void OgreOculusRender::initCameras()
 {
-	//TODO use a node-based camera rig like it's done on the OpenVR code
-
-	//Mono view camera
-	monoCam = smgr->createCamera("monocam");
-	monoCam->setAspectRatio(16.0 / 9.0);
-	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
-	monoCam->setNearClipDistance(nearClippingDistance);
-	monoCam->setFarClipDistance(farClippingDistance);
-	monoCam->setFOVy(Ogre::Degree(90));
-
-	//VR Eye cameras
-	eyeCameras[left] = smgr->createCamera("lcam");
-	eyeCameras[left]->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
-	eyeCameras[left]->setAutoAspectRatio(true);
-	eyeCameras[right] = smgr->createCamera("rcam");
-	eyeCameras[right]->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
-	eyeCameras[right]->setAutoAspectRatio(true);
-
+	OgreVRRender::initCameras();
 	//do NOT attach camera to this node...
-	headNode = smgr->getRootSceneNode()->createChildSceneNode();
-	roomNode = headNode->createChildSceneNode();
 }
 
 void OgreOculusRender::setMonoFov(float degreeFov)
@@ -560,19 +540,16 @@ void OgreOculusRender::updateTracking()
 	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
 
 	//Apply pose to the two cameras
+	//TODO add a method to apply this IPD translation;
 	for (auto eye : eyeUpdateOrder)
-	{
-		eyeCameras[eye]->setOrientation(bodyOrientation * oculusToOgreQuat(pose.Orientation));
-		eyeCameras[eye]->setPosition(feetPosition
-									 + (eyeCameras[eye]->getOrientation() * oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset)
-									 + bodyOrientation * oculusToOgreVect3(pose.Position)));
-	}
+		eyeCameras[eye]->setPosition(oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset));
+
+	cameraRig->setOrientation(bodyOrientation * oculusToOgreQuat(pose.Orientation));
+	cameraRig->setPosition(feetPosition + bodyOrientation*oculusToOgreVect3(pose.Position));
 
 	//Update the pose for gameplay purposes
-	returnPose.position = feetPosition + bodyOrientation * oculusToOgreVect3(pose.Position);
-	returnPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
-	monoCam->setPosition(returnPose.position);
-	monoCam->setOrientation(returnPose.orientation);
+	returnPose.position = cameraRig->getPosition();
+	returnPose.orientation = cameraRig->getOrientation();
 }
 
 void OgreOculusRender::renderAndSubmitFrame()
