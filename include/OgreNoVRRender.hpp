@@ -10,6 +10,7 @@ class DLL OgreNoVRRender : public OgreVRRender
 {
 public:
 	OgreNoVRRender(std::string winName = "OgreVRNoVRRender");
+	~OgreNoVRRender();
 
 	void initPipeline() override;
 	void initVrHmd() override;
