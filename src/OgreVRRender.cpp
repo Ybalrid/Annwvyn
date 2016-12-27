@@ -29,6 +29,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	name(windowName),
 	headNode(nullptr),
 	backgroundColor(0, 0.56f, 1),
+	cameraRig{ nullptr },
 	frameCounter(0),
 	rttEyes(nullptr)
 {

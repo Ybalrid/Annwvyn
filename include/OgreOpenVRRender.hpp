@@ -164,9 +164,6 @@ private:
 	///Transform that correspond to the HMD tracking
 	Ogre::Matrix4 hmdAbsoluteTransform;
 
-	///Camera Rig that holds the 2 cameras on the same plane
-	Ogre::SceneNode* eyeRig;
-
 	///State of the "should quit" marker. If it goes to true, the game loop should stop
 	bool shouldQuitState;
 
