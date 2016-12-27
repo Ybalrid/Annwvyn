@@ -32,6 +32,8 @@ public:
 
 	void updateProjectionMatrix() override;
 
+	void handleIPDChange() override;
+
 private:
 	static OgreNoVRRender* noVRself;
 	Ogre::Viewport* noVRViewport;

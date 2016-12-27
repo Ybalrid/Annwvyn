@@ -32,7 +32,9 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	backgroundColor(0, 0.56f, 1),
 	cameraRig{ nullptr },
 	frameCounter(0),
-	rttEyes(nullptr)
+	rttEyes(nullptr),
+	then(0),
+	now(0)
 {
 	rttTexture.setNull();
 	if (self)
@@ -167,4 +169,24 @@ void OgreVRRender::initCameras()
 
 	//do NOT attach camera to this node...
 	headNode = smgr->getRootSceneNode()->createChildSceneNode();
+}
+
+void OgreVRRender::applyCameraRigPose(OgrePose pose)
+{
+	cameraRig->setPosition(pose.position);
+	cameraRig->setOrientation(pose.orientation);
+}
+
+void OgreVRRender::syncGameplayBody()
+{
+	//Get current camera base information
+	feetPosition = headNode->getPosition();
+	bodyOrientation = headNode->getOrientation();
+}
+
+void OgreVRRender::calculateTimingFromOgre()
+{
+	then = now;
+	now = getTimer()->getMilliseconds() / 1000.0;
+	updateTime = now - then;
 }

@@ -376,8 +376,8 @@ stop:
 
 void AnnConsole::syncConsolePosition()
 {
-	auto targetPosition = AnnGetVRRenderer()->returnPose.position + AnnGetVRRenderer()->returnPose.orientation*offset;
-	auto targetOrientaiton = AnnGetVRRenderer()->returnPose.orientation;
+	auto targetPosition = AnnGetVRRenderer()->trackedHeadPose.position + AnnGetVRRenderer()->trackedHeadPose.orientation*offset;
+	auto targetOrientaiton = AnnGetVRRenderer()->trackedHeadPose.orientation;
 
 	consoleNode->setPosition(targetPosition);
 	consoleNode->setOrientation(targetOrientaiton);

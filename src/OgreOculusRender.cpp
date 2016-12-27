@@ -512,11 +512,15 @@ void OgreOculusRender::showDebug(DebugMode mode)
 	}
 }
 
+void OgreOculusRender::handleIPDChange()
+{
+	for (auto eye : eyeUpdateOrder)
+		eyeCameras[eye]->setPosition(oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset));
+}
+
 void OgreOculusRender::updateTracking()
 {
-	//Get current camera base information
-	feetPosition = headNode->getPosition();
-	bodyOrientation = headNode->getOrientation();
+	syncGameplayBody();
 
 	//Begin frame - get timing
 	lastFrameDisplayTime = currentFrameDisplayTime;
@@ -541,15 +545,13 @@ void OgreOculusRender::updateTracking()
 
 	//Apply pose to the two cameras
 	//TODO add a method to apply this IPD translation;
-	for (auto eye : eyeUpdateOrder)
-		eyeCameras[eye]->setPosition(oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset));
-
-	cameraRig->setOrientation(bodyOrientation * oculusToOgreQuat(pose.Orientation));
-	cameraRig->setPosition(feetPosition + bodyOrientation*oculusToOgreVect3(pose.Position));
+	handleIPDChange();
 
 	//Update the pose for gameplay purposes
-	returnPose.position = cameraRig->getPosition();
-	returnPose.orientation = cameraRig->getOrientation();
+	trackedHeadPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
+	trackedHeadPose.position = feetPosition + bodyOrientation*oculusToOgreVect3(pose.Position);
+
+	applyCameraRigPose(trackedHeadPose);
 }
 
 void OgreOculusRender::renderAndSubmitFrame()
