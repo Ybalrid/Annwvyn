@@ -193,6 +193,7 @@ protected:
 	///Cameras that have to be put where the user's eye is
 	std::array<Ogre::Camera*, 2> eyeCameras;
 	Ogre::Camera* monoCam;
+	Ogre::SceneNode* cameraRig;
 
 	///Counter of frames
 	unsigned long long int frameCounter;

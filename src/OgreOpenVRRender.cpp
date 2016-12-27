@@ -17,7 +17,6 @@ windowViewport(nullptr),
 then(0),
 now(0),
 hmdAbsoluteTransform({}),
-eyeRig(nullptr),
 shouldQuitState(false),
 numberOfAxes{ 3 },
 axoffset{ vr::k_EButton_Axis0 },
@@ -211,13 +210,13 @@ void OgreOpenVRRender::updateTracking()
 	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Update the eye rig tracking to make the eyes match your
-	eyeRig->setPosition(feetPosition
-						+ bodyOrientation * getTrackedHMDTranslation());
-	eyeRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
+	cameraRig->setPosition(feetPosition
+						   + bodyOrientation * getTrackedHMDTranslation());
+	cameraRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
 
 	//Get the head reference back to the gameplay code
-	returnPose.position = eyeRig->getPosition();
-	returnPose.orientation = eyeRig->getOrientation();
+	returnPose.position = cameraRig->getPosition();
+	returnPose.orientation = cameraRig->getOrientation();
 }
 
 void OgreOpenVRRender::renderAndSubmitFrame()
@@ -295,16 +294,16 @@ void OgreOpenVRRender::initScene()
 void OgreOpenVRRender::initCameras()
 {
 	//VR Eye cameras
-	eyeRig = smgr->getRootSceneNode()->createChildSceneNode();
+	cameraRig = smgr->getRootSceneNode()->createChildSceneNode();
 
 	//Camera for  each eye
 	eyeCameras[left] = smgr->createCamera("lcam");
 	eyeCameras[left]->setAutoAspectRatio(true);
-	eyeRig->attachObject(eyeCameras[left]);
+	cameraRig->attachObject(eyeCameras[left]);
 
 	eyeCameras[right] = smgr->createCamera("rcam");
 	eyeCameras[right]->setAutoAspectRatio(true);
-	eyeRig->attachObject(eyeCameras[right]);
+	cameraRig->attachObject(eyeCameras[right]);
 
 	//This will translate the cameras to put the correct IPD distance for the user
 	handleIPDChange();
