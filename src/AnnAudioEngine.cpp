@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnAudioEngine.hpp"
 #include "AnnLogger.hpp"
+#include "AnnGetter.hpp"
 
 using namespace Annwvyn;
 

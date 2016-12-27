@@ -1,8 +1,7 @@
 #pragma once
 /**
  * \file systemMacro.h
- * \brief file that permit to handle differences between operating systems
- *        (Windows and GNU/Linux)
+ * \brief file for defining macros used for symbol export regarding the way the OS does things.
  * \author A. Brainville
  */
 
@@ -24,12 +23,6 @@
 
 //DO NOT FORGET TO CALL THE DLL MACRO AT ANY CLASS AND GLOBAL FUNCTION DECLARATION!
 //e.g. class DLL SomeClass {};
-
-//Bypass on GNU/Linux :
-#ifdef __gnu_linux__ //All that stuff is handled by the makefile and the way g++ is called. DLL macros have to be empty but declared.
-#undef DLL
-#define DLL
-#endif
 
 //Thanks to http://stackoverflow.com/a/21265197 for this convenient macro
 #ifdef __GNUC__

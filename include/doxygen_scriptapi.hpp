@@ -1,4 +1,5 @@
-//This file only exist to document the scripting API with doxygen. This file should NEVER be included ANYWERE
+//This file only exist to document the scripting API with doxygen. This file
+//should NEVER be included ANYWERE
 
 #pragma once
 
@@ -9,9 +10,14 @@
 
 namespace Annwvyn
 {
-	//As a safety measure, if anybody include this file even with the warning in the 1st line, it will put it's junk in a sub-namespace
-	//As a side effect of the above statement, this permit to access the whole thing via a single link on the generated website. GREAT.
-	///List prototypes of C++ non-existing functions that match the interface of the Script functions you can use!
+	//As a safety measure, if anybody include this file even with the warning in
+	//the 1st line, it will put it's junk in a sub-namespace
+	//As a side effect of the above statement, this permit to access the whole
+	//thing via a single link on the generated website. GREAT.
+
+	/*!	List prototypes of C++ non-existing functions that match the interface
+	 *of the Script functions you can use!
+	 */
 	namespace ChaiScriptAPIDoc
 	{
 		///ScriptFunction: Log a string
@@ -62,7 +68,7 @@ namespace Annwvyn
 		/// \param f float
 		void AnnDebugLog(float f);
 
-		//-----------------------------------------------------------------------
+		//----------------------------------------------------------------------
 
 		///ScritpFunciton: Set the world's background color
 		/// \param c Color

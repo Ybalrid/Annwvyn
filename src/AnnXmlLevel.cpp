@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnXmlLevel.hpp"
 #include "AnnLogger.hpp"
+#include "AnnGetter.hpp"
 
 using namespace tinyxml2;
 using namespace Annwvyn;
@@ -42,7 +43,7 @@ void AnnXmlLevel::load()
 	if (xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS)
 	{
 		AnnDebug() << "Cant load XML level : " << xmlFilePath;
-		exit(ANN_ERR_INFILE);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_INFILE) + "Error while reading XML Level file" "");
 	}
 	AnnDebug() << "XML Level : " << xmlFilePath << " loaded on XML parser";
 
@@ -51,7 +52,7 @@ void AnnXmlLevel::load()
 	if (!level)
 	{
 		AnnDebug() << "Cant get 1st XML Node from " << xmlFilePath;
-		exit(ANN_ERR_INFILE);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_INFILE) + "Error while reading XML Level file" "");
 	}
 
 	//Get the name of the level
@@ -59,7 +60,7 @@ void AnnXmlLevel::load()
 	if (!element)
 	{
 		AnnDebug() << "Cant get Level name from " << xmlFilePath;
-		exit(ANN_ERR_INFILE);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_INFILE) + "Error while reading XML Level file" "");
 	}
 	name = element->GetText();
 	AnnDebug() << "Name of level : " << name;
@@ -93,7 +94,7 @@ void AnnXmlLevel::load()
 	if (!element)
 	{
 		AnnDebug() << xmlFilePath << "Don't have a 'LevelContent' section. This mean the level can't be loaded";
-		exit(ANN_ERR_INFILE);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_INFILE) + "Error while reading XML Level file" "");
 	}
 
 	XMLElement* gameObject = element->FirstChildElement("Object");

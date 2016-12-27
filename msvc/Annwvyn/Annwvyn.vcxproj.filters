@@ -246,6 +246,9 @@
     <ClInclude Include="..\..\include\doxygen_scriptapi.hpp">
       <Filter>_Documentation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnGetter.hpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -361,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnScriptManager.cpp">
       <Filter>Annwvyn\SubSystems\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnGetter.cpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

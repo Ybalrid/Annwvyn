@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnFilesystem.hpp"
 #include "AnnLogger.hpp"
+#include "AnnGetter.hpp"
 
 using namespace Annwvyn;
 using namespace std;

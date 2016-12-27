@@ -1,6 +1,8 @@
 #ifndef ANN_SUB_SYSTEM
 #define ANN_SUB_SYSTEM
+
 #include "systemMacro.h"
+
 #include <string>
 namespace Annwvyn
 {

@@ -2,6 +2,7 @@
 #include "OgreOpenVRRender.hpp"
 #include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
+#include "AnnGetter.hpp"
 
 OgreOpenVRRender* OgreOpenVRRender::OpenVRSelf(nullptr);
 
@@ -109,14 +110,14 @@ void OgreOpenVRRender::initVrHmd()
 			default:
 				displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
 										 L"Non described error when initializing the OpenVR Render object");
-				exit(ANN_ERR_NOTINIT);
+				throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Unknow error while initializing OpenVR");
 
 			case vr::VRInitError_Init_HmdNotFound:
 			case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
 				displayWin32ErrorMessage(L"Error: cannot find HMD",
 										 L"OpenVR cannot find HMD.\n"
 										 L"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
-				exit(ANN_ERR_CANTHMD);
+				throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CANTHMD) + "OpenVR can't find an HMD");
 		}
 
 	//Check if VRCompositor is present
@@ -124,7 +125,7 @@ void OgreOpenVRRender::initVrHmd()
 	{
 		displayWin32ErrorMessage(L"Error: failed to init OpenVR VRCompositor",
 								 L"Failed to initialize the VR Compositor");
-		exit(ANN_ERR_NOTINIT);
+		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Failed to init the OpenVR VRCompositor");
 	}
 
 	//Get Driver and Display information
@@ -268,9 +269,6 @@ void OgreOpenVRRender::showDebug(DebugMode mode)
 
 void OgreOpenVRRender::createWindow()
 {
-	//Need to have the root created before
-	if (!root) exit(ANN_ERR_NOTINIT);
-
 	//Basic window configuration
 	Ogre::NameValuePairList misc;
 	misc["vsync"] = "false"; //This vsync parameter has no scene in VR. The display is done by the Compositor
@@ -289,7 +287,6 @@ void OgreOpenVRRender::createWindow()
 void OgreOpenVRRender::initScene()
 {
 	//Create the scene manager for the engine
-	if (!root) exit(ANN_ERR_NOTINIT);
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
 
