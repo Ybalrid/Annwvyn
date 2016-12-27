@@ -189,9 +189,9 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 		//Projection of the headset world position on the ground plane. we are turning around this point.
 		AnnVect3 basePoint
 		{
-			AnnGetVRRenderer()->returnPose.position.x,
+			AnnGetVRRenderer()->trackedHeadPose.position.x,
 			playerBody->RoomBase.y,
-			AnnGetVRRenderer()->returnPose.position.z
+			AnnGetVRRenderer()->trackedHeadPose.position.z
 		};
 
 		//AnnDebug() << "angle : " << angle;

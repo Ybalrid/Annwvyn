@@ -74,18 +74,13 @@ bool OgreNoVRRender::shouldQuit() { return !running; }
 
 void OgreNoVRRender::updateTracking()
 {
-	feetPosition = headNode->getPosition();
-	bodyOrientation = headNode->getOrientation();
+	syncGameplayBody();
+	calculateTimingFromOgre();
 
-	then = now;
-	now = getTimer()->getMilliseconds() / 1000.0;
-	updateTime = now - then;
+	trackedHeadPose.position = (feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
+	trackedHeadPose.orientation = (bodyOrientation);
 
-	cameraRig->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
-	cameraRig->setOrientation(bodyOrientation);
-
-	returnPose.position = monoCam->getPosition();
-	returnPose.orientation = monoCam->getOrientation();
+	applyCameraRigPose(trackedHeadPose);
 }
 
 void OgreNoVRRender::renderAndSubmitFrame()
@@ -136,4 +131,9 @@ bool OgreNoVRRender::shouldRecenter()
 bool OgreNoVRRender::isVisibleInHmd()
 {
 	return true;
+}
+
+void OgreNoVRRender::handleIPDChange()
+{
+	//No stereo, do nothing;
 }

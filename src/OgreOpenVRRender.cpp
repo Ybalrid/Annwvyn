@@ -14,8 +14,6 @@ windowHeight(720),
 gamma(false),
 API(vr::API_OpenGL),
 windowViewport(nullptr),
-then(0),
-now(0),
 hmdAbsoluteTransform({}),
 shouldQuitState(false),
 numberOfAxes{ 3 },
@@ -185,14 +183,10 @@ void OgreOpenVRRender::updateTracking()
 	//Process the event from OpenVR
 	processVREvents();
 
-	//Get current camera base information
-	feetPosition = headNode->getPosition();
-	bodyOrientation = headNode->getOrientation();
+	syncGameplayBody();
 
 	//Calculate update time
-	then = now;
-	now = getTimer()->getMilliseconds() / 1000.0;
-	updateTime = now - then;
+	calculateTimingFromOgre();
 
 	//Wait for next frame pose
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
@@ -203,14 +197,12 @@ void OgreOpenVRRender::updateTracking()
 	if ((hmdPose = trackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
-	//Update the eye rig tracking to make the eyes match your
-	cameraRig->setPosition(feetPosition
-						   + bodyOrientation * getTrackedHMDTranslation());
-	cameraRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
+	handleIPDChange();
 
-	//Get the head reference back to the gameplay code
-	returnPose.position = cameraRig->getPosition();
-	returnPose.orientation = cameraRig->getOrientation();
+	trackedHeadPose.position = feetPosition + bodyOrientation * getTrackedHMDTranslation();
+	trackedHeadPose.orientation = bodyOrientation * getTrackedHMDOrieation();
+
+	applyCameraRigPose(trackedHeadPose);
 }
 
 void OgreOpenVRRender::renderAndSubmitFrame()
@@ -288,30 +280,7 @@ void OgreOpenVRRender::initScene()
 void OgreOpenVRRender::initCameras()
 {
 	OgreVRRender::initCameras();
-
-	//VR Eye cameras
-	//cameraRig = smgr->getRootSceneNode()->createChildSceneNode();
-
-	//Camera for  each eye
-	//eyeCameras[left] = smgr->createCamera("lcam");
-	//eyeCameras[left]->setAutoAspectRatio(true);
-	//cameraRig->attachObject(eyeCameras[left]);
-
-	//eyeCameras[right] = smgr->createCamera("rcam");
-	//eyeCameras[right]->setAutoAspectRatio(true);
-	//cameraRig->attachObject(eyeCameras[right]);
-
-	//This will translate the cameras to put the correct IPD distance for the user
 	handleIPDChange();
-
-	//Monoscopic view camera, for non-VR display
-	//monoCam = smgr->createCamera("mcam");
-	//monoCam->setAspectRatio(16.0 / 9.0);
-	//monoCam->setAutoAspectRatio(false);
-	//monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
-	//monoCam->setNearClipDistance(nearClippingDistance);
-	//monoCam->setFarClipDistance(farClippingDistance);
-	//monoCam->setFOVy(Ogre::Degree(90));
 }
 
 void OgreOpenVRRender::initRttRendering()

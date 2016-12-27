@@ -134,7 +134,7 @@ public:
 	virtual std::string getAudioDeviceIdentifierSubString() { return ""; }
 
 	///The current position of the head center defined by the client library projected in World Space
-	OgrePose returnPose;
+	OgrePose trackedHeadPose;
 
 	///She the asked debug view
 	virtual void showDebug(DebugMode mode) = 0;
@@ -147,6 +147,16 @@ public:
 
 	///Return the number of non nullptr handControllers. Hand controllers are dynamically allocated by the VRRenderer if presents.
 	size_t getRecognizedControllerCount();
+
+	virtual void handleIPDChange() = 0;
+
+	///Apply the position/orientation of the pose object to the camera rig
+	void applyCameraRigPose(OgrePose pose);
+
+	///extract from gameplay-movable information the points used to calculate the world poses
+	void syncGameplayBody();
+
+	void calculateTimingFromOgre();
 
 protected:
 
@@ -166,7 +176,7 @@ protected:
 	Ogre::RenderWindow* window;
 
 	///Update Time
-	double updateTime;
+	double updateTime, then, now;
 
 	///Distance between eyeCamera and nearClippingDistance
 	Ogre::Real nearClippingDistance;

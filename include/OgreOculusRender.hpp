@@ -124,7 +124,7 @@ public:
 
 	///Show the requested debug view
 	void showDebug(DebugMode mode) override;
-
+	void handleIPDChange() override;
 private:
 
 	void initializeHandObjects(const OgreOculusRender::oorEyeType side);

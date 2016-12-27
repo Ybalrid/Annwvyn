@@ -82,7 +82,7 @@ public:
 	void runLogic() override
 	{
 		//auto povPos{ AnnGetEngine()->getPlayerPovNode()->getPosition() };
-		//auto headPos{ AnnGetVRRenderer()->returnPose.position };
+		//auto headPos{ AnnGetVRRenderer()->trackedHeadPose.position };
 		//AnnDebug() << "player pov node position" << povPos;
 		//AnnDebug() << "headset Position " << headPos;
 		//AnnDebug() << "y offset : " << headPos.y - povPos.y;

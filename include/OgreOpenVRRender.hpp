@@ -114,7 +114,7 @@ private:
 	void extractButtons(size_t side);
 
 	///Reset the IPD displacement of the cameras according to the EyeToHeadTransform matrix
-	void handleIPDChange();
+	void handleIPDChange() override;
 
 	///Singleton pointer
 	static OgreOpenVRRender* OpenVRSelf;
@@ -154,9 +154,6 @@ private:
 
 	///Geometry of an OpenGL texture
 	std::array<vr::VRTextureBounds_t, 2> GLBounds;
-
-	///Timing marker
-	double then, now;
 
 	///Array of tracked poses
 	vr::TrackedDevicePose_t trackedPoses[vr::k_unMaxTrackedDeviceCount];
