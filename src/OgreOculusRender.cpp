@@ -267,14 +267,7 @@ void OgreOculusRender::initRttRendering()
 	//Init GLEW here to be able to call OpenGL functions
 	AnnDebug() << "Init GL Extension Wrangler";
 
-	//TODO move that to the parent class.
-	const auto err = glewInit();
-	if (err != GLEW_OK)
-	{
-		AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
-		exit(ANN_ERR_RENDER);
-	}
-	AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
+	loadOpenGLFunctions();
 
 	//Get texture size from ovr with the maximal FOV for each eye
 	const auto texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);

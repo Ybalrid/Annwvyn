@@ -133,17 +133,7 @@ void OgreOpenVRRender::initVrHmd()
 
 void OgreOpenVRRender::initClientHmdRendering()
 {
-	//Init GLEW here to be able to call OpenGL functions
-	Annwvyn::AnnDebug() << "Init GL Extension Wrangler";
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		Annwvyn::AnnDebug("Failed to glewTnit()\n\
-						  Cannot call manual OpenGL\n\
-						  Error Code : " + static_cast<unsigned int>(err));
-		exit(ANN_ERR_RENDER);
-	}
-	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
+	loadOpenGLFunctions();
 	setupDistrotion();
 	//Should init the device model things here if we want to display the vive controllers
 
@@ -357,7 +347,6 @@ inline vr::EVREye OgreOpenVRRender::getEye(oovrEyeType eye)
 void OgreOpenVRRender::setupDistrotion()
 {
 	//Actually there's nothing to do here :)
-	return;
 }
 
 inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()

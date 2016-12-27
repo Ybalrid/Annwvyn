@@ -158,6 +158,9 @@ public:
 
 	void calculateTimingFromOgre();
 
+	// ReSharper disable once CppHiddenFunction
+	void loadOpenGLFunctions();
+
 protected:
 
 	///Called if AA level has been updated
