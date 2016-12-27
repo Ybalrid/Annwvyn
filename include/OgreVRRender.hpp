@@ -84,7 +84,7 @@ public:
 	virtual void initScene() = 0;
 
 	///Create the pair of cameras for the stereo render;
-	virtual void initCameras() = 0;
+	virtual void initCameras();
 
 	///Initialize the Render To Texture rendering
 	virtual void initRttRendering() = 0;
@@ -185,7 +185,6 @@ protected:
 
 	///Node that represent the head base. Move this in 3D to move the viewpoint
 	Ogre::SceneNode* headNode;
-	Ogre::SceneNode* roomNode;
 
 	///background color of viewports
 	Ogre::ColourValue backgroundColor;

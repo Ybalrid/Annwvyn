@@ -50,13 +50,8 @@ void OgreNoVRRender::initScene()
 
 void OgreNoVRRender::initCameras()
 {
-	monoCam = smgr->createCamera("no_vr_cam");
-	monoCam->setAutoAspectRatio(true);
-	monoCam->setNearClipDistance(nearClippingDistance);
-	monoCam->setFarClipDistance(farClippingDistance);
-	monoCam->setFOVy(Ogre::Degree(90));
-
-	headNode = smgr->getRootSceneNode()->createChildSceneNode();
+	//TODO remove this method if it's useless.
+	OgreVRRender::initCameras();
 }
 
 void OgreNoVRRender::initRttRendering()
@@ -86,8 +81,8 @@ void OgreNoVRRender::updateTracking()
 	now = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
 
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
-	monoCam->setOrientation(bodyOrientation);
+	cameraRig->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
+	cameraRig->setOrientation(bodyOrientation);
 
 	returnPose.position = monoCam->getPosition();
 	returnPose.orientation = monoCam->getOrientation();

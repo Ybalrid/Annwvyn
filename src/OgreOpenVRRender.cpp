@@ -203,12 +203,6 @@ void OgreOpenVRRender::updateTracking()
 	if ((hmdPose = trackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
-	//Update the monoscopic camera view
-	monoCam->setPosition(feetPosition
-						 + Annwvyn::AnnGetPlayer()->getEyeTranslation()
-						 + bodyOrientation * getTrackedHMDTranslation());
-	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
-
 	//Update the eye rig tracking to make the eyes match your
 	cameraRig->setPosition(feetPosition
 						   + bodyOrientation * getTrackedHMDTranslation());
@@ -293,32 +287,31 @@ void OgreOpenVRRender::initScene()
 
 void OgreOpenVRRender::initCameras()
 {
+	OgreVRRender::initCameras();
+
 	//VR Eye cameras
-	cameraRig = smgr->getRootSceneNode()->createChildSceneNode();
+	//cameraRig = smgr->getRootSceneNode()->createChildSceneNode();
 
 	//Camera for  each eye
-	eyeCameras[left] = smgr->createCamera("lcam");
-	eyeCameras[left]->setAutoAspectRatio(true);
-	cameraRig->attachObject(eyeCameras[left]);
+	//eyeCameras[left] = smgr->createCamera("lcam");
+	//eyeCameras[left]->setAutoAspectRatio(true);
+	//cameraRig->attachObject(eyeCameras[left]);
 
-	eyeCameras[right] = smgr->createCamera("rcam");
-	eyeCameras[right]->setAutoAspectRatio(true);
-	cameraRig->attachObject(eyeCameras[right]);
+	//eyeCameras[right] = smgr->createCamera("rcam");
+	//eyeCameras[right]->setAutoAspectRatio(true);
+	//cameraRig->attachObject(eyeCameras[right]);
 
 	//This will translate the cameras to put the correct IPD distance for the user
 	handleIPDChange();
 
 	//Monoscopic view camera, for non-VR display
-	monoCam = smgr->createCamera("mcam");
-	monoCam->setAspectRatio(16.0 / 9.0);
-	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
-	monoCam->setNearClipDistance(nearClippingDistance);
-	monoCam->setFarClipDistance(farClippingDistance);
-	monoCam->setFOVy(Ogre::Degree(90));
-
-	//do NOT attach camera to this node...
-	headNode = smgr->getRootSceneNode()->createChildSceneNode();
+	//monoCam = smgr->createCamera("mcam");
+	//monoCam->setAspectRatio(16.0 / 9.0);
+	//monoCam->setAutoAspectRatio(false);
+	//monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
+	//monoCam->setNearClipDistance(nearClippingDistance);
+	//monoCam->setFarClipDistance(farClippingDistance);
+	//monoCam->setFOVy(Ogre::Degree(90));
 }
 
 void OgreOpenVRRender::initRttRendering()
