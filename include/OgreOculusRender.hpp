@@ -140,9 +140,6 @@ private:
 	///Set the Fov for the monoscopic view
 	void setMonoFov(float degreeFov);
 
-	///Save content of the RenderTexture to the specified file. This very slow operation is only useful for debugging the renderer itself
-	static void debugSaveToFile(const char path[]);
-
 	///Object for getting informations from the Oculus Rift
 	OculusInterface* Oculus;
 

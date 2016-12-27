@@ -36,9 +36,9 @@ AnnMain()
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 	AnnGetResourceManager()->initResources();
-	AnnGetResourceManager()->loadGroup(AnnResourceManager::reservedResourceGroupName);
-	AnnGetResourceManager()->loadGroup(AnnResourceManager::defaultResourceGroupName);
-	AnnGetAudioEngine()->preLoadBuffer("media/bgm/bensound-happyrock.ogg");
+	//AnnGetResourceManager()->loadGroup(AnnResourceManager::reservedResourceGroupName);
+	//AnnGetResourceManager()->loadGroup(AnnResourceManager::defaultResourceGroupName);
+	//AnnGetAudioEngine()->preLoadBuffer("media/bgm/bensound-happyrock.ogg");
 
 	//create and load level objects
 	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());

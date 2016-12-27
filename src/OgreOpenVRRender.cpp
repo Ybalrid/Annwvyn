@@ -62,12 +62,8 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	//Destroy the main scene manager
 	root->destroySceneManager(smgr);
 
-	//Unload manually loaded plug-ins
-	root->unloadPlugin("Plugin_OctreeSceneManager");
-
 	rttTexture.setNull();
 
-	//Destroy the root. Everything Ogre related that is remaining should be cleaned up by the root's destructor
 	delete root;
 }
 
@@ -106,7 +102,7 @@ void OgreOpenVRRender::initVrHmd()
 			default:
 				displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
 										 L"Non described error when initializing the OpenVR Render object");
-				throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Unknow error while initializing OpenVR");
+				throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Unknown error while initializing OpenVR");
 
 			case vr::VRInitError_Init_HmdNotFound:
 			case vr::VRInitError_Init_HmdNotFoundPresenceFailed:

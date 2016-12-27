@@ -70,7 +70,6 @@ OgreOculusRender::~OgreOculusRender()
 	DebugPlaneMaterial.setNull();
 	rttTexture.setNull();
 
-	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
 }
 
@@ -120,14 +119,6 @@ void OgreOculusRender::debugPrint()
 		AnnDebug() << "eyeCamera " << eye << " " << eyeCameras[eye]->getPosition();
 		AnnDebug() << eyeCameras[eye]->getOrientation();
 	}
-}
-
-void OgreOculusRender::debugSaveToFile(const char path[])
-{
-	//Check if texture exist
-	if (Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer())
-		//Write buffer to specified file. This is really slow and should only be used to debug the renderer
-		Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer()->getBuffer()->getRenderTarget()->writeContentsToFile(path);
 }
 
 inline Ogre::Vector3 OgreOculusRender::oculusToOgreVect3(const ovrVector3f & v)
