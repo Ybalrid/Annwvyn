@@ -79,7 +79,6 @@ public:
 
 	///Initialize the SceneManager for the application.
 	void initScene() override;
-
 	///Initialize the camera for Stereo Render
 	void initCameras() override;
 

@@ -62,12 +62,9 @@ void OgreNoVRRender::initRttRendering()
 
 void OgreNoVRRender::initClientHmdRendering()
 {
-	auto error = glewInit();
-	if (error != GLEW_OK)
-	{
-		Annwvyn::AnnDebug() << "failed to glew init";
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Failed to load OpenGL functions with GLEW");
-	}
+	loadOpenGLFunctions();
+
+	//No HMD to initialize rendering for.
 }
 
 bool OgreNoVRRender::shouldQuit() { return !running; }
@@ -98,9 +95,7 @@ void OgreNoVRRender::renderAndSubmitFrame()
 }
 
 void OgreNoVRRender::recenter()
-{
-	return;
-}
+{}
 
 void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {

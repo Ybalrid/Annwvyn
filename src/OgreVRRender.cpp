@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "OgreVRRender.hpp"
 #include "AnnGetter.hpp"
+#include "../include/AnnLogger.hpp"
 
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
@@ -189,4 +190,15 @@ void OgreVRRender::calculateTimingFromOgre()
 	then = now;
 	now = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
+}
+
+void OgreVRRender::loadOpenGLFunctions()
+{
+	const auto err = glewInit();
+	if (err != GLEW_OK)
+	{
+		Annwvyn::AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
+		exit(ANN_ERR_RENDER);
+	}
+	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);//TODO move that to the parent class.
 }
