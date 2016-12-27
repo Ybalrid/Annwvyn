@@ -7,7 +7,6 @@
 OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
 
 OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
-noVRCam(nullptr),
 noVRViewport(nullptr),
 then(0),
 now(0),
@@ -51,18 +50,18 @@ void OgreNoVRRender::initScene()
 
 void OgreNoVRRender::initCameras()
 {
-	noVRCam = smgr->createCamera("no_vr_cam");
-	noVRCam->setAutoAspectRatio(true);
-	noVRCam->setNearClipDistance(nearClippingDistance);
-	noVRCam->setFarClipDistance(farClippingDistance);
-	noVRCam->setFOVy(Ogre::Degree(90));
+	monoCam = smgr->createCamera("no_vr_cam");
+	monoCam->setAutoAspectRatio(true);
+	monoCam->setNearClipDistance(nearClippingDistance);
+	monoCam->setFarClipDistance(farClippingDistance);
+	monoCam->setFOVy(Ogre::Degree(90));
 
 	headNode = smgr->getRootSceneNode()->createChildSceneNode();
 }
 
 void OgreNoVRRender::initRttRendering()
 {
-	noVRViewport = window->addViewport(noVRCam);
+	noVRViewport = window->addViewport(monoCam);
 	noVRViewport->setBackgroundColour(backgroundColor);
 }
 
@@ -87,11 +86,11 @@ void OgreNoVRRender::updateTracking()
 	now = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
 
-	noVRCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
-	noVRCam->setOrientation(bodyOrientation);
+	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
+	monoCam->setOrientation(bodyOrientation);
 
-	returnPose.position = noVRCam->getPosition();
-	returnPose.orientation = noVRCam->getOrientation();
+	returnPose.position = monoCam->getPosition();
+	returnPose.orientation = monoCam->getOrientation();
 }
 
 void OgreNoVRRender::renderAndSubmitFrame()
@@ -127,11 +126,11 @@ void OgreNoVRRender::showDebug(DebugMode mode)
 
 void OgreNoVRRender::updateProjectionMatrix()
 {
-	if (!noVRCam) return;
+	if (!monoCam) return;
 
 	//Here we don't use a custom projection matrix. Just tell the Ogre Camera to use the current near/far clip planes
-	noVRCam->setNearClipDistance(nearClippingDistance);
-	noVRCam->setFarClipDistance(farClippingDistance);
+	monoCam->setNearClipDistance(nearClippingDistance);
+	monoCam->setFarClipDistance(farClippingDistance);
 }
 
 bool OgreNoVRRender::shouldRecenter()

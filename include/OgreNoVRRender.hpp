@@ -34,7 +34,6 @@ public:
 
 private:
 	static OgreNoVRRender* noVRself;
-	Ogre::Camera* noVRCam;
 	Ogre::Viewport* noVRViewport;
 	double then, now;
 	bool running;

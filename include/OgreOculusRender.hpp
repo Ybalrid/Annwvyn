@@ -215,7 +215,7 @@ private:
 	Ogre::SceneManager* debugSmgr;
 
 	///Additional camera objects
-	Ogre::Camera* debugCam, *monoCam;
+	Ogre::Camera* debugCam;
 
 	///Nodes for the debug scene
 	Ogre::SceneNode* debugCamNode, *debugPlaneNode;
