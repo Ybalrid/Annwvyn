@@ -146,9 +146,6 @@ private:
 	///OpenVR texture handlers
 	std::array<vr::Texture_t, 2> vrTextures;
 
-	///Monoscopic camera
-	Ogre::Camera* monoCam;
-
 	///Viewport located on a window
 	Ogre::Viewport* windowViewport;
 
