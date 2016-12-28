@@ -589,7 +589,8 @@ void OgreOculusRender::renderAndSubmitFrame()
 //TODO get rid of this boolean
 bool DEBUG(true);
 
-void OgreOculusRender::initializeHandObjects(const OgreOculusRender::oorEyeType side) {
+void OgreOculusRender::initializeHandObjects(const oorEyeType side)
+{
 	//If it's the first time we have access data on this hand controller, instantiate the object
 	if (!handControllers[side])
 	{
@@ -599,14 +600,15 @@ void OgreOculusRender::initializeHandObjects(const OgreOculusRender::oorEyeType 
 	}
 }
 
-void OgreOculusRender::initializeControllerAxes(const OgreOculusRender::oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector) {
+void OgreOculusRender::initializeControllerAxes(const oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector)
+{
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
 	axesVector.push_back(AnnHandControllerAxis{ "Trigger X", inputState.IndexTrigger[side] });
 	axesVector.push_back(AnnHandControllerAxis{ "GripTrigger X", inputState.HandTrigger[side] });
 }
 
-void OgreOculusRender::ProcessButtonStates(const OgreOculusRender::oorEyeType side) {
+void OgreOculusRender::ProcessButtonStates(const oorEyeType side) {
 	//Extract button states and deduce press/released events
 	pressed.clear(); released.clear();
 	for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)

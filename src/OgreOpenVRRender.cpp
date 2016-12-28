@@ -11,6 +11,7 @@ vrSystem(nullptr),
 hmdError(vr::EVRInitError::VRInitError_None),
 windowWidth(1280),
 windowHeight(720),
+rttTextureGLID{ 0 },
 gamma(false),
 API(vr::API_OpenGL),
 windowViewport(nullptr),
@@ -24,10 +25,6 @@ triggerNormalizedValue{ 0 }
 {
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
-
-	//I like to initialize everything to zero
-	rttTexture.setNull();
-	rttTextureGLID = 0;
 
 	//buttonsToHandle.push_back(vr::k_EButton_System);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
@@ -233,9 +230,7 @@ void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 }
 
 void OgreOpenVRRender::showDebug(DebugMode mode)
-{
-	return;
-}
+{}
 
 void OgreOpenVRRender::createWindow()
 {
