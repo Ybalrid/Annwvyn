@@ -67,15 +67,18 @@ void OgreNoVRRender::initClientHmdRendering()
 	//No HMD to initialize rendering for.
 }
 
-bool OgreNoVRRender::shouldQuit() { return !running; }
+bool OgreNoVRRender::shouldQuit()
+{
+	return !running;
+}
 
 void OgreNoVRRender::updateTracking()
 {
 	syncGameplayBody();
 	calculateTimingFromOgre();
 
-	trackedHeadPose.position = (feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
-	trackedHeadPose.orientation = (bodyOrientation);
+	trackedHeadPose.position = feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation();
+	trackedHeadPose.orientation = bodyOrientation;
 
 	applyCameraRigPose(trackedHeadPose);
 }
@@ -105,9 +108,7 @@ void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 }
 
 void OgreNoVRRender::showDebug(DebugMode mode)
-{
-	return;
-}
+{}
 
 void OgreNoVRRender::updateProjectionMatrix()
 {
