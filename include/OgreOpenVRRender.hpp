@@ -32,9 +32,6 @@ public:
 	///Clear the OgreOpenVR object
 	virtual ~OgreOpenVRRender();
 
-	///Initialize the rendering pipeline
-	void initPipeline() override;
-
 	///Initialize the OpenVR HMD
 	void initVrHmd() override;
 
@@ -51,7 +48,7 @@ public:
 	bool isVisibleInHmd() override;
 
 	///Update the tracking state of the HMD (and possibly other tracked objects)
-	void updateTracking() override;
+	void getTrackingPoseAndVRTiming() override;
 
 	///Render each frames
 	void renderAndSubmitFrame() override;
