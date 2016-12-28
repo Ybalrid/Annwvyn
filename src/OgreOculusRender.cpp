@@ -272,7 +272,7 @@ void OgreOculusRender::initRttRendering()
 	//To use SSAA, just make the buffer bigger
 	if (UseSSAA)
 	{
-		if (AALevel / 2 > 0)
+		if (auto level = AALevel / 2 > 0)
 		{
 			bufferSize.w *= AALevel / 2;
 			bufferSize.h *= AALevel / 2;
@@ -461,17 +461,6 @@ ovrSessionStatus OgreOculusRender::getSessionStatus()
 	return sessionStatus;
 }
 
-void OgreOculusRender::initPipeline()
-{
-	AnnDebug() << "Init pipeline for Oculus Rift rendering";
-	getOgreConfig();
-	createWindow();
-	initScene();
-	initCameras();
-	initRttRendering();
-	updateProjectionMatrix();
-}
-
 bool OgreOculusRender::usesCustomAudioDevice()
 {
 	return true;
@@ -502,40 +491,30 @@ void OgreOculusRender::handleIPDChange()
 		eyeCameras[eye]->setPosition(oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset));
 }
 
-void OgreOculusRender::updateTracking()
+void OgreOculusRender::getTrackingPoseAndVRTiming()
 {
-	syncGameplayBody();
-
-	//Begin frame - get timing
+	//Get timing
 	lastFrameDisplayTime = currentFrameDisplayTime;
+	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter);
+	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
 
 	//Reorient the headset if the runtime flags for it
 	if (getSessionStatus().ShouldRecenter) recenter();
 
 	//Get the tracking state
 	ts = ovr_GetTrackingState(Oculus->getSession(),
-							  currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter),
+							  currentFrameDisplayTime,
 							  ovrTrue);
 
-	updateTouchControllers();
-
-	//Calculate delta between last and this frame
-	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
-
-	//Get the pose
+	//Update pose and controllers
 	pose = ts.HeadPose.ThePose;
-
 	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
-
-	//Apply pose to the two cameras
-	//TODO add a method to apply this IPD translation;
+	updateTouchControllers();
 	handleIPDChange();
 
-	//Update the pose for gameplay purposes
+	//Apply pose to the two cameras
 	trackedHeadPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
 	trackedHeadPose.position = feetPosition + bodyOrientation*oculusToOgreVect3(pose.Position);
-
-	applyCameraRigPose(trackedHeadPose);
 }
 
 void OgreOculusRender::renderAndSubmitFrame()

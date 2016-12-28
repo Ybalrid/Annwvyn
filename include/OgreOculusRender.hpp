@@ -65,8 +65,8 @@ public:
 	///Cycle through all Oculus Performance HUD available
 	void cycleDebugHud() override;
 
-	///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
-	void updateTracking() override;
+	///Get tracking and timing from the oculus runtime
+	void getTrackingPoseAndVRTiming() override;
 
 	///Render each texture buffer, copy content to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
 	void renderAndSubmitFrame() override;
@@ -79,6 +79,7 @@ public:
 
 	///Initialize the SceneManager for the application.
 	void initScene() override;
+
 	///Initialize the camera for Stereo Render
 	void initCameras() override;
 
@@ -111,9 +112,6 @@ public:
 
 	///Get the status of the session
 	ovrSessionStatus getSessionStatus();
-
-	///Init the rendering pipeline
-	void initPipeline() override;
 
 	///The Oculus Rift has integrated audio
 	bool usesCustomAudioDevice() override;

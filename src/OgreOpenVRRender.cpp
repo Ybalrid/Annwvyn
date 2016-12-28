@@ -64,16 +64,6 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	delete root;
 }
 
-void OgreOpenVRRender::initPipeline()
-{
-	getOgreConfig();
-	createWindow();
-	initScene();
-	initCameras();
-	updateProjectionMatrix();
-	initRttRendering();
-}
-
 //This function is from VALVe
 std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = nullptr)
 {
@@ -161,31 +151,23 @@ bool OgreOpenVRRender::isVisibleInHmd()
 	return true; //Only useful with the oculus runtime
 }
 
-void OgreOpenVRRender::updateTracking()
+void OgreOpenVRRender::getTrackingPoseAndVRTiming()
 {
-	//Process the event from OpenVR
-	processVREvents();
-
-	syncGameplayBody();
-
-	//Calculate update time
-	calculateTimingFromOgre();
-
-	//Wait for next frame pose
+	//Wait for next frame pose, get timing and process additional devices (controllers, anything)
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+	calculateTimingFromOgre();
 	processTrackedDevices();
+	processVREvents();
 
 	//Here we just care about the HMD
 	vr::TrackedDevicePose_t hmdPose;
 	if ((hmdPose = trackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
+	//Apply tracking
 	handleIPDChange();
-
 	trackedHeadPose.position = feetPosition + bodyOrientation * getTrackedHMDTranslation();
 	trackedHeadPose.orientation = bodyOrientation * getTrackedHMDOrieation();
-
-	applyCameraRigPose(trackedHeadPose);
 }
 
 void OgreOpenVRRender::renderAndSubmitFrame()

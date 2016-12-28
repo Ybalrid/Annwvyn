@@ -29,7 +29,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	feetPosition(0, 0, 10),
 	bodyOrientation(Ogre::Quaternion::IDENTITY),
 	name(windowName),
-	headNode(nullptr),
+	gameplayCharacterRoot(nullptr),
 	backgroundColor(0, 0.56f, 1),
 	cameraRig{ nullptr },
 	frameCounter(0),
@@ -75,7 +75,7 @@ Ogre::RenderWindow* OgreVRRender::getWindow()
 
 Ogre::SceneNode* OgreVRRender::getCameraInformationNode()
 {
-	return headNode;
+	return gameplayCharacterRoot;
 }
 
 Ogre::Timer * OgreVRRender::getTimer()
@@ -171,7 +171,7 @@ void OgreVRRender::initCameras()
 	cameraRig->attachObject(monoCam);
 
 	//do NOT attach camera to this node...
-	headNode = smgr->getRootSceneNode()->createChildSceneNode();
+	gameplayCharacterRoot = smgr->getRootSceneNode()->createChildSceneNode();
 }
 
 void OgreVRRender::applyCameraRigPose(OgrePose pose)
@@ -183,8 +183,8 @@ void OgreVRRender::applyCameraRigPose(OgrePose pose)
 void OgreVRRender::syncGameplayBody()
 {
 	//Get current camera base information
-	feetPosition = headNode->getPosition();
-	bodyOrientation = headNode->getOrientation();
+	feetPosition = gameplayCharacterRoot->getPosition();
+	bodyOrientation = gameplayCharacterRoot->getOrientation();
 }
 
 void OgreVRRender::calculateTimingFromOgre()
@@ -199,8 +199,29 @@ void OgreVRRender::loadOpenGLFunctions()
 	const auto err = glewInit();
 	if (err != GLEW_OK)
 	{
-		Annwvyn::AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
+		Annwvyn::AnnDebug() << "Failed to glewTnit(), error : "
+			<< glewGetString(err);
 		exit(ANN_ERR_RENDER);
 	}
-	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);//TODO move that to the parent class.
+	Annwvyn::AnnDebug() << "Using GLEW version : "
+		<< glewGetString(GLEW_VERSION);
+}
+
+void OgreVRRender::updateTracking()
+{
+	syncGameplayBody();
+
+	getTrackingPoseAndVRTiming();
+
+	applyCameraRigPose(trackedHeadPose);
+}
+
+void OgreVRRender::initPipeline()
+{
+	getOgreConfig();
+	createWindow();
+	initScene();
+	initCameras();
+	initRttRendering();
+	updateProjectionMatrix();
 }

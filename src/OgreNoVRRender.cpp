@@ -15,18 +15,8 @@ running(true)
 	noVRself = dynamic_cast<OgreNoVRRender*>(self);
 }
 
-void OgreNoVRRender::initPipeline()
-{
-}
-
 void OgreNoVRRender::initVrHmd()
-{
-	getOgreConfig();
-	createWindow();
-	initScene();
-	initCameras();
-	initRttRendering();
-}
+{}
 
 void OgreNoVRRender::createWindow()
 {
@@ -72,15 +62,12 @@ bool OgreNoVRRender::shouldQuit()
 	return !running;
 }
 
-void OgreNoVRRender::updateTracking()
+void OgreNoVRRender::getTrackingPoseAndVRTiming()
 {
-	syncGameplayBody();
 	calculateTimingFromOgre();
 
 	trackedHeadPose.position = feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation();
 	trackedHeadPose.orientation = bodyOrientation;
-
-	applyCameraRigPose(trackedHeadPose);
 }
 
 void OgreNoVRRender::renderAndSubmitFrame()
@@ -130,9 +117,7 @@ bool OgreNoVRRender::isVisibleInHmd()
 }
 
 void OgreNoVRRender::handleIPDChange()
-{
-	//No stereo, do nothing;
-}
+{}
 
 OgreNoVRRender::~OgreNoVRRender()
 {
