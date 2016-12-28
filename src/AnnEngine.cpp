@@ -418,11 +418,8 @@ bool AnnEngine::openConsole()
 	if (AllocConsole())
 	{
 		//put stdout on this console;
-#pragma warning(disable:4996)
-		// ReSharper disable once CppDeprecatedEntity
-		auto f = freopen("CONOUT$", "w", stdout);
+		FILE* f; freopen_s(&f, "CONOUT$", "w", stdout);
 		if (!f) state = false;
-#pragma warning(default:4996)
 	}
 
 	//Redirect cerr to cout
