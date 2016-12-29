@@ -272,7 +272,7 @@ void OgreOculusRender::initRttRendering()
 	//To use SSAA, just make the buffer bigger
 	if (UseSSAA)
 	{
-		if (auto level = AALevel / 2 > 0)
+		if (AALevel / 2 > 0)
 		{
 			bufferSize.w *= AALevel / 2;
 			bufferSize.h *= AALevel / 2;
@@ -302,7 +302,7 @@ void OgreOculusRender::initRttRendering()
 	}
 
 	//Create the Ogre equivalent of the texture as a render target for Ogre
-	auto textureManager{ Ogre::GLTextureManager::getSingletonPtr() };
+	auto textureManager{ Ogre::TextureManager::getSingletonPtr() };
 
 	//Create the texture within the Ogre Texture Manager
 	rttTexture = (textureManager->createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
