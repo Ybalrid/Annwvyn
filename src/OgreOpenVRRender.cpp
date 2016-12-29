@@ -265,11 +265,7 @@ void OgreOpenVRRender::initRttRendering()
 
 	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
-	//Create theses textures in OpenGL and get their OpenGL ID
-	//
-	//When the parent class *OgreVRRender* initialize Ogre, the OpenGL RenderSystem is loaded in hard.
-	//We don't need to check that we're using OpenGL before doing this kind of cast:
-	auto textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
+	auto textureManager = (Ogre::TextureManager::getSingletonPtr());
 
 	//shared texture
 	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,

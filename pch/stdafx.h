@@ -46,10 +46,6 @@
 //For the console, we use the font system of the Overlay
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
-//We need to get access to the guts of the OpenGL RenderSystem
-#include <RenderSystems/GL/OgreGLTextureManager.h>
-#include <RenderSystems/GL/OgreGLRenderSystem.h>
-#include <RenderSystems/GL/OgreGLTexture.h>
 
 //Object-Oriented Input System
 #include <OIS.h>
