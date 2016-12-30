@@ -65,8 +65,8 @@ public:
 	///Cycle through all Oculus Performance HUD available
 	void cycleDebugHud() override;
 
-	///Get the timing and tracking state form the oculus runtime and moves the cameras according to the reference and the tracked data
-	void updateTracking() override;
+	///Get tracking and timing from the oculus runtime
+	void getTrackingPoseAndVRTiming() override;
 
 	///Render each texture buffer, copy content to the oculus swap texture, get mirror texture data to the OgreMirror texture and update debug window
 	void renderAndSubmitFrame() override;
@@ -113,9 +113,6 @@ public:
 	///Get the status of the session
 	ovrSessionStatus getSessionStatus();
 
-	///Init the rendering pipeline
-	void initPipeline() override;
-
 	///The Oculus Rift has integrated audio
 	bool usesCustomAudioDevice() override;
 
@@ -124,7 +121,7 @@ public:
 
 	///Show the requested debug view
 	void showDebug(DebugMode mode) override;
-
+	void handleIPDChange() override;
 private:
 
 	void initializeHandObjects(const OgreOculusRender::oorEyeType side);
@@ -140,9 +137,6 @@ private:
 
 	///Set the Fov for the monoscopic view
 	void setMonoFov(float degreeFov);
-
-	///Save content of the RenderTexture to the specified file. This very slow operation is only useful for debugging the renderer itself
-	static void debugSaveToFile(const char path[]);
 
 	///Object for getting informations from the Oculus Rift
 	OculusInterface* Oculus;
@@ -215,7 +209,7 @@ private:
 	Ogre::SceneManager* debugSmgr;
 
 	///Additional camera objects
-	Ogre::Camera* debugCam, *monoCam;
+	Ogre::Camera* debugCam;
 
 	///Nodes for the debug scene
 	Ogre::SceneNode* debugCamNode, *debugPlaneNode;

@@ -7,7 +7,6 @@
 OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
 
 OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
-noVRCam(nullptr),
 noVRViewport(nullptr),
 then(0),
 now(0),
@@ -16,18 +15,8 @@ running(true)
 	noVRself = dynamic_cast<OgreNoVRRender*>(self);
 }
 
-void OgreNoVRRender::initPipeline()
-{
-}
-
 void OgreNoVRRender::initVrHmd()
-{
-	getOgreConfig();
-	createWindow();
-	initScene();
-	initCameras();
-	initRttRendering();
-}
+{}
 
 void OgreNoVRRender::createWindow()
 {
@@ -51,47 +40,34 @@ void OgreNoVRRender::initScene()
 
 void OgreNoVRRender::initCameras()
 {
-	noVRCam = smgr->createCamera("no_vr_cam");
-	noVRCam->setAutoAspectRatio(true);
-	noVRCam->setNearClipDistance(nearClippingDistance);
-	noVRCam->setFarClipDistance(farClippingDistance);
-	noVRCam->setFOVy(Ogre::Degree(90));
-
-	headNode = smgr->getRootSceneNode()->createChildSceneNode();
+	//TODO remove this method if it's useless.
+	OgreVRRender::initCameras();
 }
 
 void OgreNoVRRender::initRttRendering()
 {
-	noVRViewport = window->addViewport(noVRCam);
+	noVRViewport = window->addViewport(monoCam);
 	noVRViewport->setBackgroundColour(backgroundColor);
 }
 
 void OgreNoVRRender::initClientHmdRendering()
 {
-	auto error = glewInit();
-	if (error != GLEW_OK)
-	{
-		Annwvyn::AnnDebug() << "failed to glew init";
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Failed to load OpenGL functions with GLEW");
-	}
+	loadOpenGLFunctions();
+
+	//No HMD to initialize rendering for.
 }
 
-bool OgreNoVRRender::shouldQuit() { return !running; }
-
-void OgreNoVRRender::updateTracking()
+bool OgreNoVRRender::shouldQuit()
 {
-	feetPosition = headNode->getPosition();
-	bodyOrientation = headNode->getOrientation();
+	return !running;
+}
 
-	then = now;
-	now = getTimer()->getMilliseconds() / 1000.0;
-	updateTime = now - then;
+void OgreNoVRRender::getTrackingPoseAndVRTiming()
+{
+	calculateTimingFromOgre();
 
-	noVRCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
-	noVRCam->setOrientation(bodyOrientation);
-
-	returnPose.position = noVRCam->getPosition();
-	returnPose.orientation = noVRCam->getOrientation();
+	trackedHeadPose.position = feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation();
+	trackedHeadPose.orientation = bodyOrientation;
 }
 
 void OgreNoVRRender::renderAndSubmitFrame()
@@ -109,9 +85,7 @@ void OgreNoVRRender::renderAndSubmitFrame()
 }
 
 void OgreNoVRRender::recenter()
-{
-	return;
-}
+{}
 
 void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
@@ -121,17 +95,15 @@ void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 }
 
 void OgreNoVRRender::showDebug(DebugMode mode)
-{
-	return;
-}
+{}
 
 void OgreNoVRRender::updateProjectionMatrix()
 {
-	if (!noVRCam) return;
+	if (!monoCam) return;
 
 	//Here we don't use a custom projection matrix. Just tell the Ogre Camera to use the current near/far clip planes
-	noVRCam->setNearClipDistance(nearClippingDistance);
-	noVRCam->setFarClipDistance(farClippingDistance);
+	monoCam->setNearClipDistance(nearClippingDistance);
+	monoCam->setFarClipDistance(farClippingDistance);
 }
 
 bool OgreNoVRRender::shouldRecenter()
@@ -142,4 +114,17 @@ bool OgreNoVRRender::shouldRecenter()
 bool OgreNoVRRender::isVisibleInHmd()
 {
 	return true;
+}
+
+void OgreNoVRRender::handleIPDChange()
+{}
+
+OgreNoVRRender::~OgreNoVRRender()
+{
+	root->destroySceneManager(smgr);
+	noVRself = nullptr;
+	rttTexture.setNull();
+
+	//TODO here, and only here, there's a crash when unloading a font, probably the one declared by AnnConsole. Makes no sense. Will investigate.
+	//delete root;
 }
