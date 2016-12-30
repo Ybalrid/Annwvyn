@@ -72,7 +72,6 @@ std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t
 		return "";
 
 	auto pchBuffer = new char[unRequiredBufferLen];
-	/*unRequiredBufferLen = */
 	pHmd->GetStringTrackedDeviceProperty(unDevice, prop, pchBuffer, unRequiredBufferLen, peError);
 	std::string sResult = pchBuffer;
 	delete[] pchBuffer;
@@ -418,10 +417,7 @@ void OgreOpenVRRender::extractButtons(size_t side)
 		lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
 		currentControllerButtonsPressed[side][i] = (controllerState.ulButtonPressed & ButtonMaskFromId(buttonsToHandle[i])) != 0;
 		if (currentControllerButtonsPressed[side][i] && !lastControllerButtonsPressed[side][i])
-		{
 			pressed.push_back(i);
-			continue;
-		}
 		else if (!currentControllerButtonsPressed[side][i] && lastControllerButtonsPressed[side][i])
 			released.push_back(i);
 	}
