@@ -10,8 +10,8 @@ class DLL OgreNoVRRender : public OgreVRRender
 {
 public:
 	OgreNoVRRender(std::string winName = "OgreVRNoVRRender");
+	~OgreNoVRRender();
 
-	void initPipeline() override;
 	void initVrHmd() override;
 	void createWindow() override;
 	void initScene() override;
@@ -22,7 +22,8 @@ public:
 	bool shouldRecenter() override;
 	bool isVisibleInHmd() override;
 
-	void updateTracking() override;
+	void getTrackingPoseAndVRTiming() override;
+
 	void renderAndSubmitFrame() override;
 	void recenter() override;
 
@@ -32,9 +33,10 @@ public:
 
 	void updateProjectionMatrix() override;
 
+	void handleIPDChange() override;
+
 private:
 	static OgreNoVRRender* noVRself;
-	Ogre::Camera* noVRCam;
 	Ogre::Viewport* noVRViewport;
 	double then, now;
 	bool running;

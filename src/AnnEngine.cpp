@@ -366,7 +366,7 @@ double AnnEngine::getFrameTime()
 OgrePose AnnEngine::getHmdPose()
 {
 	if (renderer)
-		return renderer->returnPose;
+		return renderer->trackedHeadPose;
 	return OgrePose();
 }
 

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "OgreVRRender.hpp"
+#include "AnnGetter.hpp"
+#include "../include/AnnLogger.hpp"
 
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
@@ -27,10 +29,13 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	feetPosition(0, 0, 10),
 	bodyOrientation(Ogre::Quaternion::IDENTITY),
 	name(windowName),
-	headNode(nullptr),
+	gameplayCharacterRoot(nullptr),
 	backgroundColor(0, 0.56f, 1),
+	cameraRig{ nullptr },
 	frameCounter(0),
-	rttEyes(nullptr)
+	rttEyes(nullptr),
+	then(0),
+	now(0)
 {
 	rttTexture.setNull();
 	if (self)
@@ -49,6 +54,8 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 OgreVRRender::~OgreVRRender()
 {
 	self = nullptr;
+	root->unloadPlugin("Plugin_OctreeSceneManager");
+	//delete root;
 }
 
 Ogre::SceneManager* OgreVRRender::getSceneManager()
@@ -68,7 +75,7 @@ Ogre::RenderWindow* OgreVRRender::getWindow()
 
 Ogre::SceneNode* OgreVRRender::getCameraInformationNode()
 {
-	return headNode;
+	return gameplayCharacterRoot;
 }
 
 Ogre::Timer * OgreVRRender::getTimer()
@@ -140,5 +147,81 @@ void OgreVRRender::setNearClippingDistance(float distance)
 void OgreVRRender::setFarClippingDistance(float distance)
 {
 	farClippingDistance = distance;
+	updateProjectionMatrix();
+}
+
+void OgreVRRender::initCameras()
+{
+	cameraRig = smgr->getRootSceneNode()->createChildSceneNode("CameraRig");
+
+	eyeCameras[0] = smgr->createCamera("lcam");
+	eyeCameras[0]->setAutoAspectRatio(true);
+	cameraRig->attachObject(eyeCameras[0]);
+
+	eyeCameras[1] = smgr->createCamera("rcam");
+	eyeCameras[1]->setAutoAspectRatio(true);
+	cameraRig->attachObject(eyeCameras[1]);
+
+	monoCam = smgr->createCamera("mcam");
+	monoCam->setAspectRatio(16.0 / 9.0);
+	monoCam->setAutoAspectRatio(false);
+	monoCam->setNearClipDistance(nearClippingDistance);
+	monoCam->setFarClipDistance(farClippingDistance);
+	monoCam->setFOVy(Ogre::Degree(90));
+	cameraRig->attachObject(monoCam);
+
+	//do NOT attach camera to this node...
+	gameplayCharacterRoot = smgr->getRootSceneNode()->createChildSceneNode();
+}
+
+void OgreVRRender::applyCameraRigPose(OgrePose pose)
+{
+	cameraRig->setPosition(pose.position);
+	cameraRig->setOrientation(pose.orientation);
+}
+
+void OgreVRRender::syncGameplayBody()
+{
+	//Get current camera base information
+	feetPosition = gameplayCharacterRoot->getPosition();
+	bodyOrientation = gameplayCharacterRoot->getOrientation();
+}
+
+void OgreVRRender::calculateTimingFromOgre()
+{
+	then = now;
+	now = getTimer()->getMilliseconds() / 1000.0;
+	updateTime = now - then;
+}
+
+void OgreVRRender::loadOpenGLFunctions()
+{
+	const auto err = glewInit();
+	if (err != GLEW_OK)
+	{
+		Annwvyn::AnnDebug() << "Failed to glewTnit(), error : "
+			<< glewGetString(err);
+		exit(ANN_ERR_RENDER);
+	}
+	Annwvyn::AnnDebug() << "Using GLEW version : "
+		<< glewGetString(GLEW_VERSION);
+}
+
+void OgreVRRender::updateTracking()
+{
+	syncGameplayBody();
+
+	getTrackingPoseAndVRTiming();
+
+	applyCameraRigPose(trackedHeadPose);
+}
+
+void OgreVRRender::initPipeline()
+{
+	getOgreConfig();
+	createWindow();
+	initScene();
+	initCameras();
+	initRttRendering();
 	updateProjectionMatrix();
 }

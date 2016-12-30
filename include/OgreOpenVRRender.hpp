@@ -32,9 +32,6 @@ public:
 	///Clear the OgreOpenVR object
 	virtual ~OgreOpenVRRender();
 
-	///Initialize the rendering pipeline
-	void initPipeline() override;
-
 	///Initialize the OpenVR HMD
 	void initVrHmd() override;
 
@@ -51,7 +48,7 @@ public:
 	bool isVisibleInHmd() override;
 
 	///Update the tracking state of the HMD (and possibly other tracked objects)
-	void updateTracking() override;
+	void getTrackingPoseAndVRTiming() override;
 
 	///Render each frames
 	void renderAndSubmitFrame() override;
@@ -87,7 +84,7 @@ public:
 	void updateProjectionMatrix() override;
 
 	///Get a "vr::EVREye" from an "oovrEyeType"
-	static inline vr::EVREye getEye(oovrEyeType eye);
+	static vr::EVREye getEye(oovrEyeType eye);
 
 	///Setup the distortion rendering. Apparently this is actually not needed. Even if the official sample does it. This function is a placeholder
 	void setupDistrotion();
@@ -95,13 +92,13 @@ public:
 private:
 
 	///Get the HMD position in the OpenVR tracking space
-	inline Ogre::Vector3 getTrackedHMDTranslation();
+	Ogre::Vector3 getTrackedHMDTranslation();
 
 	///Get the HMD orientation in the OpenVR tracking space
-	inline Ogre::Quaternion getTrackedHMDOrieation();
+	Ogre::Quaternion getTrackedHMDOrieation();
 
 	///Take a Matrix34 from OpenVR and spew out an Ogre::Matrix4 that represent the same transform
-	static inline Ogre::Matrix4 getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat);
+	static Ogre::Matrix4 getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat);
 
 	///Iterate through the list of events from SteamVR and call code that react to it
 	void processVREvents();
@@ -114,7 +111,7 @@ private:
 	void extractButtons(size_t side);
 
 	///Reset the IPD displacement of the cameras according to the EyeToHeadTransform matrix
-	void handleIPDChange();
+	void handleIPDChange() override;
 
 	///Singleton pointer
 	static OgreOpenVRRender* OpenVRSelf;
@@ -146,9 +143,6 @@ private:
 	///OpenVR texture handlers
 	std::array<vr::Texture_t, 2> vrTextures;
 
-	///Monoscopic camera
-	Ogre::Camera* monoCam;
-
 	///Viewport located on a window
 	Ogre::Viewport* windowViewport;
 
@@ -158,17 +152,11 @@ private:
 	///Geometry of an OpenGL texture
 	std::array<vr::VRTextureBounds_t, 2> GLBounds;
 
-	///Timing marker
-	double then, now;
-
 	///Array of tracked poses
 	vr::TrackedDevicePose_t trackedPoses[vr::k_unMaxTrackedDeviceCount];
 
 	///Transform that correspond to the HMD tracking
 	Ogre::Matrix4 hmdAbsoluteTransform;
-
-	///Camera Rig that holds the 2 cameras on the same plane
-	Ogre::SceneNode* eyeRig;
 
 	///State of the "should quit" marker. If it goes to true, the game loop should stop
 	bool shouldQuitState;

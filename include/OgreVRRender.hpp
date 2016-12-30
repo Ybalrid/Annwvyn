@@ -72,7 +72,7 @@ public:
 	void initOgreRoot(std::string loggerName);
 
 	///Init the VR rendering pipeline
-	virtual void initPipeline() = 0;
+	virtual void initPipeline() final;
 
 	///Init the VR client library
 	virtual void initVrHmd() = 0;
@@ -84,7 +84,7 @@ public:
 	virtual void initScene() = 0;
 
 	///Create the pair of cameras for the stereo render;
-	virtual void initCameras() = 0;
+	virtual void initCameras();
 
 	///Initialize the Render To Texture rendering
 	virtual void initRttRendering() = 0;
@@ -102,7 +102,10 @@ public:
 	virtual bool isVisibleInHmd() = 0;
 
 	///Refresh and update the head tracking. May tell the VR client library to prepare for new frame
-	virtual void updateTracking() = 0;
+	virtual void updateTracking() final;
+
+	///Get tracking from the VR system
+	virtual void getTrackingPoseAndVRTiming() = 0;
 
 	///Render frame internally inside Ogre, and submit it to the VR client
 	virtual void renderAndSubmitFrame() = 0;
@@ -134,7 +137,7 @@ public:
 	virtual std::string getAudioDeviceIdentifierSubString() { return ""; }
 
 	///The current position of the head center defined by the client library projected in World Space
-	OgrePose returnPose;
+	OgrePose trackedHeadPose;
 
 	///She the asked debug view
 	virtual void showDebug(DebugMode mode) = 0;
@@ -147,6 +150,19 @@ public:
 
 	///Return the number of non nullptr handControllers. Hand controllers are dynamically allocated by the VRRenderer if presents.
 	size_t getRecognizedControllerCount();
+
+	virtual void handleIPDChange() = 0;
+
+	///Apply the position/orientation of the pose object to the camera rig
+	void applyCameraRigPose(OgrePose pose);
+
+	///extract from gameplay-movable information the points used to calculate the world poses
+	void syncGameplayBody();
+
+	void calculateTimingFromOgre();
+
+	// ReSharper disable once CppHiddenFunction
+	void loadOpenGLFunctions();
 
 protected:
 
@@ -166,7 +182,7 @@ protected:
 	Ogre::RenderWindow* window;
 
 	///Update Time
-	double updateTime;
+	double updateTime, then, now;
 
 	///Distance between eyeCamera and nearClippingDistance
 	Ogre::Real nearClippingDistance;
@@ -184,14 +200,19 @@ protected:
 	std::string name;
 
 	///Node that represent the head base. Move this in 3D to move the viewpoint
-	Ogre::SceneNode* headNode;
-	Ogre::SceneNode* roomNode;
+	Ogre::SceneNode* gameplayCharacterRoot;
 
 	///background color of viewports
 	Ogre::ColourValue backgroundColor;
 
 	///Cameras that have to be put where the user's eye is
 	std::array<Ogre::Camera*, 2> eyeCameras;
+
+	///Monoscopic camera
+	Ogre::Camera* monoCam;
+
+	///Camera rig, node where all the cameras are attached
+	Ogre::SceneNode* cameraRig;
 
 	///Counter of frames
 	unsigned long long int frameCounter;

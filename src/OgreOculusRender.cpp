@@ -30,7 +30,6 @@ currentSessionStatusFrameIndex{ 0 },
 debugViewport{ nullptr },
 debugSmgr{ nullptr },
 debugCam{ nullptr },
-monoCam{ nullptr },
 debugCamNode{ nullptr },
 debugPlaneNode{ nullptr },
 lastOculusPosition{ feetPosition },
@@ -71,7 +70,6 @@ OgreOculusRender::~OgreOculusRender()
 	DebugPlaneMaterial.setNull();
 	rttTexture.setNull();
 
-	root->unloadPlugin("Plugin_OctreeSceneManager");
 	delete root;
 }
 
@@ -121,14 +119,6 @@ void OgreOculusRender::debugPrint()
 		AnnDebug() << "eyeCamera " << eye << " " << eyeCameras[eye]->getPosition();
 		AnnDebug() << eyeCameras[eye]->getOrientation();
 	}
-}
-
-void OgreOculusRender::debugSaveToFile(const char path[])
-{
-	//Check if texture exist
-	if (Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer())
-		//Write buffer to specified file. This is really slow and should only be used to debug the renderer
-		Ogre::TextureManager::getSingleton().getByName("RttTex").getPointer()->getBuffer()->getRenderTarget()->writeContentsToFile(path);
 }
 
 inline Ogre::Vector3 OgreOculusRender::oculusToOgreVect3(const ovrVector3f & v)
@@ -189,28 +179,8 @@ void OgreOculusRender::createWindow()
 
 void OgreOculusRender::initCameras()
 {
-	//TODO use a node-based camera rig like it's done on the OpenVR code
-
-	//Mono view camera
-	monoCam = smgr->createCamera("monocam");
-	monoCam->setAspectRatio(16.0 / 9.0);
-	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
-	monoCam->setNearClipDistance(nearClippingDistance);
-	monoCam->setFarClipDistance(farClippingDistance);
-	monoCam->setFOVy(Ogre::Degree(90));
-
-	//VR Eye cameras
-	eyeCameras[left] = smgr->createCamera("lcam");
-	eyeCameras[left]->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
-	eyeCameras[left]->setAutoAspectRatio(true);
-	eyeCameras[right] = smgr->createCamera("rcam");
-	eyeCameras[right]->setPosition(feetPosition + AnnGetPlayer()->getEyesHeight()*Ogre::Vector3::UNIT_Y);
-	eyeCameras[right]->setAutoAspectRatio(true);
-
+	OgreVRRender::initCameras();
 	//do NOT attach camera to this node...
-	headNode = smgr->getRootSceneNode()->createChildSceneNode();
-	roomNode = headNode->createChildSceneNode();
 }
 
 void OgreOculusRender::setMonoFov(float degreeFov)
@@ -288,14 +258,7 @@ void OgreOculusRender::initRttRendering()
 	//Init GLEW here to be able to call OpenGL functions
 	AnnDebug() << "Init GL Extension Wrangler";
 
-	//TODO move that to the parent class.
-	const auto err = glewInit();
-	if (err != GLEW_OK)
-	{
-		AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
-		exit(ANN_ERR_RENDER);
-	}
-	AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
+	loadOpenGLFunctions();
 
 	//Get texture size from ovr with the maximal FOV for each eye
 	const auto texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);
@@ -339,7 +302,7 @@ void OgreOculusRender::initRttRendering()
 	}
 
 	//Create the Ogre equivalent of the texture as a render target for Ogre
-	auto textureManager{ Ogre::GLTextureManager::getSingletonPtr() };
+	auto textureManager{ Ogre::TextureManager::getSingletonPtr() };
 
 	//Create the texture within the Ogre Texture Manager
 	rttTexture = (textureManager->createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -498,17 +461,6 @@ ovrSessionStatus OgreOculusRender::getSessionStatus()
 	return sessionStatus;
 }
 
-void OgreOculusRender::initPipeline()
-{
-	AnnDebug() << "Init pipeline for Oculus Rift rendering";
-	getOgreConfig();
-	createWindow();
-	initScene();
-	initCameras();
-	initRttRendering();
-	updateProjectionMatrix();
-}
-
 bool OgreOculusRender::usesCustomAudioDevice()
 {
 	return true;
@@ -533,47 +485,36 @@ void OgreOculusRender::showDebug(DebugMode mode)
 	}
 }
 
-void OgreOculusRender::updateTracking()
+void OgreOculusRender::handleIPDChange()
 {
-	//Get current camera base information
-	feetPosition = headNode->getPosition();
-	bodyOrientation = headNode->getOrientation();
+	for (auto eye : eyeUpdateOrder)
+		eyeCameras[eye]->setPosition(oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset));
+}
 
-	//Begin frame - get timing
+void OgreOculusRender::getTrackingPoseAndVRTiming()
+{
+	//Get timing
 	lastFrameDisplayTime = currentFrameDisplayTime;
+	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter);
+	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
 
 	//Reorient the headset if the runtime flags for it
 	if (getSessionStatus().ShouldRecenter) recenter();
 
 	//Get the tracking state
 	ts = ovr_GetTrackingState(Oculus->getSession(),
-							  currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter),
+							  currentFrameDisplayTime,
 							  ovrTrue);
 
-	updateTouchControllers();
-
-	//Calculate delta between last and this frame
-	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
-
-	//Get the pose
+	//Update pose and controllers
 	pose = ts.HeadPose.ThePose;
-
 	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
+	updateTouchControllers();
+	handleIPDChange();
 
 	//Apply pose to the two cameras
-	for (auto eye : eyeUpdateOrder)
-	{
-		eyeCameras[eye]->setOrientation(bodyOrientation * oculusToOgreQuat(pose.Orientation));
-		eyeCameras[eye]->setPosition(feetPosition
-									 + (eyeCameras[eye]->getOrientation() * oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset)
-									 + bodyOrientation * oculusToOgreVect3(pose.Position)));
-	}
-
-	//Update the pose for gameplay purposes
-	returnPose.position = feetPosition + bodyOrientation * oculusToOgreVect3(pose.Position);
-	returnPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
-	monoCam->setPosition(returnPose.position);
-	monoCam->setOrientation(returnPose.orientation);
+	trackedHeadPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
+	trackedHeadPose.position = feetPosition + bodyOrientation*oculusToOgreVect3(pose.Position);
 }
 
 void OgreOculusRender::renderAndSubmitFrame()
@@ -627,7 +568,8 @@ void OgreOculusRender::renderAndSubmitFrame()
 //TODO get rid of this boolean
 bool DEBUG(true);
 
-void OgreOculusRender::initializeHandObjects(const OgreOculusRender::oorEyeType side) {
+void OgreOculusRender::initializeHandObjects(const oorEyeType side)
+{
 	//If it's the first time we have access data on this hand controller, instantiate the object
 	if (!handControllers[side])
 	{
@@ -637,14 +579,15 @@ void OgreOculusRender::initializeHandObjects(const OgreOculusRender::oorEyeType 
 	}
 }
 
-void OgreOculusRender::initializeControllerAxes(const OgreOculusRender::oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector) {
+void OgreOculusRender::initializeControllerAxes(const oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector)
+{
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
 	axesVector.push_back(AnnHandControllerAxis{ "Trigger X", inputState.IndexTrigger[side] });
 	axesVector.push_back(AnnHandControllerAxis{ "GripTrigger X", inputState.HandTrigger[side] });
 }
 
-void OgreOculusRender::ProcessButtonStates(const OgreOculusRender::oorEyeType side) {
+void OgreOculusRender::ProcessButtonStates(const oorEyeType side) {
 	//Extract button states and deduce press/released events
 	pressed.clear(); released.clear();
 	for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)

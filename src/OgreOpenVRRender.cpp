@@ -11,14 +11,11 @@ vrSystem(nullptr),
 hmdError(vr::EVRInitError::VRInitError_None),
 windowWidth(1280),
 windowHeight(720),
+rttTextureGLID{ 0 },
 gamma(false),
 API(vr::API_OpenGL),
-monoCam(nullptr),
 windowViewport(nullptr),
-then(0),
-now(0),
 hmdAbsoluteTransform({}),
-eyeRig(nullptr),
 shouldQuitState(false),
 numberOfAxes{ 3 },
 axoffset{ vr::k_EButton_Axis0 },
@@ -28,10 +25,6 @@ triggerNormalizedValue{ 0 }
 {
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
-
-	//I like to initialize everything to zero
-	rttTexture.setNull();
-	rttTextureGLID = 0;
 
 	//buttonsToHandle.push_back(vr::k_EButton_System);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
@@ -66,23 +59,9 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	//Destroy the main scene manager
 	root->destroySceneManager(smgr);
 
-	//Unload manually loaded plug-ins
-	root->unloadPlugin("Plugin_OctreeSceneManager");
-
 	rttTexture.setNull();
 
-	//Destroy the root. Everything Ogre related that is remaining should be cleaned up by the root's destructor
 	delete root;
-}
-
-void OgreOpenVRRender::initPipeline()
-{
-	getOgreConfig();
-	createWindow();
-	initScene();
-	initCameras();
-	updateProjectionMatrix();
-	initRttRendering();
 }
 
 //This function is from VALVe
@@ -93,7 +72,6 @@ std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t
 		return "";
 
 	auto pchBuffer = new char[unRequiredBufferLen];
-	/*unRequiredBufferLen = */
 	pHmd->GetStringTrackedDeviceProperty(unDevice, prop, pchBuffer, unRequiredBufferLen, peError);
 	std::string sResult = pchBuffer;
 	delete[] pchBuffer;
@@ -110,7 +88,7 @@ void OgreOpenVRRender::initVrHmd()
 			default:
 				displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
 										 L"Non described error when initializing the OpenVR Render object");
-				throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Unknow error while initializing OpenVR");
+				throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Unknown error while initializing OpenVR");
 
 			case vr::VRInitError_Init_HmdNotFound:
 			case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
@@ -137,17 +115,7 @@ void OgreOpenVRRender::initVrHmd()
 
 void OgreOpenVRRender::initClientHmdRendering()
 {
-	//Init GLEW here to be able to call OpenGL functions
-	Annwvyn::AnnDebug() << "Init GL Extension Wrangler";
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		Annwvyn::AnnDebug("Failed to glewTnit()\n\
-						  Cannot call manual OpenGL\n\
-						  Error Code : " + static_cast<unsigned int>(err));
-		exit(ANN_ERR_RENDER);
-	}
-	Annwvyn::AnnDebug() << "Using GLEW version : " << glewGetString(GLEW_VERSION);
+	loadOpenGLFunctions();
 	setupDistrotion();
 	//Should init the device model things here if we want to display the vive controllers
 
@@ -182,43 +150,23 @@ bool OgreOpenVRRender::isVisibleInHmd()
 	return true; //Only useful with the oculus runtime
 }
 
-void OgreOpenVRRender::updateTracking()
+void OgreOpenVRRender::getTrackingPoseAndVRTiming()
 {
-	//Process the event from OpenVR
-	processVREvents();
-
-	//Get current camera base information
-	feetPosition = headNode->getPosition();
-	bodyOrientation = headNode->getOrientation();
-
-	//Calculate update time
-	then = now;
-	now = getTimer()->getMilliseconds() / 1000.0;
-	updateTime = now - then;
-
-	//Wait for next frame pose
+	//Wait for next frame pose, get timing and process additional devices (controllers, anything)
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+	calculateTimingFromOgre();
 	processTrackedDevices();
+	processVREvents();
 
 	//Here we just care about the HMD
 	vr::TrackedDevicePose_t hmdPose;
 	if ((hmdPose = trackedPoses[vr::k_unTrackedDeviceIndex_Hmd]).bPoseIsValid)
 		hmdAbsoluteTransform = getMatrix4FromSteamVRMatrix34(hmdPose.mDeviceToAbsoluteTracking);
 
-	//Update the monoscopic camera view
-	monoCam->setPosition(feetPosition
-						 + Annwvyn::AnnGetPlayer()->getEyeTranslation()
-						 + bodyOrientation * getTrackedHMDTranslation());
-	monoCam->setOrientation(bodyOrientation * getTrackedHMDOrieation());
-
-	//Update the eye rig tracking to make the eyes match your
-	eyeRig->setPosition(feetPosition
-						+ bodyOrientation * getTrackedHMDTranslation());
-	eyeRig->setOrientation(bodyOrientation * getTrackedHMDOrieation());
-
-	//Get the head reference back to the gameplay code
-	returnPose.position = eyeRig->getPosition();
-	returnPose.orientation = eyeRig->getOrientation();
+	//Apply tracking
+	handleIPDChange();
+	trackedHeadPose.position = feetPosition + bodyOrientation * getTrackedHMDTranslation();
+	trackedHeadPose.orientation = bodyOrientation * getTrackedHMDOrieation();
 }
 
 void OgreOpenVRRender::renderAndSubmitFrame()
@@ -263,9 +211,7 @@ void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 }
 
 void OgreOpenVRRender::showDebug(DebugMode mode)
-{
-	return;
-}
+{}
 
 void OgreOpenVRRender::createWindow()
 {
@@ -295,32 +241,8 @@ void OgreOpenVRRender::initScene()
 
 void OgreOpenVRRender::initCameras()
 {
-	//VR Eye cameras
-	eyeRig = smgr->getRootSceneNode()->createChildSceneNode();
-
-	//Camera for  each eye
-	eyeCameras[left] = smgr->createCamera("lcam");
-	eyeCameras[left]->setAutoAspectRatio(true);
-	eyeRig->attachObject(eyeCameras[left]);
-
-	eyeCameras[right] = smgr->createCamera("rcam");
-	eyeCameras[right]->setAutoAspectRatio(true);
-	eyeRig->attachObject(eyeCameras[right]);
-
-	//This will translate the cameras to put the correct IPD distance for the user
+	OgreVRRender::initCameras();
 	handleIPDChange();
-
-	//Monoscopic view camera, for non-VR display
-	monoCam = smgr->createCamera("mcam");
-	monoCam->setAspectRatio(16.0 / 9.0);
-	monoCam->setAutoAspectRatio(false);
-	monoCam->setPosition(feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation());
-	monoCam->setNearClipDistance(nearClippingDistance);
-	monoCam->setFarClipDistance(farClippingDistance);
-	monoCam->setFOVy(Ogre::Degree(90));
-
-	//do NOT attach camera to this node...
-	headNode = smgr->getRootSceneNode()->createChildSceneNode();
 }
 
 void OgreOpenVRRender::initRttRendering()
@@ -342,11 +264,7 @@ void OgreOpenVRRender::initRttRendering()
 
 	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
-	//Create theses textures in OpenGL and get their OpenGL ID
-	//
-	//When the parent class *OgreVRRender* initialize Ogre, the OpenGL RenderSystem is loaded in hard.
-	//We don't need to check that we're using OpenGL before doing this kind of cast:
-	auto textureManager = static_cast<Ogre::GLTextureManager*>(Ogre::TextureManager::getSingletonPtr());
+	auto textureManager = (Ogre::TextureManager::getSingletonPtr());
 
 	//shared texture
 	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -397,7 +315,6 @@ inline vr::EVREye OgreOpenVRRender::getEye(oovrEyeType eye)
 void OgreOpenVRRender::setupDistrotion()
 {
 	//Actually there's nothing to do here :)
-	return;
 }
 
 inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
@@ -500,10 +417,7 @@ void OgreOpenVRRender::extractButtons(size_t side)
 		lastControllerButtonsPressed[side][i] = currentControllerButtonsPressed[side][i];
 		currentControllerButtonsPressed[side][i] = (controllerState.ulButtonPressed & ButtonMaskFromId(buttonsToHandle[i])) != 0;
 		if (currentControllerButtonsPressed[side][i] && !lastControllerButtonsPressed[side][i])
-		{
 			pressed.push_back(i);
-			continue;
-		}
 		else if (!currentControllerButtonsPressed[side][i] && lastControllerButtonsPressed[side][i])
 			released.push_back(i);
 	}
