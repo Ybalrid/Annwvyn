@@ -264,12 +264,8 @@ void OgreOpenVRRender::initRttRendering()
 
 	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
-	auto textureManager = (Ogre::TextureManager::getSingletonPtr());
-
-	//shared texture
-	rttTexture = textureManager->createManual("RTT_TEX", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-											  Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET, nullptr, gamma, AALevel);
-	rttTexture->getCustomAttribute("GLID", &rttTextureGLID);
+	//Create the render texture
+	rttTextureGLID = createRenderTexture(w, h);
 	rttEyes = rttTexture->getBuffer()->getRenderTarget();
 
 	//Create viewport for each cameras in each render texture

@@ -225,3 +225,12 @@ void OgreVRRender::initPipeline()
 	initRttRendering();
 	updateProjectionMatrix();
 }
+
+GLuint OgreVRRender::createRenderTexture(float w, float h)
+{
+	GLuint glid;
+	rttTexture = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+																   Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
+	rttTexture->getCustomAttribute("GLID", &glid);
+	return glid;
+}
