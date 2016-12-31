@@ -165,6 +165,8 @@ public:
 
 	unsigned int createRenderTexture(float w, float h);
 
+	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(float w, float h, std::string name = "");
+
 protected:
 
 	///Called if AA level has been updated

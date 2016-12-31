@@ -330,12 +330,9 @@ void OgreOculusRender::initRttRendering()
 		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Cannot create Oculus mirror texture");
 	}
 
-	//Create the Ogre equivalent of this buffer
-	Ogre::TexturePtr mirror_texture(Ogre::TextureManager::getSingleton().createManual("MirrorTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-									Ogre::TEX_TYPE_2D, hmdSize.w, hmdSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
+	auto mirror = createAdditionalRenderBuffer(hmdSize.w, hmdSize.h, "MirrorTex");
+	ogreMirrorTextureGLID = std::get<1>(mirror);
 
-	//Save the GL texture id for updating the mirror texture
-	mirror_texture->getCustomAttribute("GLID", &ogreMirrorTextureGLID);
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusRenderTextureGLID);
 
 	//Attach the camera of the debug render scene to a viewport on the actual application window
