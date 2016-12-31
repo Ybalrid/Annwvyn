@@ -302,13 +302,10 @@ void OgreOculusRender::initRttRendering()
 	}
 
 	//Create the texture within the Ogre Texture Manager
-	rttTexture = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-																   Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
-
-	rttTexture->getCustomAttribute("GLID", &renderTextureGLID);
+	renderTextureGLID = createRenderTexture(bufferSize.w, bufferSize.h);
 
 	//Calculate the actual width of the desired image on the texture in a % of the width of the buffer (as a float between 0 to 1)
-	float proportionalWidth = static_cast<float>((bufferSize.w - frontierWidth / 2) / 2) / static_cast<float>(bufferSize.w);
+	float proportionalWidth = float((bufferSize.w - frontierWidth / 2) / 2) / float(bufferSize.w);
 	AnnDebug() << proportionalWidth;
 
 	//Create viewports on the texture to render the eyeCameras

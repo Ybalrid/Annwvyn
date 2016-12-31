@@ -125,9 +125,6 @@ private:
 	///window size
 	unsigned int windowWidth, windowHeight;
 
-	///EyeCamera render textures
-	Ogre::TexturePtr rttTexture;
-
 	///OpenGL "id" of the render textures
 	GLuint rttTextureGLID;
 

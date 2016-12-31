@@ -161,8 +161,9 @@ public:
 
 	void calculateTimingFromOgre();
 
-	// ReSharper disable once CppHiddenFunction
 	void loadOpenGLFunctions();
+
+	unsigned int createRenderTexture(float w, float h);
 
 protected:
 
