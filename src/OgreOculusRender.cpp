@@ -301,12 +301,9 @@ void OgreOculusRender::initRttRendering()
 		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Cannot create Oculus OpenGL swapchain");
 	}
 
-	//Create the Ogre equivalent of the texture as a render target for Ogre
-	auto textureManager{ Ogre::TextureManager::getSingletonPtr() };
-
 	//Create the texture within the Ogre Texture Manager
-	rttTexture = (textureManager->createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-				  Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel));
+	rttTexture = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+																   Ogre::TEX_TYPE_2D, bufferSize.w, bufferSize.h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
 
 	rttTexture->getCustomAttribute("GLID", &renderTextureGLID);
 
@@ -337,7 +334,7 @@ void OgreOculusRender::initRttRendering()
 	}
 
 	//Create the Ogre equivalent of this buffer
-	Ogre::TexturePtr mirror_texture(textureManager->createManual("MirrorTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+	Ogre::TexturePtr mirror_texture(Ogre::TextureManager::getSingleton().createManual("MirrorTex", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 									Ogre::TEX_TYPE_2D, hmdSize.w, hmdSize.h, 0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET));
 
 	//Save the GL texture id for updating the mirror texture
