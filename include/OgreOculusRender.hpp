@@ -115,12 +115,21 @@ public:
 
 	///Show the requested debug view
 	void showDebug(DebugMode mode) override;
+
+	///Move the cameras according form the hmdToEye translation vector from OVR.
 	void handleIPDChange() override;
 private:
 
-	void initializeHandObjects(const OgreOculusRender::oorEyeType side);
-	void initializeControllerAxes(const OgreOculusRender::oorEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
-	void ProcessButtonStates(const OgreOculusRender::oorEyeType side);
+	///Create the AnnHandControllerObject for this side
+	void initializeHandObjects(const oorEyeType side);
+
+	///Initialize the axisVector for given controller
+	void initializeControllerAxes(const oorEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
+
+	///Extract usefull data from the button state, including buffered pressed/released events
+	void ProcessButtonStates(const oorEyeType side);
+
+	///Get the state of the touch controller and update the handController objects accordingly
 	void updateTouchControllers();
 
 	///With of the unused pixel-band between the two eyes
@@ -167,9 +176,14 @@ private:
 
 	///Pose (position+orientation)
 	ovrPosef pose;
+
+	///Pose of the hands
 	std::array<ovrPoseStatef, 2> handPoses;
+
+	///State of an input peripheral from OVR
 	ovrInputState inputState;
 
+	///Array of indexes of buttons. Indexes are fixed signed 32 bits
 	std::array<std::array < int32_t, 4>, 2> touchControllersButtons;
 
 	///Tracking state
@@ -260,8 +274,11 @@ private:
 
 	///Index buffer of the debug plane
 	static constexpr const std::array<const uint8_t, 4>debugPlaneIndexBuffer{ 0, 1, 2, 3 };
+
+	///Index buffer of a quad
 	static constexpr const std::array<const uint8_t, 4>quadIndexBuffer{ 0, 1, 2, 3 };
 
+	///Preferred order to update eyes
 	static constexpr const std::array<const oorEyeType, 2> eyeUpdateOrder{ {left, right} };
 
 	///Return true if the array sizes of each buffer are constants
