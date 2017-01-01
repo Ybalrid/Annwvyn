@@ -20,11 +20,11 @@ Please read the DEPEDENCIES file to know what you need to build it.
 System requirement
 ----------------
 
- - A fairly recent GPU. Support for OpenGL 4.3 is recommended. Tested on 4.0 GPU in "noVR" mode only
- - Graphics driver with "direct driver" for VR implemented. The lattes Nvidia/AMD driver available will do
- - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive
+ - A fairly recent GPU. Support for OpenGL 4.3 is required. Tested on OpenGL 4.0 GPU in "noVR" mode only
+ - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive, or other hardware supported by OpenVR
+ - Usable with hand controllers (touch, vive wands...) 
  - 64bit Operating system
- - Oculus Runtime 1.9 (10/20/16) installed from http://oculus.com/setup OR SteamVR installed through Steam http://steampowered.com/
+ - Oculus Runtime 1.10 (01/01/17) installed from http://oculus.com/setup OR SteamVR installed through Steam http://steampowered.com/
  - Microsoft Visual Studio 2015 Community (free to download and use from Microsoft)
  
 Installation
@@ -45,14 +45,14 @@ Please install Oculus Home and the lattes drivers of your graphics card manufact
 
 But, if you really want to build the engine yourself, here's a simple guide how to do it
 
-- Download the "dependency package" from here http://annwvyn.org/?static1/download
+- Download the "dependency package" from here http://annwvyn.org/?static2/download
 - Extract it in a folder
 - Clone this repo in the same folder
 - Run the "RUNME.BAT" script from this folder
-- Open Annwvyn/msvc/Annwvyn/Annwvyn.sln with Visual studio
+- Open /Annwvyn/msvc/Annwvyn/Annwvyn.sln with Visual studio
 - Make sure the IDE is set to build in "release" "x64" mode
 - hit Ctrl+Shift+B
-- You need to copy a bunch of .dll in the "example" (and template) directories. You can do this automatically by launching the "getLibs.bat" scripts
+- You need to copy a bunch of .dll in the "example" (and template) directories. You can do this automatically by launching the "getLibs.bat" scripts. But here's the list if you want to check
     - Ogre  
         - OgreMain.dll
         - OgreOverlay.dll  
@@ -88,7 +88,7 @@ Run "git pull" on the Annwvyn sub-directory. then open the VS solution in msvc/A
 
 Clean and build the solution.
 
-If you have build errors, you should download the newest SDK and put it in place of the older one. You can also replace the content of your SDK folder (except the Annwvyn directory) with the dependency package from http://annwvyn.org/?static1/download
+If you have build errors, you should download the newest SDK and put it in place of the older one. You can also replace the content of your SDK folder (except the Annwvyn directory) with the dependency package from http://annwvyn.org/?static2/download
 
 ______
 
