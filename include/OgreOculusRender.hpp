@@ -74,14 +74,8 @@ public:
 	///Start Oculus and Ogre libraries.
 	void initVrHmd() override;
 
-	///Create the RenderWindow
-	void createWindow() override;
-
 	///Initialize the SceneManager for the application.
 	void initScene() override;
-
-	///Initialize the camera for Stereo Render
-	void initCameras() override;
 
 	///Initialize the RTT Rendering System. Create two textures, two viewports and bind cameras on them.
 	void initRttRendering() override;

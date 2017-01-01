@@ -77,9 +77,6 @@ public:
 	///Init the VR client library
 	virtual void initVrHmd() = 0;
 
-	///Create the render window
-	virtual void createWindow() = 0;
-
 	///Create the scene(s) manager(s) needed for the rendering
 	virtual void initScene() = 0;
 
@@ -159,15 +156,24 @@ public:
 	///extract from gameplay-movable information the points used to calculate the world poses
 	void syncGameplayBody();
 
+	///For call at instant T, will set updateTime to the time between T and T-1
+	///If you do this, you'll get the time from between this frame and the last one
 	void calculateTimingFromOgre();
 
+	///Load "modern" OpenGL functions for the current OpenGL context.
 	void loadOpenGLFunctions();
 
+	///This method create a texture with the wanted Anti Aliasing level. It will set the rttTexture and rttEyes member of this class to the correct value, and return the GLID of the texture.
 	unsigned int createRenderTexture(float w, float h);
 
+	///Create a render buffer with not anti aliasing. return a tuple with a TexturePtr and a GLID. use <code><pre>std::get<></pre></code>
 	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(float w, float h, std::string name = "");
 
+	void createWindow(unsigned int w = 1280, unsigned int h = 720, bool vsync = false);
+
 protected:
+
+	std::string rendererName;
 
 	///Called if AA level has been updated
 	void changedAA();

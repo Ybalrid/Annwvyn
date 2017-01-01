@@ -12,36 +12,17 @@ then(0),
 now(0),
 running(true)
 {
+	rendererName = "OpenGL/NoVR";
 	noVRself = dynamic_cast<OgreNoVRRender*>(self);
 }
 
 void OgreNoVRRender::initVrHmd()
 {}
 
-void OgreNoVRRender::createWindow()
-{
-	Ogre::NameValuePairList misc;
-	misc["vsync"] = "true";
-	misc["top"] = "0";
-	misc["left"] = "0";
-	misc["FSAA"] = std::to_string(AALevel);
-	root->initialise(false);
-
-	const float w(1920 / 2), h(1080 / 2);
-
-	window = root->createRenderWindow(name, w, h, false, &misc);
-}
-
 void OgreNoVRRender::initScene()
 {
 	smgr = root->createSceneManager("OctreeSceneManager", "OSMSMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
-}
-
-void OgreNoVRRender::initCameras()
-{
-	//TODO remove this method if it's useless.
-	OgreVRRender::initCameras();
 }
 
 void OgreNoVRRender::initRttRendering()

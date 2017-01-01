@@ -14,6 +14,7 @@ windowHeight(720),
 rttTextureGLID{ 0 },
 gamma(false),
 API(vr::API_OpenGL),
+vrTextures{ nullptr },
 windowViewport(nullptr),
 hmdAbsoluteTransform({}),
 shouldQuitState(false),
@@ -23,6 +24,7 @@ touchpadXNormalizedValue{ 0 },
 touchpadYNormalizedValue{ 0 },
 triggerNormalizedValue{ 0 }
 {
+	rendererName = "OpengGL/OpenVR";
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
 
@@ -43,7 +45,6 @@ triggerNormalizedValue{ 0 }
 		lastControllerButtonsPressed[side].resize(buttonsToHandle.size(), false);
 		rttViewports[side] = nullptr;
 		handControllers[side] = nullptr;
-		vrTextures[side] = {};
 		GLBounds[side] = {};
 	}
 }
@@ -116,11 +117,13 @@ void OgreOpenVRRender::initVrHmd()
 void OgreOpenVRRender::initClientHmdRendering()
 {
 	loadOpenGLFunctions();
-	setupDistrotion();
-	//Should init the device model things here if we want to display the vive controllers
+
+	//here the sample inits the device model things here if we want to display the vive controllers.
+	//we don't really want to display Vive wands or whatever controller model SteamVR is using, but in-game stuff.
+	//To display a 3D model in place of the hands of the character, it's done via the AnnHandController objects
 
 	//Declare the textures for SteamVR
-	vrTextures[left] = { reinterpret_cast<void*>(rttTextureGLID), API, vr::ColorSpace_Gamma };
+	vrTextures = { reinterpret_cast<void*>(rttTextureGLID), API, vr::ColorSpace_Gamma };
 
 	//Set the OpenGL texture geometry
 	//V axis is reversed, U between 0 and 0.5 is for the left eye, between 0.5 and 1 is for the right eye.
@@ -186,8 +189,8 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 
 	//Submit the textures to the SteamVR compositor
 
-	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures[0], &GLBounds[0]);
-	vr::VRCompositor()->Submit(vr::Eye_Right, &vrTextures[0], &GLBounds[1]);
+	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures, &GLBounds[0]);
+	vr::VRCompositor()->Submit(vr::Eye_Right, &vrTextures, &GLBounds[1]);
 
 	//OMG WE RENDERED A FRAME!!! QUICK!!!! INCREMENT THE COUNTER!!!!!!!
 	frameCounter++;
@@ -213,23 +216,6 @@ void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 void OgreOpenVRRender::showDebug(DebugMode mode)
 {}
 
-void OgreOpenVRRender::createWindow()
-{
-	//Basic window configuration
-	Ogre::NameValuePairList misc;
-	misc["vsync"] = "false"; //This vsync parameter has no scene in VR. The display is done by the Compositor
-	misc["top"] = "0";
-	misc["left"] = "0";
-
-	//Manual ogre init
-	root->initialise(false);
-
-	//Create a manual window
-	window = root->createRenderWindow(name + " : Vive debug mirror view. Please put on HMD.",
-									  windowWidth, windowHeight,
-									  false, &misc);
-}
-
 void OgreOpenVRRender::initScene()
 {
 	//Create the scene manager for the engine
@@ -237,12 +223,6 @@ void OgreOpenVRRender::initScene()
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
 
 	//Optional additional scenes here
-}
-
-void OgreOpenVRRender::initCameras()
-{
-	OgreVRRender::initCameras();
-	handleIPDChange();
 }
 
 void OgreOpenVRRender::initRttRendering()
@@ -266,11 +246,10 @@ void OgreOpenVRRender::initRttRendering()
 
 	//Create the render texture
 	rttTextureGLID = createRenderTexture(w, h);
-	rttEyes = rttTexture->getBuffer()->getRenderTarget();
 
 	//Create viewport for each cameras in each render texture
-	rttViewports[left] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
-	rttViewports[right] = rttTexture->getBuffer()->getRenderTarget()->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
+	rttViewports[left] = rttEyes->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
+	rttViewports[right] = rttEyes->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
 
 	//Do the same for the window
 	windowViewport = window->addViewport(monoCam);
@@ -308,11 +287,6 @@ inline vr::EVREye OgreOpenVRRender::getEye(oovrEyeType eye)
 	return vr::Eye_Right;
 }
 
-void OgreOpenVRRender::setupDistrotion()
-{
-	//Actually there's nothing to do here :)
-}
-
 inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
 {
 	//Extract translation vector from the matrix
@@ -329,7 +303,7 @@ void OgreOpenVRRender::processVREvents()
 {
 	vr::VREvent_t event;
 	//Pump the events, and for each event, switch on it type
-	while (vrSystem->PollNextEvent(&event, sizeof(event))) switch (event.eventType)
+	while (vrSystem->PollNextEvent(&event, sizeof event)) switch (event.eventType)
 	{
 		//Handle quiting the app from Steam
 		case vr::VREvent_DriverRequestedQuit:
