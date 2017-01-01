@@ -69,8 +69,13 @@ namespace BtOgre {
 
 			btQuaternion rot = transform.getRotation();
 			btVector3 pos = transform.getOrigin();
-			mNode->setOrientation(rot.w(), rot.x(), rot.y(), rot.z());
-			mNode->setPosition(pos.x(), pos.y(), pos.z());
+
+			//Hack by Ybalrid : move the world transform instead of the `relative to parent one
+			Ogre::Vector3 ogrePos(pos.x(), pos.y(), pos.z());
+			Ogre::Quaternion ogreRot(rot.w(), rot.x(), rot.y(), rot.z());
+
+			mNode->_setDerivedOrientation(ogreRot);
+			mNode->_setDerivedPosition(ogrePos);
 		}
 
 		void setNode(Ogre::SceneNode *node)
