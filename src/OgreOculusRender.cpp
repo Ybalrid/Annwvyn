@@ -35,6 +35,7 @@ debugPlaneNode{ nullptr },
 lastOculusPosition{ feetPosition },
 lastOculusOrientation{ bodyOrientation }
 {
+	rendererName = "OpenGL/Oculus";
 	OculusSelf = static_cast<OgreOculusRender*>(self);
 
 	//List of bitmask for each buttons as we will test them
@@ -151,36 +152,6 @@ void OgreOculusRender::initVrHmd()
 
 	AnnDebug() << "Player eye height : " << playerEyeHeight << "m";
 	AnnDebug() << "Eye leveling translation : " << AnnGetPlayer()->getEyeTranslation();
-}
-
-void OgreOculusRender::createWindow()
-{
-	if (!root)
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Tried to create a window while Ogre wasn't initialized");
-	if (!Oculus)
-	{
-		AnnDebug() << "Please initialize the OculusInterface before creating window";
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Oculus Renderer need the oculus interface to be running before attempting window creation");
-	}
-
-	Ogre::NameValuePairList misc;
-	misc["vsync"] = "false"; //This vsync parameter has no sense in VR. The display is done by the Compositor
-	misc["FSAA"] = std::to_string(AALevel);
-	misc["top"] = "0";
-	misc["left"] = "0";
-	root->initialise(false);
-
-	float w(hmdSize.w), h(hmdSize.h);
-	if (w >= 1920) w /= 1.5;
-	if (h >= 1080) h /= 1.5;
-
-	window = root->createRenderWindow(name + " : mirror Rift view output (Please put your headset)", w, h, false, &misc);
-}
-
-void OgreOculusRender::initCameras()
-{
-	OgreVRRender::initCameras();
-	//do NOT attach camera to this node...
 }
 
 void OgreOculusRender::setMonoFov(float degreeFov)
@@ -309,7 +280,6 @@ void OgreOculusRender::initRttRendering()
 	AnnDebug() << proportionalWidth;
 
 	//Create viewports on the texture to render the eyeCameras
-	rttEyes = rttTexture->getBuffer()->getRenderTarget();
 	vpts[left] = rttEyes->addViewport(eyeCameras[left], 0, 0, 0, proportionalWidth);
 	vpts[right] = rttEyes->addViewport(eyeCameras[right], 1, 1.f - proportionalWidth, 0, proportionalWidth);
 
@@ -527,9 +497,11 @@ void OgreOculusRender::renderAndSubmitFrame()
 	rttEyes->update(); //This will resolve the sampling for the anti-aliasing of the texture
 
 	//Copy the rendered image to the Oculus Swap Texture
-	glCopyImageSubData(renderTextureGLID, GL_TEXTURE_2D,
+	glCopyImageSubData(renderTextureGLID,
+					   GL_TEXTURE_2D,
 					   0, 0, 0, 0,
-					   oculusRenderTextureGLID, GL_TEXTURE_2D,
+					   oculusRenderTextureGLID,
+					   GL_TEXTURE_2D,
 					   0, 0, 0, 0,
 					   bufferSize.w, bufferSize.h, 1);
 
@@ -544,9 +516,11 @@ void OgreOculusRender::renderAndSubmitFrame()
 	if (window->isVisible())
 	{
 		//Put the mirrored view available for Ogre if asked for
-		if (mirrorHMDView) glCopyImageSubData(oculusMirrorTextureGLID, GL_TEXTURE_2D,
+		if (mirrorHMDView) glCopyImageSubData(oculusMirrorTextureGLID,
+											  GL_TEXTURE_2D,
 											  0, 0, 0, 0,
-											  ogreMirrorTextureGLID, GL_TEXTURE_2D,
+											  ogreMirrorTextureGLID,
+											  GL_TEXTURE_2D,
 											  0, 0, 0, 0,
 											  hmdSize.w, hmdSize.h, 1);
 

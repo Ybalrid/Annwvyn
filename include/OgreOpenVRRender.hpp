@@ -68,14 +68,8 @@ public:
 	///Change the debug window mode
 	void showDebug(DebugMode mode) override;
 
-	///Create a window. Even if we do "off screen rendering", that's a vital part of how Ogre does stuff.
-	void createWindow() override;
-
 	///Create and initialize the scene managers
 	void initScene() override;
-
-	///Create and initialize the cameras
-	void initCameras() override;
 
 	///Create the render targets
 	void initRttRendering() override;
@@ -85,10 +79,6 @@ public:
 
 	///Get a "vr::EVREye" from an "oovrEyeType"
 	static vr::EVREye getEye(oovrEyeType eye);
-
-	///Setup the distortion rendering. Apparently this is actually not needed. Even if the official sample does it. This function is a placeholder
-	void setupDistrotion();
-
 private:
 
 	///Get the HMD position in the OpenVR tracking space
@@ -138,7 +128,7 @@ private:
 	vr::GraphicsAPIConvention API;
 
 	///OpenVR texture handlers
-	std::array<vr::Texture_t, 2> vrTextures;
+	vr::Texture_t vrTextures;
 
 	///Viewport located on a window
 	Ogre::Viewport* windowViewport;

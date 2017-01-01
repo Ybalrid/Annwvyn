@@ -13,9 +13,7 @@ public:
 	~OgreNoVRRender();
 
 	void initVrHmd() override;
-	void createWindow() override;
 	void initScene() override;
-	void initCameras() override;
 	void initRttRendering() override;
 	void initClientHmdRendering() override;
 	bool shouldQuit() override;

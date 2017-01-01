@@ -232,6 +232,7 @@ GLuint OgreVRRender::createRenderTexture(float w, float h)
 	rttTexture = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 																   Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
 	rttTexture->getCustomAttribute("GLID", &glid);
+	rttEyes = rttTexture->getBuffer()->getRenderTarget();
 	return glid;
 }
 
@@ -244,4 +245,20 @@ std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderB
 	unsigned int glid;
 	texture->getCustomAttribute("GLID", &glid);
 	return std::tie(texture, glid);
+}
+
+void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
+{
+	Ogre::NameValuePairList options;
+	options["FSAA"] = std::to_string(AALevel);
+	options["top"] = "0";
+	options["left"] = "0";
+	if (vsync)
+		options["vsync"] = "true";
+	else
+		options["vsync"] = "false";
+
+	root->initialise(false);
+	window = root->createRenderWindow(rendererName + " : " + name + " - monitor output",
+									  w, h, false, &options);
 }
