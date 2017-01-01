@@ -188,7 +188,6 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	window->update();
 
 	//Submit the textures to the SteamVR compositor
-
 	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures, &GLBounds[0]);
 	vr::VRCompositor()->Submit(vr::Eye_Right, &vrTextures, &GLBounds[1]);
 

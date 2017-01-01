@@ -40,7 +40,9 @@ AnnGameObject::~AnnGameObject()
 	}
 	if (state) delete state;
 
-	Node->getParent()->removeChild(Node);
+	//Prevent dereferencing null pointer here. Parent can be something other than root scene node now.
+	if (Node->getParent())
+		Node->getParent()->removeChild(Node);
 	std::vector<Ogre::MovableObject*> attachedObject;
 	for (unsigned short i(0); i < Node->numAttachedObjects(); i++)
 		attachedObject.push_back(Node->getAttachedObject(i));
@@ -56,13 +58,13 @@ void AnnGameObject::playSound(std::string path, bool loop, float volume)
 	audioSource->changeSound(path);
 	audioSource->setLooping(loop);
 	audioSource->setVolume(volume);
-	audioSource->setPositon(getPosition());
+	audioSource->setPositon(getWorldPosition());
 	audioSource->play();
 }
 
 void AnnGameObject::updateOpenAlPos()
 {
-	audioSource->setPositon(getPosition());
+	audioSource->setPositon(getWorldPosition());
 }
 
 void AnnGameObject::callUpdateOnScripts()
@@ -217,7 +219,7 @@ Ogre::Entity* AnnGameObject::getEntity()
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject)
 {
-	return getPosition().distance(otherObject->getPosition());
+	return getWorldPosition().distance(otherObject->getWorldPosition());
 }
 
 btRigidBody* AnnGameObject::getBody()
@@ -305,4 +307,44 @@ void AnnGameObject::attachScript(const std::string & scriptName)
 	if (script->isValid())
 		scripts.push_back(script);
 	script->registerAsListener();
+}
+
+bool AnnGameObject::hasParent()
+{
+	auto parentSceneNode = Node->getParentSceneNode();
+	if (parentSceneNode != nullptr && parentSceneNode != AnnGetEngine()->getSceneManager()->getRootSceneNode())
+		return true;
+	return false;
+}
+
+std::shared_ptr<AnnGameObject> AnnGameObject::getParent()
+{
+	if (!hasParent()) return nullptr;
+
+	return AnnGetGameObjectManager()->getFromNode(Node->getParentSceneNode());
+}
+
+void AnnGameObject::attachChildObject(std::shared_ptr<AnnGameObject> child)
+{
+	//child->Node has been detached from it's current parent(that was either a node or the root node)
+	child->Node->getParentSceneNode()->removeChild(child->Node);
+
+	//Attach it to the node of this object.
+	Node->addChild(child->Node);
+}
+
+void AnnGameObject::detachFromParent()
+{
+	Node->getParentSceneNode()->removeChild(Node);
+	AnnGetEngine()->getSceneManager()->getRootSceneNode()->addChild(Node);
+}
+
+AnnVect3 AnnGameObject::getWorldPosition()
+{
+	return Node->_getDerivedPosition();
+}
+
+AnnQuaternion AnnGameObject::getWorldOrientation()
+{
+	return Node->_getDerivedOrientation();
 }

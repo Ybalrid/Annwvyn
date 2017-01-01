@@ -87,8 +87,12 @@ namespace Annwvyn
 		///Get Position
 		AnnVect3 getPosition() override;
 
+		AnnVect3 getWorldPosition();
+
 		///Get Orientation
 		AnnQuaternion getOrientation() override;
+
+		AnnQuaternion getWorldOrientation();
 
 		///Get scale
 		AnnVect3 getScale();
@@ -154,6 +158,18 @@ namespace Annwvyn
 
 		///Attach a script to this object
 		void attachScript(const std::string& scriptName);
+
+		///Return true if node is attached to the node of a GameObject. Nodes present in the scene allays have a parent, the Root node. It will be treated as 'not attached to parent' if attached to scene root
+		bool hasParent();
+
+		///Get the parent Game Object
+		std::shared_ptr<AnnGameObject> getParent();
+
+		///Attach an object to this object.
+		void attachChildObject(std::shared_ptr<AnnGameObject> child);
+
+		///Make the node independent to any GameObject
+		void detachFromParent();
 
 	private:
 		///Make Annwvyn::AnnEngine access these methods :

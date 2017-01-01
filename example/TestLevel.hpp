@@ -65,6 +65,16 @@ public:
 		S->playSound("media/monster.wav", true, 1);
 		S->attachScript("DummyBehavior");
 
+		auto Gizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "Gizmo");
+		//S->attachChildObject(Gizmo);
+		//Gizmo->setUpPhysics(10, sphereShape);
+		//Gizmo->setScale(10, 10, 10);
+
+		Gizmo->setPosition(0, 0, -4);
+		Gizmo->attachChildObject(S);
+
+		//Gizmo->setPosition(S->getPosition() + AnnVect3{ 0.0f, 1.0f, 0.0f });
+
 		//Add water
 		auto Water = addGameObject("environment/Water.mesh");
 
