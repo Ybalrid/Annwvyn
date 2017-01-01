@@ -96,8 +96,10 @@ private:
 	///Process through the array of OpenVR tracked devices, get the data of the interesting ones (hand controllers)
 	void processTrackedDevices();
 
+	///Go extract the controller data from the tracked OpenVR device
 	void processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side);
 
+	///Extract the list of buttons state from the button from the registered bit flag for this side, and construct the buffered pressed/released lists.
 	void extractButtons(size_t side);
 
 	///Reset the IPD displacement of the cameras according to the EyeToHeadTransform matrix

@@ -8,8 +8,6 @@ OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
 
 OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
 noVRViewport(nullptr),
-then(0),
-now(0),
 running(true)
 {
 	rendererName = "OpenGL/NoVR";
