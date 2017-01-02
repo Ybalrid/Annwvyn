@@ -171,7 +171,12 @@ namespace Annwvyn
 		///Make the node independent to any GameObject
 		void detachFromParent();
 
+		bool checkForBodyInParent();
+
 	private:
+
+		bool parentsHaveBody(AnnGameObject* obj);
+
 		///Make Annwvyn::AnnEngine access these methods :
 		friend class AnnEngine;
 		friend class AnnGameObjectManager;
