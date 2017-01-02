@@ -161,6 +161,7 @@ void AnnGameObject::setEntity(Ogre::Entity* newEntity)
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
+	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 
 	//init shape converter
 	BtOgre::StaticMeshToShapeConverter converter(Entity);
@@ -315,15 +316,27 @@ void AnnGameObject::attachScript(const std::string & scriptName)
 bool AnnGameObject::hasParent()
 {
 	auto parentSceneNode = Node->getParentSceneNode();
-	if (parentSceneNode != nullptr && parentSceneNode != AnnGetEngine()->getSceneManager()->getRootSceneNode())
+
+	AnnDebug() << this << " " << getName() << " is testing for parent";
+	AnnDebug() << "Our node is" << Node;
+	AnnDebug() << "Parent node is " << parentSceneNode;
+	AnnDebug() << "Root node is " << AnnGetEngine()->getSceneManager()->getRootSceneNode();
+
+	if (reinterpret_cast<uint64_t>(static_cast<void*>(parentSceneNode))
+		== reinterpret_cast<uint64_t>(static_cast<void*>(AnnGetEngine()->getSceneManager()->getRootSceneNode())))
+	{
+		AnnDebug() << "we catched the fact that parent scene node is root scene node";
+		return false;
+	}
+
+	if (parentSceneNode != nullptr)
 		return true;
+
 	return false;
 }
 
 std::shared_ptr<AnnGameObject> AnnGameObject::getParent()
 {
-	if (!hasParent()) return nullptr;
-
 	return AnnGetGameObjectManager()->getFromNode(Node->getParentSceneNode());
 }
 
@@ -360,6 +373,27 @@ AnnQuaternion AnnGameObject::getWorldOrientation()
 bool AnnGameObject::parentsHaveBody(AnnGameObject* obj)
 {
 	if (!hasParent()) return false;
+	auto addr = obj->getParent().get();
+	if (!addr) return false;
 	if (obj->getParent()->getBody()) return true;
-	return parentsHaveBody(obj->getParent().get());
+	return parentsHaveBody(addr);
+}
+
+bool AnnGameObject::checkForBodyInChild()
+{
+	for (auto childNode : Node->getChildIterator())
+	{
+		auto node = childNode.second;
+		Ogre::SceneNode* childSceneNode;
+		if (dynamic_cast<Ogre::SceneNode*>(node))
+		{
+			childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
+			auto obj = AnnGetGameObjectManager()->getFromNode(childSceneNode);
+			if (obj)
+				if (obj->getBody())
+					return true;
+		}
+	}
+
+	return false;
 }

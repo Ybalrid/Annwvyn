@@ -172,6 +172,7 @@ namespace Annwvyn
 		void detachFromParent();
 
 		bool checkForBodyInParent();
+		bool checkForBodyInChild();
 
 	private:
 

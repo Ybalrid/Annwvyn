@@ -25,4 +25,13 @@ namespace Annwvyn
 		AnnGameObject* objectWithProblem;
 		static std::ostringstream outputFormater;
 	};
+
+	class DLL AnnPhysicsSetupChildError : public std::runtime_error
+	{
+	public:
+		AnnPhysicsSetupChildError(AnnGameObject* origin);
+		const char* what() const throw() override;
+	private:
+		AnnGameObject* objectWithProblem;
+	};
 }
