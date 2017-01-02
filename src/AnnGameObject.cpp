@@ -2,6 +2,7 @@
 #include "AnnGameObject.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 
@@ -159,6 +160,8 @@ void AnnGameObject::setEntity(Ogre::Entity* newEntity)
 
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
+	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
+
 	//init shape converter
 	BtOgre::StaticMeshToShapeConverter converter(Entity);
 
@@ -339,6 +342,11 @@ void AnnGameObject::detachFromParent()
 	AnnGetEngine()->getSceneManager()->getRootSceneNode()->addChild(Node);
 }
 
+bool AnnGameObject::checkForBodyInParent()
+{
+	return parentsHaveBody(this);
+}
+
 AnnVect3 AnnGameObject::getWorldPosition()
 {
 	return Node->_getDerivedPosition();
@@ -347,4 +355,11 @@ AnnVect3 AnnGameObject::getWorldPosition()
 AnnQuaternion AnnGameObject::getWorldOrientation()
 {
 	return Node->_getDerivedOrientation();
+}
+
+bool AnnGameObject::parentsHaveBody(AnnGameObject* obj)
+{
+	if (!hasParent()) return false;
+	if (obj->getParent()->getBody()) return true;
+	return parentsHaveBody(obj->getParent().get());
 }

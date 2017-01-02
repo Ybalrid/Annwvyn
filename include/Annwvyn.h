@@ -95,6 +95,7 @@
 #include "AnnResourceManager.hpp"
 #include "Ann3DTextPlane.hpp"
 #include "AnnUserSpaceSubSystem.hpp"
+#include "AnnException.hpp"
 
 //Other Annwvyn
 #include "AnnTypes.h"
@@ -147,7 +148,7 @@ namespace Annwvyn
 		std::cout << "ANNWVYN DEVEL\n";
 		std::cout << "Console output enabled\n";
 #endif
-	}
+}
 
 	inline void postQuit()
 	{
