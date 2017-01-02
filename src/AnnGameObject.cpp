@@ -101,7 +101,13 @@ void AnnGameObject::setPosition(AnnVect3 pos)
 	Node->setPosition(pos);
 
 	//change OpenAL Source Position
-	audioSource->setPositon(pos);
+	updateOpenAlPos();
+}
+
+void AnnGameObject::setWorldPosition(AnnVect3 pos)
+{
+	Node->_setDerivedPosition(pos);
+	updateOpenAlPos();
 }
 
 void AnnGameObject::setOrientation(float w, float x, float y, float z)
@@ -123,9 +129,19 @@ void AnnGameObject::setOrientation(AnnQuaternion orient)
 	}
 }
 
+void AnnGameObject::setWorldOrientation(AnnQuaternion orient)
+{
+	Node->_setDerivedOrientation(orient);
+}
+
 void AnnGameObject::setScale(AnnVect3 scale)
 {
 	Node->setScale(scale);
+}
+
+void AnnGameObject::setWorldOrientation(float w, float x, float y, float z)
+{
+	setWorldOrientation(AnnQuaternion{ w,x,y,z });
 }
 
 void AnnGameObject::setScale(float x, float y, float z)
@@ -384,16 +400,18 @@ bool AnnGameObject::checkForBodyInChild()
 	for (auto childNode : Node->getChildIterator())
 	{
 		auto node = childNode.second;
-		Ogre::SceneNode* childSceneNode;
-		if (dynamic_cast<Ogre::SceneNode*>(node))
+		Ogre::SceneNode* childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
+		if (childSceneNode != nullptr)
 		{
-			childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
 			auto obj = AnnGetGameObjectManager()->getFromNode(childSceneNode);
-			if (obj)
-				if (obj->getBody())
-					return true;
+			if (obj != nullptr && obj->getBody()) return true;
 		}
 	}
 
 	return false;
+}
+
+void AnnGameObject::setWorldPosition(float x, float y, float z)
+{
+	setWorldPosition(AnnVect3{ x,y,z });
 }

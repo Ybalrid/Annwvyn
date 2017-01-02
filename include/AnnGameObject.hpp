@@ -57,6 +57,9 @@ namespace Annwvyn
 		/// \param pos 3D position vector. Relative to scene root position
 		void setPosition(AnnVect3 pos) override;
 
+		void setWorldPosition(AnnVect3 pos);
+		void setWorldPosition(float x, float y, float z);
+
 		///Translate
 		/// \param x X component of the translation vector
 		/// \param y Y component of the translation vector
@@ -73,6 +76,9 @@ namespace Annwvyn
 		///Set Orientation from Quaternion
 		/// \param orient Quaternion for absolute orientation
 		void setOrientation(AnnQuaternion orient) override;
+
+		void setWorldOrientation(AnnQuaternion orient);
+		void setWorldOrientation(float w, float x, float y, float z);
 
 		///Set scale
 		/// \param x X component of the scale vector
