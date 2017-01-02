@@ -44,3 +44,20 @@ AnnGameObject* AnnPhysicsSetupParentError::recurToBody(AnnGameObject* start) con
 	if (start->getParent()->getBody()) return start->getParent().get();
 	return recurToBody(start->getParent().get());
 }
+
+AnnPhysicsSetupChildError::AnnPhysicsSetupChildError(AnnGameObject* origin) :
+	runtime_error{ "Cannot setup physics for Object " },
+	objectWithProblem{ origin }
+{
+	AnnDebug() << AnnPhysicsSetupChildError::what();
+}
+
+const char* AnnPhysicsSetupChildError::what() const throw()
+{
+	ostringstream out;
+	out << runtime_error::what();
+	out << objectWithProblem->getName() << '\n';
+	out << "a child has a rigid body. Creating a body will mess up the system. consider not using parenting for theses objects";
+
+	return out.str().c_str();
+}

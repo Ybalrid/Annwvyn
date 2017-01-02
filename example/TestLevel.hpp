@@ -16,7 +16,7 @@ public:
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
-		setUpPhysics(40, boxShape);
+		//setUpPhysics(40, boxShape);
 	}
 
 	void atRefresh() override
@@ -68,6 +68,8 @@ public:
 		auto Gizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "Gizmo");
 		S->attachChildObject(Gizmo);
 		Gizmo->setScale(10, 10, 10);
+		Gizmo->setUpPhysics(10, boxShape);
+		S->setUpPhysics(10, boxShape);
 
 		//Add water
 		auto Water = addGameObject("environment/Water.mesh");
