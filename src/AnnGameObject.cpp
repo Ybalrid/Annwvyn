@@ -338,10 +338,10 @@ bool AnnGameObject::hasParent()
 	AnnDebug() << "Parent node is " << parentSceneNode;
 	AnnDebug() << "Root node is " << AnnGetEngine()->getSceneManager()->getRootSceneNode();
 
-	if (reinterpret_cast<uint64_t>(static_cast<void*>(parentSceneNode))
-		== reinterpret_cast<uint64_t>(static_cast<void*>(AnnGetEngine()->getSceneManager()->getRootSceneNode())))
+	if (reinterpret_cast<uint64_t>(parentSceneNode)
+		== reinterpret_cast<uint64_t>(AnnGetEngine()->getSceneManager()->getRootSceneNode()))
 	{
-		AnnDebug() << "we catched the fact that parent scene node is root scene node";
+		AnnDebug() << "we caught the fact that parent scene node is root scene node";
 		return false;
 	}
 
