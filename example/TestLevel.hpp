@@ -68,7 +68,7 @@ public:
 		auto Gizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "Gizmo");
 		S->attachChildObject(Gizmo);
 		Gizmo->setScale(10, 10, 10);
-		Gizmo->setUpPhysics(10, boxShape);
+		//Gizmo->setUpPhysics(10, boxShape);
 		S->setUpPhysics(10, boxShape);
 
 		//Add water
