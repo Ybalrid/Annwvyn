@@ -183,6 +183,7 @@ namespace Annwvyn
 	private:
 
 		bool parentsHaveBody(AnnGameObject* obj);
+		bool childrenHaveBody(AnnGameObject* obj);
 
 		///Make Annwvyn::AnnEngine access these methods :
 		friend class AnnEngine;

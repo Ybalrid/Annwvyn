@@ -397,14 +397,29 @@ bool AnnGameObject::parentsHaveBody(AnnGameObject* obj)
 
 bool AnnGameObject::checkForBodyInChild()
 {
-	for (auto childNode : Node->getChildIterator())
+	return childrenHaveBody(this);
+}
+
+bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
+{
+	for (auto childNode : parentObj->Node->getChildIterator())
 	{
 		auto node = childNode.second;
-		Ogre::SceneNode* childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
+		auto childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
+
+		//Is an actual SceneNode
 		if (childSceneNode != nullptr)
 		{
 			auto obj = AnnGetGameObjectManager()->getFromNode(childSceneNode);
-			if (obj != nullptr && obj->getBody()) return true;
+			//found an object
+			if (obj != nullptr)
+			{
+				//Found a body
+				if (obj->getBody()) return true;
+
+				//Do child recursion here.
+				return childrenHaveBody(obj.get());
+			}
 		}
 	}
 
@@ -413,5 +428,5 @@ bool AnnGameObject::checkForBodyInChild()
 
 void AnnGameObject::setWorldPosition(float x, float y, float z)
 {
-	setWorldPosition(AnnVect3{ x,y,z });
+	setWorldPosition(AnnVect3{ x, y, z });
 }
