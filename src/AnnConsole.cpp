@@ -214,7 +214,7 @@ void AnnConsole::update()
 				   texture,																			//Texture
 				   Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
 				   Ogre::ColourValue::Black,														//Color
-				   'l', true);																		//Alignment
+				   'l');																		//Alignment
 }
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap)

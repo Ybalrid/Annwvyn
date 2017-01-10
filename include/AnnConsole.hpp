@@ -48,6 +48,8 @@ namespace Annwvyn
 		///Update the console by filling it with background texture then blitting text on it.
 		///Can take some computing time depending on the size/resolution of the textures and buffer
 		void update() override;
+
+		///Move the console where it should
 		void syncConsolePosition();
 
 	private:
@@ -92,8 +94,11 @@ namespace Annwvyn
 		///If false, the console is not visible
 		bool visibility;
 
+		///Timestamp in seconds since the start of the game the last console refresh was performed
 		double lastUpdate;
-		double refreshRate;
+
+		///Delay in seconds to re-refresh the console.
+		const double refreshRate;
 	};
 }
 
