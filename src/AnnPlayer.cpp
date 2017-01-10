@@ -45,6 +45,8 @@ AnnPlayer::AnnPlayer()
 	setActuator(new AnnDefaultPlayerActuator);
 
 	ignorePhysics = false;
+
+	mouseSensitivity = 3;
 }
 
 void AnnPlayer::setActuator(AnnPlayerActuator* act)
@@ -212,6 +214,7 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
 {
+	relValue *= mouseSensitivity;
 	applyRelativeBodyYaw(Ogre::Radian(-float(relValue) * getTurnSpeed() * updateTime));
 }
 

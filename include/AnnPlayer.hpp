@@ -155,7 +155,7 @@ namespace Annwvyn
 
 		///Boolean false if the player can get orientation transformation from
 		bool standing;
-
+		float mouseSensitivity;
 		///Get the ratio between walking and running speed
 		float getRunFactor();
 

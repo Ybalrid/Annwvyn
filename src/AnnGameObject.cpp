@@ -2,6 +2,7 @@
 #include "AnnGameObject.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 
@@ -40,7 +41,9 @@ AnnGameObject::~AnnGameObject()
 	}
 	if (state) delete state;
 
-	Node->getParent()->removeChild(Node);
+	//Prevent dereferencing null pointer here. Parent can be something other than root scene node now.
+	if (Node->getParent())
+		Node->getParent()->removeChild(Node);
 	std::vector<Ogre::MovableObject*> attachedObject;
 	for (unsigned short i(0); i < Node->numAttachedObjects(); i++)
 		attachedObject.push_back(Node->getAttachedObject(i));
@@ -56,13 +59,13 @@ void AnnGameObject::playSound(std::string path, bool loop, float volume)
 	audioSource->changeSound(path);
 	audioSource->setLooping(loop);
 	audioSource->setVolume(volume);
-	audioSource->setPositon(getPosition());
+	audioSource->setPositon(getWorldPosition());
 	audioSource->play();
 }
 
 void AnnGameObject::updateOpenAlPos()
 {
-	audioSource->setPositon(getPosition());
+	audioSource->setPositon(getWorldPosition());
 }
 
 void AnnGameObject::callUpdateOnScripts()
@@ -72,7 +75,7 @@ void AnnGameObject::callUpdateOnScripts()
 
 void AnnGameObject::setPosition(float x, float y, float z)
 {
-	setPosition(AnnVect3{ x,y,z });
+	setPosition(AnnVect3{ x, y, z });
 }
 
 void AnnGameObject::translate(float x, float y, float z)
@@ -98,7 +101,13 @@ void AnnGameObject::setPosition(AnnVect3 pos)
 	Node->setPosition(pos);
 
 	//change OpenAL Source Position
-	audioSource->setPositon(pos);
+	updateOpenAlPos();
+}
+
+void AnnGameObject::setWorldPosition(AnnVect3 pos)
+{
+	Node->_setDerivedPosition(pos);
+	updateOpenAlPos();
 }
 
 void AnnGameObject::setOrientation(float w, float x, float y, float z)
@@ -120,9 +129,19 @@ void AnnGameObject::setOrientation(AnnQuaternion orient)
 	}
 }
 
+void AnnGameObject::setWorldOrientation(AnnQuaternion orient)
+{
+	Node->_setDerivedOrientation(orient);
+}
+
 void AnnGameObject::setScale(AnnVect3 scale)
 {
 	Node->setScale(scale);
+}
+
+void AnnGameObject::setWorldOrientation(float w, float x, float y, float z)
+{
+	setWorldOrientation(AnnQuaternion{ w, x, y, z });
 }
 
 void AnnGameObject::setScale(float x, float y, float z)
@@ -157,6 +176,9 @@ void AnnGameObject::setEntity(Ogre::Entity* newEntity)
 
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
+	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
+	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
+
 	//init shape converter
 	BtOgre::StaticMeshToShapeConverter converter(Entity);
 
@@ -217,7 +239,7 @@ Ogre::Entity* AnnGameObject::getEntity()
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject)
 {
-	return getPosition().distance(otherObject->getPosition());
+	return getWorldPosition().distance(otherObject->getWorldPosition());
 }
 
 btRigidBody* AnnGameObject::getBody()
@@ -305,4 +327,106 @@ void AnnGameObject::attachScript(const std::string & scriptName)
 	if (script->isValid())
 		scripts.push_back(script);
 	script->registerAsListener();
+}
+
+bool AnnGameObject::hasParent()
+{
+	auto parentSceneNode = Node->getParentSceneNode();
+
+	//AnnDebug() << this << " " << getName() << " is testing for parent";
+	//AnnDebug() << "Our node is" << Node;
+	//AnnDebug() << "Parent node is " << parentSceneNode;
+	//AnnDebug() << "Root node is " << AnnGetEngine()->getSceneManager()->getRootSceneNode();
+
+	if (reinterpret_cast<uint64_t>(parentSceneNode)
+		== reinterpret_cast<uint64_t>(AnnGetEngine()->getSceneManager()->getRootSceneNode()))
+	{
+		//AnnDebug() << "we caught the fact that parent scene node is root scene node";
+		return false;
+	}
+
+	if (parentSceneNode != nullptr)
+		return true;
+
+	return false;
+}
+
+std::shared_ptr<AnnGameObject> AnnGameObject::getParent()
+{
+	return AnnGetGameObjectManager()->getFromNode(Node->getParentSceneNode());
+}
+
+void AnnGameObject::attachChildObject(std::shared_ptr<AnnGameObject> child)
+{
+	//child->Node has been detached from it's current parent(that was either a node or the root node)
+	child->Node->getParentSceneNode()->removeChild(child->Node);
+
+	//Attach it to the node of this object.
+	Node->addChild(child->Node);
+}
+
+void AnnGameObject::detachFromParent()
+{
+	Node->getParentSceneNode()->removeChild(Node);
+	AnnGetEngine()->getSceneManager()->getRootSceneNode()->addChild(Node);
+}
+
+bool AnnGameObject::checkForBodyInParent()
+{
+	return parentsHaveBody(this);
+}
+
+AnnVect3 AnnGameObject::getWorldPosition()
+{
+	return Node->_getDerivedPosition();
+}
+
+AnnQuaternion AnnGameObject::getWorldOrientation()
+{
+	return Node->_getDerivedOrientation();
+}
+
+bool AnnGameObject::parentsHaveBody(AnnGameObject* obj)
+{
+	if (!hasParent()) return false;
+	auto addr = obj->getParent().get();
+	if (!addr) return false;
+	if (obj->getParent()->getBody()) return true;
+	return parentsHaveBody(addr);
+}
+
+bool AnnGameObject::checkForBodyInChild()
+{
+	return childrenHaveBody(this);
+}
+
+bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
+{
+	for (auto childNode : parentObj->Node->getChildIterator())
+	{
+		auto node = childNode.second;
+		auto childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
+
+		//Is an actual SceneNode
+		if (childSceneNode != nullptr)
+		{
+			auto obj = AnnGetGameObjectManager()->getFromNode(childSceneNode);
+			//found an object
+			if (obj != nullptr)
+			{
+				//Found a body
+				if (obj->getBody()) return true;
+
+				//Do child recursion here.
+				return childrenHaveBody(obj.get());
+			}
+		}
+	}
+
+	return false;
+}
+
+void AnnGameObject::setWorldPosition(float x, float y, float z)
+{
+	setWorldPosition(AnnVect3{ x, y, z });
 }

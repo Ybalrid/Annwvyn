@@ -17,7 +17,7 @@
 using namespace std;
 using namespace Annwvyn;
 
-bool isRoomscale{ true };
+constexpr bool isRoomscale{ false };
 
 AnnMain()
 {
