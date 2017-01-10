@@ -564,6 +564,8 @@ namespace Annwvyn
 		std::string input;
 		///If set false, this class does nothing.
 		bool listen;
+
+		bool asciiOnly;
 	};
 
 	//The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by
