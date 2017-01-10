@@ -76,6 +76,8 @@ namespace Annwvyn
 		///Return true if it's a key release. Key event are debounced.
 		bool isReleased();
 
+		bool shouldIgnore();
+
 	private:
 		friend class AnnEventManager;
 		///Code of the key this event relate to
@@ -84,6 +86,8 @@ namespace Annwvyn
 		bool pressed;
 		///Released state
 		bool released;
+
+		bool ignored;
 		///Set the event as a key release event
 		void setPressed();
 		///Set the event as a key press event
@@ -615,6 +619,8 @@ namespace Annwvyn
 		///Get the text inputer object
 		AnnTextInputer* getTextInputer();
 
+		void keyboardUsedForText(bool state = true);
+
 	private:
 
 		///List of pointer to the listeners.
@@ -633,7 +639,7 @@ namespace Annwvyn
 		void processTimers();
 		///Process triggers
 		void processTriggerEvents();
-
+		///Process collisions
 		void processCollisionEvents();
 
 		// TODO get rid of the shared pointer here
@@ -682,6 +688,8 @@ namespace Annwvyn
 
 		StickAxisId xboxID;
 		bool knowXbox;
+
+		bool keyboardIgnore;
 	};
 }
 

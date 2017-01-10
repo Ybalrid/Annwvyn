@@ -10,7 +10,9 @@ modified(false),
 consoleNode(nullptr),
 offset(0, 0.125f, -0.75f),
 openGL43plus(false),
-visibility(false)
+visibility(false),
+lastUpdate{ 0 },
+refreshRate{ 1 / 15 }
 {
 	//Define the custom material
 	Ogre::MaterialPtr Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
@@ -123,10 +125,7 @@ visibility(false)
 		log << "AnnConsolen constructor detected OpenGL version " << major << "." << minor;
 		AnnEngine::log(log.str());
 
-		if ((openGL43plus = major >= 4 && minor >= 3))
-		{
-			AnnEngine::log("This version is 4.3 or greater. Texture copy optimization enabled");
-		}
+		if ((openGL43plus = major >= 4 && minor >= 3)) { AnnEngine::log("This version is 4.3 or greater. Texture copy optimization enabled"); }
 	}
 }
 
@@ -146,6 +145,12 @@ void AnnConsole::append(std::string str)
 void AnnConsole::setVisible(bool state)
 {
 	visibility = state;
+	AnnGetEventManager()->keyboardUsedForText(state);
+	if (state)
+		AnnGetEventManager()->getTextInputer()->startListening();
+	else
+		AnnGetEventManager()->getTextInputer()->stopListening();
+
 	consoleNode->setVisible(visibility);
 }
 
@@ -156,17 +161,28 @@ void AnnConsole::toggle()
 
 void AnnConsole::update()
 {
-	//std::stringstream toLog;
-	//toLog << "Console Position " << consoleNode->getPosition();
-	//toLog << "Console DerivedPosition" << consoleNode->_getDerivedPosition();
-	//AnnEngine::log(toLog.str());
-
 	//Updated
 	modified = false;
+	lastUpdate = AnnGetEngine()->getTimeFromStartupSeconds();
+
 	//Get the content of the buffer into a static string
 	std::stringstream content;
-	for (size_t i(0); i < CONSOLE_BUFFER; i++)
-		content << buffer[i] << std::endl;
+	for (auto i{ 0 }; i < CONSOLE_BUFFER; i++) content << buffer[i].substr(0, MAX_CONSOLE_LOG_WIDTH) << "\n";
+	for (auto i{ 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "-";
+	content << "\n%> ";
+
+	auto command = AnnGetEventManager()->getTextInputer()->getInput();
+	content << command;
+
+	//If carriage return character
+	if (command[command.size() - 1] == '\r')
+	{
+		//Execute command code here
+		AnnGetEventManager()->getTextInputer()->clearInput();
+	}
+
+	if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
+
 	Ogre::String textToDisplay = content.str();
 
 	if (openGL43plus)
@@ -194,13 +210,11 @@ void AnnConsole::update()
 	}
 
 	//Write text to texture
-	WriteToTexture
-	(textToDisplay,																//Text
-	 texture,																	//Texture
-	 Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
-	 Ogre::ColourValue::Black,															//Color
-	 'l',																		//Alignment
-	 false);																		//LineWrap
+	WriteToTexture(textToDisplay,																	//Text
+				   texture,																			//Texture
+				   Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
+				   Ogre::ColourValue::Black,														//Color
+				   'l', true);																		//Alignment
 }
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap)
@@ -386,6 +400,9 @@ void AnnConsole::syncConsolePosition()
 bool AnnConsole::needUpdate()
 {
 	syncConsolePosition();
+
+	if (AnnGetEngine()->getTimeFromStartupSeconds() - lastUpdate > refreshRate)
+		modified = true;
 
 	return modified && visibility;
 }
