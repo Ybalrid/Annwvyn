@@ -16,7 +16,7 @@ public:
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
-		setUpPhysics(40, boxShape);
+		//setUpPhysics(40, boxShape);
 	}
 
 	void atRefresh() override
@@ -64,6 +64,21 @@ public:
 		levelContent.push_back(S);
 		S->playSound("media/monster.wav", true, 1);
 		S->attachScript("DummyBehavior");
+
+		auto Gizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "Gizmo");
+		auto ChildGizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "ChildGizmo");
+		Gizmo->attachChildObject(ChildGizmo);
+		ChildGizmo->setPosition(1, 1, 1);
+
+		//S is parent
+		//Gizmo is child
+		S->attachChildObject(Gizmo);
+		Gizmo->setScale(10, 10, 10);
+
+		//If both of theses lines are run, the 2nd one will crash the engine
+		//ChildGizmo->setUpPhysics(10, boxShape);
+
+		S->setUpPhysics(10, boxShape);
 
 		//Add water
 		auto Water = addGameObject("environment/Water.mesh");
@@ -118,7 +133,8 @@ class PhysicsDebugLevel : LEVEL
 		AnnGetPlayer()->resetPlayerPhysics();
 	}
 
-	void runLogic() override {
+	void runLogic() override
+	{
 		AnnDebug() << "Player position is : " << AnnGetPlayer()->getPosition();
 	}
 };
