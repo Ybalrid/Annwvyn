@@ -75,7 +75,7 @@ void AnnGameObject::callUpdateOnScripts()
 
 void AnnGameObject::setPosition(float x, float y, float z)
 {
-	setPosition(AnnVect3{ x,y,z });
+	setPosition(AnnVect3{ x, y, z });
 }
 
 void AnnGameObject::translate(float x, float y, float z)
@@ -141,7 +141,7 @@ void AnnGameObject::setScale(AnnVect3 scale)
 
 void AnnGameObject::setWorldOrientation(float w, float x, float y, float z)
 {
-	setWorldOrientation(AnnQuaternion{ w,x,y,z });
+	setWorldOrientation(AnnQuaternion{ w, x, y, z });
 }
 
 void AnnGameObject::setScale(float x, float y, float z)
@@ -333,15 +333,15 @@ bool AnnGameObject::hasParent()
 {
 	auto parentSceneNode = Node->getParentSceneNode();
 
-	AnnDebug() << this << " " << getName() << " is testing for parent";
-	AnnDebug() << "Our node is" << Node;
-	AnnDebug() << "Parent node is " << parentSceneNode;
-	AnnDebug() << "Root node is " << AnnGetEngine()->getSceneManager()->getRootSceneNode();
+	//AnnDebug() << this << " " << getName() << " is testing for parent";
+	//AnnDebug() << "Our node is" << Node;
+	//AnnDebug() << "Parent node is " << parentSceneNode;
+	//AnnDebug() << "Root node is " << AnnGetEngine()->getSceneManager()->getRootSceneNode();
 
 	if (reinterpret_cast<uint64_t>(parentSceneNode)
 		== reinterpret_cast<uint64_t>(AnnGetEngine()->getSceneManager()->getRootSceneNode()))
 	{
-		AnnDebug() << "we caught the fact that parent scene node is root scene node";
+		//AnnDebug() << "we caught the fact that parent scene node is root scene node";
 		return false;
 	}
 

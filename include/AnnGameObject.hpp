@@ -30,7 +30,6 @@
 
 namespace Annwvyn
 {
-	class DLL AnnGameObject;
 	class DLL AnnGameObjectManager;
 
 	///An object that exist in the game. Graphically and Potentially Physically
@@ -57,7 +56,10 @@ namespace Annwvyn
 		/// \param pos 3D position vector. Relative to scene root position
 		void setPosition(AnnVect3 pos) override;
 
+		///Set the world position from a vector
 		void setWorldPosition(AnnVect3 pos);
+
+		///Set the world position from a few floats
 		void setWorldPosition(float x, float y, float z);
 
 		///Translate
@@ -77,7 +79,10 @@ namespace Annwvyn
 		/// \param orient Quaternion for absolute orientation
 		void setOrientation(AnnQuaternion orient) override;
 
+		///Set the world orientation as a quaternion
 		void setWorldOrientation(AnnQuaternion orient);
+
+		///Set the world orientation as some floats
 		void setWorldOrientation(float w, float x, float y, float z);
 
 		///Set scale
@@ -93,11 +98,13 @@ namespace Annwvyn
 		///Get Position
 		AnnVect3 getPosition() override;
 
+		///Get the position in world
 		AnnVect3 getWorldPosition();
 
 		///Get Orientation
 		AnnQuaternion getOrientation() override;
 
+		///Get the world orientation
 		AnnQuaternion getWorldOrientation();
 
 		///Get scale
@@ -165,7 +172,7 @@ namespace Annwvyn
 		///Attach a script to this object
 		void attachScript(const std::string& scriptName);
 
-		///Return true if node is attached to the node of a GameObject. Nodes present in the scene allays have a parent, the Root node. It will be treated as 'not attached to parent' if attached to scene root
+		///Return true if node is attached to the node owned by another AnnGameObject
 		bool hasParent();
 
 		///Get the parent Game Object
@@ -177,12 +184,18 @@ namespace Annwvyn
 		///Make the node independent to any GameObject
 		void detachFromParent();
 
+		///Recursively check if any parent has a body, if one is found, returns true
 		bool checkForBodyInParent();
+
+		///Recursively check if any child has a body, if one is found, returns true
 		bool checkForBodyInChild();
 
 	private:
 
+		///Do the actual recursion of checkForBodyInParent
 		bool parentsHaveBody(AnnGameObject* obj);
+
+		///Do the actual recursion of checkForBodyInChild
 		bool childrenHaveBody(AnnGameObject* obj);
 
 		///Make Annwvyn::AnnEngine access these methods :
@@ -211,7 +224,10 @@ namespace Annwvyn
 		* Same is true with the Orientation. We use Ogre node
 		*/
 
+		///SceneNode
 		Ogre::SceneNode* Node;
+
+		///Entity
 		Ogre::Entity* Entity;
 
 		// TODO create animation state machine
@@ -232,6 +248,7 @@ namespace Annwvyn
 		///True if the object is visible
 		BtOgre::RigidBodyState *state;
 
+		///list of script objects
 		std::vector<std::shared_ptr<AnnBehaviorScript>> scripts;
 
 	public:
