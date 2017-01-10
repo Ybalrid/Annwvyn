@@ -18,7 +18,8 @@
 
 #include "AnnSubsystem.hpp"
 
-#define CONSOLE_BUFFER 19
+#define CONSOLE_BUFFER 17
+#define MAX_CONSOLE_LOG_WIDTH 72
 #define BASE 256
 #define MARGIN 4
 
@@ -51,7 +52,7 @@ namespace Annwvyn
 
 	private:
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
-		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true);
+		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false);
 		///True if content of the buffer has been modified
 		bool modified;
 
@@ -90,6 +91,9 @@ namespace Annwvyn
 
 		///If false, the console is not visible
 		bool visibility;
+
+		double lastUpdate;
+		double refreshRate;
 	};
 }
 

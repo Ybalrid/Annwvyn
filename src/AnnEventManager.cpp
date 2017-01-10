@@ -41,6 +41,8 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	else
 		//Put typed char into the application
 		input.push_back(char(arg.text));
+	//AnnDebug() << "typed char as code " << arg.text;
+	//AnnDebug() << "typed char as char " << char(arg.text);
 	return true;
 }
 
@@ -80,7 +82,8 @@ Keyboard(nullptr),
 Mouse(nullptr),
 lastTimerCreated(0),
 defaultEventListener(nullptr),
-knowXbox(false)
+knowXbox(false),
+keyboardIgnore{ false }
 {
 	//Init all bool array to false
 	for (auto& keyState : previousKeyStates) keyState = false;
@@ -218,6 +221,7 @@ void AnnEventManager::processInput()
 				e.setPressed();
 				e.populate();
 				e.validate();
+				e.ignored = keyboardIgnore;
 
 				for (auto weak_listener : listeners)
 					if (auto listener = weak_listener.lock())
@@ -233,6 +237,7 @@ void AnnEventManager::processInput()
 				e.setReleased();
 				e.populate();
 				e.validate();
+				e.ignored = keyboardIgnore;
 
 				for (auto weak_listener : listeners)
 					if (auto listener = weak_listener.lock())
@@ -451,4 +456,14 @@ void AnnEventManager::detectedCollision(void* a, void* b)
 void AnnEventManager::playerCollision(void* object)
 {
 	playerCollisionBuffer.push_back(static_cast<AnnGameObject*>(object));
+}
+
+bool AnnKeyEvent::shouldIgnore()
+{
+	return ignored;
+}
+
+void AnnEventManager::keyboardUsedForText(bool state)
+{
+	keyboardIgnore = state;
 }
