@@ -664,3 +664,8 @@ void AnnBehaviorScript::PlayerCollisionEvent(AnnPlayerCollisionEvent e)
 	catch (const chaiscript::exception::dispatch_error&) { cannotPlayerCollision = true; }
 	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
 }
+
+void AnnScriptManager::evalString(const std::string& chaiCode)
+{
+	chai.eval(chaiCode);
+}

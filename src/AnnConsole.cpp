@@ -2,6 +2,7 @@
 #include "AnnConsole.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
@@ -177,6 +178,7 @@ void AnnConsole::update()
 	//If carriage return character
 	if (command[command.size() - 1] == '\r')
 	{
+		runInput(command);
 		//Execute command code here
 		AnnGetEventManager()->getTextInputer()->clearInput();
 	}
@@ -405,4 +407,35 @@ bool AnnConsole::needUpdate()
 		modified = true;
 
 	return modified && visibility;
+}
+
+void AnnConsole::runInput(std::string& input)
+{
+	//do some cleanup on the inputed string
+	//remove the \r terminaison
+	input.pop_back();
+
+	if (input == "AnnClearConsole()")
+	{
+		AnnDebug() << "console clear here!";
+		for (auto i{ 0 }; i < CONSOLE_BUFFER; ++i) AnnDebug() << "";
+		return void();
+	}
+
+	try
+	{
+		AnnGetScriptManager()->evalString(input);
+	}
+	catch (const chaiscript::exception::eval_error& eval_error)
+	{
+		auto strings = { std::string(eval_error.what()), eval_error.pretty_print() };
+
+		for (const auto& errorStr : strings)
+		{
+			std::stringstream whatsstr(errorStr);
+			std::string errorBuffer;
+			while (std::getline(whatsstr, errorBuffer))
+				AnnDebug() << errorBuffer.substr(0, MAX_CONSOLE_LOG_WIDTH - 8);
+		}
+	}
 }

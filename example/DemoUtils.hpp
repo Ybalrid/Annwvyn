@@ -13,6 +13,7 @@ public:
 
 	void KeyEvent(AnnKeyEvent e) override
 	{
+		if (e.shouldIgnore()) return;
 		if (e.isPressed() && e.getKey() == KeyCode::space)
 			jumpToHub();
 	}
