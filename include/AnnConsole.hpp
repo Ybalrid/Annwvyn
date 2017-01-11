@@ -12,6 +12,7 @@
 #include "AnnTypes.h"
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include <Ogre.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
