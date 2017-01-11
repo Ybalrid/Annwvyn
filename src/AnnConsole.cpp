@@ -167,13 +167,22 @@ void AnnConsole::update()
 	lastUpdate = AnnGetEngine()->getTimeFromStartupSeconds();
 
 	//Get the content of the buffer into a static string
-	std::stringstream content;
-	for (auto i{ 0 }; i < CONSOLE_BUFFER; i++) content << buffer[i].substr(0, MAX_CONSOLE_LOG_WIDTH) << "\n";
-	for (auto i{ 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "-";
+	std::stringstream content; std::string logLine;
+	for (auto i{ 0 }; i < CONSOLE_BUFFER; i++)
+	{
+		logLine = buffer[i].substr(0, MAX_CONSOLE_LOG_WIDTH);
+
+		for (auto j{ 0 }; j < logLine.size(); j++)
+			if (logLine[j] == '\n') logLine[j] = '|';
+
+		content << logLine << '\n';
+	}
+
+	for (auto i{ 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "_";
 	content << "\n%> ";
 
 	auto command = AnnGetEventManager()->getTextInputer()->getInput();
-	content << command;
+	content << command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
 
 	//If carriage return character
 	if (command[command.size() - 1] == '\r')
@@ -216,7 +225,7 @@ void AnnConsole::update()
 				   texture,																			//Texture
 				   Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
 				   Ogre::ColourValue::Black,														//Color
-				   'l');																		//Alignment
+				   'l', true);																		//Alignment
 }
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap)
@@ -415,27 +424,14 @@ void AnnConsole::runInput(std::string& input)
 	//remove the \r terminaison
 	input.pop_back();
 
-	if (input == "AnnClearConsole()")
-	{
-		AnnDebug() << "console clear here!";
-		for (auto i{ 0 }; i < CONSOLE_BUFFER; ++i) AnnDebug() << "";
-		return void();
-	}
-
 	try
 	{
 		AnnGetScriptManager()->evalString(input);
 	}
 	catch (const chaiscript::exception::eval_error& eval_error)
 	{
-		auto strings = { std::string(eval_error.what()), eval_error.pretty_print() };
-
-		for (const auto& errorStr : strings)
-		{
-			std::stringstream whatsstr(errorStr);
-			std::string errorBuffer;
-			while (std::getline(whatsstr, errorBuffer))
-				AnnDebug() << errorBuffer.substr(0, MAX_CONSOLE_LOG_WIDTH - 8);
-		}
+		AnnDebug() << "Console script error : " << input;
+		AnnDebug() << eval_error.what();
+		AnnDebug() << eval_error.pretty_print();
 	}
 }
