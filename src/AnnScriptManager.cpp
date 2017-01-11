@@ -211,6 +211,7 @@ void AnnScriptManager::registerApi()
 		auto obj = AnnGetGameObjectManager()->getObjectFromID(objectName);
 		if (!obj) return;
 		AnnGetGameObjectManager()->removeGameObject(obj);
+		AnnGetLevelManager()->removeFromCurrentLevel(obj);
 	}
 	), "AnnRemoveGameObject");
 
@@ -322,6 +323,13 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](bool b) {string s("true"); if (!b) s = "false"; AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
 	chai.add(fun([](int i) {AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
 	chai.add(fun([](float f) {AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
+
+	chai.add(fun([]()
+	{
+		AnnDebug() << "console clear : ";
+		for (auto i{ 0 }; i < CONSOLE_BUFFER; ++i)
+			AnnDebug() << "";
+	}), "AnnClearConsole");
 }
 
 void AnnScriptManager::tryAndGetEventHooks()
