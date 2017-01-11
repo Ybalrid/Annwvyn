@@ -76,6 +76,7 @@ namespace Annwvyn
 		///Return true if it's a key release. Key event are debounced.
 		bool isReleased();
 
+		///If this is true, it probably means that the keyboard is used for something else and that you should ignore this event.
 		bool shouldIgnore();
 
 	private:
@@ -298,11 +299,13 @@ namespace Annwvyn
 		int stickID;
 	};
 	class AnnHandController;
+
 	class DLL AnnHandControllerEvent : public AnnEvent
 	{
 	public:
 		AnnHandControllerEvent();
 
+		///get access to the hand controller this event is related to
 		AnnHandController* getController();
 	private:
 		friend class AnnEventManager;
