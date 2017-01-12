@@ -146,8 +146,8 @@ void AnnConsole::append(std::string str)
 void AnnConsole::setVisible(bool state)
 {
 	visibility = state;
-	AnnGetEventManager()->keyboardUsedForText(state);
-	if (state)
+	AnnGetEventManager()->keyboardUsedForText(visibility);
+	if (visibility)
 		AnnGetEventManager()->getTextInputer()->startListening();
 	else
 		AnnGetEventManager()->getTextInputer()->stopListening();
@@ -168,34 +168,48 @@ void AnnConsole::update()
 
 	//Get the content of the buffer into a static string
 	std::stringstream content; std::string logLine;
+
+	//For each line
 	for (auto i{ 0 }; i < CONSOLE_BUFFER; i++)
 	{
+		//Make the len fit the screen
 		logLine = buffer[i].substr(0, MAX_CONSOLE_LOG_WIDTH);
 
+		//No newline char
 		for (auto j{ 0 }; j < logLine.size(); j++)
 			if (logLine[j] == '\n') logLine[j] = '|';
 
+		//Append to display content
 		content << logLine << '\n';
 	}
 
+	//horizontal separator
 	for (auto i{ 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "-";
+
+	//Command Invite
 	content << "\n%> ";
 
+	//Extract user inputed text
 	auto command = AnnGetEventManager()->getTextInputer()->getInput();
+
+	//Display with a scrolling window
 	content << command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
 
-	//If carriage return character
+	//If carriage return character (return key was last key press done)
 	if (command[command.size() - 1] == '\r')
 	{
-		runInput(command);
 		//Execute command code here
+		runInput(command);
 		AnnGetEventManager()->getTextInputer()->clearInput();
 	}
 
+	//Append blinking cursor
 	if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
 
+	//Extract string from stream
 	Ogre::String textToDisplay = content.str();
 
+	//Erase plane (draw background)
 	if (openGL43plus)
 		glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
 						   textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
