@@ -178,7 +178,7 @@ void AnnConsole::update()
 		content << logLine << '\n';
 	}
 
-	for (auto i{ 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "_";
+	for (auto i{ 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "-";
 	content << "\n%> ";
 
 	auto command = AnnGetEventManager()->getTextInputer()->getInput();

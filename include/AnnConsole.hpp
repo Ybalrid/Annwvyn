@@ -55,6 +55,7 @@ namespace Annwvyn
 
 	private:
 
+		///Cleanup and run the user input.
 		void runInput(std::string& input);
 
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
