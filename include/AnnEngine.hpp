@@ -141,6 +141,9 @@ namespace Annwvyn
 		///Get the VRRenderer
 		std::shared_ptr<OgreVRRender> getVRRenderer();
 
+		///Get the console 
+		std::shared_ptr<AnnConsole> getOnScreenConsole();
+
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 
 		///Init the physics model

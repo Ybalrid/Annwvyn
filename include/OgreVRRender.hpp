@@ -171,6 +171,9 @@ public:
 
 	void createWindow(unsigned int w = 1280, unsigned int h = 720, bool vsync = false);
 
+	///Get the name of this renderer
+	std::string getName() const;
+
 protected:
 
 	std::string rendererName;

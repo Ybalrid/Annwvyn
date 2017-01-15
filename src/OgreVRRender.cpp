@@ -262,3 +262,8 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	window = root->createRenderWindow(rendererName + " : " + name + " - monitor output",
 									  w, h, false, &options);
 }
+
+std::string OgreVRRender::getName() const
+{
+	return rendererName;
+}

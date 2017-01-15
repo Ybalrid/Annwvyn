@@ -53,10 +53,14 @@ namespace Annwvyn
 		///Move the console where it should
 		void syncConsolePosition();
 
+		void bufferClear();
+
 	private:
 
 		///Cleanup and run the user input.
 		void runInput(std::string& input);
+
+		bool runSpecialInput(const std::string& input);
 
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
 		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false);

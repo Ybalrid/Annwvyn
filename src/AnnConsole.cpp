@@ -438,6 +438,8 @@ void AnnConsole::runInput(std::string& input)
 	//remove the \r terminaison
 	input.pop_back();
 
+	if (runSpecialInput(input)) return;
+
 	try
 	{
 		AnnGetScriptManager()->evalString(input);
@@ -448,4 +450,40 @@ void AnnConsole::runInput(std::string& input)
 		AnnDebug() << eval_error.what();
 		AnnDebug() << eval_error.pretty_print();
 	}
+}
+
+bool AnnConsole::runSpecialInput(const std::string& input)
+{
+	std::stringstream writeStream;
+	if(input =="help")
+	{
+		bufferClear();
+		append("You asked for help :");
+		append("This debug console understand the same thing");
+		append("as the integrated scripting language.");
+		append("However, it runs on global space. To prevent");
+		append("To prevent breaking stuff, you cannot create");
+		append("store variables here.");
+		append("");
+		append("You can display this help by typing \"help\"");
+
+		return true;
+	}
+
+	if(input == "status")
+	{
+		bufferClear();
+		append("Running VR system: " + AnnGetVRRenderer()->getName());
+		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getContent().size()) + " active objects");
+		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getLights().size()) + " active light sources");
+
+		return true;
+	}
+	return false;
+}
+
+void AnnConsole::bufferClear()
+{
+	for (auto& line : buffer)
+		line.clear();
 }
