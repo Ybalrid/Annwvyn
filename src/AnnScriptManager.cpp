@@ -324,12 +324,8 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](int i) {AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
 	chai.add(fun([](float f) {AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
 
-	chai.add(fun([]()
-	{
-		AnnDebug() << "console clear : ";
-		for (auto i{ 0 }; i < CONSOLE_BUFFER; ++i)
-			AnnDebug() << "";
-	}), "AnnClearConsole");
+	///Clear the console 
+	chai.add(fun([]() {AnnGetOnScreenConsole()->bufferClear(); }), "AnnClearConsole");
 }
 
 void AnnScriptManager::tryAndGetEventHooks()

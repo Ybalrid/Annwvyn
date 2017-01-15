@@ -58,6 +58,9 @@ namespace Annwvyn
 		///Retrieve the `id`th  loaded level pointer
 		std::shared_ptr<AnnLevel> getLevelByIndex(level_id id);
 
+		///Get the current level
+		std::shared_ptr<AnnLevel> getCurrentLevel();
+
 		///Add an orphan object to the current level
 		void addToCurrentLevel(std::shared_ptr<AnnGameObject> obj);
 

@@ -86,3 +86,13 @@ std::string AnnLevel::generateRandomID(size_t len)
 
 	return id;
 }
+
+AnnGameObjectList& AnnLevel::getContent()
+{
+	return levelContent;
+}
+
+AnnLightList& AnnLevel::getLights()
+{
+	return levelLighting;
+}
