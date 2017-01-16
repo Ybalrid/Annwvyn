@@ -57,7 +57,7 @@ namespace Annwvyn
 		void bufferClear();
 
 		///Array of forbidden keyword to check
-		std::array<const char*, 1> forbidden = { {"var"} };
+		std::array<const char*, 2> forbidden = { {"var", "auto"} };
 
 	private:
 
