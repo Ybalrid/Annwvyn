@@ -111,6 +111,9 @@ namespace Annwvyn
 		///Create a instance to the script. Return a shared pointer.
 		std::shared_ptr <AnnBehaviorScript> getBehaviorScript(const std::string& scriptName, AnnGameObject* owner = nullptr);
 
+		///Evaluate one line of chaiCode
+		void evalString(const std::string& chaiCode);
+
 	private:
 
 		///ChaiScript engine

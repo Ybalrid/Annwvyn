@@ -211,6 +211,7 @@ void AnnScriptManager::registerApi()
 		auto obj = AnnGetGameObjectManager()->getObjectFromID(objectName);
 		if (!obj) return;
 		AnnGetGameObjectManager()->removeGameObject(obj);
+		AnnGetLevelManager()->removeFromCurrentLevel(obj);
 	}
 	), "AnnRemoveGameObject");
 
@@ -322,6 +323,9 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](bool b) {string s("true"); if (!b) s = "false"; AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
 	chai.add(fun([](int i) {AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
 	chai.add(fun([](float f) {AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
+
+	///Clear the console 
+	chai.add(fun([]() {AnnGetOnScreenConsole()->bufferClear(); }), "AnnClearConsole");
 }
 
 void AnnScriptManager::tryAndGetEventHooks()
@@ -663,4 +667,9 @@ void AnnBehaviorScript::PlayerCollisionEvent(AnnPlayerCollisionEvent e)
 	}
 	catch (const chaiscript::exception::dispatch_error&) { cannotPlayerCollision = true; }
 	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+}
+
+void AnnScriptManager::evalString(const std::string& chaiCode)
+{
+	chai.eval(chaiCode);
 }

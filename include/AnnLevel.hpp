@@ -44,6 +44,12 @@ namespace Annwvyn
 		///Run logic code from the level
 		virtual void runLogic() = 0;
 
+		///Get the list of objects
+		AnnGameObjectList& getContent();
+
+		///Get the list of lights
+		AnnLightList& getLights();
+
 	protected:
 		friend class AnnLevelManager;
 		AnnGameObjectList levelContent;

@@ -8,6 +8,7 @@ class DummyBehavior
 
 		//I have to manage the fact that holding a reference to this object don't mess up the object deletion
 		//Hey, it works now! :-D
+
 		this.OwnerRef := AnnGetGameObject(ownerTag);
 
 	}
@@ -16,8 +17,8 @@ class DummyBehavior
 	{
 		//AnnDebugLog("Dummy Behavior updated");
 
-		/*AnnDebugLog(this.OwnerRef.getPosition());
-		AnnDebugLog(this.OwnerRef.getOrientation());*/
+		//AnnDebugLog(this.OwnerRef.getPosition());
+		//AnnDebugLog(this.OwnerRef.getOrientation());
 
 		//this.methodThatDontExist();
 

@@ -76,6 +76,9 @@ namespace Annwvyn
 		///Return true if it's a key release. Key event are debounced.
 		bool isReleased();
 
+		///If this is true, it probably means that the keyboard is used for something else and that you should ignore this event.
+		bool shouldIgnore();
+
 	private:
 		friend class AnnEventManager;
 		///Code of the key this event relate to
@@ -84,6 +87,8 @@ namespace Annwvyn
 		bool pressed;
 		///Released state
 		bool released;
+
+		bool ignored;
 		///Set the event as a key release event
 		void setPressed();
 		///Set the event as a key press event
@@ -294,11 +299,13 @@ namespace Annwvyn
 		int stickID;
 	};
 	class AnnHandController;
+
 	class DLL AnnHandControllerEvent : public AnnEvent
 	{
 	public:
 		AnnHandControllerEvent();
 
+		///get access to the hand controller this event is related to
 		AnnHandController* getController();
 	private:
 		friend class AnnEventManager;
@@ -560,6 +567,8 @@ namespace Annwvyn
 		std::string input;
 		///If set false, this class does nothing.
 		bool listen;
+
+		bool asciiOnly;
 	};
 
 	//The event manager handles all events that can occur during the gameplay loop. The private 'update()' method is called by
@@ -615,6 +624,8 @@ namespace Annwvyn
 		///Get the text inputer object
 		AnnTextInputer* getTextInputer();
 
+		void keyboardUsedForText(bool state = true);
+
 	private:
 
 		///List of pointer to the listeners.
@@ -633,7 +644,7 @@ namespace Annwvyn
 		void processTimers();
 		///Process triggers
 		void processTriggerEvents();
-
+		///Process collisions
 		void processCollisionEvents();
 
 		// TODO get rid of the shared pointer here
@@ -682,6 +693,8 @@ namespace Annwvyn
 
 		StickAxisId xboxID;
 		bool knowXbox;
+
+		bool keyboardIgnore;
 	};
 }
 

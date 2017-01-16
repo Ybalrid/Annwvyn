@@ -70,6 +70,11 @@ KeyCode::code AnnKeyEvent::getKey()
 	return key;
 }
 
+bool AnnKeyEvent::shouldIgnore()
+{
+	return ignored;
+}
+
 //---------------------------------------MOUSE
 AnnMouseAxis::AnnMouseAxis()
 {

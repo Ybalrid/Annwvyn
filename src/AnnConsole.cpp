@@ -2,6 +2,7 @@
 #include "AnnConsole.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
@@ -10,12 +11,14 @@ modified(false),
 consoleNode(nullptr),
 offset(0, 0.125f, -0.75f),
 openGL43plus(false),
-visibility(false)
+visibility(false),
+lastUpdate{ 0 },
+refreshRate{ 1 / 15 }
 {
 	//Define the custom material
-	Ogre::MaterialPtr Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
-	Ogre::Technique* technique = Console.getPointer()->getTechnique(0);
-	Ogre::Pass* pass = technique->getPass(0);
+	auto Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
+	auto technique = Console.getPointer()->getTechnique(0);
+	auto pass = technique->getPass(0);
 	pass->setLightingEnabled(false);
 	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
 
@@ -27,7 +30,7 @@ visibility(false)
 	*    |        /      |
 	*    |     /         |
 	*    |  /            |
-	*  1 +----------------+ 3
+	*  1 +---------------+ 3
 	* Texture coordinates are also mapped. To display properly, the texture should respect the same aspect ratio (2:1)
 	*/
 
@@ -93,8 +96,12 @@ visibility(false)
 
 	//Aspect ration of the console is 2:1. The actual size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
-	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_CORE", Ogre::TEX_TYPE_2D, 2 * BASE, BASE, Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
-	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
+	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_CORE",
+																Ogre::TEX_TYPE_2D, 2 * BASE, BASE,
+																Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8,
+																Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
+
+	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
 	displaySurfaceTextureUniteState->setTexture(texture);
 
 	//Load background texture to a buffer
@@ -123,10 +130,7 @@ visibility(false)
 		log << "AnnConsolen constructor detected OpenGL version " << major << "." << minor;
 		AnnEngine::log(log.str());
 
-		if ((openGL43plus = major >= 4 && minor >= 3))
-		{
-			AnnEngine::log("This version is 4.3 or greater. Texture copy optimization enabled");
-		}
+		if ((openGL43plus = major >= 4 && minor >= 3)) { AnnEngine::log("This version is 4.3 or greater. Texture copy optimization enabled"); }
 	}
 }
 
@@ -146,6 +150,12 @@ void AnnConsole::append(std::string str)
 void AnnConsole::setVisible(bool state)
 {
 	visibility = state;
+	AnnGetEventManager()->keyboardUsedForText(visibility);
+	if (visibility)
+		AnnGetEventManager()->getTextInputer()->startListening();
+	else
+		AnnGetEventManager()->getTextInputer()->stopListening();
+
 	consoleNode->setVisible(visibility);
 }
 
@@ -156,19 +166,48 @@ void AnnConsole::toggle()
 
 void AnnConsole::update()
 {
-	//std::stringstream toLog;
-	//toLog << "Console Position " << consoleNode->getPosition();
-	//toLog << "Console DerivedPosition" << consoleNode->_getDerivedPosition();
-	//AnnEngine::log(toLog.str());
-
 	//Updated
 	modified = false;
-	//Get the content of the buffer into a static string
-	std::stringstream content;
-	for (size_t i(0); i < CONSOLE_BUFFER; i++)
-		content << buffer[i] << std::endl;
-	Ogre::String textToDisplay = content.str();
+	lastUpdate = AnnGetEngine()->getTimeFromStartupSeconds();
 
+	//Get the content of the buffer into a static string
+	std::stringstream content; std::string logLine;
+
+	//For each line
+	for (auto i{ 0 }; i < CONSOLE_BUFFER; i++)
+	{
+		//Make the len fit the screen
+		logLine = buffer[i].substr(0, MAX_CONSOLE_LOG_WIDTH);
+
+		//No newline char
+		for (auto j{ 0 }; j < logLine.size(); j++)
+			if (logLine[j] == '\n') logLine[j] = '|';
+
+		//Append to display content
+		content << logLine << '\n';
+	}
+
+	//horizontal separator
+	for (auto i{ 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "-";
+
+	//Command Invite
+	content << "\n%> ";
+	auto command = AnnGetEventManager()->getTextInputer()->getInput();
+
+	//Display with a scrolling window
+	content << command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
+	if (command[command.size() - 1] == '\r')
+	{
+		//Execute command code here
+		runInput(command);
+		AnnGetEventManager()->getTextInputer()->clearInput();
+	}
+
+	//Append blinking cursor
+	if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
+	auto textToDisplay = content.str();
+
+	//Erase plane (draw background)
 	if (openGL43plus)
 		glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
 						   textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
@@ -194,13 +233,19 @@ void AnnConsole::update()
 	}
 
 	//Write text to texture
-	WriteToTexture
-	(textToDisplay,																//Text
-	 texture,																	//Texture
-	 Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
-	 Ogre::ColourValue::Black,															//Color
-	 'l',																		//Alignment
-	 false);																		//LineWrap
+	WriteToTexture(textToDisplay,																	//Text
+				   texture,																			//Texture
+				   Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
+				   Ogre::ColourValue::Black,														//Color
+				   'l', true);																		//Alignment
+}
+
+bool AnnConsole::isForbdiden(const std::string& keyword)
+{
+	for (const auto& forbiddenKeyword : forbidden)
+		if (keyword == forbiddenKeyword)
+			return true;
+	return false;
 }
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap)
@@ -387,5 +432,85 @@ bool AnnConsole::needUpdate()
 {
 	syncConsolePosition();
 
+	if (AnnGetEngine()->getTimeFromStartupSeconds() - lastUpdate > refreshRate)
+		modified = true;
+
 	return modified && visibility;
+}
+
+void AnnConsole::runInput(std::string& input)
+{
+	//do some cleanup on the inputed string
+	//remove the \r termination
+	input.pop_back();
+
+	//Prevent to start with some chaiscript symbols in global space.
+	std::string firstWord;
+	std::stringstream inputStream(input);
+	inputStream >> firstWord;
+
+	if (isForbdiden(firstWord))
+	{
+		AnnDebug() << "Console input error : " << firstWord << " is a forbidden keyword";
+		return;
+	}
+
+	if (runSpecialInput(input)) return;
+
+	try
+	{
+		AnnGetScriptManager()->evalString(input);
+	}
+	catch (const chaiscript::exception::eval_error& eval_error)
+	{
+		AnnDebug() << "Console script error : " << input;
+		AnnDebug() << eval_error.what();
+		AnnDebug() << eval_error.pretty_print();
+	}
+}
+
+bool AnnConsole::runSpecialInput(const std::string& input)
+{
+	if (input == "help")
+	{
+		bufferClear();
+		append("You asked for help :");
+		append("This debug console understand the same thing as the integrated");
+		append("scripting language.");
+		append("However, it runs on global space. To prevent breaking stuff");
+		append("you can't create global variables from that console. You have to");
+		append("reference GameObject by their name for example");
+		append("You can display this help by typing \"help\"");
+
+		return true;
+	}
+
+	if (input == "status")
+	{
+		bufferClear();
+		append("Running VR system: " + AnnGetVRRenderer()->getName());
+		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getContent().size()) + " active objects");
+		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getLights().size()) + " active light sources");
+		size_t nbControllers;
+		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " current controllers");
+		if (nbControllers > 0) if (AnnGetVRRenderer()->getHandControllerArray()[0])
+		{
+			append("HandControllers connected");
+			append("HandController types : " + AnnGetVRRenderer()->getHandControllerArray()[0]->getType());
+		}
+		else
+		{
+			append("HandControllers are not connected");
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+void AnnConsole::bufferClear()
+{
+	for (auto& line : buffer)
+		line.clear();
 }
