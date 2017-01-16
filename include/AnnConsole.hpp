@@ -53,8 +53,10 @@ namespace Annwvyn
 		///Move the console where it should
 		void syncConsolePosition();
 
+		///Clear the text draw buffer of the console
 		void bufferClear();
 
+		///Array of forbidden keyword to check
 		std::array<const char*, 1> forbidden = { {"var"} };
 
 	private:
@@ -62,8 +64,10 @@ namespace Annwvyn
 		///Cleanup and run the user input.
 		void runInput(std::string& input);
 
+		///Run input that are not regular script commands
 		bool runSpecialInput(const std::string& input);
 
+		///Return true if the given string match with any of the forbidden keyword int the array
 		bool isForbdiden(const std::string& keyword);
 
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs

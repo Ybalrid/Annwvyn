@@ -16,9 +16,9 @@ lastUpdate{ 0 },
 refreshRate{ 1 / 15 }
 {
 	//Define the custom material
-	Ogre::MaterialPtr Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
-	Ogre::Technique* technique = Console.getPointer()->getTechnique(0);
-	Ogre::Pass* pass = technique->getPass(0);
+	auto Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
+	auto technique = Console.getPointer()->getTechnique(0);
+	auto pass = technique->getPass(0);
 	pass->setLightingEnabled(false);
 	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
 
@@ -30,7 +30,7 @@ refreshRate{ 1 / 15 }
 	*    |        /      |
 	*    |     /         |
 	*    |  /            |
-	*  1 +----------------+ 3
+	*  1 +---------------+ 3
 	* Texture coordinates are also mapped. To display properly, the texture should respect the same aspect ratio (2:1)
 	*/
 
@@ -96,8 +96,12 @@ refreshRate{ 1 / 15 }
 
 	//Aspect ration of the console is 2:1. The actual size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
-	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_CORE", Ogre::TEX_TYPE_2D, 2 * BASE, BASE, Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8, Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
-	Ogre::TextureUnitState* displaySurfaceTextureUniteState = pass->createTextureUnitState();
+	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_CORE",
+																Ogre::TEX_TYPE_2D, 2 * BASE, BASE,
+																Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8,
+																Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
+
+	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
 	displaySurfaceTextureUniteState->setTexture(texture);
 
 	//Load background texture to a buffer
@@ -188,14 +192,10 @@ void AnnConsole::update()
 
 	//Command Invite
 	content << "\n%> ";
-
-	//Extract user inputed text
 	auto command = AnnGetEventManager()->getTextInputer()->getInput();
 
 	//Display with a scrolling window
 	content << command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
-
-	//If carriage return character (return key was last key press done)
 	if (command[command.size() - 1] == '\r')
 	{
 		//Execute command code here
@@ -205,9 +205,7 @@ void AnnConsole::update()
 
 	//Append blinking cursor
 	if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
-
-	//Extract string from stream
-	Ogre::String textToDisplay = content.str();
+	auto textToDisplay = content.str();
 
 	//Erase plane (draw background)
 	if (openGL43plus)
@@ -443,7 +441,7 @@ bool AnnConsole::needUpdate()
 void AnnConsole::runInput(std::string& input)
 {
 	//do some cleanup on the inputed string
-	//remove the \r terminaison
+	//remove the \r termination
 	input.pop_back();
 
 	//Prevent to start with some chaiscript symbols in global space.
