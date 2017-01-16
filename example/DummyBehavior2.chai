@@ -13,6 +13,7 @@ class DummyBehavior2
 	def KeyEvent(event)
 	{
 		/*
+
 		AnnDebugLog("Some keyboard event happened");
 		AnnDebugLog(event.getKey())//Value is int. The KeyCode::code enum isn't exposed to ChaiScript
 		if(event.isPressed())
@@ -23,6 +24,7 @@ class DummyBehavior2
 		{
 			AnnDebugLog("Released()");
 		}
+
 		*/
 	}
 
@@ -70,6 +72,6 @@ class DummyBehavior2
 
 	def PlayerCollisionEvent(event)
 	{
-		AnnDebugLog(event.getObject().getName());
+		//AnnDebugLog(event.getObject().getName());
 	}
 }

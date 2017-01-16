@@ -211,8 +211,6 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 	AnnDebug() << "Size is : " << width << "x" << height;
 	if (caption.empty())
 		AnnDebug() << "No caption yet";
-	else
-		AnnDebug() << "caption : " << caption.c_str();
 
 	if (fontName.empty())
 	{

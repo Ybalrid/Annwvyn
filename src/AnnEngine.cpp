@@ -455,3 +455,8 @@ void AnnEngine::initPlayerRoomscalePhysics()
 {
 	physicsEngine->initPlayerRoomscalePhysics(vrRendererPovGameplayPlacement);
 }
+
+std::shared_ptr<AnnConsole> AnnEngine::getOnScreenConsole()
+{
+	return onScreenConsole;
+}

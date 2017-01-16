@@ -103,3 +103,8 @@ void AnnLevelManager::removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj)
 	if (!current || !obj) return;
 	current->levelContent.remove(obj);
 }
+
+std::shared_ptr<AnnLevel> AnnLevelManager::getCurrentLevel()
+{
+	return current;
+}

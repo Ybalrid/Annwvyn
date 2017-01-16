@@ -239,9 +239,15 @@ GLuint OgreVRRender::createRenderTexture(float w, float h)
 std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderBuffer(float w, float h, std::string additionalTextureName)
 {
 	static int counter;
-	if (additionalTextureName.empty()) additionalTextureName = "additionalTexture" + std::to_string(counter++);
-	Ogre::TexturePtr  texture = Ogre::TextureManager::getSingleton().createManual(additionalTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-																				  Ogre::TEX_TYPE_2D, w, h, 9, Ogre::PF_R8G8B8A8);
+	if (additionalTextureName.empty())
+		additionalTextureName = "additionalTexture" + std::to_string(counter++);
+
+	auto texture{ Ogre::TextureManager::getSingleton().createManual
+		(additionalTextureName,
+					 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+					 Ogre::TEX_TYPE_2D, w, h, 9,
+					 Ogre::PF_R8G8B8A8) };
+
 	unsigned int glid;
 	texture->getCustomAttribute("GLID", &glid);
 	return std::tie(texture, glid);
@@ -261,4 +267,9 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	root->initialise(false);
 	window = root->createRenderWindow(rendererName + " : " + name + " - monitor output",
 									  w, h, false, &options);
+}
+
+std::string OgreVRRender::getName() const
+{
+	return rendererName;
 }

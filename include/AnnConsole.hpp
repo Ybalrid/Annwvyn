@@ -12,13 +12,15 @@
 #include "AnnTypes.h"
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include <Ogre.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 
 #include "AnnSubsystem.hpp"
 
-#define CONSOLE_BUFFER 19
+#define CONSOLE_BUFFER 17
+#define MAX_CONSOLE_LOG_WIDTH 72
 #define BASE 256
 #define MARGIN 4
 
@@ -47,11 +49,29 @@ namespace Annwvyn
 		///Update the console by filling it with background texture then blitting text on it.
 		///Can take some computing time depending on the size/resolution of the textures and buffer
 		void update() override;
+
+		///Move the console where it should
 		void syncConsolePosition();
 
+		///Clear the text draw buffer of the console
+		void bufferClear();
+
+		///Array of forbidden keyword to check
+		std::array<const char*, 2> forbidden = { {"var", "auto"} };
+
 	private:
+
+		///Cleanup and run the user input.
+		void runInput(std::string& input);
+
+		///Run input that are not regular script commands
+		bool runSpecialInput(const std::string& input);
+
+		///Return true if the given string match with any of the forbidden keyword int the array
+		bool isForbdiden(const std::string& keyword);
+
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
-		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true);
+		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false);
 		///True if content of the buffer has been modified
 		bool modified;
 
@@ -90,6 +110,12 @@ namespace Annwvyn
 
 		///If false, the console is not visible
 		bool visibility;
+
+		///Timestamp in seconds since the start of the game the last console refresh was performed
+		double lastUpdate;
+
+		///Delay in seconds to re-refresh the console.
+		const double refreshRate;
 	};
 }
 

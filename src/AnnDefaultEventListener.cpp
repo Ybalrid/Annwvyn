@@ -58,21 +58,23 @@ void AnnDefaultEventListener::setKeys(KeyCode::code fw,
 void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 {
 	//If the corresponding key is pressed, set the direction to true.
-	if (e.getKey() == forward)
-		player->walking[walkDirection::forward] = e.isPressed();
-	if (e.getKey() == backward)
-		player->walking[walkDirection::backward] = e.isPressed();
-	if (e.getKey() == straffleft)
-		player->walking[left] = e.isPressed();
-	if (e.getKey() == straffright)
-		player->walking[right] = e.isPressed();
-	if (e.getKey() == run)
-		player->run = e.isPressed();
+	if (!e.shouldIgnore())
+	{
+		if (e.getKey() == forward)
+			player->walking[walkDirection::forward] = e.isPressed();
+		if (e.getKey() == backward)
+			player->walking[walkDirection::backward] = e.isPressed();
+		if (e.getKey() == straffleft)
+			player->walking[left] = e.isPressed();
+		if (e.getKey() == straffright)
+			player->walking[right] = e.isPressed();
+		if (e.getKey() == run)
+			player->run = e.isPressed();
 
-	//Jumping is a function call because it's an action and not a "state" the player has.
-	if (e.isPressed() && e.getKey() == recenter)
-		AnnGetVRRenderer()->recenter();
-
+		//Jumping is a function call because it's an action and not a "state" the player has.
+		if (e.isPressed() && e.getKey() == recenter)
+			AnnGetVRRenderer()->recenter();
+	}
 	if (e.isPressed()) switch (e.getKey())
 	{
 		case KeyCode::grave:

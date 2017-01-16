@@ -28,7 +28,8 @@ std::shared_ptr<AnnEventListener> AnnEventListener::getSharedListener()
 }
 
 AnnTextInputer::AnnTextInputer() :
-	listen(false)
+	listen(false),
+	asciiOnly{ true }
 {
 }
 
@@ -38,9 +39,11 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	//If backspace, pop last char if possible
 	if (arg.key == OIS::KC_BACK && !input.empty())
 		input.pop_back();
-	else
+	else if ((arg.text < 127 && arg.text > 31) || arg.text == 13 || !asciiOnly)
 		//Put typed char into the application
 		input.push_back(char(arg.text));
+	//AnnDebug() << "typed char as code " << arg.text;
+	//AnnDebug() << "typed char as char " << char(arg.text);
 	return true;
 }
 
@@ -80,7 +83,8 @@ Keyboard(nullptr),
 Mouse(nullptr),
 lastTimerCreated(0),
 defaultEventListener(nullptr),
-knowXbox(false)
+knowXbox(false),
+keyboardIgnore{ false }
 {
 	//Init all bool array to false
 	for (auto& keyState : previousKeyStates) keyState = false;
@@ -99,10 +103,10 @@ knowXbox(false)
 	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
 
 	//There's a joystick object for each joysticks
-	for (int nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
+	for (auto nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
 	{
 		//Create joystick object
-		OIS::JoyStick* Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
+		auto Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		Joysticks.push_back(new JoystickBuffer(Joystick));
 		AnnDebug() << "Detected joystick : " << Joystick->vendor();
 
@@ -218,6 +222,7 @@ void AnnEventManager::processInput()
 				e.setPressed();
 				e.populate();
 				e.validate();
+				e.ignored = keyboardIgnore;
 
 				for (auto weak_listener : listeners)
 					if (auto listener = weak_listener.lock())
@@ -233,6 +238,7 @@ void AnnEventManager::processInput()
 				e.setReleased();
 				e.populate();
 				e.validate();
+				e.ignored = keyboardIgnore;
 
 				for (auto weak_listener : listeners)
 					if (auto listener = weak_listener.lock())
@@ -451,4 +457,9 @@ void AnnEventManager::detectedCollision(void* a, void* b)
 void AnnEventManager::playerCollision(void* object)
 {
 	playerCollisionBuffer.push_back(static_cast<AnnGameObject*>(object));
+}
+
+void AnnEventManager::keyboardUsedForText(bool state)
+{
+	keyboardIgnore = state;
 }
