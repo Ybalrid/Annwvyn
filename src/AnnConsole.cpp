@@ -242,6 +242,14 @@ void AnnConsole::update()
 				   'l', true);																		//Alignment
 }
 
+bool AnnConsole::isForbdiden(const std::string& keyword)
+{
+	for (const auto& forbiddenKeyword : forbidden)
+		if (keyword == forbiddenKeyword)
+			return true;
+	return false;
+}
+
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap)
 {
 	using namespace Ogre;
@@ -438,6 +446,17 @@ void AnnConsole::runInput(std::string& input)
 	//remove the \r terminaison
 	input.pop_back();
 
+	//Prevent to start with some chaiscript symbols in global space.
+	std::string firstWord;
+	std::stringstream inputStream(input);
+	inputStream >> firstWord;
+
+	if (isForbdiden(firstWord))
+	{
+		AnnDebug() << "Console input error : " << firstWord << " is a forbidden keyword";
+		return;
+	}
+
 	if (runSpecialInput(input)) return;
 
 	try
@@ -454,31 +473,41 @@ void AnnConsole::runInput(std::string& input)
 
 bool AnnConsole::runSpecialInput(const std::string& input)
 {
-	std::stringstream writeStream;
-	if(input =="help")
+	if (input == "help")
 	{
 		bufferClear();
 		append("You asked for help :");
-		append("This debug console understand the same thing");
-		append("as the integrated scripting language.");
-		append("However, it runs on global space. To prevent");
-		append("To prevent breaking stuff, you cannot create");
-		append("store variables here.");
-		append("");
+		append("This debug console understand the same thing as the integrated");
+		append("scripting language.");
+		append("However, it runs on global space. To prevent breaking stuff");
+		append("you can't create global variables from that console. You have to");
+		append("reference GameObject by their name for example");
 		append("You can display this help by typing \"help\"");
 
 		return true;
 	}
 
-	if(input == "status")
+	if (input == "status")
 	{
 		bufferClear();
 		append("Running VR system: " + AnnGetVRRenderer()->getName());
 		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getContent().size()) + " active objects");
 		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getLights().size()) + " active light sources");
+		size_t nbControllers;
+		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " current controllers");
+		if (nbControllers > 0) if (AnnGetVRRenderer()->getHandControllerArray()[0])
+		{
+			append("HandControllers connected");
+			append("HandController types : " + AnnGetVRRenderer()->getHandControllerArray()[0]->getType());
+		}
+		else
+		{
+			append("HandControllers are not connected");
+		}
 
 		return true;
 	}
+
 	return false;
 }
 

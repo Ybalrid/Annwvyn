@@ -55,12 +55,16 @@ namespace Annwvyn
 
 		void bufferClear();
 
+		std::array<const char*, 1> forbidden = { {"var"} };
+
 	private:
 
 		///Cleanup and run the user input.
 		void runInput(std::string& input);
 
 		bool runSpecialInput(const std::string& input);
+
+		bool isForbdiden(const std::string& keyword);
 
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
 		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false);
