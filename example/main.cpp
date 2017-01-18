@@ -19,6 +19,59 @@ using namespace Annwvyn;
 
 constexpr bool isRoomscale{ false };
 
+class TextMessageEvent : public AnnUserSpaceEvent
+{
+public:
+	TextMessageEvent(string message) : AnnUserSpaceEvent("TextMessage"),
+		enclosedMessage(message)
+	{
+	}
+
+	string getMessage() const { return enclosedMessage; };
+private:
+	string enclosedMessage;
+};
+
+class SomeEventListener : LISTENER
+{
+public:
+	SomeEventListener() : constructListener(),
+		//TODO make the hashing less painful to write and without constructing an std::hash at each call
+		hashTypeCheckTextEvent(hash<string>()("TextMessage"))
+	{
+	}
+
+	void EventFromUserSubsystem(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* origin) override
+	{
+		if (e.getType() == hashTypeCheckTextEvent)
+			AnnDebug() << "SomeEventListener got the TextMessageEvent \""
+			<< dynamic_cast<TextMessageEvent&>(e).getMessage()
+			<< "\" from " << origin;
+	}
+
+private:
+	const AnnUserSpaceEvent::AnnUserSpaceEventTypeHash hashTypeCheckTextEvent;
+};
+
+class SomeSubSystem : public AnnUserSubSystem
+{
+public:
+	SomeSubSystem() : AnnUserSubSystem("Useless Subsystem")
+	{
+	}
+
+	void update() override
+	{
+		auto e = TextMessageEvent("Useless message!");
+		dispatchEvent(e);
+	}
+
+	bool needUpdate() override
+	{
+		return true;
+	}
+};
+
 AnnMain()
 {
 	OgreVRRender::setAntiAliasingLevel(8);
@@ -50,10 +103,19 @@ AnnMain()
 
 	AnnGetScriptManager()->evalFile("script/test.chai");
 
-	//stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
 
+	AnnGetEngine()->registerUserSubSystem(make_shared<SomeSubSystem>());
+
+	//Not how you're supposed to do it:
+	auto someListener = make_shared<SomeEventListener>();
+	AnnGetEventManager()->addListener(someListener);
+
 	AnnGetEngine()->startGameplayLoop();
+
+	//Cleanup of the "don't do it" listener
+	AnnGetEventManager()->removeListener(someListener);
+	someListener.reset();
 
 	AnnQuit();
 
