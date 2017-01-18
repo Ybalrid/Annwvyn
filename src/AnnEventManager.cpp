@@ -194,6 +194,7 @@ void AnnEventManager::update()
 	processInput();
 	processTriggerEvents();
 	processTimers();
+	processUserSpaceEvents();
 }
 
 unsigned int JoystickBuffer::idcounter = 0;
@@ -464,9 +465,21 @@ void AnnEventManager::keyboardUsedForText(bool state)
 	keyboardIgnore = state;
 }
 
-void AnnEventManager::userSpaceDispatchEvent(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* l)
+void AnnEventManager::userSpaceDispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* l)
 {
-	for (auto weakListener : listeners)
-		if (auto listener = weakListener.lock())
-			listener->EventFromUserSubsystem(e, l);
+	//for (auto weakListener : listeners)
+	//	if (auto listener = weakListener.lock())
+	//		listener->EventFromUserSubsystem(e, l);
+
+	userSpaceEventBuffer.push_back(std::make_pair(e, l));
+}
+
+void AnnEventManager::processUserSpaceEvents()
+{
+	for (auto userSpaceEvent : userSpaceEventBuffer)
+	{
+		for (auto weakListener : listeners) if (auto listener = weakListener.lock())
+			listener->EventFromUserSubsystem(*userSpaceEvent.first, userSpaceEvent.second);
+	}
+	userSpaceEventBuffer.clear();
 }
