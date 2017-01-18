@@ -351,7 +351,7 @@ void Ann3DTextPlane::createMaterial()
 	auto renderPlaneTextureUnitState = materialPass->createTextureUnitState();
 
 	texture = Ogre::TextureManager::getSingleton()
-		.createManual(generateRandomString(),
+		.createManual(AnnGetStringUtility()->getRandomString(),
 					  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 					  Ogre::TEX_TYPE_2D,
 					  width * resolutionFactor,
@@ -367,15 +367,7 @@ void Ann3DTextPlane::autoUpdateCheck()
 
 void Ann3DTextPlane::generateMaterialName()
 {
-	materialName = generateRandomString(materialNameLen);
-}
-
-string Ann3DTextPlane::generateRandomString(size_t len)
-{
-	string s;
-	string textSpace("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	for (size_t i(0); i < len; i++) s += textSpace[rand() % textSpace.length()];
-	return s;
+	materialName = AnnGetStringUtility()->getRandomString(materialNameLen);
 }
 
 void Ann3DTextPlane::setTextColor(AnnColor color)

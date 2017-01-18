@@ -5,7 +5,7 @@ using namespace Annwvyn;
 
 AnnUserSpaceEvent::AnnUserSpaceEvent(std::string typeName) :
 	eventTypeName(typeName),
-	eventTypeHash(std::hash <std::string>()(eventTypeName))
+	eventTypeHash(AnnGetStringUtility()->hash(eventTypeName))
 {
 }
 
@@ -17,8 +17,4 @@ void AnnUserSpaceEventLauncher::dispatchEvent(std::shared_ptr<AnnUserSpaceEvent>
 AnnUserSpaceEvent::AnnUserSpaceEventTypeHash AnnUserSpaceEvent::getType() const
 {
 	return eventTypeHash;
-}
-
-AnnUserSpaceEventLauncher::AnnUserSpaceEventLauncher()
-{
 }

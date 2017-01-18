@@ -43,7 +43,7 @@ class SomeEventListener : LISTENER
 public:
 	SomeEventListener() : constructListener(),
 		//TODO make the hashing less painful to write and without constructing an std::hash at each call
-		hashTypeCheckTextEvent(hash<string>()("TextMessage"))
+		hashTypeCheckTextEvent(AnnGetStringUtility()->hash("TextMessage"))
 	{
 	}
 

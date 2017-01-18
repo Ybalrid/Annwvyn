@@ -44,6 +44,7 @@
 #include "AnnGameObjectManager.hpp"
 #include "AnnSceneryManager.hpp"
 #include "AnnScriptManager.hpp"
+#include "AnnStringUtility.hpp"
 
 #include "AnnUserSpaceSubSystem.hpp"
 
@@ -141,8 +142,11 @@ namespace Annwvyn
 		///Get the VRRenderer
 		std::shared_ptr<OgreVRRender> getVRRenderer();
 
-		///Get the console 
+		///Get the console
 		std::shared_ptr<AnnConsole> getOnScreenConsole();
+
+		///
+		std::shared_ptr<AnnStringUility> getStringUtility();
 
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 
@@ -200,6 +204,8 @@ namespace Annwvyn
 		static WORD consoleYellow;
 		static WORD consoleWhite;
 
+		std::shared_ptr<AnnStringUility> stringUtility;
+
 		///VR renderer
 		std::shared_ptr<OgreVRRender> renderer;
 
@@ -225,6 +231,8 @@ namespace Annwvyn
 		std::shared_ptr<AnnScriptManager> scriptManager;
 		///Player
 		std::shared_ptr<AnnPlayer> player;
+
+		///String Utility;
 
 		///The scene manager
 		Ogre::SceneManager* SceneManager;

@@ -209,6 +209,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnSceneryManager.hpp" />
     <ClInclude Include="..\..\include\AnnScriptManager.hpp" />
     <ClInclude Include="..\..\include\AnnSplashLevel.hpp" />
+    <ClInclude Include="..\..\include\AnnStringUtility.hpp" />
     <ClInclude Include="..\..\include\AnnSubsystem.hpp" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
     <ClInclude Include="..\..\include\AnnTypes.h" />
