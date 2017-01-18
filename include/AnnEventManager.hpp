@@ -647,7 +647,7 @@ namespace Annwvyn
 		friend class AnnUserSpaceEventLauncher;
 
 		///Send the given event to the listeners
-		void userSpaceDispatchEvent(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* sender);
+		void userSpaceDispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* sender);
 
 		///Engine call for refreshing the event system
 		void update() override;
@@ -659,6 +659,8 @@ namespace Annwvyn
 		void processTriggerEvents();
 		///Process collisions
 		void processCollisionEvents();
+		///Process user event dispatch()
+		void processUserSpaceEvents();
 
 		// TODO get rid of the shared pointer here
 		///Register trigger event for next triggerProcess by the engine
@@ -703,6 +705,9 @@ namespace Annwvyn
 
 		std::vector<std::pair<void*, void*>> collisionBuffer;
 		std::vector<AnnGameObject*> playerCollisionBuffer;
+
+		//Using a shared ptr to keep ownership of the event object until the event is dealt with. Also, polymorphism.
+		std::vector<std::pair<std::shared_ptr<AnnUserSpaceEvent>, AnnUserSpaceEventLauncher*>> userSpaceEventBuffer;
 
 		StickAxisId xboxID;
 		bool knowXbox;

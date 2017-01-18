@@ -26,6 +26,6 @@ namespace Annwvyn
 		virtual ~AnnUserSpaceEventLauncher() = default;
 		AnnUserSpaceEventLauncher();
 	protected:
-		virtual void dispatchEvent(AnnUserSpaceEvent& e);
+		virtual void dispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e);
 	};
 }

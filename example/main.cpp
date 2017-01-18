@@ -27,6 +27,12 @@ public:
 	{
 	}
 
+	~TextMessageEvent()
+	{
+		//This is just to check that everything is in order
+		//AnnDebug() << "event destructed!";
+	}
+
 	string getMessage() const { return enclosedMessage; };
 private:
 	string enclosedMessage;
@@ -62,8 +68,9 @@ public:
 
 	void update() override
 	{
-		auto e = TextMessageEvent("Useless message!");
-		dispatchEvent(e);
+		//We need the event to live on the heap, and we need to transfer (or share) the ownership of this object to the event manager.
+		//Event manager buffer the object and
+		dispatchEvent(make_shared<TextMessageEvent>("Useless message!"));
 	}
 
 	bool needUpdate() override
