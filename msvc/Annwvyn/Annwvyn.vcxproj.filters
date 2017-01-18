@@ -255,6 +255,9 @@
     <ClInclude Include="..\..\include\AnnUserSpaceEvent.hpp">
       <Filter>Annwvyn\SubSystems\UserDefined</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnStringUtility.hpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">

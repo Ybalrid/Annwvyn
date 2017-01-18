@@ -86,9 +86,6 @@ namespace Annwvyn
 		///Check if auto-update is on. If so, call update
 		void autoUpdateCheck();
 
-		///Generate a random string of letter of arbitrary length
-		static std::string generateRandomString(size_t len = 15);
-
 		///Generate a random material name
 		void generateMaterialName();
 

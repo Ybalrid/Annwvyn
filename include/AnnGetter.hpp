@@ -32,4 +32,6 @@ namespace Annwvyn
 	DLL std::shared_ptr<AnnGameObjectManager> AnnGetGameObjectManager();
 	///Get the on screen console
 	DLL std::shared_ptr<AnnConsole> AnnGetOnScreenConsole();
+	///Get the string utility object
+	DLL std::shared_ptr<AnnStringUility> AnnGetStringUtility();
 }
