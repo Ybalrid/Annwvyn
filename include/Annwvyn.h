@@ -95,6 +95,7 @@
 #include "AnnResourceManager.hpp"
 #include "Ann3DTextPlane.hpp"
 #include "AnnUserSpaceSubSystem.hpp"
+#include "AnnUserSpaceEvent.hpp"
 #include "AnnException.hpp"
 
 //Other Annwvyn

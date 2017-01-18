@@ -463,3 +463,10 @@ void AnnEventManager::keyboardUsedForText(bool state)
 {
 	keyboardIgnore = state;
 }
+
+void AnnEventManager::userSpaceDispatchEvent(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* l)
+{
+	for (auto weakListener : listeners)
+		if (auto listener = weakListener.lock())
+			listener->EventFromUserSubsystem(e, l);
+}
