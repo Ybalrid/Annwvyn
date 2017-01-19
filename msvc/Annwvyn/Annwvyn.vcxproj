@@ -265,6 +265,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnSceneryManager.cpp" />
     <ClCompile Include="..\..\src\AnnScriptManager.cpp" />
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp" />
+    <ClCompile Include="..\..\src\AnnStringUtility.cpp" />
     <ClCompile Include="..\..\src\AnnSubSystem.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
     <ClCompile Include="..\..\src\AnnUserSpaceEvent.cpp" />
