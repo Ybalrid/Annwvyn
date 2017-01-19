@@ -12,36 +12,19 @@ namespace Annwvyn
 	class DLL AnnStringUility
 	{
 	public:
-		AnnStringUility() :
-			//Allocate the string hasher
-			stringHasher(std::make_unique<std::hash<std::string>>()),
-			//Seed the 64bit Mersenne Twister generator with the random device
-			mt(r())
-		{
-		}
+		///Construct the string utility
+		AnnStringUility();
+		///Hash a string with the built-in hash algorithm of C++11
+		size_t hash(const std::string& string) const;
+		///Get a string of random characters of specified length. 15 char by default
+		std::string getRandomString(size_t length = 15U);
 
-		size_t hash(const std::string& string) const
-		{
-			return (*stringHasher)(string);
-		}
-
-		std::string getRandomString(size_t length = 15U)
-		{
-			static const std::string charset{ "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_" };
-			static const auto maxNbChar{ charset.size() };
-			static std::uniform_int_distribution<size_t> distribution(0, maxNbChar - 1);
-
-			std::string output;
-			//No need to push_back X times if we already know the length;
-			output.resize(length);
-			for (size_t i{ 0 }; i < length; i++)
-				output[i] = charset[distribution(mt)];
-
-			return output;
-		}
 	private:
+		///Hasher
 		std::unique_ptr<std::hash<std::string>> stringHasher;
+		///Random device, to seed the mt engine
 		std::random_device r;
+		///mt engine
 		std::mt19937_64 mt;
 	};
 }

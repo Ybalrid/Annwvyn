@@ -23,6 +23,7 @@ namespace Annwvyn
 
 		///Get the hash of the type of this event
 		AnnUserSpaceEventTypeHash getType() const;
+
 	private:
 		///Name of the type
 		const std::string eventTypeName;
@@ -39,6 +40,7 @@ namespace Annwvyn
 
 		///Construct the event launcher
 		AnnUserSpaceEventLauncher() = default;
+
 	protected:
 		///Dispatch an event via the event manager for you
 		virtual void dispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e);

@@ -383,6 +383,9 @@
     <ClCompile Include="..\..\src\AnnUserSpaceEvent.cpp">
       <Filter>Annwvyn\SubSystems\UserDefined</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\AnnStringUtility.cpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />
