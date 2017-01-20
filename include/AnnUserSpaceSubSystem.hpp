@@ -27,7 +27,7 @@ namespace Annwvyn
 		///Marker if the system wants it's "update" method to be called by the engine. this is tested each frames.
 		bool needUpdate() override;
 
-		void dispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e) override { AnnUserSpaceEventLauncher::dispatchEvent(e); }
+		void dispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e) override;
 	};
 }
 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "AnnStringUtility.hpp"
-
+#include "AnnLogger.hpp"
 using namespace Annwvyn;
 
 AnnStringUility::AnnStringUility() :
@@ -9,6 +9,12 @@ AnnStringUility::AnnStringUility() :
 	//Seed the 64bit Mersenne Twister generator with the random device
 	mt(r())
 {
+	AnnDebug() << "AnnStringUtility created";
+}
+
+AnnStringUility::~AnnStringUility()
+{
+	AnnDebug() << "AnnStringUtility destructed";
 }
 
 size_t AnnStringUility::hash(const std::string& string) const
