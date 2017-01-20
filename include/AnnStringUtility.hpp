@@ -4,7 +4,6 @@
 #include <string>
 #include <memory>
 #include <functional>
-
 #include <random>
 
 namespace Annwvyn

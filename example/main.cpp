@@ -19,6 +19,7 @@ using namespace Annwvyn;
 
 constexpr bool isRoomscale{ false };
 
+///Event
 class TextMessageEvent : public AnnUserSpaceEvent
 {
 public:
@@ -38,6 +39,7 @@ private:
 	string enclosedMessage;
 };
 
+///Event Listener
 class SomeEventListener : LISTENER
 {
 public:
@@ -59,24 +61,36 @@ private:
 	const AnnUserSpaceEvent::AnnUserSpaceEventTypeHash hashTypeCheckTextEvent;
 };
 
+///A user defined subsystem sending the event declared above regularly
 class SomeSubSystem : public AnnUserSubSystem
 {
 public:
-	SomeSubSystem() : AnnUserSubSystem("Useless Subsystem")
+	SomeSubSystem(double updateRate = 3) : AnnUserSubSystem("Useless Subsystem"),
+		now(0),
+		last(0),
+		delay(updateRate)
 	{
 	}
 
 	void update() override
 	{
-		//We need the event to live on the heap, and we need to transfer (or share) the ownership of this object to the event manager.
-		//Event manager buffer the object and
-		dispatchEvent(make_shared<TextMessageEvent>("Useless message!"));
+		now = AnnGetEngine()->getTimeFromStartupSeconds();
+
+		if (now - last > delay)
+		{
+			static unsigned int count = 0;
+			last = now;
+			dispatchEvent(make_shared<TextMessageEvent>("Useless message! " + std::to_string(++count)));
+		}
 	}
 
 	bool needUpdate() override
 	{
 		return true;
 	}
+
+private:
+	double now, last, delay;
 };
 
 AnnMain()
