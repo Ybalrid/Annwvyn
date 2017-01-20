@@ -13,6 +13,8 @@ namespace Annwvyn
 	public:
 		///Construct the string utility
 		AnnStringUility();
+		///
+		~AnnStringUility();
 		///Hash a string with the built-in hash algorithm of C++11
 		size_t hash(const std::string& string) const;
 		///Get a string of random characters of specified length. 15 char by default

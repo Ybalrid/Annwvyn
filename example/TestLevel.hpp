@@ -3,6 +3,7 @@
 
 #include <Annwvyn.h>
 #include "DemoUtils.hpp"
+
 using namespace Annwvyn;
 
 //Custom object:
@@ -116,7 +117,7 @@ public:
 
 	void runLogic() override
 	{
-		AnnGetPlayer()->regroundOnPhysicsBody(1000, { 0,100,0 });
+		AnnGetPlayer()->regroundOnPhysicsBody(1000, { 0, 100, 0 });
 	}
 
 private:

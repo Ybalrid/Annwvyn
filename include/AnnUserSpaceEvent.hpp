@@ -14,13 +14,10 @@ namespace Annwvyn
 	public:
 		///Create the event
 		explicit AnnUserSpaceEvent(std::string typeName);
-
 		///Destruct the event
 		virtual ~AnnUserSpaceEvent() = default;
-
 		///Define hash type
 		using AnnUserSpaceEventTypeHash = size_t;
-
 		///Get the hash of the type of this event
 		AnnUserSpaceEventTypeHash getType() const;
 
@@ -37,7 +34,6 @@ namespace Annwvyn
 	public:
 		///Destruct the event launcher
 		virtual ~AnnUserSpaceEventLauncher() = default;
-
 		///Construct the event launcher
 		AnnUserSpaceEventLauncher() = default;
 

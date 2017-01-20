@@ -35,6 +35,7 @@ public:
 	}
 
 	string getMessage() const { return enclosedMessage; };
+
 private:
 	string enclosedMessage;
 };
@@ -80,7 +81,7 @@ public:
 		{
 			static unsigned int count = 0;
 			last = now;
-			dispatchEvent(make_shared<TextMessageEvent>("Useless message! " + std::to_string(++count)));
+			dispatchEvent(make_shared<TextMessageEvent>("Useless message! " + to_string(++count)));
 		}
 	}
 
@@ -110,9 +111,6 @@ AnnMain()
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 	AnnGetResourceManager()->initResources();
-	//AnnGetResourceManager()->loadGroup(AnnResourceManager::reservedResourceGroupName);
-	//AnnGetResourceManager()->loadGroup(AnnResourceManager::defaultResourceGroupName);
-	//AnnGetAudioEngine()->preLoadBuffer("media/bgm/bensound-happyrock.ogg");
 
 	//create and load level objects
 	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
@@ -122,13 +120,10 @@ AnnMain()
 	//ask the level manager to perform a jump to the first level
 	AnnGetLevelManager()->jumpToFirstLevel();
 
-	AnnGetScriptManager()->evalFile("script/test.chai");
-
 	AnnDebug() << "Starting the render loop";
 
-	AnnGetEngine()->registerUserSubSystem(make_shared<SomeSubSystem>());
-
 	//Not how you're supposed to do it:
+	AnnGetEngine()->registerUserSubSystem(make_shared<SomeSubSystem>());
 	auto someListener = make_shared<SomeEventListener>();
 	AnnGetEventManager()->addListener(someListener);
 
