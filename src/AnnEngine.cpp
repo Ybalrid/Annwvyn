@@ -97,7 +97,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	log("| Annwvyn Game Engine - Step into the Other World          |", false);
 	log("| Free/Libre C++ Game Engine designed for Virtual Reality  |", false);
 	log("|                                                          |", false);
-	log("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2016   |", false);
+	log("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2017   |", false);
 	log("| Distributed under the terms of the MIT license agreement |", false);
 	log("|                                                          |", false);
 	log("| Visit http://annwvyn.org/ for more informations!         |", false);
