@@ -70,8 +70,6 @@ OgreOculusRender::~OgreOculusRender()
 	//Release shared pointers from Ogre before deleting Root
 	DebugPlaneMaterial.setNull();
 	rttTexture.setNull();
-
-	//delete root;
 }
 
 bool OgreOculusRender::shouldQuit()
