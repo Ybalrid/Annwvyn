@@ -35,6 +35,7 @@ AnnMain()
 	//load resources
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
+
 	AnnGetResourceManager()->initResources();
 	//AnnGetResourceManager()->loadGroup(AnnResourceManager::reservedResourceGroupName);
 	//AnnGetResourceManager()->loadGroup(AnnResourceManager::defaultResourceGroupName);
@@ -53,6 +54,16 @@ AnnMain()
 	//stringstream controllerOut;
 	AnnDebug() << "Starting the render loop";
 
+	AnnGetEngine()->startGameplayLoop();
+
+	AnnQuit();
+
+	//Try to start the engine again :
+
+	MessageBox(nullptr, L"Starting Annwvyn again", L"Engine restart", MB_ICONINFORMATION);
+
+	/*auto */GameEngine = std::make_unique<AnnEngine>("other app", detectedHMD);
+	AnnGetResourceManager()->initResources();
 	AnnGetEngine()->startGameplayLoop();
 
 	AnnQuit();
