@@ -71,7 +71,7 @@ OgreOculusRender::~OgreOculusRender()
 	DebugPlaneMaterial.setNull();
 	rttTexture.setNull();
 
-	delete root;
+	//delete root;
 }
 
 bool OgreOculusRender::shouldQuit()

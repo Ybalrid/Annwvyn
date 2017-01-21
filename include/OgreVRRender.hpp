@@ -188,7 +188,7 @@ protected:
 	Ogre::SceneManager* smgr;
 
 	///Ogre root object
-	Ogre::Root* root;
+	std::unique_ptr<Ogre::Root> root;
 
 	///Render window. VR isn't drawn to this window. A window is mandatory to init the RenderSystem.
 	Ogre::RenderWindow* window;

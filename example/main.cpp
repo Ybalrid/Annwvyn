@@ -68,5 +68,7 @@ AnnMain()
 
 	AnnQuit();
 
+	MessageBox(nullptr, L"If it did not crash here, it means that the engine is not in a zombie state when cleared, and is stable!", L"Engine test success!", MB_ICONASTERISK);
+
 	return EXIT_SUCCESS;
 }
