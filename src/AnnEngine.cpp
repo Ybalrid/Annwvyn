@@ -5,9 +5,20 @@
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(nullptr);
+bool AnnEngine::consoleReady(false);
+
+AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
+{
+	engine = address;
+}
+
+AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
+{
+	engine->singleton = nullptr;
+}
 
 //Log is static. Therefore this has to be static too to be able to write to it.
-std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
+//std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
 WORD AnnEngine::consoleGreen(0);
 WORD AnnEngine::consoleYellow(0);
 WORD AnnEngine::consoleWhite(0);
@@ -47,13 +58,16 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	player(nullptr),
 	SceneManager(nullptr),
 	vrRendererPovGameplayPlacement(nullptr),
-	updateTime(-1)
+	updateTime(-1),
+	resetGuard(this)
 {
 	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
 		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_MEMORY) + "Can't create 2 instances of AnnEngine");
 	}
+
+	consoleReady = false;
 
 	std::cerr << "HMD selection from command line routine returned : "
 		<< hmdCommand << std::endl;
@@ -180,6 +194,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		FOREGROUND_GREEN |
 		FOREGROUND_BLUE |
 		FOREGROUND_INTENSITY;
+
+	consoleReady = true;
 }
 
 AnnEngine::~AnnEngine()
@@ -187,6 +203,7 @@ AnnEngine::~AnnEngine()
 	//Some cute log messages
 	log("Game engine stopped. Subsystem are shutting down...");
 	log("Good luck with the real world now! :3");
+	consoleReady = false;
 }
 
 //All theses getter are for encapsulation purpose. Calling them directly would
@@ -264,8 +281,8 @@ void AnnEngine::log(std::string message, bool flag)
 	if (Ogre::LogManager::getSingletonPtr())
 		Ogre::LogManager::getSingleton().logMessage(messageForLog);
 
-	if (onScreenConsole)
-		onScreenConsole->append(message);
+	if (consoleReady)
+		singleton->onScreenConsole->append(message);
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
 }
@@ -431,12 +448,6 @@ bool AnnEngine::openConsole()
 
 #endif
 	return state;
-}
-
-//Well, I may make the pointer to the onScreenConsole more accessible.
-void AnnEngine::toogleOnScreenConsole()
-{
-	if (onScreenConsole) onScreenConsole->toggle();
 }
 
 bool AnnEngine::appVisibleInHMD()

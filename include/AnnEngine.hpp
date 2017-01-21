@@ -57,6 +57,16 @@
 
 namespace Annwvyn
 {
+	class AnnEngine;
+	class DLL AnnEngineSingletonReseter
+	{
+	private:
+		AnnEngineSingletonReseter(AnnEngine* address);
+		~AnnEngineSingletonReseter();
+		friend class AnnEngine;
+		AnnEngine* engine;
+	};
+
 	///Main engine class. Creating an instance of this class make the engine start.
 	class DLL AnnEngine
 	{
@@ -70,6 +80,8 @@ namespace Annwvyn
 	private:
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
+		friend class AnnEngineSingletonReseter;
+		AnnEngineSingletonReseter resetGuard;
 
 	public:
 
@@ -141,7 +153,7 @@ namespace Annwvyn
 		///Get the VRRenderer
 		std::shared_ptr<OgreVRRender> getVRRenderer();
 
-		///Get the console 
+		///Get the console
 		std::shared_ptr<AnnConsole> getOnScreenConsole();
 
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
@@ -163,9 +175,6 @@ namespace Annwvyn
 
 		///This start the render loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
-
-		///Toggle the display of the in-engine console
-		static void toogleOnScreenConsole();
 
 		///Return true if the app is visible inside the head mounted display
 		bool appVisibleInHMD();
@@ -199,12 +208,13 @@ namespace Annwvyn
 		static WORD consoleGreen;
 		static WORD consoleYellow;
 		static WORD consoleWhite;
+		static bool consoleReady;
 
 		///VR renderer
 		std::shared_ptr<OgreVRRender> renderer;
 
 		///The onScreenConsole object
-		static std::shared_ptr<AnnConsole> onScreenConsole;
+		std::shared_ptr<AnnConsole> onScreenConsole;
 		///ResourceManager
 		std::shared_ptr<AnnResourceManager> resourceManager;
 		///SceneryManager
