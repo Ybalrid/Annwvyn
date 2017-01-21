@@ -18,7 +18,6 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 }
 
 //Log is static. Therefore this has to be static too to be able to write to it.
-//std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
 WORD AnnEngine::consoleGreen(0);
 WORD AnnEngine::consoleYellow(0);
 WORD AnnEngine::consoleWhite(0);
