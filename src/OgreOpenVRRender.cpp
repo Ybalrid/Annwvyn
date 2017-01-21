@@ -62,7 +62,7 @@ OgreOpenVRRender::~OgreOpenVRRender()
 
 	rttTexture.setNull();
 
-	delete root;
+	//delete root;
 }
 
 //This function is from VALVe
