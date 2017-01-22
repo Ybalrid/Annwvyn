@@ -47,6 +47,8 @@ namespace Annwvyn
 			: AnnHandController("Oculus Touch", handNode, controllerID, controllerSide),
 			currentSession(session)
 		{
+			if (side == leftHandController) myControllerType = ovrControllerType_LTouch;
+			else if (side == rightHandController) myControllerType = ovrControllerType_RTouch;
 		}
 
 		///This will call ovr_SetControllerVibration
@@ -57,6 +59,7 @@ namespace Annwvyn
 
 	private:
 		ovrSession currentSession;
+		ovrControllerType myControllerType;
 	};
 }
 

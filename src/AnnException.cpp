@@ -61,3 +61,16 @@ const char* AnnPhysicsSetupChildError::what() const throw()
 
 	return out.str().c_str();
 }
+
+AnnInvalidControllerSide::AnnInvalidControllerSide() : std::runtime_error("Invalid hand controller side")
+{
+	AnnDebug() << AnnInvalidControllerSide::what();
+}
+
+const char* AnnInvalidControllerSide::what() const throw()
+{
+	ostringstream out;
+	out << runtime_error::what();
+	out << "AnnHandController object initialized without knowing the side. This should not happen.";
+	return out.str().c_str();
+}

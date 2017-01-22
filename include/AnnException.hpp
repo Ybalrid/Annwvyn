@@ -5,6 +5,7 @@
 #include <exception>
 #include <stdexcept>
 #include <AnnGameObject.hpp>
+
 namespace Annwvyn
 {
 	///Exception to throw when a physics enabled object will cause object coordinates reset
@@ -33,5 +34,12 @@ namespace Annwvyn
 		const char* what() const throw() override;
 	private:
 		AnnGameObject* objectWithProblem;
+	};
+
+	class DLL AnnInvalidControllerSide : public std::runtime_error
+	{
+	public:
+		AnnInvalidControllerSide();
+		const char* what() const throw() override;
 	};
 }
