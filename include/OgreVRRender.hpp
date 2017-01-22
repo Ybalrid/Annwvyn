@@ -26,6 +26,13 @@ struct OgrePose
 class DLL OgreVRRender
 {
 public:
+	///Name of the rendersystem plugin to load on Ogre
+	static constexpr const char* const PluginRenderSystemGL{ "RenderSystem_GL" };
+	///Name of the scene manager plugin to load on ogre
+	static constexpr const char* const PluginOctreeSceneManager{ "Plugin_OctreeSceneManager" };
+	///Name of the rendersystem to initialize
+	static constexpr const char* const GLRenderSystem{ "OpenGL Rendering Subsystem" };
+
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 	static bool UseSSAA;
 
@@ -48,25 +55,25 @@ public:
 	virtual ~OgreVRRender();
 
 	///Get the scene manager of the virtual world
-	Ogre::SceneManager* getSceneManager();
+	Ogre::SceneManager* getSceneManager() const;
 
 	///Get the Ogre::Root object
-	Ogre::Root* getRoot();
+	Ogre::Root* getRoot() const;
 
 	///Get the RenderWidow that should display a debug render the VR view
-	Ogre::RenderWindow* getWindow();
+	Ogre::RenderWindow* getWindow() const;
 
 	///Get the node that is the player's head anchor point
-	Ogre::SceneNode* getCameraInformationNode();
+	Ogre::SceneNode* getCameraInformationNode() const;
 
 	///Get Ogre's internal timer
-	Ogre::Timer* getTimer();
+	Ogre::Timer* getTimer() const;
 
 	///Get frame update time from the VR renderer
-	double getUpdateTime();
+	double getUpdateTime() const;
 
 	///Configure the Ogre root engine. Will load all the ogre Plug-ins and components we need.
-	void getOgreConfig();
+	void getOgreConfig() const;
 
 	///Init Ogre, please provide the name of the output log file
 	void initOgreRoot(std::string loggerName);
@@ -140,7 +147,7 @@ public:
 	virtual void showDebug(DebugMode mode) = 0;
 
 	///Get a naked array of hand controllers
-	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> getHandControllerArray();
+	std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> getHandControllerArray() const;
 
 	///Get the size of the controller array
 	static size_t getHanControllerArraySize();
@@ -151,7 +158,7 @@ public:
 	virtual void handleIPDChange() = 0;
 
 	///Apply the position/orientation of the pose object to the camera rig
-	void applyCameraRigPose(OgrePose pose);
+	void applyCameraRigPose(OgrePose pose) const;
 
 	///extract from gameplay-movable information the points used to calculate the world poses
 	void syncGameplayBody();
@@ -161,13 +168,13 @@ public:
 	void calculateTimingFromOgre();
 
 	///Load "modern" OpenGL functions for the current OpenGL context.
-	void loadOpenGLFunctions();
+	static void loadOpenGLFunctions();
 
 	///This method create a texture with the wanted Anti Aliasing level. It will set the rttTexture and rttEyes member of this class to the correct value, and return the GLID of the texture.
 	unsigned int createRenderTexture(float w, float h);
 
 	///Create a render buffer with not anti aliasing. return a tuple with a TexturePtr and a GLID. use <code><pre>std::get<></pre></code>
-	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(float w, float h, std::string name = "");
+	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(float w, float h, std::string name = "") const;
 
 	void createWindow(unsigned int w = 1280, unsigned int h = 720, bool vsync = false);
 
@@ -179,7 +186,7 @@ protected:
 	std::string rendererName;
 
 	///Called if AA level has been updated
-	void changedAA();
+	void changedAA() const;
 
 	///Singleton pointer
 	static OgreVRRender* self;
@@ -188,7 +195,7 @@ protected:
 	Ogre::SceneManager* smgr;
 
 	///Ogre root object
-	Ogre::Root* root;
+	std::unique_ptr<Ogre::Root> root;
 
 	///Render window. VR isn't drawn to this window. A window is mandatory to init the RenderSystem.
 	Ogre::RenderWindow* window;

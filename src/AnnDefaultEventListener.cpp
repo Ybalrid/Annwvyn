@@ -78,7 +78,7 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	if (e.isPressed()) switch (e.getKey())
 	{
 		case KeyCode::grave:
-			AnnGetEngine()->toogleOnScreenConsole();
+			AnnGetOnScreenConsole()->toggle();
 			break;
 		case KeyCode::tab:
 			AnnGetVRRenderer()->cycleDebugHud();
@@ -124,7 +124,7 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 		player->run = false;
 
 	if (e.isPressed(buttons[b_console]))
-		AnnGetEngine()->toogleOnScreenConsole();
+		AnnGetOnScreenConsole()->toggle();
 	if (e.isPressed(buttons[b_debug]))
 		AnnGetVRRenderer()->cycleDebugHud();
 }
@@ -151,7 +151,7 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 			if (controller->hasBeenPressed(2))
 			{
 				if (controller->getType() == "Oculus Touch")
-					AnnGetEngine()->toogleOnScreenConsole();
+					AnnGetOnScreenConsole()->toggle();
 			}
 			break;
 		}
