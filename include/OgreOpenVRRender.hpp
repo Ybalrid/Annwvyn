@@ -20,9 +20,11 @@
 
 namespace Annwvyn
 {
+	///Specialization of AnnHandController for an OpenVR Motion Controller
 	class DLL AnnOpenVRMotionController : public AnnHandController
 	{
 	public:
+		///Needs a pointer to the currently initialized IVRSystem, and the raw TrackedDeviceIndex of the controller
 		AnnOpenVRMotionController(vr::IVRSystem* vrsystem, vr::TrackedDeviceIndex_t OpenVRDeviceIndex, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
 			: AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
 			deviceIndex(OpenVRDeviceIndex),
@@ -30,7 +32,10 @@ namespace Annwvyn
 		{
 		}
 
+		///This will trigger one impulse of the hap tics actuator by calling VrSystem->TriggerHapticPulse
 		void rumbleStart(float value) override;
+
+		///This will trigger one impulse of duration 0 (as in : asking not to move)
 		void rumbleStop() override;
 
 	private:
