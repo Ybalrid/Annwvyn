@@ -139,7 +139,10 @@ namespace Annwvyn
 		///Get the hash of the type of the controller
 		AnnHandControllerTypeHash getTypeHash() const;
 
+		///Start vibrating the controller with a set amount of "strength". Result will vary between VR systems...
 		virtual void rumbleStart(float factor);
+
+		///Stop vibrating, if the controller was vibrating in the first place...
 		virtual void rumbleStop();
 
 	protected:
