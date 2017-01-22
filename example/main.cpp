@@ -64,6 +64,7 @@ AnnMain()
 
 	/*auto */GameEngine = std::make_unique<AnnEngine>("other app", detectedHMD);
 	AnnGetResourceManager()->initResources();
+	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetEngine()->startGameplayLoop();
 
 	AnnQuit();
