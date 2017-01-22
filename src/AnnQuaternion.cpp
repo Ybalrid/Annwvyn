@@ -21,17 +21,17 @@ AnnQuaternion::AnnQuaternion(float* floatArray) : Quaternion(floatArray) { init(
 
 AnnQuaternion::AnnQuaternion(bool validState) : Quaternion() { init(); valid = validState; }
 
-AnnVect3 AnnQuaternion::getAtVector()
+AnnVect3 AnnQuaternion::getAtVector() const
 {
 	return *this * AnnVect3::NEGATIVE_UNIT_Z;
 }
 
-AnnVect3 AnnQuaternion::getUpVector()
+AnnVect3 AnnQuaternion::getUpVector() const
 {
 	return *this * AnnVect3::UNIT_Y;
 }
 
-btQuaternion AnnQuaternion::getBtQuaternion()
+btQuaternion AnnQuaternion::getBtQuaternion() const
 {
 	return btQuaternion(x, y, z, w);
 }
@@ -41,7 +41,7 @@ void AnnQuaternion::init()
 	valid = true;
 }
 
-bool AnnQuaternion::isValid()
+bool AnnQuaternion::isValid() const
 {
 	return valid;
 }

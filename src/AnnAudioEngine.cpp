@@ -30,7 +30,7 @@ Context(nullptr)
 	locked = false;
 }
 
-void AnnAudioEngine::logError()
+void AnnAudioEngine::logError() const
 {
 	AnnDebug() << lastError;
 }
@@ -262,7 +262,7 @@ void AnnAudioEngine::playBGM(const std::string path, const float volume)
 	alSourcePlay(bgm);
 }
 
-void AnnAudioEngine::stopBGM()
+void AnnAudioEngine::stopBGM() const
 {
 	AnnDebug() << "Stop any BGM playing";
 	alSourceStop(bgm);
@@ -298,7 +298,7 @@ void AnnAudioEngine::update()
 	updateListenerOrient(pose.orientation);
 }
 
-std::string AnnAudioEngine::getLastError()
+std::string AnnAudioEngine::getLastError() const
 {
 	return lastError;
 }
@@ -349,27 +349,27 @@ void AnnAudioSource::setPositon(AnnVect3 position)
 	pos = position;
 }
 
-void AnnAudioSource::setVolume(float gain)
+void AnnAudioSource::setVolume(float gain) const
 {
 	alSourcef(source, AL_GAIN, gain);
 }
 
-void AnnAudioSource::rewind()
+void AnnAudioSource::rewind() const
 {
 	alSourceRewind(source);
 }
 
-void AnnAudioSource::play()
+void AnnAudioSource::play() const
 {
 	alSourcePlay(source);
 }
 
-void AnnAudioSource::pause()
+void AnnAudioSource::pause() const
 {
 	alSourcePause(source);
 }
 
-void AnnAudioSource::stop()
+void AnnAudioSource::stop() const
 {
 	alSourceStop(source);
 }
@@ -383,7 +383,7 @@ void AnnAudioSource::changeSound(std::string path)
 	if (buffer) alSourcei(source, AL_BUFFER, buffer);
 }
 
-void AnnAudioSource::setLooping(bool looping)
+void AnnAudioSource::setLooping(bool looping) const
 {
 	if (looping) alSourcei(source, AL_LOOPING, AL_TRUE);
 	else alSourcei(source, AL_LOOPING, AL_FALSE);

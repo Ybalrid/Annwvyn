@@ -30,14 +30,14 @@ public:
 	~OculusInterface();
 
 	///Return the active HmdDesc object
-	ovrHmdDesc getHmdDesc();
+	ovrHmdDesc getHmdDesc() const;
 
 	///Return the current oculus session
-	ovrSession getSession();
+	ovrSession getSession() const;
 
 private:
 	///Print every known characteristics about the hardware to the log output
-	void customReport();
+	void customReport() const;
 
 	///Oculus session for the application
 	ovrSession session;

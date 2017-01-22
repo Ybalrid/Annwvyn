@@ -60,7 +60,7 @@ OculusInterface::~OculusInterface()
 	AnnDebug("LibOVR Shutdown... No longer can communicate with OculusService");
 }
 
-void OculusInterface::customReport()
+void OculusInterface::customReport() const
 {
 	//Print to the logger a bunch of information
 	AnnDebug() << "========================================================";
@@ -76,12 +76,12 @@ void OculusInterface::customReport()
 	AnnDebug() << "========================================================";
 }
 
-ovrHmdDesc OculusInterface::getHmdDesc()
+ovrHmdDesc OculusInterface::getHmdDesc() const
 {
 	return hmdDesc;
 }
 
-ovrSession OculusInterface::getSession()
+ovrSession OculusInterface::getSession() const
 {
 	return session;
 }

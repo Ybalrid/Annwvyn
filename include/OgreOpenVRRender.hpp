@@ -82,10 +82,10 @@ public:
 private:
 
 	///Get the HMD position in the OpenVR tracking space
-	Ogre::Vector3 getTrackedHMDTranslation();
+	Ogre::Vector3 getTrackedHMDTranslation() const;
 
 	///Get the HMD orientation in the OpenVR tracking space
-	Ogre::Quaternion getTrackedHMDOrieation();
+	Ogre::Quaternion getTrackedHMDOrieation() const;
 
 	///Take a Matrix34 from OpenVR and spew out an Ogre::Matrix4 that represent the same transform
 	static Ogre::Matrix4 getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat);

@@ -71,22 +71,22 @@ namespace Annwvyn
 		void detachModel();
 
 		///Return the current model :
-		Ogre::Entity* getModel();
+		Ogre::Entity* getModel() const;
 
 		///Get position in world space
-		AnnVect3 getWorldPosition();
+		AnnVect3 getWorldPosition() const;
 
 		///Get orientation in world space
-		AnnQuaternion getWorldOrientation();
+		AnnQuaternion getWorldOrientation() const;
 
 		///Get tracked angular speed
-		AnnVect3 getAngularSpeed();
+		AnnVect3 getAngularSpeed() const;
 
 		///Get tracked linear speed
-		AnnVect3 getLinearSpeed();
+		AnnVect3 getLinearSpeed() const;
 
 		///Get a vector aligned with the pointing direction
-		AnnVect3 getPointingDirection();
+		AnnVect3 getPointingDirection() const;
 
 		///Attach the node as a child to the controller node
 		void attachNode(Ogre::SceneNode* grabbedObject);
@@ -104,14 +104,14 @@ namespace Annwvyn
 		void setTrackedAngularSpeed(AnnVect3 v);
 
 		///Return true if the hand controller object has revived updates from the tracking system
-		bool isTracked();
+		bool isTracked() const;
 
 		///Get the state of the given button
 		///\param buttonIndex index of the button to test
 		bool getButtonState(uint8_t buttonIndex);
 
 		///Return the number of buttons
-		size_t getNbButton();
+		size_t getNbButton() const;
 
 		///Return true if the given button has been pressed during the frame
 		///\param buttonIndex index of the button to test
@@ -122,17 +122,17 @@ namespace Annwvyn
 		bool hasBeenReleased(uint8_t buttonIndex);
 
 		///Return the number of analog axis this controller has.
-		size_t getNbAxes();
+		size_t getNbAxes() const;
 
 		///Get the axis object for each axis
 		///\param index Index of the axis you need
 		AnnHandControllerAxis& getAxis(size_t index);
 
 		///Get the "hand side" of this particular controller
-		AnnHandControllerSide getSide();
+		AnnHandControllerSide getSide() const;
 
 		///Get the type of the controller. Can be anything. Expect stuff like "Vive Controller" or "Oculus Touch Controller"
-		std::string getType();
+		std::string getType() const;
 
 	private:
 

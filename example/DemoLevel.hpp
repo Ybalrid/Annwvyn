@@ -101,7 +101,7 @@ public:
 			jumpToLevelTriggeredBy(e.getSender());
 	}
 
-	void jumpToLevelTriggeredBy(AnnTriggerObject* trigger)
+	void jumpToLevelTriggeredBy(AnnTriggerObject* trigger) const
 	{
 		if (demo0trig.get() == trigger)
 		{

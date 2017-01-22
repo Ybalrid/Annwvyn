@@ -26,10 +26,10 @@ namespace Annwvyn
 		void loadReseourceFile(const std::string& path);
 
 		///InitAllResources
-		void initResources();
+		void initResources() const;
 
 		///Load in memory the content of the specified group
-		void loadGroup(const std::string& groupName);
+		void loadGroup(const std::string& groupName) const;
 
 		///Name of the default resource group
 		static constexpr const char* const defaultResourceGroupName = "Annwvyn_UserDefined_Group";
@@ -39,10 +39,10 @@ namespace Annwvyn
 
 	private:
 		///Log the fact that resource location creation as been rejected
-		void refuseResource(const std::string& name, const std::string& group);
+		static void refuseResource(const std::string& name, const std::string& group);
 
 		///Add to the default resource group "FileSystem=media" and "Zip=media/CORE.zip"
-		void addDefaultResourceLocation();
+		void addDefaultResourceLocation() const;
 
 		///Pointer to the resource group manager. We cache the address to prevent calling a static method all the time
 		Ogre::ResourceGroupManager* ResourceGroupManager;

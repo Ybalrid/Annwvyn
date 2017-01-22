@@ -924,7 +924,7 @@ namespace BtOgre {
 		}
 	}
 	//------------------------------------------------------------------------------------------------
-	Real DynamicRenderable::getBoundingRadius(void) const
+	Real DynamicRenderable::getBoundingRadius() const
 	{
 		return Math::Sqrt(std::max(mBox.getMaximum().squaredLength(), mBox.getMinimum().squaredLength()));
 	}
@@ -990,7 +990,7 @@ namespace BtOgre {
 		return mPoints[index];
 	}
 	//------------------------------------------------------------------------------------------------
-	unsigned short DynamicLines::getNumPoints(void) const
+	unsigned short DynamicLines::getNumPoints() const
 	{
 		return (unsigned short)mPoints.size();
 	}

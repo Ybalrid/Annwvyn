@@ -32,32 +32,32 @@ void AnnLightObject::setPosition(AnnVect3 position)
 	light->setPosition(position);
 }
 
-void AnnLightObject::setDirection(AnnVect3 direction)
+void AnnLightObject::setDirection(AnnVect3 direction) const
 {
 	light->setDirection(direction);
 }
 
-void AnnLightObject::setType(LightTypes type)
+void AnnLightObject::setType(LightTypes type) const
 {
 	light->setType(Ogre::Light::LightTypes(type));
 }
 
-void AnnLightObject::setDiffuseColor(AnnColor color)
+void AnnLightObject::setDiffuseColor(AnnColor color) const
 {
 	light->setDiffuseColour(color.getOgreColor());
 }
 
-void AnnLightObject::setSpecularColor(AnnColor color)
+void AnnLightObject::setSpecularColor(AnnColor color) const
 {
 	light->setSpecularColour(color.getOgreColor());
 }
 
-AnnColor AnnLightObject::getDiffuseColor()
+AnnColor AnnLightObject::getDiffuseColor() const
 {
 	return AnnColor(light->getDiffuseColour());
 }
 
-AnnColor AnnLightObject::getSpecularColor()
+AnnColor AnnLightObject::getSpecularColor() const
 {
 	return AnnColor(light->getSpecularColour());
 }

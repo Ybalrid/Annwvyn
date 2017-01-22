@@ -248,7 +248,7 @@ bool AnnConsole::isForbdiden(const std::string& keyword)
 	return false;
 }
 
-void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap)
+void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap) const
 {
 	using namespace Ogre;
 
@@ -419,7 +419,7 @@ stop:
 	free(textureBuffer);
 }
 
-void AnnConsole::syncConsolePosition()
+void AnnConsole::syncConsolePosition() const
 {
 	auto targetPosition = AnnGetVRRenderer()->trackedHeadPose.position + AnnGetVRRenderer()->trackedHeadPose.orientation*offset;
 	auto targetOrientaiton = AnnGetVRRenderer()->trackedHeadPose.orientation;

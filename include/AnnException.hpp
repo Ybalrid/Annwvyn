@@ -21,7 +21,7 @@ namespace Annwvyn
 		AnnGameObject* getParentWithBody() const;
 
 	private:
-		AnnGameObject* recurToBody(AnnGameObject* start) const;
+		static AnnGameObject* recurToBody(AnnGameObject* start);
 		AnnGameObject* objectWithProblem;
 		static std::ostringstream outputFormater;
 	};

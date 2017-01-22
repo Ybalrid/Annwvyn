@@ -43,17 +43,17 @@ namespace Annwvyn
 		///Get the position of the light (if relevant)
 		AnnVect3 getPosition() override;
 		///Set the direction of the light (if relevant)
-		void setDirection(AnnVect3 direction);
+		void setDirection(AnnVect3 direction) const;
 		///Set the type of the light
-		void setType(LightTypes type);
+		void setType(LightTypes type) const;
 		///Set the diffuse color of this light source
-		void setDiffuseColor(AnnColor color);
+		void setDiffuseColor(AnnColor color) const;
 		///Set the specular color of this light source
-		void setSpecularColor(AnnColor color);
+		void setSpecularColor(AnnColor color) const;
 		///Get the diffuse color of this light source
-		AnnColor getDiffuseColor();
+		AnnColor getDiffuseColor() const;
 		///Get the specular color of this light source
-		AnnColor getSpecularColor();
+		AnnColor getSpecularColor() const;
 
 	private:
 		friend class AnnEngine;

@@ -25,25 +25,25 @@ namespace Annwvyn
 		AnnColor(const AnnColor& color);
 
 		///Return a Ogre::ColourValue from the internal color value
-		Ogre::ColourValue getOgreColor();
+		Ogre::ColourValue getOgreColor() const;
 
 		///Return the red channel as an integer between 0 and 255
-		unsigned char getRedI();
+		unsigned char getRedI() const;
 		///Return the blue channel as an integer between 0 and 255
-		unsigned char getBlueI();
+		unsigned char getBlueI() const;
 		///Return the green channel as an integer between 0 and 255
-		unsigned char getGreenI();
+		unsigned char getGreenI() const;
 		///Return the alpha channel as an integer between 0 and 255
-		unsigned char getAlphaI();
+		unsigned char getAlphaI() const;
 
 		///Get the red value as float
-		float getRed();
+		float getRed() const;
 		///Get the green value as float
-		float getGreen();
+		float getGreen() const;
 		///Get blue red value as float
-		float getBlue();
+		float getBlue() const;
 		///Get alpha red value as float
-		float getAlpha();
+		float getAlpha() const;
 
 		///Set the red value
 		void setRed(float red);
@@ -71,7 +71,7 @@ namespace Annwvyn
 	private:
 		const unsigned char MAX8BIT;
 		///Return f*MAX8BIT
-		unsigned char f2i(float f);
+		unsigned char f2i(float f) const;
 		///Return true if f is inside interval [0;1]
 		static bool isInFloatRange(float f);
 	};

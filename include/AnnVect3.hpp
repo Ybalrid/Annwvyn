@@ -38,10 +38,10 @@ namespace Annwvyn
 		AnnVect3(btVector3& v);
 
 		///Return as bullet vector
-		btVector3 getBtVector();
+		btVector3 getBtVector() const;
 
 		///You can trust this vector
-		bool isValid();
+		bool isValid() const;
 	private:
 		///Set valid to true
 		void init();

@@ -80,44 +80,44 @@ namespace Annwvyn
 		void setOrientation(AnnQuaternion orient) override;
 
 		///Set the world orientation as a quaternion
-		void setWorldOrientation(AnnQuaternion orient);
+		void setWorldOrientation(AnnQuaternion orient) const;
 
 		///Set the world orientation as some floats
-		void setWorldOrientation(float w, float x, float y, float z);
+		void setWorldOrientation(float w, float x, float y, float z) const;
 
 		///Set scale
 		/// \param x X component of the scale vector
 		/// \param y Y component of the scale vector
 		/// \param z Z component of the scale vector
-		void setScale(float x, float y, float z);
+		void setScale(float x, float y, float z) const;
 
 		///Set scale from Vector 3D
 		/// \param scale Relative scaling factor
-		void setScale(AnnVect3 scale);
+		void setScale(AnnVect3 scale) const;
 
 		///Get Position
 		AnnVect3 getPosition() override;
 
 		///Get the position in world
-		AnnVect3 getWorldPosition();
+		AnnVect3 getWorldPosition() const;
 
 		///Get Orientation
 		AnnQuaternion getOrientation() override;
 
 		///Get the world orientation
-		AnnQuaternion getWorldOrientation();
+		AnnQuaternion getWorldOrientation() const;
 
 		///Get scale
-		AnnVect3 getScale();
+		AnnVect3 getScale() const;
 
 		///Get Ogre Node
-		Ogre::SceneNode* getNode();
+		Ogre::SceneNode* getNode() const;
 
 		///Get Ogre Entity
-		Ogre::Entity* getEntity();
+		Ogre::Entity* getEntity() const;
 
 		///Get Rigid Body
-		btRigidBody* getBody();
+		btRigidBody* getBody() const;
 
 		///Get distance from another object
 		/// \param otherObject The object we're counting the distance from
@@ -145,15 +145,15 @@ namespace Annwvyn
 		void loopAnimation(bool loop = true);
 
 		///Apply a physical force
-		void applyForce(AnnVect3 force);
+		void applyForce(AnnVect3 force) const;
 
 		///Apply a physical impulsion
 		/// \param impulse the impulsion force
-		void applyImpulse(AnnVect3 impulse);
+		void applyImpulse(AnnVect3 impulse) const;
 
 		///Set the linear speed of the object
 		/// \param v The linear speed
-		void setLinearSpeed(AnnVect3 v);
+		void setLinearSpeed(AnnVect3 v) const;
 
 		///Set up Physics
 		/// \param mass The mass of the object
@@ -161,28 +161,28 @@ namespace Annwvyn
 		void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true);
 
 		///Make the object visible
-		void setVisible();
+		void setVisible() const;
 
 		///Make the object invisible
-		void setInvisible();
+		void setInvisible() const;
 
 		///Return the name of the object
-		std::string getName();
+		std::string getName() const;
 
 		///Attach a script to this object
 		void attachScript(const std::string& scriptName);
 
 		///Return true if node is attached to the node owned by another AnnGameObject
-		bool hasParent();
+		bool hasParent() const;
 
 		///Get the parent Game Object
-		std::shared_ptr<AnnGameObject> getParent();
+		std::shared_ptr<AnnGameObject> getParent() const;
 
 		///Attach an object to this object.
-		void attachChildObject(std::shared_ptr<AnnGameObject> child);
+		void attachChildObject(std::shared_ptr<AnnGameObject> child) const;
 
 		///Make the node independent to any GameObject
-		void detachFromParent();
+		void detachFromParent() const;
 
 		///Recursively check if any parent has a body, if one is found, returns true
 		bool checkForBodyInParent();
@@ -193,10 +193,10 @@ namespace Annwvyn
 	private:
 
 		///Do the actual recursion of checkForBodyInParent
-		bool parentsHaveBody(AnnGameObject* obj);
+		bool parentsHaveBody(AnnGameObject* obj) const;
 
 		///Do the actual recursion of checkForBodyInChild
-		bool childrenHaveBody(AnnGameObject* obj);
+		static bool childrenHaveBody(AnnGameObject* obj);
 
 		///Make Annwvyn::AnnEngine access these methods :
 		friend class AnnEngine;
@@ -210,7 +210,7 @@ namespace Annwvyn
 
 		// TODO create animation state machine
 		///For engine : get elapsed time
-		void addAnimationTime(double offsetTime);
+		void addAnimationTime(double offsetTime) const;
 
 		///For engine : update OpenAL source position
 		void updateOpenAlPos();

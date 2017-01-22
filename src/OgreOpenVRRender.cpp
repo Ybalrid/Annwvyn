@@ -284,13 +284,13 @@ inline vr::EVREye OgreOpenVRRender::getEye(oovrEyeType eye)
 	return vr::Eye_Right;
 }
 
-inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation()
+inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation() const
 {
 	//Extract translation vector from the matrix
 	return hmdAbsoluteTransform.getTrans();
 }
 
-inline Ogre::Quaternion OgreOpenVRRender::getTrackedHMDOrieation()
+inline Ogre::Quaternion OgreOpenVRRender::getTrackedHMDOrieation() const
 {
 	//Orientation/scale as quaternion (the matrix transform has no scale component.
 	return hmdAbsoluteTransform.extractQuaternion();

@@ -14,12 +14,12 @@
  * =====================================================================================
  */
 
+#ifndef _BtOgreGP_H_
+#define _BtOgreGP_H_
+
 #ifdef _WIN32
 #pragma warning (disable : 4244)
 #endif
-
-#ifndef _BtOgreGP_H_
-#define _BtOgreGP_H_
 
 #include "systemMacro.h"
 

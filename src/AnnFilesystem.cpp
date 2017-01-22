@@ -40,7 +40,7 @@ AnnFileReader::AnnFileReader()
 	AnnDebug() << "FileReader instantiated";
 }
 
-shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName)
+shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName) const
 {
 	AnnDebug() << "Reading file " << fileName << " to memory";
 
@@ -127,14 +127,14 @@ void AnnFilesystemManager::setSaveDirectoryName(string dirname)
 	AnnDebug() << "Save directory location : " << getSaveDirectoryFullPath();
 }
 
-string AnnFilesystemManager::getPathForFileName(string filename)
+string AnnFilesystemManager::getPathForFileName(string filename) const
 {
 	if (!pathToUserDir.empty())
 		return pathToUserDir + "/" + saveDirectoryName + "/" + filename;
 	return "";
 }
 
-string AnnFilesystemManager::getSaveDirectoryFullPath()
+string AnnFilesystemManager::getSaveDirectoryFullPath() const
 {
 	return pathToUserDir + "/" + saveDirectoryName;
 }
@@ -146,7 +146,7 @@ void AnnFilesystemManager::createDirectory(string path)
 #endif
 }
 
-void AnnFilesystemManager::createSaveDirectory()
+void AnnFilesystemManager::createSaveDirectory() const
 {
 	createDirectory(getSaveDirectoryFullPath());
 }
@@ -171,12 +171,12 @@ shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObject(st
 	return nullptr;
 }
 
-shared_ptr<AnnFileReader> AnnFilesystemManager::getFileReader()
+shared_ptr<AnnFileReader> AnnFilesystemManager::getFileReader() const
 {
 	return fileReader;
 }
 
-shared_ptr<AnnFileWriter> AnnFilesystemManager::getFileWriter()
+shared_ptr<AnnFileWriter> AnnFilesystemManager::getFileWriter() const
 {
 	return fileWriter;
 }
@@ -188,12 +188,12 @@ AnnSaveFileData::AnnSaveFileData(string name) :
 	AnnDebug() << "SaveFileData object for file " << name << " created";
 }
 
-bool AnnSaveFileData::hasUnsavedChanges()
+bool AnnSaveFileData::hasUnsavedChanges() const
 {
 	return changed;
 }
 
-string AnnSaveFileData::getFilename()
+string AnnSaveFileData::getFilename() const
 {
 	return fileName;
 }
@@ -277,27 +277,27 @@ AnnSaveDataInterpretor::AnnSaveDataInterpretor(shared_ptr<AnnSaveFileData> data)
 {
 }
 
-float AnnSaveDataInterpretor::stringToFloat(string text)
+float AnnSaveDataInterpretor::stringToFloat(string text) const
 {
 	return stof(text);
 }
 
-int AnnSaveDataInterpretor::stringToInt(string text)
+int AnnSaveDataInterpretor::stringToInt(string text) const
 {
 	return stoi(text);
 }
 
-float AnnSaveDataInterpretor::keyStringToFloat(string key)
+float AnnSaveDataInterpretor::keyStringToFloat(string key) const
 {
 	return stringToFloat(dataObject->getValue(key));
 }
 
-int AnnSaveDataInterpretor::keyStringToInt(string key)
+int AnnSaveDataInterpretor::keyStringToInt(string key) const
 {
 	return stringToInt(dataObject->getValue(key));
 }
 
-AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(string key)
+AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(string key) const
 {
 	//Get text data from the dataObject return an invalid vector if the keyvalue wanted is not found
 	string x, y, z;
@@ -312,7 +312,7 @@ AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(string key)
 		stringToFloat(z));
 }
 
-AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(string key)
+AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(string key) const
 {
 	//Get text data from the dataObject return an invalid quaternion if the keyvalue wanted is not found
 	string x, y, z, w;

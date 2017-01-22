@@ -26,12 +26,12 @@ void AnnVect3::init()
 	valid = true;
 }
 
-btVector3 AnnVect3::getBtVector()
+btVector3 AnnVect3::getBtVector() const
 {
 	return btVector3(x, y, z);
 }
 
-bool AnnVect3::isValid()
+bool AnnVect3::isValid() const
 {
 	return valid;
 }

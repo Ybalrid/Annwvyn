@@ -29,7 +29,7 @@ namespace Annwvyn
 		void setSkyDomeMaterial(bool activate,
 								const char materialName[],
 								float curvature = 2.0f,
-								float tiling = 1.0f); //scene
+								float tiling = 1.0f) const; //scene
 
 							///Set the ogre material for the sky-box with params
 							/// \param activate if true put the sky-box on the scene
@@ -39,21 +39,21 @@ namespace Annwvyn
 		void setSkyBoxMaterial(bool activate,
 							   const char materialName[],
 							   float distance = 8000,
-							   bool renderedFirst = true);
+							   bool renderedFirst = true) const;
 
 						   ///Set the view-ports background color
 						   /// \param color background color
-		void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56f, 1));
+		void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56f, 1)) const;
 
 		///Remove the sky dome
-		void removeSkyDome();
+		void removeSkyDome() const;
 
 		///Remove the sky box
-		void removeSkyBox();
+		void removeSkyBox() const;
 
 		///Set the ambient light
 		/// \param color the color of the light
-		void setAmbientLight(AnnColor color);
+		void setAmbientLight(AnnColor color) const;
 
 	private:
 		///Scene manager created by the VR renderer

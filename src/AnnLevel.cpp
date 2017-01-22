@@ -12,8 +12,8 @@ AnnLevel::AnnLevel()
 
 AnnLevel::~AnnLevel()
 {
-	unload();
-	AnnDebug() << "Destructing level object " << this;
+	AnnDebug() << "Running generic level unload procedure now.";
+	AnnLevel::unload();
 }
 
 void AnnLevel::unload()
