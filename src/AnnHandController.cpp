@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "AnnHandController.hpp"
+#include "AnnGetter.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
 AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
 	controllerType(type),
+	controllerTypeHash(AnnGetStringUtility()->hash(type)),
 	id(controllerID),
 	side(controllerSide),
 	node(handNode),
@@ -17,6 +20,7 @@ AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode
 {
 	std::cerr << "HandController ID : " << id << " created";
 	std::cerr << "For side : " << getSideAsString(side);
+	std::cerr << "Of type : " << controllerType;
 }
 
 inline std::string AnnHandController::getSideAsString(AnnHandControllerSide s)
@@ -186,3 +190,8 @@ void AnnHandControllerAxis::updateValue(float normalizedValue)
 }
 
 bool AnnHandControllerAxis::isInRange(float v) { return (v >= -1 && v <= 1); }
+
+AnnHandController::AnnHandControllerTypeHash AnnHandController::getTypeHash() const
+{
+	return controllerTypeHash;
+}
