@@ -41,10 +41,17 @@ namespace Annwvyn
 	class DLL AnnOculusTouchController : public AnnHandController
 	{
 	public:
-		AnnOculusTouchController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
-			: AnnHandController("Oculus Touch", handNode, controllerID, controllerSide)
+		AnnOculusTouchController(ovrSession session, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
+			: AnnHandController("Oculus Touch", handNode, controllerID, controllerSide),
+			currentSession(session)
 		{
 		}
+
+		void rumbleStart(float factor) override;
+		void rumbleStop() override;
+
+	private:
+		ovrSession currentSession;
 	};
 }
 

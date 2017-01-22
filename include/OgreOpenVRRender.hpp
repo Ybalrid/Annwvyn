@@ -23,10 +23,20 @@ namespace Annwvyn
 	class DLL AnnOpenVRMotionController : public AnnHandController
 	{
 	public:
-		AnnOpenVRMotionController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
-			: AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide)
+		AnnOpenVRMotionController(vr::IVRSystem* vrsystem, vr::TrackedDeviceIndex_t OpenVRDeviceIndex, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
+			: AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
+			deviceIndex(OpenVRDeviceIndex),
+			vrSystem(vrsystem), last(0), current(0)
 		{
 		}
+
+		void rumbleStart(float value) override;
+		void rumbleStop() override;
+
+	private:
+		const vr::TrackedDeviceIndex_t deviceIndex;
+		vr::IVRSystem* vrSystem;
+		long last, current;
 	};
 }
 
