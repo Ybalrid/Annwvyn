@@ -536,8 +536,8 @@ void OgreOculusRender::initializeHandObjects(const oorEyeType side)
 	//If it's the first time we have access data on this hand controller, instantiate the object
 	if (!handControllers[side])
 	{
-		handControllers[side] = std::make_shared<AnnHandController>
-			("Oculus Touch", smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
+		handControllers[side] = std::make_shared<AnnOculusTouchController>
+			(smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
 		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 	}
 }

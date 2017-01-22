@@ -342,8 +342,8 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	//Dynamically allocate the controller if the controller doesn't exist yet
 	if (!handControllers[side])
 	{
-		handControllers[side] = std::make_shared<Annwvyn::AnnHandController>
-			("OpenVR Hand Controller", smgr->getRootSceneNode()->createChildSceneNode(), size_t(controllerDeviceIndex), side);
+		handControllers[side] = std::make_shared<Annwvyn::AnnOpenVRMotionController>
+			(smgr->getRootSceneNode()->createChildSceneNode(), size_t(controllerDeviceIndex), side);
 
 		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 	}
