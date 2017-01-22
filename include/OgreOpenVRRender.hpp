@@ -18,6 +18,18 @@
 
 #include "AnnHandController.hpp"
 
+namespace Annwvyn
+{
+	class DLL AnnOpenVRMotionController : public AnnHandController
+	{
+	public:
+		AnnOpenVRMotionController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
+			: AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide)
+		{
+		}
+	};
+}
+
 class DLL OgreOpenVRRender : public OgreVRRender
 {
 	///Marker for left and right : "Ogre Open VR Eye Type"
