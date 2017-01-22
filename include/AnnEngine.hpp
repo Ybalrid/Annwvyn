@@ -157,9 +157,8 @@ namespace Annwvyn
 		///Get the console
 		std::shared_ptr<AnnConsole> getOnScreenConsole() const;
 
-
 		///
-		std::shared_ptr<AnnStringUility> getStringUtility();
+		std::shared_ptr<AnnStringUility> getStringUtility() const;
 
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 

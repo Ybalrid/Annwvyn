@@ -68,11 +68,9 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_MEMORY) + "Can't create 2 instances of AnnEngine");
 	}
 
-
 	stringUtility = std::make_shared<AnnStringUility>();
 
 	consoleReady = false;
-
 
 	std::cerr << "HMD selection from command line routine returned : "
 		<< hmdCommand << std::endl;
@@ -475,12 +473,9 @@ void AnnEngine::initPlayerRoomscalePhysics() const
 std::shared_ptr<AnnConsole> AnnEngine::getOnScreenConsole() const
 {
 	return onScreenConsole;
-
 }
 
-std::shared_ptr<AnnStringUility> AnnEngine::getStringUtility()
+std::shared_ptr<AnnStringUility> AnnEngine::getStringUtility() const
 {
 	return stringUtility;
-}
-
 }
