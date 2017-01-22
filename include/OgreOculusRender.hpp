@@ -139,7 +139,7 @@ private:
 	static OgreOculusRender* OculusSelf;
 
 	///Set the Fov for the monoscopic view
-	void setMonoFov(float degreeFov);
+	void setMonoFov(float degreeFov) const;
 
 	///Object for getting informations from the Oculus Rift
 	OculusInterface* Oculus;
@@ -184,7 +184,7 @@ private:
 	ovrInputState inputState;
 
 	///Array of indexes of buttons. Indexes are fixed signed 32 bits
-	std::array<std::array < int32_t, 4>, 2> touchControllersButtons;
+	std::array<std::array<int32_t, 4>, 2> touchControllersButtons;
 
 	///Tracking state
 	ovrTrackingState ts;
@@ -220,7 +220,7 @@ private:
 	Ogre::Camera* debugCam;
 
 	///Nodes for the debug scene
-	Ogre::SceneNode* debugCamNode, *debugPlaneNode;
+	Ogre::SceneNode *debugCamNode, *debugPlaneNode;
 
 	///Pointer to the debug plane manual material
 	Ogre::MaterialPtr DebugPlaneMaterial;
@@ -262,7 +262,7 @@ private:
 	};
 
 	///Texture coordinates to map a whole texture to the debug plane
-	static constexpr const std::array<const std::array< const float, 2>, 4> debugPlaneTextureCoord
+	static constexpr const std::array<const std::array<const float, 2>, 4> debugPlaneTextureCoord
 	{
 		{
 			{0, 0},
@@ -273,10 +273,10 @@ private:
 	};
 
 	///Index buffer of the debug plane
-	static constexpr const std::array<const uint8_t, 4>debugPlaneIndexBuffer{ 0, 1, 2, 3 };
+	static constexpr const std::array<const uint8_t, 4> debugPlaneIndexBuffer{ 0, 1, 2, 3 };
 
 	///Index buffer of a quad
-	static constexpr const std::array<const uint8_t, 4>quadIndexBuffer{ 0, 1, 2, 3 };
+	static constexpr const std::array<const uint8_t, 4> quadIndexBuffer{ 0, 1, 2, 3 };
 
 	///Preferred order to update eyes
 	static constexpr const std::array<const oorEyeType, 2> eyeUpdateOrder{ {left, right} };
