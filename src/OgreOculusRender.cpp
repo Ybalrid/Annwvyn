@@ -70,8 +70,6 @@ OgreOculusRender::~OgreOculusRender()
 	//Release shared pointers from Ogre before deleting Root
 	DebugPlaneMaterial.setNull();
 	rttTexture.setNull();
-
-	delete root;
 }
 
 bool OgreOculusRender::shouldQuit()
@@ -154,7 +152,7 @@ void OgreOculusRender::initVrHmd()
 	AnnDebug() << "Eye leveling translation : " << AnnGetPlayer()->getEyeTranslation();
 }
 
-void OgreOculusRender::setMonoFov(float degreeFov)
+void OgreOculusRender::setMonoFov(float degreeFov) const
 {
 	if (monoCam) monoCam->setFOVy(Ogre::Degree(degreeFov));
 }

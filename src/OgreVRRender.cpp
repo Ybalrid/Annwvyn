@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "OgreVRRender.hpp"
 #include "AnnGetter.hpp"
-#include "../include/AnnLogger.hpp"
+#include "AnnLogger.hpp"
 
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
@@ -20,22 +20,22 @@ void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
 }
 
 OgreVRRender::OgreVRRender(std::string windowName) :
-	smgr(nullptr),
-	root(nullptr),
-	window(nullptr),
-	updateTime(0),
-	nearClippingDistance(0.1f),
-	farClippingDistance(500.0f),
-	feetPosition(0, 0, 10),
-	bodyOrientation(Ogre::Quaternion::IDENTITY),
-	name(windowName),
-	gameplayCharacterRoot(nullptr),
-	backgroundColor(0, 0.56f, 1),
+	smgr{ nullptr },
+	root{ nullptr },
+	window{ nullptr },
+	updateTime{ 0 },
+	then{ 0 },
+	now{ 0 },
+	nearClippingDistance{ 0.1f },
+	farClippingDistance{ 500.0f },
+	feetPosition{ 0, 0, 10 },
+	bodyOrientation{ Ogre::Quaternion::IDENTITY },
+	name{ windowName },
+	gameplayCharacterRoot{ nullptr },
+	backgroundColor{ 0, 0.56f, 1 },
 	cameraRig{ nullptr },
-	frameCounter(0),
-	rttEyes(nullptr),
-	then(0),
-	now(0)
+	frameCounter{ 0 },
+	rttEyes{ nullptr }
 {
 	rttTexture.setNull();
 	if (self)
@@ -55,36 +55,35 @@ OgreVRRender::~OgreVRRender()
 {
 	self = nullptr;
 	root->unloadPlugin("Plugin_OctreeSceneManager");
-	//delete root;
 }
 
-Ogre::SceneManager* OgreVRRender::getSceneManager()
+Ogre::SceneManager* OgreVRRender::getSceneManager() const
 {
 	return smgr;
 }
 
-Ogre::Root* OgreVRRender::getRoot()
+Ogre::Root* OgreVRRender::getRoot() const
 {
-	return root;
+	return root.get();
 }
 
-Ogre::RenderWindow* OgreVRRender::getWindow()
+Ogre::RenderWindow* OgreVRRender::getWindow() const
 {
 	return window;
 }
 
-Ogre::SceneNode* OgreVRRender::getCameraInformationNode()
+Ogre::SceneNode* OgreVRRender::getCameraInformationNode() const
 {
 	return gameplayCharacterRoot;
 }
 
-Ogre::Timer * OgreVRRender::getTimer()
+Ogre::Timer * OgreVRRender::getTimer() const
 {
 	if (root) return root->getTimer();
 	return nullptr;
 }
 
-double OgreVRRender::getUpdateTime()
+double OgreVRRender::getUpdateTime() const
 {
 	return updateTime;
 }
@@ -92,29 +91,29 @@ double OgreVRRender::getUpdateTime()
 void OgreVRRender::initOgreRoot(std::string loggerName)
 {
 	//Create the ogre root with standards Ogre configuration file
-	root = new Ogre::Root("", "ogre.cfg", loggerName.c_str());
+	root = std::make_unique<Ogre::Root>("", "ogre.cfg", loggerName.c_str());
 
 	//Set the log verbosity to "bore me"
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LoggingLevel::LL_BOREME);
 }
 
-void OgreVRRender::getOgreConfig()
+void OgreVRRender::getOgreConfig() const
 {
 	//Ogre as to be initialized
 	if (!root) throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Need to initialize Ogre::Root before loading system configuration");
 
 	//Load OgrePlugins
-	root->loadPlugin("RenderSystem_GL");
-	root->loadPlugin("Plugin_OctreeSceneManager");
+	root->loadPlugin(PluginRenderSystemGL);
+	root->loadPlugin(PluginOctreeSceneManager);
 
 	//Set the classic OpenGL render system
-	root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
+	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem));
 	root->getRenderSystem()->setFixedPipelineEnabled(true);
 	root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 }
 
-std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> OgreVRRender::getHandControllerArray()
+std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> OgreVRRender::getHandControllerArray() const
 {
 	return handControllers;
 }
@@ -133,7 +132,7 @@ size_t OgreVRRender::getRecognizedControllerCount()
 	return count;
 }
 
-void OgreVRRender::changedAA()
+void OgreVRRender::changedAA() const
 {
 	if (rttTexture.getPointer() && !UseSSAA) rttTexture->setFSAA(AALevel, "");
 }
@@ -174,7 +173,7 @@ void OgreVRRender::initCameras()
 	gameplayCharacterRoot = smgr->getRootSceneNode()->createChildSceneNode();
 }
 
-void OgreVRRender::applyCameraRigPose(OgrePose pose)
+void OgreVRRender::applyCameraRigPose(OgrePose pose) const
 {
 	cameraRig->setPosition(pose.position);
 	cameraRig->setOrientation(pose.orientation);
@@ -210,9 +209,7 @@ void OgreVRRender::loadOpenGLFunctions()
 void OgreVRRender::updateTracking()
 {
 	syncGameplayBody();
-
 	getTrackingPoseAndVRTiming();
-
 	applyCameraRigPose(trackedHeadPose);
 }
 
@@ -236,7 +233,7 @@ GLuint OgreVRRender::createRenderTexture(float w, float h)
 	return glid;
 }
 
-std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderBuffer(float w, float h, std::string additionalTextureName)
+std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderBuffer(float w, float h, std::string additionalTextureName) const
 {
 	static int counter;
 	if (additionalTextureName.empty())

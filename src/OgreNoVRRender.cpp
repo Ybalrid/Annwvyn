@@ -103,7 +103,4 @@ OgreNoVRRender::~OgreNoVRRender()
 	root->destroySceneManager(smgr);
 	noVRself = nullptr;
 	rttTexture.setNull();
-
-	//TODO here, and only here, there's a crash when unloading a font, probably the one declared by AnnConsole. Makes no sense. Will investigate.
-	//delete root;
 }
