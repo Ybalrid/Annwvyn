@@ -252,6 +252,12 @@
     <ClInclude Include="..\..\include\AnnException.hpp">
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AnnUserSpaceEvent.hpp">
+      <Filter>Annwvyn\SubSystems\UserDefined</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\AnnStringUtility.hpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -372,6 +378,12 @@
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnException.cpp">
+      <Filter>Annwvyn\Core\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnUserSpaceEvent.cpp">
+      <Filter>Annwvyn\SubSystems\UserDefined</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AnnStringUtility.cpp">
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClCompile>
   </ItemGroup>

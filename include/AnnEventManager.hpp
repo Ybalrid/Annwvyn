@@ -20,6 +20,9 @@
 
 #include "AnnSubsystem.hpp"
 
+//TODO if it breaks, just pre-declaer the class
+#include "AnnUserSpaceSubSystem.hpp"
+
 //the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
 #define LISTENER public Annwvyn::AnnEventListener
@@ -30,6 +33,10 @@ namespace Annwvyn
 {
 	class AnnEngine;
 	class AnnEventManager; //pre-declaration of the event manager for class friendliness directives
+
+	class AnnUserSpaceEventLauncher;
+	class AnnUserSpaceEvent;
+
 	enum AnnEventType
 	{
 		NO_TYPE,
@@ -421,6 +428,8 @@ namespace Annwvyn
 		virtual void CollisionEvent(AnnCollisionEvent e) { return; }
 		///Event from detected player collisions
 		virtual void PlayerCollisionEvent(AnnPlayerCollisionEvent e) { return; }
+		///Events from code outside of Annwvyn itself
+		virtual void EventFromUserSubsystem(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* origin) { return; }
 
 		///This method is called at each frame. Useful for updating player's movement command for example
 		virtual void tick() { return; }
@@ -635,6 +644,10 @@ namespace Annwvyn
 
 		friend class AnnEngine;
 		friend class AnnPhysicsEngine;
+		friend class AnnUserSpaceEventLauncher;
+
+		///Send the given event to the listeners
+		void userSpaceDispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* sender);
 
 		///Engine call for refreshing the event system
 		void update() override;
@@ -646,6 +659,8 @@ namespace Annwvyn
 		void processTriggerEvents();
 		///Process collisions
 		void processCollisionEvents();
+		///Process user event dispatch()
+		void processUserSpaceEvents();
 
 		// TODO get rid of the shared pointer here
 		///Register trigger event for next triggerProcess by the engine
@@ -690,6 +705,9 @@ namespace Annwvyn
 
 		std::vector<std::pair<void*, void*>> collisionBuffer;
 		std::vector<AnnGameObject*> playerCollisionBuffer;
+
+		//Using a shared ptr to keep ownership of the event object until the event is dealt with. Also, polymorphism.
+		std::vector<std::pair<std::shared_ptr<AnnUserSpaceEvent>, AnnUserSpaceEventLauncher*>> userSpaceEventBuffer;
 
 		StickAxisId xboxID;
 		bool knowXbox;

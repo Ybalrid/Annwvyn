@@ -38,7 +38,7 @@ void AnnSplashLevel::load()
 	//Create manual object
 	AnnDebug() << "Creating the display \"plane\" for the splash";
 	auto smgr(AnnGetEngine()->getSceneManager());
-	CurvedPlane = smgr->createManualObject(generateRandomID());
+	CurvedPlane = smgr->createManualObject(AnnGetStringUtility()->getRandomString());
 
 	CurvedPlane->begin("Splash", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 

@@ -76,9 +76,6 @@ namespace Annwvyn
 
 		///Name of the level
 		std::string name;
-
-		///Create a random ID for level objects.
-		static std::string generateRandomID(size_t len = defaultIdLen);
 	};
 }
 #endif

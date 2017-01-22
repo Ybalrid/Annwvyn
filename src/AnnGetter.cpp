@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "AnnGetter.hpp"
 
-//using namespace Annwvyn;
 using namespace std;
 
 namespace Annwvyn
@@ -20,4 +19,5 @@ namespace Annwvyn
 	shared_ptr<AnnScriptManager> AnnGetScriptManager() { return AnnGetEngine()->getScriptManager(); }
 	shared_ptr<AnnGameObjectManager> AnnGetGameObjectManager() { return AnnGetEngine()->getGameObjectManager(); }
 	shared_ptr<AnnConsole> AnnGetOnScreenConsole() { return AnnGetEngine()->getOnScreenConsole(); }
+	shared_ptr<AnnStringUility> AnnGetStringUtility() { return AnnGetEngine()->getStringUtility(); }
 }

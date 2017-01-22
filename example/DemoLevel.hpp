@@ -140,7 +140,7 @@ public:
 		Ground->setUpPhysics();
 
 		auto MyObject = addGameObject("MyObject.mesh");
-		MyObject->setPosition({ 0, 1,-5 });
+		MyObject->setPosition({ 0, 1, -5 });
 		MyObject->setUpPhysics(200, convexShape);
 
 		auto objectQueryFromNode = AnnGetGameObjectManager()->getFromNode(MyObject->getNode());
@@ -166,6 +166,7 @@ public:
 
 	void runLogic() override
 	{
+		/*
 		auto object = AnnGetGameObjectManager()->playerLookingAt();
 		if (object)
 		{
@@ -175,6 +176,7 @@ public:
 		{
 			AnnDebug() << "No object";
 		}
+		*/
 	}
 
 private:

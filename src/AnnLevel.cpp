@@ -76,17 +76,6 @@ std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::shared_ptr<AnnT
 	return obj;
 }
 
-std::string AnnLevel::generateRandomID(size_t len)
-{
-	std::string id;
-	std::string buffer = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
-
-	for (size_t i(0); i < len; i++)
-		id += buffer.substr(rand() % buffer.size(), 1);
-
-	return id;
-}
-
 AnnGameObjectList& AnnLevel::getContent()
 {
 	return levelContent;

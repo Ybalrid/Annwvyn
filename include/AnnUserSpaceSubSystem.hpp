@@ -3,6 +3,7 @@
 
 #include "systemMacro.h"
 #include "AnnSubsystem.hpp"
+#include "AnnUserSpaceEvent.hpp"
 #include <memory>
 
 #define AnnUserSystemAs(type) std::dynamic_pointer_cast<type>
@@ -11,7 +12,7 @@ namespace Annwvyn
 {
 	class AnnEngine;
 	///User defined subsystem base class
-	class DLL AnnUserSubSystem : public AnnSubSystem
+	class DLL AnnUserSubSystem : public AnnSubSystem, AnnUserSpaceEventLauncher
 	{
 	public:
 		///Construct the user subsystem. The systemName is mandatory
@@ -25,6 +26,8 @@ namespace Annwvyn
 
 		///Marker if the system wants it's "update" method to be called by the engine. this is tested each frames.
 		bool needUpdate() override;
+
+		void dispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e) override;
 	};
 }
 
