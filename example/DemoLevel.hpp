@@ -86,6 +86,8 @@ public:
 		//AnnDebug() << "player pov node position" << povPos;
 		//AnnDebug() << "headset Position " << headPos;
 		//AnnDebug() << "y offset : " << headPos.y - povPos.y;
+		for (auto i : { 0,1 })
+			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[i]) controller->rumbleStop();
 	}
 
 	void unload() override

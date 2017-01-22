@@ -537,7 +537,7 @@ void OgreOculusRender::initializeHandObjects(const oorEyeType side)
 	if (!handControllers[side])
 	{
 		handControllers[side] = std::make_shared<AnnOculusTouchController>
-			(smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
+			(Oculus->getSession(), smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
 		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 	}
 }
@@ -607,4 +607,22 @@ void OgreOculusRender::updateTouchControllers()
 		handController->setTrackedAngularSpeed(oculusToOgreVect3(handPoses[side].AngularVelocity));
 		handController->setTrackedLinearSpeed(oculusToOgreVect3(handPoses[side].LinearVelocity));
 	}
+}
+
+void AnnOculusTouchController::rumbleStart(float factor)
+{
+	ovrControllerType myType = {};
+	if (side == leftHandController) myType = ovrControllerType_LTouch;
+	else if (side == rightHandController) myType = ovrControllerType_RTouch;
+
+	ovr_SetControllerVibration(currentSession, myType, factor / 2, factor);
+}
+
+void AnnOculusTouchController::rumbleStop()
+{
+	ovrControllerType myType = {};
+	if (side == leftHandController) myType = ovrControllerType_LTouch;
+	else if (side == rightHandController) myType = ovrControllerType_RTouch;
+
+	ovr_SetControllerVibration(currentSession, myType, 0, 0);
 }

@@ -195,3 +195,13 @@ AnnHandController::AnnHandControllerTypeHash AnnHandController::getTypeHash() co
 {
 	return controllerTypeHash;
 }
+
+void AnnHandController::rumbleStart(float factor)
+{
+	AnnDebug() << "rumbleStart not specialized on this controller...";
+}
+
+void AnnHandController::rumbleStop()
+{
+	AnnDebug() << "rumbleStop not specialized on this controller...";
+}

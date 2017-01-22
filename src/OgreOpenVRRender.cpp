@@ -318,6 +318,8 @@ void OgreOpenVRRender::processVREvents()
 
 const bool DEBUG(true);
 
+float ll = 0, ln = 0, rl = 0, rn = 0;
+
 void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side)
 {
 	//Extract tracking information from the device
@@ -343,7 +345,7 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	if (!handControllers[side])
 	{
 		handControllers[side] = std::make_shared<Annwvyn::AnnOpenVRMotionController>
-			(smgr->getRootSceneNode()->createChildSceneNode(), size_t(controllerDeviceIndex), side);
+			(vrSystem, controllerDeviceIndex, smgr->getRootSceneNode()->createChildSceneNode(), size_t(controllerDeviceIndex), side);
 
 		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 	}
@@ -444,4 +446,19 @@ inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::H
 		mat.m[2][0],	mat.m[2][1],	mat.m[2][2],	mat.m[2][3],
 		0.0f,			0.0f,			0.0f,			1.0f
 	};
+}
+
+void Annwvyn::AnnOpenVRMotionController::rumbleStart(float value)
+{
+	current = AnnGetVRRenderer()->getTimer()->getMilliseconds();
+	if (current - last > 30)
+	{
+		last = current;
+		vrSystem->TriggerHapticPulse(deviceIndex, vr::EVRButtonId::k_EButton_SteamVR_Touchpad - vr::k_EButton_Axis0, static_cast<unsigned short>(value * USHRT_MAX));
+	}
+}
+
+void Annwvyn::AnnOpenVRMotionController::rumbleStop()
+{
+	vrSystem->TriggerHapticPulse(deviceIndex, vr::EVRButtonId::k_EButton_SteamVR_Touchpad - vr::k_EButton_Axis0, 0x0000);
 }
