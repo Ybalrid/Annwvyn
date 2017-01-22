@@ -36,6 +36,18 @@
 #include "AnnErrorCode.hpp"
 #include "AnnTypes.h"
 
+namespace Annwvyn
+{
+	class DLL AnnOculusTouchController : public AnnHandController
+	{
+	public:
+		AnnOculusTouchController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
+			: AnnHandController("Oculus Touch", handNode, controllerID, controllerSide)
+		{
+		}
+	};
+}
+
 ///Do the initialization and graphical rendering for the Oculus Rift using Ogre
 class DLL OgreOculusRender : public OgreVRRender
 {
