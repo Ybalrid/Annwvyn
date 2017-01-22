@@ -110,6 +110,7 @@ AnnMain()
 	//load resources
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
+
 	AnnGetResourceManager()->initResources();
 
 	//create and load level objects
@@ -134,6 +135,19 @@ AnnMain()
 	someListener.reset();
 
 	AnnQuit();
+
+	//Try to start the engine again :
+
+	MessageBox(nullptr, L"Starting Annwvyn again", L"Engine restart", MB_ICONINFORMATION);
+
+	/*auto */GameEngine = std::make_unique<AnnEngine>("other app", detectedHMD);
+	AnnGetResourceManager()->initResources();
+	AnnGetEventManager()->useDefaultEventListener();
+	AnnGetEngine()->startGameplayLoop();
+
+	AnnQuit();
+
+	MessageBox(nullptr, L"If it did not crash here, it means that the engine is not in a zombie state when cleared, and is stable!", L"Engine test success!", MB_ICONASTERISK);
 
 	return EXIT_SUCCESS;
 }

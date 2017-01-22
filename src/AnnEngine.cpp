@@ -5,9 +5,21 @@
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(nullptr);
+bool AnnEngine::consoleReady(false);
+
+AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
+{
+	engine = address;
+}
+
+AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
+{
+	//Reset static members of friend class AnnEnigine that will outlive the object itself.
+	engine->singleton = nullptr;
+	engine->consoleReady = false;
+}
 
 //Log is static. Therefore this has to be static too to be able to write to it.
-std::shared_ptr<AnnConsole> AnnEngine::onScreenConsole(nullptr);
 WORD AnnEngine::consoleGreen(0);
 WORD AnnEngine::consoleYellow(0);
 WORD AnnEngine::consoleWhite(0);
@@ -35,6 +47,7 @@ void AnnEngine::startGameplayLoop()
 }
 
 AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
+	resetGuard(this),
 	renderer(nullptr),
 	resourceManager(nullptr),
 	sceneryManager(nullptr),
@@ -55,7 +68,11 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_MEMORY) + "Can't create 2 instances of AnnEngine");
 	}
 
+
 	stringUtility = std::make_shared<AnnStringUility>();
+
+	consoleReady = false;
+
 
 	std::cerr << "HMD selection from command line routine returned : "
 		<< hmdCommand << std::endl;
@@ -99,7 +116,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	log("| Annwvyn Game Engine - Step into the Other World          |", false);
 	log("| Free/Libre C++ Game Engine designed for Virtual Reality  |", false);
 	log("|                                                          |", false);
-	log("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2016   |", false);
+	log("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2017   |", false);
 	log("| Distributed under the terms of the MIT license agreement |", false);
 	log("|                                                          |", false);
 	log("| Visit http://annwvyn.org/ for more informations!         |", false);
@@ -182,6 +199,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		FOREGROUND_GREEN |
 		FOREGROUND_BLUE |
 		FOREGROUND_INTENSITY;
+
+	consoleReady = true;
 }
 
 AnnEngine::~AnnEngine()
@@ -189,62 +208,63 @@ AnnEngine::~AnnEngine()
 	//Some cute log messages
 	log("Game engine stopped. Subsystem are shutting down...");
 	log("Good luck with the real world now! :3");
+	consoleReady = false;
 }
 
 //All theses getter are for encapsulation purpose. Calling them directly would
 //make very long lines of code. Note that there's a whole bunch of macro in
 //AnnEngine.hpp to help with that
-std::shared_ptr<AnnEventManager> AnnEngine::getEventManager()
+std::shared_ptr<AnnEventManager> AnnEngine::getEventManager() const
 {
 	return eventManager;
 }
 
-std::shared_ptr<AnnResourceManager> AnnEngine::getResourceManager()
+std::shared_ptr<AnnResourceManager> AnnEngine::getResourceManager() const
 {
 	return resourceManager;
 }
 
-std::shared_ptr<AnnGameObjectManager> AnnEngine::getGameObjectManager()
+std::shared_ptr<AnnGameObjectManager> AnnEngine::getGameObjectManager() const
 {
 	return gameObjectManager;
 }
 
-std::shared_ptr<AnnSceneryManager> AnnEngine::getSceneryManager()
+std::shared_ptr<AnnSceneryManager> AnnEngine::getSceneryManager() const
 {
 	return sceneryManager;
 }
 
-std::shared_ptr<AnnScriptManager> AnnEngine::getScriptManager()
+std::shared_ptr<AnnScriptManager> AnnEngine::getScriptManager() const
 {
 	return scriptManager;
 }
 
-std::shared_ptr<OgreVRRender> AnnEngine::getVRRenderer()
+std::shared_ptr<OgreVRRender> AnnEngine::getVRRenderer() const
 {
 	return renderer;
 }
 
-std::shared_ptr<AnnLevelManager> AnnEngine::getLevelManager()
+std::shared_ptr<AnnLevelManager> AnnEngine::getLevelManager() const
 {
 	return levelManager;
 }
 
-std::shared_ptr<AnnPlayer> AnnEngine::getPlayer()
+std::shared_ptr<AnnPlayer> AnnEngine::getPlayer() const
 {
 	return player;
 }
 
-std::shared_ptr<AnnFilesystemManager> AnnEngine::getFileSystemManager()
+std::shared_ptr<AnnFilesystemManager> AnnEngine::getFileSystemManager() const
 {
 	return filesystemManager;
 }
 
-std::shared_ptr<AnnAudioEngine> AnnEngine::getAudioEngine()
+std::shared_ptr<AnnAudioEngine> AnnEngine::getAudioEngine() const
 {
 	return audioEngine;
 }
 
-std::shared_ptr<AnnPhysicsEngine> AnnEngine::getPhysicsEngine()
+std::shared_ptr<AnnPhysicsEngine> AnnEngine::getPhysicsEngine() const
 {
 	return physicsEngine;
 }
@@ -266,21 +286,21 @@ void AnnEngine::log(std::string message, bool flag)
 	if (Ogre::LogManager::getSingletonPtr())
 		Ogre::LogManager::getSingleton().logMessage(messageForLog);
 
-	if (onScreenConsole)
-		onScreenConsole->append(message);
+	if (consoleReady)
+		singleton->onScreenConsole->append(message);
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
 }
 
 //Don't ask me why this is not part of the Physics engine. Actually it just
 //calls something on the physics engine. Will be probably deleted in the future.
-void AnnEngine::initPlayerPhysics()
+void AnnEngine::initPlayerPhysics() const
 {
 	initPlayerStandingPhysics();
 }
 
 //Need to be redone.
-bool AnnEngine::requestStop()
+bool AnnEngine::requestStop() const
 {
 	//pres ESC to quit. Stupid but efficient. I like that.
 	if (isKeyDown(OIS::KC_ESCAPE))
@@ -321,7 +341,7 @@ bool AnnEngine::refresh()
 
 // This just move a node where the other node is. Yes I know about parenting.
 // I had reasons to do it that way, but I forgot.
-inline void AnnEngine::syncPov()
+inline void AnnEngine::syncPov() const
 {
 	vrRendererPovGameplayPlacement->setPosition(
 		player->getPosition());
@@ -330,34 +350,34 @@ inline void AnnEngine::syncPov()
 }
 
 //Bad. Don't use. Register an event listener and use the KeyEvent callback.
-inline bool AnnEngine::isKeyDown(OIS::KeyCode key)
+inline bool AnnEngine::isKeyDown(OIS::KeyCode key) const
 {
 	if (!eventManager) return false;
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
-Ogre::SceneNode* AnnEngine::getPlayerPovNode()
+Ogre::SceneNode* AnnEngine::getPlayerPovNode() const
 {
 	return vrRendererPovGameplayPlacement;
 }
 
-Ogre::SceneManager* AnnEngine::getSceneManager()
+Ogre::SceneManager* AnnEngine::getSceneManager() const
 {
 	return SceneManager;
 }
 
-unsigned long AnnEngine::getTimeFromStartUp()
+unsigned long AnnEngine::getTimeFromStartUp() const
 {
 	return renderer->getTimer()->getMilliseconds();
 }
 
-double AnnEngine::getTimeFromStartupSeconds()
+double AnnEngine::getTimeFromStartupSeconds() const
 {
 	return double(getTimeFromStartUp()) / 1000.0;
 }
 
 //the delta time of the last frame, not the current one
-double AnnEngine::getFrameTime()
+double AnnEngine::getFrameTime() const
 {
 	return updateTime;
 }
@@ -365,7 +385,7 @@ double AnnEngine::getFrameTime()
 // Raw position and orientation of the head in world space. This is useful if
 // you want to mess around with weird stuff. This has been bodged when I
 // integrated a LEAP motion in that mess.
-OgrePose AnnEngine::getHmdPose()
+OgrePose AnnEngine::getHmdPose() const
 {
 	if (renderer)
 		return renderer->trackedHeadPose;
@@ -435,35 +455,32 @@ bool AnnEngine::openConsole()
 	return state;
 }
 
-//Well, I may make the pointer to the onScreenConsole more accessible.
-void AnnEngine::toogleOnScreenConsole()
-{
-	if (onScreenConsole) onScreenConsole->toggle();
-}
-
-bool AnnEngine::appVisibleInHMD()
+bool AnnEngine::appVisibleInHMD() const
 {
 	if (renderer->isVisibleInHmd())
 		return true;
 	return false;
 }
 
-void AnnEngine::initPlayerStandingPhysics()
+void AnnEngine::initPlayerStandingPhysics() const
 {
 	physicsEngine->initPlayerStandingPhysics(vrRendererPovGameplayPlacement);
 }
 
-void AnnEngine::initPlayerRoomscalePhysics()
+void AnnEngine::initPlayerRoomscalePhysics() const
 {
 	physicsEngine->initPlayerRoomscalePhysics(vrRendererPovGameplayPlacement);
 }
 
-std::shared_ptr<AnnConsole> AnnEngine::getOnScreenConsole()
+std::shared_ptr<AnnConsole> AnnEngine::getOnScreenConsole() const
 {
 	return onScreenConsole;
+
 }
 
 std::shared_ptr<AnnStringUility> AnnEngine::getStringUtility()
 {
 	return stringUtility;
+}
+
 }
