@@ -30,52 +30,52 @@ AnnColor::AnnColor(const AnnColor & color) :
 {
 }
 
-Ogre::ColourValue AnnColor::getOgreColor()
+Ogre::ColourValue AnnColor::getOgreColor() const
 {
 	return Ogre::ColourValue(r, g, b, a);
 }
 
-float AnnColor::getRed()
+float AnnColor::getRed() const
 {
 	return r;
 }
 
-float AnnColor::getGreen()
+float AnnColor::getGreen() const
 {
 	return g;
 }
 
-float AnnColor::getBlue()
+float AnnColor::getBlue() const
 {
 	return b;
 }
 
-float AnnColor::getAlpha()
+float AnnColor::getAlpha() const
 {
 	return a;
 }
 
-unsigned char AnnColor::f2i(float f)
+unsigned char AnnColor::f2i(float f) const
 {
 	return static_cast<unsigned char>(f * MAX8BIT);
 }
 
-unsigned char AnnColor::getRedI()
+unsigned char AnnColor::getRedI() const
 {
 	return f2i(r);
 }
 
-unsigned char AnnColor::getGreenI()
+unsigned char AnnColor::getGreenI() const
 {
 	return f2i(g);
 }
 
-unsigned char AnnColor::getBlueI()
+unsigned char AnnColor::getBlueI() const
 {
 	return f2i(b);
 }
 
-unsigned char AnnColor::getAlphaI()
+unsigned char AnnColor::getAlphaI() const
 {
 	return f2i(a);
 }

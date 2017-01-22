@@ -66,45 +66,45 @@ AnnPlayer::~AnnPlayer()
 	delete playerBody;
 }
 
-bool AnnPlayer::isLocked()
+bool AnnPlayer::isLocked() const
 {
 	return locked;
 }
 
-void AnnPlayer::setPosition(AnnVect3 Position)
+void AnnPlayer::setPosition(AnnVect3 Position) const
 {
 	playerBody->FeetPosition = Position;
 }
 
-void AnnPlayer::setOrientation(Ogre::Euler Orientation)
+void AnnPlayer::setOrientation(Ogre::Euler Orientation) const
 {
 	playerBody->Orientation = Orientation;
 }
 
-void AnnPlayer::setHeadOrientation(AnnQuaternion Orientation)
+void AnnPlayer::setHeadOrientation(AnnQuaternion Orientation) const
 {
 	playerBody->HeadOrientation = Orientation;
 }
 
-void AnnPlayer::setEyesHeight(float eyeHeight)
+void AnnPlayer::setEyesHeight(float eyeHeight) const
 {
 	if (!isLocked())
 		playerBody->eyeHeight = eyeHeight;
 }
 
-void AnnPlayer::setWalkSpeed(float walk)
+void AnnPlayer::setWalkSpeed(float walk) const
 {
 	if (!isLocked())
 		playerBody->walkSpeed = walk;
 }
 
-void AnnPlayer::setTurnSpeed(float ts)
+void AnnPlayer::setTurnSpeed(float ts) const
 {
 	if (!isLocked())
 		playerBody->turnSpeed = ts;
 }
 
-void AnnPlayer::setMass(float mass)
+void AnnPlayer::setMass(float mass) const
 {
 	playerBody->mass = mass;
 }
@@ -132,57 +132,57 @@ void AnnPlayer::unlockParameters()
 	locked = true;
 }
 
-bodyParams* AnnPlayer::getLowLevelBodyParams()
+bodyParams* AnnPlayer::getLowLevelBodyParams() const
 {
 	return playerBody;
 }
 
-float AnnPlayer::getWalkSpeed()
+float AnnPlayer::getWalkSpeed() const
 {
 	return playerBody->walkSpeed;
 }
 
-float AnnPlayer::getEyesHeight()
+float AnnPlayer::getEyesHeight() const
 {
 	return playerBody->eyeHeight;
 }
 
-AnnVect3 AnnPlayer::getEyeTranslation()
+AnnVect3 AnnPlayer::getEyeTranslation() const
 {
 	return getEyesHeight() * AnnVect3::UNIT_Y;
 }
 
-float AnnPlayer::getTurnSpeed()
+float AnnPlayer::getTurnSpeed() const
 {
 	return playerBody->turnSpeed;
 }
 
-float AnnPlayer::getMass()
+float AnnPlayer::getMass() const
 {
 	return playerBody->mass;
 }
 
-btRigidBody* AnnPlayer::getBody()
+btRigidBody* AnnPlayer::getBody() const
 {
 	return playerBody->Body;
 }
 
-btCollisionShape* AnnPlayer::getShape()
+btCollisionShape* AnnPlayer::getShape() const
 {
 	return playerBody->Shape;
 }
 
-AnnVect3 AnnPlayer::getPosition()
+AnnVect3 AnnPlayer::getPosition() const
 {
 	return playerBody->FeetPosition;
 }
 
-Ogre::Euler AnnPlayer::getOrientation()
+Ogre::Euler AnnPlayer::getOrientation() const
 {
 	return playerBody->Orientation;
 }
 
-void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
+void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle) const
 {
 	if (mode == STANDING)
 		playerBody->Orientation.yaw(angle);
@@ -196,23 +196,17 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 			AnnGetVRRenderer()->trackedHeadPose.position.z
 		};
 
-		//AnnDebug() << "angle : " << angle;
-		//AnnDebug() << "basepoint " << basePoint;
-
 		playerBody->Orientation.yaw(angle);
 		AnnVect3 displacement = playerBody->RoomBase - basePoint;
-		//AnnDebug() << "displacement :" << displacement;
 		playerBody->RoomBase -= displacement;
 
 		AnnQuaternion rotation(angle, AnnVect3::UNIT_Y);
 		displacement = rotation*displacement;
 		playerBody->RoomBase += displacement;
-
-		//AnnDebug() << "displacement :" << displacement;
 	}
 }
 
-void AnnPlayer::applyMouseRelativeRotation(int relValue)
+void AnnPlayer::applyMouseRelativeRotation(int relValue) const
 {
 	relValue *= mouseSensitivity;
 	applyRelativeBodyYaw(Ogre::Radian(-float(relValue) * getTurnSpeed() * updateTime));
@@ -233,7 +227,7 @@ AnnVect3 AnnPlayer::getTranslation()
 	return translation.normalisedCopy();
 }
 
-AnnVect3 AnnPlayer::getAnalogTranslation()
+AnnVect3 AnnPlayer::getAnalogTranslation() const
 {
 	AnnVect3 translate(AnnVect3::ZERO);
 
@@ -243,14 +237,14 @@ AnnVect3 AnnPlayer::getAnalogTranslation()
 	return translate;
 }
 
-void AnnPlayer::applyAnalogYaw()
+void AnnPlayer::applyAnalogYaw() const
 {
 	//7 is the value that was more or less feeling good for me.
 	float  value = -7 * analogRotate * getTurnSpeed() * updateTime;
 	applyRelativeBodyYaw(Ogre::Radian(value));
 }
 
-float AnnPlayer::getRunFactor()
+float AnnPlayer::getRunFactor() const
 {
 	return playerBody->runFactor;
 }
@@ -325,7 +319,7 @@ void AnnPlayer::engineUpdate(float deltaTime)
 	}
 }
 
-bool AnnPlayer::hasPhysics()
+bool AnnPlayer::hasPhysics() const
 {
 	return physics;
 }
@@ -338,9 +332,6 @@ void AnnPlayer::setMode(AnnPlayerMode playerMode)
 void AnnPlayer::setRoomRefNode(Ogre::SceneNode* node)
 {
 	RoomReferenceNode = node;
-	/*auto gizmo = node->createChildSceneNode();
-	gizmo->attachObject(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
-	gizmo->setScale(4, 4, 4);*/
 }
 
 void AnnPlayer::reground(float YvalueForGround)

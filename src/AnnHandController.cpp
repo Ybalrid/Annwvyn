@@ -38,32 +38,32 @@ void AnnHandController::detachModel()
 	model = nullptr;
 }
 
-Ogre::Entity* AnnHandController::getModel()
+Ogre::Entity* AnnHandController::getModel() const
 {
 	return model;
 }
 
-AnnVect3 AnnHandController::getWorldPosition()
+AnnVect3 AnnHandController::getWorldPosition() const
 {
 	return node->getPosition();
 }
 
-AnnQuaternion AnnHandController::getWorldOrientation()
+AnnQuaternion AnnHandController::getWorldOrientation() const
 {
 	return node->getOrientation();
 }
 
-AnnVect3 AnnHandController::getAngularSpeed()
+AnnVect3 AnnHandController::getAngularSpeed() const
 {
 	return trackedAngularSpeed;
 }
 
-AnnVect3 AnnHandController::getLinearSpeed()
+AnnVect3 AnnHandController::getLinearSpeed() const
 {
 	return trackedLinearSpeed;
 }
 
-AnnVect3 AnnHandController::getPointingDirection()
+AnnVect3 AnnHandController::getPointingDirection() const
 {
 	return node->getOrientation() * AnnVect3::NEGATIVE_UNIT_Z;
 }
@@ -100,7 +100,7 @@ void AnnHandController::setTrackedAngularSpeed(AnnVect3 v)
 	trackedAngularSpeed = v;
 }
 
-bool AnnHandController::isTracked()
+bool AnnHandController::isTracked() const
 {
 	return tracked;
 }
@@ -110,7 +110,7 @@ bool AnnHandController::getButtonState(uint8_t buttonIndex)
 	return buttonsState[buttonIndex];
 }
 
-size_t AnnHandController::getNbButton()
+size_t AnnHandController::getNbButton() const
 {
 	return buttonsState.size();
 }
@@ -129,7 +129,7 @@ bool AnnHandController::hasBeenReleased(uint8_t buttonIndex)
 	return false;
 }
 
-size_t AnnHandController::getNbAxes()
+size_t AnnHandController::getNbAxes() const
 {
 	return axes.size();
 }
@@ -140,12 +140,12 @@ AnnHandControllerAxis& AnnHandController::getAxis(size_t index)
 	return invalidAxis;
 }
 
-AnnHandController::AnnHandControllerSide AnnHandController::getSide()
+AnnHandController::AnnHandControllerSide AnnHandController::getSide() const
 {
 	return side;
 }
 
-std::string AnnHandController::getType()
+std::string AnnHandController::getType() const
 {
 	return controllerType;
 }

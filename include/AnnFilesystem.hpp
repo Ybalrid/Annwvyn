@@ -49,7 +49,7 @@ namespace Annwvyn
 		AnnFileReader();
 
 		///read the asked file and return a new AnnSaveFileData*
-		std::shared_ptr<AnnSaveFileData> read(std::string filename);
+		std::shared_ptr<AnnSaveFileData> read(std::string filename) const;
 	};
 
 	class AnnSaveFileData;
@@ -65,14 +65,14 @@ namespace Annwvyn
 		///Set the name of the app directory
 		void setSaveDirectoryName(std::string name);
 		///Get the path to the file name
-		std::string getPathForFileName(std::string fileName);
+		std::string getPathForFileName(std::string fileName) const;
 		///Get the path to the directory where save are read/written
-		std::string getSaveDirectoryFullPath();
+		std::string getSaveDirectoryFullPath() const;
 
 		///Create the given directory (OS call)
 		static void createDirectory(std::string path);
 		///Create the save directory (should be done at least once)
-		void createSaveDirectory();
+		void createSaveDirectory() const;
 
 		///Create en empty SaveFileData Object for a specific file
 		std::shared_ptr<AnnSaveFileData> crateSaveFileDataObject(std::string filename);
@@ -84,9 +84,9 @@ namespace Annwvyn
 		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 
 		///Get the FileReader object
-		std::shared_ptr<AnnFileReader> getFileReader();
+		std::shared_ptr<AnnFileReader> getFileReader() const;
 		///Get the FileWriter object
-		std::shared_ptr<AnnFileWriter> getFileWriter();
+		std::shared_ptr<AnnFileWriter> getFileWriter() const;
 
 	private:
 		std::string saveDirectoryName;
@@ -107,7 +107,7 @@ namespace Annwvyn
 		AnnSaveFileData(std::string name);
 
 		///Get the name of this file
-		std::string getFilename();
+		std::string getFilename() const;
 
 		///Get the value of this key. Return empty if key doesn't exist
 		std::string getValue(std::string key);
@@ -133,7 +133,7 @@ namespace Annwvyn
 		void clearQuaternionValue(std::string key);
 
 		///Return true if keys were manipulated but changes weren't wrote to disk yet
-		bool hasUnsavedChanges();
+		bool hasUnsavedChanges() const;
 
 	private:
 		friend class AnnFileWriter;
@@ -157,17 +157,17 @@ namespace Annwvyn
 		AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data);
 
 		///Get a float from this string
-		float stringToFloat(std::string text);
+		float stringToFloat(std::string text) const;
 		///Get a int from this string
-		int stringToInt(std::string text);
+		int stringToInt(std::string text) const;
 		///Extract a float from the data-object stored at the given key
-		float keyStringToFloat(std::string key);
+		float keyStringToFloat(std::string key) const;
 		///Extract a int from the data-object stored at the given key
-		int keyStringToInt(std::string key);
+		int keyStringToInt(std::string key) const;
 		///Extract a Vector3 from the data-object stored at the given key
-		AnnVect3 keyStringToVect3(std::string key);
+		AnnVect3 keyStringToVect3(std::string key) const;
 		///Extract a quaternion from the data-object stored at the given key
-		AnnQuaternion keyStringToQuaternion(std::string key);
+		AnnQuaternion keyStringToQuaternion(std::string key) const;
 
 		///Overload this method with
 		virtual void extract() = 0;

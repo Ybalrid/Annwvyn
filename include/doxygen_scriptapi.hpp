@@ -96,7 +96,7 @@ namespace Annwvyn
 		void AnnChangeGravity(const Ogre::Vector3& gravity);
 
 		///ScriptFunction: restore the gravity vector
-		void AnnRestoreGravity(void);
+		void AnnRestoreGravity();
 
 		///ScriptFunction: Jump the level manager to another level
 		/// \param id The ID number of the level

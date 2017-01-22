@@ -40,7 +40,7 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
 {
 }
 
-void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld()
+void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld() const
 {
 	// TODO define name for the bullet's collision masks
 	DynamicsWorld->addRigidBody(playerObject->getBody(), MASK(0), MASK(1));
@@ -67,29 +67,29 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 	playerObject->setBody(body);
 }
 
-void AnnPhysicsEngine::createVirtualBodyShape(float radius)
+void AnnPhysicsEngine::createVirtualBodyShape(float radius) const
 {
 	//remove the diameter of the two half sphere on top and bottom of the capsule
 	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
 }
 
-btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld()
+btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld() const
 {
 	return DynamicsWorld.get();
 }
 
-void AnnPhysicsEngine::step(float delta)
+void AnnPhysicsEngine::step(float delta) const
 {
 	DynamicsWorld->stepSimulation(delta, 10, 1.0f / 240.0f);
 }
 
-void AnnPhysicsEngine::stepDebugDrawer()
+void AnnPhysicsEngine::stepDebugDrawer() const
 {
 	if (debugPhysics)
 		debugDrawer->step();
 }
 
-void AnnPhysicsEngine::processCollisionTesting()
+void AnnPhysicsEngine::processCollisionTesting() const
 {
 	auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
 	for (auto i{ 0 }; i < nbManifold; ++i)
@@ -101,7 +101,7 @@ void AnnPhysicsEngine::processCollisionTesting()
 	}
 }
 
-void AnnPhysicsEngine::removeRigidBody(btRigidBody* body)
+void AnnPhysicsEngine::removeRigidBody(btRigidBody* body) const
 {
 	AnnDebug() << "Removing " << body << " Form physics simulation";
 	if (body)
@@ -115,7 +115,7 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 	debugDrawer->step();
 }
 
-void AnnPhysicsEngine::processTriggersContacts()
+void AnnPhysicsEngine::processTriggersContacts() const
 {
 	for (auto trigger : triggerObjects)
 	{
@@ -126,12 +126,12 @@ void AnnPhysicsEngine::processTriggersContacts()
 	}
 }
 
-void AnnPhysicsEngine::changeGravity(AnnVect3 gravity)
+void AnnPhysicsEngine::changeGravity(AnnVect3 gravity) const
 {
 	DynamicsWorld->setGravity(gravity.getBtVector());
 }
 
-void AnnPhysicsEngine::resetGravity()
+void AnnPhysicsEngine::resetGravity() const
 {
 	changeGravity(defaultGravity);
 }
@@ -149,7 +149,7 @@ void AnnPhysicsEngine::toggleDebugPhysics()
 	setDebugPhysics(!debugPhysics);
 }
 
-void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode)
+void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode) const
 {
 	playerObject->setMode(ROOMSCALE);
 	AnnDebug() << "Initializing player's physics in roomscale mode";

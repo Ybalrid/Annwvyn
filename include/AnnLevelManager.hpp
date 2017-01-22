@@ -59,13 +59,13 @@ namespace Annwvyn
 		std::shared_ptr<AnnLevel> getLevelByIndex(level_id id);
 
 		///Get the current level
-		std::shared_ptr<AnnLevel> getCurrentLevel();
+		std::shared_ptr<AnnLevel> getCurrentLevel() const;
 
 		///Add an orphan object to the current level
-		void addToCurrentLevel(std::shared_ptr<AnnGameObject> obj);
+		void addToCurrentLevel(std::shared_ptr<AnnGameObject> obj) const;
 
 		///Remove an object from the current level (make it orphan)
-		void removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj);
+		void removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj) const;
 
 	private:
 		///List of levels

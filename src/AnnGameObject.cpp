@@ -129,22 +129,22 @@ void AnnGameObject::setOrientation(AnnQuaternion orient)
 	}
 }
 
-void AnnGameObject::setWorldOrientation(AnnQuaternion orient)
+void AnnGameObject::setWorldOrientation(AnnQuaternion orient) const
 {
 	Node->_setDerivedOrientation(orient);
 }
 
-void AnnGameObject::setScale(AnnVect3 scale)
+void AnnGameObject::setScale(AnnVect3 scale) const
 {
 	Node->setScale(scale);
 }
 
-void AnnGameObject::setWorldOrientation(float w, float x, float y, float z)
+void AnnGameObject::setWorldOrientation(float w, float x, float y, float z) const
 {
 	setWorldOrientation(AnnQuaternion{ w, x, y, z });
 }
 
-void AnnGameObject::setScale(float x, float y, float z)
+void AnnGameObject::setScale(float x, float y, float z) const
 {
 	Node->setScale(AnnVect3(x, y, z));
 }
@@ -159,7 +159,7 @@ AnnQuaternion AnnGameObject::getOrientation()
 	return Node->getOrientation();
 }
 
-AnnVect3 AnnGameObject::getScale()
+AnnVect3 AnnGameObject::getScale() const
 {
 	return Node->getScale();
 }
@@ -227,12 +227,12 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, MASK(1), bulletMask);
 }
 
-Ogre::SceneNode* AnnGameObject::getNode()
+Ogre::SceneNode* AnnGameObject::getNode() const
 {
 	return Node;
 }
 
-Ogre::Entity* AnnGameObject::getEntity()
+Ogre::Entity* AnnGameObject::getEntity() const
 {
 	return Entity;
 }
@@ -242,7 +242,7 @@ float AnnGameObject::getDistance(AnnGameObject *otherObject)
 	return getWorldPosition().distance(otherObject->getWorldPosition());
 }
 
-btRigidBody* AnnGameObject::getBody()
+btRigidBody* AnnGameObject::getBody() const
 {
 	return Body;
 }
@@ -282,7 +282,7 @@ void AnnGameObject::loopAnimation(bool loop)
 	}
 }
 
-void AnnGameObject::addAnimationTime(double offset)
+void AnnGameObject::addAnimationTime(double offset) const
 {
 	if (!animIsSetted || !animIsPlaying)
 		return;
@@ -290,33 +290,33 @@ void AnnGameObject::addAnimationTime(double offset)
 	anim->addTime(float(offset));
 }
 
-void AnnGameObject::applyImpulse(AnnVect3 force)
+void AnnGameObject::applyImpulse(AnnVect3 force) const
 {
 	Body->applyCentralImpulse(force.getBtVector());
 }
 
-void AnnGameObject::applyForce(AnnVect3 force)
+void AnnGameObject::applyForce(AnnVect3 force) const
 {
 	Body->applyCentralForce(force.getBtVector());
 }
 
-void AnnGameObject::setLinearSpeed(AnnVect3 v)
+void AnnGameObject::setLinearSpeed(AnnVect3 v) const
 {
 	if (Body)
 		Body->setLinearVelocity(v.getBtVector());
 }
 
-void AnnGameObject::setVisible()
+void AnnGameObject::setVisible() const
 {
 	getNode()->setVisible(true);
 }
 
-void AnnGameObject::setInvisible()
+void AnnGameObject::setInvisible() const
 {
 	getNode()->setVisible(false);
 }
 
-std::string AnnGameObject::getName()
+std::string AnnGameObject::getName() const
 {
 	return name;
 }
@@ -329,19 +329,13 @@ void AnnGameObject::attachScript(const std::string & scriptName)
 	script->registerAsListener();
 }
 
-bool AnnGameObject::hasParent()
+bool AnnGameObject::hasParent() const
 {
 	auto parentSceneNode = Node->getParentSceneNode();
-
-	//AnnDebug() << this << " " << getName() << " is testing for parent";
-	//AnnDebug() << "Our node is" << Node;
-	//AnnDebug() << "Parent node is " << parentSceneNode;
-	//AnnDebug() << "Root node is " << AnnGetEngine()->getSceneManager()->getRootSceneNode();
 
 	if (reinterpret_cast<uint64_t>(parentSceneNode)
 		== reinterpret_cast<uint64_t>(AnnGetEngine()->getSceneManager()->getRootSceneNode()))
 	{
-		//AnnDebug() << "we caught the fact that parent scene node is root scene node";
 		return false;
 	}
 
@@ -351,12 +345,12 @@ bool AnnGameObject::hasParent()
 	return false;
 }
 
-std::shared_ptr<AnnGameObject> AnnGameObject::getParent()
+std::shared_ptr<AnnGameObject> AnnGameObject::getParent() const
 {
 	return AnnGetGameObjectManager()->getFromNode(Node->getParentSceneNode());
 }
 
-void AnnGameObject::attachChildObject(std::shared_ptr<AnnGameObject> child)
+void AnnGameObject::attachChildObject(std::shared_ptr<AnnGameObject> child) const
 {
 	//child->Node has been detached from it's current parent(that was either a node or the root node)
 	child->Node->getParentSceneNode()->removeChild(child->Node);
@@ -365,7 +359,7 @@ void AnnGameObject::attachChildObject(std::shared_ptr<AnnGameObject> child)
 	Node->addChild(child->Node);
 }
 
-void AnnGameObject::detachFromParent()
+void AnnGameObject::detachFromParent() const
 {
 	Node->getParentSceneNode()->removeChild(Node);
 	AnnGetEngine()->getSceneManager()->getRootSceneNode()->addChild(Node);
@@ -376,17 +370,17 @@ bool AnnGameObject::checkForBodyInParent()
 	return parentsHaveBody(this);
 }
 
-AnnVect3 AnnGameObject::getWorldPosition()
+AnnVect3 AnnGameObject::getWorldPosition() const
 {
 	return Node->_getDerivedPosition();
 }
 
-AnnQuaternion AnnGameObject::getWorldOrientation()
+AnnQuaternion AnnGameObject::getWorldOrientation() const
 {
 	return Node->_getDerivedOrientation();
 }
 
-bool AnnGameObject::parentsHaveBody(AnnGameObject* obj)
+bool AnnGameObject::parentsHaveBody(AnnGameObject* obj) const
 {
 	if (!hasParent()) return false;
 	auto addr = obj->getParent().get();

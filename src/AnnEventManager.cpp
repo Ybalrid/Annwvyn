@@ -52,7 +52,7 @@ bool AnnTextInputer::keyReleased(const OIS::KeyEvent &arg)
 	return true;
 }
 
-std::string AnnTextInputer::getInput()
+std::string AnnTextInputer::getInput() const
 {
 	return input;
 }
@@ -124,7 +124,7 @@ keyboardIgnore{ false }
 	Keyboard->setEventCallback(textInputer);
 }
 
-AnnTextInputer* AnnEventManager::getTextInputer()
+AnnTextInputer* AnnEventManager::getTextInputer() const
 {
 	return textInputer;
 }
@@ -158,7 +158,7 @@ void AnnEventManager::useDefaultEventListener()
 	addListener(defaultEventListener);
 }
 
-std::shared_ptr<AnnEventListener> AnnEventManager::getDefaultEventListener()
+std::shared_ptr<AnnEventListener> AnnEventManager::getDefaultEventListener() const
 {
 	return defaultEventListener;
 }
@@ -434,7 +434,7 @@ void AnnEventManager::spatialTrigger(std::shared_ptr<AnnTriggerObject> sender)
 	triggerEventBuffer.push_back(e);
 }
 
-size_t AnnEventManager::getNbStick()
+size_t AnnEventManager::getNbStick() const
 {
 	return Joysticks.size();
 }

@@ -49,7 +49,7 @@ namespace Ogre
 		\param r Starting value for roll [degree]
 		*/
 		Euler(int y, int p = 0, int r = 0)
-			: mYaw(Ogre::Degree((Ogre::Real)y)), mPitch(Ogre::Degree((Ogre::Real)p)), mRoll(Ogre::Degree((Ogre::Real)r)), mChanged(true)
+			: mYaw(Ogre::Degree(Ogre::Real(y))), mPitch(Ogre::Degree(Ogre::Real(p))), mRoll(Ogre::Degree(Ogre::Real(r))), mChanged(true)
 		{
 		}
 
@@ -83,13 +83,13 @@ namespace Ogre
 		}
 
 		/// Get the Yaw angle.
-		inline Ogre::Radian getYaw() { return mYaw; }
+		inline Ogre::Radian getYaw() const { return mYaw; }
 
 		/// Get the Pitch angle.
-		inline Ogre::Radian getPitch() { return mPitch; }
+		inline Ogre::Radian getPitch() const { return mPitch; }
 
 		/// Get the Roll angle.
-		inline Ogre::Radian getRoll() { return mRoll; }
+		inline Ogre::Radian getRoll() const { return mRoll; }
 
 		/**
 		\brief Set the yaw.
@@ -353,7 +353,7 @@ namespace Ogre
 		(0,0,-1) will return a -1000 degree yaw. When true, the same yaw and dir would give 80 degrees (1080 degrees faces
 		the same way as (0,0,-1).
 		*/
-		inline Euler getRotationTo(const Ogre::Vector3 &dir, bool setYaw = true, bool setPitch = true, bool shortest = true)
+		inline Euler getRotationTo(const Ogre::Vector3 &dir, bool setYaw = true, bool setPitch = true, bool shortest = true) const
 		{
 			Euler t1;
 			Euler t2;

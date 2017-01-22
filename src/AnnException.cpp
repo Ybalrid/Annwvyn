@@ -39,7 +39,7 @@ AnnGameObject* AnnPhysicsSetupParentError::getObject() const { return objectWith
 
 AnnGameObject* AnnPhysicsSetupParentError::getParentWithBody() const { return recurToBody(objectWithProblem); }
 
-AnnGameObject* AnnPhysicsSetupParentError::recurToBody(AnnGameObject* start) const
+AnnGameObject* AnnPhysicsSetupParentError::recurToBody(AnnGameObject* start)
 {
 	if (start->getParent()->getBody()) return start->getParent().get();
 	return recurToBody(start->getParent().get());

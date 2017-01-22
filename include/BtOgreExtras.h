@@ -12,12 +12,13 @@
  *
  * =====================================================================================
  */
-#ifdef _WIN32
-#pragma warning (disable : 4244)
-#endif
 
 #ifndef BTOGRE_EXTRA_H__
 #define BTOGRE_EXTRA_H__
+
+#ifdef _WIN32
+#pragma warning (disable : 4244)
+#endif
 
 #include "systemMacro.h"
 

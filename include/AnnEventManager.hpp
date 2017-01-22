@@ -53,7 +53,7 @@ namespace Annwvyn
 	public:
 		///Event constructor
 		AnnEvent();
-		AnnEventType getType();
+		AnnEventType getType() const;
 
 	protected:
 		bool accepted;
@@ -75,16 +75,16 @@ namespace Annwvyn
 		AnnKeyEvent();
 	public:
 		///Get the key involved in that event
-		KeyCode::code getKey();
+		KeyCode::code getKey() const;
 
 		///Return true if it's a key press. Key event are debounced.
-		bool isPressed();
+		bool isPressed() const;
 
 		///Return true if it's a key release. Key event are debounced.
-		bool isReleased();
+		bool isReleased() const;
 
 		///If this is true, it probably means that the keyboard is used for something else and that you should ignore this event.
-		bool shouldIgnore();
+		bool shouldIgnore() const;
 
 	private:
 		friend class AnnEventManager;
@@ -118,11 +118,11 @@ namespace Annwvyn
 		///Construct a mouse axis information object
 		AnnMouseAxis();
 		///Return the id of the axis that object represent
-		MouseAxisId getMouseAxisId();
+		MouseAxisId getMouseAxisId() const;
 		///Relative value in arbitrary unit
-		int getRelValue();
+		int getRelValue() const;
 		///Absolute value in arbitrary unit
-		int getAbsValue();
+		int getAbsValue() const;
 
 	private:
 		///Give access to private fields to the EventManager
@@ -190,11 +190,11 @@ namespace Annwvyn
 		///This constructor will produce an invalid stick axis object
 		AnnStickAxis();
 		///Get the ID if this axis
-		StickAxisId getAxisId();
+		StickAxisId getAxisId() const;
 		///Compute a float number between -1 and 1. if relative value isn't supported by the input, will return INVALID (42)
-		float getRelValue();
+		float getRelValue() const;
 		///Compute a float number between -1 and 1
-		float getAbsValue();
+		float getAbsValue() const;
 
 	private:
 		int a, r;
@@ -220,25 +220,25 @@ namespace Annwvyn
 		AnnStickPov();
 
 		///Get the up (north) state
-		bool getNorth();
+		bool getNorth() const;
 		///Get the down (south) state
-		bool getSouth();
+		bool getSouth() const;
 		///Get the right (east) state
-		bool getEast();
+		bool getEast() const;
 		///Get the left (west) state
-		bool getWest();
+		bool getWest() const;
 
 		///Get the north && east state
-		bool getNorthEast();
+		bool getNorthEast() const;
 		///Get the south && east state
-		bool getSouthEast();
+		bool getSouthEast() const;
 		///Get the north && west state
-		bool getNorthWest();
+		bool getNorthWest() const;
 		///Get the south && west state
-		bool getSouthWest();
+		bool getSouthWest() const;
 
 		///Return true if nothing is pressed on the POV controller
-		bool isCentred();
+		bool isCentred() const;
 
 	private:
 		///up
@@ -266,12 +266,12 @@ namespace Annwvyn
 		///Destroy a stick event object
 		~AnnStickEvent();
 		///Number of buttons this controller has
-		size_t getNbButtons();
+		size_t getNbButtons() const;
 
 		///Get the list of pressed buttons
-		std::vector<unsigned short> getPressed();
+		std::vector<unsigned short> getPressed() const;
 		///Get the list of released buttons
-		std::vector<unsigned short> getReleased();
+		std::vector<unsigned short> getReleased() const;
 
 		///Return true if this button just have been pressed
 		bool isPressed(ButtonId id);
@@ -282,17 +282,17 @@ namespace Annwvyn
 		///Get the axis object for this ID
 		AnnStickAxis getAxis(StickAxisId ax);
 		///Get the number of axes the controller has
-		size_t getNbAxis();
+		size_t getNbAxis() const;
 		///Get the unique ID given by Annwvyn for this stick
-		unsigned int getStickID();
+		unsigned int getStickID() const;
 		///Get the "vendor string" of this joystick (could be its name)
-		std::string getVendor();
+		std::string getVendor() const;
 
-		size_t getNbPov();
+		size_t getNbPov() const;
 		AnnStickPov getPov(PovId pov);
 
 		///Return true if this event is from an Xbox controller
-		bool isXboxController();
+		bool isXboxController() const;
 
 	private:
 		bool xbox;
@@ -313,7 +313,7 @@ namespace Annwvyn
 		AnnHandControllerEvent();
 
 		///get access to the hand controller this event is related to
-		AnnHandController* getController();
+		AnnHandController* getController() const;
 	private:
 		friend class AnnEventManager;
 		AnnHandController* sender;
@@ -328,7 +328,7 @@ namespace Annwvyn
 		///Create a timer timeout event
 		AnnTimeEvent();
 		///Get the ID of this timer
-		timerID getID();
+		timerID getID() const;
 	private:
 		friend class AnnEventManager;
 		///Set the ID of the timer
@@ -349,15 +349,15 @@ namespace Annwvyn
 			type = COLLISION;
 		}
 
-		bool hasObject(AnnGameObject* obj)
+		bool hasObject(AnnGameObject* obj) const
 		{
 			if (obj == a || obj == b)
 				return true;
 			return false;
 		}
 
-		AnnGameObject* getA() { return a; };
-		AnnGameObject* getB() { return b; };
+		AnnGameObject* getA() const { return a; };
+		AnnGameObject* getB() const { return b; };
 	private:
 		AnnGameObject* a;
 		AnnGameObject* b;
@@ -372,7 +372,7 @@ namespace Annwvyn
 			type = PLAYER_COLLISION;
 		}
 
-		AnnGameObject* getObject()
+		AnnGameObject* getObject() const
 		{
 			return col;
 		}
@@ -388,12 +388,12 @@ namespace Annwvyn
 		///Construct a trigger in/out event
 		AnnTriggerEvent();
 		///Return true if if there's collision
-		bool getContactStatus();
+		bool getContactStatus() const;
 		///Pointer to the trigger that have sent this event
 
 		// TODO don't use a shared ptr here
 
-		AnnTriggerObject* getSender();
+		AnnTriggerObject* getSender() const;
 	private:
 		friend class AnnEventManager;
 		bool contact;
@@ -516,7 +516,7 @@ namespace Annwvyn
 		///Timer object for the EventMAnager
 		AnnTimer(timerID id, double delay);
 		///If timeout
-		bool isTimeout();
+		bool isTimeout() const;
 		///Timeout ID
 		timerID tID;
 		///Time of timeout
@@ -542,7 +542,7 @@ namespace Annwvyn
 		std::vector<bool> previousStickButtonStates;
 
 		///Get the ID if this stick
-		unsigned int getID() { return id; }
+		unsigned int getID() const { return id; }
 
 	private://members
 		///The ID
@@ -562,7 +562,7 @@ namespace Annwvyn
 		///Callback key released method
 		bool keyReleased(const OIS::KeyEvent &arg) override;
 		///Return the "input" string object
-		std::string getInput();
+		std::string getInput() const;
 		///Permit you to change the content of the input method
 		void setInput(std::string content);
 		///Clear the input string : remove all characters hanging there
@@ -607,7 +607,7 @@ namespace Annwvyn
 		/// That event listener is designed as an example of an event listener, and for exploring the environment without having to write a custom event listener
 		void useDefaultEventListener();
 
-		std::shared_ptr<AnnEventListener> getDefaultEventListener();
+		std::shared_ptr<AnnEventListener> getDefaultEventListener() const;
 
 		///Ad a listener to the event manager
 		/// \param listener Pointer to a listener object
@@ -628,10 +628,10 @@ namespace Annwvyn
 		timerID fireTimerMillisec(double millisecDelay);
 
 		///Get the number of available sticks
-		size_t getNbStick();
+		size_t getNbStick() const;
 
 		///Get the text inputer object
-		AnnTextInputer* getTextInputer();
+		AnnTextInputer* getTextInputer() const;
 
 		void keyboardUsedForText(bool state = true);
 

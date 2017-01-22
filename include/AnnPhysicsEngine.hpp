@@ -38,46 +38,46 @@ namespace Annwvyn
 		~AnnPhysicsEngine();
 
 		///Add the player body to the dynamics world
-		void addPlayerPhysicalBodyToDynamicsWorld();
+		void addPlayerPhysicalBodyToDynamicsWorld() const;
 
 		///Create player's rigid-body
 		void createPlayerPhysicalVirtualBody(Ogre::SceneNode* node);
 
 		///Create player's body shape (a capsule)
-		void createVirtualBodyShape(float radius = 0.125f);
+		void createVirtualBodyShape(float radius = 0.125f) const;
 
 		///Pointer to the bullet's dynamics world
-		btDiscreteDynamicsWorld* getWorld();
+		btDiscreteDynamicsWorld* getWorld() const;
 
 		///Step the simulation
 		/// \param delta Interval in seconds that time has to be simulated
-		void step(float delta);
+		void step(float delta) const;
 
 		///Process the collision query system
-		void processCollisionTesting();
+		void processCollisionTesting() const;
 
 		///Process triggers contact event
-		void processTriggersContacts();
+		void processTriggersContacts() const;
 
 		///Remove a body from simulation
-		void removeRigidBody(btRigidBody* body);
+		void removeRigidBody(btRigidBody* body) const;
 
 		///Do not use anymore, choose to call initPlayerStandingPhysics, or initPlayerRoomscalePhysics.
 		DEPRECATED	void initPlayerPhysics(Ogre::SceneNode* cameraNode) { initPlayerStandingPhysics(cameraNode); }
 		void initPlayerStandingPhysics(Ogre::SceneNode* playerAnchorNode);
-		void initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode);
+		void initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode) const;
 
 		///Set the debug drawer state
 		void setDebugPhysics(bool state);
 
 		///Step the debug drawing for the physical representation
-		void stepDebugDrawer();
+		void stepDebugDrawer() const;
 
 		///Change the gravity vector
-		void changeGravity(AnnVect3 gravity);
+		void changeGravity(AnnVect3 gravity) const;
 
 		///Restore the default gravity
-		void resetGravity();
+		void resetGravity() const;
 
 		///Toggle the debug physics overlay
 		void toggleDebugPhysics();

@@ -39,7 +39,7 @@ namespace Annwvyn
 		AnnDebug();
 
 		///Permit to log a static string via the debug stream
-		/// \copydoc AnnEngine::AnnDebug()
+		/// \copydoc Annwvyn::AnnDebug()
 		AnnDebug(const std::string& message);
 
 		///Destroy the debug outputer object

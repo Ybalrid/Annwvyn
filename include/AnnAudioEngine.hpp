@@ -46,20 +46,20 @@ namespace Annwvyn
 		void setPositon(AnnVect3 position);
 		///Set the volume at the given gain (between 0 & 1)
 		/// \param gain value between 0 and 1
-		void setVolume(float gain);
+		void setVolume(float gain) const;
 		///Put the audio read position at the origin
-		void rewind();
+		void rewind() const;
 		///Play the sound
-		void play();
+		void play() const;
 		///Pause the sound
-		void pause();
+		void pause() const;
 		///Stop playing the sound
-		void stop();
+		void stop() const;
 		///Change the sound buffer this source plays
 		void changeSound(std::string path);
 
 		///If looping is activated, the sound will replay when finished
-		void setLooping(bool looping = true);
+		void setLooping(bool looping = true) const;
 		///If true, the sound position will use (and update) the player's current position as origin
 		void setPositionRelToPlayer(bool relToPlayer = true);
 
@@ -119,10 +119,10 @@ namespace Annwvyn
 		void playBGM(const std::string path, const float volume = 0.5f);
 
 		///stop the current background music from playing
-		void stopBGM();
+		void stopBGM() const;
 
 		///Get the last error message that occurred in-engine
-		std::string getLastError();
+		std::string getLastError() const;
 
 		///Create an audio source
 		std::shared_ptr<AnnAudioSource> createSource();
@@ -134,7 +134,7 @@ namespace Annwvyn
 		void removeSource(std::shared_ptr<AnnAudioSource> source);
 
 		///Write last error text to the log
-		void logError();
+		void logError() const;
 
 	private:
 		///For the engine: update the listener position to match the player's head
@@ -143,7 +143,7 @@ namespace Annwvyn
 
 		///For the engine : update the listener orientation to match the player's head
 		/// \param orient The orientation of the player
-		void updateListenerOrient(AnnQuaternion orient);
+		static void updateListenerOrient(AnnQuaternion orient);
 
 		///For engine : update listener Orientation
 		friend class AnnEngine;

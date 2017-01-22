@@ -41,15 +41,15 @@ namespace Annwvyn
 		//Custom Annwvyn part
 
 		///Get a vector pointing upwards from this quaternion
-		AnnVect3 getUpVector();
+		AnnVect3 getUpVector() const;
 		///Get a vector pointing in the direction if this quaternion
-		AnnVect3 getAtVector();
+		AnnVect3 getAtVector() const;
 
 		///get this quaternion as a bullet quaternion
-		btQuaternion getBtQuaternion();
+		btQuaternion getBtQuaternion() const;
 
 		///If true you can trust the data on this Quaternion
-		bool isValid();
+		bool isValid() const;
 
 		///Used to say that the quaternion hasn't been retrieved
 		AnnQuaternion(bool validState);

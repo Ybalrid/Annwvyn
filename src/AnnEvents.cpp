@@ -24,7 +24,7 @@ void AnnEvent::populate()
 	unpopulated = false;
 }
 
-AnnEventType AnnEvent::getType()
+AnnEventType AnnEvent::getType() const
 {
 	return type;
 }
@@ -33,7 +33,8 @@ AnnEventType AnnEvent::getType()
 AnnKeyEvent::AnnKeyEvent() : AnnEvent(),
 key(KeyCode::unassigned),
 pressed(false),
-released(false)
+released(false),
+ignored(false)
 {
 	type = USER_INPUT;
 }
@@ -55,22 +56,22 @@ void AnnKeyEvent::setCode(KeyCode::code c)
 	key = c;
 }
 
-bool AnnKeyEvent::isPressed()
+bool AnnKeyEvent::isPressed() const
 {
 	return pressed;
 }
 
-bool AnnKeyEvent::isReleased()
+bool AnnKeyEvent::isReleased() const
 {
 	return released;
 }
 
-KeyCode::code AnnKeyEvent::getKey()
+KeyCode::code AnnKeyEvent::getKey() const
 {
 	return key;
 }
 
-bool AnnKeyEvent::shouldIgnore()
+bool AnnKeyEvent::shouldIgnore() const
 {
 	return ignored;
 }
@@ -105,17 +106,17 @@ void AnnMouseAxis::setAbsValue(int v)
 	abs = v;
 }
 
-MouseAxisId AnnMouseAxis::getMouseAxisId()
+MouseAxisId AnnMouseAxis::getMouseAxisId() const
 {
 	return id;
 }
 
-int AnnMouseAxis::getRelValue()
+int AnnMouseAxis::getRelValue() const
 {
 	return rel;
 }
 
-int AnnMouseAxis::getAbsValue()
+int AnnMouseAxis::getAbsValue() const
 {
 	return abs;
 }
@@ -168,7 +169,7 @@ AnnStickAxis::AnnStickAxis()
 	noRel = true;
 }
 
-StickAxisId AnnStickAxis::getAxisId()
+StickAxisId AnnStickAxis::getAxisId() const
 {
 	return id;
 }
@@ -195,13 +196,13 @@ void AnnStickAxis::setAxis(StickAxisId ax)
 	id = ax;
 }
 
-float AnnStickAxis::getRelValue()
+float AnnStickAxis::getRelValue() const
 {
 	if (noRel) return INVALID;
 	return float(r) / float(OIS::JoyStick::MAX_AXIS);
 }
 
-float AnnStickAxis::getAbsValue()
+float AnnStickAxis::getAbsValue() const
 {
 	return float(a) / float(OIS::JoyStick::MAX_AXIS);
 }
@@ -214,47 +215,47 @@ AnnStickPov::AnnStickPov() :
 {
 }
 
-bool AnnStickPov::getNorth()
+bool AnnStickPov::getNorth() const
 {
 	return north;
 }
 
-bool AnnStickPov::getSouth()
+bool AnnStickPov::getSouth() const
 {
 	return south;
 }
 
-bool AnnStickPov::getEast()
+bool AnnStickPov::getEast() const
 {
 	return east;
 }
 
-bool AnnStickPov::getWest()
+bool AnnStickPov::getWest() const
 {
 	return west;
 }
 
-bool AnnStickPov::getNorthEast()
+bool AnnStickPov::getNorthEast() const
 {
 	return north && east;
 }
 
-bool AnnStickPov::getSouthEast()
+bool AnnStickPov::getSouthEast() const
 {
 	return south && east;
 }
 
-bool AnnStickPov::getNorthWest()
+bool AnnStickPov::getNorthWest() const
 {
 	return north && west;
 }
 
-bool AnnStickPov::getSouthWest()
+bool AnnStickPov::getSouthWest() const
 {
 	return south && west;
 }
 
-bool AnnStickPov::isCentred()
+bool AnnStickPov::isCentred() const
 {
 	return !(north || south || east || west);
 }
@@ -318,7 +319,7 @@ stickID(-1)
 
 AnnStickEvent::~AnnStickEvent() {}
 
-unsigned int AnnStickEvent::getStickID()
+unsigned int AnnStickEvent::getStickID() const
 {
 	return stickID;
 }
@@ -329,17 +330,17 @@ bool AnnStickEvent::isDown(ButtonId id)
 	return buttons[id];
 }
 
-size_t AnnStickEvent::getNbButtons()
+size_t AnnStickEvent::getNbButtons() const
 {
 	return buttons.size();
 }
 
-std::vector<unsigned short> AnnStickEvent::getPressed()
+std::vector<unsigned short> AnnStickEvent::getPressed() const
 {
 	return pressed;
 }
 
-std::vector<unsigned short> AnnStickEvent::getReleased()
+std::vector<unsigned short> AnnStickEvent::getReleased() const
 {
 	return released;
 }
@@ -349,7 +350,7 @@ AnnStickAxis AnnStickEvent::getAxis(StickAxisId ax)
 	return axes[ax];
 }
 
-size_t AnnStickEvent::getNbAxis()
+size_t AnnStickEvent::getNbAxis() const
 {
 	return axes.size();
 }
@@ -374,7 +375,7 @@ bool AnnStickEvent::isReleased(ButtonId id)
 	return false;
 }
 
-std::string AnnStickEvent::getVendor()
+std::string AnnStickEvent::getVendor() const
 {
 	return vendor;
 }
@@ -387,12 +388,12 @@ AnnStickPov AnnStickEvent::getPov(PovId pov)
 	return p;
 }
 
-bool AnnStickEvent::isXboxController()
+bool AnnStickEvent::isXboxController() const
 {
 	return xbox;
 }
 
-size_t AnnStickEvent::getNbPov()
+size_t AnnStickEvent::getNbPov() const
 {
 	return povs.size();
 }
@@ -408,7 +409,7 @@ void AnnTimeEvent::setTimerID(timerID id)
 	tID = id;
 }
 
-timerID AnnTimeEvent::getID()
+timerID AnnTimeEvent::getID() const
 {
 	return tID;
 }
@@ -419,7 +420,7 @@ AnnTimer::AnnTimer(timerID id, double delay)
 	timeoutTime = delay + AnnGetEngine()->getTimeFromStartUp();
 }
 
-bool AnnTimer::isTimeout()
+bool AnnTimer::isTimeout() const
 {
 	if (AnnGetEngine()->getTimeFromStartUp() >= timeoutTime)
 		return true;
@@ -433,12 +434,12 @@ sender{ nullptr }
 	contact = false;
 }
 
-bool AnnTriggerEvent::getContactStatus()
+bool AnnTriggerEvent::getContactStatus() const
 {
 	return contact;
 }
 
-AnnTriggerObject* AnnTriggerEvent::getSender()
+AnnTriggerObject* AnnTriggerEvent::getSender() const
 {
 	return sender;
 }
@@ -449,7 +450,7 @@ AnnHandControllerEvent::AnnHandControllerEvent() :
 	type = HAND_CONTROLLER;
 }
 
-AnnHandController* AnnHandControllerEvent::getController()
+AnnHandController* AnnHandControllerEvent::getController() const
 {
 	return sender;
 }
