@@ -57,6 +57,16 @@
 
 namespace Annwvyn
 {
+	class AnnEngine;
+	class DLL AnnEngineSingletonReseter
+	{
+	private:
+		AnnEngineSingletonReseter(AnnEngine* address);
+		~AnnEngineSingletonReseter();
+		friend class AnnEngine;
+		AnnEngine* engine;
+	};
+
 	///Main engine class. Creating an instance of this class make the engine start.
 	class DLL AnnEngine
 	{
@@ -70,6 +80,8 @@ namespace Annwvyn
 	private:
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
+		friend class AnnEngineSingletonReseter;
+		AnnEngineSingletonReseter resetGuard;
 
 	public:
 
@@ -92,14 +104,14 @@ namespace Annwvyn
 		static void log(std::string message, bool flag = true); //engine
 
 		///Get the player
-		std::shared_ptr<AnnPlayer> getPlayer();
+		std::shared_ptr<AnnPlayer> getPlayer() const;
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generally 'OIS::KC_X' where X is the key you want.
 		/// key an OIS key code
-		bool isKeyDown(OIS::KeyCode key); //event
+		bool isKeyDown(OIS::KeyCode key) const; //event
 
 		///Get ogre camera scene node
-		Ogre::SceneNode* getPlayerPovNode();
+		Ogre::SceneNode* getPlayerPovNode() const;
 
 		///Open a console and redirect standard output to it.
 		///This is only effective on Windows. There is no other
@@ -107,80 +119,77 @@ namespace Annwvyn
 		static bool openConsole();
 
 		///Get ogre scene manager
-		Ogre::SceneManager* getSceneManager(); //scene or graphics
+		Ogre::SceneManager* getSceneManager() const; //scene or graphics
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
 
 		///Get the event manager
-		std::shared_ptr<AnnEventManager> getEventManager();
+		std::shared_ptr<AnnEventManager> getEventManager() const;
 
 		///Get the file-system manager
-		std::shared_ptr<AnnFilesystemManager> getFileSystemManager();
+		std::shared_ptr<AnnFilesystemManager> getFileSystemManager() const;
 
 		///Return the Annwvyn OpenAL simplified audio engine
-		std::shared_ptr<AnnAudioEngine> getAudioEngine(); //audio
+		std::shared_ptr<AnnAudioEngine> getAudioEngine() const; //audio
 
 		///Return the Physics Engine
-		std::shared_ptr<AnnPhysicsEngine> getPhysicsEngine();
+		std::shared_ptr<AnnPhysicsEngine> getPhysicsEngine() const;
 
 		///Get the current level manager
-		std::shared_ptr<AnnLevelManager> getLevelManager();
+		std::shared_ptr<AnnLevelManager> getLevelManager() const;
 
 		///Get the ResourceManager
-		std::shared_ptr<AnnResourceManager> getResourceManager();
+		std::shared_ptr<AnnResourceManager> getResourceManager() const;
 
 		///Get the GameObjectManager
-		std::shared_ptr<AnnGameObjectManager> getGameObjectManager();
+		std::shared_ptr<AnnGameObjectManager> getGameObjectManager() const;
 
 		///Get the SceneryManager
-		std::shared_ptr<AnnSceneryManager> getSceneryManager();
+		std::shared_ptr<AnnSceneryManager> getSceneryManager() const;
 
 		///Get the ScriptManager
-		std::shared_ptr<AnnScriptManager> getScriptManager();
+		std::shared_ptr<AnnScriptManager> getScriptManager() const;
 
 		///Get the VRRenderer
-		std::shared_ptr<OgreVRRender> getVRRenderer();
+		std::shared_ptr<OgreVRRender> getVRRenderer() const;
 
-		///Get the console 
-		std::shared_ptr<AnnConsole> getOnScreenConsole();
+		///Get the console
+		std::shared_ptr<AnnConsole> getOnScreenConsole() const;
 
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 
 		///Init the physics model
-		DEPRECATED void initPlayerPhysics(); //physics on player
-		void initPlayerStandingPhysics();
+		DEPRECATED void initPlayerPhysics() const; //physics on player
+		void initPlayerStandingPhysics() const;
 
-		void initPlayerRoomscalePhysics();
+		void initPlayerRoomscalePhysics() const;
 
 		///Return true if the game want to terminate the program
-		bool requestStop(); //engine
+		bool requestStop() const; //engine
 
 		///Refresh all for you
 		bool refresh(); //engine main loop
 
 		///Set the POV node to the AnnPlayer gameplay defined position/orientation of the player's body
-		void syncPov();
+		void syncPov() const;
 
 		///This start the render loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
 		void startGameplayLoop();
 
-		///Toggle the display of the in-engine console
-		static void toogleOnScreenConsole();
-
 		///Return true if the app is visible inside the head mounted display
-		bool appVisibleInHMD();
+		bool appVisibleInHMD() const;
 
 		///Get elapsed time from engine startup in millisecond
-		unsigned long getTimeFromStartUp();//engine
+		unsigned long getTimeFromStartUp() const;//engine
 
 		///Get elapsed time from engine startup in seconds
-		double getTimeFromStartupSeconds();
+		double getTimeFromStartupSeconds() const;
 
 		///Get elapsed time between two frames in seconds
-		double getFrameTime();
+		double getFrameTime() const;
 
 		///Get the pose of the HMD in VR world space
-		OgrePose getHmdPose();
+		OgrePose getHmdPose() const;
 
 		///Register your own subsystem to be updated by the engine
 		std::shared_ptr<AnnUserSubSystem> registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem);
@@ -199,12 +208,13 @@ namespace Annwvyn
 		static WORD consoleGreen;
 		static WORD consoleYellow;
 		static WORD consoleWhite;
+		static bool consoleReady;
 
 		///VR renderer
 		std::shared_ptr<OgreVRRender> renderer;
 
 		///The onScreenConsole object
-		static std::shared_ptr<AnnConsole> onScreenConsole;
+		std::shared_ptr<AnnConsole> onScreenConsole;
 		///ResourceManager
 		std::shared_ptr<AnnResourceManager> resourceManager;
 		///SceneryManager

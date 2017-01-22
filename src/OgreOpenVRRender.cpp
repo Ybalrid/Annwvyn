@@ -61,8 +61,6 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	root->destroySceneManager(smgr);
 
 	rttTexture.setNull();
-
-	delete root;
 }
 
 //This function is from VALVe
