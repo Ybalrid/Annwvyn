@@ -209,9 +209,11 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnSceneryManager.hpp" />
     <ClInclude Include="..\..\include\AnnScriptManager.hpp" />
     <ClInclude Include="..\..\include\AnnSplashLevel.hpp" />
+    <ClInclude Include="..\..\include\AnnStringUtility.hpp" />
     <ClInclude Include="..\..\include\AnnSubsystem.hpp" />
     <ClInclude Include="..\..\include\AnnTriggerObject.hpp" />
     <ClInclude Include="..\..\include\AnnTypes.h" />
+    <ClInclude Include="..\..\include\AnnUserSpaceEvent.hpp" />
     <ClInclude Include="..\..\include\AnnUserSpaceSubSystem.hpp" />
     <ClInclude Include="..\..\include\AnnVect3.hpp" />
     <ClInclude Include="..\..\include\Annwvyn.h" />
@@ -263,8 +265,10 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnSceneryManager.cpp" />
     <ClCompile Include="..\..\src\AnnScriptManager.cpp" />
     <ClCompile Include="..\..\src\AnnSplashLevel.cpp" />
+    <ClCompile Include="..\..\src\AnnStringUtility.cpp" />
     <ClCompile Include="..\..\src\AnnSubSystem.cpp" />
     <ClCompile Include="..\..\src\AnnTriggerObject.cpp" />
+    <ClCompile Include="..\..\src\AnnUserSpaceEvent.cpp" />
     <ClCompile Include="..\..\src\AnnUserSpaceSubSystem.cpp" />
     <ClCompile Include="..\..\src\AnnVect3.cpp" />
     <ClCompile Include="..\..\src\AnnXmlLevel.cpp" />
