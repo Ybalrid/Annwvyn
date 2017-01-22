@@ -55,6 +55,7 @@ namespace Annwvyn
 	class DLL AnnHandController
 	{
 	public:
+		using AnnHandControllerTypeHash = size_t;
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
 		enum AnnHandControllerSide : size_t { leftHandController = 0, rightHandController = 1, invalidHandController = 2 };
 
@@ -131,8 +132,11 @@ namespace Annwvyn
 		///Get the "hand side" of this particular controller
 		AnnHandControllerSide getSide() const;
 
-		///Get the type of the controller. Can be anything. Expect stuff like "Vive Controller" or "Oculus Touch Controller"
+		///For test/branching, prefer using getTypeHash(). Get the type of the controller. Can be anything. Expect stuff like "Vive Controller" or "Oculus Touch Controller".
 		std::string getType() const;
+
+		///Get the hash of the type of the controller
+		AnnHandControllerTypeHash getTypeHash() const;
 
 	private:
 
@@ -142,6 +146,9 @@ namespace Annwvyn
 
 		///Type of the controller, Can be string like "Vive controller" or "Oculus Touch Controller"
 		std::string controllerType;
+
+		///Hash of the type, see controllerType
+		AnnHandControllerTypeHash controllerTypeHash;
 
 		///Get a reference to the axes vector
 		std::vector<AnnHandControllerAxis>& getAxesVector();
