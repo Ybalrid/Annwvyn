@@ -38,13 +38,28 @@
 
 namespace Annwvyn
 {
+	///Specialization fo the HandController class for Oculus Touch
 	class DLL AnnOculusTouchController : public AnnHandController
 	{
 	public:
-		AnnOculusTouchController(Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
-			: AnnHandController("Oculus Touch", handNode, controllerID, controllerSide)
+		///Need to get the oculus session of the controller
+		AnnOculusTouchController(ovrSession session, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
+			: AnnHandController("Oculus Touch", handNode, controllerID, controllerSide),
+			currentSession(session)
 		{
+			if (side == leftHandController) myControllerType = ovrControllerType_LTouch;
+			else if (side == rightHandController) myControllerType = ovrControllerType_RTouch;
 		}
+
+		///This will call ovr_SetControllerVibration
+		void rumbleStart(float factor) override;
+
+		///This will call ovr_SetControllerVibration
+		void rumbleStop() override;
+
+	private:
+		ovrSession currentSession;
+		ovrControllerType myControllerType;
 	};
 }
 
