@@ -26,6 +26,10 @@ public:
 
 	void HandControllerEvent(AnnHandControllerEvent e) override
 	{
+		e.getController()->rumbleStart(1);
+		if (e.getController()->hasBeenPressed(1))
+			e.getController()->rumbleStop();
+
 		if (e.getController()->hasBeenPressed(3))
 			switch (e.getController()->getSide())
 			{

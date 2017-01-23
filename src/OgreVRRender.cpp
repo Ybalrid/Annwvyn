@@ -54,7 +54,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 OgreVRRender::~OgreVRRender()
 {
 	self = nullptr;
-	root->unloadPlugin("Plugin_OctreeSceneManager");
+	root->unloadPlugin(PluginOctreeSceneManager);
 }
 
 Ogre::SceneManager* OgreVRRender::getSceneManager() const

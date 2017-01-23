@@ -2,6 +2,7 @@
 #include "AnnHandController.hpp"
 #include "AnnGetter.hpp"
 #include "AnnLogger.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 
@@ -18,6 +19,8 @@ AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode
 	trackedLinearSpeed(AnnVect3::ZERO),
 	invalidAxis("INVALID", 0)
 {
+	if (side == invalidHandController) throw AnnInvalidControllerSide();
+
 	std::cerr << "HandController ID : " << id << " created";
 	std::cerr << "For side : " << getSideAsString(side);
 	std::cerr << "Of type : " << controllerType;
@@ -194,4 +197,14 @@ bool AnnHandControllerAxis::isInRange(float v) { return (v >= -1 && v <= 1); }
 AnnHandController::AnnHandControllerTypeHash AnnHandController::getTypeHash() const
 {
 	return controllerTypeHash;
+}
+
+void AnnHandController::rumbleStart(float factor)
+{
+	AnnDebug() << "rumbleStart not specialized on this controller...";
+}
+
+void AnnHandController::rumbleStop()
+{
+	AnnDebug() << "rumbleStop not specialized on this controller...";
 }

@@ -15,7 +15,7 @@ namespace Annwvyn
 	using AnnHandControllerID = size_t;
 
 	///Represent the axis of an hand controller
-	class AnnHandControllerAxis
+	class DLL AnnHandControllerAxis
 	{
 	public:
 
@@ -55,6 +55,7 @@ namespace Annwvyn
 	class DLL AnnHandController
 	{
 	public:
+		virtual ~AnnHandController() = default;
 		using AnnHandControllerTypeHash = size_t;
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
 		enum AnnHandControllerSide : size_t { leftHandController = 0, rightHandController = 1, invalidHandController = 2 };
@@ -138,7 +139,13 @@ namespace Annwvyn
 		///Get the hash of the type of the controller
 		AnnHandControllerTypeHash getTypeHash() const;
 
-	private:
+		///Start vibrating the controller with a set amount of "strength". Result will vary between VR systems...
+		virtual void rumbleStart(float factor);
+
+		///Stop vibrating, if the controller was vibrating in the first place...
+		virtual void rumbleStop();
+
+	protected:
 
 		friend class OgreVRRender;
 		friend class OgreOpenVRRender;
