@@ -86,6 +86,10 @@ namespace Annwvyn
 
 	public:
 
+		static bool autosetProcessPriorityHigh;
+		static void setProcessPriorityNormal();
+		static void setProcessPriorityHigh();
+
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
 
