@@ -70,6 +70,13 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	stringUtility = std::make_shared<AnnStringUility>();
 
+#ifdef _WIN32
+	//Set current process to high priority.
+	//Looks like the scheduler of Windows sometimes don't give use the time we need to be consistent.
+	//This seems to fixes the problem.
+	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+#endif
+
 	consoleReady = false;
 
 	std::cerr << "HMD selection from command line routine returned : "
