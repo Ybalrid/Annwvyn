@@ -491,10 +491,14 @@ std::shared_ptr<AnnStringUility> AnnEngine::getStringUtility() const
 
 void AnnEngine::setProcessPriorityNormal()
 {
+#ifdef _WIN32
 	SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
+#endif
 }
 
 void AnnEngine::setProcessPriorityHigh()
 {
+#ifdef _WIN32
 	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+#endif
 }
