@@ -6,6 +6,7 @@ using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(nullptr);
 bool AnnEngine::consoleReady(false);
+bool AnnEngine::autosetProcessPriorityHigh(true);
 
 AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
 {
@@ -69,6 +70,14 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	}
 
 	stringUtility = std::make_shared<AnnStringUility>();
+
+#ifdef _WIN32
+	//Set current process to high priority.
+	//Looks like the scheduler of Windows sometimes don't give use the time we need to be consistent.
+	//This seems to fixes the problem.
+	if (autosetProcessPriorityHigh)
+		setProcessPriorityHigh();
+#endif
 
 	consoleReady = false;
 
@@ -478,4 +487,18 @@ std::shared_ptr<AnnConsole> AnnEngine::getOnScreenConsole() const
 std::shared_ptr<AnnStringUility> AnnEngine::getStringUtility() const
 {
 	return stringUtility;
+}
+
+void AnnEngine::setProcessPriorityNormal()
+{
+#ifdef _WIN32
+	SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
+#endif
+}
+
+void AnnEngine::setProcessPriorityHigh()
+{
+#ifdef _WIN32
+	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+#endif
 }
