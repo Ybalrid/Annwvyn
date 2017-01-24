@@ -324,8 +324,11 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](int i) {AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
 	chai.add(fun([](float f) {AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
 
-	///Clear the console 
+	///Clear the console
 	chai.add(fun([]() {AnnGetOnScreenConsole()->bufferClear(); }), "AnnClearConsole");
+
+	chai.add(fun([]() {AnnEngine::setProcessPriorityHigh(); }), "AnnSetProcessPriorityHigh");
+	chai.add(fun([]() {AnnEngine::setProcessPriorityNormal(); }), "AnnSetProcessPriorityNormal");
 }
 
 void AnnScriptManager::tryAndGetEventHooks()
