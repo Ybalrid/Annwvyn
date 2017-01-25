@@ -42,5 +42,5 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Run]
 Filename: "{app}\RUNME-64.BAT"
-Filename: "{app}\Annwvyn\utils\vc_redist.x64.2015.exe"; StatusMsg: "Installing Visual C++ 2015 x64 redistribuable"; Check: IsWin64();
+Filename: "{app}\Annwvyn\utils\vc_redist.x64.2015.exe /q"; StatusMsg: "Installing Visual C++ 2015 x64 redistribuable"; Check: IsWin64();
 
