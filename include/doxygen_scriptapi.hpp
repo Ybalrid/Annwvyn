@@ -102,6 +102,12 @@ namespace Annwvyn
 		/// \param id The ID number of the level
 		void AnnJumpLevel(Annwvyn::level_id id);
 
+		///Call the Win32 API to change the game process priority to "normal". Reduce the impact of the game on background task but also can create performance problems.
+		void AnnSetProcessPriorityNormal();
+
+		///Call the Win32 API to change the game process priority to "high" for avoiding some performance problems with CPU time scheduling
+		void AnnSetProcessPriorityHigh();
+
 		//-classes-----------------------------------------------------
 
 		///Keyboard event from scripts
