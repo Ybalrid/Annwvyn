@@ -451,10 +451,12 @@ inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::H
 void Annwvyn::AnnOpenVRMotionController::rumbleStart(float value)
 {
 	current = AnnGetVRRenderer()->getTimer()->getMilliseconds();
-	if (current - last > 30)
+	//Limit frequency to 1/50 hz
+	if (current - last > 50)
 	{
 		last = current;
-		vrSystem->TriggerHapticPulse(deviceIndex, vr::EVRButtonId::k_EButton_SteamVR_Touchpad - vr::k_EButton_Axis0, static_cast<unsigned short>(value * USHRT_MAX));
+		//Max value of one pulse will be 3500µs
+		vrSystem->TriggerHapticPulse(deviceIndex, vr::EVRButtonId::k_EButton_SteamVR_Touchpad - vr::k_EButton_Axis0, static_cast<unsigned short>(value * 3500));
 	}
 }
 

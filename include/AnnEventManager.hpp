@@ -506,6 +506,9 @@ namespace Annwvyn
 		ButtonId buttons[b_size];
 
 		float lastAngle;
+
+		///Hash of controller type strings 
+		size_t OpenVRController, OculusTouchController;
 	};
 
 	///Internal utility class that represent a timer
