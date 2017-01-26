@@ -22,8 +22,8 @@ minWheelAngle{ 0.5f },
 stickCurrentAngleDegree{ 0 },
 computedWheelValue{ 0 },
 lastAngle{ 0 },
-OpenVRController{AnnGetStringUtility()->hash("OpenVR Hand Controller")},
-OculusTouchController{AnnGetStringUtility()->hash("Oculus Touch")}
+OpenVRController{ AnnGetStringUtility()->hash("OpenVR Hand Controller") },
+OculusTouchController{ AnnGetStringUtility()->hash("Oculus Touch") }
 {
 	//Use 1st analog stick for displacement
 	axes[ax_walk] = 0;
@@ -117,7 +117,6 @@ void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 	{
 		player->analogWalk = trim(e.getAxis(axes[ax_walk]).getAbsValue(), deadzone);
 		player->analogStraff = trim(e.getAxis(axes[ax_straff]).getAbsValue(), deadzone);
-
 		player->analogRotate = trim(e.getAxis(axes[ax_rotate]).getAbsValue(), deadzone);
 	}
 	if (e.isPressed(buttons[b_run]))
@@ -139,7 +138,7 @@ void AnnDefaultEventListener::reclampDegreeToPositiveRange(float& degree)
 
 void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
-	double rightStickThreashold = 0;
+	auto rightStickThreashold{ 0.0225 };
 	if (e.getController()->getTypeHash() == OculusTouchController) rightStickThreashold = 0.8;
 
 	auto controller = e.getController();
@@ -168,9 +167,6 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 			{
 				default: case WHEEL:
 					//If we take the stick values as coordinate in the trigonometric plan, this will give the angle
-
-					///AnnDebug() << analog.squaredLength();
-
 					stickCurrentAngleDegree = AnnRadian(std::atan2(analog.y, analog.x)).valueDegrees();
 					//Change range from [-180; +180] to [0; 360]
 					reclampDegreeToPositiveRange(stickCurrentAngleDegree);
