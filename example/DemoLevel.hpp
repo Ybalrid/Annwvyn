@@ -168,6 +168,9 @@ public:
 
 	void runLogic() override
 	{
+		for(auto controller : AnnGetVRRenderer()->getHandControllerArray())
+			if(controller)
+				controller->rumbleStart(1);
 		/*
 		auto object = AnnGetGameObjectManager()->playerLookingAt();
 		if (object)

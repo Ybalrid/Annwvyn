@@ -21,7 +21,9 @@ maxWheelAngle{ 45 },
 minWheelAngle{ 0.5f },
 stickCurrentAngleDegree{ 0 },
 computedWheelValue{ 0 },
-lastAngle{ 0 }
+lastAngle{ 0 },
+OpenVRController{AnnGetStringUtility()->hash("OpenVR Hand Controller")},
+OculusTouchController{AnnGetStringUtility()->hash("Oculus Touch")}
 {
 	//Use 1st analog stick for displacement
 	axes[ax_walk] = 0;
@@ -137,6 +139,9 @@ void AnnDefaultEventListener::reclampDegreeToPositiveRange(float& degree)
 
 void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
+	double rightStickThreashold = 0;
+	if (e.getController()->getTypeHash() == OculusTouchController) rightStickThreashold = 0.8;
+
 	auto controller = e.getController();
 	AnnVect2 analog{ controller->getAxis(0).getValue(), controller->getAxis(1).getValue() };
 	switch (controller->getSide())
@@ -176,7 +181,7 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 					if (stickCurrentAngleDegree == 0 ||
 						std::abs(computedWheelValue) > maxWheelAngle ||
 						std::abs(computedWheelValue) < minWheelAngle ||
-						analog.squaredLength() < 0.8f)
+						analog.squaredLength() < rightStickThreashold)
 						computedWheelValue = 0;
 
 					player->analogRotate = wheelStickSensitivity * computedWheelValue;
