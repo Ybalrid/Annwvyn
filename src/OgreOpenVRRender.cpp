@@ -13,7 +13,8 @@ windowWidth(1280),
 windowHeight(720),
 rttTextureGLID{ 0 },
 gamma(false),
-API(vr::API_OpenGL),
+//API(vr::API_OpenGL),
+TextureType(vr::TextureType_OpenGL),
 vrTextures{ nullptr },
 windowViewport(nullptr),
 hmdAbsoluteTransform({}),
@@ -121,7 +122,7 @@ void OgreOpenVRRender::initClientHmdRendering()
 	//To display a 3D model in place of the hands of the character, it's done via the AnnHandController objects
 
 	//Declare the textures for SteamVR
-	vrTextures = { reinterpret_cast<void*>(rttTextureGLID), API, vr::ColorSpace_Gamma };
+	vrTextures = { reinterpret_cast<void*>(rttTextureGLID), TextureType, vr::ColorSpace_Gamma };
 
 	//Set the OpenGL texture geometry
 	//V axis is reversed, U between 0 and 0.5 is for the left eye, between 0.5 and 1 is for the right eye.
@@ -260,8 +261,8 @@ void OgreOpenVRRender::updateProjectionMatrix()
 	//Get the couple of matrices
 	std::array<vr::HmdMatrix44_t, 2> openVRProjectionMatrix
 	{
-		vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance, API),
-		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance, API)
+		vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance),
+		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance)
 	};
 
 	std::array<Ogre::Matrix4, 2> ogreProjectionMatrix{};
@@ -330,7 +331,7 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	auto orientation = transform.extractQuaternion();
 
 	//Get the state of the controller. The state contains the buttons and triggers data at the last sample
-	vrSystem->GetControllerState(controllerDeviceIndex, &controllerState);
+	vrSystem->GetControllerState(controllerDeviceIndex, &controllerState, sizeof controllerState);
 
 	//This will fill the buttons array
 	extractButtons(side);

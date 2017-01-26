@@ -154,7 +154,8 @@ private:
 	bool gamma;
 
 	///API handler, should be initialized to "OpenGL"
-	vr::GraphicsAPIConvention API;
+	//vr::GraphicsAPIConvention API;
+	vr::ETextureType TextureType;
 
 	///OpenVR texture handlers
 	vr::Texture_t vrTextures;

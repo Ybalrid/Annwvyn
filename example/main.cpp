@@ -18,6 +18,7 @@ using namespace std;
 using namespace Annwvyn;
 
 constexpr bool isRoomscale{ !false };
+constexpr bool highPriority{ !false };
 
 ///Event
 class TextMessageEvent : public AnnUserSpaceEvent
@@ -97,6 +98,8 @@ private:
 AnnMain()
 {
 	OgreVRRender::setAntiAliasingLevel(8);
+	AnnEngine::autosetProcessPriorityHigh = highPriority;
+
 	AnnInit("AnnTest");
 
 	//Init some player body parameters
