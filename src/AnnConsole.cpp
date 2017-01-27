@@ -13,7 +13,7 @@ offset(0, 0.125f, -0.75f),
 openGL43plus(false),
 visibility(false),
 lastUpdate{ 0 },
-refreshRate{ 1 / 15 }
+refreshRate{ 1.0 / 15.0 }
 {
 	//Define the custom material
 	auto Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
@@ -97,9 +97,9 @@ refreshRate{ 1 / 15 }
 	//Aspect ration of the console is 2:1. The actual size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
 	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", "ANNWVYN_CORE",
-																Ogre::TEX_TYPE_2D, 2 * BASE, BASE,
-																Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8,
-																Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
+		Ogre::TEX_TYPE_2D, 2 * BASE, BASE,
+		Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8,
+		Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
 
 	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
 	displaySurfaceTextureUniteState->setTexture(texture);
@@ -210,8 +210,8 @@ void AnnConsole::update()
 	//Erase plane (draw background)
 	if (openGL43plus)
 		glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
-						   textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
-						   texture->getSrcWidth(), texture->getSrcHeight(), 1);
+			textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
+			texture->getSrcWidth(), texture->getSrcHeight(), 1);
 	else
 	{
 		//background->copyToTexture(texture);
@@ -234,10 +234,10 @@ void AnnConsole::update()
 
 	//Write text to texture
 	WriteToTexture(textToDisplay,																	//Text
-				   texture,																			//Texture
-				   Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),		//Part of the pixel buffer to write to
-				   Ogre::ColourValue::Black,														//Color
-				   'l', true);																		//Alignment
+		texture,																					//Texture
+		Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),					//Part of the pixel buffer to write to
+		Ogre::ColourValue::Black,																	//Color
+		'l', true);																					//Alignment
 }
 
 bool AnnConsole::isForbdiden(const std::string& keyword)
@@ -318,95 +318,95 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	{
 		switch (str[strindex])
 		{
-			case ' ': cursorX += charwidth;  break;
-			case '\t':cursorX += charwidth * 3; break;
-			case '\n':cursorY += charheight; carriagreturn = true; break;
-			default:
+		case ' ': cursorX += charwidth;  break;
+		case '\t':cursorX += charwidth * 3; break;
+		case '\n':cursorY += charheight; carriagreturn = true; break;
+		default:
+		{
+			//wrapping
+			if ((cursorX + GlyphTexCoords[strindex].getWidth() > lineend) && !carriagreturn)
 			{
-				//wrapping
-				if ((cursorX + GlyphTexCoords[strindex].getWidth() > lineend) && !carriagreturn)
-				{
-					cursorY += charheight;
-					carriagreturn = true;
-				}
+				cursorY += charheight;
+				carriagreturn = true;
+			}
 
-				//justify
-				if (carriagreturn)
-				{
-					size_t l = strindex;
-					size_t textwidth = 0;
-					size_t wordwidth = 0;
+			//justify
+			if (carriagreturn)
+			{
+				size_t l = strindex;
+				size_t textwidth = 0;
+				size_t wordwidth = 0;
 
-					while ((l < str.size()) && (str[l] != '\n'))
+				while ((l < str.size()) && (str[l] != '\n'))
+				{
+					wordwidth = 0;
+
+					switch (str[l])
 					{
-						wordwidth = 0;
+					case ' ': wordwidth = charwidth; ++l; break;
+					case '\t': wordwidth = charwidth * 3; ++l; break;
+					case '\n': l = str.size();
+					default: break;
+					}
 
-						switch (str[l])
-						{
-							case ' ': wordwidth = charwidth; ++l; break;
-							case '\t': wordwidth = charwidth * 3; ++l; break;
-							case '\n': l = str.size();
-							default: break;
-						}
-
-						if (wordwrap)
-							while ((l < str.size()) && (str[l] != ' ') && (str[l] != '\t') && (str[l] != '\n'))
-							{
-								wordwidth += GlyphTexCoords[l].getWidth();
-								++l;
-							}
-						else
+					if (wordwrap)
+						while ((l < str.size()) && (str[l] != ' ') && (str[l] != '\t') && (str[l] != '\n'))
 						{
 							wordwidth += GlyphTexCoords[l].getWidth();
-							l++;
+							++l;
 						}
-
-						if ((textwidth + wordwidth) <= destRectangle.getWidth())
-							textwidth += (wordwidth);
-						else
-							break;
-					}
-
-					if ((textwidth == 0) && (wordwidth > destRectangle.getWidth()))
-						textwidth = destRectangle.getWidth();
-
-					switch (justify)
+					else
 					{
-						case 'c':    cursorX = (destRectangle.getWidth() - textwidth) / 2;
-							lineend = destRectangle.getWidth() - cursorX;
-							break;
-
-						case 'r':    cursorX = (destRectangle.getWidth() - textwidth);
-							lineend = destRectangle.getWidth();
-							break;
-
-						default:    cursorX = 0;
-							lineend = textwidth;
-							break;
+						wordwidth += GlyphTexCoords[l].getWidth();
+						l++;
 					}
 
-					carriagreturn = false;
+					if ((textwidth + wordwidth) <= destRectangle.getWidth())
+						textwidth += (wordwidth);
+					else
+						break;
 				}
 
-				//abort - not enough space to draw
-				if ((cursorY + charheight) > destRectangle.getHeight())
-					goto stop;
+				if ((textwidth == 0) && (wordwidth > destRectangle.getWidth()))
+					textwidth = destRectangle.getWidth();
 
-				//draw pixel by pixel
-				for (size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
-					for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
-					{
-						float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0);
-						float invalpha = 1.0 - alpha;
-						size_t charOffset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
-						ColourValue pix;
-						PixelUtil::unpackColour(&pix, destPb.format, &destData[charOffset]);
-						pix = (pix * invalpha) + (color * alpha);
-						PixelUtil::packColour(pix, destPb.format, &destData[charOffset]);
-					}
+				switch (justify)
+				{
+				case 'c':    cursorX = (destRectangle.getWidth() - textwidth) / 2;
+					lineend = destRectangle.getWidth() - cursorX;
+					break;
 
-				cursorX += GlyphTexCoords[strindex].getWidth();
-			}//default
+				case 'r':    cursorX = (destRectangle.getWidth() - textwidth);
+					lineend = destRectangle.getWidth();
+					break;
+
+				default:    cursorX = 0;
+					lineend = textwidth;
+					break;
+				}
+
+				carriagreturn = false;
+			}
+
+			//abort - not enough space to draw
+			if ((cursorY + charheight) > destRectangle.getHeight())
+				goto stop;
+
+			//draw pixel by pixel
+			for (size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
+				for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
+				{
+					float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0);
+					float invalpha = 1.0 - alpha;
+					size_t charOffset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
+					ColourValue pix;
+					PixelUtil::unpackColour(&pix, destPb.format, &destData[charOffset]);
+					pix = (pix * invalpha) + (color * alpha);
+					PixelUtil::packColour(pix, destPb.format, &destData[charOffset]);
+				}
+
+			cursorX += GlyphTexCoords[strindex].getWidth();
+		}//default
 		}//switch
 	}//for
 

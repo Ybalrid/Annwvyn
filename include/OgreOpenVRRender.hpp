@@ -25,12 +25,7 @@ namespace Annwvyn
 	{
 	public:
 		///Needs a pointer to the currently initialized IVRSystem, and the raw TrackedDeviceIndex of the controller
-		AnnOpenVRMotionController(vr::IVRSystem* vrsystem, vr::TrackedDeviceIndex_t OpenVRDeviceIndex, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
-			: AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
-			deviceIndex(OpenVRDeviceIndex),
-			vrSystem(vrsystem), last(0), current(0)
-		{
-		}
+		AnnOpenVRMotionController(vr::IVRSystem* vrsystem, vr::TrackedDeviceIndex_t OpenVRDeviceIndex, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
 
 		///This will trigger one impulse of the hap tics actuator by calling VrSystem->TriggerHapticPulse
 		void rumbleStart(float value) override;
@@ -52,6 +47,7 @@ class DLL OgreOpenVRRender : public OgreVRRender
 	{
 		left, right
 	};
+
 public:
 	///Construct an OgreOpenVR object
 	OgreOpenVRRender(std::string windowName = "OgreOpenVRRender");
@@ -106,8 +102,8 @@ public:
 
 	///Get a "vr::EVREye" from an "oovrEyeType"
 	static vr::EVREye getEye(oovrEyeType eye);
-private:
 
+private:
 	///Get the HMD position in the OpenVR tracking space
 	Ogre::Vector3 getTrackedHMDTranslation() const;
 
@@ -153,8 +149,7 @@ private:
 	///Use hardware gamma correction
 	bool gamma;
 
-	///API handler, should be initialized to "OpenGL"
-	//vr::GraphicsAPIConvention API;
+	///TextureType, set to OpenGL by constructor
 	vr::ETextureType TextureType;
 
 	///OpenVR texture handlers

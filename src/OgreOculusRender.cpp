@@ -625,3 +625,10 @@ void AnnOculusTouchController::rumbleStop()
 
 	ovr_SetControllerVibration(currentSession, myType, 0, 0);
 }
+
+AnnOculusTouchController::AnnOculusTouchController(ovrSession session, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) : AnnHandController("Oculus Touch", handNode, controllerID, controllerSide),
+currentSession(session)
+{
+	if (side == leftHandController) myControllerType = ovrControllerType_LTouch;
+	else if (side == rightHandController) myControllerType = ovrControllerType_RTouch;
+}

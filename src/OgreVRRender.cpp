@@ -153,13 +153,13 @@ void OgreVRRender::initCameras()
 {
 	cameraRig = smgr->getRootSceneNode()->createChildSceneNode("CameraRig");
 
-	eyeCameras[0] = smgr->createCamera("lcam");
-	eyeCameras[0]->setAutoAspectRatio(true);
-	cameraRig->attachObject(eyeCameras[0]);
+	eyeCameras[left] = smgr->createCamera("lcam");
+	eyeCameras[left]->setAutoAspectRatio(true);
+	cameraRig->attachObject(eyeCameras[left]);
 
-	eyeCameras[1] = smgr->createCamera("rcam");
-	eyeCameras[1]->setAutoAspectRatio(true);
-	cameraRig->attachObject(eyeCameras[1]);
+	eyeCameras[right] = smgr->createCamera("rcam");
+	eyeCameras[right]->setAutoAspectRatio(true);
+	cameraRig->attachObject(eyeCameras[right]);
 
 	monoCam = smgr->createCamera("mcam");
 	monoCam->setAspectRatio(16.0 / 9.0);

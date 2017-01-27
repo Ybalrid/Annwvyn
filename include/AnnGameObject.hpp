@@ -20,7 +20,7 @@
 #include "BtOgrePG.h"
 #include "BtOgreExtras.h"
 
-//Annwvyn
+ //Annwvyn
 #include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
 #include "AnnScriptManager.hpp"
@@ -57,16 +57,16 @@ namespace Annwvyn
 		void setPosition(AnnVect3 pos) override;
 
 		///Set the world position from a vector
-		void setWorldPosition(AnnVect3 pos);
+		void setWorldPosition(AnnVect3 pos) const;
 
 		///Set the world position from a few floats
-		void setWorldPosition(float x, float y, float z);
+		void setWorldPosition(float x, float y, float z) const;
 
 		///Translate
 		/// \param x X component of the translation vector
 		/// \param y Y component of the translation vector
 		/// \param z Z component of the translation vector
-		void translate(float x, float y, float z);
+		void translate(float x, float y, float z) const;
 
 		///Set orientation from Quaternion components
 		/// \param w W component of a quaternion
@@ -121,13 +121,13 @@ namespace Annwvyn
 
 		///Get distance from another object
 		/// \param otherObject The object we're counting the distance from
-		float getDistance(AnnGameObject* otherObject);
+		float getDistance(AnnGameObject* otherObject) const;
 
 		///Play a sound file
 		/// \param path Path to the audio file
 		/// \param loop If set to true, will play the sound in loop
 		/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
-		void playSound(std::string path, bool loop = false, float volume = 1.0f);
+		void playSound(std::string path, bool loop = false, float volume = 1.0f) const;
 
 		// TODO create animation state machine
 		///Set currently playing animation
@@ -213,7 +213,7 @@ namespace Annwvyn
 		void addAnimationTime(double offsetTime) const;
 
 		///For engine : update OpenAL source position
-		void updateOpenAlPos();
+		void updateOpenAlPos() const;
 
 		/**
 		* You will certainly find strange to see that the Object does not carry a "position" vector.
