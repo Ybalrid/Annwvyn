@@ -43,13 +43,7 @@ namespace Annwvyn
 	{
 	public:
 		///Need to get the oculus session of the controller
-		AnnOculusTouchController(ovrSession session, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide)
-			: AnnHandController("Oculus Touch", handNode, controllerID, controllerSide),
-			currentSession(session)
-		{
-			if (side == leftHandController) myControllerType = ovrControllerType_LTouch;
-			else if (side == rightHandController) myControllerType = ovrControllerType_RTouch;
-		}
+		AnnOculusTouchController(ovrSession session, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
 
 		///This will call ovr_SetControllerVibration
 		void rumbleStart(float factor) override;

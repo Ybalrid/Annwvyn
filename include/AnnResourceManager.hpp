@@ -15,15 +15,15 @@ namespace Annwvyn
 		///Give a zipped archive resource location to the Ogre Resource Group Manager
 		/// \param path The path to a zip file.
 		/// \param resourceGroupName name of the resource group where the content will be added
-		void addZipLocation(const std::string& path, const std::string& resourceGroupName = defaultResourceGroupName);
+		void addZipLocation(const std::string& path, const std::string& resourceGroupName = defaultResourceGroupName) const;
 
 		///Give a directory resource location to the Ogre Resource Group Manager
 		/// \param path The path to the directory
 		/// \param resourceGroupName name of the resource group
-		void addFileLocation(const std::string& path, const std::string& resourceGroupName = defaultResourceGroupName);
+		void addFileLocation(const std::string& path, const std::string& resourceGroupName = defaultResourceGroupName) const;
 
 		///Load resource.cfg like file
-		void loadReseourceFile(const std::string& path);
+		void loadReseourceFile(const std::string& path) const;
 
 		///InitAllResources
 		void initResources() const;

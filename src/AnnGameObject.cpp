@@ -54,7 +54,7 @@ AnnGameObject::~AnnGameObject()
 	Node = nullptr;
 }
 
-void AnnGameObject::playSound(std::string path, bool loop, float volume)
+void AnnGameObject::playSound(std::string path, bool loop, float volume) const
 {
 	audioSource->changeSound(path);
 	audioSource->setLooping(loop);
@@ -63,7 +63,7 @@ void AnnGameObject::playSound(std::string path, bool loop, float volume)
 	audioSource->play();
 }
 
-void AnnGameObject::updateOpenAlPos()
+void AnnGameObject::updateOpenAlPos() const
 {
 	audioSource->setPositon(getWorldPosition());
 }
@@ -78,7 +78,7 @@ void AnnGameObject::setPosition(float x, float y, float z)
 	setPosition(AnnVect3{ x, y, z });
 }
 
-void AnnGameObject::translate(float x, float y, float z)
+void AnnGameObject::translate(float x, float y, float z) const
 {
 	//Ogre
 	Node->translate(x, y, z);
@@ -94,8 +94,8 @@ void AnnGameObject::setPosition(AnnVect3 pos)
 	{
 		auto currentPosition = Node->getPosition();
 		Body->translate(btVector3(pos.x - currentPosition.x,
-						pos.y - currentPosition.y,
-						pos.z - currentPosition.z));
+			pos.y - currentPosition.y,
+			pos.z - currentPosition.z));
 	}
 	//change OgrePosition
 	Node->setPosition(pos);
@@ -104,7 +104,7 @@ void AnnGameObject::setPosition(AnnVect3 pos)
 	updateOpenAlPos();
 }
 
-void AnnGameObject::setWorldPosition(AnnVect3 pos)
+void AnnGameObject::setWorldPosition(AnnVect3 pos) const
 {
 	Node->_setDerivedPosition(pos);
 	updateOpenAlPos();
@@ -186,28 +186,28 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	//create the correct shape
 	switch (type)
 	{
-		case boxShape:
-			Shape = converter.createBox();
-			break;
-		case cylinderShape:
-			Shape = converter.createCylinder();
-			break;
-		case capsuleShape:
-			Shape = converter.createCapsule();
-			break;
-		case convexShape:
-			Shape = converter.createConvex();
-			break;
-		case staticShape:
-			Shape = converter.createTrimesh();
-			break;
-		case sphereShape:
-			Shape = converter.createSphere();
-			break;
-		default:
-			//non valid;
-			AnnDebug() << "Error: Requested shape is invalid";
-			return;
+	case boxShape:
+		Shape = converter.createBox();
+		break;
+	case cylinderShape:
+		Shape = converter.createCylinder();
+		break;
+	case capsuleShape:
+		Shape = converter.createCapsule();
+		break;
+	case convexShape:
+		Shape = converter.createConvex();
+		break;
+	case staticShape:
+		Shape = converter.createTrimesh();
+		break;
+	case sphereShape:
+		Shape = converter.createSphere();
+		break;
+	default:
+		//non valid;
+		AnnDebug() << "Error: Requested shape is invalid";
+		return;
 	}
 
 	AnnVect3 scale = getNode()->getScale();
@@ -237,7 +237,7 @@ Ogre::Entity* AnnGameObject::getEntity() const
 	return Entity;
 }
 
-float AnnGameObject::getDistance(AnnGameObject *otherObject)
+float AnnGameObject::getDistance(AnnGameObject *otherObject) const
 {
 	return getWorldPosition().distance(otherObject->getWorldPosition());
 }
@@ -420,7 +420,7 @@ bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
 	return false;
 }
 
-void AnnGameObject::setWorldPosition(float x, float y, float z)
+void AnnGameObject::setWorldPosition(float x, float y, float z) const
 {
 	setWorldPosition(AnnVect3{ x, y, z });
 }

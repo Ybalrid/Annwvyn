@@ -17,8 +17,7 @@
 using namespace std;
 using namespace Annwvyn;
 
-constexpr bool isRoomscale{ !false };
-constexpr bool highPriority{ !false };
+constexpr bool isRoomscale{ true };
 
 ///Event
 class TextMessageEvent : public AnnUserSpaceEvent
@@ -98,7 +97,6 @@ private:
 AnnMain()
 {
 	OgreVRRender::setAntiAliasingLevel(8);
-	AnnEngine::autosetProcessPriorityHigh = highPriority;
 
 	AnnInit("AnnTest");
 
@@ -139,18 +137,5 @@ AnnMain()
 
 	AnnQuit();
 
-	//Try to start the engine again :
-
-	/*MessageBox(nullptr, L"Starting Annwvyn again", L"Engine restart", MB_ICONINFORMATION);
-
-	GameEngine = std::make_unique<AnnEngine>("other app", detectedHMD);
-	AnnGetResourceManager()->initResources();
-	AnnGetEventManager()->useDefaultEventListener();
-	AnnGetEngine()->startGameplayLoop();
-
-	AnnQuit();
-
-	MessageBox(nullptr, L"If it did not crash here, it means that the engine is not in a zombie state when cleared, and is stable!", L"Engine test success!", MB_ICONASTERISK);
-	*/
 	return EXIT_SUCCESS;
 }

@@ -13,7 +13,6 @@ windowWidth(1280),
 windowHeight(720),
 rttTextureGLID{ 0 },
 gamma(false),
-//API(vr::API_OpenGL),
 TextureType(vr::TextureType_OpenGL),
 vrTextures{ nullptr },
 windowViewport(nullptr),
@@ -29,16 +28,11 @@ triggerNormalizedValue{ 0 }
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
 
-	//buttonsToHandle.push_back(vr::k_EButton_System);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
 	buttonsToHandle.push_back(vr::k_EButton_Grip);
 	buttonsToHandle.push_back(vr::k_EButton_A);
 	buttonsToHandle.push_back(vr::k_EButton_SteamVR_Touchpad);
 	buttonsToHandle.push_back(vr::k_EButton_SteamVR_Trigger);
-	//buttonsToHandle.push_back(vr::k_EButton_DPad_Up);
-	//buttonsToHandle.push_back(vr::k_EButton_DPad_Down);
-	//buttonsToHandle.push_back(vr::k_EButton_DPad_Left);
-	//buttonsToHandle.push_back(vr::k_EButton_DPad_Right);
 
 	for (auto side : { left, right })
 	{
@@ -157,6 +151,8 @@ void OgreOpenVRRender::getTrackingPoseAndVRTiming()
 	//Wait for next frame pose, get timing and process additional devices (controllers, anything)
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	calculateTimingFromOgre();
+
+	//Here the controllers are handled
 	processTrackedDevices();
 	processVREvents();
 
@@ -182,9 +178,9 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	//Update each viewports
 	rttViewports[0]->update();
 	rttViewports[1]->update();
-	rttEyes->update();
-	windowViewport->update();
-	window->update();
+	rttEyes->update();			//Resolve anti-aliasing
+	windowViewport->update();	//Window content
+	window->update();			//Window display
 
 	//Submit the textures to the SteamVR compositor
 	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures, &GLBounds[0]);
@@ -317,9 +313,7 @@ void OgreOpenVRRender::processVREvents()
 	}
 }
 
-const bool DEBUG(true);
-
-float ll = 0, ln = 0, rl = 0, rn = 0;
+constexpr bool DEBUG(false);
 
 void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side)
 {
@@ -464,4 +458,10 @@ void Annwvyn::AnnOpenVRMotionController::rumbleStart(float value)
 void Annwvyn::AnnOpenVRMotionController::rumbleStop()
 {
 	vrSystem->TriggerHapticPulse(deviceIndex, vr::EVRButtonId::k_EButton_SteamVR_Touchpad - vr::k_EButton_Axis0, 0x0000);
+}
+
+Annwvyn::AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem, vr::TrackedDeviceIndex_t OpenVRDeviceIndex, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) : AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
+deviceIndex(OpenVRDeviceIndex),
+vrSystem(vrsystem), last(0), current(0)
+{
 }

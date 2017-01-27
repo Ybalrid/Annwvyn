@@ -181,6 +181,7 @@ void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 	AnnDebug() << "Removing an event listener : " << l.get();
 	if (l == nullptr) { clearListenerList(); return; }
 
+	//TODO write this with better
 	auto iterator = listeners.begin();
 	while (iterator != listeners.end())
 		if ((*iterator).lock() && (*iterator).lock().get() == l.get())

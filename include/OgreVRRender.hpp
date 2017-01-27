@@ -259,6 +259,9 @@ protected:
 
 	///Name given to the texture manager for the eyeBuffer
 	static constexpr const char* const rttTextureName = { "RttTex" };
+
+private:
+	enum side : uint8_t { left = 0, right = 1 };
 };
 
 #endif

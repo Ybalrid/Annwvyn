@@ -10,7 +10,7 @@ ResourceGroupManager{ Ogre::ResourceGroupManager::getSingletonPtr() }
 	addDefaultResourceLocation();
 }
 
-void AnnResourceManager::addZipLocation(const std::string& path, const std::string& resourceGroupName)
+void AnnResourceManager::addZipLocation(const std::string& path, const std::string& resourceGroupName) const
 {
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
 	AnnDebug("Will load resources from Zip archive :");
@@ -18,7 +18,7 @@ void AnnResourceManager::addZipLocation(const std::string& path, const std::stri
 	ResourceGroupManager->addResourceLocation(path, "Zip", resourceGroupName);
 }
 
-void AnnResourceManager::addFileLocation(const std::string& path, const std::string& resourceGroupName)
+void AnnResourceManager::addFileLocation(const std::string& path, const std::string& resourceGroupName) const
 {
 	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
 	AnnDebug("Will load resources from File-system directory :");
@@ -34,7 +34,7 @@ void AnnResourceManager::addDefaultResourceLocation() const
 	ResourceGroupManager->initialiseResourceGroup(reservedResourceGroupName);
 }
 
-void AnnResourceManager::loadReseourceFile(const std::string& path)
+void AnnResourceManager::loadReseourceFile(const std::string& path) const
 {
 	/*from ogre wiki : load the given resource file*/
 	Ogre::ConfigFile configFile;
