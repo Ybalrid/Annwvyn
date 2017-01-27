@@ -433,13 +433,13 @@ void OgreOculusRender::showDebug(DebugMode mode)
 {
 	switch (mode)
 	{
-		case RAW_BUFFER:
-			return showRawView();
-		case HMD_MIRROR:
-			return showMirrorView();
-		case MONOSCOPIC:
-			return showMonscopicView();
-		default: break;
+	case RAW_BUFFER:
+		return showRawView();
+	case HMD_MIRROR:
+		return showMirrorView();
+	case MONOSCOPIC:
+		return showMonscopicView();
+	default: break;
 	}
 }
 
@@ -461,8 +461,8 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 
 	//Get the tracking state
 	ts = ovr_GetTrackingState(Oculus->getSession(),
-							  currentFrameDisplayTime,
-							  ovrTrue);
+		currentFrameDisplayTime,
+		ovrTrue);
 
 	//Update pose and controllers
 	pose = ts.HeadPose.ThePose;
@@ -495,12 +495,12 @@ void OgreOculusRender::renderAndSubmitFrame()
 
 	//Copy the rendered image to the Oculus Swap Texture
 	glCopyImageSubData(renderTextureGLID,
-					   GL_TEXTURE_2D,
-					   0, 0, 0, 0,
-					   oculusRenderTextureGLID,
-					   GL_TEXTURE_2D,
-					   0, 0, 0, 0,
-					   bufferSize.w, bufferSize.h, 1);
+		GL_TEXTURE_2D,
+		0, 0, 0, 0,
+		oculusRenderTextureGLID,
+		GL_TEXTURE_2D,
+		0, 0, 0, 0,
+		bufferSize.w, bufferSize.h, 1);
 
 	//Get the rendering layer
 	layers = &layer.Header;
@@ -514,12 +514,12 @@ void OgreOculusRender::renderAndSubmitFrame()
 	{
 		//Put the mirrored view available for Ogre if asked for
 		if (mirrorHMDView) glCopyImageSubData(oculusMirrorTextureGLID,
-											  GL_TEXTURE_2D,
-											  0, 0, 0, 0,
-											  ogreMirrorTextureGLID,
-											  GL_TEXTURE_2D,
-											  0, 0, 0, 0,
-											  hmdSize.w, hmdSize.h, 1);
+			GL_TEXTURE_2D,
+			0, 0, 0, 0,
+			ogreMirrorTextureGLID,
+			GL_TEXTURE_2D,
+			0, 0, 0, 0,
+			hmdSize.w, hmdSize.h, 1);
 
 		//Update the window
 		debugViewport->update();
@@ -614,7 +614,7 @@ void AnnOculusTouchController::rumbleStart(float factor)
 	if (side == leftHandController) myType = ovrControllerType_LTouch;
 	else if (side == rightHandController) myType = ovrControllerType_RTouch;
 
-	ovr_SetControllerVibration(currentSession, myType, factor / 2, factor);
+	ovr_SetControllerVibration(currentSession, myType, 0, factor);
 }
 
 void AnnOculusTouchController::rumbleStop()
