@@ -94,6 +94,21 @@ private:
 	double now, last, delay;
 };
 
+void putGizmoOnHands()
+{
+	static bool done[2] = { false, false };
+	enum sideNames : size_t { left = 0x0, right = 0x1 };
+
+	for (auto side : { left, right })
+		if (!done[side]) if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[side])
+		{
+			controller->attachModel(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
+			done[side] = true;
+		}
+}
+
+std::function<void()> debugHook;
+
 AnnMain()
 {
 	OgreVRRender::setAntiAliasingLevel(8);
@@ -129,7 +144,14 @@ AnnMain()
 	auto someListener = make_shared<SomeEventListener>();
 	AnnGetEventManager()->addListener(someListener);
 
-	AnnGetEngine()->startGameplayLoop();
+	//AnnGetEngine()->startGameplayLoop();
+
+	debugHook = []() {putGizmoOnHands(); };
+
+	do
+	{
+		debugHook();
+	} while (AnnGetEngine()->refresh());
 
 	//Cleanup of the "don't do it" listener
 	AnnGetEventManager()->removeListener(someListener);

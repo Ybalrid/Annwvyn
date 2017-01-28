@@ -79,24 +79,24 @@ void OgreOpenVRRender::initVrHmd()
 	if (hmdError != vr::VRInitError_None) //Check for errors
 		switch (hmdError)
 		{
-			default:
-				displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
-										 L"Non described error when initializing the OpenVR Render object");
-				throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Unknown error while initializing OpenVR");
+		default:
+			displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
+				L"Non described error when initializing the OpenVR Render object");
+			throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Unknown error while initializing OpenVR");
 
-			case vr::VRInitError_Init_HmdNotFound:
-			case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
-				displayWin32ErrorMessage(L"Error: cannot find HMD",
-										 L"OpenVR cannot find HMD.\n"
-										 L"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
-				throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CANTHMD) + "OpenVR can't find an HMD");
+		case vr::VRInitError_Init_HmdNotFound:
+		case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
+			displayWin32ErrorMessage(L"Error: cannot find HMD",
+				L"OpenVR cannot find HMD.\n"
+				L"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
+			throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CANTHMD) + "OpenVR can't find an HMD");
 		}
 
 	//Check if VRCompositor is present
 	if (!vr::VRCompositor())
 	{
 		displayWin32ErrorMessage(L"Error: failed to init OpenVR VRCompositor",
-								 L"Failed to initialize the VR Compositor");
+			L"Failed to initialize the VR Compositor");
 		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Failed to init the OpenVR VRCompositor");
 	}
 
@@ -300,19 +300,20 @@ void OgreOpenVRRender::processVREvents()
 	while (vrSystem->PollNextEvent(&event, sizeof event)) switch (event.eventType)
 	{
 		//Handle quiting the app from Steam
-		case vr::VREvent_DriverRequestedQuit:
-		case vr::VREvent_Quit:
-			shouldQuitState = true;
-			break;
+	case vr::VREvent_DriverRequestedQuit:
+	case vr::VREvent_Quit:
+		shouldQuitState = true;
+		break;
 
 		//Handle user IPD adjustment
-		case vr::VREvent_IpdChanged:
-			handleIPDChange();
-			break;
-		default: break;
+	case vr::VREvent_IpdChanged:
+		handleIPDChange();
+		break;
+	default: break;
 	}
 }
 
+//TODO completely remove this boolean
 constexpr bool DEBUG(false);
 
 void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side)
@@ -391,8 +392,8 @@ void OgreOpenVRRender::processTrackedDevices()
 {
 	//Iterate through the possible trackedDeviceIndexes
 	for (auto trackedDevice = vr::k_unTrackedDeviceIndex_Hmd + 1;
-		 trackedDevice < vr::k_unMaxTrackedDeviceCount;
-		 trackedDevice++)
+		trackedDevice < vr::k_unMaxTrackedDeviceCount;
+		trackedDevice++)
 	{
 		//If the device is not connected, pass.
 		//If the device is not recognized as a controller, pass
@@ -407,17 +408,17 @@ void OgreOpenVRRender::processTrackedDevices()
 		Annwvyn::AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
-			case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
-				side = Annwvyn::AnnHandController::leftHandController;
-				break;
+		case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
+			side = Annwvyn::AnnHandController::leftHandController;
+			break;
 
-			case vr::ETrackedControllerRole::TrackedControllerRole_RightHand:
-				side = Annwvyn::AnnHandController::rightHandController;
-				break;
+		case vr::ETrackedControllerRole::TrackedControllerRole_RightHand:
+			side = Annwvyn::AnnHandController::rightHandController;
+			break;
 
-			case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:
-			default:
-				continue;
+		case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:
+		default:
+			continue;
 		}
 
 		processController(trackedDevice, side);
