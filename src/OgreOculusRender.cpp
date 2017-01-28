@@ -528,7 +528,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 }
 
 //TODO get rid of this boolean
-bool DEBUG(true);
+constexpr bool DEBUG(false);
 
 void OgreOculusRender::initializeHandObjects(const oorEyeType side)
 {

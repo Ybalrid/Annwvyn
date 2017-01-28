@@ -182,7 +182,7 @@ Ogre::Euler AnnPlayer::getOrientation() const
 	return playerBody->Orientation;
 }
 
-void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle) const
+void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 {
 	if (mode == STANDING)
 		playerBody->Orientation.yaw(angle);
@@ -203,10 +203,12 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle) const
 		AnnQuaternion rotation(angle, AnnVect3::UNIT_Y);
 		displacement = rotation*displacement;
 		playerBody->RoomBase += displacement;
+
+		roomTranslateQuatReference = AnnQuaternion(rotation * roomTranslateQuatReference);
 	}
 }
 
-void AnnPlayer::applyMouseRelativeRotation(int relValue) const
+void AnnPlayer::applyMouseRelativeRotation(int relValue)
 {
 	relValue *= mouseSensitivity;
 	applyRelativeBodyYaw(Ogre::Radian(-float(relValue) * getTurnSpeed() * updateTime));
@@ -237,7 +239,7 @@ AnnVect3 AnnPlayer::getAnalogTranslation() const
 	return translate;
 }
 
-void AnnPlayer::applyAnalogYaw() const
+void AnnPlayer::applyAnalogYaw()
 {
 	//7 is the value that was more or less feeling good for me.
 	float  value = -7 * analogRotate * getTurnSpeed() * updateTime;
@@ -283,39 +285,53 @@ void AnnPlayer::teleport(AnnVect3 position)
 
 void AnnPlayer::engineUpdate(float deltaTime)
 {
+	static AnnVect3 roomTranslation = AnnVect3::ZERO;
 	updateTime = deltaTime;
 	switch (mode)
 	{
-		case STANDING:
-			if (ignorePhysics) return;
+	case STANDING:
+		if (ignorePhysics) return;
 
-			if (getBody())
-			{
-				applyAnalogYaw();
-				getBody()->activate();
-			}
-
-			//Tell the actuator to "act" on the player
-			actuator->actuate(deltaTime);
-
-			//get back position data from physics engine
-			if (getBody())
-			{
-				setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) -
-							AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation()) *
-							AnnVect3(0, getEyesHeight() / 2, 0));
-			}
-			break;
-
-		case ROOMSCALE:
+		if (getBody())
+		{
 			applyAnalogYaw();
+			getBody()->activate();
+		}
 
-			playerBody->RoomBase += updateTime*getWalkSpeed() *
-				(playerBody->Orientation.toQuaternion() *
-				(getTranslation() + getAnalogTranslation()));
-			break;
+		//Tell the actuator to "act" on the player
+		actuator->actuate(deltaTime);
 
-		default:break;
+		//get back position data from physics engine
+		if (getBody())
+		{
+			setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) -
+				AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation()) *
+				AnnVect3(0, getEyesHeight() / 2, 0));
+		}
+		break;
+
+	case ROOMSCALE:
+		applyAnalogYaw();
+
+		if (needNewRoomTranslateReference)
+			roomTranslateQuatReference = AnnQuaternion{ AnnGetVRRenderer()->trackedHeadPose.orientation.getYaw(), AnnVect3::UNIT_Y };
+
+		roomTranslation = updateTime*getWalkSpeed() *
+			//(playerBody->Orientation.toQuaternion() *
+			(roomTranslateQuatReference *
+			(getTranslation() + getAnalogTranslation()));
+
+		if (roomTranslation == AnnVect3::ZERO)
+			needNewRoomTranslateReference = true; //New base will be calculated at next frame
+		else
+		{
+			needNewRoomTranslateReference = false;
+			playerBody->RoomBase += roomTranslation;
+		}
+
+		break;
+
+	default:break;
 	}
 }
 
@@ -354,11 +370,11 @@ void AnnPlayer::regroundOnPhysicsBody(float length, AnnVect3 preoffset)
 	AnnVect3 rayEndPoint{ rayOrigin + length * AnnVect3::NEGATIVE_UNIT_Y };
 
 	btCollisionWorld::ClosestRayResultCallback rayGroundingCallback(rayOrigin.getBtVector(),
-																	rayEndPoint.getBtVector());
+		rayEndPoint.getBtVector());
 
 	AnnGetPhysicsEngine()->getWorld()->rayTest(rayOrigin.getBtVector(),
-											   rayEndPoint.getBtVector(),
-											   rayGroundingCallback);
+		rayEndPoint.getBtVector(),
+		rayGroundingCallback);
 
 	if (rayGroundingCallback.hasHit())
 		reground(rayGroundingCallback.m_hitPointWorld);

@@ -135,11 +135,11 @@ namespace Annwvyn
 
 		///Apply a relative yaw transform to the player. Useful to bind it to the mouse X axis for FPS-like gameplay.
 		/// \param angle Radian angle of the transformation.
-		void applyRelativeBodyYaw(Ogre::Radian angle) const;
+		void applyRelativeBodyYaw(Ogre::Radian angle);
 
 		///Apply the rotation from the mouse relative value
 		/// \param relValue Relative value in pixels of the mouse linear movement
-		void applyMouseRelativeRotation(int relValue) const;
+		void applyMouseRelativeRotation(int relValue);
 
 		///Return true if physics has been initialized once
 		bool hasPhysics() const;
@@ -213,7 +213,7 @@ namespace Annwvyn
 		bool contactWithGround;
 
 		///Apply yaw from analog value
-		void applyAnalogYaw() const;
+		void applyAnalogYaw();
 
 		///time length of the frame
 		double updateTime;
@@ -225,6 +225,9 @@ namespace Annwvyn
 		AnnPlayerActuator* actuator;
 
 		Ogre::SceneNode* RoomReferenceNode;
+
+		bool needNewRoomTranslateReference;
+		AnnQuaternion roomTranslateQuatReference;
 
 	public:
 
