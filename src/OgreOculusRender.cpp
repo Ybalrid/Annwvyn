@@ -90,7 +90,7 @@ bool OgreOculusRender::isVisibleInHmd()
 void OgreOculusRender::cycleDebugHud()
 {
 	//Loop through the perf HUD mode available
-	perfHudMode = (perfHudMode + 1) % (ovrPerfHud_Count);
+	perfHudMode = (perfHudMode + 1) % ovrPerfHud_Count;
 
 	//Set the current perf hud mode
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
