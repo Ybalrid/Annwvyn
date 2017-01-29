@@ -458,7 +458,7 @@ void Annwvyn::AnnOpenVRMotionController::rumbleStart(float value)
 
 void Annwvyn::AnnOpenVRMotionController::rumbleStop()
 {
-	vrSystem->TriggerHapticPulse(deviceIndex, vr::EVRButtonId::k_EButton_SteamVR_Touchpad - vr::k_EButton_Axis0, 0x0000);
+	//NB : The "rumbeling" of OpenVR controllers is pulse based. Meaning that telling it to "not move" doesn't make much sense.
 }
 
 Annwvyn::AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem, vr::TrackedDeviceIndex_t OpenVRDeviceIndex, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) : AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
