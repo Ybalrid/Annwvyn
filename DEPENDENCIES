@@ -2,10 +2,10 @@ For building the engine, you need to link :
 
 Ogre 1.9.x 
 Bullet >= 2.85
-OpenAL lattest available should work
+OpenAL-soft lattest available should work
 libsndfile lattest available should work
-libOVR 1.9 from the Oculus developer center
-OpenVR 1.0.3 from https://github.com/ValveSoftware/openvr
+libOVR 1.10 from the Oculus developer center
+OpenVR 1.0.5 from https://github.com/ValveSoftware/openvr
 ChaiScript 5.8.5 headers
 
 You should download the SDK from http://annwvyn.org/
