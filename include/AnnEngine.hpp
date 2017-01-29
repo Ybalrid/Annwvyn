@@ -211,12 +211,17 @@ namespace Annwvyn
 		///Remove a subsystem form the engine. Only works if the system has been user defined.
 		void removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem);
 
+		///Permit
+		void requestQuit();
+
 	private:
 
 		static WORD consoleGreen;
 		static WORD consoleYellow;
 		static WORD consoleWhite;
 		static bool consoleReady;
+
+		bool applicationQuitRequested;
 
 		std::shared_ptr<AnnStringUility> stringUtility;
 

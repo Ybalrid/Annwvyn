@@ -61,7 +61,8 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	player(nullptr),
 	SceneManager(nullptr),
 	vrRendererPovGameplayPlacement(nullptr),
-	updateTime(-1)
+	updateTime(-1),
+	applicationQuitRequested(false)
 {
 	if (singleton)
 	{
@@ -84,7 +85,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	std::cerr << "HMD selection from command line routine returned : "
 		<< hmdCommand << std::endl;
 
-		//Select the correct OgreVRRender class to use :
+	//Select the correct OgreVRRender class to use :
 	if (hmdCommand == "OgreOculusRender"
 		|| hmdCommand == "OgreDefaultRender")
 		renderer = std::make_shared<OgreOculusRender>(title);
@@ -113,7 +114,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		);
 		//exit(ANN_ERR_CANTHMD)
 		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CANTHMD)
-								 + "Can't find an HMD to use");
+			+ "Can't find an HMD to use");
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");
@@ -144,17 +145,17 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	//Element on this list will be updated in order by the engine each frame
 	SubSystemList.push_back(levelManager =
-							std::make_shared<AnnLevelManager>());
+		std::make_shared<AnnLevelManager>());
 	SubSystemList.push_back(gameObjectManager =
-							std::make_shared<AnnGameObjectManager>());
+		std::make_shared<AnnGameObjectManager>());
 
-						//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
+	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
 
-						/*The wanted order is
-						- physics is ticked (stuff move)
-						- event happens (player input, timers...)
-						- audio is synced (sounds comes form where they should)
-						- then the game can redraw*/
+	/*The wanted order is
+	- physics is ticked (stuff move)
+	- event happens (player input, timers...)
+	- audio is synced (sounds comes form where they should)
+	- then the game can redraw*/
 
 	SubSystemList.push_back
 	(physicsEngine = std::make_shared<AnnPhysicsEngine>(
@@ -188,13 +189,13 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	renderer->initClientHmdRendering();
 	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();
 	vrRendererPovGameplayPlacement->setPosition(player->getPosition() +
-												AnnVect3(0.0f,
-												player->getEyesHeight(),
-												0.0f));
+		AnnVect3(0.0f,
+			player->getEyesHeight(),
+			0.0f));
 
-//This subsystem need the vrRendererPovGameplayPlacement object to be
-//initialized. And the Resource manager because it wants a font file and an
-//image background
+	//This subsystem need the vrRendererPovGameplayPlacement object to be
+	//initialized. And the Resource manager because it wants a font file and an
+	//image background
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
 
 	consoleGreen = FOREGROUND_GREEN |
@@ -315,6 +316,10 @@ bool AnnEngine::requestStop() const
 	//If the user quit the App from the Oculus Home
 	if (renderer->shouldQuit())
 		return true;
+
+	if (applicationQuitRequested)
+		return true;
+
 	return false;
 }
 
@@ -456,7 +461,7 @@ bool AnnEngine::openConsole()
 
 	SetConsoleTitle(L"Annwvyn Debug Console");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-							consoleWhite);
+		consoleWhite);
 
 #endif
 	return state;
@@ -501,4 +506,9 @@ void AnnEngine::setProcessPriorityHigh()
 #ifdef _WIN32
 	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
 #endif
+}
+
+void AnnEngine::requestQuit()
+{
+	applicationQuitRequested = true;
 }

@@ -97,15 +97,37 @@ private:
 void putGizmoOnHands()
 {
 	static bool done[2] = { false, false };
-	enum sideNames : size_t { left = 0x0, right = 0x1 };
+	enum sideNames : size_t
+	{
+		left = 0x0,
+		right = 0x1
+	};
 
 	for (auto side : { left, right })
-		if (!done[side]) if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[side])
-		{
-			controller->attachModel(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
-			done[side] = true;
-		}
+		if (!done[side])
+			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[side])
+			{
+				controller->attachModel(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
+				done[side] = true;
+			}
 }
+
+class QuitOnButtonListener : LISTENER
+{
+public:
+	QuitOnButtonListener() : constructListener()
+	{
+	}
+
+	///Quit app when button zero of left controller is pressed
+	void HandControllerEvent(AnnHandControllerEvent e) override
+	{
+		auto controller = e.getController();
+		if (controller->getSide() == AnnHandController::leftHandController)
+			if (controller->hasBeenPressed(0))
+				AnnGetEngine()->requestQuit();
+	}
+};
 
 std::function<void()> debugHook;
 
@@ -122,6 +144,8 @@ AnnMain()
 		AnnGetEngine()->initPlayerStandingPhysics();
 
 	AnnGetEventManager()->useDefaultEventListener();
+	auto quitOnButtonListener = make_shared<QuitOnButtonListener>();
+	AnnGetEventManager()->addListener(quitOnButtonListener);
 
 	//load resources
 	AnnGetResourceManager()->addFileLocation("media/environment");
@@ -146,7 +170,10 @@ AnnMain()
 
 	//AnnGetEngine()->startGameplayLoop();
 
-	debugHook = []() {putGizmoOnHands(); };
+	debugHook = []()
+	{
+		putGizmoOnHands();
+	};
 
 	do
 	{
