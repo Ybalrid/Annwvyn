@@ -173,6 +173,7 @@ namespace Annwvyn
 		///Set the player mode between standing and roomscale;
 		void setMode(AnnPlayerMode playerMode);
 
+		///Register the room reference node
 		void setRoomRefNode(Ogre::SceneNode* node);
 
 		///Put the reference point for the roomscale VR at Y altitude
@@ -224,9 +225,13 @@ namespace Annwvyn
 		///PlayerActuator to use
 		AnnPlayerActuator* actuator;
 
+		///Room reference node
 		Ogre::SceneNode* RoomReferenceNode;
 
+		///If true, will extract the yaw angle from the last head pose, and store it in roomTranslateQuatReference
 		bool needNewRoomTranslateReference;
+
+		///Reference for the translation of the room
 		AnnQuaternion roomTranslateQuatReference;
 
 	public:
