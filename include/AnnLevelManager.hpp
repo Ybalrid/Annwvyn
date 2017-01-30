@@ -8,7 +8,7 @@
 #ifndef ANN_LEVELMANAGER
 #define ANN_LEVELMANAGER
 
-//#include <Annwvyn.h>
+ //#include <Annwvyn.h>
 #include <vector>
 #include "AnnLevel.hpp"
 #include "tinyxml2.h"
@@ -16,7 +16,7 @@
 
 namespace Annwvyn
 {
-	typedef size_t level_id;
+	using level_id = size_t;
 
 	///Class that take care of switching between different levels dynamically and clearing the memory afterwards
 	class DLL AnnLevelManager : public AnnSubSystem
