@@ -177,9 +177,10 @@ namespace Annwvyn
 	};
 
 	///A joystick event
-	typedef int ButtonId;
-	typedef int StickAxisId;
-	typedef int PovId;
+	using ButtonId = int;
+	using StickAxisId = int;
+	using PovId = int;
+
 #define InvalidStickAxisId -1
 #define INVALID 42.0f
 
@@ -319,7 +320,7 @@ namespace Annwvyn
 		AnnHandController* sender;
 	};
 
-	typedef int timerID;
+	using  timerID = int;
 
 	///A timer timeout event
 	class DLL AnnTimeEvent : public AnnEvent
@@ -468,11 +469,11 @@ namespace Annwvyn
 
 		///Set all the key-codes for the controls
 		void setKeys(KeyCode::code fw,
-					 KeyCode::code bw,
-					 KeyCode::code sl,
-					 KeyCode::code sr,
-					 KeyCode::code jmp,
-					 KeyCode::code rn);
+			KeyCode::code bw,
+			KeyCode::code sl,
+			KeyCode::code sr,
+			KeyCode::code jmp,
+			KeyCode::code rn);
 		enum turnStickMode { NORMAL, WHEEL };
 		turnStickMode turnMode;
 
@@ -507,7 +508,7 @@ namespace Annwvyn
 
 		float lastAngle;
 
-		///Hash of controller type strings 
+		///Hash of controller type strings
 		size_t OpenVRController, OculusTouchController;
 	};
 

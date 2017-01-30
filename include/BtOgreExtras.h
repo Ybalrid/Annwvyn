@@ -70,7 +70,7 @@ namespace BtOgre
 	class DLL DynamicRenderable : public Ogre::SimpleRenderable
 	{
 	public:
-	  /// Constructor
+		/// Constructor
 		DynamicRenderable();
 		/// Virtual destructor
 		virtual ~DynamicRenderable();
@@ -84,7 +84,7 @@ namespace BtOgre
 		 @param useIndices Specifies whether to use indices to determine the
 				vertices to use as input. */
 		void initialize(Ogre::RenderOperation::OperationType operationType,
-						bool useIndices);
+			bool useIndices);
 
 		/// Implementation of Ogre::SimpleRenderable
 		virtual Ogre::Real getBoundingRadius(void) const;
@@ -92,7 +92,7 @@ namespace BtOgre
 		virtual Ogre::Real getSquaredViewDepth(const Ogre::Camera* cam) const;
 
 	protected:
-	  /// Maximum capacity of the currently allocated vertex buffer.
+		/// Maximum capacity of the currently allocated vertex buffer.
 		size_t mVertexBufferCapacity;
 		/// Maximum capacity of the currently allocated index buffer.
 		size_t mIndexBufferCapacity;
@@ -138,7 +138,7 @@ namespace BtOgre
 		typedef Ogre::RenderOperation::OperationType OperationType;
 
 	public:
-	  /// Constructor - see setOperationType() for description of argument.
+		/// Constructor - see setOperationType() for description of argument.
 		DynamicLines(OperationType opType = Ogre::RenderOperation::OT_LINE_STRIP);
 		virtual ~DynamicLines();
 
@@ -176,7 +176,7 @@ namespace BtOgre
 		OperationType getOperationType() const;
 
 	protected:
-	  /// Implementation DynamicRenderable, creates a simple vertex-only decl
+		/// Implementation DynamicRenderable, creates a simple vertex-only decl
 		virtual void createVertexDeclaration();
 		/// Implementation DynamicRenderable, pushes point list out to hardware memory
 		virtual void fillHardwareBuffers();

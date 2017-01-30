@@ -26,17 +26,17 @@ namespace Annwvyn
 	class AnnTriggerObject;
 
 	///Harmonize names :
-	typedef Ogre::Vector2 AnnVect2;
-	typedef Ogre::Matrix3 AnnMatrix3;
-	typedef Ogre::Matrix4 AnnMatrix4;
+	using AnnVect2 = Ogre::Vector2;
+	using AnnMatrix3 = Ogre::Matrix3;
+	using AnnMatrix4 = Ogre::Matrix4;
 
 	//Remove some ugliness :
-	typedef std::list<std::shared_ptr<AnnTriggerObject> > AnnTriggerObjectList;
-	typedef std::list<std::shared_ptr<AnnGameObject> > AnnGameObjectList;
-	typedef std::list<std::shared_ptr<AnnLightObject> > AnnLightList;
+	using AnnTriggerObjectList = std::list<std::shared_ptr<AnnTriggerObject> >;
+	using AnnGameObjectList = std::list<std::shared_ptr<AnnGameObject> >;
+	using AnnLightList = std::list < std::shared_ptr<AnnLightObject>>;
 
 	///Because sometimes, after one byte you're full...
-	typedef uint8_t byte;
+	using byte = uint8_t;
 
 	///Name of the objects physical shapes
 	///Theses shapes are available to create objects's rigid body for the physics
