@@ -527,9 +527,6 @@ void OgreOculusRender::renderAndSubmitFrame()
 	}
 }
 
-//TODO get rid of this boolean
-constexpr bool DEBUG(false);
-
 void OgreOculusRender::initializeHandObjects(const oorEyeType side)
 {
 	//If it's the first time we have access data on this hand controller, instantiate the object
@@ -537,7 +534,6 @@ void OgreOculusRender::initializeHandObjects(const oorEyeType side)
 	{
 		handControllers[side] = std::make_shared<AnnOculusTouchController>
 			(Oculus->getSession(), smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
-		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 	}
 }
 
