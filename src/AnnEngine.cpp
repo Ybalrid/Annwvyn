@@ -69,6 +69,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		log("Can't create 2 instances of the engine!");
 		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_MEMORY) + "Can't create 2 instances of AnnEngine");
 	}
+	singleton = this;
 
 	stringUtility = std::make_shared<AnnStringUility>();
 
@@ -118,21 +119,6 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");
-
-	//Display start banner
-	log("============================================================", false);
-	log("| Annwvyn Game Engine - Step into the Other World          |", false);
-	log("| Free/Libre C++ Game Engine designed for Virtual Reality  |", false);
-	log("|                                                          |", false);
-	log("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2017   |", false);
-	log("| Distributed under the terms of the MIT license agreement |", false);
-	log("|                                                          |", false);
-	log("| Visit http://annwvyn.org/ for more informations!         |", false);
-	log("| Version : " + getAnnwvynVersion(61 - 13 - 1) + "|", false);
-	log("============================================================", false);
-
-	srand(time(nullptr));
-	singleton = this;
 
 	player = std::make_shared< AnnPlayer>();
 	renderer->initVrHmd();
@@ -209,6 +195,17 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		FOREGROUND_INTENSITY;
 
 	consoleReady = true;
+	//Display start banner
+	log("============================================================", false);
+	log("| Annwvyn Game Engine - Step into the Other World          |", false);
+	log("| Free/Libre C++ Game Engine designed for Virtual Reality  |", false);
+	log("|                                                          |", false);
+	log("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2017   |", false);
+	log("| Distributed under the terms of the MIT license agreement |", false);
+	log("|                                                          |", false);
+	log("| Visit http://annwvyn.org/ for more informations!         |", false);
+	log("| Version : " + getAnnwvynVersion(61 - 13 - 1) + "|", false);
+	log("============================================================", false);
 }
 
 AnnEngine::~AnnEngine()
