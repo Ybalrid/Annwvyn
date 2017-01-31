@@ -31,7 +31,7 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	AnnGetLevelManager()->addLevel(std::make_shared<MyLevel>());
 	AnnGetLevelManager()->jumpToFirstLevel();
 
-	//The game is rendering here now:
+	//Use the default event listener. It's a commodity for development, you'll probably want to write your own.
 	AnnGetEventManager()->useDefaultEventListener();
 
 	//The game runs here
