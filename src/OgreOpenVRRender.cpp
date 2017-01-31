@@ -313,9 +313,6 @@ void OgreOpenVRRender::processVREvents()
 	}
 }
 
-//TODO completely remove this boolean
-constexpr bool DEBUG(false);
-
 void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side)
 {
 	//Extract tracking information from the device
@@ -342,8 +339,6 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	{
 		handControllers[side] = std::make_shared<Annwvyn::AnnOpenVRMotionController>
 			(vrSystem, controllerDeviceIndex, smgr->getRootSceneNode()->createChildSceneNode(), size_t(controllerDeviceIndex), side);
-
-		if (DEBUG) handControllers[side]->attachModel(smgr->createEntity("gizmo.mesh"));
 	}
 
 	auto handController = handControllers[side];
