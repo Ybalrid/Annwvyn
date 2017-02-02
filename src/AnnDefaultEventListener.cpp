@@ -15,7 +15,7 @@ straffright{ KeyCode::d },
 jump{ KeyCode::space },
 run{ KeyCode::lshift },
 recenter{ KeyCode::f12 },
-deadzone{ 1 / 10 },
+deadzone{ 1.0f / 10.0f },
 wheelStickSensitivity{ 6.0f / 8.0f },
 maxWheelAngle{ 45 },
 minWheelAngle{ 0.5f },
@@ -38,11 +38,11 @@ OculusTouchController{ AnnGetStringUtility()->hash("Oculus Touch") }
 }
 
 void AnnDefaultEventListener::setKeys(KeyCode::code fw,
-									  KeyCode::code bw,
-									  KeyCode::code sl,
-									  KeyCode::code sr,
-									  KeyCode::code jmp,
-									  KeyCode::code rn)
+	KeyCode::code bw,
+	KeyCode::code sl,
+	KeyCode::code sr,
+	KeyCode::code jmp,
+	KeyCode::code rn)
 {
 	forward = fw;
 	backward = bw;
@@ -79,24 +79,24 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	}
 	if (e.isPressed()) switch (e.getKey())
 	{
-		case KeyCode::grave:
-			AnnGetOnScreenConsole()->toggle();
-			break;
-		case KeyCode::tab:
-			AnnGetVRRenderer()->cycleDebugHud();
-			break;
-		case KeyCode::f1:
-			AnnGetVRRenderer()->showDebug(OgreVRRender::RAW_BUFFER);
-			break;
-		case KeyCode::f2:
-			AnnGetVRRenderer()->showDebug(OgreVRRender::HMD_MIRROR);
-			break;
-		case KeyCode::f3:
-			AnnGetVRRenderer()->showDebug(OgreVRRender::MONOSCOPIC);
-			break;
-		case KeyCode::f5:
-			AnnGetPhysicsEngine()->toggleDebugPhysics();
-		default: break;
+	case KeyCode::grave:
+		AnnGetOnScreenConsole()->toggle();
+		break;
+	case KeyCode::tab:
+		AnnGetVRRenderer()->cycleDebugHud();
+		break;
+	case KeyCode::f1:
+		AnnGetVRRenderer()->showDebug(OgreVRRender::RAW_BUFFER);
+		break;
+	case KeyCode::f2:
+		AnnGetVRRenderer()->showDebug(OgreVRRender::HMD_MIRROR);
+		break;
+	case KeyCode::f3:
+		AnnGetVRRenderer()->showDebug(OgreVRRender::MONOSCOPIC);
+		break;
+	case KeyCode::f5:
+		AnnGetPhysicsEngine()->toggleDebugPhysics();
+	default: break;
 	}
 }
 
@@ -145,49 +145,49 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 	AnnVect2 analog{ controller->getAxis(0).getValue(), controller->getAxis(1).getValue() };
 	switch (controller->getSide())
 	{
-		default:break;
-		case AnnHandController::leftHandController:
+	default:break;
+	case AnnHandController::leftHandController:
+	{
+		player->analogStraff = controller->getAxis(0).getValue();
+		player->analogWalk = -controller->getAxis(1).getValue();
+
+		//TODO use an hashing system to prevent string compare here
+		if (controller->hasBeenPressed(2))
 		{
-			player->analogStraff = controller->getAxis(0).getValue();
-			player->analogWalk = -controller->getAxis(1).getValue();
-
-			//TODO use an hashing system to prevent string compare here
-			if (controller->hasBeenPressed(2))
-			{
-				if (controller->getType() == "Oculus Touch")
-					AnnGetOnScreenConsole()->toggle();
-			}
-			break;
+			if (controller->getType() == "Oculus Touch")
+				AnnGetOnScreenConsole()->toggle();
 		}
-		case AnnHandController::rightHandController:
+		break;
+	}
+	case AnnHandController::rightHandController:
+	{
+		if (controller->hasBeenPressed(3))
+			AnnGetVRRenderer()->recenter();
+		switch (turnMode)
 		{
-			if (controller->hasBeenPressed(3))
-				AnnGetVRRenderer()->recenter();
-			switch (turnMode)
-			{
-				default: case WHEEL:
-					//If we take the stick values as coordinate in the trigonometric plan, this will give the angle
-					stickCurrentAngleDegree = AnnRadian(std::atan2(analog.y, analog.x)).valueDegrees();
-					//Change range from [-180; +180] to [0; 360]
-					reclampDegreeToPositiveRange(stickCurrentAngleDegree);
+		default: case WHEEL:
+			//If we take the stick values as coordinate in the trigonometric plan, this will give the angle
+			stickCurrentAngleDegree = AnnRadian(std::atan2(analog.y, analog.x)).valueDegrees();
+			//Change range from [-180; +180] to [0; 360]
+			reclampDegreeToPositiveRange(stickCurrentAngleDegree);
 
-					//Detect the relative angle between 2 frames
-					computedWheelValue = lastAngle - stickCurrentAngleDegree;
-					//If value is too high it's either that you completed a full turn or there's a glitch in the input data, ignore.
-					if (stickCurrentAngleDegree == 0 ||
-						std::abs(computedWheelValue) > maxWheelAngle ||
-						std::abs(computedWheelValue) < minWheelAngle ||
-						analog.squaredLength() < rightStickThreashold)
-						computedWheelValue = 0;
+			//Detect the relative angle between 2 frames
+			computedWheelValue = lastAngle - stickCurrentAngleDegree;
+			//If value is too high it's either that you completed a full turn or there's a glitch in the input data, ignore.
+			if (stickCurrentAngleDegree == 0 ||
+				std::abs(computedWheelValue) > maxWheelAngle ||
+				std::abs(computedWheelValue) < minWheelAngle ||
+				analog.squaredLength() < rightStickThreashold)
+				computedWheelValue = 0;
 
-					player->analogRotate = wheelStickSensitivity * computedWheelValue;
-					lastAngle = stickCurrentAngleDegree;
-					break;
-
-				case NORMAL:
-					player->analogRotate = controller->getAxis(0).getValue();
-			}
+			player->analogRotate = wheelStickSensitivity * computedWheelValue;
+			lastAngle = stickCurrentAngleDegree;
 			break;
+
+		case NORMAL:
+			player->analogRotate = controller->getAxis(0).getValue();
 		}
+		break;
+	}
 	}
 }
