@@ -61,6 +61,9 @@ void OgreNoVRRender::renderAndSubmitFrame()
 	root->_fireFrameRenderingQueued();
 	noVRViewport->update();
 	window->update();
+
+	//Sleep for one ms
+	std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
 
 void OgreNoVRRender::recenter()
