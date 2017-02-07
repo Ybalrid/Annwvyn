@@ -216,7 +216,10 @@ void OgreVRRender::updateTracking()
 void OgreVRRender::initPipeline()
 {
 	getOgreConfig();
-	createWindow();
+	if (rendererName.find("NoVR") != std::string::npos)
+		createWindow(1280, 720, true);
+	else
+		createWindow();
 	initScene();
 	initCameras();
 	initRttRendering();
@@ -227,7 +230,7 @@ GLuint OgreVRRender::createRenderTexture(float w, float h)
 {
 	GLuint glid;
 	rttTexture = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-																   Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
+		Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
 	rttTexture->getCustomAttribute("GLID", &glid);
 	rttEyes = rttTexture->getBuffer()->getRenderTarget();
 	return glid;
@@ -263,7 +266,7 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 
 	root->initialise(false);
 	window = root->createRenderWindow(rendererName + " : " + name + " - monitor output",
-									  w, h, false, &options);
+		w, h, false, &options);
 }
 
 std::string OgreVRRender::getName() const
