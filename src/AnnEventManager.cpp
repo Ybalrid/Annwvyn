@@ -315,7 +315,7 @@ void AnnEventManager::processInput()
 				listener->StickEvent(e);
 	}
 
-	if (AnnGetVRRenderer()->getRecognizedControllerCount() > 0)
+	if (AnnGetVRRenderer()->handControllersAvailable())
 	{
 		for (auto handController : AnnGetVRRenderer()->getHandControllerArray())
 		{

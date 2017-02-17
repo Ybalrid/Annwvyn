@@ -273,3 +273,8 @@ std::string OgreVRRender::getName() const
 {
 	return rendererName;
 }
+
+bool OgreVRRender::handControllersAvailable() const
+{
+	return handControllers[left].get() && handControllers[right].get();
+}
