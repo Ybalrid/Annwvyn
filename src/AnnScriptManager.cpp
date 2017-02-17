@@ -5,6 +5,7 @@
 #include "AnnGameObjectManager.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
+#include <stdbool.h>
 
 using namespace Annwvyn;
 
@@ -329,6 +330,8 @@ void AnnScriptManager::registerApi()
 
 	chai.add(fun([]() {AnnEngine::setProcessPriorityHigh(); }), "AnnSetProcessPriorityHigh");
 	chai.add(fun([]() {AnnEngine::setProcessPriorityNormal(); }), "AnnSetProcessPriorityNormal");
+
+	chai.add(fun([]() {AnnGetEngine()->requestQuit(); }), "AnnQuit");
 }
 
 void AnnScriptManager::tryAndGetEventHooks()
@@ -517,16 +520,16 @@ AnnBehaviorScript::AnnBehaviorScript() :
 }
 
 AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
-									 std::function<void(chaiscript::Boxed_Value&)> updateHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
-									 chaiscript::Boxed_Value chaisriptInstance) : constructListener(),
+	std::function<void(chaiscript::Boxed_Value&)> updateHook,
+	std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
+	std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
+	std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+	std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
+	std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
+	std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
+	std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
+	std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
+	chaiscript::Boxed_Value chaisriptInstance) : constructListener(),
 	valid{ true },
 	name{ scriptName },
 	ScriptObjectInstance{ chaisriptInstance },

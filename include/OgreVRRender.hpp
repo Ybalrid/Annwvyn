@@ -153,8 +153,12 @@ public:
 	static size_t getHanControllerArraySize();
 
 	///Return the number of non nullptr handControllers. Hand controllers are dynamically allocated by the VRRenderer if presents.
-	size_t getRecognizedControllerCount();
+	DEPRECATED size_t getRecognizedControllerCount();
 
+	///Return true if the hand controllers are available
+	bool handControllersAvailable() const;
+
+	///Called when the IPD needs to be taken into account. Translate the cameras along local X to make them match the position of your eyes
 	virtual void handleIPDChange() = 0;
 
 	///Apply the position/orientation of the pose object to the camera rig
@@ -176,6 +180,7 @@ public:
 	///Create a render buffer with not anti aliasing. return a tuple with a TexturePtr and a GLID. use <code><pre>std::get<></pre></code>
 	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(float w, float h, std::string name = "") const;
 
+	///Create a window. Even if we do VR, the way OGRE is architectured, you need to create a window to initialize the RenderSystem
 	void createWindow(unsigned int w = 1280, unsigned int h = 720, bool vsync = false);
 
 	///Get the name of this renderer
