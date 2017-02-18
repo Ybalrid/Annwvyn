@@ -42,16 +42,19 @@ AnnGameObject::~AnnGameObject()
 	if (state) delete state;
 
 	//Prevent dereferencing null pointer here. Parent can be something other than root scene node now.
-	if (Node->getParent())
-		Node->getParent()->removeChild(Node);
-	std::vector<Ogre::MovableObject*> attachedObject;
-	for (unsigned short i(0); i < Node->numAttachedObjects(); i++)
-		attachedObject.push_back(Node->getAttachedObject(i));
-	Node->detachAllObjects();
-	for (auto object : attachedObject)
-		AnnGetEngine()->getSceneManager()->destroyMovableObject(object);
-	AnnGetEngine()->getSceneManager()->destroySceneNode(Node);
-	Node = nullptr;
+	if (Node)
+	{
+		if (Node->getParent())
+			Node->getParent()->removeChild(Node);
+		std::vector<Ogre::MovableObject*> attachedObject;
+		for (unsigned short i(0); i < Node->numAttachedObjects(); i++)
+			attachedObject.push_back(Node->getAttachedObject(i));
+		Node->detachAllObjects();
+		for (auto object : attachedObject)
+			AnnGetEngine()->getSceneManager()->destroyMovableObject(object);
+		AnnGetEngine()->getSceneManager()->destroySceneNode(Node);
+		Node = nullptr;
+	}
 }
 
 void AnnGameObject::playSound(std::string path, bool loop, float volume) const

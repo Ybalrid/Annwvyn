@@ -3,6 +3,7 @@
 #include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 unsigned long long AnnGameObjectManager::id;
@@ -57,6 +58,9 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> object)
 {
 	AnnDebug() << "Removed object " << object.get();
+
+	if (!object) throw AnnNullGameObjectError();
+
 	Objects.remove(object);
 	identifiedObjects.erase(object->getName());
 }
@@ -66,7 +70,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 	AnnDebug() << "Trying to identify object at address " << static_cast<void*>(node);
 
 	auto result = std::find_if(Objects.begin(), Objects.end(),
-							   [&](std::shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
+		[&](std::shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
 	if (result != Objects.end())
 		return *result;
 

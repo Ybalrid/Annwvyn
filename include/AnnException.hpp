@@ -42,4 +42,11 @@ namespace Annwvyn
 		AnnInvalidControllerSide();
 		const char* what() const throw() override;
 	};
+
+	class DLL AnnNullGameObjectError : public std::runtime_error
+	{
+	public:
+		AnnNullGameObjectError();
+		const char* what() const throw() override;
+	};
 }

@@ -74,3 +74,16 @@ const char* AnnInvalidControllerSide::what() const throw()
 	out << "AnnHandController object initialized without knowing the side. This should not happen.";
 	return out.str().c_str();
 }
+
+AnnNullGameObjectError::AnnNullGameObjectError() : std::runtime_error("Error : Trying to do an operation on a null GameObject")
+{
+	AnnDebug() << AnnNullGameObjectError::what();
+}
+
+const char* AnnNullGameObjectError::what() const throw()
+{
+	ostringstream out;
+	out << runtime_error::what();
+	out << "Check what you're doing with your pointers...";
+	return out.str().c_str();
+}
