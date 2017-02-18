@@ -24,7 +24,7 @@ System requirement
  - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive, or other hardware supported by OpenVR
  - Usable with hand controllers (touch, vive wands...) 
  - 64bit Operating system
- - Oculus Runtime 1.10 (01/01/17) installed from http://oculus.com/setup OR SteamVR installed through Steam http://steampowered.com/
+ - Oculus Runtime 1.11 (02/18/17) installed from http://oculus.com/setup OR SteamVR installed through Steam http://steampowered.com/
  - Microsoft Visual Studio 2015 Community (free to download and use from Microsoft)
  
 Installation
