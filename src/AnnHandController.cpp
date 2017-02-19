@@ -17,13 +17,16 @@ AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode
 	tracked(false),
 	trackedAngularSpeed(AnnVect3::ZERO),
 	trackedLinearSpeed(AnnVect3::ZERO),
-	invalidAxis("INVALID", 0)
+	invalidAxis("INVALID", 0),
+	gestureNotAvailableHash(AnnGetStringUtility()->hash(gestureNotAvailableString))
 {
 	if (side == invalidHandController) throw AnnInvalidControllerSide();
 
 	std::cerr << "HandController ID : " << id << " created";
 	std::cerr << "For side : " << getSideAsString(side);
 	std::cerr << "Of type : " << controllerType;
+
+	capabilites = None;
 }
 
 inline std::string AnnHandController::getSideAsString(AnnHandControllerSide s)
@@ -207,4 +210,19 @@ void AnnHandController::rumbleStart(float factor)
 void AnnHandController::rumbleStop()
 {
 	AnnDebug() << "rumbleStop not specialized on this controller...";
+}
+
+AnnHandController::HandControllerCapabilites_t AnnHandController::getCapabilities() const
+{
+	return capabilites;
+}
+
+std::string AnnHandController::getCurrentGesture()
+{
+	return gestureNotAvailableString;
+}
+
+AnnHandController::AnnHandControllerGestureHash AnnHandController::gestcurrentGesturesHash()
+{
+	return gestureNotAvailableHash;
 }

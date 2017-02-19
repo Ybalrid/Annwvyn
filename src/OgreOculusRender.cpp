@@ -606,25 +606,22 @@ void OgreOculusRender::updateTouchControllers()
 
 void AnnOculusTouchController::rumbleStart(float factor)
 {
-	ovrControllerType myType = {};
-	if (side == leftHandController) myType = ovrControllerType_LTouch;
-	else if (side == rightHandController) myType = ovrControllerType_RTouch;
-
-	ovr_SetControllerVibration(currentSession, myType, 0, factor);
+	ovr_SetControllerVibration(currentSession, myControllerType, 0, factor);
 }
 
 void AnnOculusTouchController::rumbleStop()
 {
-	ovrControllerType myType = {};
-	if (side == leftHandController) myType = ovrControllerType_LTouch;
-	else if (side == rightHandController) myType = ovrControllerType_RTouch;
-
-	ovr_SetControllerVibration(currentSession, myType, 0, 0);
+	ovr_SetControllerVibration(currentSession, myControllerType, 0, 0);
 }
 
-AnnOculusTouchController::AnnOculusTouchController(ovrSession session, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) : AnnHandController("Oculus Touch", handNode, controllerID, controllerSide),
-currentSession(session)
+AnnOculusTouchController::AnnOculusTouchController(ovrSession session,
+	Ogre::SceneNode* handNode,
+	AnnHandControllerID controllerID,
+	AnnHandControllerSide controllerSide) : AnnHandController("Oculus Touch", handNode, controllerID, controllerSide),
+	currentSession(session)
 {
 	if (side == leftHandController) myControllerType = ovrControllerType_LTouch;
 	else if (side == rightHandController) myControllerType = ovrControllerType_RTouch;
+
+	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking | LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback | DiscreteHandGestures;
 }

@@ -456,8 +456,13 @@ void Annwvyn::AnnOpenVRMotionController::rumbleStop()
 	//NB : The "rumbeling" of OpenVR controllers is pulse based. Meaning that telling it to "not move" doesn't make much sense.
 }
 
-Annwvyn::AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem, vr::TrackedDeviceIndex_t OpenVRDeviceIndex, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) : AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
+Annwvyn::AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem, 
+	vr::TrackedDeviceIndex_t OpenVRDeviceIndex, 
+	Ogre::SceneNode* handNode, 
+	AnnHandControllerID controllerID, 
+	AnnHandControllerSide controllerSide) : AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
 deviceIndex(OpenVRDeviceIndex),
 vrSystem(vrsystem), last(0), current(0)
 {
+	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking | LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback;
 }
