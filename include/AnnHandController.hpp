@@ -57,8 +57,30 @@ namespace Annwvyn
 	public:
 		virtual ~AnnHandController() = default;
 		using AnnHandControllerTypeHash = size_t;
+		using AnnHandControllerGestureHash = size_t;
+		using proportionalFingerValues = std::array<float, 5>;
+
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
 		enum AnnHandControllerSide : size_t { leftHandController = 0, rightHandController = 1, invalidHandController = 2 };
+
+		///Fix the bitflag at 16bits wide
+		using HandControllerCapabilites_t = uint16_t;
+
+		///List of the capabilities that can be tested against
+		enum HandControllerCapabilites : HandControllerCapabilites_t
+		{
+			None = 0,
+			RotationalTracking				= 0b0000000001,		//Can get the orientation of the user hand
+			PositionalTracking				= 0b0000000010,		//Can get the position of the user hand
+			AngularAccelerationTracking		= 0b0000000100,		//Can get the current angular acceleration
+			LinearAccelerationTracking		= 0b0000001000,		//Can get the current linear acceleration
+			ButtonInputs					= 0b0000010000,		//Can get inputs form buttons
+			AnalogInputs					= 0b0000100000,		//Can get inputs from axes
+			HapticFeedback					= 0b0001000000,		//Can produce haptic feedback
+			DiscreteHandGestures			= 0b0010000000,		//Can detect some hand gestures (Like the touch controller does)
+			SkeletalFingerTracking			= 0b0100000000,		//Can fully get the pose of an hand (Like on the LEAP Motion controller)
+			ProportionalFingerTrackng		= 0b1000000000,		//Can get a 5 axis analog representation of the fingers
+		};
 
 		///Construct a Controller object
 		AnnHandController(std::string Type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
@@ -145,7 +167,18 @@ namespace Annwvyn
 		///Stop vibrating, if the controller was vibrating in the first place...
 		virtual void rumbleStop();
 
+		///Get the capabilities (bit test again the capability flags) 
+		HandControllerCapabilites_t getCapabilities() const;
+
+		///Get the name of the current gesture. Please prefer use the hashed version.
+		virtual std::string getCurrentGesture();
+
+		///Get the hash of the current gesture
+		virtual AnnHandControllerGestureHash gestcurrentGesturesHash();
+
 	protected:
+
+		HandControllerCapabilites_t capabilites;
 
 		friend class OgreVRRender;
 		friend class OgreOpenVRRender;
@@ -201,5 +234,11 @@ namespace Annwvyn
 
 		///buttons that has been pressed or released
 		std::vector<uint8_t> pressedButtons, releasedButtons;
+
+		///The hash of the "N/A" string
+		const AnnHandControllerGestureHash gestureNotAvailableHash;
+
+		///Permanently set to "N/A"
+		static constexpr const char* const gestureNotAvailableString{ "N/A" };
 	};
 }
