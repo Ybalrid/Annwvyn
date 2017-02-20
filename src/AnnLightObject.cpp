@@ -66,3 +66,8 @@ AnnVect3 AnnLightObject::getPosition()
 {
 	return light->getPosition();
 }
+
+void AnnLightObject::setAttenuation(float range, float constant, float linear, float quadratic)
+{
+	light->setAttenuation(range, constant, linear, quadratic);
+}
