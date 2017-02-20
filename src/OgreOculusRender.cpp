@@ -3,6 +3,7 @@
 
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 
@@ -161,7 +162,7 @@ void OgreOculusRender::initScene()
 {
 	//Get if the complied buffer are correct
 	if (!debugPlaneSanityCheck())
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Sanity check failed, check the static buffer in OgreOculusRender.hpp");
+		throw AnnInitializationError(ANN_ERR_NOTINIT, "Sanity check failed, check the static buffer in OgreOculusRender.hpp");
 
 	//Create the scene manager for the engine
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
@@ -265,15 +266,15 @@ void OgreOculusRender::initRttRendering()
 	if (ovr_CreateTextureSwapChainGL(Oculus->getSession(), &textureSwapChainDesc, &textureSwapChain) != ovrSuccess)
 	{
 		//If we can't get the textures, there is no point trying more.
-		AnnDebug("Cannot create Oculus OpenGL SwapChain");
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Cannot create Oculus OpenGL swapchain");
+		AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
+		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
 	}
 
 	//Create the texture within the Ogre Texture Manager
 	renderTextureGLID = createRenderTexture(bufferSize.w, bufferSize.h);
 
 	//Calculate the actual width of the desired image on the texture in a % of the width of the buffer (as a float between 0 to 1)
-	float proportionalWidth = float((bufferSize.w - frontierWidth / 2) / 2) / float(bufferSize.w);
+	auto proportionalWidth = float((bufferSize.w - frontierWidth / 2) / 2) / float(bufferSize.w);
 	AnnDebug() << proportionalWidth;
 
 	//Create viewports on the texture to render the eyeCameras
@@ -293,8 +294,8 @@ void OgreOculusRender::initRttRendering()
 	if (ovr_CreateMirrorTextureGL(Oculus->getSession(), &mirrorTextureDesc, &mirrorTexture) != ovrSuccess)
 	{
 		//If for some weird reason (stars alignment, dragons, northern gods, reaper invasion) we can't create the mirror texture
-		AnnDebug("Cannot create Oculus mirror texture");
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_RENDER) + "Cannot create Oculus mirror texture");
+		AnnDebug() << "Cannot create Oculus mirror texture";
+		throw AnnInitializationError(ANN_ERR_RENDER , "Cannot create Oculus mirror texture");
 	}
 
 	auto mirror = createAdditionalRenderBuffer(hmdSize.w, hmdSize.h, "MirrorTex");
@@ -472,7 +473,7 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 
 	//Apply pose to the two cameras
 	trackedHeadPose.orientation = bodyOrientation * oculusToOgreQuat(pose.Orientation);
-	trackedHeadPose.position = feetPosition + bodyOrientation*oculusToOgreVect3(pose.Position);
+	trackedHeadPose.position = feetPosition + bodyOrientation * oculusToOgreVect3(pose.Position);
 }
 
 void OgreOculusRender::renderAndSubmitFrame()

@@ -3,6 +3,7 @@
 #include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
+#include "Annwvyn.h"
 
 OgreOpenVRRender* OgreOpenVRRender::OpenVRSelf(nullptr);
 
@@ -82,14 +83,14 @@ void OgreOpenVRRender::initVrHmd()
 		default:
 			displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
 				L"Non described error when initializing the OpenVR Render object");
-			throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Unknown error while initializing OpenVR");
+			throw Annwvyn::AnnInitializationError(ANN_ERR_NOTINIT, "Unknown error while initializing OpenVR");
 
 		case vr::VRInitError_Init_HmdNotFound:
 		case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
 			displayWin32ErrorMessage(L"Error: cannot find HMD",
 				L"OpenVR cannot find HMD.\n"
 				L"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
-			throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CANTHMD) + "OpenVR can't find an HMD");
+			throw Annwvyn::AnnInitializationError(ANN_ERR_CANTHMD, "OpenVR can't find an HMD");
 		}
 
 	//Check if VRCompositor is present
@@ -97,7 +98,8 @@ void OgreOpenVRRender::initVrHmd()
 	{
 		displayWin32ErrorMessage(L"Error: failed to init OpenVR VRCompositor",
 			L"Failed to initialize the VR Compositor");
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Failed to init the OpenVR VRCompositor");
+		throw Annwvyn::AnnInitializationError(ANN_ERR_NOTINIT, "Failed to init the OpenVR VRCompositor");
+
 	}
 
 	//Get Driver and Display information

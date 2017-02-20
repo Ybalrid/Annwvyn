@@ -26,6 +26,7 @@ AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode
 	std::cerr << "For side : " << getSideAsString(side);
 	std::cerr << "Of type : " << controllerType;
 
+	//Let this variable not initialized
 	capabilites = None;
 }
 

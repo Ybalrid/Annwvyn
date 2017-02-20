@@ -2,6 +2,7 @@
 #include "Ann3DTextPlane.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 using namespace std;
@@ -215,7 +216,7 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 	if (fontName.empty())
 	{
 		AnnDebug() << "You need set a font to initialize a text render plane";
-		throw std::runtime_error("Error: " + std::to_string(ANN_ERR_NOTINIT) + "3D Text plane initialized without a valid font");
+		throw AnnInitializationError(ANN_ERR_NOTINIT, "3D Text plane initialized without a valid font");
 	}
 
 	AnnDebug() << "font : " << fontName;

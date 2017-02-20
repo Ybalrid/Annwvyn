@@ -2,6 +2,7 @@
 #include "OgreVRRender.hpp"
 #include "AnnGetter.hpp"
 #include "AnnLogger.hpp"
+#include "Annwvyn.h"
 
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
@@ -41,7 +42,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	if (self)
 	{
 		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialization. OgreOculusRender object already created.");
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CRITIC) + "Cannot create more than one OgreVRRenderer object!");
+		throw Annwvyn::AnnInitializationError(ANN_ERR_CRITIC, "Cannot create more than one OgreVRRenderer object!");
 	}
 	self = this;
 
@@ -100,7 +101,7 @@ void OgreVRRender::initOgreRoot(std::string loggerName)
 void OgreVRRender::getOgreConfig() const
 {
 	//Ogre as to be initialized
-	if (!root) throw std::runtime_error("Error : " + std::to_string(ANN_ERR_NOTINIT) + "Need to initialize Ogre::Root before loading system configuration");
+	if (!root) throw Annwvyn::AnnInitializationError(ANN_ERR_NOTINIT, "Need to initialize Ogre::Root before loading system configuration");
 
 	//Load OgrePlugins
 	root->loadPlugin(PluginRenderSystemGL);

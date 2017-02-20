@@ -58,7 +58,6 @@ const char* AnnPhysicsSetupChildError::what() const throw()
 	out << runtime_error::what();
 	out << objectWithProblem->getName() << '\n';
 	out << "a child has a rigid body. Creating a body will mess up the system. consider not using parenting for theses objects";
-
 	return out.str().c_str();
 }
 
@@ -85,5 +84,18 @@ const char* AnnNullGameObjectError::what() const throw()
 	ostringstream out;
 	out << runtime_error::what();
 	out << "Check what you're doing with your pointers...";
+	return out.str().c_str();
+}
+
+AnnInitializationError::AnnInitializationError(int errorCode, const std::string& message) : std::runtime_error("Error : " + std::to_string(errorCode) + " " + message)
+{
+	AnnDebug() << AnnInitializationError::what();
+}
+
+const char* AnnInitializationError::what() const throw()
+{
+	ostringstream out;
+	out << runtime_error::what();
+	out << " AnnInitializationError thrown";
 	return out.str().c_str();
 }
