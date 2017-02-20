@@ -1,10 +1,37 @@
 #include "stdafx.h"
 #include "OculusInterface.hpp"
 #include "AnnLogger.hpp"
+#include "AnnException.hpp"
 
 using namespace std;
 using namespace OVR;
 using namespace Annwvyn;
+
+void OculusInterface::abortOnFailure()
+{
+	session = {};
+	luid = {};
+	hmdDesc = {};
+
+	//Notify user
+	AnnDebug() << "Error: Cannot create Oculus Session";
+	//Debug HMD is now handled by the configuration utility and the runtime.
+	AnnDebug() << "Please make sure Oculus Home is installed on your system and "
+		"please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
+
+	displayWin32ErrorMessage(L"Error: Cannot create Oculus Session!",
+		L"Please make sure Oculus Home is installed on your system\n"
+		L"and check HDMI and USB connection to your Rift and Tracker");
+
+	//Cleanup
+	ovr_Shutdown();
+	//Return an error
+	AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
+	//Destroy Ogre
+	delete Ogre::Root::getSingletonPtr();
+	//Stop program
+	throw AnnInitializationError((ANN_ERR_CRITIC), "Unable to create an Oculus session");
+}
 
 OculusInterface::OculusInterface()
 {
@@ -21,26 +48,7 @@ OculusInterface::OculusInterface()
 
 	//Attempt to create OVR session
 	if (ovr_Create(&session, &luid) != ovrSuccess)
-	{
-		//Notify user
-		AnnDebug() << "Error: Cannot create Oculus Session";
-		//Debug HMD is now handled by the configuration utility and the runtime.
-		AnnDebug() << "Please make sure Oculus Home is installed on your system and "
-			"please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
-
-		displayWin32ErrorMessage(L"Error: Cannot create Oculus Session!",
-								 L"Please make sure Oculus Home is installed on your system\n"
-								 L"and check HDMI and USB connection to your Rift and Tracker");
-
-		//Cleanup
-		ovr_Shutdown();
-		//Return an error
-		AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
-		//Destroy Ogre
-		delete Ogre::Root::getSingletonPtr();
-		//Stop program
-		throw runtime_error("Error : " + to_string(ANN_ERR_CRITIC) + "Unable to create an Oculus session");
-	}
+		abortOnFailure();
 
 	//Fill the hmdDesc structure
 	hmdDesc = ovr_GetHmdDesc(session);

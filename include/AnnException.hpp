@@ -49,4 +49,11 @@ namespace Annwvyn
 		AnnNullGameObjectError();
 		const char* what() const throw() override;
 	};
+
+	class DLL AnnInitializationError : public std::runtime_error
+	{
+	public:
+		AnnInitializationError(int errorCode, const std::string& message);
+		const char* what() const throw() override;
+	};
 }

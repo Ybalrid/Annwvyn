@@ -39,6 +39,9 @@ private:
 	///Print every known characteristics about the hardware to the log output
 	void customReport() const;
 
+	///Abort, display error, log it and crash the game 
+	void abortOnFailure();
+
 	///Oculus session for the application
 	ovrSession session;
 

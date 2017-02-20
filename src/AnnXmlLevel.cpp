@@ -2,6 +2,7 @@
 #include "AnnXmlLevel.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+#include "AnnException.hpp"
 
 using namespace tinyxml2;
 using namespace Annwvyn;
@@ -33,7 +34,7 @@ void AnnXmlLevel::load()
 {
 	//Get the parent directory of the file (all file path are in "UNIX style")
 	std::string dirPath;
-	const size_t last_slash = xmlFilePath.rfind('/');
+	const auto last_slash = xmlFilePath.rfind('/');
 	if (std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
 	AnnDebug() << "Working directory of the level file : " << dirPath;
 
@@ -43,7 +44,7 @@ void AnnXmlLevel::load()
 	if (xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS)
 	{
 		AnnDebug() << "Cant load XML level : " << xmlFilePath;
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_INFILE) + "Error while reading XML Level file" "");
+		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
 	}
 	AnnDebug() << "XML Level : " << xmlFilePath << " loaded on XML parser";
 
@@ -52,7 +53,7 @@ void AnnXmlLevel::load()
 	if (!level)
 	{
 		AnnDebug() << "Cant get 1st XML Node from " << xmlFilePath;
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_INFILE) + "Error while reading XML Level file" "");
+		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
 	}
 
 	//Get the name of the level
@@ -60,7 +61,7 @@ void AnnXmlLevel::load()
 	if (!element)
 	{
 		AnnDebug() << "Cant get Level name from " << xmlFilePath;
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_INFILE) + "Error while reading XML Level file" "");
+		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
 	}
 	name = element->GetText();
 	AnnDebug() << "Name of level : " << name;
@@ -94,7 +95,7 @@ void AnnXmlLevel::load()
 	if (!element)
 	{
 		AnnDebug() << xmlFilePath << "Don't have a 'LevelContent' section. This mean the level can't be loaded";
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_INFILE) + "Error while reading XML Level file" "");
+		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
 	}
 
 	XMLElement* gameObject = element->FirstChildElement("Object");

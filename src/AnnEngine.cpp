@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 
@@ -67,7 +68,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_MEMORY) + "Can't create 2 instances of AnnEngine");
+		throw AnnInitializationError(ANN_ERR_MEMORY ,"Can't create 2 instances of AnnEngine");
 	}
 	singleton = this;
 
@@ -114,8 +115,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 			L"to talk to VR hardware"
 		);
 		//exit(ANN_ERR_CANTHMD)
-		throw std::runtime_error("Error : " + std::to_string(ANN_ERR_CANTHMD)
-			+ "Can't find an HMD to use");
+		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
 
 	renderer->initOgreRoot("Annwvyn.log");
