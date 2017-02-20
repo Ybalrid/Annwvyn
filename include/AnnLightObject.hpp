@@ -55,6 +55,8 @@ namespace Annwvyn
 		///Get the specular color of this light source
 		AnnColor getSpecularColor() const;
 
+		void setAttenuation(float range, float constant, float linear, float quadratic);
+
 	private:
 		friend class AnnEngine;
 		friend class AnnGameObjectManager;
