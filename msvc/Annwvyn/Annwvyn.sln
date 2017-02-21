@@ -12,6 +12,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "..\test\test.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnnwvynUnitTest", "..\AnnwvynUnitTest\AnnwvynUnitTest.vcxproj", "{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}"
 	ProjectSection(ProjectDependencies) = postProject
+		{FF00A220-BA2F-45E4-8335-A7ACCACD0F1B} = {FF00A220-BA2F-45E4-8335-A7ACCACD0F1B}
 		{97023299-5F70-417C-A8C2-A3521719B5A8} = {97023299-5F70-417C-A8C2-A3521719B5A8}
 	EndProjectSection
 EndProject
@@ -33,7 +34,6 @@ Global
 		{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}.Debug|x64.ActiveCfg = Debug|x64
 		{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}.Debug|x64.Build.0 = Debug|x64
 		{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}.Release|x64.ActiveCfg = Release|x64
-		{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -109,7 +109,7 @@ void OgreVRRender::getOgreConfig() const
 
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem));
-	root->getRenderSystem()->setFixedPipelineEnabled(true);
+	//root->getRenderSystem()->setFixedPipelineEnabled(true); //NO MORE FIXED PIPELINE
 	root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 }
@@ -135,7 +135,8 @@ size_t OgreVRRender::getRecognizedControllerCount()
 
 void OgreVRRender::changedAA() const
 {
-	if (rttTexture.getPointer() && !UseSSAA) rttTexture->setFSAA(AALevel, "");
+	//TODO look into FSAA 
+	//if (rttTexture.getPointer() && !UseSSAA) rttTexture->setFSAA(AALevel);
 }
 
 void OgreVRRender::setNearClippingDistance(float distance)
@@ -152,7 +153,8 @@ void OgreVRRender::setFarClippingDistance(float distance)
 
 void OgreVRRender::initCameras()
 {
-	cameraRig = smgr->getRootSceneNode()->createChildSceneNode("CameraRig");
+	//TODO name on node?
+	cameraRig = smgr->getRootSceneNode()->createChildSceneNode();
 
 	eyeCameras[left] = smgr->createCamera("lcam");
 	eyeCameras[left]->setAutoAspectRatio(true);

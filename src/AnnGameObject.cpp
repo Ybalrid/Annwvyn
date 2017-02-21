@@ -8,11 +8,11 @@ using namespace Annwvyn;
 
 AnnGameObject::AnnGameObject() :
 	Node(nullptr),
-	Entity(nullptr),
+	/*Entity(nullptr),
 	animIsSetted(false),
 	animIsPlaying(false),
 	animIsLooping(false),
-	anim(nullptr),
+	anim(nullptr),*/
 	Shape(nullptr),
 	Body(nullptr),
 	audioSource(nullptr),
@@ -172,18 +172,16 @@ void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 	Node = newNode;
 }
 
-void AnnGameObject::setEntity(Ogre::Entity* newEntity)
-{
-	Entity = newEntity;
-}
-
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 
 	//init shape converter
-	BtOgre::StaticMeshToShapeConverter converter(Entity);
+	//TODO need the v1 geommetry here:
+	/*
+	Ogre::v1::Entity* dummy{nullptr};
+	BtOgre::StaticMeshToShapeConverter converter(dummy);
 
 	// TODO put this thing inside the Physics engine
 	//create the correct shape
@@ -228,16 +226,12 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	if (!colideWithPlayer)
 		bulletMask = MASK(1);
 	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, MASK(1), bulletMask);
+	*/
 }
 
 Ogre::SceneNode* AnnGameObject::getNode() const
 {
 	return Node;
-}
-
-Ogre::Entity* AnnGameObject::getEntity() const
-{
-	return Entity;
 }
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject) const
@@ -252,45 +246,22 @@ btRigidBody* AnnGameObject::getBody() const
 
 void AnnGameObject::setAnimation(const char animationName[])
 {
-	if (animIsSetted)
-	{
-		anim->setEnabled(false);
-		anim->setLoop(false);
-		animIsSetted = false;
-		animIsLooping = false;
-		animIsPlaying = false;
-		anim = nullptr;
-	}
-
-	anim = Entity->getAnimationState(animationName);
-	if (anim != nullptr)
-		animIsSetted = true;
+	// TODO new animation systme
 }
 
 void AnnGameObject::playAnimation(bool play)
 {
-	if (animIsSetted)
-	{
-		anim->setEnabled(play);
-		animIsPlaying = play;
-	}
+	// TODO new animation system
 }
 
 void AnnGameObject::loopAnimation(bool loop)
 {
-	if (animIsSetted)
-	{
-		anim->setLoop(loop);
-		animIsLooping = loop;
-	}
+	// TODO new animation system
+
 }
 
 void AnnGameObject::addAnimationTime(double offset) const
-{
-	if (!animIsSetted || !animIsPlaying)
-		return;
-
-	anim->addTime(float(offset));
+{	// TODO new animation system
 }
 
 void AnnGameObject::applyImpulse(AnnVect3 force) const
@@ -401,7 +372,7 @@ bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
 {
 	for (auto childNode : parentObj->Node->getChildIterator())
 	{
-		auto node = childNode.second;
+		auto node = childNode; //TODO check if this is okay... 
 		auto childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
 
 		//Is an actual SceneNode

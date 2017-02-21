@@ -36,7 +36,7 @@ inline std::string AnnHandController::getSideAsString(AnnHandControllerSide s)
 	return "Right Hand";
 }
 
-void AnnHandController::attachModel(Ogre::Entity* handModel)
+void AnnHandController::attachModel(Ogre::Item* handModel)
 {
 	if (model) node->detachObject(model);
 	model = handModel;
@@ -49,7 +49,7 @@ void AnnHandController::detachModel()
 	model = nullptr;
 }
 
-Ogre::Entity* AnnHandController::getModel() const
+Ogre::Item* AnnHandController::getModel() const
 {
 	return model;
 }

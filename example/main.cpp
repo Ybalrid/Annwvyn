@@ -107,7 +107,8 @@ void putGizmoOnHands()
 		if (!done[side])
 			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[side])
 			{
-				controller->attachModel(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
+				//TODO mh... Need an item here. 
+				//controller->attachModel(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
 				done[side] = true;
 			}
 }

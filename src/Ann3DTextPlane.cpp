@@ -238,7 +238,8 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 
 	createMaterial();
 
-	renderPlane->begin(materialName, Ogre::RenderOperation::OT_TRIANGLE_STRIP);
+	// TODO new manual object
+	/*renderPlane->begin(materialName, Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 
 	for (char i(0); i < 4; i++)
 	{
@@ -246,7 +247,7 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 		renderPlane->textureCoord(textureCoords[i]);
 	}
 
-	renderPlane->end();
+	renderPlane->end();*/
 
 	node->attachObject(renderPlane);
 	//end of the thing that should be in it's own method
@@ -342,6 +343,8 @@ void Ann3DTextPlane::calculateVerticesForPlaneSize()
 
 void Ann3DTextPlane::createMaterial()
 {
+	//TODO new material system (probalby unlit here) 
+	/*
 	generateMaterialName();
 	AnnDebug() << "materialName : " << materialName;
 
@@ -361,6 +364,7 @@ void Ann3DTextPlane::createMaterial()
 					  height * resolutionFactor,
 					  0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET | Ogre::TU_AUTOMIPMAP);
 	renderPlaneTextureUnitState->setTexture(texture);
+	*/
 }
 
 void Ann3DTextPlane::autoUpdateCheck()
@@ -468,6 +472,8 @@ void Ann3DTextPlane::clearTexture()
 	}
 	else
 	{
+		/*TODO fix hardware buffer thing here (texture copy)*/
+		/*
 		auto textureBuffer = texture->getBuffer();
 		const auto w = textureBuffer->getWidth();
 		const auto h = textureBuffer->getHeight();
@@ -479,5 +485,6 @@ void Ann3DTextPlane::clearTexture()
 			pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
 
 		textureBuffer->unlock();
+		*/
 	}
 }
