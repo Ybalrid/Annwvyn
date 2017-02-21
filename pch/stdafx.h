@@ -85,5 +85,19 @@
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
-#include <glew.h>
 #endif
+
+//OpenGL stuff : 
+
+//GL Extension Wrangler
+#include <glew.h>
+
+//GL FrameWork
+#include <GLFW/glfw3.h>
+
+//Native windows access
+#ifdef _WIN32
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NAVIVE_WGL
+#endif
+#include <GLFW/glfw3native.h>

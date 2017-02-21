@@ -10,7 +10,6 @@
 
 #ifdef _WIN32
 #include <Windows.h>
-#include <glew.h>
 #endif
 
 #include "AnnErrorCode.hpp"

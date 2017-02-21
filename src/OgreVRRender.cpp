@@ -4,6 +4,9 @@
 #include "AnnLogger.hpp"
 #include "Annwvyn.h"
 
+
+auto logToOgre = [] (const std::string& str) {Ogre::LogManager::getSingleton().logMessage(str); };
+
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
 bool OgreVRRender::UseSSAA{ false };
@@ -36,7 +39,9 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	backgroundColor{ 0, 0.56f, 1 },
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
-	rttEyes{ nullptr }
+	rttEyes{ nullptr },
+	glMajor{ 4 },
+	glMinor{ 3 }
 {
 	rttTexture.setNull();
 	if (self)
@@ -258,7 +263,30 @@ std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderB
 
 void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 {
+	logToOgre("call glfwInit()");
+	glfwInit();
+	//Specify OpenGL version 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	logToOgre("Set OpenGL context version " + std::to_string(glMajor) + "." + std::to_string(glMinor));
+
+	//Create a window (and an opengl context with it)
+	auto winName = rendererName + " : " + name + " - monitor output";
+	glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
+
+
+	//Make the created context current
+	glfwMakeContextCurrent(glfwWindow);
+
+	//Get the hwnd and the context :
+	HGLRC context{ wglGetCurrentContext() };
+	HWND handle{ glfwGetWin32Window(glfwWindow) };
+
 	Ogre::NameValuePairList options;
+	options["externalWindowHandle"] = std::to_string(size_t(handle));
+	options["externalGLContext"] = std::to_string(size_t(context));
 	options["FSAA"] = std::to_string(AALevel);
 	options["top"] = "0";
 	options["left"] = "0";
@@ -268,8 +296,7 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 		options["vsync"] = "false";
 
 	root->initialise(false);
-	window = root->createRenderWindow(rendererName + " : " + name + " - monitor output",
-		w, h, false, &options);
+	window = root->createRenderWindow(winName, w, h, false, &options);
 }
 
 std::string OgreVRRender::getName() const
