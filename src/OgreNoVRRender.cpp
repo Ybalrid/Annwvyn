@@ -19,14 +19,20 @@ void OgreNoVRRender::initVrHmd()
 
 void OgreNoVRRender::initScene()
 {
+	/*
+	 TODO change to new scene manager with multiple threads
 	smgr = root->createSceneManager("OctreeSceneManager", "OSMSMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
+	*/
 }
 
 void OgreNoVRRender::initRttRendering()
 {
+	/*
+	 *TODO swithc to compositor2 
 	noVRViewport = window->addViewport(monoCam);
 	noVRViewport->setBackgroundColour(backgroundColor);
+	*/
 }
 
 void OgreNoVRRender::initClientHmdRendering()
@@ -58,10 +64,11 @@ void OgreNoVRRender::renderAndSubmitFrame()
 		return;
 	}
 
-	root->_fireFrameRenderingQueued();
+	// TODO update compositor instead
+	/*root->_fireFrameRenderingQueued();
 	noVRViewport->update();
 	window->update();
-
+	*/
 	//Sleep for one ms
 	std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
@@ -73,7 +80,8 @@ void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	backgroundColor = color;
 
-	noVRViewport->setBackgroundColour(color);
+	//TODO AFAIK, changing the viewport clear color is a bit tricky. Investigate
+	//noVRViewport->setBackgroundColour(color);
 }
 
 void OgreNoVRRender::showDebug(DebugMode mode)

@@ -28,14 +28,16 @@ void AnnGameObjectManager::update()
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char entityName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
 {
+	//TODO probably need to convert entity to items here!
 	AnnDebug("Creating a game object from the entity " + std::string(entityName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
 	auto ent = smgr->createEntity(entityName);
+	Ogre::Item* v2;
 	auto node = smgr->getRootSceneNode()->createChildSceneNode();
 
-	node->attachObject(ent);
+	node->attachObject(v2);
 	obj->setNode(node);
-	obj->setEntity(ent);
+	obj->setItem(v2);
 	obj->audioSource = AnnGetAudioEngine()->createSource();
 
 	//id will be unique to every non-identified object.

@@ -27,7 +27,7 @@ class DLL OgreVRRender
 {
 public:
 	///Name of the rendersystem plugin to load on Ogre
-	static constexpr const char* const PluginRenderSystemGL{ "RenderSystem_GL" };
+	static constexpr const char* const PluginRenderSystemGL{ "RenderSystem_GL3Plus" };
 	///Name of the scene manager plugin to load on ogre
 	static constexpr const char* const PluginOctreeSceneManager{ "Plugin_OctreeSceneManager" };
 	///Name of the rendersystem to initialize

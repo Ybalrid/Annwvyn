@@ -178,11 +178,13 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	root->_fireFrameRenderingQueued();
 
 	//Update each viewports
+	/*TODO use compostior2
 	rttViewports[0]->update();
 	rttViewports[1]->update();
 	rttEyes->update();			//Resolve anti-aliasing
 	windowViewport->update();	//Window content
 	window->update();			//Window display
+*/
 
 	//Submit the textures to the SteamVR compositor
 	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures, &GLBounds[0]);
@@ -200,13 +202,14 @@ void OgreOpenVRRender::recenter()
 
 void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
-	backgroundColor = color;
+	/* TODO background color problem
+	 *backgroundColor = color;
 	//Eye camera viewports
 	for (char i(0); i < 2; i++) if (rttViewports[i])
 		rttViewports[i]->setBackgroundColour(backgroundColor);
 
 	//Debug window viewports
-	if (windowViewport) windowViewport->setBackgroundColour(backgroundColor);
+	if (windowViewport) windowViewport->setBackgroundColour(backgroundColor);**/
 }
 
 void OgreOpenVRRender::showDebug(DebugMode mode)
@@ -215,9 +218,11 @@ void OgreOpenVRRender::showDebug(DebugMode mode)
 void OgreOpenVRRender::initScene()
 {
 	//Create the scene manager for the engine
+	/*
+	 * TODO new scene manager
 	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
-
+	*/
 	//Optional additional scenes here
 }
 
@@ -244,12 +249,13 @@ void OgreOpenVRRender::initRttRendering()
 	rttTextureGLID = createRenderTexture(w, h);
 
 	//Create viewport for each cameras in each render texture
-	rttViewports[left] = rttEyes->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
+/*	 TODO compositor2 here
+ *	rttViewports[left] = rttEyes->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
 	rttViewports[right] = rttEyes->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
 
 	//Do the same for the window
 	windowViewport = window->addViewport(monoCam);
-
+	*/
 	//Make sure the default viewport background color is set for everything
 	changeViewportBackgroundColor(backgroundColor);
 }
