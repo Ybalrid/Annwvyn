@@ -60,7 +60,6 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 OgreVRRender::~OgreVRRender()
 {
 	self = nullptr;
-	root->unloadPlugin(PluginOctreeSceneManager);
 }
 
 Ogre::SceneManager* OgreVRRender::getSceneManager() const
@@ -115,8 +114,11 @@ void OgreVRRender::getOgreConfig() const
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem));
 	//root->getRenderSystem()->setFixedPipelineEnabled(true); //NO MORE FIXED PIPELINE
-	root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
+	//root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
+
+
+	root->initialise(false);
 }
 
 std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> OgreVRRender::getHandControllerArray() const
@@ -156,6 +158,12 @@ void OgreVRRender::setFarClippingDistance(float distance)
 	updateProjectionMatrix();
 }
 
+void OgreVRRender::detachCameraFromParent(Ogre::Camera* camera)
+{
+	if (auto parent = camera->getParentSceneNode())
+		parent->detachObject(camera);
+}
+
 void OgreVRRender::initCameras()
 {
 	//TODO name on node?
@@ -163,10 +171,12 @@ void OgreVRRender::initCameras()
 
 	eyeCameras[left] = smgr->createCamera("lcam");
 	eyeCameras[left]->setAutoAspectRatio(true);
+	detachCameraFromParent(eyeCameras[left]);
 	cameraRig->attachObject(eyeCameras[left]);
 
 	eyeCameras[right] = smgr->createCamera("rcam");
 	eyeCameras[right]->setAutoAspectRatio(true);
+	detachCameraFromParent(eyeCameras[right]);
 	cameraRig->attachObject(eyeCameras[right]);
 
 	monoCam = smgr->createCamera("mcam");
@@ -175,6 +185,7 @@ void OgreVRRender::initCameras()
 	monoCam->setNearClipDistance(nearClippingDistance);
 	monoCam->setFarClipDistance(farClippingDistance);
 	monoCam->setFOVy(Ogre::Degree(90));
+	detachCameraFromParent(monoCam);
 	cameraRig->attachObject(monoCam);
 
 	//do NOT attach camera to this node...
@@ -263,6 +274,7 @@ std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderB
 
 void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 {
+
 	logToOgre("call glfwInit()");
 	glfwInit();
 	//Specify OpenGL version 
@@ -295,7 +307,6 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	else
 		options["vsync"] = "false";
 
-	root->initialise(false);
 	window = root->createRenderWindow(winName, w, h, false, &options);
 }
 

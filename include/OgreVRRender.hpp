@@ -139,6 +139,7 @@ public:
 
 	///Set the distance from the viewpoint to the far clipping distance plane
 	void setFarClippingDistance(float distance);
+	static void detachCameraFromParent(Ogre::Camera* camera);
 
 	///The projection matrix is generally given by the underlying VR api, generally, using the near/far clipping distances set in this class
 	/// \note this method is called by the set{Near/Far}ClippingDistance() automatically.
