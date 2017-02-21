@@ -71,3 +71,8 @@ void AnnLightObject::setAttenuation(float range, float constant, float linear, f
 {
 	light->setAttenuation(range, constant, linear, quadratic);
 }
+
+Ogre::Light* AnnLightObject::getOgreLight()
+{
+	return light;
+}
