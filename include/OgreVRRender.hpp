@@ -31,7 +31,7 @@ public:
 	///Name of the scene manager plugin to load on ogre
 	static constexpr const char* const PluginOctreeSceneManager{ "Plugin_OctreeSceneManager" };
 	///Name of the rendersystem to initialize
-	static constexpr const char* const GLRenderSystem{ "OpenGL Rendering Subsystem" };
+	static constexpr const char* const GLRenderSystem{ "OpenGL 3+ Rendering Subsystem" };
 
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 	static bool UseSSAA;
