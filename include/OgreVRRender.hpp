@@ -7,8 +7,18 @@
 #include <array>
 
 #include <Ogre.h>
+
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
+
+#include <glew.h>
+
+#include <GLFW/glfw3.h>
+
+//Native windows access (for getting the handle and the context)
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NAVIVE_WGL
+#include <GLFW/glfw3native.h>
 
 constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 
@@ -185,6 +195,17 @@ public:
 
 	///Get the name of this renderer
 	std::string getName() const;
+
+private:
+
+	//GL version to use
+	const GLuint glMajor, glMinor;
+
+	//GL FrameWork window
+	GLFWwindow* glfwWindow;
+
+	//Shading language to use
+	static constexpr const char* const SL{ "GLSL" };
 
 protected:
 
