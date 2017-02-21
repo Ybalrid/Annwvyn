@@ -7,6 +7,15 @@
 #include <array>
 
 #include <Ogre.h>
+#include <OgreSceneNode.h>
+#include <OgreCamera.h>
+#include <Compositor/OgreCompositorManager2.h>
+#include <Compositor/OgreCompositorWorkspaceDef.h>
+#include <Compositor/OgreCompositorWorkspace.h>
+#include <Hlms/Pbs/OgreHlmsPbs.h>
+#include <Hlms/Unlit/OgreHlmsUnlit.h>
+#include <OgreHlmsManager.h>
+#include <OgreHlms.h>
 
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
@@ -139,6 +148,8 @@ public:
 
 	///Set the distance from the viewpoint to the far clipping distance plane
 	void setFarClippingDistance(float distance);
+
+	///Detach camera from their parent node. It seems that Ogre automatically attach new cameras to the root...
 	static void detachCameraFromParent(Ogre::Camera* camera);
 
 	///The projection matrix is generally given by the underlying VR api, generally, using the near/far clipping distances set in this class
@@ -209,6 +220,13 @@ private:
 	static constexpr const char* const SL{ "GLSL" };
 
 protected:
+
+	///Compositor workspaces. 0 = left, 1 = right, 2 = monoscopic, plugged to the render window
+	std::array<Ogre::CompositorWorkspace*, 3> compositorWorkspaces;
+
+	const Ogre::IdString monoscopicCompositor, stereoscopicCompositor;
+	static constexpr const char* const monoscopicWorkspaceName{ "MonoscopicCompositor" };
+	static constexpr const char* const stereoscopicWorkspaceName{ "StereoscopicWorkspaceCompositor" };
 
 	std::string rendererName;
 

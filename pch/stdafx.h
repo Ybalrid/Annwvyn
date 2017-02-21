@@ -43,9 +43,15 @@
 #include <OgreEntity.h>
 #include <OgreLight.h>
 #include <OgreMatrix3.h>
-//For the console, we use the font system of the Overlay
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
+#include <Compositor/OgreCompositorManager2.h>
+#include <Compositor/OgreCompositorWorkspaceDef.h>
+#include <Compositor/OgreCompositorWorkspace.h>
+#include <Hlms/Pbs/OgreHlmsPbs.h>
+#include <Hlms/Unlit/OgreHlmsUnlit.h>
+#include <OgreHlmsManager.h>
+#include <OgreHlms.h>
 
 //Object-Oriented Input System
 #include <OIS.h>

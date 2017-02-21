@@ -35,6 +35,11 @@ void OgreNoVRRender::initRttRendering()
 	noVRViewport = window->addViewport(monoCam);
 	noVRViewport->setBackgroundColour(backgroundColor);
 	*/
+
+	auto compositor = getRoot()->getCompositorManager2();
+	if (!compositor->hasWorkspaceDefinition(monoscopicCompositor))
+		compositor->createBasicWorkspaceDef(monoscopicWorkspaceName, backgroundColor);
+	compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, monoscopicCompositor, true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
 }
 
 void OgreNoVRRender::initClientHmdRendering()
@@ -72,6 +77,8 @@ void OgreNoVRRender::renderAndSubmitFrame()
 	window->update();
 	*/
 	//Sleep for one ms
+
+	root->renderOneFrame();
 	std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
 
