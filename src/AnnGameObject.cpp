@@ -427,3 +427,13 @@ void AnnGameObject::setWorldPosition(float x, float y, float z) const
 {
 	setWorldPosition(AnnVect3{ x, y, z });
 }
+
+void AnnGameObject::setItem(Ogre::Item* item)
+{
+	Model = item;
+}
+
+Ogre::Item* AnnGameObject::getItem() const
+{
+	return Model;
+}

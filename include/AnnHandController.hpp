@@ -4,6 +4,7 @@
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
+#include <OgreItem.h>
 
 //Forward declaration of the renderer classes that manager VR controllers
 class OgreVRRender;
@@ -89,13 +90,13 @@ namespace Annwvyn
 		static std::string getSideAsString(AnnHandControllerSide s);
 
 		///Attach a 3D model to the hand. Previously attached model will be detached
-		void attachModel(Ogre::Entity* handModel);
+		void attachModel(Ogre::Item* handModel);
 
 		///Detach model without destroying it
 		void detachModel();
 
 		///Return the current model :
-		Ogre::Entity* getModel() const;
+		Ogre::Item* getModel() const;
 
 		///Get position in world space
 		AnnVect3 getWorldPosition() const;
@@ -212,7 +213,7 @@ namespace Annwvyn
 		Ogre::SceneNode* node, *grabbed;
 
 		///Currently attached entity
-		Ogre::Entity* model;
+		Ogre::Item* model;
 
 		///tracked boolean, true if controller has been updated by the engine
 		bool tracked;

@@ -15,6 +15,7 @@
 #include <OgreQuaternion.h>
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
+#include <OgreItem.h>
 
 #include "BtOgreGP.h"
 #include "BtOgrePG.h"
@@ -114,7 +115,8 @@ namespace Annwvyn
 		Ogre::SceneNode* getNode() const;
 
 		///Get Ogre Entity
-		Ogre::Entity* getEntity() const;
+		DEPRECATED Ogre::Item* getEntity() const { return getItem(); };
+		Ogre::Item* getItem() const;
 
 		///Get Rigid Body
 		btRigidBody* getBody() const;
@@ -206,7 +208,7 @@ namespace Annwvyn
 		void setNode(Ogre::SceneNode* node);
 
 		///For engine : set Entity
-		void setEntity(Ogre::Entity* entity);
+		void setItem(Ogre::Item* item);
 
 		// TODO create animation state machine
 		///For engine : get elapsed time
@@ -228,13 +230,13 @@ namespace Annwvyn
 		Ogre::SceneNode* Node;
 
 		///Entity
-		Ogre::Entity* Entity;
+		Ogre::Item* Model;
 
-		// TODO create animation state machine
+		/*// TODO create animation state machine
 		bool animIsSetted;
 		bool animIsPlaying;
 		bool animIsLooping;
-		Ogre::AnimationState* anim;
+		Ogre::AnimationState* anim;*/
 
 		btCollisionShape* Shape;
 		btRigidBody* Body;

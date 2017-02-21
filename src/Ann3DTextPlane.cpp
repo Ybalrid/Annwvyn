@@ -9,6 +9,7 @@ using namespace std;
 
 void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true)
 {
+	/* TODO fix hardware buffer/texture copy
 	using namespace Ogre;
 
 	if (destTexture->getHeight() < destRectangle.bottom)
@@ -190,6 +191,7 @@ stop:
 
 	// Free the memory allocated for the buffer
 	free(buffer);
+	*/
 }
 
 Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float resolution, string fName, string TTF) :

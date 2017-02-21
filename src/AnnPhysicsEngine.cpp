@@ -12,7 +12,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	CollisionConfiguration(nullptr),
 	Solver(nullptr),
 	DynamicsWorld(nullptr),
-	debugDrawer(nullptr),
+	//debugDrawer(nullptr),
 	playerRigidBodyState(nullptr),
 	gameObjects(objects),
 	triggerObjects(triggers),
@@ -32,8 +32,8 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	AnnDebug() << "Gravity vector " << defaultGravity;
 
 	debugPhysics = false;//by default
-	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get());
-	DynamicsWorld->setDebugDrawer(debugDrawer);
+	//debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get());
+	//DynamicsWorld->setDebugDrawer(debugDrawer);
 }
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
@@ -85,8 +85,8 @@ void AnnPhysicsEngine::step(float delta) const
 
 void AnnPhysicsEngine::stepDebugDrawer() const
 {
-	if (debugPhysics)
-		debugDrawer->step();
+	/*if (debugPhysics)
+		debugDrawer->step();*/
 }
 
 void AnnPhysicsEngine::processCollisionTesting() const
@@ -111,8 +111,8 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body) const
 void AnnPhysicsEngine::setDebugPhysics(bool state)
 {
 	debugPhysics = state;
-	debugDrawer->setDebugMode(int(state));
-	debugDrawer->step();
+	/*debugDrawer->setDebugMode(int(state));
+	debugDrawer->step();*/
 }
 
 void AnnPhysicsEngine::processTriggersContacts() const
