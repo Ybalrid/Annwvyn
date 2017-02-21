@@ -105,7 +105,7 @@ void OgreVRRender::getOgreConfig() const
 
 	//Load OgrePlugins
 	root->loadPlugin(PluginRenderSystemGL);
-	root->loadPlugin(PluginOctreeSceneManager);
+	//root->loadPlugin(PluginOctreeSceneManager);
 
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem));
