@@ -26,12 +26,12 @@ void AnnGameObjectManager::update()
 	}
 }
 
-std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char entityName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char meshName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
 {
 	//TODO probably need to convert entity to items here!
-	AnnDebug("Creating a game object from the entity " + std::string(entityName));
+	AnnDebug("Creating a game object from the entity " + std::string(meshName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
-	auto ent = smgr->createEntity(entityName);
+	auto ent = smgr->createEntity(meshName);
 	Ogre::Item* v2;
 	auto node = smgr->getRootSceneNode()->createChildSceneNode();
 
@@ -44,7 +44,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	//The identifier name can be empty, meaning that we have to figure out an unique name.
 	//In that case we will append to the entity name + a number that will always be incremented.
 	if (identifier.empty())
-		identifier = entityName + std::to_string(++id);
+		identifier = meshName + std::to_string(++id);
 
 	AnnDebug() << "The object " << identifier << " has been created. Annwvyn memory address " << obj;
 	AnnDebug() << "This object take " << sizeof *obj.get() << " bytes";

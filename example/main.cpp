@@ -137,7 +137,7 @@ AnnMain()
 	OgreVRRender::setAntiAliasingLevel(8);
 
 	AnnInit("AnnTest");
-
+/*
 	//Init some player body parameters
 	if (isRoomscale)
 		AnnGetEngine()->initPlayerRoomscalePhysics();
@@ -175,15 +175,15 @@ AnnMain()
 	{
 		putGizmoOnHands();
 	};
-
+	*/
 	do
 	{
-		debugHook();
+		//debugHook();
 	} while (AnnGetEngine()->refresh());
 
 	//Cleanup of the "don't do it" listener
-	AnnGetEventManager()->removeListener(someListener);
-	someListener.reset();
+	//AnnGetEventManager()->removeListener(someListener);
+	//someListener.reset();
 
 	AnnQuit();
 

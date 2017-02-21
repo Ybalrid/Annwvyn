@@ -392,8 +392,6 @@ namespace Annwvyn
 		bool getContactStatus() const;
 		///Pointer to the trigger that have sent this event
 
-		// TODO don't use a shared ptr here
-
 		AnnTriggerObject* getSender() const;
 	private:
 		friend class AnnEventManager;

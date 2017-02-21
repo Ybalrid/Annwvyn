@@ -20,10 +20,12 @@ void OgreNoVRRender::initVrHmd()
 void OgreNoVRRender::initScene()
 {
 	/*
-	 TODO change to new scene manager with multiple threads
 	smgr = root->createSceneManager("OctreeSceneManager", "OSMSMGR");
 	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
 	*/
+	
+	//TODO make the amont of threads here a parameter
+	smgr = root->createSceneManager(Ogre::ST_GENERIC, 4, Ogre::INSTANCING_CULLING_THREADED);
 }
 
 void OgreNoVRRender::initRttRendering()
