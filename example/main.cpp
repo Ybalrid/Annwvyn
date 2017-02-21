@@ -135,6 +135,7 @@ std::function<void()> debugHook;
 AnnMain()
 {
 	OgreVRRender::setAntiAliasingLevel(8);
+	AnnEngine::openConsole();
 
 	AnnInit("AnnTest");
 /*

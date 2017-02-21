@@ -41,7 +41,9 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	frameCounter{ 0 },
 	rttEyes{ nullptr },
 	glMajor{ 4 },
-	glMinor{ 3 }
+	glMinor{ 3 },
+	monoscopicCompositor(monoscopicWorkspaceName),
+	stereoscopicCompositor(stereoscopicWorkspaceName)
 {
 	rttTexture.setNull();
 	if (self)
@@ -55,6 +57,8 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 		eyeCamera = nullptr;
 	for (auto& handController : handControllers)
 		handController = nullptr;
+	for (auto& compositor : compositorWorkspaces)
+		compositor = nullptr;
 }
 
 OgreVRRender::~OgreVRRender()
