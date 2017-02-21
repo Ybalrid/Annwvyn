@@ -57,6 +57,8 @@ namespace Annwvyn
 
 		void setAttenuation(float range, float constant, float linear, float quadratic);
 
+		Ogre::Light* getOgreLight();
+
 	private:
 		friend class AnnEngine;
 		friend class AnnGameObjectManager;
