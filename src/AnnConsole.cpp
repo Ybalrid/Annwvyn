@@ -19,7 +19,7 @@ refreshRate{ 1.0 / 15.0 }
 	auto Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
 	auto technique = Console.getPointer()->getTechnique(0);
 	auto pass = technique->getPass(0);
-	pass->setLightingEnabled(false);
+	//pass->setLightingEnabled(false);
 	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
 
 	/*
@@ -47,7 +47,8 @@ refreshRate{ 1.0 / 15.0 }
 	textCoord[3] = AnnVect2(1, 1);
 
 	//create the quad itself
-	displaySurface = AnnGetEngine()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
+	/* TODO fix manual object
+	 *displaySurface = AnnGetEngine()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
 	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);//Strip of triangle : Define a triangle then add them by points
 
 	//Add the four vertices. This will directly describe two Triangles
@@ -58,13 +59,13 @@ refreshRate{ 1.0 / 15.0 }
 	}
 
 	//Object complete
-	displaySurface->end();
+	displaySurface->end();*/
 
 	//create a node child to the camera here :
 	consoleNode = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 
 	//attach The object
-	consoleNode->attachObject(displaySurface);
+	//consoleNode->attachObject(displaySurface);
 
 	//set the player relative position
 	consoleNode->setPosition(offset + AnnGetPlayer()->getEyesHeight() * AnnVect3::UNIT_Y);
@@ -214,6 +215,8 @@ void AnnConsole::update()
 			texture->getSrcWidth(), texture->getSrcHeight(), 1);
 	else
 	{
+		/*TODO fix hardware buffer for copy without OpenGL 4.3, or deprecate*/
+		/*
 		//background->copyToTexture(texture);
 		float w(texture->getBuffer()->getWidth());
 		float h(texture->getBuffer()->getHeight());
@@ -230,6 +233,7 @@ void AnnConsole::update()
 
 		background->getBuffer()->unlock();
 		texture->getBuffer()->unlock();
+		*/
 	}
 
 	//Write text to texture
@@ -250,7 +254,8 @@ bool AnnConsole::isForbdiden(const std::string& keyword)
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap) const
 {
-	using namespace Ogre;
+	/* TODO fix hardware buffer for manual texture copy
+	 *using namespace Ogre;
 
 	if (destTexture->getHeight() < destRectangle.bottom)
 		destRectangle.bottom = destTexture->getHeight();
@@ -416,7 +421,7 @@ stop:
 	destBuffer->unlock();
 
 	// Free the memory allocated for the textureBuffer
-	free(textureBuffer);
+	free(textureBuffer);*/
 }
 
 void AnnConsole::syncConsolePosition() const

@@ -18,6 +18,10 @@ hasBGM(false) {}
 
 void AnnSplashLevel::load()
 {
+	/* 
+	TODO : Fix manual object
+	TODO : Fix material stuff (unlit) 
+	 
 	AnnDebug() << "Ignore physics";
 	AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
 	AnnGetPlayer()->ignorePhysics = true;
@@ -82,6 +86,7 @@ void AnnSplashLevel::load()
 	Splash = smgr->getRootSceneNode()->createChildSceneNode();
 	Splash->attachObject(CurvedPlane);
 	Splash->setScale(10, 10, 10);
+	*/
 }
 
 void AnnSplashLevel::setBGM(std::string path, bool preload)

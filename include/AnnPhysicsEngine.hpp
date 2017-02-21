@@ -100,7 +100,7 @@ namespace Annwvyn
 		bool debugPhysics;
 
 		///Debug drawer object from BtOgre
-		BtOgre::DebugDrawer* debugDrawer;
+		//BtOgre::DebugDrawer* debugDrawer; TODO fix DebugDrawer on BtOgre
 		BtOgre::RigidBodyState* playerRigidBodyState;
 
 		AnnGameObjectList& gameObjects;

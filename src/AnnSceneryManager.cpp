@@ -14,7 +14,9 @@ renderer(rendererFromEngine)
 void AnnSceneryManager::setAmbientLight(AnnColor color) const
 {
 	AnnDebug() << "Setting the ambient light to color " << color;
-	smgr->setAmbientLight(color.getOgreColor());
+	/*TODO fix ambiant ligh 
+	 *smgr->setAmbientLight(color.getOgreColor());
+	 */
 }
 
 void AnnSceneryManager::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling) const
