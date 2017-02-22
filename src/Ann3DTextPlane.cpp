@@ -284,6 +284,8 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 
 Ann3DTextPlane::~Ann3DTextPlane()
 {
+	/*
+	// TODO : fix the manual object mess!
 	AnnDebug() << "Destructing a 3D Text plane!";
 	auto smgr = AnnGetEngine()->getSceneManager();
 
@@ -292,7 +294,8 @@ Ann3DTextPlane::~Ann3DTextPlane()
 
 	Ogre::MaterialManager::getSingleton().remove(materialName);
 
-	auto textureName = texture->getName();
+	
+	 *auto textureName = texture->getName();
 	Ogre::TextureManager::getSingleton().remove(textureName);
 
 	if (!bgTexture.isNull())
@@ -300,9 +303,10 @@ Ann3DTextPlane::~Ann3DTextPlane()
 		textureName = texture->getName();
 		Ogre::TextureManager::getSingleton().remove(textureName);
 	}
-
+	
 	smgr->destroySceneNode(node);
 	node = nullptr;
+	*/
 }
 
 void Ann3DTextPlane::setCaption(string newCaption)
@@ -447,6 +451,8 @@ void Ann3DTextPlane::setBackgroundImage(string imgName)
 
 void Ann3DTextPlane::renderText()
 {
+	/*
+	TODO fix hardware buffer and text rendering
 	clearTexture();
 	WriteToTexture(caption,
 				   texture,
@@ -461,6 +467,7 @@ void Ann3DTextPlane::renderText()
 				   true);
 
 	needUpdating = false;
+	*/
 }
 
 void Ann3DTextPlane::clearTexture()

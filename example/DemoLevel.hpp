@@ -75,7 +75,10 @@ public:
 
 		AnnGetPlayer()->teleport({ 0, 5, 0 }, 0);
 		AnnDebug() << "Ground Level is : " << Ground->getPosition().y;
-		AnnGetPlayer()->regroundOnPhysicsBody();
+		AnnGetPlayer()->regroundOnPhysicsBody(); //<--- will not work because no physics yet
+
+		//TODO temp hack fix. Remove me : 
+		AnnGetPlayer()->reground(Ground->getPosition().y);
 	}
 
 	//Called at each frame

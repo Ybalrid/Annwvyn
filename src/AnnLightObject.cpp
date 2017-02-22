@@ -10,13 +10,28 @@ AnnLightObject::AnnLightObject(Ogre::Light* light) :
 	light(light)
 {
 	AnnDebug() << "Light constructor called";
+	if (light)
+	{
+		node = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+		node->attachObject(light);
+	}
 }
 
 AnnLightObject::~AnnLightObject()
 {
 	AnnDebug() << "Light destructor called";
 	if (light)
+	{
+		if (node)
+		{
+			node->detachObject(light);
+			if (node->getParentSceneNode())
+				node->getParentSceneNode()->removeChild(node);
+			AnnGetEngine()->getSceneManager()->destroySceneNode(node);
+			node = nullptr;
+		}
 		AnnGetEngine()->getSceneManager()->destroyLight(light);
+	}
 }
 
 AnnLightObject::LightTypes AnnLightObject::getLightTypeFromString(std::string ltype)
@@ -31,6 +46,8 @@ void AnnLightObject::setPosition(AnnVect3 position)
 {
 	//TODO lights have to be attached to nodes
 	//light->setPosition(position);
+
+	node->setPosition(position);
 }
 
 void AnnLightObject::setDirection(AnnVect3 direction) const

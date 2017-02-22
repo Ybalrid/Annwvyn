@@ -160,7 +160,7 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <PreventDllBinding>false</PreventDllBinding>
-      <AdditionalDependencies>Annwvyn.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;OIS.lib;libovr.lib;openvr_api.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Annwvyn.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;OgreHlmsPbs.lib;OgreHlmsUnlit.lib;OIS.lib;libovr.lib;openvr_api.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
       <LinkStatus>false</LinkStatus>
     </Link>

@@ -247,6 +247,7 @@ void OgreVRRender::initPipeline()
 	initCameras();
 	initRttRendering();
 	updateProjectionMatrix();
+	loadHLMSLibrary();
 }
 
 GLuint OgreVRRender::createRenderTexture(float w, float h)
@@ -322,4 +323,29 @@ std::string OgreVRRender::getName() const
 bool OgreVRRender::handControllersAvailable() const
 {
 	return handControllers[left].get() && handControllers[right].get();
+}
+
+void OgreVRRender::loadHLMSLibrary(const std::string& path)
+{
+	auto hlmsFolder = path;
+
+	//The hlmsFolder can come from a configuration file where it could be "empty" or set to "." or lacking the trailing "/"
+	if (hlmsFolder.empty()) hlmsFolder = "./";
+	else if (hlmsFolder[hlmsFolder.size() - 1] != '/') hlmsFolder += "/";
+
+	//Get the hlmsManager (not a singleton by itself, but accessible via Root)
+	auto hlmsManager = Ogre::Root::getSingleton().getHlmsManager();
+
+	//Define the shader library to use for HLMS
+	auto library = Ogre::ArchiveVec();
+	auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/" + SL, "FileSystem", true);
+	library.push_back(archiveLibrary);
+
+	//Define "unlit" and "PBS" (physics based shader) HLMS
+	auto archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/" + SL, "FileSystem", true);
+	auto archivePbs = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Pbs/" + SL, "FileSystem", true);
+	auto hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveUnlit, &library);
+	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &library);
+	hlmsManager->registerHlms(hlmsUnlit);
+	hlmsManager->registerHlms(hlmsPbs);
 }

@@ -208,6 +208,8 @@ public:
 	///Get the name of this renderer
 	std::string getName() const;
 
+	void loadHLMSLibrary(const std::string& path = "./hlms/");
+
 private:
 
 	//GL version to use

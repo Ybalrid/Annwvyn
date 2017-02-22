@@ -26,20 +26,19 @@ void OgreNoVRRender::initScene()
 	
 	//TODO make the amont of threads here a parameter
 	smgr = root->createSceneManager(Ogre::ST_GENERIC, 4, Ogre::INSTANCING_CULLING_THREADED);
+
 }
 
 void OgreNoVRRender::initRttRendering()
 {
-	/*
-	 *TODO swithc to compositor2 
-	noVRViewport = window->addViewport(monoCam);
-	noVRViewport->setBackgroundColour(backgroundColor);
-	*/
-
 	auto compositor = getRoot()->getCompositorManager2();
 	if (!compositor->hasWorkspaceDefinition(monoscopicCompositor))
 		compositor->createBasicWorkspaceDef(monoscopicWorkspaceName, backgroundColor);
+	auto def = compositor->getWorkspaceDefinition(monoscopicCompositor);
+
+
 	compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, monoscopicCompositor, true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
+	//compositorWorkspaces[2]->get
 }
 
 void OgreNoVRRender::initClientHmdRendering()

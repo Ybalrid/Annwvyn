@@ -7,6 +7,11 @@
 #include "AnnTypes.h"
 #include "AnnTriggerObject.hpp"
 
+#include <OgreMesh.h>
+#include <OgreMesh2.h>
+#include <OgreMeshManager.h>
+#include <OgreMeshManager2.h>
+
 #include <memory>
 
 namespace Annwvyn
