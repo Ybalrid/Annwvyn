@@ -63,6 +63,7 @@ namespace Annwvyn
 		friend class AnnEngine;
 		friend class AnnGameObjectManager;
 		Ogre::Light* light;
+		Ogre::SceneNode* node;
 	};
 }
 

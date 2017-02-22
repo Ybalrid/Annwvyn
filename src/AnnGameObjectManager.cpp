@@ -28,11 +28,24 @@ void AnnGameObjectManager::update()
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char meshName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
 {
-	//TODO probably need to convert entity to items here!
-	AnnDebug("Creating a game object from the entity " + std::string(meshName));
+	AnnDebug("Creating a game object from the mesh file :  " + std::string(meshName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
-	auto ent = smgr->createEntity(meshName);
-	Ogre::Item* v2;
+	
+	//auto ent = smgr->createEntity(meshName);
+
+	auto v1Mesh = Ogre::v1::MeshManager::getSingleton().load(meshName,
+		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+		Ogre::v1::HardwareBuffer::HBU_STATIC,
+		Ogre::v1::HardwareBuffer::HBU_STATIC);
+
+	// TODO : Don't use that uniq stuff, it's a hack;
+	static const std::string sufix = "_V2mesh";
+	static auto uniq = 0;
+	auto v2Mesh = Ogre::MeshManager::getSingleton().createManual(meshName + sufix + std::to_string(uniq++), AnnResourceManager::defaultResourceGroupName);
+	// TODO : permit to set theses things by hand
+	v2Mesh->importV1(v1Mesh.get(), true, true, true);
+
+	Ogre::Item* v2 = smgr->createItem(v2Mesh);
 	auto node = smgr->getRootSceneNode()->createChildSceneNode();
 
 	node->attachObject(v2);

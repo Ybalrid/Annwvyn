@@ -138,7 +138,7 @@ AnnMain()
 	AnnEngine::openConsole();
 
 	AnnInit("AnnTest");
-/*
+
 	//Init some player body parameters
 	if (isRoomscale)
 		AnnGetEngine()->initPlayerRoomscalePhysics();
@@ -146,15 +146,17 @@ AnnMain()
 		AnnGetEngine()->initPlayerStandingPhysics();
 
 	AnnGetEventManager()->useDefaultEventListener();
-	auto quitOnButtonListener = make_shared<QuitOnButtonListener>();
+/*	auto quitOnButtonListener = make_shared<QuitOnButtonListener>();
 	AnnGetEventManager()->addListener(quitOnButtonListener);
 
 	//load resources
+	*/
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 
 	AnnGetResourceManager()->initResources();
-
+	
+	
 	//create and load level objects
 	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
 	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
@@ -162,7 +164,7 @@ AnnMain()
 
 	//ask the level manager to perform a jump to the first level
 	AnnGetLevelManager()->jumpToFirstLevel();
-
+	
 	AnnDebug() << "Starting the render loop";
 
 	//Not how you're supposed to do it:
@@ -176,15 +178,15 @@ AnnMain()
 	{
 		putGizmoOnHands();
 	};
-	*/
+
 	do
 	{
 		//debugHook();
 	} while (AnnGetEngine()->refresh());
 
 	//Cleanup of the "don't do it" listener
-	//AnnGetEventManager()->removeListener(someListener);
-	//someListener.reset();
+	AnnGetEventManager()->removeListener(someListener);
+	someListener.reset();
 
 	AnnQuit();
 

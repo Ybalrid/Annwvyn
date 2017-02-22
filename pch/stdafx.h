@@ -52,6 +52,10 @@
 #include <Hlms/Unlit/OgreHlmsUnlit.h>
 #include <OgreHlmsManager.h>
 #include <OgreHlms.h>
+#include <OgreMesh.h>
+#include <OgreMesh2.h>
+#include <OgreMeshManager.h>
+#include <OgreMeshManager2.h>
 
 //Object-Oriented Input System
 #include <OIS.h>
