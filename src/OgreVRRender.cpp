@@ -118,16 +118,11 @@ void OgreVRRender::getOgreConfig() const
 
 	//Load OgrePlugins
 	root->loadPlugin(PluginRenderSystemGL3Plus);
-	//root->loadPlugin(PluginOctreeSceneManager);
 
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem3Plus));
-	//root->getRenderSystem()->setFixedPipelineEnabled(true); //NO MORE FIXED PIPELINE
-	//root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 	root->getRenderSystem()->setConfigOption("sRGB Gamma Conversion", "Yes");
-
-
 	root->initialise(false);
 }
 
@@ -286,35 +281,46 @@ std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderB
 
 void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 {
-
-	logToOgre("call glfwInit()");
-	glfwInit();
-	//Specify OpenGL version 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	logToOgre("Set OpenGL context version " + std::to_string(glMajor) + "." + std::to_string(glMinor));
-
-	//Create a window (and an opengl context with it)
 	auto winName = rendererName + " : " + name + " - monitor output";
-	glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
+	HGLRC context = {};
+	HWND handle = {};
+	auto useGLFW{ true };
+
+	if (useGLFW)
+	{
+
+		logToOgre("call glfwInit()");
+		glfwInit();
+		//Specify OpenGL version 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_SAMPLES, AALevel);
+
+		logToOgre("Set OpenGL context version " + std::to_string(glMajor) + "." + std::to_string(glMinor));
+
+		//Create a window (and an opengl context with it)
+		glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
 
 
-	//Make the created context current
-	glfwMakeContextCurrent(glfwWindow);
+		//Make the created context current
+		glfwMakeContextCurrent(glfwWindow);
 
-	//Get the hwnd and the context :
-	HGLRC context{ wglGetCurrentContext() };
-	HWND handle{ glfwGetWin32Window(glfwWindow) };
+		//Get the hwnd and the context :
+		context =  wglGetCurrentContext() ;
+		handle =  glfwGetWin32Window(glfwWindow) ;
 
+	}
 	Ogre::NameValuePairList options;
-	options["externalWindowHandle"] = std::to_string(size_t(handle));
-	options["externalGLContext"] = std::to_string(size_t(context));
+	if (useGLFW)
+	{
+		options["externalWindowHandle"] = std::to_string(size_t(handle));
+		options["externalGLContext"] = std::to_string(size_t(context));
+	}
 	options["FSAA"] = std::to_string(AALevel);
 	options["top"] = "0";
 	options["left"] = "0";
-	options["gamma"] = "true";
+	//Do not put gamma = true here
 	if (vsync)
 		options["vsync"] = "true";
 	else
