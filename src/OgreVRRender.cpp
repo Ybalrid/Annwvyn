@@ -36,7 +36,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	bodyOrientation{ Ogre::Quaternion::IDENTITY },
 	name{ windowName },
 	gameplayCharacterRoot{ nullptr },
-	backgroundColor{ 0, 0.56f, 1 },
+	backgroundColor{ 0.2f, 0.4f, 0.75f },
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
 	rttEyes{ nullptr },
@@ -117,11 +117,11 @@ void OgreVRRender::getOgreConfig() const
 	if (!root) throw Annwvyn::AnnInitializationError(ANN_ERR_NOTINIT, "Need to initialize Ogre::Root before loading system configuration");
 
 	//Load OgrePlugins
-	root->loadPlugin(PluginRenderSystemGL);
+	root->loadPlugin(PluginRenderSystemGL3Plus);
 	//root->loadPlugin(PluginOctreeSceneManager);
 
 	//Set the classic OpenGL render system
-	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem));
+	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem3Plus));
 	//root->getRenderSystem()->setFixedPipelineEnabled(true); //NO MORE FIXED PIPELINE
 	//root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
@@ -333,13 +333,18 @@ bool OgreVRRender::handControllersAvailable() const
 	return handControllers[left].get() && handControllers[right].get();
 }
 
+void OgreVRRender::makeValidPath(std::string& path)
+{
+	if (path.empty()) path = "./";
+	else if (path[path.size() - 1] != '/') path += "/";
+}
+
 void OgreVRRender::loadHLMSLibrary(const std::string& path)
 {
 	auto hlmsFolder = path;
 
 	//The hlmsFolder can come from a configuration file where it could be "empty" or set to "." or lacking the trailing "/"
-	if (hlmsFolder.empty()) hlmsFolder = "./";
-	else if (hlmsFolder[hlmsFolder.size() - 1] != '/') hlmsFolder += "/";
+	makeValidPath(hlmsFolder);
 
 	//Get the hlmsManager (not a singleton by itself, but accessible via Root)
 	auto hlmsManager = Ogre::Root::getSingleton().getHlmsManager();
@@ -358,11 +363,48 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 	hlmsManager->registerHlms(hlmsPbs);
 }
 
-void OgreVRRender::loadCompositor()
+void OgreVRRender::loadCompositor(const std::string& path, const std::string& type)
 {
+	auto compositorFolder = path;
+	makeValidPath(compositorFolder);
 	auto resourceGroupManager = Ogre::ResourceGroupManager::getSingletonPtr();
-	static const std::string path = "./compositor/";
-	static const char* RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
-	resourceGroupManager->addResourceLocation(path, "FileSystem", RESOURCE_GROUP_COMPOSITOR);
+	//TODO maybe package the compositor differently
+	resourceGroupManager->addResourceLocation(compositorFolder, type, RESOURCE_GROUP_COMPOSITOR);
 	resourceGroupManager->initialiseResourceGroup(RESOURCE_GROUP_COMPOSITOR);
+}
+
+void OgreVRRender::setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName)
+{
+	auto compositor = root->getCompositorManager2();
+	auto renderingNodeDef = compositor->getNodeDefinitionNonConst(renderingNodeName);
+	auto targetDef = renderingNodeDef->getTargetPass(0);
+	auto& passDefs = targetDef->getCompositorPasses();
+	for (auto pass : passDefs) if (pass->getType() == Ogre::PASS_CLEAR)
+	{
+		auto clearDef = dynamic_cast<Ogre::CompositorPassClearDef*>(pass);
+		if (clearDef)
+		{
+			clearDef->mColourValue = skyColor * multiplier;
+		}
+	}
+}
+
+void OgreVRRender::setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial)
+{
+	auto materialManager = Ogre::MaterialManager::getSingletonPtr();
+	auto material = materialManager->load(postProcessMaterial, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME).staticCast<Ogre::Material>();
+
+	auto pass = material->getTechnique(0)->getPass(0);
+	auto psParams = pass->getFragmentProgramParameters();
+
+	const Ogre::Vector3 exposureParams
+	{
+		//TODO understand why theses parameters are used
+		1024.0f * expf(exposure - 2.0f),
+		7.5f - maxAuto,
+		7.5f - minAuto
+	};
+
+	psParams->setNamedConstant("exposure", exposureParams);
+
 }

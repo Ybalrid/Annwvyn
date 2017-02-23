@@ -26,24 +26,20 @@ void OgreNoVRRender::initScene()
 
 }
 
+///TODO move that to the Scenery Manager
 void OgreNoVRRender::initRttRendering()
 {
-	auto compositor = getRoot()->getCompositorManager2();
+	auto compositor = getRoot()->getCompositorManager2();			
+	float multiplier = 60.0f;
+	auto skyColor = backgroundColor;
+	auto renderingNodeName = "MyHdrRenderingNode";
+
 	
 	//We loaded the HDR workspace from file earlier already
 	compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, "MyHdrWorkspace", true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
 
-	auto renderingNodeDef = compositor->getNodeDefinitionNonConst("MyHdrRenderingNode");
-	auto targetDef = renderingNodeDef->getTargetPass(0);
-	auto& passDefs = targetDef->getCompositorPasses();
-	for (auto pass : passDefs) if (pass->getType() == Ogre::PASS_CLEAR )
-	{
-		auto clearDef = dynamic_cast<Ogre::CompositorPassClearDef*>(pass);
-		if(clearDef)
-		{
-			clearDef->mColourValue = backgroundColor;
-		}
-	}
+	setSkyColor(skyColor, multiplier, renderingNodeName);
+	setExposure(0, -1, 2.5f);
 
 }
 

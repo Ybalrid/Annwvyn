@@ -15,11 +15,14 @@
 #include <Compositor/OgreCompositorNode.h>
 #include <Compositor/OgreCompositorNodeDef.h>
 #include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
+#include <OgreMaterialManager.h>
+#include <OgreMaterial.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
 #include <Hlms/Pbs/OgreHlmsPbs.h>
 #include <Hlms/Unlit/OgreHlmsUnlit.h>
 #include <OgreHlmsManager.h>
 #include <OgreHlms.h>
-
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
 
@@ -49,11 +52,12 @@ class DLL OgreVRRender
 {
 public:
 	///Name of the rendersystem plugin to load on Ogre
-	static constexpr const char* const PluginRenderSystemGL{ "RenderSystem_GL3Plus" };
-	///Name of the scene manager plugin to load on ogre
-	static constexpr const char* const PluginOctreeSceneManager{ "Plugin_OctreeSceneManager" };
+	static constexpr const char* const PluginRenderSystemGL3Plus{ "RenderSystem_GL3Plus" };
 	///Name of the rendersystem to initialize
-	static constexpr const char* const GLRenderSystem{ "OpenGL 3+ Rendering Subsystem" };
+	static constexpr const char* const GLRenderSystem3Plus{ "OpenGL 3+ Rendering Subsystem" };
+	///Resource group to load the shaders, material and compositor script for rendering.
+	static constexpr const char* const RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
+
 
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 	static bool UseSSAA;
@@ -182,6 +186,7 @@ public:
 
 	///Return true if the hand controllers are available
 	bool handControllersAvailable() const;
+	void makeValidPath(std::string& hlmsFolder);
 
 	///Called when the IPD needs to be taken into account. Translate the cameras along local X to make them match the position of your eyes
 	virtual void handleIPDChange() = 0;
@@ -213,7 +218,12 @@ public:
 
 	void loadHLMSLibrary(const std::string& path = "./hlms/");
 
-	void loadCompositor();
+	void loadCompositor(const std::string& path = "./compositor/", const std::string& type = "FileSystem");
+
+	///Set the color used on the "clear" pass of the compositor node given 
+	void setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName);
+
+	void setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial = "HDR/DownScale03_SumLumEnd");
 
 private:
 
