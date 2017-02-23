@@ -63,6 +63,11 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 
 OgreVRRender::~OgreVRRender()
 {
+
+	root->destroyRenderTarget(window);
+	glfwDestroyWindow(glfwWindow);
+	glfwTerminate();
+
 	self = nullptr;
 }
 
@@ -120,6 +125,7 @@ void OgreVRRender::getOgreConfig() const
 	//root->getRenderSystem()->setFixedPipelineEnabled(true); //NO MORE FIXED PIPELINE
 	//root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "FBO");
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
+	root->getRenderSystem()->setConfigOption("sRGB Gamma Conversion", "Yes");
 
 
 	root->initialise(false);
@@ -245,6 +251,7 @@ void OgreVRRender::initPipeline()
 		createWindow();
 	initScene();
 	initCameras();
+	loadCompositor();
 	initRttRendering();
 	updateProjectionMatrix();
 	loadHLMSLibrary();
@@ -307,6 +314,7 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	options["FSAA"] = std::to_string(AALevel);
 	options["top"] = "0";
 	options["left"] = "0";
+	options["gamma"] = "true";
 	if (vsync)
 		options["vsync"] = "true";
 	else
@@ -348,4 +356,13 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &library);
 	hlmsManager->registerHlms(hlmsUnlit);
 	hlmsManager->registerHlms(hlmsPbs);
+}
+
+void OgreVRRender::loadCompositor()
+{
+	auto resourceGroupManager = Ogre::ResourceGroupManager::getSingletonPtr();
+	static const std::string path = "./compositor/";
+	static const char* RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
+	resourceGroupManager->addResourceLocation(path, "FileSystem", RESOURCE_GROUP_COMPOSITOR);
+	resourceGroupManager->initialiseResourceGroup(RESOURCE_GROUP_COMPOSITOR);
 }

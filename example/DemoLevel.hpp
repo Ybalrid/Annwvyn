@@ -71,7 +71,14 @@ public:
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
 
-		AnnGetSceneryManager()->setAmbientLight(AnnColor(0.15f, 0.15f, 0.15f));
+		///Fix for LDR
+		Sun->getOgreLight()->setPowerScale(97000.0f);
+
+		AnnGetEngine()->getSceneManager()->setAmbientLight(Ogre::ColourValue(0.3f, 0.5f, 0.7f) * 0.1f * 0.75f * 60.0f,
+			Ogre::ColourValue(0.6f, 0.45f, 0.3f) * 0.065f * 0.75f * 60.0f,
+			Ogre::Vector3{ 0, -1, -0.5 });
+
+		//AnnGetSceneryManager()->setAmbientLight(AnnColor(0.15f, 0.15f, 0.15f));
 
 		AnnGetPlayer()->teleport({ 0, 5, 0 }, 0);
 		AnnDebug() << "Ground Level is : " << Ground->getPosition().y;

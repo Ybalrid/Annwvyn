@@ -18,27 +18,33 @@ void OgreNoVRRender::initVrHmd()
 {}
 
 void OgreNoVRRender::initScene()
-{
-	/*
-	smgr = root->createSceneManager("OctreeSceneManager", "OSMSMGR");
-	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
-	*/
-	
+{	
 	//TODO make the amont of threads here a parameter
 	smgr = root->createSceneManager(Ogre::ST_GENERIC, 4, Ogre::INSTANCING_CULLING_THREADED);
+	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
+	smgr->setShadowFarDistance(500.0f);
 
 }
 
 void OgreNoVRRender::initRttRendering()
 {
 	auto compositor = getRoot()->getCompositorManager2();
-	if (!compositor->hasWorkspaceDefinition(monoscopicCompositor))
-		compositor->createBasicWorkspaceDef(monoscopicWorkspaceName, backgroundColor);
-	auto def = compositor->getWorkspaceDefinition(monoscopicCompositor);
+	
+	//We loaded the HDR workspace from file earlier already
+	compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, "MyHdrWorkspace", true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
 
+	auto renderingNodeDef = compositor->getNodeDefinitionNonConst("MyHdrRenderingNode");
+	auto targetDef = renderingNodeDef->getTargetPass(0);
+	auto& passDefs = targetDef->getCompositorPasses();
+	for (auto pass : passDefs) if (pass->getType() == Ogre::PASS_CLEAR )
+	{
+		auto clearDef = dynamic_cast<Ogre::CompositorPassClearDef*>(pass);
+		if(clearDef)
+		{
+			clearDef->mColourValue = backgroundColor;
+		}
+	}
 
-	compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, monoscopicCompositor, true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
-	//compositorWorkspaces[2]->get
 }
 
 void OgreNoVRRender::initClientHmdRendering()
@@ -69,13 +75,6 @@ void OgreNoVRRender::renderAndSubmitFrame()
 		running = false;
 		return;
 	}
-
-	// TODO update compositor instead
-	/*root->_fireFrameRenderingQueued();
-	noVRViewport->update();
-	window->update();
-	*/
-	//Sleep for one ms
 
 	root->renderOneFrame();
 	std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -119,7 +118,7 @@ void OgreNoVRRender::handleIPDChange()
 
 OgreNoVRRender::~OgreNoVRRender()
 {
-	root->destroySceneManager(smgr);
+	//root->destroySceneManager(smgr);
 	noVRself = nullptr;
 	rttTexture.setNull();
 }

@@ -12,6 +12,9 @@
 #include <Compositor/OgreCompositorManager2.h>
 #include <Compositor/OgreCompositorWorkspaceDef.h>
 #include <Compositor/OgreCompositorWorkspace.h>
+#include <Compositor/OgreCompositorNode.h>
+#include <Compositor/OgreCompositorNodeDef.h>
+#include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
 #include <Hlms/Pbs/OgreHlmsPbs.h>
 #include <Hlms/Unlit/OgreHlmsUnlit.h>
 #include <OgreHlmsManager.h>
@@ -209,6 +212,8 @@ public:
 	std::string getName() const;
 
 	void loadHLMSLibrary(const std::string& path = "./hlms/");
+
+	void loadCompositor();
 
 private:
 
