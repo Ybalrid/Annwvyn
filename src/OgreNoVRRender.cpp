@@ -34,7 +34,8 @@ void OgreNoVRRender::initRttRendering()
 	auto skyColor = backgroundColor;
 	auto renderingNodeName = "MyHdrRenderingNode";
 
-	
+	compositor->createBasicWorkspaceDef(monoscopicWorkspaceName, backgroundColor);
+	//compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, monoscopicCompositor, true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
 	//We loaded the HDR workspace from file earlier already
 	compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, "MyHdrWorkspace", true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
 

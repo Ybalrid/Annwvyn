@@ -70,12 +70,8 @@ public:
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
-
-		///Fix for HDR
 		Sun->getOgreLight()->setPowerScale(97000.0f);
 		
-
-
 		//Some ambient lighting is needed
 		AnnGetEngine()->getSceneManager()->setAmbientLight(Ogre::ColourValue(0.3f, 0.5f, 0.7f) * 0.1f * 0.75f * 60.0f,
 			Ogre::ColourValue(0.6f, 0.45f, 0.3f) * 0.065f * 0.75f * 60.0f,
