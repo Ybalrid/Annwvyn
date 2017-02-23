@@ -153,7 +153,7 @@ AnnMain()
 	*/
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
-
+	//AnnGetResourceManager()->addFileLocation("media/HDR");
 	AnnGetResourceManager()->initResources();
 	
 	
