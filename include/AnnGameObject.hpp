@@ -210,6 +210,8 @@ namespace Annwvyn
 		///For engine : set Entity
 		void setItem(Ogre::Item* item);
 
+		void setPhysicsMesh(Ogre::v1::MeshPtr mesh);
+
 		// TODO create animation state machine
 		///For engine : get elapsed time
 		void addAnimationTime(double offsetTime) const;
@@ -231,6 +233,7 @@ namespace Annwvyn
 
 		///Entity
 		Ogre::Item* Model;
+		Ogre::v1::MeshPtr v1mesh;
 
 		/*// TODO create animation state machine
 		bool animIsSetted;

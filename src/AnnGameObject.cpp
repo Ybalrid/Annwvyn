@@ -179,9 +179,8 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 
 	//init shape converter
 	//TODO need the v1 geommetry here:
-	/*
-	Ogre::v1::Entity* dummy{nullptr};
-	BtOgre::StaticMeshToShapeConverter converter(dummy);
+	
+	BtOgre::StaticMeshToShapeConverter converter( v1mesh.get() );
 
 	// TODO put this thing inside the Physics engine
 	//create the correct shape
@@ -226,7 +225,8 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	if (!colideWithPlayer)
 		bulletMask = MASK(1);
 	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, MASK(1), bulletMask);
-	*/
+
+	v1mesh.setNull();
 }
 
 Ogre::SceneNode* AnnGameObject::getNode() const
@@ -402,6 +402,11 @@ void AnnGameObject::setWorldPosition(float x, float y, float z) const
 void AnnGameObject::setItem(Ogre::Item* item)
 {
 	Model = item;
+}
+
+void AnnGameObject::setPhysicsMesh(Ogre::v1::MeshPtr mesh)
+{
+	v1mesh = mesh;
 }
 
 Ogre::Item* AnnGameObject::getItem() const
