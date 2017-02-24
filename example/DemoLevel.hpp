@@ -70,7 +70,7 @@ public:
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
-		Sun->getOgreLight()->setPowerScale(97000.0f);
+		Sun->setPower(97000.0f);
 		
 		//Some ambient lighting is needed
 		AnnGetEngine()->getSceneManager()->setAmbientLight(Ogre::ColourValue(0.3f, 0.5f, 0.7f) * 0.1f * 0.75f * 60.0f,
@@ -159,6 +159,8 @@ public:
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, 1, -0.75 });
+		Sun->setPower(97000.0f);
+
 
 		AnnGetPlayer()->teleport({ 0, 1, 0 }, 0);
 	}
