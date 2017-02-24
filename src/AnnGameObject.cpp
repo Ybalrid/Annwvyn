@@ -178,8 +178,7 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 
 	//init shape converter
-	//TODO need the v1 geommetry here:
-	
+	// TODO : maybe need to switch to an animated meshToShape converter if the object own a skeleton
 	BtOgre::StaticMeshToShapeConverter converter( v1mesh.get() );
 
 	// TODO put this thing inside the Physics engine
