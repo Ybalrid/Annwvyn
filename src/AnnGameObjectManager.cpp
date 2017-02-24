@@ -45,12 +45,13 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	// TODO : permit to set theses things by hand
 	v2Mesh->importV1(v1Mesh.get(), true, true, true);
 
-	Ogre::Item* v2 = smgr->createItem(v2Mesh);
+	Ogre::Item* item = smgr->createItem(v2Mesh);
 	auto node = smgr->getRootSceneNode()->createChildSceneNode();
 
-	node->attachObject(v2);
+	node->attachObject(item);
 	obj->setNode(node);
-	obj->setItem(v2);
+	obj->setItem(item);
+	obj->setPhysicsMesh(v1Mesh);
 	obj->audioSource = AnnGetAudioEngine()->createSource();
 
 	//id will be unique to every non-identified object.

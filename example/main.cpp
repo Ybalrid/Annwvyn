@@ -17,7 +17,7 @@
 using namespace std;
 using namespace Annwvyn;
 
-constexpr bool isRoomscale{ true };
+constexpr bool isRoomscale{ false };
 
 ///Event
 class TextMessageEvent : public AnnUserSpaceEvent
