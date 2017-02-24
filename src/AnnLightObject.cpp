@@ -96,3 +96,13 @@ Ogre::Light* AnnLightObject::getOgreLight()
 {
 	return light;
 }
+
+void AnnLightObject::setPower(float lumens)
+{
+	light->setPowerScale(lumens);
+}
+
+float AnnLightObject::getPower()
+{
+	return light->getPowerScale();
+}

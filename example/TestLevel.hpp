@@ -59,6 +59,8 @@ public:
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5f* AnnVect3::NEGATIVE_UNIT_Z);
+		Sun->setPower(97000.0f);
+
 
 		//Create objects and register them as content of the level
 		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "SuperSinbad", std::make_shared<Sinbad>());
@@ -66,15 +68,19 @@ public:
 		S->playSound("media/monster.wav", true, 1);
 		S->attachScript("DummyBehavior");
 
+		/*
 		auto Gizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "Gizmo");
 		auto ChildGizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "ChildGizmo");
 		Gizmo->attachChildObject(ChildGizmo);
 		ChildGizmo->setPosition(1, 1, 1);
+		*/
 
 		//S is parent
 		//Gizmo is child
+		/*
 		S->attachChildObject(Gizmo);
 		Gizmo->setScale(10, 10, 10);
+		*/
 
 		//If both of theses lines are run, the 2nd one will crash the engine
 		//ChildGizmo->setUpPhysics(10, boxShape);
