@@ -7,7 +7,12 @@ using namespace Annwvyn;
 
 AnnSceneryManager::AnnSceneryManager(std::shared_ptr<OgreVRRender> rendererFromEngine) : AnnSubSystem("SceneryManager"),
 smgr(AnnGetEngine()->getSceneManager()),
-renderer(rendererFromEngine)
+renderer(rendererFromEngine),
+defaultExposure(0.0f),
+defaultMinAutoExposure(-1.0f),
+defaultMaxAutExposure(+2.5f),
+defaultSkyColorMultiplier(60.0f),
+defaultSkyColor(0, 0.56f, 1)
 {
 }
 
@@ -47,4 +52,24 @@ void AnnSceneryManager::removeSkyBox() const
 {
 	AnnDebug("Disabling sky-box");
 	smgr->setSkyBoxEnabled(false);
+}
+
+void AnnSceneryManager::setExposure(float exposure, float minExposure, float maxExposure)
+{
+	renderer->setExposure(exposure, minExposure, maxExposure);
+}
+
+void AnnSceneryManager::setDefaultExposure()
+{
+	setExposure(defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure);
+}
+
+void AnnSceneryManager::setSkyColor(AnnColor color, float multiplier)
+{
+	renderer->setSkyColor(color.getOgreColor(), multiplier, "MyHdrRenderingNode");
+}
+
+void AnnSceneryManager::setDefaultSkyColor()
+{
+	setSkyColor(defaultSkyColor, defaultSkyColorMultiplier);
 }

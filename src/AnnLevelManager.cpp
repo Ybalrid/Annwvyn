@@ -54,7 +54,7 @@ void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
 
 void AnnLevelManager::addLevel(std::shared_ptr<AnnLevel> level)
 {
-	AnnDebug() << "Adding level " << level << "to LevelManager";
+	AnnDebug() << "Adding level " << level << " to LevelManager";
 	levelList.push_back(level);
 }
 
