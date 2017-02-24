@@ -71,10 +71,16 @@ public:
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
 		Sun->setPower(97000.0f);
-		
+
+		//auto PointLight = addLightObject();
+		//PointLight->setPower(200000);
+		//PointLight->setDiffuseColor(AnnColor(1, 0, 0));
+		//PointLight->setPosition({ 0,2,0 });
+		//PointLight->getOgreLight()->setCastShadows(true);
+
 		//Some ambient lighting is needed
-		AnnGetEngine()->getSceneManager()->setAmbientLight(Ogre::ColourValue(0.3f, 0.5f, 0.7f) * 0.1f * 0.75f * 60.0f,
-			Ogre::ColourValue(0.6f, 0.45f, 0.3f) * 0.065f * 0.75f * 60.0f,
+		AnnGetEngine()->getSceneManager()->setAmbientLight(Ogre::ColourValue(0.3f, 0.5f, 0.7f) * 150.0f,
+			Ogre::ColourValue(0.6f, 0.45f, 0.3f) * 150.0f,
 			Ogre::Vector3{ 0, -1, -0.5 });
 
 		//AnnGetSceneryManager()->setAmbientLight(AnnColor(0.15f, 0.15f, 0.15f));

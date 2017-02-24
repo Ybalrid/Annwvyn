@@ -23,7 +23,6 @@ void OgreNoVRRender::initScene()
 	smgr = root->createSceneManager(Ogre::ST_GENERIC, 4, Ogre::INSTANCING_CULLING_THREADED);
 	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
 	smgr->setShadowFarDistance(500.0f);
-
 }
 
 ///TODO move that to the Scenery Manager
@@ -80,12 +79,10 @@ void OgreNoVRRender::renderAndSubmitFrame()
 void OgreNoVRRender::recenter()
 {}
 
+///TODO This is deprecated and will be removed
 void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
 {
 	backgroundColor = color;
-
-	//TODO AFAIK, changing the viewport clear color is a bit tricky. Investigate
-	//noVRViewport->setBackgroundColour(color);
 }
 
 void OgreNoVRRender::showDebug(DebugMode mode)
@@ -115,7 +112,6 @@ void OgreNoVRRender::handleIPDChange()
 
 OgreNoVRRender::~OgreNoVRRender()
 {
-	//root->destroySceneManager(smgr);
 	noVRself = nullptr;
 	rttTexture.setNull();
 }
