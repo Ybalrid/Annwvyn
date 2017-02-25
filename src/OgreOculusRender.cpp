@@ -64,10 +64,6 @@ OgreOculusRender::~OgreOculusRender()
 	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
 	delete Oculus;
 
-	//Clean the Ogre environment
-	root->destroySceneManager(debugSmgr);
-	root->destroySceneManager(smgr);
-
 	//Release shared pointers from Ogre before deleting Root
 	DebugPlaneMaterial.setNull();
 	rttTexture.setNull();
@@ -164,6 +160,8 @@ void OgreOculusRender::initScene()
 	//Get if the complied buffer are correct
 	if (!debugPlaneSanityCheck())
 		throw AnnInitializationError(ANN_ERR_NOTINIT, "Sanity check failed, check the static buffer in OgreOculusRender.hpp");
+
+	createMainSmgr();
 
 	//Create the scene manager for the engine
 	// TODO new scene manager with threads
@@ -287,6 +285,15 @@ void OgreOculusRender::initRttRendering()
 	/*vpts[left] = rttEyes->addViewport(eyeCameras[left], 0, 0, 0, proportionalWidth);
 	vpts[right] = rttEyes->addViewport(eyeCameras[right], 1, 1.f - proportionalWidth, 0, proportionalWidth);
 	*/
+	auto compositor = root->getCompositorManager2();
+
+	compositor->createBasicWorkspaceDef(stereoscopicWorkspaceName, backgroundColor);
+
+	compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[left], "HdrWorkspace", true, -1, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 0.5f, 1));
+	compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[right], "HdrWorkspace", true, -1, nullptr, nullptr, nullptr, Ogre::Vector4(0.5f, 0, 0.5f, 1));
+	//compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
+
+	//auto node = compositor->getNodeDefinitionNonConst("MhHdrPostProcessingNode");
 
 	//Set the background color of each viewport the 1st time
 	changeViewportBackgroundColor(backgroundColor);
@@ -310,14 +317,7 @@ void OgreOculusRender::initRttRendering()
 
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusRenderTextureGLID);
 
-	//Attach the camera of the debug render scene to a viewport on the actual application window
-	 /*
-	  *debugViewport = window->addViewport(debugCam);
-	debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
-	debugTexturePlane->setTextureName("MirrorTex");
-	debugTexturePlane->setTextureFiltering(Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_NONE);
-	debugViewport->setAutoUpdated(false);
-	*/
+	
 }
 
 void OgreOculusRender::showRawView()
@@ -493,24 +493,24 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 
 void OgreOculusRender::renderAndSubmitFrame()
 {
+	static int debug = 0;
+	if (debug++ > 90 * 10)
+	{
+		rttEyes->writeContentsToTimestampedFile("debug_", ".png");
+		debug = 0;
+	}
+
 	//Process window's message queue
 	Ogre::WindowEventUtilities::messagePump();
 
 	//Select the current render texture
 	ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureSwapChain, &currentIndex);
-
+	
 	//Update the relevant OpenGL IDs
 	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, currentIndex, &oculusRenderTextureGLID);
 	ovr_GetMirrorTextureBufferGL(Oculus->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
 
-	//Render
-	root->_fireFrameRenderingQueued();
-	
-	// TODO use compositor2 
-	/*vpts[left]->update();
-	vpts[right]->update();
-	rttEyes->update(); //This will resolve the sampling for the anti-aliasing of the texture
-	*/
+	root->renderOneFrame();
 
 
 	//Copy the rendered image to the Oculus Swap Texture
@@ -547,6 +547,11 @@ void OgreOculusRender::renderAndSubmitFrame()
 		debugViewport->update();
 		window->update();
 		*/
+
+		//compositorWorkspaces[leftEyeCompositor]->setEnabled(false);
+		//compositorWorkspaces[rightEyeCompositor]->setEnabled(false);
+		//compositorWorkspaces[monoCompositor]->setEnabled(true);
+		//root->renderOneFrame();
 	}
 }
 

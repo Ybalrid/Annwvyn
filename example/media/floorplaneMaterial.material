@@ -4,7 +4,7 @@
 
 hlms floorplaneMaterial pbs
 {
-    roughness 0
+    roughness 0.01
     specular 0.25 0.25 0.25
     diffuse_map floorplanegrid.png
 }

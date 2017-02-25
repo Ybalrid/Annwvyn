@@ -121,7 +121,7 @@ void OgreVRRender::getOgreConfig() const
 
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem3Plus));
-	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
+//	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 	root->getRenderSystem()->setConfigOption("sRGB Gamma Conversion", "Yes");
 	root->initialise(false);
 }
@@ -413,4 +413,11 @@ void OgreVRRender::setExposure(float exposure, float minAuto, float maxAuto, con
 
 	psParams->setNamedConstant("exposure", exposureParams);
 
+}
+
+void OgreVRRender::createMainSmgr()
+{
+	smgr = root->createSceneManager(Ogre::ST_GENERIC, 4, Ogre::INSTANCING_CULLING_THREADED);
+	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
+	smgr->setShadowFarDistance(500.0f);
 }

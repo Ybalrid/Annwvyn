@@ -14,6 +14,8 @@ defaultMaxAutExposure(+2.5f),
 defaultSkyColorMultiplier(60.0f),
 defaultSkyColor(0, 0.56f, 1)
 {
+	setDefaultExposure();
+	setDefaultSkyColor();
 }
 
 void AnnSceneryManager::setAmbientLight(AnnColor color) const
@@ -66,7 +68,7 @@ void AnnSceneryManager::setDefaultExposure()
 
 void AnnSceneryManager::setSkyColor(AnnColor color, float multiplier)
 {
-	renderer->setSkyColor(color.getOgreColor(), multiplier, "MyHdrRenderingNode");
+	renderer->setSkyColor(color.getOgreColor(), multiplier, "HdrRenderingNode");
 }
 
 void AnnSceneryManager::setDefaultSkyColor()

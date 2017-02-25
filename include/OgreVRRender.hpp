@@ -58,6 +58,14 @@ public:
 	///Resource group to load the shaders, material and compositor script for rendering.
 	static constexpr const char* const RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
 
+	enum compositorIndex : size_t
+	{
+		leftEyeCompositor = 0,
+		rightEyeCompositor = 1,
+		monoCompositor = 2,
+		nbCompositor = 3,
+	};
+
 
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 	static bool UseSSAA;
@@ -225,6 +233,8 @@ public:
 
 	void setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial = "HDR/DownScale03_SumLumEnd");
 
+	void createMainSmgr();
+
 private:
 
 	//GL version to use
@@ -239,7 +249,7 @@ private:
 protected:
 
 	///Compositor workspaces. 0 = left, 1 = right, 2 = monoscopic, plugged to the render window
-	std::array<Ogre::CompositorWorkspace*, 3> compositorWorkspaces;
+	std::array<Ogre::CompositorWorkspace*, nbCompositor> compositorWorkspaces;
 
 	const Ogre::IdString monoscopicCompositor, stereoscopicCompositor;
 	static constexpr const char* const monoscopicWorkspaceName{ "MonoscopicCompositor" };
