@@ -289,9 +289,10 @@ void OgreOculusRender::initRttRendering()
 
 	compositor->createBasicWorkspaceDef(stereoscopicWorkspaceName, backgroundColor);
 
-	compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[left], "HdrWorkspace", true, -1, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 0.5f, 1));
-	compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[right], "HdrWorkspace", true, -1, nullptr, nullptr, nullptr, Ogre::Vector4(0.5f, 0, 0.5f, 1));
-	//compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
+	compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[left], "HdrWorkspace", true, 1, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 0.5f, 1), 0x01, 0x01);
+	compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[right], "HdrWorkspace", true, 2, nullptr, nullptr, nullptr, Ogre::Vector4(0.5f, 0, 0.5f, 1), 0x02, 0x02);
+	//compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, rttEyes, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
+	//compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
 
 	//auto node = compositor->getNodeDefinitionNonConst("MhHdrPostProcessingNode");
 
