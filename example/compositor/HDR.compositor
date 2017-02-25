@@ -6,7 +6,7 @@ abstract target discardTarget
 	}
 }
 
-compositor_node MyHdrRenderingNode
+compositor_node HdrRenderingNode
 {
 	texture rt0 target_width target_height PF_FLOAT16_RGBA
 
@@ -30,7 +30,7 @@ compositor_node MyHdrRenderingNode
 	out 0 rt0
 }
 
-compositor_node MyHdrPostprocessingNode
+compositor_node HdrPostprocessingNode
 {
 	in 0 rt0
 	in 1 rt_output
@@ -213,8 +213,8 @@ compositor_node MyHdrPostprocessingNode
 	out 0 rt0
 }
 
-workspace MyHdrWorkspace
+workspace HdrWorkspace
 {
-	connect MyHdrRenderingNode 0 MyHdrPostprocessingNode 0
-	connect_output MyHdrPostprocessingNode 1
+	connect HdrRenderingNode 0 HdrPostprocessingNode 0
+	connect_output HdrPostprocessingNode 1
 }

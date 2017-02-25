@@ -8,11 +8,6 @@ using namespace Annwvyn;
 
 AnnGameObject::AnnGameObject() :
 	Node(nullptr),
-	/*Entity(nullptr),
-	animIsSetted(false),
-	animIsPlaying(false),
-	animIsLooping(false),
-	anim(nullptr),*/
 	Shape(nullptr),
 	Body(nullptr),
 	audioSource(nullptr),
@@ -178,7 +173,7 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 
 	//init shape converter
-	// TODO : maybe need to switch to an animated meshToShape converter if the object own a skeleton
+	// TODO : maybe need to switch to an animated meshToShape converter if the object owns a skeleton
 	BtOgre::StaticMeshToShapeConverter converter( v1mesh.get() );
 
 	// TODO put this thing inside the Physics engine

@@ -19,10 +19,7 @@ void OgreNoVRRender::initVrHmd()
 
 void OgreNoVRRender::initScene()
 {	
-	//TODO make the amont of threads here a parameter
-	smgr = root->createSceneManager(Ogre::ST_GENERIC, 4, Ogre::INSTANCING_CULLING_THREADED);
-	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
-	smgr->setShadowFarDistance(500.0f);
+	createMainSmgr();
 }
 
 ///TODO move that to the Scenery Manager
@@ -31,15 +28,12 @@ void OgreNoVRRender::initRttRendering()
 	auto compositor = getRoot()->getCompositorManager2();			
 	float multiplier = 60.0f;
 	auto skyColor = backgroundColor;
-	auto renderingNodeName = "MyHdrRenderingNode";
+	auto renderingNodeName = "HdrRenderingNode";
 
 	compositor->createBasicWorkspaceDef(monoscopicWorkspaceName, backgroundColor);
-	//compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, monoscopicCompositor, true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
+	//compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, monoscopicCompositor, true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
 	//We loaded the HDR workspace from file earlier already
-	compositorWorkspaces[2] = compositor->addWorkspace(smgr, window, monoCam, "MyHdrWorkspace", true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
-
-	setSkyColor(skyColor, multiplier, renderingNodeName);
-	setExposure(0, -1, 2.5f);
+	compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
 
 }
 
