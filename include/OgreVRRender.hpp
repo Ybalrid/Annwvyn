@@ -34,6 +34,8 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #define GLFW_EXPOSE_NAVIVE_WGL
 #include <GLFW/glfw3native.h>
+#include <algorithm>
+#include <algorithm>
 
 constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 
@@ -65,7 +67,6 @@ public:
 		monoCompositor = 2,
 		nbCompositor = 3,
 	};
-
 
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 	static bool UseSSAA;
@@ -212,8 +213,9 @@ public:
 	///Load "modern" OpenGL functions for the current OpenGL context.
 	static void loadOpenGLFunctions();
 
-	///This method create a texture with the wanted Anti Aliasing level. It will set the rttTexture and rttEyes member of this class to the correct value, and return the GLID of the texture.
-	unsigned int createRenderTexture(float w, float h);
+	///This method create a texture with the wanted Anti Aliasing level. It will set the rttTextureCombined and rttEyesCombined member of this class to the correct value, and return the GLID of the texture.
+	unsigned int createCombinedRenderTexture(float w, float h);
+	std::array<unsigned int, 2> createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions);
 
 	///Create a render buffer with not anti aliasing. return a tuple with a TexturePtr and a GLID. use <code><pre>std::get<></pre></code>
 	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(float w, float h, std::string name = "") const;
@@ -228,7 +230,7 @@ public:
 
 	void loadCompositor(const std::string& path = "./compositor/", const std::string& type = "FileSystem");
 
-	///Set the color used on the "clear" pass of the compositor node given 
+	///Set the color used on the "clear" pass of the compositor node given
 	void setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName);
 
 	void setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial = "HDR/DownScale03_SumLumEnd");
@@ -309,10 +311,12 @@ protected:
 	unsigned long long int frameCounter;
 
 	///Render target that serve as intermediate buffer for the eyeCameras
-	Ogre::RenderTexture* rttEyes;
+	Ogre::RenderTexture* rttEyesCombined;
+	std::array < Ogre::RenderTexture*, 2> rttEyeSeparated;
 
 	///The texture that is used to hold the render target
-	Ogre::TexturePtr rttTexture;
+	Ogre::TexturePtr rttTextureCombined;
+	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
 
 	///Level of anti aliasing to use.
 	static uint8_t AALevel;

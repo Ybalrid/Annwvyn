@@ -4,10 +4,10 @@
  * \author A. Brainville (Ybalrid)
  */
 
-///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
-///(even if now I'm not using code from him anymore)
-///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
-///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
+ ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
+ ///(even if now I'm not using code from him anymore)
+ ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
+ ///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
 
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
@@ -140,6 +140,9 @@ public:
 	void handleIPDChange() override;
 private:
 
+	const bool separateTextures;
+	ovrSizei texSizeL, texSizeR;
+
 	///Create the AnnHandControllerObject for this side
 	void initializeHandObjects(const oorEyeType side);
 
@@ -164,9 +167,6 @@ private:
 	///Object for getting informations from the Oculus Rift
 	OculusInterface* Oculus;
 
-	///Viewports on textures. Textures are separated. One viewport for each textures
-	std::array<Ogre::Viewport*, 2> vpts;
-
 	///Timing in seconds
 	double currentFrameDisplayTime, lastFrameDisplayTime;
 
@@ -180,7 +180,8 @@ private:
 	ovrMirrorTexture mirrorTexture;
 
 	///OpenGL Texture ID of the render buffers
-	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureGLID, renderTextureGLID;
+	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureCombinedGLID, ogreRenderTextureCombinedGLID;
+	std::array<GLuint, 2> oculusRenderTexturesSeparatedGLID, ogreRenderTexturesSeparatedGLID;
 
 	///If true, need to copy the mirrored buffer from Oculus to Ogre
 	static bool mirrorHMDView;
@@ -189,7 +190,8 @@ private:
 	ovrLayerEyeFov layer;
 
 	///GL texture set for the rendering
-	ovrTextureSwapChain textureSwapChain;
+	ovrTextureSwapChain textureCombinedSwapChain;
+	std::array<ovrTextureSwapChain, 2> texturesSeparatedSwapChain;
 
 	///offset between render center and camera (for IPD variation)
 	std::array<ovrVector3f, 2> offset;
@@ -218,8 +220,9 @@ private:
 	///State of the performance HUD
 	int perfHudMode;
 
-	///Index of the current texture in the textureSwapChain
-	int currentIndex;
+	///Index of the current texture in the textureCombinedSwapChain
+	int currentCombinedIndex;
+	std::array<int, 2> currentSeparatedIndex;
 
 	///Frame index of the current session status
 	unsigned long long int currentSessionStatusFrameIndex;

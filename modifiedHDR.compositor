@@ -2,6 +2,7 @@ abstract target discardTarget
 {
 	pass clear
 	{
+
 		discard_only yes
 	}
 }
@@ -9,18 +10,25 @@ abstract target discardTarget
 compositor_node HdrRenderingNode
 {
 	texture rt0 target_width target_height PF_FLOAT16_RGBA
-
+	
 	target rt0
 	{
 		pass clear
 		{
+			execution_mask         0x01		
+			viewport_modifier_mask   0x00
+			
 			//colour_value 0.2 0.4 0.6 1
 			colour_value 6.667 13.333 20 1
+			//colour_value 13.333 26.667 40 1
 			//colour_value 13.333 26.667 40 1
 		}
 
 		pass render_scene
 		{
+			execution_mask         0xff
+			viewport_modifier_mask   0xff
+
 			//lod_update_list	off					//Turn Lod off?
 			shadows				ShadowMapDebuggingShadowNode
 			overlays			off
@@ -54,6 +62,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/DownScale01_SumLumStart
 			input		0	rt0
 		}
@@ -63,6 +73,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/DownScale02_SumLumIterative
 			input		0	rtIter0
 		}
@@ -72,6 +84,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/DownScale02_SumLumIterative
 			input		0	rtIter1
 		}
@@ -82,6 +96,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass clear
 		{
+
+			
 			num_initial 1
 			colour_value 0.01 0.01 0.01 1
 		}
@@ -91,6 +107,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/DownScale03_SumLumEnd
 			input		0	rtIter2
 			input		1	lumRt1
@@ -101,6 +119,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	Ogre/Copy/1xFP32
 			input		0	lumRt0
 		}
@@ -111,6 +131,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/BrightPass_Start
 			input		0	rt0
 			input		1	lumRt0
@@ -121,6 +143,9 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
+			
 			material	HDR/BoxBlurH
 			input		0	rtBlur0
 		}
@@ -130,6 +155,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/BoxBlurV
 			input		0	rtBlur1
 		}
@@ -139,6 +166,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/BoxBlurH
 			input		0	rtBlur0
 		}
@@ -148,6 +177,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/BoxBlurV
 			input		0	rtBlur1
 		}
@@ -157,6 +188,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/BoxBlurH
 			input		0	rtBlur0
 		}
@@ -166,6 +199,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/BoxBlurH
 			input		0	rtBlur1
 		}
@@ -175,6 +210,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/BoxBlurH
 			input		0	rtBlur0
 		}
@@ -184,6 +221,8 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+
+			
 			material	HDR/BoxBlurH
 			input		0	rtBlur1
 		}
@@ -193,6 +232,10 @@ compositor_node HdrPostprocessingNode
 	{
 		pass render_quad
 		{
+			
+			execution_mask 0x02
+			viewport_modifier_mask 0x00
+			
 			material	HDR/FinalToneMapping
 			input		0	rt0
 			input		1	lumRt0
@@ -201,6 +244,10 @@ compositor_node HdrPostprocessingNode
 		
 		pass render_scene
 		{
+			
+			execution_mask 0x02
+			viewport_modifier_mask 0x00
+			
 			lod_update_list	off
 
 			//Render Overlays
@@ -214,18 +261,6 @@ compositor_node HdrPostprocessingNode
 }
 
 workspace HdrWorkspace
-{
-	connect HdrRenderingNode 0 HdrPostprocessingNode 0
-	connect_output HdrPostprocessingNode 1
-}
-
-workspace HdrWorkspaceLeft
-{
-	connect HdrRenderingNode 0 HdrPostprocessingNode 0
-	connect_output HdrPostprocessingNode 1
-}
-
-workspace HdrWorkspaceRight
 {
 	connect HdrRenderingNode 0 HdrPostprocessingNode 0
 	connect_output HdrPostprocessingNode 1

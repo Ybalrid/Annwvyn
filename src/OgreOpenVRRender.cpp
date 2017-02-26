@@ -51,12 +51,12 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	vr::VR_Shutdown();
 
 	//Need to forget Ogre's smart pointers
-	rttTexture.setNull();
+	rttTextureCombined.setNull();
 
 	//Destroy the main scene manager
 	root->destroySceneManager(smgr);
 
-	rttTexture.setNull();
+	rttTextureCombined.setNull();
 }
 
 //This function is from VALVe
@@ -181,7 +181,7 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	/*TODO use compostior2
 	rttViewports[0]->update();
 	rttViewports[1]->update();
-	rttEyes->update();			//Resolve anti-aliasing
+	rttEyesCombined->update();			//Resolve anti-aliasing
 	windowViewport->update();	//Window content
 	window->update();			//Window display
 */
@@ -246,12 +246,12 @@ void OgreOpenVRRender::initRttRendering()
 	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create the render texture
-	rttTextureGLID = createRenderTexture(w, h);
+	rttTextureGLID = createCombinedRenderTexture(w, h);
 
 	//Create viewport for each cameras in each render texture
 /*	 TODO compositor2 here
- *	rttViewports[left] = rttEyes->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
-	rttViewports[right] = rttEyes->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
+ *	rttViewports[left] = rttEyesCombined->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
+	rttViewports[right] = rttEyesCombined->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
 
 	//Do the same for the window
 	windowViewport = window->addViewport(monoCam);
