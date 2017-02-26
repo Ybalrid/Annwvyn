@@ -18,23 +18,19 @@ void OgreNoVRRender::initVrHmd()
 {}
 
 void OgreNoVRRender::initScene()
-{	
+{
 	createMainSmgr();
 }
 
 ///TODO move that to the Scenery Manager
 void OgreNoVRRender::initRttRendering()
 {
-	auto compositor = getRoot()->getCompositorManager2();			
-	float multiplier = 60.0f;
-	auto skyColor = backgroundColor;
-	auto renderingNodeName = "HdrRenderingNode";
+	auto compositor = getRoot()->getCompositorManager2();
 
 	compositor->createBasicWorkspaceDef(monoscopicWorkspaceName, backgroundColor);
 	//compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, monoscopicCompositor, true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
 	//We loaded the HDR workspace from file earlier already
 	compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
-
 }
 
 void OgreNoVRRender::initClientHmdRendering()
@@ -107,5 +103,5 @@ void OgreNoVRRender::handleIPDChange()
 OgreNoVRRender::~OgreNoVRRender()
 {
 	noVRself = nullptr;
-	rttTexture.setNull();
+	rttTextureCombined.setNull();
 }

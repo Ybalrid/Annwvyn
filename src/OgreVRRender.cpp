@@ -4,8 +4,7 @@
 #include "AnnLogger.hpp"
 #include "Annwvyn.h"
 
-
-auto logToOgre = [] (const std::string& str) {Ogre::LogManager::getSingleton().logMessage(str); };
+auto logToOgre = [](const std::string& str) {Ogre::LogManager::getSingleton().logMessage(str); };
 
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
@@ -39,13 +38,13 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	backgroundColor{ 0.2f, 0.4f, 0.75f },
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
-	rttEyes{ nullptr },
+	rttEyesCombined{ nullptr },
 	glMajor{ 4 },
 	glMinor{ 3 },
 	monoscopicCompositor(monoscopicWorkspaceName),
 	stereoscopicCompositor(stereoscopicWorkspaceName)
 {
-	rttTexture.setNull();
+	rttTextureCombined.setNull();
 	if (self)
 	{
 		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialization. OgreOculusRender object already created.");
@@ -63,7 +62,6 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 
 OgreVRRender::~OgreVRRender()
 {
-
 	root->destroyRenderTarget(window);
 	glfwDestroyWindow(glfwWindow);
 	glfwTerminate();
@@ -121,7 +119,7 @@ void OgreVRRender::getOgreConfig() const
 
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem3Plus));
-//	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
+	//	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 	root->getRenderSystem()->setConfigOption("sRGB Gamma Conversion", "Yes");
 	root->initialise(false);
 }
@@ -147,8 +145,8 @@ size_t OgreVRRender::getRecognizedControllerCount()
 
 void OgreVRRender::changedAA() const
 {
-	//TODO look into FSAA 
-	//if (rttTexture.getPointer() && !UseSSAA) rttTexture->setFSAA(AALevel);
+	//TODO look into FSAA
+	//if (rttTextureCombined.getPointer() && !UseSSAA) rttTextureCombined->setFSAA(AALevel);
 }
 
 void OgreVRRender::setNearClippingDistance(float distance)
@@ -252,13 +250,28 @@ void OgreVRRender::initPipeline()
 	loadHLMSLibrary();
 }
 
-GLuint OgreVRRender::createRenderTexture(float w, float h)
+GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
 {
 	GLuint glid;
-	rttTexture = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+	rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 		Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
-	rttTexture->getCustomAttribute("GLID", &glid);
-	rttEyes = rttTexture->getBuffer()->getRenderTarget();
+	rttTextureCombined->getCustomAttribute("GLID", &glid);
+	rttEyesCombined = rttTextureCombined->getBuffer()->getRenderTarget();
+	return glid;
+}
+
+std::array<GLuint, 2> OgreVRRender::createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions)
+{
+	std::array <GLuint, 2> glid;
+
+	for (size_t i : {0u, 1u})
+	{
+		rttTexturesSeparated[i] = Ogre::TextureManager::getSingleton().createManual(std::string(rttTextureName) + std::to_string(i),
+			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D,
+			dimentions[i][0], dimentions[i][1], 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel); //penultimate argument may be true if gamma problem.
+		rttTexturesSeparated[i]->getCustomAttribute("GLID", &glid[i]);
+		rttEyeSeparated[i] = rttTexturesSeparated[i]->getBuffer(0)->getRenderTarget(0);
+	}
 	return glid;
 }
 
@@ -288,10 +301,9 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 
 	if (useGLFW)
 	{
-
 		logToOgre("call glfwInit()");
 		glfwInit();
-		//Specify OpenGL version 
+		//Specify OpenGL version
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -302,14 +314,12 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 		//Create a window (and an opengl context with it)
 		glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
 
-
 		//Make the created context current
 		glfwMakeContextCurrent(glfwWindow);
 
 		//Get the hwnd and the context :
-		context =  wglGetCurrentContext() ;
-		handle =  glfwGetWin32Window(glfwWindow) ;
-
+		context = wglGetCurrentContext();
+		handle = glfwGetWin32Window(glfwWindow);
 	}
 	Ogre::NameValuePairList options;
 	if (useGLFW)
@@ -412,7 +422,6 @@ void OgreVRRender::setExposure(float exposure, float minAuto, float maxAuto, con
 	};
 
 	psParams->setNamedConstant("exposure", exposureParams);
-
 }
 
 void OgreVRRender::createMainSmgr()
