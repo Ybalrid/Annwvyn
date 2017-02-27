@@ -140,7 +140,7 @@ public:
 	void handleIPDChange() override;
 private:
 
-	const bool separateTextures;
+	static constexpr bool separateTextures = true;
 	ovrSizei texSizeL, texSizeR;
 
 	///Create the AnnHandControllerObject for this side

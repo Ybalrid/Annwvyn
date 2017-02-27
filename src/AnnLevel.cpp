@@ -31,6 +31,8 @@ void AnnLevel::unload()
 	//Remove the ambient lighting
 	AnnGetSceneryManager()->setAmbientLight(AnnColor(0, 0, 0));
 	AnnGetSceneryManager()->setDefaultExposure();
+	AnnGetSceneryManager()->setDefaultBloomThreshold();
+	AnnGetSceneryManager()->setDefaultSkyColor();
 
 	//Restore the default gravity
 	AnnGetPhysicsEngine()->resetGravity();

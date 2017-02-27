@@ -432,3 +432,20 @@ void OgreVRRender::createMainSmgr()
 	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
 	smgr->setShadowFarDistance(500.0f);
 }
+
+void OgreVRRender::setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial)
+{
+	auto material = Ogre::MaterialManager::getSingleton().load(
+		brightnessPassMaterial,
+		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME).
+		staticCast<Ogre::Material>();
+
+	auto pass = material->getTechnique(0)->getPass(0);
+
+	auto psParams = pass->getFragmentProgramParameters();
+	psParams->setNamedConstant("brightThreshold",
+		Ogre::Vector4(
+			minThreshold,
+			1.0f / (fullColorThreshold - minThreshold),
+			0, 0));
+}
