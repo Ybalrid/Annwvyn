@@ -236,6 +236,8 @@ public:
 
 	void setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial = "HDR/DownScale03_SumLumEnd");
 
+	void setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial = "HDR/BrightPass_Start");
+
 	void createMainSmgr();
 
 private:

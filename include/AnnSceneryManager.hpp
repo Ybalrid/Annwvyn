@@ -7,6 +7,7 @@
 #include "AnnTypes.h"
 #include "OgreVRRender.hpp"
 #include <memory>
+#include <algorithm>
 
 namespace Annwvyn
 {
@@ -59,6 +60,8 @@ namespace Annwvyn
 		void setDefaultExposure();
 		void setSkyColor(AnnColor color, float multiplier);
 		void setDefaultSkyColor();
+		void setBloomThreshold(float threshold);
+		void setDefaultBloomThreshold();
 
 	private:
 		///Scene manager created by the VR renderer
@@ -68,7 +71,7 @@ namespace Annwvyn
 		std::shared_ptr<OgreVRRender> renderer;
 
 		///Defaults environemental floats
-		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure, defaultSkyColorMultiplier;
+		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure, defaultSkyColorMultiplier, defaultBloom;
 		///Default sky color
 		const AnnColor defaultSkyColor; 
 	};

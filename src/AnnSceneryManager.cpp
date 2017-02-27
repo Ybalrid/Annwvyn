@@ -12,10 +12,12 @@ defaultExposure(0.0f),
 defaultMinAutoExposure(-1.0f),
 defaultMaxAutExposure(+2.5f),
 defaultSkyColorMultiplier(60.0f),
-defaultSkyColor(0, 0.56f, 1)
+defaultSkyColor(0, 0.56f, 1),
+defaultBloom(16)
 {
 	setDefaultExposure();
 	setDefaultSkyColor();
+	setDefaultBloomThreshold();
 }
 
 void AnnSceneryManager::setAmbientLight(AnnColor color) const
@@ -74,4 +76,14 @@ void AnnSceneryManager::setSkyColor(AnnColor color, float multiplier)
 void AnnSceneryManager::setDefaultSkyColor()
 {
 	setSkyColor(defaultSkyColor, defaultSkyColorMultiplier);
+}
+
+void AnnSceneryManager::setBloomThreshold(float threshold)
+{
+	renderer->setBloomThreshold(std::max(threshold - 2.f, 0.f), std::max(threshold, 0.01f));
+}
+
+void AnnSceneryManager::setDefaultBloomThreshold()
+{
+	setBloomThreshold(defaultBloom);
 }

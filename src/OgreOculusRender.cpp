@@ -13,7 +13,6 @@ Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane{ nullptr };
 OgreOculusRender* OgreOculusRender::OculusSelf{ nullptr };
 
 OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
-separateTextures(true),
 frontierWidth{ 100 },
 Oculus(nullptr),
 currentFrameDisplayTime{ 0 },
@@ -477,8 +476,7 @@ void OgreOculusRender::updateProjectionMatrix()
 		eyeCameras[eye]->setNearClipDistance(nearClippingDistance);
 		eyeCameras[eye]->setFarClipDistance(farClippingDistance);
 	}
-	//smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
-	//smgr->setShadowFarDistance(500.0f);
+
 }
 
 ovrSessionStatus OgreOculusRender::getSessionStatus()
@@ -549,21 +547,6 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 
 void OgreOculusRender::renderAndSubmitFrame()
 {
-	static int debug = 0;
-	if (debug++ > 90 * 10)
-	{
-		if (!separateTextures)
-		{
-			rttEyesCombined->writeContentsToTimestampedFile("debug_", ".png");
-		}
-		else
-		{
-			rttEyeSeparated[left]->writeContentsToTimestampedFile("debug_left", ".png");
-			rttEyeSeparated[right]->writeContentsToTimestampedFile("debug_right", ".png");
-		}
-		debug = 0;
-	}
-
 	//Process window's message queue
 	Ogre::WindowEventUtilities::messagePump();
 	if (separateTextures)
@@ -576,10 +559,8 @@ void OgreOculusRender::renderAndSubmitFrame()
 	}
 	else
 	{
-		//Select the current render texture
+		//Select the current render texture and get the opengl id
 		ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureCombinedSwapChain, &currentCombinedIndex);
-
-		//Update the relevant OpenGL IDs
 		ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureCombinedSwapChain, currentCombinedIndex, &oculusRenderTextureCombinedGLID);
 	}
 

@@ -135,7 +135,7 @@ void AnnSplashLevel::unload()
 	AnnGetPlayer()->ignorePhysics = false;
 	AnnGetPlayer()->setPosition(AnnVect3(0, 0, 10));
 	AnnGetPlayer()->resetPlayerPhysics();
-	AnnGetSceneryManager()->setWorldBackgroundColor();
+
 }
 
 void AnnSplashLevel::setNextLevel(std::shared_ptr<AnnLevel> level)
