@@ -289,8 +289,8 @@ void OgreOculusRender::initRttRendering()
 		std::array<std::array<size_t, 2>, 2> textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
 		ogreRenderTexturesSeparatedGLID = createSeparatedRenderTextures(textureDimentions);
 
-		compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspaceLeft", true);
-		compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspaceRight", true);
+		compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);
+		compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", true);
 		compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
 	}
 	else
@@ -473,9 +473,12 @@ void OgreOculusRender::updateProjectionMatrix()
 				//put the number where it should
 				ogreProjectionMatrix[eye][x][y] = oculusProjectionMatrix[eye].M[x][y];
 
-		//Set the matrix
 		eyeCameras[eye]->setCustomProjectionMatrix(true, ogreProjectionMatrix[eye]);
+		eyeCameras[eye]->setNearClipDistance(nearClippingDistance);
+		eyeCameras[eye]->setFarClipDistance(farClippingDistance);
 	}
+	//smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
+	//smgr->setShadowFarDistance(500.0f);
 }
 
 ovrSessionStatus OgreOculusRender::getSessionStatus()

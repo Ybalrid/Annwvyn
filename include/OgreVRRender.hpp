@@ -14,6 +14,7 @@
 #include <Compositor/OgreCompositorWorkspace.h>
 #include <Compositor/OgreCompositorNode.h>
 #include <Compositor/OgreCompositorNodeDef.h>
+//#include <Compositor/OgreCompositorShadowNodeDef.h>
 #include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
 #include <OgreMaterialManager.h>
 #include <OgreMaterial.h>
