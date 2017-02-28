@@ -35,7 +35,7 @@ public:
 	{
 		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
 		//Set some ambient light
-		AnnGetSceneryManager()->setAmbientLight(AnnColor(.6f, .6f, .6f));
+		AnnGetSceneryManager()->setAmbientLight(AnnColor(.6f, .6f, .6f), 100, AnnColor(.6f, .6f, .6f), 100, AnnVect3::UNIT_Y);
 		AnnGetSceneryManager()->setExposure(-0.5, -1.0, 0.5);
 
 		//We add our brand new 3D object

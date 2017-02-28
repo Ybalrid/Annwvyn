@@ -29,7 +29,7 @@ void AnnLevel::unload()
 	AnnGetSceneryManager()->setDefaultSkyColor();
 	
 	//Remove the ambient lighting
-	AnnGetSceneryManager()->setAmbientLight(AnnColor(0, 0, 0));
+	AnnGetSceneryManager()->setDefaultAmbientLight();
 	AnnGetSceneryManager()->setDefaultExposure();
 	AnnGetSceneryManager()->setDefaultBloomThreshold();
 	AnnGetSceneryManager()->setDefaultSkyColor();

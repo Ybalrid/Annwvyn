@@ -13,28 +13,39 @@ defaultMinAutoExposure(-1.0f),
 defaultMaxAutExposure(+2.5f),
 defaultSkyColorMultiplier(60.0f),
 defaultSkyColor(0, 0.56f, 1),
-defaultBloom(16)
+defaultBloom(16),
+defaultUpperAmbientLightMul(150),
+defaultLowerAmbientLightMul(150),
+defaultUpperAmbient(0.3f, 0.5f, 0.7f),
+defaultLowerAmbient(0.6f, 0.45f, 0.3f)
+
 {
 	setDefaultExposure();
 	setDefaultSkyColor();
 	setDefaultBloomThreshold();
+	setDefaultAmbientLight();
 }
 
-void AnnSceneryManager::setAmbientLight(AnnColor color) const
+void AnnSceneryManager::setAmbientLight(AnnColor upperColor, float upperMul, AnnColor lowerColor, float lowerMul, AnnVect3 direction, float environementMapScaling) const
 {
-	AnnDebug() << "Setting the ambient light to color " << color;
-	/*TODO fix ambiant ligh 
-	 *smgr->setAmbientLight(color.getOgreColor());
-	 */
+	AnnDebug() << "Setting the ambient light to" 
+	<< upperColor.getOgreColor()*upperMul << " " 
+	<< lowerColor.getOgreColor()*lowerMul << " " 
+	<< direction << environementMapScaling;
+
+	smgr->setAmbientLight(upperColor.getOgreColor() * upperMul, 
+		lowerColor.getOgreColor() * lowerMul,
+		direction,
+		environementMapScaling);
 }
 
-void AnnSceneryManager::setSkyDomeMaterial(bool activate, const char materialName[], float curvature, float tiling) const
+void AnnSceneryManager::setSkyDomeMaterial(bool activate, const std::string& materialName, float curvature, float tiling) const
 {
 	AnnDebug() << "Setting sky-dome from material" << materialName;
 	smgr->setSkyDome(activate, materialName, curvature, tiling);
 }
 
-void AnnSceneryManager::setSkyBoxMaterial(bool activate, const char materialName[], float distance, bool renderedFirst) const
+void AnnSceneryManager::setSkyBoxMaterial(bool activate, const std::string& materialName, float distance, bool renderedFirst) const
 {
 	AnnDebug() << "Setting sky-dome from material" << materialName;
 	smgr->setSkyBox(activate, materialName, distance, renderedFirst);
@@ -86,4 +97,9 @@ void AnnSceneryManager::setBloomThreshold(float threshold)
 void AnnSceneryManager::setDefaultBloomThreshold()
 {
 	setBloomThreshold(defaultBloom);
+}
+
+void AnnSceneryManager::setDefaultAmbientLight()
+{
+	setAmbientLight(defaultUpperAmbient, defaultUpperAmbientLightMul, defaultLowerAmbient, defaultLowerAmbientLightMul, AnnVect3::NEGATIVE_UNIT_Y);
 }

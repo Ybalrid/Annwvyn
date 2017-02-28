@@ -197,7 +197,8 @@ void AnnScriptManager::registerApi()
 	//Changing the color of the background
 	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setWorldBackgroundColor(color); }), "AnnSetWorldBackgroundColor");
 	//Change the ambient lighting
-	chai.add(fun([](const AnnColor& color) {AnnGetSceneryManager()->setAmbientLight(color); }), "AnnSetAmbientLight");
+	chai.add(fun([](const AnnColor& ucolor, const float umul, const AnnColor& lcolor, const float lmul, const Vector3& dir, const float envMapScaling) 
+	{AnnGetSceneryManager()->setAmbientLight(ucolor, umul, lcolor, lmul, dir, envMapScaling); }), "AnnSetAmbientLight");
 	//Create a GameObject form ChaiScript
 	chai.add(fun([](const string& mesh, const string& objectName)
 	{

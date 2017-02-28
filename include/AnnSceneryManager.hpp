@@ -28,9 +28,9 @@ namespace Annwvyn
 		/// \param curvature curvature of the texture
 		/// \param tiling tilling of the texture
 		void setSkyDomeMaterial(bool activate,
-								const char materialName[],
-								float curvature = 2.0f,
-								float tiling = 1.0f) const; //scene
+		                        const std::string& materialName,
+		                        float curvature = 2.0f,
+		                        float tiling = 1.0f) const; //scene
 
 		///Set the ogre material for the sky-box with params
 		/// \param activate if true put the sky-box on the scene
@@ -38,9 +38,9 @@ namespace Annwvyn
 		/// \param distance distance of the sky from the camera
 		/// \param renderedFirst if true, the sky-box will be the first thing rendered
 		void setSkyBoxMaterial(bool activate,
-							   const char materialName[],
-							   float distance = 8000,
-							   bool renderedFirst = true) const;
+		                       const std::string& materialName,
+		                       float distance = 8000,
+		                       bool renderedFirst = true) const;
 
 		///Set the view-ports background color
 		/// \param color background color
@@ -54,8 +54,8 @@ namespace Annwvyn
 
 		///Set the ambient light
 		/// \param color the color of the light
-		void setAmbientLight(AnnColor color) const;
-
+		void setAmbientLight(AnnColor upperColor, float upperMul, AnnColor lowerColor, float lowerMul, AnnVect3 direction, float environementMapScaling = 16) const;
+		void setDefaultAmbientLight();
 		void setExposure(float exposure, float minExposure, float maxExposure);
 		void setDefaultExposure();
 		void setSkyColor(AnnColor color, float multiplier);
@@ -70,10 +70,11 @@ namespace Annwvyn
 		///Pointer to the VR renderer
 		std::shared_ptr<OgreVRRender> renderer;
 
-		///Defaults environemental floats
-		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure, defaultSkyColorMultiplier, defaultBloom;
+		///Defaults environmental floats
+		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure, defaultSkyColorMultiplier, defaultBloom, defaultUpperAmbientLightMul, defaultLowerAmbientLightMul;
 		///Default sky color
-		const AnnColor defaultSkyColor; 
+		const AnnColor defaultSkyColor, defaultUpperAmbient, defaultLowerAmbient;
+
 	};
 }
 
