@@ -51,12 +51,6 @@ void AnnSceneryManager::setSkyBoxMaterial(bool activate, const std::string& mate
 	smgr->setSkyBox(activate, materialName, distance, renderedFirst);
 }
 
-void AnnSceneryManager::setWorldBackgroundColor(AnnColor v) const
-{
-	AnnDebug() << "Setting the background world color " << v;
-	renderer->changeViewportBackgroundColor(v.getOgreColor());
-}
-
 void AnnSceneryManager::removeSkyDome() const
 {
 	AnnDebug("Disabling sky-dome");
@@ -69,37 +63,37 @@ void AnnSceneryManager::removeSkyBox() const
 	smgr->setSkyBoxEnabled(false);
 }
 
-void AnnSceneryManager::setExposure(float exposure, float minExposure, float maxExposure)
+void AnnSceneryManager::setExposure(float exposure, float minExposure, float maxExposure) const
 {
 	renderer->setExposure(exposure, minExposure, maxExposure);
 }
 
-void AnnSceneryManager::setDefaultExposure()
+void AnnSceneryManager::setDefaultExposure() const
 {
 	setExposure(defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure);
 }
 
-void AnnSceneryManager::setSkyColor(AnnColor color, float multiplier)
+void AnnSceneryManager::setSkyColor(AnnColor color, float multiplier) const
 {
 	renderer->setSkyColor(color.getOgreColor(), multiplier, "HdrRenderingNode");
 }
 
-void AnnSceneryManager::setDefaultSkyColor()
+void AnnSceneryManager::setDefaultSkyColor() const
 {
 	setSkyColor(defaultSkyColor, defaultSkyColorMultiplier);
 }
 
-void AnnSceneryManager::setBloomThreshold(float threshold)
+void AnnSceneryManager::setBloomThreshold(float threshold) const
 {
 	renderer->setBloomThreshold(std::max(threshold - 2.f, 0.f), std::max(threshold, 0.01f));
 }
 
-void AnnSceneryManager::setDefaultBloomThreshold()
+void AnnSceneryManager::setDefaultBloomThreshold() const
 {
 	setBloomThreshold(defaultBloom);
 }
 
-void AnnSceneryManager::setDefaultAmbientLight()
+void AnnSceneryManager::setDefaultAmbientLight() const
 {
 	setAmbientLight(defaultUpperAmbient, defaultUpperAmbientLightMul, defaultLowerAmbient, defaultLowerAmbientLightMul, AnnVect3::NEGATIVE_UNIT_Y);
 }

@@ -12,8 +12,9 @@ class DemoHub : LEVEL, LISTENER
 {
 public:
 
-	DemoHub() : constructLevel(), constructListener(),
-		panelDpi(18)
+	DemoHub() : constructLevel(), constructListener(), 
+	rotating(nullptr),
+	                            panelDpi(18)
 	{
 	}
 
@@ -24,16 +25,21 @@ public:
 
 	void load() override
 	{
-		//Register ourselves as event listener
+		////Register ourselves as event listener
 		AnnGetEventManager()->addListener(getSharedListener());
 
 		//Add static geometry
+
+		auto pbrTest = addGameObject("SubstanceSphereDecimated.mesh");
+		pbrTest->setPosition({ 0, 1.5f, -2 });
+		rotating = pbrTest.get();
+
 		auto Ground = addGameObject("floorplane.mesh");
 		Ground->setUpPhysics();
 
 		auto StoneDemo0 = addGameObject("DemoStone.mesh");
 		StoneDemo0->setPosition({ -3, 0, -5 });
-		StoneDemo0->setOrientation(AnnQuaternion(AnnDegree(45), AnnVect3::UNIT_Y));
+		StoneDemo0->setOrientation({ AnnDegree(45), AnnVect3::UNIT_Y });
 		StoneDemo0->setUpPhysics();
 
 		auto TextPane = std::make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, panelDpi);
@@ -72,37 +78,32 @@ public:
 		Sun->setDirection({ 0, -1, -0.5 });
 		Sun->setPower(97000.0f);
 
-		//auto PointLight = addLightObject();
-		//PointLight->setPower(200000);
-		//PointLight->setDiffuseColor(AnnColor(1, 0, 0));
-		//PointLight->setPosition({ 0,2,0 });
-		//PointLight->getOgreLight()->setCastShadows(true);
-
 		//Some ambient lighting is needed
-		AnnGetEngine()->getSceneManager()->setAmbientLight(Ogre::ColourValue(0.3f, 0.5f, 0.7f) * 150.0f,
-			Ogre::ColourValue(0.6f, 0.45f, 0.3f) * 150.0f,
-			Ogre::Vector3{ 0, -1, -0.5 });
-
-		//AnnGetSceneryManager()->setAmbientLight(AnnColor(0.15f, 0.15f, 0.15f));
+		AnnGetSceneryManager()->setAmbientLight(
+		{ 0.3f, 0.5f, 0.7f }, 150.f,
+		{ 0.6f, 0.45f, 0.3f }, 150.f,
+		{ 0, -1, -0.5 });
+		
+		AnnGetSceneryManager()->setExposure(1.0f, -2, +2);
+		AnnGetSceneryManager()->setBloomThreshold(8);
 
 		AnnGetPlayer()->teleport({ 0, 5, 0 }, 0);
 		AnnDebug() << "Ground Level is : " << Ground->getPosition().y;
 		AnnGetPlayer()->regroundOnPhysicsBody(); //<--- will not work because no physics yet
 
-		//TODO temp hack fix. Remove me : 
+		//TODO temp hack fix. Remove me :
 		AnnGetPlayer()->reground(Ground->getPosition().y);
+;
+
 	}
 
 	//Called at each frame
 	void runLogic() override
 	{
-		//auto povPos{ AnnGetEngine()->getPlayerPovNode()->getPosition() };
-		//auto headPos{ AnnGetVRRenderer()->trackedHeadPose.position };
-		//AnnDebug() << "player pov node position" << povPos;
-		//AnnDebug() << "headset Position " << headPos;
-		//AnnDebug() << "y offset : " << headPos.y - povPos.y;
-		for (auto i : { 0,1 })
-			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[i]) controller->rumbleStop();
+		if (rotating)
+		{
+			rotating->setOrientation({ AnnDegree(AnnGetEngine()->getTimeFromStartupSeconds() * 45), AnnVect3::UNIT_Y });
+		}
 	}
 
 	void unload() override
@@ -110,6 +111,9 @@ public:
 		//Unregister the listener
 		AnnGetEventManager()->removeListener(getSharedListener());
 		AnnLevel::unload();
+		demo0trig.reset();
+		testLevelTrig.reset();
+		rotating = nullptr;
 	}
 
 	void TriggerEvent(AnnTriggerEvent e) override
@@ -139,6 +143,9 @@ public:
 private:
 	std::shared_ptr<AnnTriggerObject> demo0trig;
 	std::shared_ptr<AnnTriggerObject> testLevelTrig;
+
+	AnnGameObject* rotating;
+
 	float panelDpi;
 };
 
@@ -164,9 +171,8 @@ public:
 
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		Sun->setDirection({ 0, 1, -0.75 });
+		Sun->setDirection({ 0, -1, -0.75 });
 		Sun->setPower(97000.0f);
-
 
 		AnnGetPlayer()->teleport({ 0, 1, 0 }, 0);
 	}
@@ -185,20 +191,9 @@ public:
 
 	void runLogic() override
 	{
-		for(auto controller : AnnGetVRRenderer()->getHandControllerArray())
-			if(controller)
+		for (auto controller : AnnGetVRRenderer()->getHandControllerArray())
+			if (controller)
 				controller->rumbleStart(1);
-		/*
-		auto object = AnnGetGameObjectManager()->playerLookingAt();
-		if (object)
-		{
-			AnnDebug() << "looking at " << object->getName();
-		}
-		else
-		{
-			AnnDebug() << "No object";
-		}
-		*/
 	}
 
 private:
