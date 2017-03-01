@@ -19,6 +19,7 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 	//Reset static members of friend class AnnEnigine that will outlive the object itself.
 	engine->singleton = nullptr;
 	engine->consoleReady = false;
+
 }
 
 //Log is static. Therefore this has to be static too to be able to write to it.
@@ -214,6 +215,7 @@ AnnEngine::~AnnEngine()
 	log("Game engine stopped. Subsystem are shutting down...");
 	log("Good luck with the real world now! :3");
 	consoleReady = false;
+	FreeConsole();
 }
 
 //All theses getter are for encapsulation purpose. Calling them directly would

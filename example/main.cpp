@@ -135,7 +135,7 @@ std::function<void()> debugHook;
 AnnMain()
 {
 	OgreVRRender::setAntiAliasingLevel(8);
-	AnnEngine::openConsole();
+	//AnnEngine::openConsole();
 
 	AnnInit("AnnTest");
 
@@ -146,11 +146,8 @@ AnnMain()
 		AnnGetEngine()->initPlayerStandingPhysics();
 
 	AnnGetEventManager()->useDefaultEventListener();
-/*	auto quitOnButtonListener = make_shared<QuitOnButtonListener>();
-	AnnGetEventManager()->addListener(quitOnButtonListener);
 
-	//load resources
-	*/
+
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 	//AnnGetResourceManager()->addFileLocation("media/HDR");
@@ -172,7 +169,7 @@ AnnMain()
 	auto someListener = make_shared<SomeEventListener>();
 	AnnGetEventManager()->addListener(someListener);
 
-	//AnnGetEngine()->startGameplayLoop();
+	AnnGetEngine()->startGameplayLoop();
 
 	debugHook = []()
 	{
@@ -189,6 +186,8 @@ AnnMain()
 	someListener.reset();
 
 	AnnQuit();
+
+
 
 	return EXIT_SUCCESS;
 }

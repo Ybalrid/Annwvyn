@@ -519,3 +519,8 @@ void AnnConsole::bufferClear()
 	for (auto& line : buffer)
 		line.clear();
 }
+
+AnnConsole::~AnnConsole()
+{
+	font.setNull();
+}

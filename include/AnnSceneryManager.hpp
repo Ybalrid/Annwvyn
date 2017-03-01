@@ -42,10 +42,6 @@ namespace Annwvyn
 		                       float distance = 8000,
 		                       bool renderedFirst = true) const;
 
-		///Set the view-ports background color
-		/// \param color background color
-		DEPRECATED void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56f, 1)) const;
-
 		///Remove the sky dome
 		void removeSkyDome() const;
 
@@ -55,13 +51,13 @@ namespace Annwvyn
 		///Set the ambient light
 		/// \param color the color of the light
 		void setAmbientLight(AnnColor upperColor, float upperMul, AnnColor lowerColor, float lowerMul, AnnVect3 direction, float environementMapScaling = 16) const;
-		void setDefaultAmbientLight();
-		void setExposure(float exposure, float minExposure, float maxExposure);
-		void setDefaultExposure();
-		void setSkyColor(AnnColor color, float multiplier);
-		void setDefaultSkyColor();
-		void setBloomThreshold(float threshold);
-		void setDefaultBloomThreshold();
+		void setDefaultAmbientLight() const;
+		void setExposure(float exposure, float minExposure, float maxExposure) const;
+		void setDefaultExposure() const;
+		void setSkyColor(AnnColor color, float multiplier) const;
+		void setDefaultSkyColor() const;
+		void setBloomThreshold(float threshold) const;
+		void setDefaultBloomThreshold() const;
 
 	private:
 		///Scene manager created by the VR renderer

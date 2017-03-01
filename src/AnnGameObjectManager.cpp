@@ -82,7 +82,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 	obj->name = identifier;
 	identifiedObjects[identifier] = obj;
-	Objects.push_back(std::shared_ptr<AnnGameObject>(obj));
+	Objects.push_back(obj);
 
 	obj->postInit();
 	return obj;
@@ -90,7 +90,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> object)
 {
-	AnnDebug() << "Removed object " << object.get();
+	AnnDebug() << "Removed object " << object->getName();
 
 	if (!object) throw AnnNullGameObjectError();
 

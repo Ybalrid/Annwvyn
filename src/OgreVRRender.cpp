@@ -62,11 +62,16 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 
 OgreVRRender::~OgreVRRender()
 {
+	Ogre::LogManager::getSingleton().logMessage("OgreVRRender::~OgreVRRender()");
 	root->destroyRenderTarget(window);
 	glfwDestroyWindow(glfwWindow);
 	glfwTerminate();
 
+	rttTextureCombined.setNull();
+	for (auto tex : rttTexturesSeparated) tex.setNull();
+
 	self = nullptr;
+	root.reset(nullptr);
 }
 
 Ogre::SceneManager* OgreVRRender::getSceneManager() const
