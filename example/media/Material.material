@@ -2,7 +2,7 @@
 //Edited by hand to use hlms
 hlms Material pbs
 {
-    diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865
-    specular 0.5 0.5 0.5
-
+    diffuse_map lena.png
+	specular_map lena.png
+	
 }

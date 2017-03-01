@@ -3,6 +3,7 @@
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
 #include "AnnLogger.hpp"
+#include "../../OgreSDK/include/OGRE/OgreHardwarePixelBuffer.h"
 
 using namespace Annwvyn;
 
@@ -16,11 +17,15 @@ lastUpdate{ 0 },
 refreshRate{ 1.0 / 15.0 }
 {
 	//Define the custom material
-	auto Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
-	auto technique = Console.getPointer()->getTechnique(0);
-	auto pass = technique->getPass(0);
+	//auto Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
+	//auto technique = Console.getPointer()->getTechnique(0);
+	//auto pass = technique->getPass(0);
 	//pass->setLightingEnabled(false);
 	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
+
+	//auto hlmsUnlit = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HlmsTypes::HLMS_UNLIT);
+	
+
 
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
@@ -47,25 +52,33 @@ refreshRate{ 1.0 / 15.0 }
 	textCoord[3] = AnnVect2(1, 1);
 
 	//create the quad itself
-	/* TODO fix manual object
-	 *displaySurface = AnnGetEngine()->getSceneManager()->createManualObject("DISPLAY_SURFACE");
-	displaySurface->begin("Console", Ogre::RenderOperation::OT_TRIANGLE_STRIP);//Strip of triangle : Define a triangle then add them by points
-
+	// TODO fix manual object
+	displaySurface = AnnGetEngine()->getSceneManager()->createManualObject();
+	displaySurface->begin("Console", Ogre::OT_TRIANGLE_STRIP);//Strip of triangle : Define a triangle then add them by points
+	
 	//Add the four vertices. This will directly describe two Triangles
 	for (char i(0); i < 4; i++)
 	{
 		displaySurface->position(points[i]);
+		displaySurface->normal(0, 0, 1);
+		displaySurface->tangent(1, 0, 0);
 		displaySurface->textureCoord(textCoord[i]);
+		displaySurface->index(i);
 	}
 
 	//Object complete
-	displaySurface->end();*/
+	displaySurface->end();
+
+
+	displaySurface->setCastShadows(false);
+
+
 
 	//create a node child to the camera here :
 	consoleNode = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 
 	//attach The object
-	//consoleNode->attachObject(displaySurface);
+	consoleNode->attachObject(displaySurface);
 
 	//set the player relative position
 	consoleNode->setPosition(offset + AnnGetPlayer()->getEyesHeight() * AnnVect3::UNIT_Y);
@@ -102,8 +115,15 @@ refreshRate{ 1.0 / 15.0 }
 		Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8,
 		Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
 
-	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
-	displaySurfaceTextureUniteState->setTexture(texture);
+//	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
+//	displaySurfaceTextureUniteState->setTexture(texture);
+
+	auto datablock = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getDatablock("Console");
+	if(auto unlitDatablock = reinterpret_cast<Ogre::HlmsUnlitDatablock*>(datablock))
+	{
+		AnnDebug() << "got unlit datablock for " << "Console";
+		unlitDatablock->setTexture(Ogre::HlmsTextureManager::TEXTURE_TYPE_DIFFUSE, 0, texture);
+	}
 
 	//Load background texture to a buffer
 	background = Ogre::TextureManager::getSingleton().load("background.png", "ANNWVYN_CORE");
@@ -117,7 +137,7 @@ refreshRate{ 1.0 / 15.0 }
 	//To optimize texture copy, make sure to use the most efficient OpenGL method
 
 	if (Ogre::Root::getSingleton().getRenderSystem()->getName()
-		== "OpenGL Rendering Subsystem")
+		== "OpenGL 3+ Rendering Subsystem")
 	{
 		background->getCustomAttribute("GLID", &backgroundID);
 		texture->getCustomAttribute("GLID", &textureID);
@@ -210,9 +230,12 @@ void AnnConsole::update()
 
 	//Erase plane (draw background)
 	if (openGL43plus)
+	{
 		glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
 			textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
 			texture->getSrcWidth(), texture->getSrcHeight(), 1);
+		//AnnDebug() << "texture cleared";
+	}
 	else
 	{
 		/*TODO fix hardware buffer for copy without OpenGL 4.3, or deprecate*/
@@ -254,8 +277,8 @@ bool AnnConsole::isForbdiden(const std::string& keyword)
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap) const
 {
-	/* TODO fix hardware buffer for manual texture copy
-	 *using namespace Ogre;
+	// TODO fix hardware buffer for manual texture copy
+	 using namespace Ogre;
 
 	if (destTexture->getHeight() < destRectangle.bottom)
 		destRectangle.bottom = destTexture->getHeight();
@@ -267,10 +290,10 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 
 	TexturePtr fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
 
-	HardwarePixelBufferSharedPtr fontBuffer = fontTexture->getBuffer();
-	HardwarePixelBufferSharedPtr destBuffer = destTexture->getBuffer();
+	auto fontBuffer = fontTexture->getBuffer();
+	auto destBuffer = destTexture->getBuffer();
 
-	PixelBox destPb = destBuffer->lock(destRectangle, HardwareBuffer::HBL_NORMAL);
+	PixelBox destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
 
 	// The font texture textureBuffer was created write only...so we cannot read it back :o). One solution is to copy the textureBuffer  instead of locking it. (Maybe there is a way to create a font texture which is not write_only ?)
 
@@ -421,7 +444,7 @@ stop:
 	destBuffer->unlock();
 
 	// Free the memory allocated for the textureBuffer
-	free(textureBuffer);*/
+	free(textureBuffer);
 }
 
 void AnnConsole::syncConsolePosition() const

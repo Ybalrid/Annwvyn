@@ -9,7 +9,7 @@ using namespace std;
 
 void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true)
 {
-	/* TODO fix hardware buffer/texture copy
+	 //TODO fix hardware buffer/texture copy
 	using namespace Ogre;
 
 	if (destTexture->getHeight() < destRectangle.bottom)
@@ -22,10 +22,10 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 
 	TexturePtr fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
 
-	HardwarePixelBufferSharedPtr fontBuffer = fontTexture->getBuffer();
-	HardwarePixelBufferSharedPtr destBuffer = destTexture->getBuffer();
+	auto fontBuffer = fontTexture->getBuffer();
+	auto destBuffer = destTexture->getBuffer();
 
-	PixelBox destPb = destBuffer->lock(destRectangle, HardwareBuffer::HBL_NORMAL);
+	PixelBox destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
 
 	// The font texture buffer was created write only...so we cannot read it back :o). One solution is to copy the buffer  instead of locking it. (Maybe there is a way to create a font texture which is not write_only ?)
 
@@ -191,7 +191,6 @@ stop:
 
 	// Free the memory allocated for the buffer
 	free(buffer);
-	*/
 }
 
 Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float resolution, string fName, string TTF) :
@@ -238,16 +237,19 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 
 	createMaterial();
 
-	// TODO new manual object
-	/*renderPlane->begin(materialName, Ogre::RenderOperation::OT_TRIANGLE_STRIP);
+	//TODO new manual object
+	renderPlane->begin(materialName, Ogre::OT_TRIANGLE_STRIP);
 
 	for (char i(0); i < 4; i++)
 	{
 		renderPlane->position(vertices[i]);
+		renderPlane->normal(0,0,1);
+		renderPlane->tangent(1,0,0);
+		renderPlane->index(i);
 		renderPlane->textureCoord(textureCoords[i]);
 	}
 
-	renderPlane->end();*/
+	renderPlane->end();
 
 	node->attachObject(renderPlane);
 	//end of the thing that should be in it's own method
@@ -284,7 +286,7 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 
 Ann3DTextPlane::~Ann3DTextPlane()
 {
-	/*
+	
 	// TODO : fix the manual object mess!
 	AnnDebug() << "Destructing a 3D Text plane!";
 	auto smgr = AnnGetEngine()->getSceneManager();
@@ -295,7 +297,7 @@ Ann3DTextPlane::~Ann3DTextPlane()
 	Ogre::MaterialManager::getSingleton().remove(materialName);
 
 	
-	 *auto textureName = texture->getName();
+	auto textureName = texture->getName();
 	Ogre::TextureManager::getSingleton().remove(textureName);
 
 	if (!bgTexture.isNull())
@@ -306,7 +308,7 @@ Ann3DTextPlane::~Ann3DTextPlane()
 	
 	smgr->destroySceneNode(node);
 	node = nullptr;
-	*/
+	
 }
 
 void Ann3DTextPlane::setCaption(string newCaption)
@@ -347,6 +349,29 @@ void Ann3DTextPlane::calculateVerticesForPlaneSize()
 
 void Ann3DTextPlane::createMaterial()
 {
+
+	generateMaterialName();
+
+	//We want theses objects to react to the light and be present in the scene. We will create some kind of dielectric material (aka paint) 
+	auto hlms = static_cast<Ogre::HlmsPbs*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_PBS));
+	//auto hlms = static_cast<Ogre::HlmsUnlit*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT));
+	auto datablock = static_cast<Ogre::HlmsPbsDatablock*>(hlms->createDatablock(materialName, materialName, Ogre::HlmsMacroblock(), Ogre::HlmsBlendblock(), Ogre::HlmsParamVec()));
+
+
+	texture = Ogre::TextureManager::getSingleton()
+		.createManual(AnnGetStringUtility()->getRandomString(),
+			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			Ogre::TEX_TYPE_2D_ARRAY,
+			width * resolutionFactor,
+			height * resolutionFactor, 1,
+			12, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET | Ogre::TU_AUTOMIPMAP);
+
+	datablock->setTexture(Ogre::PBSM_DIFFUSE, 0, texture);
+	datablock->setRoughness(0.001);
+	datablock->setSpecular({ 0.25,0.25,0.25 });
+	datablock->setAlphaTest(Ogre::CompareFunction::CMPF_GREATER);
+	datablock->setAlphaTestThreshold(0.33f); 
+
 	//TODO new material system (probalby unlit here) 
 	/*
 	generateMaterialName();
@@ -451,8 +476,8 @@ void Ann3DTextPlane::setBackgroundImage(string imgName)
 
 void Ann3DTextPlane::renderText()
 {
-	/*
-	TODO fix hardware buffer and text rendering
+
+//	TODO fix hardware buffer and text rendering
 	clearTexture();
 	WriteToTexture(caption,
 				   texture,
@@ -467,7 +492,6 @@ void Ann3DTextPlane::renderText()
 				   true);
 
 	needUpdating = false;
-	*/
 }
 
 void Ann3DTextPlane::clearTexture()
@@ -480,18 +504,18 @@ void Ann3DTextPlane::clearTexture()
 	else
 	{
 		/*TODO fix hardware buffer thing here (texture copy)*/
-		/*
+		
 		auto textureBuffer = texture->getBuffer();
 		const auto w = textureBuffer->getWidth();
 		const auto h = textureBuffer->getHeight();
 
 		Ogre::Image::Box imageBox(0, 0, w, h);
-		auto pixelBox = textureBuffer->lock(imageBox, Ogre::HardwareBuffer::HBL_NORMAL);
+		auto pixelBox = textureBuffer->lock(imageBox, Ogre::v1::HardwareBuffer::HBL_NORMAL);
 
 		for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
 			pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
 
 		textureBuffer->unlock();
-		*/
+		
 	}
 }

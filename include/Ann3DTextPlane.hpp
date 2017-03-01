@@ -5,6 +5,8 @@
 #include <Ogre.h>
 #include <Overlay/OgreFontManager.h>
 #include <Overlay/OgreFont.h>
+#include <OgreRenderOperation.h>
+#include <Hlms/Pbs/OgreHlmsPbsDatablock.h>
 #include <string>
 
 #include "AnnEngine.hpp"
