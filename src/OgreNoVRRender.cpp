@@ -55,7 +55,7 @@ void OgreNoVRRender::getTrackingPoseAndVRTiming()
 
 void OgreNoVRRender::renderAndSubmitFrame()
 {
-	Ogre::WindowEventUtilities::messagePump();
+	handleWindowMessages();
 	if (window->isClosed())
 	{
 		running = false;
