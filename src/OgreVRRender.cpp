@@ -190,11 +190,10 @@ void OgreVRRender::initCameras()
 	cameraRig->attachObject(eyeCameras[right]);
 
 	monoCam = smgr->createCamera("mcam");
-	monoCam->setAspectRatio(16.0 / 9.0);
-	monoCam->setAutoAspectRatio(false);
 	monoCam->setNearClipDistance(nearClippingDistance);
 	monoCam->setFarClipDistance(farClippingDistance);
 	monoCam->setFOVy(Ogre::Degree(90));
+	monoCam->setAutoAspectRatio(true);
 	detachCameraFromParent(monoCam);
 	cameraRig->attachObject(monoCam);
 
@@ -233,6 +232,11 @@ void OgreVRRender::loadOpenGLFunctions()
 	}
 	Annwvyn::AnnDebug() << "Using GLEW version : "
 		<< glewGetString(GLEW_VERSION);
+
+	if (glCopyImageSubData)
+	{
+		Annwvyn::AnnDebug() << "glCopyImageSubData is available!";
+	}
 }
 
 void OgreVRRender::updateTracking()
@@ -301,6 +305,7 @@ std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderB
 
 void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 {
+	windowW = w, windowH = h;
 	auto winName = rendererName + " : " + name + " - monitor output";
 	HGLRC context = {};
 	HWND handle = {};
@@ -344,7 +349,6 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 		options["vsync"] = "false";
 
 	window = root->createRenderWindow(winName, w, h, false, &options);
-
 }
 
 std::string OgreVRRender::getName() const
@@ -385,7 +389,6 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &library);
 	hlmsManager->registerHlms(hlmsUnlit);
 	hlmsManager->registerHlms(hlmsPbs);
-
 }
 
 void OgreVRRender::loadCompositor(const std::string& path, const std::string& type)
@@ -461,4 +464,23 @@ void OgreVRRender::setBloomThreshold(float minThreshold, float fullColorThreshol
 			minThreshold,
 			1.0f / (fullColorThreshold - minThreshold),
 			0, 0));
+}
+
+void OgreVRRender::handleWindowMessages()
+{
+	Ogre::WindowEventUtilities::messagePump();
+	glfwPollEvents();
+
+	static int w, h;
+	glfwGetWindowSize(glfwWindow, &w, &h);
+
+	if (windowW != w || windowH != h)
+	{
+		windowW = w;
+		windowH = h;
+
+		window->windowMovedOrResized();
+	}
+
+	//window->resize(w, h);
 }

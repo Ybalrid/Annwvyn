@@ -255,6 +255,9 @@ private:
 
 protected:
 
+	void handleWindowMessages();
+	int windowW, windowH;
+
 	///Compositor workspaces. 0 = left, 1 = right, 2 = monoscopic, plugged to the render window
 	std::array<Ogre::CompositorWorkspace*, nbCompositor> compositorWorkspaces;
 
