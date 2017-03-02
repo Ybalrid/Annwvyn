@@ -24,8 +24,6 @@ refreshRate{ 1.0 / 15.0 }
 	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
 
 	//auto hlmsUnlit = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HlmsTypes::HLMS_UNLIT);
-	
-
 
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
@@ -52,10 +50,9 @@ refreshRate{ 1.0 / 15.0 }
 	textCoord[3] = AnnVect2(1, 1);
 
 	//create the quad itself
-	// TODO fix manual object
 	displaySurface = AnnGetEngine()->getSceneManager()->createManualObject();
 	displaySurface->begin("Console", Ogre::OT_TRIANGLE_STRIP);//Strip of triangle : Define a triangle then add them by points
-	
+
 	//Add the four vertices. This will directly describe two Triangles
 	for (char i(0); i < 4; i++)
 	{
@@ -69,10 +66,7 @@ refreshRate{ 1.0 / 15.0 }
 	//Object complete
 	displaySurface->end();
 
-
 	displaySurface->setCastShadows(false);
-
-
 
 	//create a node child to the camera here :
 	consoleNode = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
@@ -115,11 +109,11 @@ refreshRate{ 1.0 / 15.0 }
 		Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8,
 		Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
 
-//	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
-//	displaySurfaceTextureUniteState->setTexture(texture);
+	//	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
+	//	displaySurfaceTextureUniteState->setTexture(texture);
 
 	auto datablock = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getDatablock("Console");
-	if(auto unlitDatablock = reinterpret_cast<Ogre::HlmsUnlitDatablock*>(datablock))
+	if (auto unlitDatablock = reinterpret_cast<Ogre::HlmsUnlitDatablock*>(datablock))
 	{
 		AnnDebug() << "got unlit datablock for " << "Console";
 		unlitDatablock->setTexture(Ogre::HlmsTextureManager::TEXTURE_TYPE_DIFFUSE, 0, texture);
@@ -234,29 +228,24 @@ void AnnConsole::update()
 		glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
 			textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
 			texture->getSrcWidth(), texture->getSrcHeight(), 1);
-		//AnnDebug() << "texture cleared";
 	}
 	else
 	{
-		/*TODO fix hardware buffer for copy without OpenGL 4.3, or deprecate*/
-		/*
-		//background->copyToTexture(texture);
 		float w(texture->getBuffer()->getWidth());
 		float h(texture->getBuffer()->getHeight());
 
-		auto texture_out = texture->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::HardwareBuffer::LockOptions::HBL_WRITE_ONLY);
+		auto texture_out = texture->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::v1::HardwareBuffer::LockOptions::HBL_WRITE_ONLY);
 
 		w = background->getBuffer()->getWidth();
 		h = background->getBuffer()->getHeight();
 
-		auto background_in = background->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::HardwareBuffer::LockOptions::HBL_READ_ONLY);
+		auto background_in = background->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::v1::HardwareBuffer::LockOptions::HBL_READ_ONLY);
 
 		for (auto y(0); y < h; ++y) for (auto x(0); x < w; ++x)
 			texture_out.setColourAt(background_in.getColourAt(x, y, 0), x, y, 0);
 
 		background->getBuffer()->unlock();
 		texture->getBuffer()->unlock();
-		*/
 	}
 
 	//Write text to texture
@@ -277,8 +266,7 @@ bool AnnConsole::isForbdiden(const std::string& keyword)
 
 void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap) const
 {
-	// TODO fix hardware buffer for manual texture copy
-	 using namespace Ogre;
+	using namespace Ogre;
 
 	if (destTexture->getHeight() < destRectangle.bottom)
 		destRectangle.bottom = destTexture->getHeight();

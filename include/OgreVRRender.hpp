@@ -61,6 +61,8 @@ public:
 	///Resource group to load the shaders, material and compositor script for rendering.
 	static constexpr const char* const RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
 
+	const size_t numberOfThreads;
+
 	enum compositorIndex : size_t
 	{
 		leftEyeCompositor = 0,

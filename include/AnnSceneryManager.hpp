@@ -28,19 +28,19 @@ namespace Annwvyn
 		/// \param curvature curvature of the texture
 		/// \param tiling tilling of the texture
 		void setSkyDomeMaterial(bool activate,
-		                        const std::string& materialName,
-		                        float curvature = 2.0f,
-		                        float tiling = 1.0f) const; //scene
+			const std::string& materialName,
+			float curvature = 2.0f,
+			float tiling = 1.0f) const; //scene
 
-		///Set the ogre material for the sky-box with params
-		/// \param activate if true put the sky-box on the scene
-		/// \param materialName name of a material declared on the resource manager
-		/// \param distance distance of the sky from the camera
-		/// \param renderedFirst if true, the sky-box will be the first thing rendered
+///Set the ogre material for the sky-box with params
+/// \param activate if true put the sky-box on the scene
+/// \param materialName name of a material declared on the resource manager
+/// \param distance distance of the sky from the camera
+/// \param renderedFirst if true, the sky-box will be the first thing rendered
 		void setSkyBoxMaterial(bool activate,
-		                       const std::string& materialName,
-		                       float distance = 8000,
-		                       bool renderedFirst = true) const;
+			const std::string& materialName,
+			float distance = 8000,
+			bool renderedFirst = true) const;
 
 		///Remove the sky dome
 		void removeSkyDome() const;
@@ -70,7 +70,6 @@ namespace Annwvyn
 		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure, defaultSkyColorMultiplier, defaultBloom, defaultUpperAmbientLightMul, defaultLowerAmbientLightMul;
 		///Default sky color
 		const AnnColor defaultSkyColor, defaultUpperAmbient, defaultLowerAmbient;
-
 	};
 }
 

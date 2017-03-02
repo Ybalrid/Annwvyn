@@ -23,6 +23,11 @@ void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
 }
 
 OgreVRRender::OgreVRRender(std::string windowName) :
+	numberOfThreads(std::thread::hardware_concurrency()),
+	glMajor{ 4 },
+	glMinor{ 3 },
+	monoscopicCompositor(monoscopicWorkspaceName),
+	stereoscopicCompositor(stereoscopicWorkspaceName),
 	smgr{ nullptr },
 	root{ nullptr },
 	window{ nullptr },
@@ -38,11 +43,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	backgroundColor{ 0.2f, 0.4f, 0.75f },
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
-	rttEyesCombined{ nullptr },
-	glMajor{ 4 },
-	glMinor{ 3 },
-	monoscopicCompositor(monoscopicWorkspaceName),
-	stereoscopicCompositor(stereoscopicWorkspaceName)
+	rttEyesCombined{ nullptr }
 {
 	rttTextureCombined.setNull();
 	if (self)
@@ -96,8 +97,7 @@ Ogre::SceneNode* OgreVRRender::getCameraInformationNode() const
 
 Ogre::Timer * OgreVRRender::getTimer() const
 {
-	if (root) return root->getTimer();
-	return nullptr;
+	return root->getTimer();
 }
 
 double OgreVRRender::getUpdateTime() const
@@ -174,8 +174,8 @@ void OgreVRRender::detachCameraFromParent(Ogre::Camera* camera)
 
 void OgreVRRender::initCameras()
 {
-	//TODO name on node?
 	cameraRig = smgr->getRootSceneNode()->createChildSceneNode();
+	cameraRig->setName("CameraRig");
 
 	eyeCameras[left] = smgr->createCamera("lcam");
 	eyeCameras[left]->setNearClipDistance(nearClippingDistance);
@@ -184,9 +184,9 @@ void OgreVRRender::initCameras()
 	cameraRig->attachObject(eyeCameras[left]);
 
 	eyeCameras[right] = smgr->createCamera("rcam");
-	detachCameraFromParent(eyeCameras[right]);
 	eyeCameras[right]->setNearClipDistance(nearClippingDistance);
 	eyeCameras[right]->setFarClipDistance(farClippingDistance);
+	detachCameraFromParent(eyeCameras[right]);
 	cameraRig->attachObject(eyeCameras[right]);
 
 	monoCam = smgr->createCamera("mcam");
@@ -344,6 +344,7 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 		options["vsync"] = "false";
 
 	window = root->createRenderWindow(winName, w, h, false, &options);
+
 }
 
 std::string OgreVRRender::getName() const
@@ -384,6 +385,7 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &library);
 	hlmsManager->registerHlms(hlmsUnlit);
 	hlmsManager->registerHlms(hlmsPbs);
+
 }
 
 void OgreVRRender::loadCompositor(const std::string& path, const std::string& type)
@@ -433,7 +435,13 @@ void OgreVRRender::setExposure(float exposure, float minAuto, float maxAuto, con
 
 void OgreVRRender::createMainSmgr()
 {
-	smgr = root->createSceneManager(Ogre::ST_GENERIC, 4, Ogre::INSTANCING_CULLING_THREADED);
+	std::ostringstream outstream;
+	outstream << "Detected " << numberOfThreads << " hardware threads.";
+	logToOgre(outstream.str());
+
+	smgr = root->createSceneManager(Ogre::ST_GENERIC, numberOfThreads, Ogre::INSTANCING_CULLING_THREADED);
+
+	logToOgre("Setting the shadow distances to 500m");
 	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
 	smgr->setShadowFarDistance(500.0f);
 }

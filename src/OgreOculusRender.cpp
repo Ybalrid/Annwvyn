@@ -476,7 +476,6 @@ void OgreOculusRender::updateProjectionMatrix()
 		eyeCameras[eye]->setNearClipDistance(nearClippingDistance);
 		eyeCameras[eye]->setFarClipDistance(farClippingDistance);
 	}
-
 }
 
 ovrSessionStatus OgreOculusRender::getSessionStatus()

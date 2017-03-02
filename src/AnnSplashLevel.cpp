@@ -18,10 +18,10 @@ hasBGM(false) {}
 
 void AnnSplashLevel::load()
 {
-	/* 
+	/*
 	TODO : Fix manual object
-	TODO : Fix material stuff (unlit) 
-	 
+	TODO : Fix material stuff (unlit)
+
 	AnnDebug() << "Ignore physics";
 	AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
 	AnnGetPlayer()->ignorePhysics = true;
@@ -135,7 +135,6 @@ void AnnSplashLevel::unload()
 	AnnGetPlayer()->ignorePhysics = false;
 	AnnGetPlayer()->setPosition(AnnVect3(0, 0, 10));
 	AnnGetPlayer()->resetPlayerPhysics();
-
 }
 
 void AnnSplashLevel::setNextLevel(std::shared_ptr<AnnLevel> level)

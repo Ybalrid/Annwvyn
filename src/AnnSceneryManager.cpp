@@ -28,12 +28,12 @@ defaultLowerAmbient(0.6f, 0.45f, 0.3f)
 
 void AnnSceneryManager::setAmbientLight(AnnColor upperColor, float upperMul, AnnColor lowerColor, float lowerMul, AnnVect3 direction, float environementMapScaling) const
 {
-	AnnDebug() << "Setting the ambient light to" 
-	<< upperColor.getOgreColor()*upperMul << " " 
-	<< lowerColor.getOgreColor()*lowerMul << " " 
-	<< direction << environementMapScaling;
+	AnnDebug() << "Setting the ambient light to"
+		<< upperColor.getOgreColor()*upperMul << " "
+		<< lowerColor.getOgreColor()*lowerMul << " "
+		<< direction << environementMapScaling;
 
-	smgr->setAmbientLight(upperColor.getOgreColor() * upperMul, 
+	smgr->setAmbientLight(upperColor.getOgreColor() * upperMul,
 		lowerColor.getOgreColor() * lowerMul,
 		direction,
 		environementMapScaling);

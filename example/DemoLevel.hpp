@@ -12,9 +12,9 @@ class DemoHub : LEVEL, LISTENER
 {
 public:
 
-	DemoHub() : constructLevel(), constructListener(), 
-	rotating(nullptr),
-	                            panelDpi(18)
+	DemoHub() : constructLevel(), constructListener(),
+		rotating(nullptr),
+		panelDpi(18)
 	{
 	}
 
@@ -83,7 +83,7 @@ public:
 		{ 0.3f, 0.5f, 0.7f }, 150.f,
 		{ 0.6f, 0.45f, 0.3f }, 150.f,
 		{ 0, -1, -0.5 });
-		
+
 		AnnGetSceneryManager()->setExposure(1.0f, -2, +2);
 		AnnGetSceneryManager()->setBloomThreshold(8);
 
@@ -93,8 +93,7 @@ public:
 
 		//TODO temp hack fix. Remove me :
 		AnnGetPlayer()->reground(Ground->getPosition().y);
-;
-
+		;
 	}
 
 	//Called at each frame

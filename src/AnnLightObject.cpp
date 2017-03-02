@@ -44,9 +44,6 @@ AnnLightObject::LightTypes AnnLightObject::getLightTypeFromString(std::string lt
 
 void AnnLightObject::setPosition(AnnVect3 position)
 {
-	//TODO lights have to be attached to nodes
-	//light->setPosition(position);
-
 	node->setPosition(position);
 }
 
@@ -82,9 +79,7 @@ AnnColor AnnLightObject::getSpecularColor() const
 
 AnnVect3 AnnLightObject::getPosition()
 {
-	return AnnVect3();
-	//TODO lights have to be attached to nodes
-	//return light->getPosition();
+	return node->getPosition();
 }
 
 void AnnLightObject::setAttenuation(float range, float constant, float linear, float quadratic)
