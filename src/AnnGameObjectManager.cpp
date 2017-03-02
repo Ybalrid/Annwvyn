@@ -30,10 +30,10 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 {
 	AnnDebug("Creating a game object from the mesh file :  " + std::string(meshName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
-	
+
 	//auto ent = smgr->createEntity(meshName);
 
-	//We are using Ogre v1 mesh format : 
+	//We are using Ogre v1 mesh format :
 	auto v1Mesh = Ogre::v1::MeshManager::getSingleton().load(meshName,
 		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
 		Ogre::v1::HardwareBuffer::HBU_STATIC,
@@ -41,14 +41,14 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 	static const std::string sufix = "_V2mesh";
 
-	//Generate the name of the v2 mesh 
+	//Generate the name of the v2 mesh
 	auto v2meshName = meshName + sufix;
 	AnnDebug() << "Mesh v2 name : " << v2meshName;
 
 	//See it the mesh allready exist :
 	Ogre::MeshPtr v2Mesh = {};
 	v2Mesh = Ogre::MeshManager::getSingleton().getByName(v2meshName);
-	if (!v2Mesh) //create and import 
+	if (!v2Mesh) //create and import
 	{
 		AnnDebug() << v2Mesh << " doesn't exist yet in the v2 MeshManager, creating it and loading the v1 " << meshName << " geometry";
 		v2Mesh = Ogre::MeshManager::getSingleton().createManual(v2meshName, AnnResourceManager::defaultResourceGroupName);
@@ -58,10 +58,10 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 	//Create an item
 	Ogre::Item* item = smgr->createItem(v2Mesh);
-	
+
 	//Create a node
 	auto node = smgr->getRootSceneNode()->createChildSceneNode();
-	
+
 	//Attach
 	node->attachObject(item);
 

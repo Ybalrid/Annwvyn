@@ -99,7 +99,6 @@ void OgreOpenVRRender::initVrHmd()
 		displayWin32ErrorMessage(L"Error: failed to init OpenVR VRCompositor",
 			L"Failed to initialize the VR Compositor");
 		throw Annwvyn::AnnInitializationError(ANN_ERR_NOTINIT, "Failed to init the OpenVR VRCompositor");
-
 	}
 
 	//Get Driver and Display information
@@ -186,7 +185,7 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	window->update();			//Window display
 */
 
-	//Submit the textures to the SteamVR compositor
+//Submit the textures to the SteamVR compositor
 	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures, &GLBounds[0]);
 	vr::VRCompositor()->Submit(vr::Eye_Right, &vrTextures, &GLBounds[1]);
 
@@ -464,13 +463,13 @@ void Annwvyn::AnnOpenVRMotionController::rumbleStop()
 	//NB : The "rumbeling" of OpenVR controllers is pulse based. Meaning that telling it to "not move" doesn't make much sense.
 }
 
-Annwvyn::AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem, 
-	vr::TrackedDeviceIndex_t OpenVRDeviceIndex, 
-	Ogre::SceneNode* handNode, 
-	AnnHandControllerID controllerID, 
+Annwvyn::AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem,
+	vr::TrackedDeviceIndex_t OpenVRDeviceIndex,
+	Ogre::SceneNode* handNode,
+	AnnHandControllerID controllerID,
 	AnnHandControllerSide controllerSide) : AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
-deviceIndex(OpenVRDeviceIndex),
-vrSystem(vrsystem), last(0), current(0)
+	deviceIndex(OpenVRDeviceIndex),
+	vrSystem(vrsystem), last(0), current(0)
 {
 	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking | LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback;
 }

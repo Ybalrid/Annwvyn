@@ -107,7 +107,7 @@ void putGizmoOnHands()
 		if (!done[side])
 			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[side])
 			{
-				//TODO mh... Need an item here. 
+				//TODO mh... Need an item here.
 				//controller->attachModel(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
 				done[side] = true;
 			}
@@ -147,13 +147,11 @@ AnnMain()
 
 	AnnGetEventManager()->useDefaultEventListener();
 
-
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
 	//AnnGetResourceManager()->addFileLocation("media/HDR");
 	AnnGetResourceManager()->initResources();
-	
-	
+
 	//create and load level objects
 	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
 	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
@@ -161,7 +159,7 @@ AnnMain()
 
 	//ask the level manager to perform a jump to the first level
 	AnnGetLevelManager()->jumpToFirstLevel();
-	
+
 	AnnDebug() << "Starting the render loop";
 
 	//Not how you're supposed to do it:
@@ -186,8 +184,6 @@ AnnMain()
 	someListener.reset();
 
 	AnnQuit();
-
-
 
 	return EXIT_SUCCESS;
 }

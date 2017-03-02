@@ -19,7 +19,6 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 	//Reset static members of friend class AnnEnigine that will outlive the object itself.
 	engine->singleton = nullptr;
 	engine->consoleReady = false;
-
 }
 
 //Log is static. Therefore this has to be static too to be able to write to it.
@@ -69,7 +68,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
-		throw AnnInitializationError(ANN_ERR_MEMORY ,"Can't create 2 instances of AnnEngine");
+		throw AnnInitializationError(ANN_ERR_MEMORY, "Can't create 2 instances of AnnEngine");
 	}
 	singleton = this;
 

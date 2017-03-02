@@ -174,7 +174,7 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 
 	//init shape converter
 	// TODO : maybe need to switch to an animated meshToShape converter if the object owns a skeleton
-	BtOgre::StaticMeshToShapeConverter converter( v1mesh.get() );
+	BtOgre::StaticMeshToShapeConverter converter(v1mesh.get());
 
 	// TODO put this thing inside the Physics engine
 	//create the correct shape
@@ -251,7 +251,6 @@ void AnnGameObject::playAnimation(bool play)
 void AnnGameObject::loopAnimation(bool loop)
 {
 	// TODO new animation system
-
 }
 
 void AnnGameObject::addAnimationTime(double offset) const
@@ -366,7 +365,7 @@ bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
 {
 	for (auto childNode : parentObj->Node->getChildIterator())
 	{
-		auto node = childNode; //TODO check if this is okay... 
+		auto node = childNode; //TODO check if this is okay...
 		auto childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
 
 		//Is an actual SceneNode

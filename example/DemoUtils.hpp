@@ -33,10 +33,10 @@ public:
 		if (e.getController()->hasBeenPressed(3))
 			switch (e.getController()->getSide())
 			{
-				default:break;
-				case AnnHandController::leftHandController:
-					jumpToHub();
-					break;
+			default:break;
+			case AnnHandController::leftHandController:
+				jumpToHub();
+				break;
 			}
 	}
 
