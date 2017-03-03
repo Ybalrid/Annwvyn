@@ -8,7 +8,7 @@
 using namespace Annwvyn;
 unsigned long long AnnGameObjectManager::id;
 
-AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
+AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager"), halfPos(true), halfTexCoord(true), qTan(true)
 {
 	//There will only be one manager, set the id to 0
 	id = 0;
@@ -53,7 +53,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 		AnnDebug() << v2Mesh << " doesn't exist yet in the v2 MeshManager, creating it and loading the v1 " << meshName << " geometry";
 		v2Mesh = Ogre::MeshManager::getSingleton().createManual(v2meshName, AnnResourceManager::defaultResourceGroupName);
 		// TODO : permit to set theses things by hand
-		v2Mesh->importV1(v1Mesh.get(), true, true, true);
+		v2Mesh->importV1(v1Mesh.get(), halfPos, halfTexCoord, qTan);
 	}
 
 	//Create an item
@@ -178,4 +178,11 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getObjectFromID(std::string
 	if (object != identifiedObjects.end())
 		return object->second;
 	return nullptr;
+}
+
+void AnnGameObjectManager::setImportParameter(bool halfPosition, bool halfTextureCoord, bool qTangents)
+{
+	halfPos = halfPosition;
+	halfTexCoord = halfTextureCoord;
+	qTan = qTangents;
 }
