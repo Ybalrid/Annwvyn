@@ -69,12 +69,6 @@ void OgreNoVRRender::renderAndSubmitFrame()
 void OgreNoVRRender::recenter()
 {}
 
-///TODO This is deprecated and will be removed
-void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
-{
-	backgroundColor = color;
-}
-
 void OgreNoVRRender::showDebug(DebugMode mode)
 {}
 

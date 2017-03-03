@@ -46,9 +46,6 @@ public:
 	///Will do nothing
 	void recenter() override;
 
-	///Change the clear color on the window
-	void changeViewportBackgroundColor(Ogre::ColourValue) override;
-
 	///Nothing to do, just here to not make this class abstract
 	void showDebug(DebugMode mode) override;
 
