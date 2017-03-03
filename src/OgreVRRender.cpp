@@ -164,7 +164,7 @@ void OgreVRRender::initCameras()
 
 	monoCam = smgr->createCamera("mcam");
 	monoCam->setAspectRatio(16.0 / 9.0);
-	monoCam->setAutoAspectRatio(false);
+	monoCam->setAutoAspectRatio(true);
 	monoCam->setNearClipDistance(nearClippingDistance);
 	monoCam->setFarClipDistance(farClippingDistance);
 	monoCam->setFOVy(Ogre::Degree(90));
