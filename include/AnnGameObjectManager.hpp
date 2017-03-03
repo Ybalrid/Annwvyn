@@ -60,6 +60,9 @@ namespace Annwvyn
 		///Get an AnnGameObject for the required string; return nullptr if object cannot be found
 		std::shared_ptr<AnnGameObject> getObjectFromID(std::string idString);
 
+		///Set the options to pass while converting Ogre V1 meshes to Ogre V2 meshes
+		void setImportParameter(bool halfPosition, bool halfTextureCoord, bool qTangents);
+
 	private:
 		friend class AnnEngine;
 
@@ -74,6 +77,8 @@ namespace Annwvyn
 		std::unordered_map<std::string, std::shared_ptr<AnnGameObject>> identifiedObjects;
 
 		static unsigned long long id;
+
+		bool halfPos, halfTexCoord, qTan;
 	};
 }
 
