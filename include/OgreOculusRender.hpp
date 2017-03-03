@@ -112,9 +112,6 @@ public:
 	///Compute from OVR the correct projection matrix for the given clipping distance
 	void updateProjectionMatrix() override;
 
-	///change main viewport background color
-	void changeViewportBackgroundColor(Ogre::ColourValue color) override;
-
 	///Show in debug window what the camera are seeing
 	static void showRawView();
 

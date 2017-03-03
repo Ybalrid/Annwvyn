@@ -92,22 +92,6 @@ void OgreOculusRender::cycleDebugHud()
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
 }
 
-void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
-{
-	//save the color then apply it to each viewport
-	backgroundColor = color;
-
-	//Render buffers
-/*	for (auto eye : eyeUpdateOrder)
-		if (vpts[eye])
-			vpts[eye]->setBackgroundColour(backgroundColor);
-
-	//Debug window
-	if (debugViewport && !mirrorHMDView)
-		debugViewport->setBackgroundColour(backgroundColor);
-*/
-}
-
 void OgreOculusRender::debugPrint()
 {
 	for (auto eye : eyeUpdateOrder)
@@ -324,13 +308,10 @@ void OgreOculusRender::initRttRendering()
 
 		compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[left], "HdrWorkspace", true, 1, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 0.5f, 1), 0x01, 0x01);
 		compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[right], "HdrWorkspace", true, 2, nullptr, nullptr, nullptr, Ogre::Vector4(0.5f, 0, 0.5f, 1), 0x02, 0x02);
-		//compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
+		compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
 	}
 
 	//auto node = compositor->getNodeDefinitionNonConst("MhHdrPostProcessingNode");
-
-	//Set the background color of each viewport the 1st time
-	changeViewportBackgroundColor(backgroundColor);
 
 	//Fill in MirrorTexture parameters
 	ovrMirrorTextureDesc mirrorTextureDesc = {};

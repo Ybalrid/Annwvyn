@@ -199,23 +199,13 @@ void OgreOpenVRRender::recenter()
 	if (vrSystem) vrSystem->ResetSeatedZeroPose();
 }
 
-void OgreOpenVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
-{
-	/* TODO background color problem
-	 *backgroundColor = color;
-	//Eye camera viewports
-	for (char i(0); i < 2; i++) if (rttViewports[i])
-		rttViewports[i]->setBackgroundColour(backgroundColor);
-
-	//Debug window viewports
-	if (windowViewport) windowViewport->setBackgroundColour(backgroundColor);**/
-}
-
 void OgreOpenVRRender::showDebug(DebugMode mode)
 {}
 
 void OgreOpenVRRender::initScene()
 {
+	createMainSmgr();
+
 	//Create the scene manager for the engine
 	/*
 	 * TODO new scene manager
@@ -247,16 +237,6 @@ void OgreOpenVRRender::initRttRendering()
 	//Create the render texture
 	rttTextureGLID = createCombinedRenderTexture(w, h);
 
-	//Create viewport for each cameras in each render texture
-/*	 TODO compositor2 here
- *	rttViewports[left] = rttEyesCombined->addViewport(eyeCameras[left], 0, 0, 0, 0.5f, 1);
-	rttViewports[right] = rttEyesCombined->addViewport(eyeCameras[right], 1, 0.5f, 0, 0.5f, 1);
-
-	//Do the same for the window
-	windowViewport = window->addViewport(monoCam);
-	*/
-	//Make sure the default viewport background color is set for everything
-	changeViewportBackgroundColor(backgroundColor);
 }
 
 void OgreOpenVRRender::updateProjectionMatrix()

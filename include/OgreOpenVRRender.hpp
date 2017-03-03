@@ -78,9 +78,6 @@ public:
 	///Recenter the tracking origin
 	void recenter() override;
 
-	///Change the background color of every viewport on the rendering pipeline
-	void changeViewportBackgroundColor(Ogre::ColourValue color) override;
-
 	///Return true if this VR system has an integrated audio device
 	bool usesCustomAudioDevice() override { return false; }
 

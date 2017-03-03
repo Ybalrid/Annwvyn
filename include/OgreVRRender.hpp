@@ -155,10 +155,6 @@ public:
 	///Put the current position as the center of tracking
 	virtual void recenter() = 0;
 
-	///Change the color of the pixels when there is *nothing*
-	/// \param color Color to use as background
-	virtual void changeViewportBackgroundColor(Ogre::ColourValue color) = 0;
-
 	///(Optional) Cycle through the client debug display if available.
 	virtual void cycleDebugHud() {};
 
