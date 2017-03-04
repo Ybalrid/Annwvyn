@@ -307,7 +307,7 @@ namespace BtOgre
 		{
 			for (auto obj : objects)
 			{
-				Ogre::LogManager::getSingleton().logMessage(Ogre::String("size : ") + std::to_string(objects.size()));
+				//				Ogre::LogManager::getSingleton().logMessage(Ogre::String("size : ") + std::to_string(objects.size()));
 				attachNode->detachObject(obj);
 				static auto smgr = Ogre::Root::getSingleton().getSceneManager("ANN_MAIN_SMGR");
 				smgr->destroyMovableObject(obj, obj->getMovableType());
@@ -321,8 +321,24 @@ namespace BtOgre
 			lines.push_back({ start, end, value });
 		}
 
+		void checkForMaterial()
+		{
+			Ogre::HlmsUnlit* hlmsUnlit = (Ogre::HlmsUnlit*) Ogre::Root::getSingleton().getHlmsManager()->getHlms(Ogre::HLMS_UNLIT);
+			auto datablock = hlmsUnlit->getDatablock(datablockToUse);
+
+			if (datablock) return;
+			Ogre::LogManager::getSingleton().logMessage("BtOgre's datablock not found, creating...");
+			auto createdDatablock = hlmsUnlit->createDatablock(datablockToUse, datablockToUse, Ogre::HlmsMacroblock(), Ogre::HlmsBlendblock(), Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, "BtOgre");
+
+			if (!createdDatablock)
+			{
+				Ogre::LogManager().logMessage("Mh. Datablock hasn't been created. Weird.");
+			}
+		}
+
 		void update()
 		{
+			checkForMaterial();
 			static auto smgr = Ogre::Root::getSingleton().getSceneManager("ANN_MAIN_SMGR");
 			int index = 0;
 
@@ -331,12 +347,12 @@ namespace BtOgre
 			for (const auto& l : lines)
 			{
 				manualObj->position(l.start);
-				//manualObj->colour(l.vertexColor);
+				manualObj->colour(l.vertexColor);
 				//manualObj->textureCoord(0, 0);
 				manualObj->index(index++);
 
 				manualObj->position(l.end);
-				//manualObj->colour(l.vertexColor);
+				manualObj->colour(l.vertexColor);
 				//manualObj->textureCoord(0, 0);
 				manualObj->index(index++);
 			}
@@ -354,8 +370,8 @@ namespace BtOgre
 		Ogre::SceneNode *mNode;
 		btDynamicsWorld *mWorld;
 		//DynamicLines *mLineDrawer;
-		bool mDebugOn;
-		static constexpr char* unlitDatablockName{ "DebugLines" };
+		int mDebugOn;
+		static constexpr char* unlitDatablockName{ "DebugLinesGenerated" };
 		const Ogre::IdString unlitDatablockId;
 
 		//To accommodate the diffuse color -> light value "change" of meaning of the color of a fragment in HDR pipelines, multiply all colors by this value
@@ -370,16 +386,12 @@ namespace BtOgre
 			mWorld(world),
 			mDebugOn(true),
 			unlitDatablockId(unlitDatablockName),
-			unlitDiffuseMultiplier(1000.0f),
+			unlitDiffuseMultiplier(200.0f),
 			drawer(mNode, unlitDatablockName),
 			stepped(false)
 		{
-			////auto hlmsUnlit = Ogre::Root::getSingleton().getHlmsManager()->getHlms(Ogre::HlmsTypes::HLMS_UNLIT);
-			// /*Ogre::HlmsUnlitDatablock* datablock = static_cast<Ogre::HlmsUnlitDatablock*>(hlmsUnlit->createDatablock(unlitDatablockName, unlitDatablockName, Ogre::HlmsMacroblock(), Ogre::HlmsBlendblock(), Ogre::HlmsParamVec()));
-			// */
-			//auto datablock = static_cast<Ogre::HlmsUnlitDatablock*>(Ogre::Root::getSingleton().getHlmsManager()->getHlms(Ogre::HLMS_UNLIT)->getDatablock("DebugLines"));
-			//datablock->setUseColour(true);
-			//datablock->setColour(Ogre::ColourValue::Red * unlitDiffuseMultiplier);
+			if (!Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("BtOgre"))
+				Ogre::ResourceGroupManager::getSingleton().createResourceGroup("BtOgre");
 		}
 
 		~DebugDrawer()
