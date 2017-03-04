@@ -112,7 +112,7 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 {
 	debugPhysics = state;
 	if (debugPhysics)
-		debugDrawer->setDebugMode(btIDebugDraw::DebugDrawModes::DBG_DrawWireframe | btIDebugDraw::DBG_DrawNormals | btIDebugDraw::DebugDrawModes::DBG_FastWireframe);
+		debugDrawer->setDebugMode(btIDebugDraw::DebugDrawModes::DBG_DrawWireframe | btIDebugDraw::DebugDrawModes::DBG_FastWireframe | btIDebugDraw::DBG_DrawAabb | btIDebugDraw::DBG_DrawContactPoints);
 	else
 		debugDrawer->setDebugMode(0);
 	debugDrawer->step();
@@ -168,4 +168,9 @@ void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)
 	createVirtualBodyShape();
 	createPlayerPhysicalVirtualBody(node);
 	addPlayerPhysicalBodyToDynamicsWorld();
+}
+
+void AnnPhysicsEngine::setDebugDrawerColorMultiplier(float value) const
+{
+	debugDrawer->setUnlitDiffuseMultiplier(value);
 }

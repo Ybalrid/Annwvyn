@@ -192,11 +192,10 @@ void AnnScriptManager::registerApi()
 
 	//Object getter
 	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getObjectFromID(id).get(); }), "AnnGetGameObject");
+
 	//Level jumper
 	chai.add(fun([](level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
-	//Change the ambient lighting
-	chai.add(fun([](const AnnColor& ucolor, const float umul, const AnnColor& lcolor, const float lmul, const Vector3& dir, const float envMapScaling)
-	{AnnGetSceneryManager()->setAmbientLight(ucolor, umul, lcolor, lmul, dir, envMapScaling); }), "AnnSetAmbientLight");
+
 	//Create a GameObject form ChaiScript
 	chai.add(fun([](const string& mesh, const string& objectName)
 	{
@@ -326,11 +325,16 @@ void AnnScriptManager::registerApi()
 
 	///Clear the console
 	chai.add(fun([]() {AnnGetOnScreenConsole()->bufferClear(); }), "AnnClearConsole");
-
 	chai.add(fun([]() {AnnEngine::setProcessPriorityHigh(); }), "AnnSetProcessPriorityHigh");
 	chai.add(fun([]() {AnnEngine::setProcessPriorityNormal(); }), "AnnSetProcessPriorityNormal");
 
 	chai.add(fun([]() {AnnGetEngine()->requestQuit(); }), "AnnQuit");
+	chai.add(fun([](const float& multiplier) {AnnGetPhysicsEngine()->setDebugDrawerColorMultiplier(multiplier); }), "AnnSetDebugDrawerColorMultiplier");
+	chai.add(fun([](const float& ev, const float& minEv, const float& maxEv) {AnnGetSceneryManager()->setExposure(ev, minEv, maxEv); }), "AnnSetExposure");
+	chai.add(fun([](const float& threshold) {AnnGetSceneryManager()->setBloomThreshold(threshold); }), "AnnSetBloomThreshold");
+	chai.add(fun([](AnnColor& color, float& multiplier) {AnnGetSceneryManager()->setSkyColor(color, multiplier); }), "AnnSetSkyColor");
+	chai.add(fun([](const AnnColor& ucolor, const float umul, const AnnColor& lcolor, const float lmul, const Vector3& dir, const float envMapScaling)
+	{AnnGetSceneryManager()->setAmbientLight(ucolor, umul, lcolor, lmul, dir, envMapScaling); }), "AnnSetAmbientLight");
 }
 
 void AnnScriptManager::tryAndGetEventHooks()

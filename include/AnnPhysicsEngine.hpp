@@ -82,6 +82,8 @@ namespace Annwvyn
 		///Toggle the debug physics overlay
 		void toggleDebugPhysics();
 
+		void setDebugDrawerColorMultiplier(float value) const;
+
 	private:
 
 		friend class AnnEngine;
