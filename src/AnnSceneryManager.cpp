@@ -18,7 +18,6 @@ defaultUpperAmbientLightMul(150),
 defaultLowerAmbientLightMul(150),
 defaultUpperAmbient(0.3f, 0.5f, 0.7f),
 defaultLowerAmbient(0.6f, 0.45f, 0.3f)
-
 {
 	setDefaultExposure();
 	setDefaultSkyColor();
@@ -65,6 +64,7 @@ void AnnSceneryManager::removeSkyBox() const
 
 void AnnSceneryManager::setExposure(float exposure, float minExposure, float maxExposure) const
 {
+	AnnDebug() << "Setting exposure to " << exposure << "ev with adjustable range [" << minExposure << "; " << maxExposure << "]";
 	renderer->setExposure(exposure, minExposure, maxExposure);
 }
 
@@ -75,6 +75,7 @@ void AnnSceneryManager::setDefaultExposure() const
 
 void AnnSceneryManager::setSkyColor(AnnColor color, float multiplier) const
 {
+	AnnDebug() << "Setting sky color : " << color << "*" << multiplier;
 	renderer->setSkyColor(color.getOgreColor(), multiplier, "HdrRenderingNode");
 }
 
@@ -85,6 +86,7 @@ void AnnSceneryManager::setDefaultSkyColor() const
 
 void AnnSceneryManager::setBloomThreshold(float threshold) const
 {
+	AnnDebug() << "Set bloom threshold to " << threshold;
 	renderer->setBloomThreshold(std::max(threshold - 2.f, 0.f), std::max(threshold, 0.01f));
 }
 

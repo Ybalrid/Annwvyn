@@ -33,7 +33,7 @@
 #include "hlms/Unlit/OgreHlmsUnlitDatablock.h"
 
 #include <sstream>
-#include "../../OgreSDK/include/OGRE/OgreManualObject.h"
+#include "OgreManualObject.h"
 
 namespace BtOgre
 {
@@ -307,12 +307,8 @@ namespace BtOgre
 		{
 			for (auto obj : objects)
 			{
-				//				Ogre::LogManager::getSingleton().logMessage(Ogre::String("size : ") + std::to_string(objects.size()));
-				attachNode->detachObject(obj);
-				static auto smgr = Ogre::Root::getSingleton().getSceneManager("ANN_MAIN_SMGR");
-				smgr->destroyMovableObject(obj, obj->getMovableType());
+				obj->clear();
 			}
-			objects.clear();
 			lines.clear();
 		}
 
@@ -323,12 +319,20 @@ namespace BtOgre
 
 		void checkForMaterial()
 		{
-			Ogre::HlmsUnlit* hlmsUnlit = (Ogre::HlmsUnlit*) Ogre::Root::getSingleton().getHlmsManager()->getHlms(Ogre::HLMS_UNLIT);
+			Ogre::HlmsUnlit* hlmsUnlit = static_cast<Ogre::HlmsUnlit*>(Ogre::Root::getSingleton().getHlmsManager()->getHlms(Ogre::HLMS_UNLIT));
 			auto datablock = hlmsUnlit->getDatablock(datablockToUse);
 
 			if (datablock) return;
 			Ogre::LogManager::getSingleton().logMessage("BtOgre's datablock not found, creating...");
-			auto createdDatablock = hlmsUnlit->createDatablock(datablockToUse, datablockToUse, Ogre::HlmsMacroblock(), Ogre::HlmsBlendblock(), Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, "BtOgre");
+
+			auto macroblock = Ogre::HlmsMacroblock();
+			//macroblock.mDepthCheck = false;
+			macroblock.mDepthWrite = false;
+			macroblock.mCullMode = Ogre::CULL_NONE;
+
+			auto blendblock = Ogre::HlmsBlendblock();
+
+			auto createdDatablock = hlmsUnlit->createDatablock(datablockToUse, datablockToUse, macroblock, blendblock, Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, "BtOgre");
 
 			if (!createdDatablock)
 			{
@@ -342,8 +346,20 @@ namespace BtOgre
 			static auto smgr = Ogre::Root::getSingleton().getSceneManager("ANN_MAIN_SMGR");
 			int index = 0;
 
-			auto manualObj = smgr->createManualObject();
+			Ogre::ManualObject* manualObj;
+			if (!objects.empty())
+			{
+				manualObj = objects[0];
+			}
+			else
+			{
+				manualObj = smgr->createManualObject();
+				attachNode->attachObject(manualObj);
+				objects.push_back(manualObj);
+			}
+
 			manualObj->begin(datablockToUse, Ogre::OT_LINE_LIST);
+
 			for (const auto& l : lines)
 			{
 				manualObj->position(l.start);
@@ -359,8 +375,6 @@ namespace BtOgre
 
 			manualObj->end();
 			manualObj->setCastShadows(false);
-			attachNode->attachObject(manualObj);
-			objects.push_back(manualObj);
 		}
 	};
 
@@ -398,6 +412,11 @@ namespace BtOgre
 		{
 		}
 
+		void setUnlitDiffuseMultiplier(float value)
+		{
+			if (value >= 1) unlitDiffuseMultiplier = value;
+		}
+
 		void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override
 		{
 			if (stepped)
@@ -411,19 +430,18 @@ namespace BtOgre
 			Ogre::ColourValue ogreColor(color.x(), color.y(), color.z(), 1);
 			ogreColor *= unlitDiffuseMultiplier;
 
-			//std::stringstream out;
-			//out << ogreColor;
-			//Ogre::LogManager::getSingleton().logMessage(out.str());
-
 			drawer.addLine(ogreFrom, ogreTo, ogreColor);
 		}
 
 		void draw3dText(const btVector3 &location, const char *textString) override
 		{
 		}
+
 		void drawContactPoint(const btVector3 &PointOnB, const btVector3 &normalOnB, btScalar distance, int lifeTime, const btVector3 &color) override
 		{
+			drawLine(PointOnB, PointOnB + normalOnB * distance * 20, color);
 		}
+
 		void reportErrorWarning(const char *warningString) override
 		{
 			Ogre::LogManager::getSingleton().logMessage(warningString);
@@ -435,8 +453,6 @@ namespace BtOgre
 			//mDebugOn = (isOn == 0) ? false : true;
 			mDebugOn = isOn;
 
-			//if (!mDebugOn)
-			//	mLineDrawer->clear();
 			if (!mDebugOn)
 				drawer.clear();
 		}
