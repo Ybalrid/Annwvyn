@@ -22,7 +22,6 @@ void OgreNoVRRender::initScene()
 	createMainSmgr();
 }
 
-///TODO move that to the Scenery Manager
 void OgreNoVRRender::initRttRendering()
 {
 	auto compositor = getRoot()->getCompositorManager2();
@@ -97,5 +96,4 @@ void OgreNoVRRender::handleIPDChange()
 OgreNoVRRender::~OgreNoVRRender()
 {
 	noVRself = nullptr;
-	rttTextureCombined.setNull();
 }

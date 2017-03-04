@@ -12,11 +12,10 @@ vrSystem(nullptr),
 hmdError(vr::EVRInitError::VRInitError_None),
 windowWidth(1280),
 windowHeight(720),
-rttTextureGLID{ 0 },
+rttTextureGLID{ 0 }, rttLeftTextureGLID(0), rttRightTextureGLID(0),
 gamma(false),
 TextureType(vr::TextureType_OpenGL),
 vrTextures{ nullptr },
-windowViewport(nullptr),
 hmdAbsoluteTransform({}),
 shouldQuitState(false),
 numberOfAxes{ 3 },
@@ -39,7 +38,6 @@ triggerNormalizedValue{ 0 }
 	{
 		currentControllerButtonsPressed[side].resize(buttonsToHandle.size(), false);
 		lastControllerButtonsPressed[side].resize(buttonsToHandle.size(), false);
-		rttViewports[side] = nullptr;
 		handControllers[side] = nullptr;
 		GLBounds[side] = {};
 	}
@@ -50,13 +48,7 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	//Shutdown SteamVR
 	vr::VR_Shutdown();
 
-	//Need to forget Ogre's smart pointers
-	rttTextureCombined.setNull();
-
-	//Destroy the main scene manager
-	root->destroySceneManager(smgr);
-
-	rttTextureCombined.setNull();
+	OpenVRSelf = nullptr;
 }
 
 //This function is from VALVe
@@ -117,16 +109,19 @@ void OgreOpenVRRender::initClientHmdRendering()
 	//To display a 3D model in place of the hands of the character, it's done via the AnnHandController objects
 
 	//Declare the textures for SteamVR
-	vrTextures = { reinterpret_cast<void*>(rttTextureGLID), TextureType, vr::ColorSpace_Gamma };
+	vrTextures = { {
+		{reinterpret_cast<void*>(rttLeftTextureGLID), TextureType, vr::ColorSpace_Gamma },
+		{reinterpret_cast<void*>(rttRightTextureGLID), TextureType, vr::ColorSpace_Gamma }
+	} };
 
 	//Set the OpenGL texture geometry
-	//V axis is reversed, U between 0 and 0.5 is for the left eye, between 0.5 and 1 is for the right eye.
+	//V axis is reversed
 	GLBounds[left].uMin = 0;
-	GLBounds[left].uMax = 0.5f;
+	GLBounds[left].uMax = 1;
 	GLBounds[left].vMin = 1;
 	GLBounds[left].vMax = 0;
 
-	GLBounds[right].uMin = 0.5f;
+	GLBounds[right].uMin = 0;
 	GLBounds[right].uMax = 1;
 	GLBounds[right].vMin = 1;
 	GLBounds[right].vMax = 0;
@@ -170,24 +165,13 @@ void OgreOpenVRRender::getTrackingPoseAndVRTiming()
 
 void OgreOpenVRRender::renderAndSubmitFrame()
 {
-	//Make Windows happy by pumping clearing it's event queue
-	Ogre::WindowEventUtilities::messagePump();
+	handleWindowMessages();
 
-	//Mark the fact that the frame rendering will happen to Ogre (unlock the animation state updates for example)
-	root->_fireFrameRenderingQueued();
+	root->renderOneFrame();
 
-	//Update each viewports
-	/*TODO use compostior2
-	rttViewports[0]->update();
-	rttViewports[1]->update();
-	rttEyesCombined->update();			//Resolve anti-aliasing
-	windowViewport->update();	//Window content
-	window->update();			//Window display
-*/
-
-//Submit the textures to the SteamVR compositor
-	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures, &GLBounds[0]);
-	vr::VRCompositor()->Submit(vr::Eye_Right, &vrTextures, &GLBounds[1]);
+	//Submit the textures to the SteamVR compositor
+	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures[0], &GLBounds[0]);
+	vr::VRCompositor()->Submit(vr::Eye_Right, &vrTextures[1], &GLBounds[1]);
 
 	//OMG WE RENDERED A FRAME!!! QUICK!!!! INCREMENT THE COUNTER!!!!!!!
 	frameCounter++;
@@ -220,7 +204,7 @@ void OgreOpenVRRender::initRttRendering()
 	//Get the render texture size recommended by the OpenVR API for the current Driver/Display
 	unsigned int w, h;
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
-	w *= 2;
+	//w *= 2;
 
 	if (UseSSAA)
 	{
@@ -235,8 +219,15 @@ void OgreOpenVRRender::initRttRendering()
 	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create the render texture
-	rttTextureGLID = createCombinedRenderTexture(w, h);
+	//rttTextureGLID = createCombinedRenderTexture(w, h);
+	auto glids = createSeparatedRenderTextures({ { {w, h}, {w, h} } });
+	rttLeftTextureGLID = glids[0];
+	rttRightTextureGLID = glids[1];
 
+	auto compositor = root->getCompositorManager2();
+	compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);
+	compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", true);
+	compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
 }
 
 void OgreOpenVRRender::updateProjectionMatrix()

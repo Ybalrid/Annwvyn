@@ -45,7 +45,6 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	frameCounter{ 0 },
 	rttEyesCombined{ nullptr }
 {
-	rttTextureCombined.setNull();
 	if (self)
 	{
 		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialization. OgreOculusRender object already created.");
@@ -68,11 +67,7 @@ OgreVRRender::~OgreVRRender()
 	glfwDestroyWindow(glfwWindow);
 	glfwTerminate();
 
-	rttTextureCombined.setNull();
-	for (auto tex : rttTexturesSeparated) tex.setNull();
-
 	self = nullptr;
-	root.reset(nullptr);
 }
 
 Ogre::SceneManager* OgreVRRender::getSceneManager() const
@@ -264,8 +259,9 @@ void OgreVRRender::initPipeline()
 GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
 {
 	GLuint glid;
-	rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-		Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
+	Ogre::TexturePtr
+		rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
 	rttTextureCombined->getCustomAttribute("GLID", &glid);
 	rttEyesCombined = rttTextureCombined->getBuffer()->getRenderTarget();
 	return glid;
@@ -274,6 +270,10 @@ GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
 std::array<GLuint, 2> OgreVRRender::createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions)
 {
 	std::array <GLuint, 2> glid;
+
+	Annwvyn::AnnDebug() << "Creating separated render textures " << dimentions[0][0] << "x" << dimentions[0][1] << " " << dimentions[1][0] << "x" << dimentions[1][1];
+
+	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
 
 	for (size_t i : {0u, 1u})
 	{
@@ -442,7 +442,7 @@ void OgreVRRender::createMainSmgr()
 	outstream << "Detected " << numberOfThreads << " hardware threads.";
 	logToOgre(outstream.str());
 
-	smgr = root->createSceneManager(Ogre::ST_GENERIC, numberOfThreads, Ogre::INSTANCING_CULLING_THREADED);
+	smgr = root->createSceneManager(Ogre::ST_GENERIC, numberOfThreads, Ogre::INSTANCING_CULLING_THREADED, "ANN_MAIN_SMGR");
 
 	logToOgre("Setting the shadow distances to 500m");
 	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);

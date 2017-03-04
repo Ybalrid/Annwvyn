@@ -137,10 +137,7 @@ private:
 	unsigned int windowWidth, windowHeight;
 
 	///OpenGL "id" of the render textures
-	GLuint rttTextureGLID;
-
-	///EyeCameraViewport
-	std::array<Ogre::Viewport*, 2> rttViewports;
+	GLuint rttTextureGLID, rttLeftTextureGLID, rttRightTextureGLID;
 
 	///Use hardware gamma correction
 	bool gamma;
@@ -149,10 +146,7 @@ private:
 	vr::ETextureType TextureType;
 
 	///OpenVR texture handlers
-	vr::Texture_t vrTextures;
-
-	///Viewport located on a window
-	Ogre::Viewport* windowViewport;
+	std::array<vr::Texture_t, 2> vrTextures;
 
 	///OpenVR device strings
 	std::string strDriver, strDisplay;

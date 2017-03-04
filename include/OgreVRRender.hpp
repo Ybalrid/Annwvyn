@@ -318,10 +318,6 @@ protected:
 	Ogre::RenderTexture* rttEyesCombined;
 	std::array < Ogre::RenderTexture*, 2> rttEyeSeparated;
 
-	///The texture that is used to hold the render target
-	Ogre::TexturePtr rttTextureCombined;
-	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
-
 	///Level of anti aliasing to use.
 	static uint8_t AALevel;
 

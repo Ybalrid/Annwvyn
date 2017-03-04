@@ -1,0 +1,4 @@
+hlms DebugLines unlit
+{
+    diffuse 1000 0 0 1000
+}
