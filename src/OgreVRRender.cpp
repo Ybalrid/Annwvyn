@@ -389,6 +389,9 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &library);
 	hlmsManager->registerHlms(hlmsUnlit);
 	hlmsManager->registerHlms(hlmsPbs);
+
+	//Set the best shadows we can do by default
+	hlmsPbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_4x4);
 }
 
 void OgreVRRender::loadCompositor(const std::string& path, const std::string& type)
