@@ -63,9 +63,6 @@ OgreOculusRender::~OgreOculusRender()
 	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
 	delete Oculus;
 
-	//Release shared pointers from Ogre before deleting Root
-	DebugPlaneMaterial.setNull();
-	rttTextureCombined.setNull();
 }
 
 bool OgreOculusRender::shouldQuit()

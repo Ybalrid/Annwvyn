@@ -5,9 +5,9 @@
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
-								   std::shared_ptr<AnnPlayer> player,
-								   AnnGameObjectList & objects,
-								   AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+	std::shared_ptr<AnnPlayer> player,
+	AnnGameObjectList & objects,
+	AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
 	Broadphase(nullptr),
 	CollisionConfiguration(nullptr),
 	Solver(nullptr),
@@ -32,8 +32,8 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	AnnDebug() << "Gravity vector " << defaultGravity;
 
 	debugPhysics = false;//by default
-	//debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get());
-	//DynamicsWorld->setDebugDrawer(debugDrawer);
+	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get());
+	DynamicsWorld->setDebugDrawer(debugDrawer);
 }
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
@@ -85,8 +85,8 @@ void AnnPhysicsEngine::step(float delta) const
 
 void AnnPhysicsEngine::stepDebugDrawer() const
 {
-	/*if (debugPhysics)
-		debugDrawer->step();*/
+	if (debugPhysics)
+		debugDrawer->step();
 }
 
 void AnnPhysicsEngine::processCollisionTesting() const
@@ -97,7 +97,7 @@ void AnnPhysicsEngine::processCollisionTesting() const
 		auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		if (contactManifold->getNumContacts() > 0)
 			AnnGetEventManager()->detectedCollision(contactManifold->getBody0()->getUserPointer(),
-													contactManifold->getBody1()->getUserPointer());
+				contactManifold->getBody1()->getUserPointer());
 	}
 }
 
@@ -111,8 +111,11 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body) const
 void AnnPhysicsEngine::setDebugPhysics(bool state)
 {
 	debugPhysics = state;
-	/*debugDrawer->setDebugMode(int(state));
-	debugDrawer->step();*/
+	if (debugPhysics)
+		debugDrawer->setDebugMode(btIDebugDraw::DebugDrawModes::DBG_DrawWireframe | btIDebugDraw::DBG_DrawNormals | btIDebugDraw::DebugDrawModes::DBG_FastWireframe);
+	else
+		debugDrawer->setDebugMode(0);
+	debugDrawer->step();
 }
 
 void AnnPhysicsEngine::processTriggersContacts() const
