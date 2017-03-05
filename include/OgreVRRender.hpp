@@ -73,6 +73,15 @@ public:
 		nbCompositor = 3,
 	};
 
+	enum class ShadowFiltering
+	{
+		low,
+		medium,
+		high
+	};
+
+	void setShadowFiltering(ShadowFiltering level);
+
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 	static bool UseSSAA;
 
