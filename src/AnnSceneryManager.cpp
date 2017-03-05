@@ -99,3 +99,13 @@ void AnnSceneryManager::setDefaultAmbientLight() const
 {
 	setAmbientLight(defaultUpperAmbient, defaultUpperAmbientLightMul, defaultLowerAmbient, defaultLowerAmbientLightMul, AnnVect3::NEGATIVE_UNIT_Y);
 }
+
+void AnnSceneryManager::resetSceneParameters() const
+{
+	removeSkyBox();
+	removeSkyDome();
+	setDefaultSkyColor();
+	setDefaultAmbientLight();
+	setDefaultBloomThreshold();
+	setDefaultExposure();
+}

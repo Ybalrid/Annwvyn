@@ -23,16 +23,8 @@ void AnnLevel::unload()
 	//Remove background music
 	AnnGetAudioEngine()->stopBGM();
 
-	//Remove the sky
-	AnnGetSceneryManager()->removeSkyDome();
-	AnnGetSceneryManager()->removeSkyBox();
-	AnnGetSceneryManager()->setDefaultSkyColor();
-
-	//Remove the ambient lighting
-	AnnGetSceneryManager()->setDefaultAmbientLight();
-	AnnGetSceneryManager()->setDefaultExposure();
-	AnnGetSceneryManager()->setDefaultBloomThreshold();
-	AnnGetSceneryManager()->setDefaultSkyColor();
+	//Reset scene
+	AnnGetSceneryManager()->resetSceneParameters();
 
 	//Restore the default gravity
 	AnnGetPhysicsEngine()->resetGravity();

@@ -49,7 +49,6 @@ namespace Annwvyn
 		void removeSkyBox() const;
 
 		///Set the ambient light
-		/// \param color the color of the light
 		void setAmbientLight(AnnColor upperColor, float upperMul, AnnColor lowerColor, float lowerMul, AnnVect3 direction, float environementMapScaling = 16) const;
 		void setDefaultAmbientLight() const;
 		void setExposure(float exposure, float minExposure, float maxExposure) const;
@@ -58,6 +57,8 @@ namespace Annwvyn
 		void setDefaultSkyColor() const;
 		void setBloomThreshold(float threshold) const;
 		void setDefaultBloomThreshold() const;
+
+		void resetSceneParameters() const;
 
 	private:
 		///Scene manager created by the VR renderer
