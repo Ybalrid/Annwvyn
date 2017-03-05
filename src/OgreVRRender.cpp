@@ -147,6 +147,23 @@ void OgreVRRender::changedAA() const
 {
 	//TODO look into FSAA
 	//if (rttTextureCombined.getPointer() && !UseSSAA) rttTextureCombined->setFSAA(AALevel);
+
+	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
+	window->setFSAA(AALevel, "");
+	auto textureManager = Ogre::TextureManager::getSingletonPtr();
+	auto texture = textureManager->getByName(rttTextureName);
+	if (texture)
+	{
+		texture->setFSAA(AALevel, "", false);
+	}
+	else
+	{
+		for (auto i{ 0 }; i < 2; i++)
+		{
+			texture = textureManager->getByName(rttTextureName + std::to_string(i));
+			if (texture) texture->setFSAA(AALevel, "", false);
+		}
+	}
 }
 
 void OgreVRRender::setNearClippingDistance(float distance)
