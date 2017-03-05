@@ -131,20 +131,17 @@ namespace Annwvyn
 		/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
 		void playSound(std::string path, bool loop = false, float volume = 1.0f) const;
 
-		// TODO create animation state machine
 		///Set currently playing animation
 		/// \param name Name of the animation as defined by the 3D entity
-		void setAnimation(const char name[]);
+		void setAnimation(const std::string& name);
 
-		// TODO create animation state machine
 		///Set if we want to play the animation
 		/// \param play the playing state we want to apply
-		void playAnimation(bool play = true);
+		void playAnimation(bool play = true) const;
 
-		// TODO create animation state machine
 		///Loop the animation ?
 		/// \param loop the looping state of the animation
-		void loopAnimation(bool loop = true);
+		void loopAnimation(bool loop = true) const;
 
 		///Apply a physical force
 		void applyForce(AnnVect3 force) const;
@@ -193,53 +190,42 @@ namespace Annwvyn
 		bool checkForBodyInChild();
 
 	private:
+		///The GameObjectManager populate the content of this object when it goes through it's initialization
+		friend class AnnEngine;
+		friend class AnnGameObjectManager;
 
+		//------------------ local utility
 		///Do the actual recursion of checkForBodyInParent
 		bool parentsHaveBody(AnnGameObject* obj) const;
 
 		///Do the actual recursion of checkForBodyInChild
 		static bool childrenHaveBody(AnnGameObject* obj);
 
-		///Make Annwvyn::AnnEngine access these methods :
-		friend class AnnEngine;
-		friend class AnnGameObjectManager;
-
+		//----------------- engine utility
 		///For engine : set node
 		void setNode(Ogre::SceneNode* node);
 
 		///For engine : set Entity
 		void setItem(Ogre::Item* item);
 
+		///Set the legacy mesh for BtOgre
 		void setPhysicsMesh(Ogre::v1::MeshPtr mesh);
 
-		// TODO create animation state machine
 		///For engine : get elapsed time
 		void addAnimationTime(double offsetTime) const;
 
 		///For engine : update OpenAL source position
 		void updateOpenAlPos() const;
 
-		/**
-		* You will certainly find strange to see that the Object does not carry a "position" vector.
-		* We use the position of the Ogre Node or the Bullet body to align the object.
-		*
-		* The reference is the position of the node. You can access it through the getters/setters setPos() and getPos()
-		*
-		* Same is true with the Orientation. We use Ogre node
-		*/
-
-		///SceneNode
+		///SceneNode. This also holds the position/orientation/scale of the object
 		Ogre::SceneNode* Node;
 
 		///Entity
 		Ogre::Item* Model;
 		Ogre::v1::MeshPtr v1mesh;
 
-		/*// TODO create animation state machine
-		bool animIsSetted;
-		bool animIsPlaying;
-		bool animIsLooping;
-		Ogre::AnimationState* anim;*/
+		//Currently selected animation
+		Ogre::SkeletonAnimation* currentAnimation;
 
 		btCollisionShape* Shape;
 		btRigidBody* Body;
@@ -250,7 +236,7 @@ namespace Annwvyn
 		///Name of the object
 		std::string name;
 
-		///True if the object is visible
+		///RigidBodyState of this object
 		BtOgre::RigidBodyState *state;
 
 		///list of script objects
