@@ -335,6 +335,8 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnColor& color, float& multiplier) {AnnGetSceneryManager()->setSkyColor(color, multiplier); }), "AnnSetSkyColor");
 	chai.add(fun([](const AnnColor& ucolor, const float umul, const AnnColor& lcolor, const float lmul, const Vector3& dir, const float envMapScaling)
 	{AnnGetSceneryManager()->setAmbientLight(ucolor, umul, lcolor, lmul, dir, envMapScaling); }), "AnnSetAmbientLight");
+
+	chai.add(fun([](int AA) {OgreVRRender::setAntiAliasingLevel(AA); }), "AnnSetAA");
 }
 
 void AnnScriptManager::tryAndGetEventHooks()

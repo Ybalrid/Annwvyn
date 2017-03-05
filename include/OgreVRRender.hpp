@@ -61,8 +61,10 @@ public:
 	///Resource group to load the shaders, material and compositor script for rendering.
 	static constexpr const char* const RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
 
+	///number of hardware threads
 	const size_t numberOfThreads;
 
+	///Indexes of the compositor workspace
 	enum compositorIndex : size_t
 	{
 		leftEyeCompositor = 0,
@@ -225,17 +227,22 @@ public:
 	///Get the name of this renderer
 	std::string getName() const;
 
+	///Load the HLMS library from the file-system
 	void loadHLMSLibrary(const std::string& path = "./hlms/");
 
+	///Load the compositor resources that are needed to setup the pipeline
 	void loadCompositor(const std::string& path = "./compositor/", const std::string& type = "FileSystem");
 
 	///Set the color used on the "clear" pass of the compositor node given
 	void setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName);
 
+	///Set the exposure, need the name of the post process material
 	void setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial = "HDR/DownScale03_SumLumEnd");
 
+	///Se the bloom threshold. Need the name of the brightness pass material
 	void setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial = "HDR/BrightPass_Start");
 
+	///Create the main scene manager and set some shadow parameters
 	void createMainSmgr();
 
 private:
