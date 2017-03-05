@@ -7,7 +7,7 @@
 using namespace Annwvyn;
 
 AnnGameObject::AnnGameObject() :
-	Node(nullptr),
+	Node(nullptr), Model(nullptr), currentAnimation(nullptr),
 	Shape(nullptr),
 	Body(nullptr),
 	audioSource(nullptr),
@@ -169,11 +169,11 @@ void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
+	//Some sanity checks
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 
 	//init shape converter
-	// TODO : maybe need to switch to an animated meshToShape converter if the object owns a skeleton
 	BtOgre::StaticMeshToShapeConverter converter(v1mesh.get());
 
 	// TODO put this thing inside the Physics engine
@@ -238,23 +238,46 @@ btRigidBody* AnnGameObject::getBody() const
 	return Body;
 }
 
-void AnnGameObject::setAnimation(const char animationName[])
+void AnnGameObject::setAnimation(const std::string&	animationName)
 {
-	// TODO new animation systme
+	//Check if the item has a skeleton
+	if (!getItem()->hasSkeleton())
+	{
+		AnnDebug() << "Attempting to set a skeleton animation on a skeleton-less object. (" << getName() << " Check yo' programin' bro!";
+		return;
+	}
+
+	//Attempt to get the animation
+	auto selectedAnimation = getItem()->getSkeletonInstance()->getAnimation(animationName);
+	if (!selectedAnimation)
+	{
+		AnnDebug() << "Looks like " << getName() << " doesn't have an animation called " << animationName;
+		return;
+	}
+
+	//If an animation was already playing, disable it
+	if (currentAnimation)
+	{
+		currentAnimation->setEnabled(false);
+	}
+
+	//Set the current animation, but don't start playing it just yet.
+	currentAnimation = selectedAnimation;
 }
 
-void AnnGameObject::playAnimation(bool play)
+void AnnGameObject::playAnimation(bool play) const
 {
-	// TODO new animation system
+	if (currentAnimation) currentAnimation->setEnabled(play);
 }
 
-void AnnGameObject::loopAnimation(bool loop)
+void AnnGameObject::loopAnimation(bool loop) const
 {
-	// TODO new animation system
+	if (currentAnimation) currentAnimation->setLoop(loop);
 }
 
 void AnnGameObject::addAnimationTime(double offset) const
-{	// TODO new animation system
+{
+	if (currentAnimation) currentAnimation->addTime(offset);
 }
 
 void AnnGameObject::applyImpulse(AnnVect3 force) const
