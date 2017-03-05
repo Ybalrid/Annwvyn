@@ -504,3 +504,23 @@ void OgreVRRender::handleWindowMessages()
 
 	//window->resize(w, h);
 }
+
+void OgreVRRender::setShadowFiltering(ShadowFiltering level)
+{
+	if (auto pbs = static_cast<Ogre::HlmsPbs*>
+		(root->getHlmsManager()->getHlms(Ogre::HLMS_PBS)))
+	{
+		switch (level)
+		{
+		case ShadowFiltering::low:
+			pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_2x2);
+			break;
+		case ShadowFiltering::medium:
+			pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_3x3);
+			break;
+		case ShadowFiltering::high:
+			pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_4x4);
+			break;
+		}
+	}
+}
