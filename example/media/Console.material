@@ -1,6 +1,0 @@
-hlms Console unlit
-{
-    //This defuse value is because of the final tonemapping
-    diffuse 100 100 100 100
-    diffuse_map lena.png
-}
