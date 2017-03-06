@@ -7,6 +7,7 @@ using namespace Annwvyn;
 AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager"),
 ResourceGroupManager{ Ogre::ResourceGroupManager::getSingletonPtr() }
 {
+	ResourceGroupManager->createResourceGroup(defaultResourceGroupName);
 	addDefaultResourceLocation();
 }
 
