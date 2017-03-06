@@ -11,13 +11,15 @@ SET Annwvyn=%ANNWVYNSDK64%\Annwvyn\
 ECHO ANNWYVN main DLL
 COPY %Annwvyn%\lib\Annwvyn.dll .
 ECHO OGRE main DLL
-COPY %ANNWVYNSDK64%\OgreSDK\bin\release\OgreMain.dll .
-ECHO OGRE OpenGL Rendering Subsystem
-COPY %ANNWVYNSDK64%\OgreSDK\bin\release\RenderSystem_GL.dll .
+COPY %ANNWVYNSDK64%\Ogre21SDK\bin\release\OgreMain.dll .
+ECHO OGRE OpenGL 3+ Rendering Subsystem
+COPY %ANNWVYNSDK64%\Ogre21SDK\bin\release\RenderSystem_GL3Plus.dll .
 ECHO OGRE Overlay component
-COPY %ANNWVYNSDK64%\OgreSDK\bin\release\OgreOverlay.dll .
-ECHO OGRE Plugin OctreeSceneManager
-COPY %ANNWVYNSDK64%\OgreSDK\bin\release\Plugin_OctreeSceneManager.dll .
+COPY %ANNWVYNSDK64%\Ogre21SDK\bin\release\OgreOverlay.dll .
+ECHO OGRE Hlms Pbs
+COPY %ANNWVYNSDK64%\Ogre21SDK\bin\release\OgreHlmsPbs.dll .
+ECHO OGRE Hlms Unlit
+COPY %ANNWVYNSDK64%\Ogre21SDK\bin\release\OgreHlmsUnlit.dll .
 ECHO GL Extension Wrangler DLL
 COPY %ANNWVYNSDK64%\glew\bin\Release\x64\glew32.dll .
 ECHO OpenAL runtime DLL 
