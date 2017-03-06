@@ -462,7 +462,7 @@ void OgreVRRender::createMainSmgr()
 	outstream << "Detected " << numberOfThreads << " hardware threads.";
 	logToOgre(outstream.str());
 
-	smgr = root->createSceneManager(Ogre::ST_GENERIC, numberOfThreads, Ogre::INSTANCING_CULLING_THREADED, "ANN_MAIN_SMGR");
+	smgr = root->createSceneManager(Ogre::ST_GENERIC, numberOfThreads > 4 ? 4 : numberOfThreads, Ogre::INSTANCING_CULLING_THREADED, "ANN_MAIN_SMGR");
 
 	logToOgre("Setting the shadow distances to 500m");
 	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
