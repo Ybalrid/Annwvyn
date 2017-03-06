@@ -6,6 +6,7 @@
 * Annwvyn test program http://annwvyn.org/
 *
 */
+
 #include "stdafx.h"
 
 //Annwvyn
@@ -17,7 +18,7 @@
 using namespace std;
 using namespace Annwvyn;
 
-constexpr bool isRoomscale{ false };
+constexpr bool isRoomscale{ true };
 
 ///Event
 class TextMessageEvent : public AnnUserSpaceEvent
@@ -45,7 +46,6 @@ class SomeEventListener : LISTENER
 {
 public:
 	SomeEventListener() : constructListener(),
-		//TODO make the hashing less painful to write and without constructing an std::hash at each call
 		hashTypeCheckTextEvent(AnnGetStringUtility()->hash("TextMessage"))
 	{
 	}
@@ -96,7 +96,7 @@ private:
 
 void putGizmoOnHands()
 {
-	static bool done[2] = { false, false };
+	static volatile bool done[2] = { false, false };
 	enum sideNames : size_t
 	{
 		left = 0x0,
@@ -104,13 +104,18 @@ void putGizmoOnHands()
 	};
 
 	for (auto side : { left, right })
+	{
 		if (!done[side])
+		{
 			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[side])
 			{
-				//TODO mh... Need an item here.
-				//controller->attachModel(AnnGetEngine()->getSceneManager()->createEntity("gizmo.mesh"));
+				Ogre::v1::MeshPtr v1; Ogre::MeshPtr v2;
+				v2 = AnnGetGameObjectManager()->getMesh("gizmo.mesh", v1, v2);
+				controller->attachModel(AnnGetEngine()->getSceneManager()->createItem(v2));
 				done[side] = true;
 			}
+		}
+	}
 }
 
 class QuitOnButtonListener : LISTENER
@@ -149,7 +154,6 @@ AnnMain()
 
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->addFileLocation("media/debug");
-	//AnnGetResourceManager()->addFileLocation("media/HDR");
 	AnnGetResourceManager()->initResources();
 
 	//create and load level objects
@@ -157,17 +161,11 @@ AnnMain()
 	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 
-	//ask the level manager to perform a jump to the first level
-	AnnGetLevelManager()->jumpToFirstLevel();
+	AnnGetLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getLevelByIndex(0), 4));
 
+	//ask the level manager to perform a jump to the last level
+	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
 	AnnDebug() << "Starting the render loop";
-
-	//Not how you're supposed to do it:
-	AnnGetEngine()->registerUserSubSystem(make_shared<SomeSubSystem>());
-	auto someListener = make_shared<SomeEventListener>();
-	AnnGetEventManager()->addListener(someListener);
-
-	AnnGetEngine()->startGameplayLoop();
 
 	debugHook = []()
 	{
@@ -176,12 +174,8 @@ AnnMain()
 
 	do
 	{
-		//debugHook();
+		putGizmoOnHands();
 	} while (AnnGetEngine()->refresh());
-
-	//Cleanup of the "don't do it" listener
-	AnnGetEventManager()->removeListener(someListener);
-	someListener.reset();
 
 	AnnQuit();
 
