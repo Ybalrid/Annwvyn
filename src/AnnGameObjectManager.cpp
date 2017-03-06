@@ -26,15 +26,9 @@ void AnnGameObjectManager::update()
 	}
 }
 
-std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char meshName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
+Ogre::MeshPtr AnnGameObjectManager::getMesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh)
 {
-	AnnDebug("Creating a game object from the mesh file :  " + std::string(meshName));
-	auto smgr{ AnnGetEngine()->getSceneManager() };
-
-	//auto ent = smgr->createEntity(meshName);
-
-	//We are using Ogre v1 mesh format :
-	auto v1Mesh = Ogre::v1::MeshManager::getSingleton().load(meshName,
+	v1Mesh = Ogre::v1::MeshManager::getSingleton().load(meshName,
 		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
 		Ogre::v1::HardwareBuffer::HBU_STATIC,
 		Ogre::v1::HardwareBuffer::HBU_STATIC);
@@ -45,16 +39,29 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	auto v2meshName = meshName + sufix;
 	AnnDebug() << "Mesh v2 name : " << v2meshName;
 
-	//See it the mesh allready exist :
-	Ogre::MeshPtr v2Mesh = {};
+	//v2Mesh
 	v2Mesh = Ogre::MeshManager::getSingleton().getByName(v2meshName);
 	if (!v2Mesh) //create and import
 	{
-		AnnDebug() << v2Mesh << " doesn't exist yet in the v2 MeshManager, creating it and loading the v1 " << meshName << " geometry";
+		AnnDebug() << v2meshName << " doesn't exist yet in the v2 MeshManager, creating it and loading the v1 " << meshName << " geometry";
 		v2Mesh = Ogre::MeshManager::getSingleton().createManual(v2meshName, AnnResourceManager::defaultResourceGroupName);
 		// TODO : permit to set theses things by hand
 		v2Mesh->importV1(v1Mesh.get(), halfPos, halfTexCoord, qTan);
 	}
+
+	return v2Mesh;
+}
+
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char meshName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
+{
+	AnnDebug("Creating a game object from the mesh file :  " + std::string(meshName));
+	auto smgr{ AnnGetEngine()->getSceneManager() };
+
+	//auto ent = smgr->createEntity(meshName);
+
+	Ogre::v1::MeshPtr v1Mesh;
+	Ogre::MeshPtr v2Mesh;
+	getMesh(meshName, v1Mesh, v2Mesh);
 
 	//Create an item
 	Ogre::Item* item = smgr->createItem(v2Mesh);

@@ -25,9 +25,19 @@ public:
 
 	void load() override
 	{
+		AnnDebug("DemoHub");
 		////Register ourselves as event listener
 		AnnGetEventManager()->addListener(getSharedListener());
 
+		AnnGetSceneryManager()->setExposure(1.0f, -2, +2);
+		AnnGetSceneryManager()->setBloomThreshold(8);
+		//Some ambient lighting is needed
+		AnnGetSceneryManager()->setAmbientLight(
+		{ 0.3f, 0.5f, 0.7f }, 150.f,
+		{ 0.6f, 0.45f, 0.3f }, 150.f,
+		{ 0, -1, -0.5 });
+
+		AnnGetPlayer()->teleport({ 0, 2, 0.125f }, 0);
 		//Add static geometry
 
 		auto pbrTest = addGameObject("SubstanceSphereDecimated.mesh");
@@ -36,6 +46,11 @@ public:
 
 		auto Ground = addGameObject("floorplane.mesh");
 		Ground->setUpPhysics();
+
+		AnnGetPlayer()->regroundOnPhysicsBody(); //<--- will not work because no physics yet
+
+												 //TODO temp hack fix. Remove me :
+		AnnGetPlayer()->reground(Ground->getPosition().y);
 
 		auto StoneDemo0 = addGameObject("DemoStone.mesh");
 		StoneDemo0->setPosition({ -3, 0, -5 });
@@ -77,23 +92,6 @@ public:
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
 		Sun->setPower(97000.0f);
-
-		//Some ambient lighting is needed
-		AnnGetSceneryManager()->setAmbientLight(
-		{ 0.3f, 0.5f, 0.7f }, 150.f,
-		{ 0.6f, 0.45f, 0.3f }, 150.f,
-		{ 0, -1, -0.5 });
-
-		AnnGetSceneryManager()->setExposure(1.0f, -2, +2);
-		AnnGetSceneryManager()->setBloomThreshold(8);
-
-		AnnGetPlayer()->teleport({ 0, 5, 0 }, 0);
-		AnnDebug() << "Ground Level is : " << Ground->getPosition().y;
-		AnnGetPlayer()->regroundOnPhysicsBody(); //<--- will not work because no physics yet
-
-		//TODO temp hack fix. Remove me :
-		AnnGetPlayer()->reground(Ground->getPosition().y);
-		;
 	}
 
 	//Called at each frame
