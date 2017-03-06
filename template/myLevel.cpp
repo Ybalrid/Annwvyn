@@ -23,14 +23,12 @@ void MyLevel::load()
 	Ground->setUpPhysics();
 
 	//Create a light source
-	auto Sun(addLightObject());
+	auto Sun(addLightObject("MySun"));
 	Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
+	Sun->setPower(97000);
 
 	//zenith sunlight
 	Sun->setDirection(AnnVect3{ -1, -1.5f, -1 }.normalisedCopy());
-
-	//The ambient light is a scene light that is emitted by every point of the scene. This is for making the shadows not pitch black.
-	AnnGetSceneryManager()->setAmbientLight(AnnColor(.25f, .25f, .25f));
 }
 
 void MyLevel::runLogic()
