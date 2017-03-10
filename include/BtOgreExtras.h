@@ -16,6 +16,8 @@
 #ifndef _BtOgreShapes_H_
 #define _BtOgreShapes_H_
 
+#include "systemMacro.h"
+
 #include "btBulletDynamicsCommon.h"
 #include "OgreSceneNode.h"
 #include "OgreSimpleRenderable.h"
@@ -32,35 +34,25 @@ namespace BtOgre
 	typedef std::vector<Ogre::Vector3> Vector3Array;
 
 	//Converts from and to Bullet and Ogre stuff. Pretty self-explanatory.
-	class Convert
+	class DLL Convert
 	{
 	public:
 		Convert() {};
 		~Convert() {};
 
-		static btQuaternion toBullet(const Ogre::Quaternion &q)
-		{
-			return btQuaternion(q.x, q.y, q.z, q.w);
-		}
-		static btVector3 toBullet(const Ogre::Vector3 &v)
-		{
-			return btVector3(v.x, v.y, v.z);
-		}
+		static btQuaternion toBullet(const Ogre::Quaternion& q);
 
-		static Ogre::Quaternion toOgre(const btQuaternion &q)
-		{
-			return Ogre::Quaternion(q.w(), q.x(), q.y(), q.z());
-		}
-		static Ogre::Vector3 toOgre(const btVector3 &v)
-		{
-			return Ogre::Vector3(v.x(), v.y(), v.z());
-		}
+		static btVector3 toBullet(const Ogre::Vector3& v);
+
+		static Ogre::Quaternion toOgre(const btQuaternion& q);
+
+		static Ogre::Vector3 toOgre(const btVector3& v);
 	};
 
 	//From here on its debug-drawing stuff. ------------------------------------------------------------------
 
 	//Draw the lines Bullet want's you to draw
-	class LineDrawer
+	class DLL LineDrawer
 	{
 		Ogre::String sceneManagerName;
 		///How a line is stored
@@ -92,79 +84,21 @@ namespace BtOgre
 	public:
 
 		///Construct the line drawer, need the name of the scene manager and the datablock (material)
-		LineDrawer(Ogre::SceneNode* node, Ogre::String datablockId, Ogre::String smgrName) :
-			sceneManagerName(smgrName),
-			attachNode(node),
-			datablockToUse(datablockId),
-			manualObject(nullptr),
-			index(0)
-		{
-			smgr = Ogre::Root::getSingleton().getSceneManager(sceneManagerName);
-		}
+		LineDrawer(Ogre::SceneNode* node, Ogre::String datablockId, Ogre::String smgrName);
 
-		~LineDrawer()
-		{
-			clear();
-			smgr->destroyManualObject(manualObject);
-		}
+		~LineDrawer();
 
 		///Clear the manual object AND the line buffer
-		void clear()
-		{
-			if (manualObject) manualObject->clear();
-			lines.clear();
-		}
+		void clear();
 
 		///Add a line to the "line buffer", the list of lines that will be shown at next update
-		void addLine(const Ogre::Vector3& start, const Ogre::Vector3& end, const Ogre::ColourValue& value)
-		{
-			lines.push_back({ start, end, value });
-		}
+		void addLine(const Ogre::Vector3& start, const Ogre::Vector3& end, const Ogre::ColourValue& value);
 
 		///Check if the material actually exist, if it doesn't create it
-		void checkForMaterial()
-		{
-			Ogre::HlmsUnlit* hlmsUnlit = (Ogre::HlmsUnlit*) Ogre::Root::getSingleton().getHlmsManager()->getHlms(Ogre::HLMS_UNLIT);
-			auto datablock = hlmsUnlit->getDatablock(datablockToUse);
-
-			if (datablock) return;
-			Ogre::LogManager::getSingleton().logMessage("BtOgre's datablock not found, creating...");
-			auto createdDatablock = hlmsUnlit->createDatablock(datablockToUse, datablockToUse, Ogre::HlmsMacroblock(), Ogre::HlmsBlendblock(), Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, "BtOgre");
-
-			if (!createdDatablock)
-			{
-				Ogre::LogManager::getSingleton().logMessage("Mh. Datablock hasn't been created. Weird.");
-			}
-		}
+		void checkForMaterial();
 
 		///Update the content of the manual object with the line buffer
-		void update()
-		{
-			if (!manualObject)
-			{
-				Ogre::LogManager::getSingleton().logMessage("Create manual object");
-				manualObject = smgr->createManualObject(Ogre::SCENE_STATIC);
-				manualObject->setCastShadows(false);
-				attachNode->attachObject(manualObject);
-			}
-
-			checkForMaterial();
-			manualObject->begin(datablockToUse, Ogre::OT_LINE_LIST);
-			index = 0;
-
-			for (const auto& l : lines)
-			{
-				manualObject->position(l.start);
-				manualObject->colour(l.vertexColor);
-				manualObject->index(index++);
-
-				manualObject->position(l.end);
-				manualObject->colour(l.vertexColor);
-				manualObject->index(index++);
-			}
-
-			manualObject->end();
-		}
+		void update();
 	};
 
 	class DebugDrawer : public btIDebugDraw
@@ -188,92 +122,33 @@ namespace BtOgre
 		/// \param node SceneNode (usually the Root node) where the lines will be attached. A static child node will be created
 		/// \param world Pointer to the btDynamicsWolrd you're using
 		/// \param smgrName Name of the scene manager you are using
-		DebugDrawer(Ogre::SceneNode* node, btDynamicsWorld* world, Ogre::String smgrName = "MAIN_SMGR") :
-			mNode(node->createChildSceneNode(Ogre::SCENE_STATIC)),
-			mWorld(world),
-			mDebugOn(true),
-			unlitDatablockId(unlitDatablockName),
-			unlitDiffuseMultiplier(1),
-			stepped(false),
-			scene(smgrName),
-			drawer(mNode, unlitDatablockName, scene)
-		{
-			if (!Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("BtOgre"))
-				Ogre::ResourceGroupManager::getSingleton().createResourceGroup("BtOgre");
-		}
+		DebugDrawer(Ogre::SceneNode* node, btDynamicsWorld* world, Ogre::String smgrName = "MAIN_SMGR");
 
-		~DebugDrawer()
-		{
-		}
+		virtual ~DebugDrawer();
 
 		///Set the value to multiply the texure. >= 1. Usefull only for HDR rendering
-		void setUnlitDiffuseMultiplier(float value)
-		{
-			if (value >= 1) unlitDiffuseMultiplier = value;
-		}
+		void setUnlitDiffuseMultiplier(float value);
 
 		///For bullet : add a line to the drawer
-		void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override
-		{
-			if (stepped)
-			{
-				drawer.clear();
-				stepped = false;
-			}
-
-			auto ogreFrom = Convert::toOgre(from);
-			auto ogreTo = Convert::toOgre(to);
-			Ogre::ColourValue ogreColor(color.x(), color.y(), color.z(), 1);
-			ogreColor *= unlitDiffuseMultiplier;
-
-			drawer.addLine(ogreFrom, ogreTo, ogreColor);
-		}
+		virtual void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override;
 
 		///Dummy. Rendering text is hard :D
-		void draw3dText(const btVector3 &location, const char *textString) override
-		{
-		}
+		virtual void draw3dText(const btVector3& location, const char* textString) override;
 
 		///Just render the contact point wit a line
-		void drawContactPoint(const btVector3 &PointOnB, const btVector3 &normalOnB, btScalar distance, int lifeTime, const btVector3 &color) override
-		{
-			drawLine(PointOnB, PointOnB + normalOnB * distance * 20, color);
-		}
+		virtual void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color) override;
 
 		///Redirect erros to the Ogre default log
-		void reportErrorWarning(const char *warningString) override
-		{
-			Ogre::LogManager::getSingleton().logMessage(warningString);
-		}
+		virtual void reportErrorWarning(const char* warningString) override;
 
 		///Set the debug mode. Acceptable values are combinations of the flags defined by btIDebugDraw::DebugDrawModes
-		void setDebugMode(int isOn) override
-		{
-			mDebugOn = isOn;
+		virtual void setDebugMode(int isOn) override;
 
-			if (!mDebugOn)
-				drawer.clear();
-		}
-
-		int	getDebugMode() const override
-		{
-			return mDebugOn;
-		}
+		///get the current debug mode
+		virtual int getDebugMode() const override;
 
 		///Step the debug drawer
-		void step()
-		{
-			if (mDebugOn)
-			{
-				mWorld->debugDrawWorld();
-				drawer.update();
-			}
-			else
-			{
-				drawer.clear();
-			}
-			stepped = true;
-		}
+		void step();
 	};
 }
 

@@ -296,9 +296,6 @@
     <ClCompile Include="..\..\src\tinyxml2.cpp">
       <Filter>Internaly packaged libraries\tinyxml2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\BtOgre.cpp">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\AnnSubSystem.cpp">
       <Filter>Annwvyn\SubSystems</Filter>
     </ClCompile>
@@ -385,6 +382,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnStringUtility.cpp">
       <Filter>Annwvyn\Core\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\BtOgreGP.cpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\BtOgrePG.cpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\BtOgreExtras.cpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
