@@ -258,6 +258,9 @@
     <ClInclude Include="..\..\include\AnnStringUtility.hpp">
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\BtOgre.hpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">

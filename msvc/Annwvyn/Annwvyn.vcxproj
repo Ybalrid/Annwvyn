@@ -218,6 +218,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnVect3.hpp" />
     <ClInclude Include="..\..\include\Annwvyn.h" />
     <ClInclude Include="..\..\include\AnnXmlLevel.hpp" />
+    <ClInclude Include="..\..\include\BtOgre.hpp" />
     <ClInclude Include="..\..\include\BtOgreExtras.h" />
     <ClInclude Include="..\..\include\BtOgreGP.h" />
     <ClInclude Include="..\..\include\BtOgrePG.h" />

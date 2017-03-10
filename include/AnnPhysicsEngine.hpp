@@ -16,13 +16,10 @@
 #include <btBulletDynamicsCommon.h>
 
 //btOgre
-#include "BtOgrePG.h"
-#include "BtOgreGP.h"
-#include "BtOgreExtras.h"
+#include "BtOgre.hpp"
 
+//AnnEngine
 #include "AnnEngine.hpp"
-
-//#include "AnnSubsytem.hpp"
 
 namespace Annwvyn
 {

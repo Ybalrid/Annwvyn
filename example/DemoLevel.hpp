@@ -99,7 +99,7 @@ public:
 	{
 		if (rotating)
 		{
-			rotating->setOrientation({ AnnDegree(AnnGetEngine()->getTimeFromStartupSeconds() * 45), AnnVect3::UNIT_Y });
+			rotating->setOrientation({ AnnDegree(float(AnnGetEngine()->getTimeFromStartupSeconds()) * 45.0f), AnnVect3::UNIT_Y });
 		}
 	}
 
