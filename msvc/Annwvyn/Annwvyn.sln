@@ -33,7 +33,6 @@ Global
 		{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}.Debug|x64.ActiveCfg = Debug|x64
 		{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}.Debug|x64.Build.0 = Debug|x64
 		{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}.Release|x64.ActiveCfg = Release|x64
-		{18C4D2EE-11C7-4CC0-9916-B910D07A1F2B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
