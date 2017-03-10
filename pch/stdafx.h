@@ -35,11 +35,15 @@
 #include <functional>
 
 //Object-Oriented Graphical Rendering Engine
-#include <Ogre.h>
 #include <OgrePrerequisites.h>
+#include <Ogre.h>
+#include <OgreLogManager.h>
 #include <OgreVector3.h>
+#include <OgreHardwareBufferManager.h>
 #include <OgreQuaternion.h>
 #include <OgreSceneNode.h>
+#include <OgreSimpleRenderable.h>
+#include <OgreCamera.h>
 #include <OgreEntity.h>
 #include <OgreLight.h>
 #include <OgreMatrix3.h>
@@ -48,6 +52,13 @@
 #include <Compositor/OgreCompositorManager2.h>
 #include <Compositor/OgreCompositorWorkspaceDef.h>
 #include <Compositor/OgreCompositorWorkspace.h>
+#include <Compositor/OgreCompositorNode.h>
+#include <Compositor/OgreCompositorNodeDef.h>
+#include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
+#include <OgreMaterialManager.h>
+#include <OgreMaterial.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
 #include <Hlms/Pbs/OgreHlmsPbs.h>
 #include <Hlms/Unlit/OgreHlmsUnlit.h>
 #include <OgreHlmsManager.h>
@@ -97,7 +108,7 @@
 #include <fcntl.h>
 #endif
 
-//OpenGL stuff : 
+//OpenGL stuff :
 
 //GL Extension Wrangler
 #include <glew.h>
