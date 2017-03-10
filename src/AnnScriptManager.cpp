@@ -9,14 +9,13 @@
 
 using namespace Annwvyn;
 
-AnnScriptManager::AnnScriptManager() : AnnSubSystem("ScriptManager"),
+AnnScriptManager::AnnScriptManager() : AnnSubSystem("ScriptManager")
 //Initialize with compiled-in Std_Lib
-chai(chaiscript::Std_Lib::library())
 {
 	AnnDebug() << "Initialized ChaiScript Std_Lib";
 	registerApi();
 
-	AnnDebug() << "Using ChaiScript version : " << chai.version();
+	AnnDebug() << "Using ChaiScript version 6.0";
 }
 
 void AnnScriptManager::registerApi()
