@@ -36,7 +36,6 @@
 #define GLFW_EXPOSE_NAVIVE_WGL
 #include <GLFW/glfw3native.h>
 #include <algorithm>
-#include <algorithm>
 
 constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 
