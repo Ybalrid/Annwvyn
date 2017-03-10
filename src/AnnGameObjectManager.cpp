@@ -164,7 +164,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 	//read the result list
 	auto result = std::find_if(results.begin(), results.end(), [](const Ogre::RaySceneQueryResultEntry& entry)
 	{
-		if (entry.movable && entry.movable->getMovableType() == "Entity") return true;
+		if (entry.movable && entry.movable->getMovableType() == "Item") return true;
 		return false;
 	});
 
