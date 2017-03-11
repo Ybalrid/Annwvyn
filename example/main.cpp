@@ -151,17 +151,17 @@ AnnMain()
 		AnnGetEngine()->initPlayerStandingPhysics();
 
 	AnnGetEventManager()->useDefaultEventListener();
-
 	AnnGetResourceManager()->addFileLocation("media/environment");
-	AnnGetResourceManager()->addFileLocation("media/debug");
+	// TODO remove meaa
+	AnnGetResourceManager()->addFileLocation("media/core");
 	AnnGetResourceManager()->initResources();
 
 	//create and load level objects
-	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
-	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
+	//AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
+	//AnnGetLevelManager()->addLevel(make_shared<Demo0>());
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 
-	AnnGetLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getLevelByIndex(0), 4.0f));
+	//AnnGetLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getLevelByIndex(0), 4.0f));
 
 	//ask the level manager to perform a jump to the last level
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());

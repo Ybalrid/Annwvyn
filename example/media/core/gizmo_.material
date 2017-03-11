@@ -1,0 +1,7 @@
+// gizmo_ genrated by blender2ogre 0.6.0
+
+hlms gizmo_ unlit
+{
+    diffuse 200 200 200
+    diffuse_map 3Dgizmo.png
+}
