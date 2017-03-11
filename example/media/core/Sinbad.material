@@ -4,7 +4,7 @@ hlms Sinbad/Body pbs
     normal_map Sinbad_Normal.tga
     //roughness_map Sinbad_Roughness.tga
     roughness 0.5 0.5 0.5
-    specular 0.1 0.1 0.1
+    //specular 0.1 0.1 0.1
     specular_map Sinbad_Specular.tga
 }
 hlms Sinbad/Gold pbs

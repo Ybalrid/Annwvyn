@@ -29,13 +29,11 @@ public:
 		////Register ourselves as event listener
 		AnnGetEventManager()->addListener(getSharedListener());
 
+		//AnnGetSceneryManager()->setAmbientLight(AnnColor(0, 0, 0), 0, AnnColor(0, 0, 0), 0, AnnVect3::NEGATIVE_UNIT_Y);
+
 		AnnGetSceneryManager()->setExposure(1.0f, -2, +2);
 		AnnGetSceneryManager()->setBloomThreshold(8);
 		//Some ambient lighting is needed
-		AnnGetSceneryManager()->setAmbientLight(
-		{ 0.3f, 0.5f, 0.7f }, 150.f,
-		{ 0.6f, 0.45f, 0.3f }, 150.f,
-		{ 0, -1, -0.5 });
 
 		AnnGetPlayer()->teleport({ 0, 2, 0.125f }, 0);
 		//Add static geometry
@@ -91,7 +89,7 @@ public:
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
-		Sun->setPower(97000.0f);
+		Sun->setPower(97.0f);
 	}
 
 	//Called at each frame
@@ -169,7 +167,7 @@ public:
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.75 });
-		Sun->setPower(97000.0f);
+		Sun->setPower(97.0f);
 
 		AnnGetPlayer()->teleport({ 0, 1, 0 }, 0);
 	}

@@ -12,10 +12,10 @@ defaultExposure(0.0f),
 defaultMinAutoExposure(-1.0f),
 defaultMaxAutExposure(+2.5f),
 defaultSkyColorMultiplier(60.0f),
-defaultSkyColor(0, 0.56f, 1),
+defaultSkyColor(0.2f, 0.4f, 0.6f),
 defaultBloom(16),
-defaultUpperAmbientLightMul(150),
-defaultLowerAmbientLightMul(150),
+defaultUpperAmbientLightMul(4.5f),
+defaultLowerAmbientLightMul(2.925f),
 defaultUpperAmbient(0.3f, 0.5f, 0.7f),
 defaultLowerAmbient(0.6f, 0.45f, 0.3f)
 {
@@ -97,7 +97,7 @@ void AnnSceneryManager::setDefaultBloomThreshold() const
 
 void AnnSceneryManager::setDefaultAmbientLight() const
 {
-	setAmbientLight(defaultUpperAmbient, defaultUpperAmbientLightMul, defaultLowerAmbient, defaultLowerAmbientLightMul, AnnVect3::NEGATIVE_UNIT_Y);
+	setAmbientLight(defaultUpperAmbient, defaultUpperAmbientLightMul, defaultLowerAmbient, defaultLowerAmbientLightMul, AnnGetVRRenderer()->getSceneManager()->getAmbientLightHemisphereDir());
 }
 
 void AnnSceneryManager::resetSceneParameters() const

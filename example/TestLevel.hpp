@@ -34,8 +34,7 @@ public:
 	{
 		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
 		//Set some ambient light
-		AnnGetSceneryManager()->setAmbientLight(AnnColor(1, 1, 1), 300, AnnColor(1, 1, 1), 300, AnnVect3::UNIT_Y);
-		AnnGetSceneryManager()->setExposure(-0.5, -1.0, 0.5);
+		AnnGetSceneryManager()->setExposure(1, -1.0, 2.5);
 
 		//We add our brand new 3D object
 		auto MyObject = addGameObject("MyObject.mesh");
@@ -59,7 +58,7 @@ public:
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5f* AnnVect3::NEGATIVE_UNIT_Z);
-		Sun->setPower(97000.0f);
+		Sun->setPower(97.f);
 
 		//Create objects and register them as content of the level
 		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "SuperSinbad", std::make_shared<Sinbad>());
@@ -78,7 +77,7 @@ public:
 
 		//Add the sign
 		auto Sign(addGameObject("environment/Sign.mesh"));
-		Sign->setPosition(1, -0, -2);
+		Sign->setPosition(1, -0.15, -2);
 		Sign->setUpPhysics(0, staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
