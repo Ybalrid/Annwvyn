@@ -57,7 +57,7 @@ public:
 		//Add other source of light
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5f* AnnVect3::NEGATIVE_UNIT_Z);
+		Sun->setDirection(AnnVect3{ 0.5f, -1.5f, -2.25f }.normalisedCopy());
 		Sun->setPower(97.f);
 
 		//Create objects and register them as content of the level
@@ -65,7 +65,6 @@ public:
 		levelContent.push_back(S);
 		S->playSound("media/monster.wav", true, 1);
 		S->attachScript("DummyBehavior");
-
 		S->setUpPhysics(10, boxShape);
 
 		//Add water
