@@ -9,13 +9,9 @@ hlms Sinbad/Body pbs
 }
 hlms Sinbad/Gold pbs
 {
-	roughness 0.1
 	fresnel_coef	1 0.782 0.344
-
-	
-	diffuse 0.8 0.8 0.8 
-	specular 0.3 0.3 0.3
-	diffuse_map sinbad_clothes.tga
+	specular_map sinbad_clothes.tga
+    diffuse_map sinbad_clothes.tga
 }
 hlms Sinbad/Sheaths pbs
 {

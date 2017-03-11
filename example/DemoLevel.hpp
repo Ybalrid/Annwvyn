@@ -47,7 +47,7 @@ public:
 
 		AnnGetPlayer()->regroundOnPhysicsBody(); //<--- will not work because no physics yet
 
-												 //TODO temp hack fix. Remove me :
+		//TODO temp hack fix. Remove me :
 		AnnGetPlayer()->reground(Ground->getPosition().y);
 
 		auto StoneDemo0 = addGameObject("DemoStone.mesh");
@@ -155,7 +155,7 @@ public:
 	void load() override
 	{
 		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
-		auto Ground = addGameObject("Ground.mesh");
+		auto Ground = addGameObject("floorplane.mesh");
 		Ground->setUpPhysics();
 
 		auto MyObject = addGameObject("MyObject.mesh");
@@ -170,6 +170,7 @@ public:
 		Sun->setPower(97.0f);
 
 		AnnGetPlayer()->teleport({ 0, 1, 0 }, 0);
+		AnnGetPlayer()->regroundOnPhysicsBody();
 	}
 
 	void unload() override

@@ -2,9 +2,7 @@
 
 hlms MyMaterial pbs
 {
-
-            diffuse 0.6 0.1 0.6
-            specular 0.025 0.025 0.025
-
-            roughness 0.1
+    diffuse 0.6 0.1 0.6
+    specular 0.025 0.025 0.025
+    roughness 0.5
 }
