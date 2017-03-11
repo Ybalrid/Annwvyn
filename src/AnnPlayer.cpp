@@ -311,6 +311,7 @@ void AnnPlayer::engineUpdate(float deltaTime)
 		break;
 
 	case ROOMSCALE:
+		if (ignorePhysics) return;
 		applyAnalogYaw();
 
 		if (needNewRoomTranslateReference)

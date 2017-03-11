@@ -20,8 +20,8 @@ hasBGM(false) {}
 void AnnSplashLevel::load()
 {
 	AnnDebug() << "Ignore physics";
-	AnnGetPlayer()->teleport({ 0, 0, 10 });
 	AnnGetPlayer()->ignorePhysics = true;
+	AnnGetPlayer()->setPosition({ 0,0,10 });
 	AnnGetPlayer()->setOrientation(Ogre::Euler(0, 0, 0));
 	AnnGetPhysicsEngine()->changeGravity(AnnVect3::ZERO);
 

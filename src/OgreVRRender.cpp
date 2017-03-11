@@ -278,7 +278,7 @@ GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
 	GLuint glid;
 	Ogre::TexturePtr
 		rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel);
+			Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
 	rttTextureCombined->getCustomAttribute("GLID", &glid);
 	rttEyesCombined = rttTextureCombined->getBuffer()->getRenderTarget();
 	return glid;
@@ -296,7 +296,7 @@ std::array<GLuint, 2> OgreVRRender::createSeparatedRenderTextures(const std::arr
 	{
 		rttTexturesSeparated[i] = Ogre::TextureManager::getSingleton().createManual(std::string(rttTextureName) + std::to_string(i),
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D,
-			dimentions[i][0], dimentions[i][1], 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, false, AALevel); //penultimate argument may be true if gamma problem.
+			dimentions[i][0], dimentions[i][1], 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel); //penultimate argument may be true if gamma problem.
 		rttTexturesSeparated[i]->getCustomAttribute("GLID", &glid[i]);
 		rttEyeSeparated[i] = rttTexturesSeparated[i]->getBuffer(0)->getRenderTarget(0);
 	}
@@ -359,7 +359,7 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	options["FSAA"] = std::to_string(AALevel);
 	options["top"] = "0";
 	options["left"] = "0";
-	//Do not put gamma = true here
+	options["gamma"] = "true";
 	if (vsync)
 		options["vsync"] = "true";
 	else
