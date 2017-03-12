@@ -51,7 +51,7 @@ void AnnSplashLevel::load()
 	if (!texture) throw AnnInitializationError(ANN_ERR_NOTINIT, "Texture not found for splash " + splashImageName);
 
 	//Set datablock parameters
-	static_cast<Ogre::HlmsUnlitDatablock*>(datablock)->setColour(Ogre::ColourValue::White * 97000);
+	static_cast<Ogre::HlmsUnlitDatablock*>(datablock)->setColour(Ogre::ColourValue::White * 97);
 	static_cast<Ogre::HlmsUnlitDatablock*>(datablock)->setTexture(Ogre::HlmsTextureManager::TEXTURE_TYPE_DIFFUSE, 0, texture);
 
 	//Create manual object
