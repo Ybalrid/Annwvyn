@@ -173,7 +173,7 @@ AnnMain()
 
 	do
 	{
-		putGizmoOnHands();
+		debugHook();
 	} while (AnnGetEngine()->refresh());
 
 	AnnQuit();
