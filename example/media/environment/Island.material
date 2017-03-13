@@ -2,8 +2,8 @@
     
 hlms Island pbs
 {
-            diffuse 0.1 0.4 0.1
-            specular 0.1 0.4 0.1
-            roughness 1
+    diffuse 0.1 0.8 0.1
+    specular 0.025 0.025 0.025
+    roughness 0.8
 
 }

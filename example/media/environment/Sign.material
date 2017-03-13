@@ -2,7 +2,8 @@
 
 hlms Sign pbs
 {
-    specular 0.01 0.01 0.01
+    diffuse 1 1 1
+    specular 0.001 0.001 0.001
     roughness_map Sign_Roughness.png
     diffuse_map Sign_Diffuse.png
     normal_map Sign_Normal.png
