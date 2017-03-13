@@ -34,7 +34,8 @@ public:
 	{
 		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
 		//Set some ambient light
-		AnnGetSceneryManager()->setExposure(1, -1.0, 2.5);
+		AnnGetSceneryManager()->setExposure(1, -0.25, +0.25);
+		AnnGetSceneryManager()->setSkyColor(AnnColor(0.05f, 0.45f, 1.f), 15.f);
 
 		//We add our brand new 3D object
 		auto MyObject = addGameObject("MyObject.mesh");
