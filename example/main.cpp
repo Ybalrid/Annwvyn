@@ -110,7 +110,10 @@ void putGizmoOnHands()
 			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[side])
 			{
 				Ogre::v1::MeshPtr v1; Ogre::MeshPtr v2;
-				v2 = AnnGetGameObjectManager()->getMesh("gizmo.mesh", v1, v2);
+				if (side == left)
+					v2 = AnnGetGameObjectManager()->getMesh("Hand_left.mesh", v1, v2);
+				else
+					v2 = AnnGetGameObjectManager()->getMesh("Hand_right.mesh", v1, v2);
 				controller->attachModel(AnnGetEngine()->getSceneManager()->createItem(v2));
 				done[side] = true;
 			}
