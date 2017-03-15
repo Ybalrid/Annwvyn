@@ -19,17 +19,18 @@
 
 #include "AnnSubsystem.hpp"
 
-#define CONSOLE_BUFFER 17
-#define MAX_CONSOLE_LOG_WIDTH 72
-#define BASE 256
-#define MARGIN 4
-
 namespace Annwvyn
 {
 	///In engine - On screen floating console
 	class DLL AnnConsole : public AnnSubSystem
 	{
 	public:
+
+		static constexpr auto CONSOLE_BUFFER = 17;
+		static constexpr auto MAX_CONSOLE_LOG_WIDTH = 72;
+		static constexpr auto BASE = 256;
+		static constexpr auto MARGIN = 4;
+
 		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational
 		AnnConsole();
 
