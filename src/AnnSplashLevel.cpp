@@ -124,8 +124,6 @@ void AnnSplashLevel::setBGM(std::string path, bool preload)
 
 void AnnSplashLevel::runLogic()
 {
-	AnnDebug() << Splash->getPosition();
-	AnnDebug() << AnnGetPlayer()->getPosition();
 	Splash->setPosition(AnnGetPlayer()->getPosition() + AnnVect3{ 0,0,-10 });
 
 	//If start time not set yet
