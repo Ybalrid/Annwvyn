@@ -94,7 +94,7 @@ namespace Annwvyn
 		bool pressed;
 		///Released state
 		bool released;
-
+		///Keyboard event that should be ignored has this flag as "true"
 		bool ignored;
 		///Set the event as a key release event
 		void setPressed();
@@ -181,8 +181,8 @@ namespace Annwvyn
 	using StickAxisId = int;
 	using PovId = int;
 
-#define InvalidStickAxisId -1
-#define INVALID 42.0f
+	static constexpr StickAxisId InvalidStickAxisId = -1;
+	static constexpr float INVALID = 42.0f;
 
 	///A joystick axis
 	class DLL AnnStickAxis
@@ -198,6 +198,8 @@ namespace Annwvyn
 		float getAbsValue() const;
 
 	private:
+
+		///Raw values
 		int a, r;
 		StickAxisId id;
 		friend class AnnEventManager;
@@ -210,6 +212,7 @@ namespace Annwvyn
 		void setAbsValue(int abs);
 		///Real constructor
 		AnnStickAxis(StickAxisId ax, int rel, int abs);
+		///True if the there's no "relative" value
 		bool noRel;
 	};
 
@@ -288,22 +291,31 @@ namespace Annwvyn
 		unsigned int getStickID() const;
 		///Get the "vendor string" of this joystick (could be its name)
 		std::string getVendor() const;
-
+		///Get the nubmer of PoV controller on this one
 		size_t getNbPov() const;
+		///Get the PoV coresponding to this ID
 		AnnStickPov getPov(PovId pov);
 
 		///Return true if this event is from an Xbox controller
 		bool isXboxController() const;
 
 	private:
+		///set to true if this is an Xbox controller (Xinput)
 		bool xbox;
 		friend class AnnEventManager;
+		///Button array
 		std::vector<bool> buttons;
+		///Axis array
 		std::vector<AnnStickAxis> axes;
+		///Pov Array
 		std::vector<AnnStickPov> povs;
+		///Pressed event "queue"
 		std::vector<unsigned short> pressed;
+		///Released event "queue"
 		std::vector<unsigned short> released;
+		///Joystick "vendor" name (generay the brand and model)
 		std::string vendor;
+		///Joystick ID for the engine
 		int stickID;
 	};
 	class AnnHandController;
@@ -340,45 +352,37 @@ namespace Annwvyn
 
 	class AnnGameObject;
 
+	///Collision event between 2 game objects
 	class DLL AnnCollisionEvent : public AnnEvent
 	{
 	public:
-		AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second) : AnnEvent(),
-			a{ first },
-			b{ second }
-		{
-			type = COLLISION;
-		}
+		///Event constructor
+		AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second);
 
-		bool hasObject(AnnGameObject* obj) const
-		{
-			if (obj == a || obj == b)
-				return true;
-			return false;
-		}
+		///Check if this event is about that object
+		bool hasObject(AnnGameObject* obj) const;
 
-		AnnGameObject* getA() const { return a; };
-		AnnGameObject* getB() const { return b; };
+		///Get first object
+		AnnGameObject* getA() const;
+		///Get second object
+		AnnGameObject* getB() const;
 	private:
-		AnnGameObject* a;
-		AnnGameObject* b;
+		///Some naked pointers
+		AnnGameObject *a, *b;
 	};
 
+	///Collision between the player and another object
 	class DLL AnnPlayerCollisionEvent : public AnnEvent
 	{
 	public:
-		AnnPlayerCollisionEvent(AnnGameObject* collided) : AnnEvent(),
-			col{ collided }
-		{
-			type = PLAYER_COLLISION;
-		}
+		///Constructor
+		AnnPlayerCollisionEvent(AnnGameObject* collided);
 
-		AnnGameObject* getObject() const
-		{
-			return col;
-		}
+		///Get the object this event is about
+		AnnGameObject* getObject() const;
 
 	private:
+		///Naked pointer to the collider
 		AnnGameObject* col;
 	};
 
@@ -388,10 +392,11 @@ namespace Annwvyn
 	public:
 		///Construct a trigger in/out event
 		AnnTriggerEvent();
+
 		///Return true if if there's collision
 		bool getContactStatus() const;
-		///Pointer to the trigger that have sent this event
 
+		///Pointer to the trigger that have sent this event
 		AnnTriggerObject* getSender() const;
 	private:
 		friend class AnnEventManager;
@@ -546,7 +551,7 @@ namespace Annwvyn
 		///Get the ID if this stick
 		unsigned int getID() const { return id; }
 
-	private://members
+	private:
 		///The ID
 		unsigned int id;
 		///The counter
@@ -578,7 +583,7 @@ namespace Annwvyn
 		std::string input;
 		///If set false, this class does nothing.
 		bool listen;
-
+		///true if this text should be ascii only
 		bool asciiOnly;
 	};
 
@@ -635,6 +640,7 @@ namespace Annwvyn
 		///Get the text inputer object
 		AnnTextInputer* getTextInputer() const;
 
+		///Well thet the "shouldIgnore" flag to keyboard event
 		void keyboardUsedForText(bool state = true);
 
 	private:
@@ -668,7 +674,10 @@ namespace Annwvyn
 		///Register trigger event for next triggerProcess by the engine
 		void spatialTrigger(std::shared_ptr<AnnTriggerObject> sender);
 
+		///Hook for the physics engine to signal collisions
 		void detectedCollision(void* a, void* b);
+
+		///Hook for the physics engine to signal player collision
 		void playerCollision(void* object);
 
 		///OIS Event Manager
@@ -680,10 +689,12 @@ namespace Annwvyn
 		///Pointer that holds the Mouse
 		OIS::Mouse* Mouse;
 
+		///parameters for OIS
+		OIS::ParamList pl;
+
 		///parameter list for OIS
 		std::vector<JoystickBuffer*> Joysticks;
 
-		OIS::ParamList pl;
 		///Array for remembering the key states at last update.
 		std::array<bool, KeyCode::SIZE> previousKeyStates;
 
@@ -695,25 +706,35 @@ namespace Annwvyn
 
 		///List of timers
 		std::vector<AnnTimer> activeTimers;
+
 		///List of timer that will timeout in a future frame
 		std::vector<AnnTimer> futureTimers;
+
 		///List of trigger event to process
 		std::vector<AnnTriggerEvent> triggerEventBuffer;
+
 		///The text inputer object itself
 		AnnTextInputer* textInputer;
 
 		///Default event listener
 		std::shared_ptr<AnnDefaultEventListener> defaultEventListener;
 
+		///Collision reported by the physics engine to consider
 		std::vector<std::pair<void*, void*>> collisionBuffer;
+
+		///Player collision reported by the physics engine to consider
 		std::vector<AnnGameObject*> playerCollisionBuffer;
 
-		//Using a shared ptr to keep ownership of the event object until the event is dealt with. Also, polymorphism.
+		///Using a shared ptr to keep ownership of the event object until the event is dealt with. Also, polymorphism.
 		std::vector<std::pair<std::shared_ptr<AnnUserSpaceEvent>, AnnUserSpaceEventLauncher*>> userSpaceEventBuffer;
 
+		///ID of an eventual Xbox controller
 		StickAxisId xboxID;
+
+		///True if we detected an xbox contoller
 		bool knowXbox;
 
+		///True if keyboard event should be ignored (keyboard used for "text input")
 		bool keyboardIgnore;
 	};
 }

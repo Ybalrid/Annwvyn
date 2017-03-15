@@ -6,6 +6,9 @@
 
 using namespace Annwvyn;
 
+const AnnVect3 AnnPlayer::DEFAULT_STARTING_POS{ 0,1,10 };
+const Ogre::Euler AnnPlayer::DEFAULT_STARTING_ORIENT{ 0 };
+
 bodyParams::bodyParams() :
 	RoomBase{ FeetPosition }
 {

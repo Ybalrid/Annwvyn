@@ -16,8 +16,6 @@
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 
-#define DEFAULT_STARTING_POS AnnVect3(0,1,10)
-#define DEFAULT_STARTING_ORIENT Ogre::Euler(0)
 namespace Annwvyn
 {
 	enum AnnPlayerMode { STANDING, ROOMSCALE };
@@ -57,6 +55,9 @@ namespace Annwvyn
 	class DLL AnnPlayer
 	{
 	public:
+
+		static const AnnVect3 DEFAULT_STARTING_POS;
+		static const Ogre::Euler DEFAULT_STARTING_ORIENT;
 
 		///Construct the player object
 		AnnPlayer();

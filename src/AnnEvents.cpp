@@ -268,45 +268,45 @@ AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
 {
 	switch (binaryDirection)
 	{
-		case OIS::Pov::North:
-			north = true;
-			break;
+	case OIS::Pov::North:
+		north = true;
+		break;
 
-		case OIS::Pov::NorthEast:
-			north = true;
-			east = true;
-			break;
+	case OIS::Pov::NorthEast:
+		north = true;
+		east = true;
+		break;
 
-		case OIS::Pov::NorthWest:
-			north = true;
-			west = true;
-			break;
+	case OIS::Pov::NorthWest:
+		north = true;
+		west = true;
+		break;
 
-		case OIS::Pov::South:
-			south = true;
-			break;
+	case OIS::Pov::South:
+		south = true;
+		break;
 
-		case OIS::Pov::SouthEast:
-			south = true;
-			east = true;
-			break;
+	case OIS::Pov::SouthEast:
+		south = true;
+		east = true;
+		break;
 
-		case OIS::Pov::SouthWest:
-			south = true;
-			west = true;
-			break;
+	case OIS::Pov::SouthWest:
+		south = true;
+		west = true;
+		break;
 
-		case OIS::Pov::East:
-			east = true;
-			break;
+	case OIS::Pov::East:
+		east = true;
+		break;
 
-		case OIS::Pov::West:
-			west = true;
-			break;
+	case OIS::Pov::West:
+		west = true;
+		break;
 
-		case OIS::Pov::Centered:
-		default:
-			break;
+	case OIS::Pov::Centered:
+	default:
+		break;
 	}
 }
 
@@ -407,6 +407,41 @@ AnnTimeEvent::AnnTimeEvent() : AnnEvent()
 void AnnTimeEvent::setTimerID(timerID id)
 {
 	tID = id;
+}
+
+AnnCollisionEvent::AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second) : AnnEvent(),
+a{ first },
+b{ second }
+{
+	type = COLLISION;
+}
+
+bool AnnCollisionEvent::hasObject(AnnGameObject* obj) const
+{
+	if (obj == a || obj == b)
+		return true;
+	return false;
+}
+
+AnnGameObject* AnnCollisionEvent::getA() const
+{
+	return a;
+}
+
+AnnGameObject* AnnCollisionEvent::getB() const
+{
+	return b;
+}
+
+AnnPlayerCollisionEvent::AnnPlayerCollisionEvent(AnnGameObject* collided) : AnnEvent(),
+col{ collided }
+{
+	type = PLAYER_COLLISION;
+}
+
+AnnGameObject* AnnPlayerCollisionEvent::getObject() const
+{
+	return col;
 }
 
 timerID AnnTimeEvent::getID() const
