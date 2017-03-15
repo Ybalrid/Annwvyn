@@ -105,7 +105,7 @@ void AnnSplashLevel::load()
 	//10
 	CurvedPlane->position(2, 2, CurveC);
 	CurvedPlane->textureCoord(1, 0);
-	CurvedPlane->index(index++);
+	CurvedPlane->index(index);
 
 	CurvedPlane->end();
 
