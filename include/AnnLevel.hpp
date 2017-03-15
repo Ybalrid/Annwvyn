@@ -18,8 +18,6 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 #include "AnnTriggerObject.hpp"
 #define LEVEL public Annwvyn::AnnLevel
 #define constructLevel() AnnLevel()
-#define noID "noID"
-#define defaultIdLen 15
 
 #include "AnnAbstractMovable.hpp"
 
@@ -29,6 +27,13 @@ namespace Annwvyn
 	class DLL AnnLevel
 	{
 	public:
+
+		///ID to signify there's no ID
+		static constexpr const char* noID{ "noID" };
+
+		///Lenght of an ID
+		static constexpr size_t const defaultIdLen{ 15 };
+
 		///Construct the level
 		AnnLevel();
 
@@ -56,6 +61,7 @@ namespace Annwvyn
 		AnnLightList levelLighting;
 		AnnTriggerObjectList levelTrigger;
 
+		///List of movable on the level
 		std::list<std::shared_ptr<AnnAbstractMovable>> levelMovable;
 
 		// TODO Give this storage facility to the Game Object manager
