@@ -155,6 +155,10 @@ namespace Annwvyn
 		/// \param v The linear speed
 		void setLinearSpeed(AnnVect3 v) const;
 
+		///Set the friction coefficient
+		///See the "Results" table from this page : https://www.thoughtspike.com/friction-coefficients-for-bullet-physics/
+		void setFrictionCoef(float coef) const;
+
 		///Set up Physics
 		/// \param mass The mass of the object
 		/// \param type The type of shape you want to define for the object
