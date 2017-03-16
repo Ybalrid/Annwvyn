@@ -143,6 +143,11 @@ void AnnGameObject::setScale(AnnVect3 scale) const
 	if (Body&&Shape)
 	{
 		Shape->setLocalScaling(scale.getBtVector());
+
+		auto world = AnnGetPhysicsEngine()->getWorld();
+		world->removeRigidBody(Body);
+		world->addRigidBody(Body, MASK(1), MASK(0) | MASK(1));
+		Body->activate();
 	}
 }
 
