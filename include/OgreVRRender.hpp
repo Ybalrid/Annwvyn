@@ -77,6 +77,7 @@ public:
 		high
 	};
 
+	///Set the shadow filtering level (quality)
 	void setShadowFiltering(ShadowFiltering level);
 
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
@@ -254,19 +255,22 @@ public:
 
 private:
 
-	//GL version to use
+	///GL version to use
 	const GLuint glMajor, glMinor;
 
-	//GL FrameWork window
+	///GL FrameWork window
 	GLFWwindow* glfwWindow;
 
-	//Shading language to use
+	///Shading language to use
 	static constexpr const char* const SL{ "GLSL" };
+
+	///Window size
+	int windowW, windowH;
 
 protected:
 
+	///Handle the window messages and resize event
 	void handleWindowMessages();
-	int windowW, windowH;
 
 	///Compositor workspaces. 0 = left, 1 = right, 2 = monoscopic, plugged to the render window
 	std::array<Ogre::CompositorWorkspace*, nbCompositor> compositorWorkspaces;
@@ -347,6 +351,7 @@ protected:
 	static constexpr const char* const rttTextureName = { "RttTex" };
 
 private:
+	///left, right enums
 	enum side : uint8_t { left = 0x1, right = 0x2 };
 };
 

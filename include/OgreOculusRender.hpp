@@ -15,7 +15,6 @@
 #include "OgreVRRender.hpp"
 
 //Oculus Rift Lib
-//#include <OVR.h>
 #include <OVR_CAPI_GL.h>
 
 //C++ SDL Includes

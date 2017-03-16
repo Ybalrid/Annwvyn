@@ -34,8 +34,8 @@ namespace Annwvyn
 		std::shared_ptr<AnnGameObject> createGameObject(const char entityName[], std::string identifier = "",
 			std::shared_ptr<AnnGameObject> object = std::make_shared<AnnGameObject>()); //object factory
 
-///Remove object from the manager. Object will be destroyed when no more references are in scope
-/// \param object the object to remove
+		///Remove object from the manager. Object will be destroyed when no more references are in scope
+		/// \param object the object to remove
 		void removeGameObject(std::shared_ptr<AnnGameObject> object);
 
 		///Search for an AnnGameObject that holds this node, returns it if found. Return nullptr if not found.
