@@ -135,6 +135,10 @@ void AnnGameObject::setWorldOrientation(AnnQuaternion orient) const
 void AnnGameObject::setScale(AnnVect3 scale) const
 {
 	Node->setScale(scale);
+	if (Body&&Shape)
+	{
+		Shape->setLocalScaling(scale.getBtVector());
+	}
 }
 
 void AnnGameObject::setWorldOrientation(float w, float x, float y, float z) const
