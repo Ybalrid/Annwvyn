@@ -8,16 +8,18 @@
 OgreOpenVRRender* OgreOpenVRRender::OpenVRSelf(nullptr);
 
 OgreOpenVRRender::OgreOpenVRRender(std::string winName) : OgreVRRender(winName),
-vrSystem(nullptr),
-hmdError(vr::EVRInitError::VRInitError_None),
-windowWidth(1280),
-windowHeight(720),
-rttTextureGLID{ 0 }, rttLeftTextureGLID(0), rttRightTextureGLID(0),
-gamma(false),
-TextureType(vr::TextureType_OpenGL),
+vrSystem{ nullptr },
+hmdError{ vr::EVRInitError::VRInitError_None },
+windowWidth{ 1280 },
+windowHeight{ 720 },
+rttTextureGLID{ 0 },
+rttLeftTextureGLID{ 0 },
+rttRightTextureGLID{ 0 },
+gamma{ false },
+TextureType{ vr::TextureType_OpenGL },
 vrTextures{ nullptr },
 hmdAbsoluteTransform({}),
-shouldQuitState(false),
+shouldQuitState{ false },
 numberOfAxes{ 3 },
 axoffset{ vr::k_EButton_Axis0 },
 touchpadXNormalizedValue{ 0 },
@@ -189,14 +191,6 @@ void OgreOpenVRRender::showDebug(DebugMode mode)
 void OgreOpenVRRender::initScene()
 {
 	createMainSmgr();
-
-	//Create the scene manager for the engine
-	/*
-	 * TODO new scene manager
-	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
-	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
-	*/
-	//Optional additional scenes here
 }
 
 void OgreOpenVRRender::initRttRendering()
