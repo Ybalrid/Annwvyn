@@ -298,13 +298,6 @@ void AnnEngine::log(std::string message, bool flag)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
 }
 
-//Don't ask me why this is not part of the Physics engine. Actually it just
-//calls something on the physics engine. Will be probably deleted in the future.
-void AnnEngine::initPlayerPhysics() const
-{
-	initPlayerStandingPhysics();
-}
-
 //Need to be redone.
 bool AnnEngine::requestStop() const
 {

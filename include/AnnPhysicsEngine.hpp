@@ -59,9 +59,10 @@ namespace Annwvyn
 		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body) const;
 
-		///Do not use anymore, choose to call initPlayerStandingPhysics, or initPlayerRoomscalePhysics.
-		DEPRECATED	void initPlayerPhysics(Ogre::SceneNode* cameraNode) { initPlayerStandingPhysics(cameraNode); }
+		///Init the class "standing" desinged for the Oculus physics where the player is not moving in the room at all
 		void initPlayerStandingPhysics(Ogre::SceneNode* playerAnchorNode);
+
+		///Init the "roomscale" physics model where the controlls don't break when the player move is ass in the real world
 		void initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode) const;
 
 		///Set the debug drawer state
@@ -79,6 +80,7 @@ namespace Annwvyn
 		///Toggle the debug physics overlay
 		void toggleDebugPhysics();
 
+		///Set the color multiplier to convert raw color to HDR light value
 		void setDebugDrawerColorMultiplier(float value) const;
 
 	private:
@@ -99,7 +101,7 @@ namespace Annwvyn
 		bool debugPhysics;
 
 		///Debug drawer object from BtOgre
-		BtOgre::DebugDrawer* debugDrawer; //TODO fix DebugDrawer on BtOgre
+		BtOgre::DebugDrawer* debugDrawer;
 		BtOgre::RigidBodyState* playerRigidBodyState;
 
 		AnnGameObjectList& gameObjects;

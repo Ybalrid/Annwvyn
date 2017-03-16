@@ -167,7 +167,6 @@ namespace Annwvyn
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 
 		///Init the physics model
-		DEPRECATED void initPlayerPhysics() const; //physics on player
 		void initPlayerStandingPhysics() const;
 
 		void initPlayerRoomscalePhysics() const;

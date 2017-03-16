@@ -197,11 +197,10 @@ public:
 	///Get the size of the controller array
 	static size_t getHanControllerArraySize();
 
-	///Return the number of non nullptr handControllers. Hand controllers are dynamically allocated by the VRRenderer if presents.
-	DEPRECATED size_t getRecognizedControllerCount();
-
 	///Return true if the hand controllers are available
 	bool handControllersAvailable() const;
+
+	///Make sure a string will be usable as a path for the hlms library/compositor resource group
 	static void makeValidPath(std::string& hlmsFolder);
 
 	///Called when the IPD needs to be taken into account. Translate the cameras along local X to make them match the position of your eyes
@@ -272,10 +271,7 @@ protected:
 	///Compositor workspaces. 0 = left, 1 = right, 2 = monoscopic, plugged to the render window
 	std::array<Ogre::CompositorWorkspace*, nbCompositor> compositorWorkspaces;
 
-	const Ogre::IdString monoscopicCompositor, stereoscopicCompositor;
-	static constexpr const char* const monoscopicWorkspaceName{ "MonoscopicCompositor" };
-	static constexpr const char* const stereoscopicWorkspaceName{ "StereoscopicWorkspaceCompositor" };
-
+	///Name of the renderer object
 	std::string rendererName;
 
 	///Called if AA level has been updated
@@ -351,7 +347,7 @@ protected:
 	static constexpr const char* const rttTextureName = { "RttTex" };
 
 private:
-	enum side : uint8_t { left = 0, right = 1 };
+	enum side : uint8_t { left = 0x1, right = 0x2 };
 };
 
 #endif

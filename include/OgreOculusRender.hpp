@@ -147,7 +147,7 @@ private:
 	void initializeControllerAxes(const oorEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
 
 	///Extract usefull data from the button state, including buffered pressed/released events
-	void ProcessButtonStates(const oorEyeType side);
+	void processButtonStates(const oorEyeType side);
 
 	///Get the state of the touch controller and update the handController objects accordingly
 	void updateTouchControllers();
