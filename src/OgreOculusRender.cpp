@@ -27,7 +27,6 @@ layers{ nullptr },
 perfHudMode{ ovrPerfHud_Off },
 currentCombinedIndex{ 0 },
 currentSessionStatusFrameIndex{ 0 },
-debugViewport{ nullptr },
 debugSmgr{ nullptr },
 debugCam{ nullptr },
 debugCamNode{ nullptr },
@@ -62,7 +61,6 @@ OgreOculusRender::~OgreOculusRender()
 	ovr_DestroyTextureSwapChain(Oculus->getSession(), textureCombinedSwapChain);
 	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
 	delete Oculus;
-
 }
 
 bool OgreOculusRender::shouldQuit()
@@ -142,65 +140,6 @@ void OgreOculusRender::initScene()
 		throw AnnInitializationError(ANN_ERR_NOTINIT, "Sanity check failed, check the static buffer in OgreOculusRender.hpp");
 
 	createMainSmgr();
-
-	//Create the scene manager for the engine
-	// TODO new scene manager with threads
-	//smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
-	//smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
-
-	//We are done with the main scene. The "smgr" Scene Manager will handle the actual VR world.
-	//To easily display the debug view, we will create a "debugSmgr" scene just for re-projecting the textures to the window
-
-	/* TODO fix debuging with compositor?
-	//Create the scene manager for the debug output
-	debugSmgr = root->createSceneManager(Ogre::ST_GENERIC);
-	debugSmgr->setAmbientLight(Ogre::ColourValue::White); //no shadow
-
-	//Create the camera with a 16:9 ratio in Orthographic projection
-	debugCam = debugSmgr->createCamera("DebugRender");
-	debugCam->setAutoAspectRatio(true);
-	//Don't really care about the depth buffer here. The only geometry is at distance = 1.0f
-	debugCam->setNearClipDistance(0.1f);
-	debugCam->setFarClipDistance(1.1f);
-
-	//Orthographic projection, none of that perspective rubbish here :p
-	debugCam->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
-
-	//Set the orthographic window to match the quad we will construct
-	debugCam->setOrthoWindow(debugPlaneGeometry[0], debugPlaneGeometry[1]);
-
-	//Attach the camera to a node
-	debugCamNode = debugSmgr->getRootSceneNode()->createChildSceneNode();
-	debugCamNode->attachObject(debugCam);
-
-	//Base setup inside the scene manager
-	debugPlaneNode = debugCamNode->createChildSceneNode();
-	debugPlaneNode->setPosition(0, 0, -1);
-
-	//Create a manual object
-	auto debugPlane = debugSmgr->createManualObject("DebugPlane");
-
-	//Create a manual material and add a texture unit state to the default pass
-	DebugPlaneMaterial = Ogre::MaterialManager::getSingleton().create("DebugPlaneMaterial", "General", true);
-	debugTexturePlane = DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->createTextureUnitState();
-
-	//Describe the manual object
-	debugPlane->begin("DebugPlaneMaterial", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
-
-	//Theses buffers are statically declared on the class.
-	for (const auto point : debugPlaneIndexBuffer)
-	{
-		debugPlane->position(AnnVect3{ debugPlaneVertexBuffer[point].data() });
-		debugPlane->textureCoord(AnnVect2{ debugPlaneTextureCoord[point].data() });
-	}
-
-	//We're done!
-	debugPlane->end();
-
-	//Add it to the scene
-	debugPlaneNode->attachObject(debugPlane);
-	debugPlaneNode->setVisible(true);
-	*/
 }
 
 ///This will create the Oculus Textures and the Ogre textures for rendering and mirror display
@@ -301,8 +240,6 @@ void OgreOculusRender::initRttRendering()
 		auto proportionalWidth = float((bufferSize.w - frontierWidth / 2) / 2) / float(bufferSize.w);
 		AnnDebug() << proportionalWidth;
 
-		compositor->createBasicWorkspaceDef(stereoscopicWorkspaceName, backgroundColor);
-
 		compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[left], "HdrWorkspace", true, 1, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 0.5f, 1), 0x01, 0x01);
 		compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[right], "HdrWorkspace", true, 2, nullptr, nullptr, nullptr, Ogre::Vector4(0.5f, 0, 0.5f, 1), 0x02, 0x02);
 		compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
@@ -332,37 +269,14 @@ void OgreOculusRender::initRttRendering()
 
 void OgreOculusRender::showRawView()
 {
-	/*
-	mirrorHMDView = false;
-	if (!debugTexturePlane) return;
-	OculusSelf->debugViewport->setCamera(OculusSelf->debugCam);
-	debugTexturePlane->setTextureName("RttTex");
-	OculusSelf->debugViewport->setBackgroundColour(OculusSelf->backgroundColor);
-	AnnDebug() << "Switched to Raw view";
-	*/
 }
 
 void OgreOculusRender::showMirrorView()
 {
-	/*
-	mirrorHMDView = true;
-	if (!debugTexturePlane) return;
-	OculusSelf->debugViewport->setCamera(OculusSelf->debugCam);
-	debugTexturePlane->setTextureName("MirrorTex");
-	OculusSelf->debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
-	AnnDebug() << "Switched to Oculus Compositor view";
-	*/
 }
 
 void OgreOculusRender::showMonscopicView()
 {
-	/*
-	mirrorHMDView = false;
-	if (!OculusSelf) return;
-	OculusSelf->debugViewport->setCamera(OculusSelf->monoCam);
-	OculusSelf->debugViewport->setBackgroundColour(OculusSelf->backgroundColor);
-	AnnDebug() << "Switched to Monoscopic view";
-	*/
 }
 
 void OgreOculusRender::initClientHmdRendering()

@@ -40,7 +40,6 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	bodyOrientation{ Ogre::Quaternion::IDENTITY },
 	name{ windowName },
 	gameplayCharacterRoot{ nullptr },
-	backgroundColor{ 0.2f, 0.4f, 0.75f },
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
 	rttEyesCombined{ nullptr }
@@ -145,9 +144,6 @@ size_t OgreVRRender::getRecognizedControllerCount()
 
 void OgreVRRender::changedAA() const
 {
-	//TODO look into FSAA
-	//if (rttTextureCombined.getPointer() && !UseSSAA) rttTextureCombined->setFSAA(AALevel);
-
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 	window->setFSAA(AALevel, "");
 	auto textureManager = Ogre::TextureManager::getSingletonPtr();
@@ -276,9 +272,8 @@ void OgreVRRender::initPipeline()
 GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
 {
 	GLuint glid;
-	Ogre::TexturePtr
-		rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
+	auto rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+		Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
 	rttTextureCombined->getCustomAttribute("GLID", &glid);
 	rttEyesCombined = rttTextureCombined->getBuffer()->getRenderTarget();
 	return glid;
@@ -287,16 +282,13 @@ GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
 std::array<GLuint, 2> OgreVRRender::createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions)
 {
 	std::array <GLuint, 2> glid;
-
 	Annwvyn::AnnDebug() << "Creating separated render textures " << dimentions[0][0] << "x" << dimentions[0][1] << " " << dimentions[1][0] << "x" << dimentions[1][1];
-
 	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
-
 	for (size_t i : {0u, 1u})
 	{
 		rttTexturesSeparated[i] = Ogre::TextureManager::getSingleton().createManual(std::string(rttTextureName) + std::to_string(i),
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D,
-			dimentions[i][0], dimentions[i][1], 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel); //penultimate argument may be true if gamma problem.
+			Ogre::uint(dimentions[i][0]), Ogre::uint(dimentions[i][1]), 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
 		rttTexturesSeparated[i]->getCustomAttribute("GLID", &glid[i]);
 		rttEyeSeparated[i] = rttTexturesSeparated[i]->getBuffer(0)->getRenderTarget(0);
 	}
@@ -392,7 +384,7 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 	makeValidPath(hlmsFolder);
 
 	//Get the hlmsManager (not a singleton by itself, but accessible via Root)
-	auto hlmsManager = Ogre::Root::getSingleton().getHlmsManager();
+	auto hlmsManager = root->getHlmsManager();
 
 	//Define the shader library to use for HLMS
 	auto library = Ogre::ArchiveVec();
@@ -421,7 +413,7 @@ void OgreVRRender::loadCompositor(const std::string& path, const std::string& ty
 	resourceGroupManager->initialiseResourceGroup(RESOURCE_GROUP_COMPOSITOR);
 }
 
-void OgreVRRender::setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName)
+void OgreVRRender::setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName) const
 {
 	auto compositor = root->getCompositorManager2();
 	auto renderingNodeDef = compositor->getNodeDefinitionNonConst(renderingNodeName);
@@ -437,7 +429,7 @@ void OgreVRRender::setSkyColor(Ogre::ColourValue skyColor, float multiplier, con
 	}
 }
 
-void OgreVRRender::setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial)
+void OgreVRRender::setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial) const
 {
 	auto materialManager = Ogre::MaterialManager::getSingletonPtr();
 	auto material = materialManager->load(postProcessMaterial, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME).staticCast<Ogre::Material>();
@@ -447,7 +439,6 @@ void OgreVRRender::setExposure(float exposure, float minAuto, float maxAuto, con
 
 	const Ogre::Vector3 exposureParams
 	{
-		//TODO understand why theses parameters are used
 		1024.0f * expf(exposure - 2.0f),
 		7.5f - maxAuto,
 		7.5f - minAuto
@@ -501,8 +492,6 @@ void OgreVRRender::handleWindowMessages()
 
 		window->windowMovedOrResized();
 	}
-
-	//window->resize(w, h);
 }
 
 void OgreVRRender::setShadowFiltering(ShadowFiltering level)

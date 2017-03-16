@@ -9,8 +9,8 @@ AnnSceneryManager::AnnSceneryManager(std::shared_ptr<OgreVRRender> rendererFromE
 smgr(AnnGetEngine()->getSceneManager()),
 renderer(rendererFromEngine),
 defaultExposure(0.0f),
-defaultMinAutoExposure(-1.0f),
-defaultMaxAutExposure(+2.5f),
+defaultMinAutoExposure(0),
+defaultMaxAutoExposure(0),
 defaultSkyColorMultiplier(15.f),
 defaultSkyColor(0.05f, 0.45f, 1.f),
 defaultBloom(5),
@@ -70,7 +70,7 @@ void AnnSceneryManager::setExposure(float exposure, float minExposure, float max
 
 void AnnSceneryManager::setDefaultExposure() const
 {
-	setExposure(defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure);
+	setExposure(defaultExposure, defaultMinAutoExposure, defaultMaxAutoExposure);
 }
 
 void AnnSceneryManager::setSkyColor(AnnColor color, float multiplier) const
