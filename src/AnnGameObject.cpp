@@ -305,6 +305,12 @@ void AnnGameObject::setLinearSpeed(AnnVect3 v) const
 		Body->setLinearVelocity(v.getBtVector());
 }
 
+void AnnGameObject::setFrictionCoef(float coef) const
+{
+	if (Body)
+		Body->setFriction(coef);
+}
+
 void AnnGameObject::setVisible() const
 {
 	getNode()->setVisible(true);
