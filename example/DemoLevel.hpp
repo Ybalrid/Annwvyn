@@ -158,7 +158,7 @@ public:
 		auto Ground = addGameObject("floorplane.mesh");
 		Ground->setUpPhysics();
 
-		auto MyObject = addGameObject("MyObject.mesh");
+		auto MyObject = addGameObject("MyObject.mesh", "MyObject");
 		MyObject->setPosition({ 0, 1, -5 });
 		MyObject->setUpPhysics(200, convexShape);
 

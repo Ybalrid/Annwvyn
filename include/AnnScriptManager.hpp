@@ -18,17 +18,17 @@ namespace Annwvyn
 
 		///Callable script constructor
 		AnnBehaviorScript(std::string name,
-						  std::function<void(chaiscript::Boxed_Value&)> updateHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
+			std::function<void(chaiscript::Boxed_Value&)> updateHook,
+			std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
+			std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
+			std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+			std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
+			std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerHook,
+			std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
+			std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
+			std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
 
-						  chaiscript::Boxed_Value chaisriptInstance);
+			chaiscript::Boxed_Value chaisriptInstance);
 
 		///Script destructor
 		virtual ~AnnBehaviorScript();
@@ -74,17 +74,26 @@ namespace Annwvyn
 
 		///The "update" function. ChaiScript "object.update()" is like calling "update(object)"
 		std::function<void(chaiscript::Boxed_Value&)> callUpdateOnScriptInstance;
-
+		///Hook for key event
 		std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> callKeyEventOnScriptInstance;
+		///Hook for Mouse event
 		std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> callMouseEventOnScriptInstance;
+		///Hook for Stick event
 		std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> callStickEventOnScriptInstance;
+		///Hook for Time event
 		std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> callTimeEventOnScriptInstance;
+		///Hook for Trigger event
 		std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> callTriggerEventOnScriptInstance;
+		///Hook for Hand Controller event
 		std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> callHandControllertOnScriptInstance;
+		///Hook for Collision event
 		std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> callCollisionEventOnScriptInstance;
+		///Hook for PlayerCollision evnet
 		std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> callPlayerCollisionEventOnScriptInstance;
 
+		///Call guards for the hooks above.
 		bool cannotKey, cannotMouse, cannotStick, cannotTime, cannotTrigger, cannotHand, cannotCollision, cannotPlayerCollision;
+
 		///Just call the update on the instance
 		void callUpdateOnScript() { callUpdateOnScriptInstance(ScriptObjectInstance); }
 	};
@@ -173,6 +182,7 @@ def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
 		std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> callCollisionEventOnScriptInstance;
 		std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> callPlayerCollisionEventOnScriptInstance;
 
+		///Hook the event listener's "methdod" to the script ones, if possible...
 		void tryAndGetEventHooks();
 	};
 }

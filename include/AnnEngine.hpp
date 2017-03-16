@@ -166,9 +166,10 @@ namespace Annwvyn
 
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 
-		///Init the physics model
+		///Init the static/standing physics model
 		void initPlayerStandingPhysics() const;
 
+		///Init the roomscale physics model
 		void initPlayerRoomscalePhysics() const;
 
 		///Return true if the game want to terminate the program
