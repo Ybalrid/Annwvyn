@@ -438,8 +438,7 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 
 void OgreOculusRender::renderAndSubmitFrame()
 {
-	//Process window's message queue
-	Ogre::WindowEventUtilities::messagePump();
+	handleWindowMessages();
 	if (separateTextures)
 	{
 		for (auto i{ 0 }; i < 2; ++i)
@@ -535,7 +534,7 @@ void OgreOculusRender::initializeControllerAxes(const oorEyeType side, std::vect
 	axesVector.push_back(AnnHandControllerAxis{ "GripTrigger X", inputState.HandTrigger[side] });
 }
 
-void OgreOculusRender::ProcessButtonStates(const oorEyeType side) {
+void OgreOculusRender::processButtonStates(const oorEyeType side) {
 	//Extract button states and deduce press/released events
 	pressed.clear(); released.clear();
 	for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
@@ -581,7 +580,7 @@ void OgreOculusRender::updateTouchControllers()
 		axesVector[2].updateValue(inputState.IndexTrigger[side]);
 		axesVector[3].updateValue(inputState.HandTrigger[side]);
 
-		ProcessButtonStates(side);
+		processButtonStates(side);
 
 		//Set all the data on the controller
 		handController->getButtonStateVector() = currentControllerButtonsPressed[side];

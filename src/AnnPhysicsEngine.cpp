@@ -34,7 +34,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	debugPhysics = false;//by default
 	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get(), "ANN_MAIN_SMGR");
 	DynamicsWorld->setDebugDrawer(debugDrawer);
-	debugDrawer->setUnlitDiffuseMultiplier(100);
+	debugDrawer->setUnlitDiffuseMultiplier(10);
 }
 
 AnnPhysicsEngine::~AnnPhysicsEngine()

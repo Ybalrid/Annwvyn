@@ -114,8 +114,7 @@ namespace Annwvyn
 		///Get Ogre Node
 		Ogre::SceneNode* getNode() const;
 
-		///Get Ogre Entity
-		DEPRECATED Ogre::Item* getEntity() const { return getItem(); };
+		///Get the item of this object
 		Ogre::Item* getItem() const;
 
 		///Get Rigid Body
@@ -222,12 +221,16 @@ namespace Annwvyn
 
 		///Entity
 		Ogre::Item* Model;
+		///Version 1 of the mesh, to extract data for physics
 		Ogre::v1::MeshPtr v1mesh;
 
-		//Currently selected animation
+		///Currently selected animation
 		Ogre::SkeletonAnimation* currentAnimation;
 
+		///Bullet shape
 		btCollisionShape* Shape;
+
+		///Bullet rigid body
 		btRigidBody* Body;
 
 		///AnnAudioEngine audioSource;

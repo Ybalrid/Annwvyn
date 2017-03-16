@@ -26,8 +26,6 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	numberOfThreads(std::thread::hardware_concurrency()),
 	glMajor{ 4 },
 	glMinor{ 3 },
-	monoscopicCompositor(monoscopicWorkspaceName),
-	stereoscopicCompositor(stereoscopicWorkspaceName),
 	smgr{ nullptr },
 	root{ nullptr },
 	window{ nullptr },
@@ -131,15 +129,6 @@ std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> O
 size_t OgreVRRender::getHanControllerArraySize()
 {
 	return MAX_CONTROLLER_NUMBER;
-}
-
-size_t OgreVRRender::getRecognizedControllerCount()
-{
-	auto count = size_t{ 0 };
-	for (auto handController : handControllers)
-		if (handController)
-			count++;
-	return count;
 }
 
 void OgreVRRender::changedAA() const
