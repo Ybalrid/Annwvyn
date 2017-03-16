@@ -83,7 +83,7 @@ namespace Annwvyn
 		std::shared_ptr<OgreVRRender> renderer;
 
 		///Defaults environmental floats
-		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutExposure, defaultSkyColorMultiplier, defaultBloom, defaultUpperAmbientLightMul, defaultLowerAmbientLightMul;
+		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutoExposure, defaultSkyColorMultiplier, defaultBloom, defaultUpperAmbientLightMul, defaultLowerAmbientLightMul;
 		///Default sky color
 		const AnnColor defaultSkyColor, defaultUpperAmbient, defaultLowerAmbient;
 	};

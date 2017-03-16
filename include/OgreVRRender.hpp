@@ -14,7 +14,6 @@
 #include <Compositor/OgreCompositorWorkspace.h>
 #include <Compositor/OgreCompositorNode.h>
 #include <Compositor/OgreCompositorNodeDef.h>
-//#include <Compositor/OgreCompositorShadowNodeDef.h>
 #include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
 #include <OgreMaterialManager.h>
 #include <OgreMaterial.h>
@@ -28,7 +27,6 @@
 #include "AnnHandController.hpp"
 
 #include <glew.h>
-
 #include <GLFW/glfw3.h>
 
 //Native windows access (for getting the handle and the context)
@@ -204,7 +202,7 @@ public:
 
 	///Return true if the hand controllers are available
 	bool handControllersAvailable() const;
-	void makeValidPath(std::string& hlmsFolder);
+	static void makeValidPath(std::string& hlmsFolder);
 
 	///Called when the IPD needs to be taken into account. Translate the cameras along local X to make them match the position of your eyes
 	virtual void handleIPDChange() = 0;
@@ -224,6 +222,8 @@ public:
 
 	///This method create a texture with the wanted Anti Aliasing level. It will set the rttTextureCombined and rttEyesCombined member of this class to the correct value, and return the GLID of the texture.
 	unsigned int createCombinedRenderTexture(float w, float h);
+
+	///This create a couple of separated render texture
 	std::array<unsigned int, 2> createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions);
 
 	///Create a render buffer with not anti aliasing. return a tuple with a TexturePtr and a GLID. use <code><pre>std::get<></pre></code>
@@ -242,10 +242,10 @@ public:
 	void loadCompositor(const std::string& path = "./compositor/", const std::string& type = "FileSystem");
 
 	///Set the color used on the "clear" pass of the compositor node given
-	void setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName);
+	void setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName) const;
 
 	///Set the exposure, need the name of the post process material
-	void setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial = "HDR/DownScale03_SumLumEnd");
+	void setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial = "HDR/DownScale03_SumLumEnd") const;
 
 	///Se the bloom threshold. Need the name of the brightness pass material
 	void setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial = "HDR/BrightPass_Start");
@@ -314,9 +314,6 @@ protected:
 	///Node that represent the head base. Move this in 3D to move the viewpoint
 	Ogre::SceneNode* gameplayCharacterRoot;
 
-	///background color of viewports
-	Ogre::ColourValue backgroundColor;
-
 	///Cameras that have to be put where the user's eye is
 	std::array<Ogre::Camera*, 2> eyeCameras;
 
@@ -331,7 +328,9 @@ protected:
 
 	///Render target that serve as intermediate buffer for the eyeCameras
 	Ogre::RenderTexture* rttEyesCombined;
-	std::array < Ogre::RenderTexture*, 2> rttEyeSeparated;
+
+	///Couple of render textures separated
+	std::array <Ogre::RenderTexture*, 2> rttEyeSeparated;
 
 	///Level of anti aliasing to use.
 	static uint8_t AALevel;

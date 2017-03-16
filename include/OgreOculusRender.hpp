@@ -230,9 +230,6 @@ private:
 	///Convert an ovrQuatf to an Ogre::Quaternion
 	static Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q);
 
-	///Viewport for the debug window
-	Ogre::Viewport* debugViewport;
-
 	///Ogre Scene Manager
 	Ogre::SceneManager* debugSmgr;
 
