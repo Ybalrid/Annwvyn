@@ -332,6 +332,14 @@ void AnnPlayer::engineUpdate(float deltaTime)
 			playerBody->RoomBase += roomTranslation;
 		}
 
+		if (playerBody->Body)
+		{
+			btTransform transform;
+			transform.setOrigin(AnnVect3(getPosition() + getEyeTranslation()).getBtVector());
+			transform.setRotation(AnnQuaternion(/*getOrientation().toQuaternion()*/).getBtQuaternion());
+			playerBody->Body->setWorldTransform(transform);
+		}
+
 		break;
 
 	default:break;
@@ -381,4 +389,9 @@ void AnnPlayer::regroundOnPhysicsBody(float length, AnnVect3 preoffset)
 
 	if (rayGroundingCallback.hasHit())
 		reground(rayGroundingCallback.m_hitPointWorld);
+}
+
+void AnnPlayer::hintRoomscaleUpdateTranslationReference()
+{
+	roomTranslateQuatReference = true;
 }
