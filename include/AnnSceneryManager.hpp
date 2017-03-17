@@ -11,7 +11,7 @@
 
 namespace Annwvyn
 {
-	///Scenery Manager, scene configuration for lighting and sky.
+	///Scenery Manager. Set the scene rendering parameters, like the exposure or the ambient lighting...
 	class DLL AnnSceneryManager : public AnnSubSystem
 	{
 	public:
