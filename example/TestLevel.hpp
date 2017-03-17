@@ -44,6 +44,7 @@ public:
 		MyObject->setUpPhysics(100, convexShape);	// <---- This activate the physics as a dynamic object. We need to tell the shape approximation to use. and a mass in Kg
 		MyObject->attachScript("DummyBehavior2");
 		//The shape approximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
+		MyObject->setFrictionCoef(0.84f);
 
 		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Hello, Virtual World!\n\nTesting line wrap right now : a bc def ghij klmn opqr stuvw xyz ", 128, 96.0f, "LibSerif", "LiberationSerif-regular.ttf");
 		//text->setTextAlign(text->ALIGN_CENTER);
@@ -67,6 +68,7 @@ public:
 		S->playSound("media/monster.wav", true, 1);
 		S->attachScript("DummyBehavior");
 		S->setUpPhysics(10, boxShape);
+		S->setFrictionCoef(0.75f);
 
 		//Add water
 		auto Water = addGameObject("environment/Water.mesh");
@@ -74,6 +76,7 @@ public:
 		//Add the island
 		auto Island = addGameObject("environment/Island.mesh");
 		Island->setUpPhysics();
+		Island->setFrictionCoef(0.75);
 
 		//Add the sign
 		auto Sign(addGameObject("environment/Sign.mesh"));
