@@ -32,8 +32,8 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	AnnDebug() << "Gravity vector " << defaultGravity;
 
 	debugPhysics = false;//by default
-	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get(), "ANN_MAIN_SMGR");
-	DynamicsWorld->setDebugDrawer(debugDrawer);
+	debugDrawer = std::make_unique< BtOgre::DebugDrawer>(rootNode, DynamicsWorld.get(), "ANN_MAIN_SMGR");
+	DynamicsWorld->setDebugDrawer(debugDrawer.get());
 	debugDrawer->setUnlitDiffuseMultiplier(16.0f);
 }
 
