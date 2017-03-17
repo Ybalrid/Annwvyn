@@ -113,7 +113,10 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 {
 	debugPhysics = state;
 	if (debugPhysics)
-		debugDrawer->setDebugMode(btIDebugDraw::DebugDrawModes::DBG_DrawWireframe | btIDebugDraw::DebugDrawModes::DBG_FastWireframe | btIDebugDraw::DBG_DrawAabb | btIDebugDraw::DBG_DrawContactPoints);
+		debugDrawer->setDebugMode(btIDebugDraw::DBG_DrawWireframe
+			| btIDebugDraw::DBG_FastWireframe
+			| btIDebugDraw::DBG_DrawAabb
+			| btIDebugDraw::DBG_DrawContactPoints);
 	else
 		debugDrawer->setDebugMode(0);
 	debugDrawer->step();
@@ -158,7 +161,7 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 	playerObject->setMode(ROOMSCALE);
 	AnnDebug() << "Initializing player's physics in roomscale mode";
 	AnnDebug() << "Player can walk around";
-	//TODO add a colision object around the camera rig representing the player's head
+	//TODO add a collision object around the camera rig representing the player's head
 	playerObject->setRoomRefNode(playerAnchorNode);
 }
 
