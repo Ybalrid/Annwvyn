@@ -68,7 +68,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
-		throw AnnInitializationError(ANN_ERR_MEMORY ,"Can't create 2 instances of AnnEngine");
+		throw AnnInitializationError(ANN_ERR_MEMORY, "Can't create 2 instances of AnnEngine");
 	}
 	singleton = this;
 
@@ -333,7 +333,6 @@ bool AnnEngine::refresh()
 		if (SubSystem->needUpdate())
 			SubSystem->update();
 
-	//Update camera from player
 	syncPov();
 
 	//Update VR form real world

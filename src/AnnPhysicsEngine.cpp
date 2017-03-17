@@ -5,9 +5,9 @@
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
-								   std::shared_ptr<AnnPlayer> player,
-								   AnnGameObjectList & objects,
-								   AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+	std::shared_ptr<AnnPlayer> player,
+	AnnGameObjectList & objects,
+	AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
 	Broadphase(nullptr),
 	CollisionConfiguration(nullptr),
 	Solver(nullptr),
@@ -97,7 +97,7 @@ void AnnPhysicsEngine::processCollisionTesting() const
 		auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		if (contactManifold->getNumContacts() > 0)
 			AnnGetEventManager()->detectedCollision(contactManifold->getBody0()->getUserPointer(),
-													contactManifold->getBody1()->getUserPointer());
+				contactManifold->getBody1()->getUserPointer());
 	}
 }
 
@@ -154,6 +154,14 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 	playerObject->setMode(ROOMSCALE);
 	AnnDebug() << "Initializing player's physics in roomscale mode";
 	AnnDebug() << "Player can walk around";
+
+	btCollisionShape* sphere;
+	sphere = new btSphereShape(0.25f);
+	btRigidBody* body = new btRigidBody(0, nullptr, sphere);
+
+	playerObject->setShape(sphere);
+	playerObject->setBody(body);
+
 	playerObject->setRoomRefNode(playerAnchorNode);
 }
 
