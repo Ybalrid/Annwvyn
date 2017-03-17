@@ -5,8 +5,7 @@
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
-	std::shared_ptr<AnnPlayer> player,
-	AnnGameObjectList & objects,
+	std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects,
 	AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
 	Broadphase(nullptr),
 	CollisionConfiguration(nullptr),
@@ -159,7 +158,7 @@ void AnnPhysicsEngine::toggleDebugPhysics()
 void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode) const
 {
 	playerObject->setMode(ROOMSCALE);
-	AnnDebug() << "Initializing player's physics in roomscale mode";
+	AnnDebug() << "Initializing player's physics in RoomScale mode";
 	AnnDebug() << "Player can walk around";
 	//TODO add a collision object around the camera rig representing the player's head
 	playerObject->setRoomRefNode(playerAnchorNode);
@@ -169,7 +168,7 @@ void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)
 {
 	playerObject->setMode(STANDING);
 	AnnDebug() << "Initializing player's physics  in standing mode";
-	AnnDebug() << "Capsule rigidbody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
+	AnnDebug() << "Capsule RigidBody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
 	createVirtualBodyShape();
 	createPlayerPhysicalVirtualBody(node);
 	addPlayerPhysicalBodyToDynamicsWorld();
