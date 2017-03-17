@@ -12,7 +12,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	CollisionConfiguration(nullptr),
 	Solver(nullptr),
 	DynamicsWorld(nullptr),
-	//debugDrawer(nullptr),
+	debugDrawer(nullptr),
 	playerRigidBodyState(nullptr),
 	gameObjects(objects),
 	triggerObjects(triggers),
@@ -34,7 +34,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	debugPhysics = false;//by default
 	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get(), "ANN_MAIN_SMGR");
 	DynamicsWorld->setDebugDrawer(debugDrawer);
-	debugDrawer->setUnlitDiffuseMultiplier(10);
+	debugDrawer->setUnlitDiffuseMultiplier(16.0f);
 }
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
@@ -158,6 +158,7 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 	playerObject->setMode(ROOMSCALE);
 	AnnDebug() << "Initializing player's physics in roomscale mode";
 	AnnDebug() << "Player can walk around";
+	//TODO add a colision object around the camera rig representing the player's head
 	playerObject->setRoomRefNode(playerAnchorNode);
 }
 
