@@ -10,6 +10,7 @@ AnnGameObject::AnnGameObject() :
 	Node(nullptr), Model(nullptr), currentAnimation(nullptr),
 	Shape(nullptr),
 	Body(nullptr),
+	bodyMass(0),
 	audioSource(nullptr),
 	state(nullptr)
 {
@@ -132,7 +133,7 @@ void AnnGameObject::setWorldOrientation(AnnQuaternion orient) const
 	Node->_setDerivedOrientation(orient);
 }
 
-void AnnGameObject::setScale(AnnVect3 scale) const
+void AnnGameObject::setScale(AnnVect3 scale, bool scaleMass) const
 {
 	Node->setScale(scale);
 	if (Body&&Shape)
@@ -141,6 +142,18 @@ void AnnGameObject::setScale(AnnVect3 scale) const
 
 		auto world = AnnGetPhysicsEngine()->getWorld();
 		world->removeRigidBody(Body);
+
+		btVector3 inertia;
+		float scaleLenght;
+
+		if (scaleMass)
+			scaleLenght = scale.length() / 3.0f;
+		else
+			scaleLenght = 1.0f;
+
+		Shape->calculateLocalInertia(scaleLenght * bodyMass, inertia);
+		Body->setMassProps(scaleLenght*bodyMass, inertia);
+
 		world->addRigidBody(Body, MASK(1), MASK(0) | MASK(1));
 		Body->activate();
 	}
@@ -151,9 +164,9 @@ void AnnGameObject::setWorldOrientation(float w, float x, float y, float z) cons
 	setWorldOrientation(AnnQuaternion{ w, x, y, z });
 }
 
-void AnnGameObject::setScale(float x, float y, float z) const
+void AnnGameObject::setScale(float x, float y, float z, bool mass) const
 {
-	Node->setScale(AnnVect3(x, y, z));
+	setScale(AnnVect3(x, y, z), mass);
 }
 
 AnnVect3 AnnGameObject::getPosition()
@@ -181,6 +194,10 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	//Some sanity checks
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
+	if (mass < 0) return;
+
+	//Register the mass
+	bodyMass = mass;
 
 	//init shape converter
 	BtOgre::StaticMeshToShapeConverter converter(v1mesh.get());
@@ -217,11 +234,11 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	Shape->setLocalScaling(scale.getBtVector());
 
 	btVector3 inertia;
-	Shape->calculateLocalInertia(mass, inertia);
+	Shape->calculateLocalInertia(bodyMass, inertia);
 
 	//create rigidBody from shape
 	state = new BtOgre::RigidBodyState(Node);
-	Body = new btRigidBody(mass, state, Shape, inertia);
+	Body = new btRigidBody(bodyMass, state, Shape, inertia);
 	Body->setUserPointer(this);
 
 	short bulletMask = MASK(0) | MASK(1);
