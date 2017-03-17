@@ -141,7 +141,7 @@ public:
 		auto Ground = addGameObject("Ground.mesh");
 		Ground->setUpPhysics();
 
-		auto MyObject = addGameObject("MyObject.mesh");
+		auto MyObject = addGameObject("MyObject.mesh", "MyObject");
 		MyObject->setPosition({ 0, 1, -5 });
 		MyObject->setUpPhysics(200, convexShape);
 
@@ -168,8 +168,8 @@ public:
 
 	void runLogic() override
 	{
-		for(auto controller : AnnGetVRRenderer()->getHandControllerArray())
-			if(controller)
+		for (auto controller : AnnGetVRRenderer()->getHandControllerArray())
+			if (controller)
 				controller->rumbleStart(1);
 		/*
 		auto object = AnnGetGameObjectManager()->playerLookingAt();
