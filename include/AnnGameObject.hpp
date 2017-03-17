@@ -225,6 +225,7 @@ namespace Annwvyn
 
 		///Entity
 		Ogre::Item* Model;
+
 		///Version 1 of the mesh, to extract data for physics
 		Ogre::v1::MeshPtr v1mesh;
 
