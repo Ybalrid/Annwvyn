@@ -89,11 +89,11 @@ namespace Annwvyn
 		/// \param x X component of the scale vector
 		/// \param y Y component of the scale vector
 		/// \param z Z component of the scale vector
-		void setScale(float x, float y, float z) const;
+		void setScale(float x, float y, float z, bool scaleMass = true) const;
 
 		///Set scale from Vector 3D
 		/// \param scale Relative scaling factor
-		void setScale(AnnVect3 scale) const;
+		void setScale(AnnVect3 scale, bool scaleMass = true) const;
 
 		///Get Position
 		AnnVect3 getPosition() override;
@@ -242,6 +242,8 @@ namespace Annwvyn
 
 		btCollisionShape* Shape;
 		btRigidBody* Body;
+
+		float bodyMass;
 
 		///AnnAudioEngine audioSource;
 		std::shared_ptr<AnnAudioSource> audioSource;
