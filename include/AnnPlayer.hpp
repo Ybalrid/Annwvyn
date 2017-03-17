@@ -186,6 +186,8 @@ namespace Annwvyn
 		///Shoot a ray form the player to relative -Y. If it hits a rigidbody, call reground() on the impact position
 		void regroundOnPhysicsBody(float lenght = 1000, AnnVect3 preoffset = AnnVect3::ZERO);
 
+		void hintRoomscaleUpdateTranslationReference();
+
 	protected:
 
 		///Object that keep body parameters (= legacy structure)

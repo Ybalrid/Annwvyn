@@ -160,7 +160,14 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 	playerObject->setMode(ROOMSCALE);
 	AnnDebug() << "Initializing player's physics in RoomScale mode";
 	AnnDebug() << "Player can walk around";
-	//TODO add a collision object around the camera rig representing the player's head
+
+	btCollisionShape* sphere;
+	sphere = new btSphereShape(0.25f);
+	btRigidBody* body = new btRigidBody(0, nullptr, sphere);
+
+	playerObject->setShape(sphere);
+	playerObject->setBody(body);
+
 	playerObject->setRoomRefNode(playerAnchorNode);
 }
 

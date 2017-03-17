@@ -327,7 +327,6 @@ bool AnnEngine::refresh()
 		if (SubSystem->needUpdate())
 			SubSystem->update();
 
-	//Update camera from player
 	syncPov();
 
 	//Update VR form real world
