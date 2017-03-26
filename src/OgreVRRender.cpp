@@ -27,7 +27,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	updateTime{ 0 },
 	then{ 0 },
 	now{ 0 },
-	nearClippingDistance{ 0.1f },
+	nearClippingDistance{ 0.01f },
 	farClippingDistance{ 500.0f },
 	feetPosition{ 0, 0, 10 },
 	bodyOrientation{ Ogre::Quaternion::IDENTITY },
