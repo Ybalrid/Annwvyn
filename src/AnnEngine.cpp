@@ -218,8 +218,8 @@ AnnEngine::~AnnEngine()
 }
 
 //All theses getter are for encapsulation purpose. Calling them directly would
-//make very long lines of code. Note that there's a whole bunch of macro in
-//AnnEngine.hpp to help with that
+//make very long lines of code. You can, but you should use the functions in
+//AnnGetter.hpp
 std::shared_ptr<AnnEventManager> AnnEngine::getEventManager() const
 {
 	return eventManager;
