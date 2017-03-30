@@ -35,7 +35,8 @@ BtOgre::LineDrawer::LineDrawer(Ogre::SceneNode* node, Ogre::String datablockId, 
 BtOgre::LineDrawer::~LineDrawer()
 {
 	clear();
-	smgr->destroyManualObject(manualObject);
+	if (manualObject)
+		smgr->destroyManualObject(manualObject);
 }
 
 void BtOgre::LineDrawer::clear()
