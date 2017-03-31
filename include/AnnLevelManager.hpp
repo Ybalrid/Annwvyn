@@ -67,13 +67,17 @@ namespace Annwvyn
 		void removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj) const;
 
 	private:
+
 		///List of levels
 		std::vector<std::shared_ptr<AnnLevel>> levelList;
 
 		///Address to the currently running level
 		std::shared_ptr<AnnLevel> current;
 
+		///Will jumpt to a level at next update
 		bool jumpRequested;
+
+		///Level to jump to at next update
 		level_id jumpTo;
 	};
 }

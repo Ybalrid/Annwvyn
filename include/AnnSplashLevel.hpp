@@ -38,8 +38,9 @@ namespace Annwvyn
 		///Set timeout time in seconds
 		void setTimeout(float time);
 
-		//Set timeout time in milliseconds
+		///Set timeout time in milliseconds
 		void setTimeoutMillisec(unsigned time);
+
 	private:
 		///Time values
 		float timeout, currentTime, startTime;

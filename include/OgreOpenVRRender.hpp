@@ -32,8 +32,13 @@ namespace Annwvyn
 		void rumbleStop() override;
 
 	private:
+		///OpenVR device index of this controller
 		const vr::TrackedDeviceIndex_t deviceIndex;
+
+		///Pointer to the vrSystem
 		vr::IVRSystem* vrSystem;
+
+		///To measure some time
 		long last, current;
 	};
 }

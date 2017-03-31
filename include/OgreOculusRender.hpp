@@ -50,7 +50,10 @@ namespace Annwvyn
 		void rumbleStop() override;
 
 	private:
+		///Current Oculus session
 		ovrSession currentSession;
+
+		///ovrControllerType (left or right touch controller)
 		ovrControllerType myControllerType;
 	};
 }
@@ -136,7 +139,10 @@ public:
 	void handleIPDChange() override;
 private:
 
+	///If we are using separated textures
 	static constexpr bool separateTextures = true;
+
+	///Render textures sizes
 	ovrSizei texSizeL, texSizeR;
 
 	///Create the AnnHandControllerObject for this side
@@ -177,6 +183,8 @@ private:
 
 	///OpenGL Texture ID of the render buffers
 	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureCombinedGLID, ogreRenderTextureCombinedGLID;
+
+	///Array of 2 OpenGL texutre indices
 	std::array<GLuint, 2> oculusRenderTexturesSeparatedGLID, ogreRenderTexturesSeparatedGLID;
 
 	///If true, need to copy the mirrored buffer from Oculus to Ogre
@@ -187,6 +195,8 @@ private:
 
 	///GL texture set for the rendering
 	ovrTextureSwapChain textureCombinedSwapChain;
+
+	///Array of 2 ovrTextureSwapChain
 	std::array<ovrTextureSwapChain, 2> texturesSeparatedSwapChain;
 
 	///offset between render center and camera (for IPD variation)
@@ -218,6 +228,8 @@ private:
 
 	///Index of the current texture in the textureCombinedSwapChain
 	int currentCombinedIndex;
+
+	///Array of 2 current texture swapchain index
 	std::array<int, 2> currentSeparatedIndex;
 
 	///Frame index of the current session status

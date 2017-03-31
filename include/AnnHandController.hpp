@@ -56,9 +56,16 @@ namespace Annwvyn
 	class DLL AnnHandController
 	{
 	public:
+
+		///Destroctor
 		virtual ~AnnHandController() = default;
+
+		///Hash of a string idientifier
 		using AnnHandControllerTypeHash = size_t;
+		///Hash of a string identifier
 		using AnnHandControllerGestureHash = size_t;
+
+		///Individual finger values
 		using proportionalFingerValues = std::array<float, 5>;
 
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
@@ -179,6 +186,7 @@ namespace Annwvyn
 
 	protected:
 
+		///Capabilities of this controller
 		HandControllerCapabilites_t capabilites;
 
 		friend class OgreVRRender;

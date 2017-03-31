@@ -56,8 +56,11 @@ public:
 	void handleIPDChange() override;
 
 private:
+
+	///Singleton pointer
 	static OgreNoVRRender* noVRself;
-	Ogre::Viewport* noVRViewport;
+
+	///True if running
 	bool running;
 };
 

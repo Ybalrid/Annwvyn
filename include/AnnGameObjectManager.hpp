@@ -26,6 +26,8 @@ namespace Annwvyn
 
 		///Update from the game engine
 		void update() override;
+
+		///Get a MeshPtr by loading a v1Mesh ptr, specify the name and where to put the 2 pointers
 		Ogre::MeshPtr getMesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh);
 
 		///Create a game object form the name of an entity.
