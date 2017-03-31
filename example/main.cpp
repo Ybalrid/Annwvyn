@@ -155,8 +155,6 @@ AnnMain()
 
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetResourceManager()->addFileLocation("media/environment");
-	// TODO remove meaa
-	//AnnGetResourceManager()->addFileLocation("media/core");
 	AnnGetResourceManager()->initResources();
 
 	//create and load level objects
