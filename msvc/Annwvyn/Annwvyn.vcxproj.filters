@@ -213,9 +213,6 @@
     <ClInclude Include="..\..\include\AnnLogger.hpp">
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\systemMacro.h">
-      <Filter>Annwvyn\Core\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\OgreOpenVRRender.hpp">
       <Filter>Annwvyn\VrUtility\OgreRenderingForVR\Vive</Filter>
     </ClInclude>
@@ -260,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\BtOgre.hpp">
       <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\systemMacro.h">
+      <Filter>Annwvyn\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
