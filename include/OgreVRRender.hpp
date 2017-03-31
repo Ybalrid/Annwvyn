@@ -70,6 +70,7 @@ public:
 		nbCompositor = 3,
 	};
 
+	///Liist of the levels of shadow filtering available
 	enum class ShadowFiltering
 	{
 		low,

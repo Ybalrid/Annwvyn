@@ -89,9 +89,16 @@ namespace Annwvyn
 		///Update by steeping simulation by one frame time. Should be called only once, and only by AnnEngine
 		void update() override;
 
+		///Bullet Broadphase
 		std::unique_ptr<btBroadphaseInterface> Broadphase;
+
+		///Bullet Default Collision Configuration
 		std::unique_ptr<btDefaultCollisionConfiguration> CollisionConfiguration;
+
+		///Bullet Collision Dispatcher
 		std::unique_ptr<btCollisionDispatcher> Dispatcher;
+
+		///Bullet Sequential Impulse Constraint Solver
 		std::unique_ptr<btSequentialImpulseConstraintSolver> Solver;
 
 		///Bullet Dynamics World
@@ -102,12 +109,20 @@ namespace Annwvyn
 
 		///Debug drawer object from BtOgre
 		std::unique_ptr<BtOgre::DebugDrawer> debugDrawer;
+
+		///Rigid body state from Bt ogre for the Player object
 		BtOgre::RigidBodyState* playerRigidBodyState;
 
+		///Reference to the list of all game object
 		AnnGameObjectList& gameObjects;
+
+		///Reference to the list of all trigger objects
 		AnnTriggerObjectList& triggerObjects;
+
+		///Shared pointer to the player
 		std::shared_ptr<AnnPlayer> playerObject;
 
+		///Default value for gravity. Should be initialized to (0, -9.82f, 0) unless something is wrong with this planet.
 		AnnVect3 defaultGravity;
 	};
 }

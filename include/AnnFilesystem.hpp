@@ -85,17 +85,31 @@ namespace Annwvyn
 
 		///Get the FileReader object
 		std::shared_ptr<AnnFileReader> getFileReader() const;
+
 		///Get the FileWriter object
 		std::shared_ptr<AnnFileWriter> getFileWriter() const;
 
 	private:
+		///Name of the save directory
 		std::string saveDirectoryName;
+
+		///Path to the save directory
 		std::string pathToUserDir;
+
+		///File writter
 		std::shared_ptr<AnnFileWriter> fileWriter;
+
+		///File reader
 		std::shared_ptr<AnnFileReader> fileReader;
+
+		///Data cache for saves
 		std::list<std::shared_ptr<AnnSaveFileData>> cachedData;
 	public:
+
+		///Escape map
 		static std::vector<char> charToEscape;
+
+		///Strip map
 		static std::vector<char> charToStrip;
 	};
 
@@ -140,19 +154,26 @@ namespace Annwvyn
 		friend class AnnFileReader;
 		friend class AnnFilesystemManager;
 
+		///Name of the file
 		std::string fileName;
+
+		///Stored data
 		std::map<std::string, std::string> storedTextData;
 
+		///If true, the content of this object should be wrote to disk when possible
 		bool changed;
 	};
 
 	///Interface class to switch from text to useful data.
 	class DLL AnnSaveDataInterpretor
 	{
-	//Inherit from this to use your saved data
+		//Inherit from this to use your saved data
 
 	public:
-		virtual ~AnnSaveDataInterpretor();
+
+		///Default destructor
+		virtual ~AnnSaveDataInterpretor() = default;
+
 		///FileInterpetor
 		AnnSaveDataInterpretor(std::shared_ptr<AnnSaveFileData> data);
 
@@ -173,6 +194,7 @@ namespace Annwvyn
 		virtual void extract() = 0;
 
 	protected:
+		///Object
 		std::shared_ptr<AnnSaveFileData> dataObject;
 	};
 }
