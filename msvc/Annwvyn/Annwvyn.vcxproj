@@ -286,7 +286,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md" />
-    <None Include="..\..\TODO.md" />
     <None Include="Main Class Diagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
