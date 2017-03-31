@@ -16,15 +16,6 @@ visibility(false),
 lastUpdate{ 0 },
 refreshRate{ 1.0 / 15.0 }
 {
-	//Define the custom material
-	//auto Console = Ogre::MaterialManager::getSingleton().create("Console", "General", true);
-	//auto technique = Console.getPointer()->getTechnique(0);
-	//auto pass = technique->getPass(0);
-	//pass->setLightingEnabled(false);
-	//pass->setDepthFunction(Ogre::CompareFunction::CMPF_ALWAYS_PASS);
-
-	//auto hlmsUnlit = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HlmsTypes::HLMS_UNLIT);
-
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
 	* on the "points" array :
