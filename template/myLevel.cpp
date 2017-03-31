@@ -18,14 +18,18 @@ void MyLevel::load()
 	Sinbad->setUpPhysics(250, boxShape);
 
 	//Load Ground:
-	auto Ground(addGameObject("Ground.mesh"));
+	auto Ground(addGameObject("floorplane.mesh"));
 	Ground->setPosition({ 0, 0, 0 });
 	Ground->setUpPhysics();
 
 	//Create a light source
 	auto Sun(addLightObject("MySun"));
 	Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-	Sun->setPower(97000);
+	Sun->setPower(97);
+
+	auto OtherLight(addLightObject("Other Light"));
+	OtherLight->setPower(50);
+	OtherLight->setPosition({ 0, 1, 1 });
 
 	//zenith sunlight
 	Sun->setDirection(AnnVect3{ -1, -1.5f, -1 }.normalisedCopy());

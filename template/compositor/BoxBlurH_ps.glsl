@@ -20,7 +20,7 @@ vec3 toSRGB( vec3 x )
 
 uniform vec4 invTex0Size;
 
-#define NUM_SAMPLES 65
+#define NUM_SAMPLES 11
 
 void main()
 {
