@@ -468,10 +468,6 @@ void AnnEventManager::keyboardUsedForText(bool state)
 
 void AnnEventManager::userSpaceDispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* l)
 {
-	//for (auto weakListener : listeners)
-	//	if (auto listener = weakListener.lock())
-	//		listener->EventFromUserSubsystem(e, l);
-
 	userSpaceEventBuffer.push_back(std::make_pair(e, l));
 }
 

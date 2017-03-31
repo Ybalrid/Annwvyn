@@ -371,28 +371,6 @@ void Ann3DTextPlane::createMaterial()
 	datablock->setAlphaTest(Ogre::CompareFunction::CMPF_GREATER);
 	datablock->setAlphaTestThreshold(0.33f);
 	datablock->setTwoSidedLighting(true);
-
-	/*
-	generateMaterialName();
-	AnnDebug() << "materialName : " << materialName;
-
-	auto material = Ogre::MaterialManager::getSingleton().create(materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true);
-	auto materialPass = material.getPointer()->getTechnique(0)->getPass(0);
-	materialPass->setCullingMode(Ogre::CullingMode::CULL_NONE);
-	materialPass->setAlphaRejectSettings(Ogre::CompareFunction::CMPF_EQUAL, 255, true);
-	materialPass->setTextureAnisotropy(8);
-	materialPass->setTextureFiltering(Ogre::TextureFilterOptions::TFO_ANISOTROPIC);
-	auto renderPlaneTextureUnitState = materialPass->createTextureUnitState();
-
-	texture = Ogre::TextureManager::getSingleton()
-		.createManual(AnnGetStringUtility()->getRandomString(),
-					  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-					  Ogre::TEX_TYPE_2D,
-					  width * resolutionFactor,
-					  height * resolutionFactor,
-					  0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET | Ogre::TU_AUTOMIPMAP);
-	renderPlaneTextureUnitState->setTexture(texture);
-	*/
 }
 
 void Ann3DTextPlane::autoUpdateCheck()
