@@ -144,7 +144,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Annwvyn\include;..\..\..\AL\openal-soft\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\Ogre21SDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;.;..\..\..\openvr\headers;..\..\..\chaiscript;..\..\..\glfw-3.2.1.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Annwvyn\include;..\..\..\AL\openal-soft\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\Ogre21SDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;.;..\..\..\openvr\headers;..\..\..\chaiscript;..\..\..\glfw-3.2.1.bin.WIN64\include;..\..\..\tinyxml2\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalOptions>-Zm232 %(AdditionalOptions)</AdditionalOptions>
@@ -160,7 +160,7 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <PreventDllBinding>false</PreventDllBinding>
-      <AdditionalDependencies>Annwvyn.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;OgreHlmsPbs.lib;OgreHlmsUnlit.lib;OIS.lib;libovr.lib;openvr_api.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Annwvyn.lib;OgreMain.lib;OgreOverlay.lib;OgreHlmsPbs.lib;OgreHlmsUnlit.lib;OIS.lib;ws2_32.lib;Winmm.lib;OpenAL32.lib;libsndfile-1.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
       <LinkStatus>false</LinkStatus>
     </Link>

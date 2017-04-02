@@ -13,9 +13,6 @@
     <Filter Include="Annwvyn\Core">
       <UniqueIdentifier>{9c9fb862-e814-46a3-bf12-0f38f3eca234}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Internaly packaged libraries\tinyxml2">
-      <UniqueIdentifier>{1efbc9df-fb99-462b-b2b4-2a0d005ea938}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Internaly packaged libraries\BtOgre">
       <UniqueIdentifier>{5ebdfa49-14be-4e50-a3bd-28d4b94ec4b6}</UniqueIdentifier>
     </Filter>
@@ -137,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\AnnXmlLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\tinyxml2.h">
-      <Filter>Internaly packaged libraries\tinyxml2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\BtOgrePG.h">
       <Filter>Internaly packaged libraries\BtOgre</Filter>
@@ -295,9 +289,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnDefaultEventListener.cpp">
       <Filter>Annwvyn\SubSystems\EventSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\tinyxml2.cpp">
-      <Filter>Internaly packaged libraries\tinyxml2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSubSystem.cpp">
       <Filter>Annwvyn\SubSystems</Filter>

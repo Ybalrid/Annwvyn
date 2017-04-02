@@ -353,7 +353,7 @@ protected:
 
 private:
 	///left, right enums
-	enum side : uint8_t { left = 0x1, right = 0x2 };
+	enum side : uint8_t { left = 0x0, right = 0x1 };
 };
 
 #endif

@@ -8,7 +8,7 @@
 #define ANN_XML_LEVEL
 #include "systemMacro.h"
 #include "AnnLevel.hpp"
-#include "tinyxml2.h"
+#include <tinyxml2.h>
 #include "AnnTypes.h"
 #include <string>
 
