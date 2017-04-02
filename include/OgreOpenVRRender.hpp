@@ -10,12 +10,10 @@
 
 #ifdef _WIN32
 #include <Windows.h>
-#include <glew.h>
 #endif
 
 #include "AnnErrorCode.hpp"
 #include "AnnTypes.h"
-
 #include "AnnHandController.hpp"
 
 namespace Annwvyn
@@ -34,8 +32,13 @@ namespace Annwvyn
 		void rumbleStop() override;
 
 	private:
+		///OpenVR device index of this controller
 		const vr::TrackedDeviceIndex_t deviceIndex;
+
+		///Pointer to the vrSystem
 		vr::IVRSystem* vrSystem;
+
+		///To measure some time
 		long last, current;
 	};
 }
@@ -78,9 +81,6 @@ public:
 
 	///Recenter the tracking origin
 	void recenter() override;
-
-	///Change the background color of every viewport on the rendering pipeline
-	void changeViewportBackgroundColor(Ogre::ColourValue color) override;
 
 	///Return true if this VR system has an integrated audio device
 	bool usesCustomAudioDevice() override { return false; }
@@ -141,10 +141,7 @@ private:
 	unsigned int windowWidth, windowHeight;
 
 	///OpenGL "id" of the render textures
-	GLuint rttTextureGLID;
-
-	///EyeCameraViewport
-	std::array<Ogre::Viewport*, 2> rttViewports;
+	GLuint rttTextureGLID, rttLeftTextureGLID, rttRightTextureGLID;
 
 	///Use hardware gamma correction
 	bool gamma;
@@ -153,10 +150,7 @@ private:
 	vr::ETextureType TextureType;
 
 	///OpenVR texture handlers
-	vr::Texture_t vrTextures;
-
-	///Viewport located on a window
-	Ogre::Viewport* windowViewport;
+	std::array<vr::Texture_t, 2> vrTextures;
 
 	///OpenVR device strings
 	std::string strDriver, strDisplay;

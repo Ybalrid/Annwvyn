@@ -7,6 +7,11 @@
 #include "AnnTypes.h"
 #include "AnnTriggerObject.hpp"
 
+#include <OgreMesh.h>
+#include <OgreMesh2.h>
+#include <OgreMeshManager.h>
+#include <OgreMeshManager2.h>
+
 #include <memory>
 
 namespace Annwvyn
@@ -22,11 +27,14 @@ namespace Annwvyn
 		///Update from the game engine
 		void update() override;
 
+		///Get a MeshPtr by loading a v1Mesh ptr, specify the name and where to put the 2 pointers
+		Ogre::MeshPtr getMesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh);
+
 		///Create a game object form the name of an entity.
 		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
 		/// \param object An instance of an empty AnnGameObject. Useful for creating object of inherited class
 		std::shared_ptr<AnnGameObject> createGameObject(const char entityName[], std::string identifier = "",
-														std::shared_ptr<AnnGameObject> object = std::make_shared<AnnGameObject>()); //object factory
+			std::shared_ptr<AnnGameObject> object = std::make_shared<AnnGameObject>()); //object factory
 
 		///Remove object from the manager. Object will be destroyed when no more references are in scope
 		/// \param object the object to remove
@@ -55,6 +63,9 @@ namespace Annwvyn
 		///Get an AnnGameObject for the required string; return nullptr if object cannot be found
 		std::shared_ptr<AnnGameObject> getObjectFromID(std::string idString);
 
+		///Set the options to pass while converting Ogre V1 meshes to Ogre V2 meshes
+		void setImportParameter(bool halfPosition, bool halfTextureCoord, bool qTangents);
+
 	private:
 		friend class AnnEngine;
 
@@ -69,6 +80,8 @@ namespace Annwvyn
 		std::unordered_map<std::string, std::shared_ptr<AnnGameObject>> identifiedObjects;
 
 		static unsigned long long id;
+
+		bool halfPos, halfTexCoord, qTan;
 	};
 }
 

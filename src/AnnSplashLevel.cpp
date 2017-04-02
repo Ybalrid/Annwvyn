@@ -3,6 +3,7 @@
 #include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 
@@ -13,73 +14,103 @@ startTime(-1),
 next(nextLevel),
 CurvedPlane{ nullptr },
 Splash{ nullptr },
-splashImage(resourceName),
+splashImageName(resourceName),
 hasBGM(false) {}
 
 void AnnSplashLevel::load()
 {
 	AnnDebug() << "Ignore physics";
-	AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(Ogre::ColourValue::Black));
-	AnnGetPlayer()->ignorePhysics = true;
+	AnnGetPlayer()->setPosition({ 0,0,10 });
+	AnnGetPlayer()->resetPlayerPhysics();
 	AnnGetPlayer()->setOrientation(Ogre::Euler(0, 0, 0));
+	AnnGetPlayer()->ignorePhysics = false;
 	AnnGetPhysicsEngine()->changeGravity(AnnVect3::ZERO);
 
+	float ev = 1;
+	AnnGetSceneryManager()->setExposure(ev, ev, ev);
+	AnnGetSceneryManager()->setSkyColor(AnnColor(0, 0, 0), 0);
+
 	//Create manual material
-	AnnDebug() << "Creating a material with no culling, now lighting, and the wanted texture";
-	auto Console = Ogre::MaterialManager::getSingleton().create("Splash", "General", true);
-	auto technique = Console.getPointer()->getTechnique(0);
-	auto pass = technique->getPass(0);
-	pass->setLightingEnabled(false);
-	pass->setCullingMode(Ogre::CullingMode::CULL_NONE);
-	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
-	auto texture = Ogre::TextureManager::getSingleton().load(splashImage, "General");
-	displaySurfaceTextureUniteState->setTexture(texture);
+	auto unlit = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT);
+	auto datablock = unlit->getDatablock("Splash");
+
+	if (!datablock)
+	{
+		auto macroblock = Ogre::HlmsMacroblock();
+		auto blendblock = Ogre::HlmsBlendblock();
+		macroblock.mCullMode = Ogre::CULL_NONE;
+		macroblock.mDepthCheck = false;
+		macroblock.mDepthWrite = false;
+		macroblock.mScissorTestEnabled = false;
+		datablock = unlit->createDatablock("Splash", "Splash", macroblock, blendblock, Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->defaultResourceGroupName);
+	}
+
+	//Get the texture
+	auto texture = Ogre::TextureManager::getSingleton().getByName(splashImageName);
+	if (!texture) texture = Ogre::TextureManager::getSingleton().load(splashImageName, AnnGetResourceManager()->defaultResourceGroupName, Ogre::TEX_TYPE_2D, 0, 1, false, Ogre::PF_UNKNOWN, true);
+	if (!texture) throw AnnInitializationError(ANN_ERR_NOTINIT, "Texture not found for splash " + splashImageName);
+
+	//Set datablock parameters
+	static_cast<Ogre::HlmsUnlitDatablock*>(datablock)->setColour(Ogre::ColourValue::White * 97);
+	static_cast<Ogre::HlmsUnlitDatablock*>(datablock)->setTexture(Ogre::HlmsTextureManager::TEXTURE_TYPE_DIFFUSE, 0, texture);
 
 	//Create manual object
 	AnnDebug() << "Creating the display \"plane\" for the splash";
 	auto smgr(AnnGetEngine()->getSceneManager());
-	CurvedPlane = smgr->createManualObject(AnnGetStringUtility()->getRandomString());
+	CurvedPlane = smgr->createManualObject(Ogre::SCENE_DYNAMIC);
 
-	CurvedPlane->begin("Splash", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
+	CurvedPlane->begin("Splash", Ogre::OT_TRIANGLE_STRIP);
 
 	const auto CurveC(1.f);
-	const auto CurveB(CurveC / 4);
+	const auto CurveB(CurveC / 4.0f);
+
+	int index = 0;
 	//10 vertex:
 	//1
 	CurvedPlane->position(-2, -2, CurveC);
 	CurvedPlane->textureCoord(0, 1);
+	CurvedPlane->index(index++);
 	//2
 	CurvedPlane->position(-2, 2, CurveC);
 	CurvedPlane->textureCoord(0, 0);
+	CurvedPlane->index(index++);
 	//3
 	CurvedPlane->position(-1, -2, CurveB);
 	CurvedPlane->textureCoord(.25, 1);
+	CurvedPlane->index(index++);
 	//4
 	CurvedPlane->position(-1, 2, CurveB);
 	CurvedPlane->textureCoord(.25, 0);
+	CurvedPlane->index(index++);
 	//5
 	CurvedPlane->position(0, -2, 0);
 	CurvedPlane->textureCoord(.5, 1);
+	CurvedPlane->index(index++);
 	//6
 	CurvedPlane->position(0, 2, 0);
 	CurvedPlane->textureCoord(.5, 0);
+	CurvedPlane->index(index++);
 	//7
 	CurvedPlane->position(1, -2, CurveB);
 	CurvedPlane->textureCoord(.75, 1);
+	CurvedPlane->index(index++);
 	//8
 	CurvedPlane->position(1, 2, CurveB);
 	CurvedPlane->textureCoord(.75, 0);
+	CurvedPlane->index(index++);
 	//9
 	CurvedPlane->position(2, -2, CurveC);
 	CurvedPlane->textureCoord(1, 1);
+	CurvedPlane->index(index++);
 	//10
 	CurvedPlane->position(2, 2, CurveC);
 	CurvedPlane->textureCoord(1, 0);
+	CurvedPlane->index(index);
 
 	CurvedPlane->end();
 
 	AnnDebug() << "Add plane to scene";
-	Splash = smgr->getRootSceneNode()->createChildSceneNode();
+	Splash = smgr->getRootSceneNode()->createChildSceneNode(Ogre::SCENE_DYNAMIC);
 	Splash->attachObject(CurvedPlane);
 	Splash->setScale(10, 10, 10);
 }
@@ -93,6 +124,8 @@ void AnnSplashLevel::setBGM(std::string path, bool preload)
 
 void AnnSplashLevel::runLogic()
 {
+	Splash->setPosition(AnnGetPlayer()->getPosition() + AnnVect3{ 0,0,-10 });
+
 	//If start time not set yet
 	if (startTime == -1)
 	{
@@ -111,9 +144,12 @@ void AnnSplashLevel::runLogic()
 	}
 
 	//Run the following only if you set a "next" level to jump to
-	if (auto nextLevel = next.lock() &&
-		AnnGetEngine()->getTimeFromStartUp() - startTime > timeout)
+	auto nextLevel = next.lock();
+	if (nextLevel && AnnGetEngine()->getTimeFromStartUp() - startTime > timeout)
+	{
+		startTime = -1;
 		AnnGetEngine()->getLevelManager()->jump(nextLevel);
+	}
 }
 
 void AnnSplashLevel::unload()
@@ -130,7 +166,6 @@ void AnnSplashLevel::unload()
 	AnnGetPlayer()->ignorePhysics = false;
 	AnnGetPlayer()->setPosition(AnnVect3(0, 0, 10));
 	AnnGetPlayer()->resetPlayerPhysics();
-	AnnGetSceneryManager()->setWorldBackgroundColor();
 }
 
 void AnnSplashLevel::setNextLevel(std::shared_ptr<AnnLevel> level)

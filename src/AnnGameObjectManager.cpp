@@ -8,7 +8,7 @@
 using namespace Annwvyn;
 unsigned long long AnnGameObjectManager::id;
 
-AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
+AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager"), halfPos(true), halfTexCoord(true), qTan(true)
 {
 	//There will only be one manager, set the id to 0
 	id = 0;
@@ -26,30 +26,67 @@ void AnnGameObjectManager::update()
 	}
 }
 
-std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char entityName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
+Ogre::MeshPtr AnnGameObjectManager::getMesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh)
 {
-	AnnDebug("Creating a game object from the entity " + std::string(entityName));
+	v1Mesh = Ogre::v1::MeshManager::getSingleton().load(meshName,
+		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+		Ogre::v1::HardwareBuffer::HBU_STATIC,
+		Ogre::v1::HardwareBuffer::HBU_STATIC);
+
+	static const std::string sufix = "_V2mesh";
+
+	//Generate the name of the v2 mesh
+	auto v2meshName = meshName + sufix;
+	AnnDebug() << "Mesh v2 name : " << v2meshName;
+
+	//v2Mesh
+	v2Mesh = Ogre::MeshManager::getSingleton().getByName(v2meshName);
+	if (!v2Mesh) //create and import
+	{
+		AnnDebug() << v2meshName << " doesn't exist yet in the v2 MeshManager, creating it and loading the v1 " << meshName << " geometry";
+		v2Mesh = Ogre::MeshManager::getSingleton().createManual(v2meshName, AnnResourceManager::defaultResourceGroupName);
+		v2Mesh->importV1(v1Mesh.get(), halfPos, halfTexCoord, qTan);
+	}
+
+	return v2Mesh;
+}
+
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char meshName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
+{
+	AnnDebug("Creating a game object from the mesh file :  " + std::string(meshName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
-	auto ent = smgr->createEntity(entityName);
+
+	Ogre::v1::MeshPtr v1Mesh;
+	Ogre::MeshPtr v2Mesh;
+	getMesh(meshName, v1Mesh, v2Mesh);
+
+	//Create an item
+	Ogre::Item* item = smgr->createItem(v2Mesh);
+
+	//Create a node
 	auto node = smgr->getRootSceneNode()->createChildSceneNode();
 
-	node->attachObject(ent);
+	//Attach
+	node->attachObject(item);
+
+	//Set GameObject members
 	obj->setNode(node);
-	obj->setEntity(ent);
+	obj->setItem(item);
+	obj->setPhysicsMesh(v1Mesh);
 	obj->audioSource = AnnGetAudioEngine()->createSource();
 
 	//id will be unique to every non-identified object.
 	//The identifier name can be empty, meaning that we have to figure out an unique name.
 	//In that case we will append to the entity name + a number that will always be incremented.
 	if (identifier.empty())
-		identifier = entityName + std::to_string(++id);
+		identifier = meshName + std::to_string(++id);
 
 	AnnDebug() << "The object " << identifier << " has been created. Annwvyn memory address " << obj;
 	AnnDebug() << "This object take " << sizeof *obj.get() << " bytes";
 
 	obj->name = identifier;
 	identifiedObjects[identifier] = obj;
-	Objects.push_back(std::shared_ptr<AnnGameObject>(obj));
+	Objects.push_back(obj);
 
 	obj->postInit();
 	return obj;
@@ -57,7 +94,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 
 void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> object)
 {
-	AnnDebug() << "Removed object " << object.get();
+	AnnDebug() << "Removed object " << object->getName();
 
 	if (!object) throw AnnNullGameObjectError();
 
@@ -127,7 +164,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 	//read the result list
 	auto result = std::find_if(results.begin(), results.end(), [](const Ogre::RaySceneQueryResultEntry& entry)
 	{
-		if (entry.movable && entry.movable->getMovableType() == "Entity") return true;
+		if (entry.movable && entry.movable->getMovableType() == "Item") return true;
 		return false;
 	});
 
@@ -145,4 +182,11 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getObjectFromID(std::string
 	if (object != identifiedObjects.end())
 		return object->second;
 	return nullptr;
+}
+
+void AnnGameObjectManager::setImportParameter(bool halfPosition, bool halfTextureCoord, bool qTangents)
+{
+	halfPos = halfPosition;
+	halfTexCoord = halfTextureCoord;
+	qTan = qTangents;
 }

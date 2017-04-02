@@ -4,10 +4,10 @@
  * \author A. Brainville (Ybalrid)
  */
 
-///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
-///(even if now I'm not using code from him anymore)
-///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
-///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
+ ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
+ ///(even if now I'm not using code from him anymore)
+ ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
+ ///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
 
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
@@ -15,7 +15,6 @@
 #include "OgreVRRender.hpp"
 
 //Oculus Rift Lib
-//#include <OVR.h>
 #include <OVR_CAPI_GL.h>
 
 //C++ SDL Includes
@@ -30,7 +29,6 @@
 #include "systemMacro.h"
 #ifdef _WIN32
 #include <Windows.h>
-#include <glew.h>
 #endif
 
 #include "AnnErrorCode.hpp"
@@ -52,7 +50,10 @@ namespace Annwvyn
 		void rumbleStop() override;
 
 	private:
+		///Current Oculus session
 		ovrSession currentSession;
+
+		///ovrControllerType (left or right touch controller)
 		ovrControllerType myControllerType;
 	};
 }
@@ -113,9 +114,6 @@ public:
 	///Compute from OVR the correct projection matrix for the given clipping distance
 	void updateProjectionMatrix() override;
 
-	///change main viewport background color
-	void changeViewportBackgroundColor(Ogre::ColourValue color) override;
-
 	///Show in debug window what the camera are seeing
 	static void showRawView();
 
@@ -141,6 +139,12 @@ public:
 	void handleIPDChange() override;
 private:
 
+	///If we are using separated textures
+	static constexpr bool separateTextures = true;
+
+	///Render textures sizes
+	ovrSizei texSizeL, texSizeR;
+
 	///Create the AnnHandControllerObject for this side
 	void initializeHandObjects(const oorEyeType side);
 
@@ -148,7 +152,7 @@ private:
 	void initializeControllerAxes(const oorEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
 
 	///Extract usefull data from the button state, including buffered pressed/released events
-	void ProcessButtonStates(const oorEyeType side);
+	void processButtonStates(const oorEyeType side);
 
 	///Get the state of the touch controller and update the handController objects accordingly
 	void updateTouchControllers();
@@ -165,9 +169,6 @@ private:
 	///Object for getting informations from the Oculus Rift
 	OculusInterface* Oculus;
 
-	///Viewports on textures. Textures are separated. One viewport for each textures
-	std::array<Ogre::Viewport*, 2> vpts;
-
 	///Timing in seconds
 	double currentFrameDisplayTime, lastFrameDisplayTime;
 
@@ -181,7 +182,10 @@ private:
 	ovrMirrorTexture mirrorTexture;
 
 	///OpenGL Texture ID of the render buffers
-	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureGLID, renderTextureGLID;
+	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureCombinedGLID, ogreRenderTextureCombinedGLID;
+
+	///Array of 2 OpenGL texutre indices
+	std::array<GLuint, 2> oculusRenderTexturesSeparatedGLID, ogreRenderTexturesSeparatedGLID;
 
 	///If true, need to copy the mirrored buffer from Oculus to Ogre
 	static bool mirrorHMDView;
@@ -190,7 +194,10 @@ private:
 	ovrLayerEyeFov layer;
 
 	///GL texture set for the rendering
-	ovrTextureSwapChain textureSwapChain;
+	ovrTextureSwapChain textureCombinedSwapChain;
+
+	///Array of 2 ovrTextureSwapChain
+	std::array<ovrTextureSwapChain, 2> texturesSeparatedSwapChain;
 
 	///offset between render center and camera (for IPD variation)
 	std::array<ovrVector3f, 2> offset;
@@ -219,8 +226,11 @@ private:
 	///State of the performance HUD
 	int perfHudMode;
 
-	///Index of the current texture in the textureSwapChain
-	int currentIndex;
+	///Index of the current texture in the textureCombinedSwapChain
+	int currentCombinedIndex;
+
+	///Array of 2 current texture swapchain index
+	std::array<int, 2> currentSeparatedIndex;
 
 	///Frame index of the current session status
 	unsigned long long int currentSessionStatusFrameIndex;
@@ -230,9 +240,6 @@ private:
 
 	///Convert an ovrQuatf to an Ogre::Quaternion
 	static Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q);
-
-	///Viewport for the debug window
-	Ogre::Viewport* debugViewport;
 
 	///Ogre Scene Manager
 	Ogre::SceneManager* debugSmgr;

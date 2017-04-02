@@ -16,13 +16,10 @@
 #include <btBulletDynamicsCommon.h>
 
 //btOgre
-#include "BtOgrePG.h"
-#include "BtOgreGP.h"
-#include "BtOgreExtras.h"
+#include "BtOgre.hpp"
 
+//AnnEngine
 #include "AnnEngine.hpp"
-
-//#include "AnnSubsytem.hpp"
 
 namespace Annwvyn
 {
@@ -62,9 +59,10 @@ namespace Annwvyn
 		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body) const;
 
-		///Do not use anymore, choose to call initPlayerStandingPhysics, or initPlayerRoomscalePhysics.
-		DEPRECATED	void initPlayerPhysics(Ogre::SceneNode* cameraNode) { initPlayerStandingPhysics(cameraNode); }
+		///Init the class "standing" desinged for the Oculus physics where the player is not moving in the room at all
 		void initPlayerStandingPhysics(Ogre::SceneNode* playerAnchorNode);
+
+		///Init the "roomscale" physics model where the controlls don't break when the player move is ass in the real world
 		void initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode) const;
 
 		///Set the debug drawer state
@@ -82,15 +80,25 @@ namespace Annwvyn
 		///Toggle the debug physics overlay
 		void toggleDebugPhysics();
 
+		///Set the color multiplier to convert raw color to HDR light value
+		void setDebugDrawerColorMultiplier(float value) const;
+
 	private:
 
 		friend class AnnEngine;
 		///Update by steeping simulation by one frame time. Should be called only once, and only by AnnEngine
 		void update() override;
 
+		///Bullet Broadphase
 		std::unique_ptr<btBroadphaseInterface> Broadphase;
+
+		///Bullet Default Collision Configuration
 		std::unique_ptr<btDefaultCollisionConfiguration> CollisionConfiguration;
+
+		///Bullet Collision Dispatcher
 		std::unique_ptr<btCollisionDispatcher> Dispatcher;
+
+		///Bullet Sequential Impulse Constraint Solver
 		std::unique_ptr<btSequentialImpulseConstraintSolver> Solver;
 
 		///Bullet Dynamics World
@@ -100,13 +108,21 @@ namespace Annwvyn
 		bool debugPhysics;
 
 		///Debug drawer object from BtOgre
-		BtOgre::DebugDrawer* debugDrawer;
+		std::unique_ptr<BtOgre::DebugDrawer> debugDrawer;
+
+		///Rigid body state from Bt ogre for the Player object
 		BtOgre::RigidBodyState* playerRigidBodyState;
 
+		///Reference to the list of all game object
 		AnnGameObjectList& gameObjects;
+
+		///Reference to the list of all trigger objects
 		AnnTriggerObjectList& triggerObjects;
+
+		///Shared pointer to the player
 		std::shared_ptr<AnnPlayer> playerObject;
 
+		///Default value for gravity. Should be initialized to (0, -9.82f, 0) unless something is wrong with this planet.
 		AnnVect3 defaultGravity;
 	};
 }

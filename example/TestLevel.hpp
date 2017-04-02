@@ -17,7 +17,6 @@ public:
 		setAnimation("Dance");
 		playAnimation(true);
 		loopAnimation(true);
-		//setUpPhysics(40, boxShape);
 	}
 
 	void atRefresh() override
@@ -35,17 +34,19 @@ public:
 	{
 		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
 		//Set some ambient light
-		AnnGetSceneryManager()->setAmbientLight(AnnColor(.6f, .6f, .6f));
+		AnnGetSceneryManager()->setExposure(1, -0.25, +0.25);
+		AnnGetSceneryManager()->setSkyColor(AnnColor(0.05f, 0.45f, 1.f), 15.f);
 
 		//We add our brand new 3D object
 		auto MyObject = addGameObject("MyObject.mesh");
-		MyObject->setPosition(5, 1, 0);//We put it 5 meters to the right, and 1 meter up...
-		//MyObject->setUpPhysics(); // <---- This activate the physics for the object as static geometry
-		MyObject->setUpPhysics(100, convexShape); // <------- this activate the physics as a dynamic object. We need to tell the shape approximation to use. and a mass in Kg
+		MyObject->setPosition(5, 1, 0);				//We put it 5 meters to the right, and 1 meter up...
+		//MyObject->setUpPhysics();					// <---- This activate the physics for the object as static geometry
+		MyObject->setUpPhysics(100, convexShape);	// <---- This activate the physics as a dynamic object. We need to tell the shape approximation to use. and a mass in Kg
 		MyObject->attachScript("DummyBehavior2");
 		//The shape approximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
+		MyObject->setFrictionCoef(0.84f);
 
-		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Accent test: 'é' Hello, Virtual World!\nthis is one line only one line only", 128, 96.0f, "LibSerif", "LiberationSerif-regular.ttf");
+		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Hello, Virtual World!\n\nTesting line wrap right now : a bc def ghij klmn opqr stuvw xyz ", 128, 96.0f, "LibSerif", "LiberationSerif-regular.ttf");
 		//text->setTextAlign(text->ALIGN_CENTER);
 		text->setBackgroundColor(AnnColor(0, 1, 0));
 		text->setPosition({ 0, 0.5f, -1 });
@@ -58,28 +59,16 @@ public:
 		//Add other source of light
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		Sun->setDirection(AnnVect3::NEGATIVE_UNIT_Y + 1.5f* AnnVect3::NEGATIVE_UNIT_Z);
+		Sun->setDirection(AnnVect3{ 0.5f, -1.5f, -2.25f }.normalisedCopy());
+		Sun->setPower(97.f);
 
 		//Create objects and register them as content of the level
 		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "SuperSinbad", std::make_shared<Sinbad>());
 		levelContent.push_back(S);
 		S->playSound("media/monster.wav", true, 1);
 		S->attachScript("DummyBehavior");
-
-		auto Gizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "Gizmo");
-		auto ChildGizmo = AnnGetGameObjectManager()->createGameObject("Gizmo.mesh", "ChildGizmo");
-		Gizmo->attachChildObject(ChildGizmo);
-		ChildGizmo->setPosition(1, 1, 1);
-
-		//S is parent
-		//Gizmo is child
-		S->attachChildObject(Gizmo);
-		Gizmo->setScale(10, 10, 10);
-
-		//If both of theses lines are run, the 2nd one will crash the engine
-		//ChildGizmo->setUpPhysics(10, boxShape);
-
 		S->setUpPhysics(10, boxShape);
+		S->setFrictionCoef(0.75f);
 
 		//Add water
 		auto Water = addGameObject("environment/Water.mesh");
@@ -87,10 +76,11 @@ public:
 		//Add the island
 		auto Island = addGameObject("environment/Island.mesh");
 		Island->setUpPhysics();
+		Island->setFrictionCoef(0.75);
 
 		//Add the sign
 		auto Sign(addGameObject("environment/Sign.mesh"));
-		Sign->setPosition(1, -0, -2);
+		Sign->setPosition(1, -0.15, -2);
 		Sign->setUpPhysics(0, staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
@@ -128,7 +118,7 @@ class PhysicsDebugLevel : LEVEL
 {
 	void load() override
 	{
-		AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(0, 0, 0));
+		//AnnGetSceneryManager()->setWorldBackgroundColor(AnnColor(0, 0, 0));
 		AnnGetPhysicsEngine()->getWorld()->setGravity(btVector3(0, 0, 0));
 		AnnGetPlayer()->setPosition(AnnVect3::ZERO);
 		AnnGetPlayer()->resetPlayerPhysics();

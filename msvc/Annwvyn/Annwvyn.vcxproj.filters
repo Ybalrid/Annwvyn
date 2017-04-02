@@ -213,9 +213,6 @@
     <ClInclude Include="..\..\include\AnnLogger.hpp">
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\systemMacro.h">
-      <Filter>Annwvyn\Core\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\OgreOpenVRRender.hpp">
       <Filter>Annwvyn\VrUtility\OgreRenderingForVR\Vive</Filter>
     </ClInclude>
@@ -258,6 +255,12 @@
     <ClInclude Include="..\..\include\AnnStringUtility.hpp">
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\BtOgre.hpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\systemMacro.h">
+      <Filter>Annwvyn\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\pch\stdafx.cpp">
@@ -295,9 +298,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\tinyxml2.cpp">
       <Filter>Internaly packaged libraries\tinyxml2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\BtOgre.cpp">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\AnnSubSystem.cpp">
       <Filter>Annwvyn\SubSystems</Filter>
@@ -386,10 +386,18 @@
     <ClCompile Include="..\..\src\AnnStringUtility.cpp">
       <Filter>Annwvyn\Core\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\BtOgreGP.cpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\BtOgrePG.cpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\BtOgreExtras.cpp">
+      <Filter>Internaly packaged libraries\BtOgre</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Main Class Diagram.cd" />
-    <None Include="..\..\TODO.md" />
     <None Include="..\..\README.md" />
   </ItemGroup>
 </Project>

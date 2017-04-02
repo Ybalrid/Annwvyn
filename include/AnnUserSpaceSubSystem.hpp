@@ -18,7 +18,9 @@ namespace Annwvyn
 		///Construct the user subsystem. The systemName is mandatory
 		/// \param systemName The name of the subsystem. Should be unique.
 		AnnUserSubSystem(std::string systemName);
+
 	protected:
+
 		friend class AnnEngine;
 
 		///Called at each refresh if this->needUpdate() returns true

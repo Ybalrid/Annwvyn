@@ -4,6 +4,7 @@
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
+#include <OgreItem.h>
 
 //Forward declaration of the renderer classes that manager VR controllers
 class OgreVRRender;
@@ -55,9 +56,16 @@ namespace Annwvyn
 	class DLL AnnHandController
 	{
 	public:
+
+		///Destroctor
 		virtual ~AnnHandController() = default;
+
+		///Hash of a string idientifier
 		using AnnHandControllerTypeHash = size_t;
+		///Hash of a string identifier
 		using AnnHandControllerGestureHash = size_t;
+
+		///Individual finger values
 		using proportionalFingerValues = std::array<float, 5>;
 
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
@@ -70,16 +78,16 @@ namespace Annwvyn
 		enum HandControllerCapabilites : HandControllerCapabilites_t
 		{
 			None = 0,
-			RotationalTracking				= 0b0000000001,		//Can get the orientation of the user hand
-			PositionalTracking				= 0b0000000010,		//Can get the position of the user hand
-			AngularAccelerationTracking		= 0b0000000100,		//Can get the current angular acceleration
-			LinearAccelerationTracking		= 0b0000001000,		//Can get the current linear acceleration
-			ButtonInputs					= 0b0000010000,		//Can get inputs form buttons
-			AnalogInputs					= 0b0000100000,		//Can get inputs from axes
-			HapticFeedback					= 0b0001000000,		//Can produce haptic feedback
-			DiscreteHandGestures			= 0b0010000000,		//Can detect some hand gestures (Like the touch controller does)
-			SkeletalFingerTracking			= 0b0100000000,		//Can fully get the pose of an hand (Like on the LEAP Motion controller)
-			ProportionalFingerTrackng		= 0b1000000000,		//Can get a 5 axis analog representation of the fingers
+			RotationalTracking = 0b0000000001,		//Can get the orientation of the user hand
+			PositionalTracking = 0b0000000010,		//Can get the position of the user hand
+			AngularAccelerationTracking = 0b0000000100,		//Can get the current angular acceleration
+			LinearAccelerationTracking = 0b0000001000,		//Can get the current linear acceleration
+			ButtonInputs = 0b0000010000,		//Can get inputs form buttons
+			AnalogInputs = 0b0000100000,		//Can get inputs from axes
+			HapticFeedback = 0b0001000000,		//Can produce haptic feedback
+			DiscreteHandGestures = 0b0010000000,		//Can detect some hand gestures (Like the touch controller does)
+			SkeletalFingerTracking = 0b0100000000,		//Can fully get the pose of an hand (Like on the LEAP Motion controller)
+			ProportionalFingerTrackng = 0b1000000000,		//Can get a 5 axis analog representation of the fingers
 		};
 
 		///Construct a Controller object
@@ -89,13 +97,13 @@ namespace Annwvyn
 		static std::string getSideAsString(AnnHandControllerSide s);
 
 		///Attach a 3D model to the hand. Previously attached model will be detached
-		void attachModel(Ogre::Entity* handModel);
+		void attachModel(Ogre::Item* handModel);
 
 		///Detach model without destroying it
 		void detachModel();
 
 		///Return the current model :
-		Ogre::Entity* getModel() const;
+		Ogre::Item* getModel() const;
 
 		///Get position in world space
 		AnnVect3 getWorldPosition() const;
@@ -167,7 +175,7 @@ namespace Annwvyn
 		///Stop vibrating, if the controller was vibrating in the first place...
 		virtual void rumbleStop();
 
-		///Get the capabilities (bit test again the capability flags) 
+		///Get the capabilities (bit test again the capability flags)
 		HandControllerCapabilites_t getCapabilities() const;
 
 		///Get the name of the current gesture. Please prefer use the hashed version.
@@ -178,6 +186,7 @@ namespace Annwvyn
 
 	protected:
 
+		///Capabilities of this controller
 		HandControllerCapabilites_t capabilites;
 
 		friend class OgreVRRender;
@@ -212,7 +221,7 @@ namespace Annwvyn
 		Ogre::SceneNode* node, *grabbed;
 
 		///Currently attached entity
-		Ogre::Entity* model;
+		Ogre::Item* model;
 
 		///tracked boolean, true if controller has been updated by the engine
 		bool tracked;

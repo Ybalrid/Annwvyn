@@ -7,12 +7,7 @@
 using namespace Annwvyn;
 
 AnnGameObject::AnnGameObject() :
-	Node(nullptr),
-	Entity(nullptr),
-	animIsSetted(false),
-	animIsPlaying(false),
-	animIsLooping(false),
-	anim(nullptr),
+	Node(nullptr), Model(nullptr), currentAnimation(nullptr),
 	Shape(nullptr),
 	Body(nullptr),
 	bodyMass(0),
@@ -194,13 +189,9 @@ void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 	Node = newNode;
 }
 
-void AnnGameObject::setEntity(Ogre::Entity* newEntity)
-{
-	Entity = newEntity;
-}
-
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
+	//Some sanity checks
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 	if (mass < 0) return;
@@ -209,7 +200,7 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	bodyMass = mass;
 
 	//init shape converter
-	BtOgre::StaticMeshToShapeConverter converter(Entity);
+	BtOgre::StaticMeshToShapeConverter converter(v1mesh.get());
 
 	// TODO put this thing inside the Physics engine
 	//create the correct shape
@@ -254,16 +245,13 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	if (!colideWithPlayer)
 		bulletMask = MASK(1);
 	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, MASK(1), bulletMask);
+
+	v1mesh.setNull();
 }
 
 Ogre::SceneNode* AnnGameObject::getNode() const
 {
 	return Node;
-}
-
-Ogre::Entity* AnnGameObject::getEntity() const
-{
-	return Entity;
 }
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject) const
@@ -276,47 +264,46 @@ btRigidBody* AnnGameObject::getBody() const
 	return Body;
 }
 
-void AnnGameObject::setAnimation(const char animationName[])
+void AnnGameObject::setAnimation(const std::string&	animationName)
 {
-	if (animIsSetted)
+	//Check if the item has a skeleton
+	if (!getItem()->hasSkeleton())
 	{
-		anim->setEnabled(false);
-		anim->setLoop(false);
-		animIsSetted = false;
-		animIsLooping = false;
-		animIsPlaying = false;
-		anim = nullptr;
+		AnnDebug() << "Attempting to set a skeleton animation on a skeleton-less object. (" << getName() << " Check yo' programin' bro!";
+		return;
 	}
 
-	anim = Entity->getAnimationState(animationName);
-	if (anim != nullptr)
-		animIsSetted = true;
+	//Attempt to get the animation
+	auto selectedAnimation = getItem()->getSkeletonInstance()->getAnimation(animationName);
+	if (!selectedAnimation)
+	{
+		AnnDebug() << "Looks like " << getName() << " doesn't have an animation called " << animationName;
+		return;
+	}
+
+	//If an animation was already playing, disable it
+	if (currentAnimation)
+	{
+		currentAnimation->setEnabled(false);
+	}
+
+	//Set the current animation, but don't start playing it just yet.
+	currentAnimation = selectedAnimation;
 }
 
-void AnnGameObject::playAnimation(bool play)
+void AnnGameObject::playAnimation(bool play) const
 {
-	if (animIsSetted)
-	{
-		anim->setEnabled(play);
-		animIsPlaying = play;
-	}
+	if (currentAnimation) currentAnimation->setEnabled(play);
 }
 
-void AnnGameObject::loopAnimation(bool loop)
+void AnnGameObject::loopAnimation(bool loop) const
 {
-	if (animIsSetted)
-	{
-		anim->setLoop(loop);
-		animIsLooping = loop;
-	}
+	if (currentAnimation) currentAnimation->setLoop(loop);
 }
 
 void AnnGameObject::addAnimationTime(double offset) const
 {
-	if (!animIsSetted || !animIsPlaying)
-		return;
-
-	anim->addTime(float(offset));
+	if (currentAnimation) currentAnimation->addTime(offset);
 }
 
 void AnnGameObject::applyImpulse(AnnVect3 force) const
@@ -433,7 +420,7 @@ bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
 {
 	for (auto childNode : parentObj->Node->getChildIterator())
 	{
-		auto node = childNode.second;
+		auto node = childNode; //TODO check if this is okay...
 		auto childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
 
 		//Is an actual SceneNode
@@ -458,4 +445,19 @@ bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
 void AnnGameObject::setWorldPosition(float x, float y, float z) const
 {
 	setWorldPosition(AnnVect3{ x, y, z });
+}
+
+void AnnGameObject::setItem(Ogre::Item* item)
+{
+	Model = item;
+}
+
+void AnnGameObject::setPhysicsMesh(Ogre::v1::MeshPtr mesh)
+{
+	v1mesh = mesh;
+}
+
+Ogre::Item* AnnGameObject::getItem() const
+{
+	return Model;
 }

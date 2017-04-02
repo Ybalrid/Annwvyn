@@ -18,19 +18,21 @@ void MyLevel::load()
 	Sinbad->setUpPhysics(250, boxShape);
 
 	//Load Ground:
-	auto Ground(addGameObject("Ground.mesh"));
+	auto Ground(addGameObject("floorplane.mesh"));
 	Ground->setPosition({ 0, 0, 0 });
 	Ground->setUpPhysics();
 
 	//Create a light source
-	auto Sun(addLightObject());
+	auto Sun(addLightObject("MySun"));
 	Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
+	Sun->setPower(97);
+
+	auto OtherLight(addLightObject("Other Light"));
+	OtherLight->setPower(50);
+	OtherLight->setPosition({ 0, 1, 1 });
 
 	//zenith sunlight
 	Sun->setDirection(AnnVect3{ -1, -1.5f, -1 }.normalisedCopy());
-
-	//The ambient light is a scene light that is emitted by every point of the scene. This is for making the shadows not pitch black.
-	AnnGetSceneryManager()->setAmbientLight(AnnColor(.25f, .25f, .25f));
 }
 
 void MyLevel::runLogic()
