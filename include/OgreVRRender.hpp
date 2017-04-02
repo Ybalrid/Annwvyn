@@ -41,10 +41,10 @@ constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 struct OgrePose
 {
 	///A 3D vector representing a position
-	Ogre::Vector3 position;
+	Annwvyn::AnnVect3 position;
 
 	///A quaternion representing an orientation
-	Ogre::Quaternion orientation;
+	Annwvyn::AnnQuaternion orientation;
 };
 
 ///Abstract class for VR Renderers. Serve as interface between Annwvyn, and "OgreHMDRender" object.
