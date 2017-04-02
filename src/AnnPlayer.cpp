@@ -336,9 +336,13 @@ void AnnPlayer::engineUpdate(float deltaTime)
 		if (playerBody->Body)
 		{
 			btTransform transform;
-			transform.setOrigin(AnnVect3(getPosition() + getEyeTranslation()).getBtVector());
-			transform.setRotation(AnnQuaternion(/*getOrientation().toQuaternion()*/).getBtQuaternion());
+			auto pose = AnnGetVRRenderer()->trackedHeadPose;
+			transform.setOrigin(pose.position.getBtVector());
+			transform.setRotation(pose.orientation.getBtQuaternion());
+			playerBody->Body->setAngularVelocity(btVector3(0, 0, 0));
+			playerBody->Body->setLinearVelocity(btVector3(0, 0, 0));
 			playerBody->Body->setWorldTransform(transform);
+			playerBody->Body->activate(true);
 		}
 
 		break;
