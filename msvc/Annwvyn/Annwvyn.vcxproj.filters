@@ -13,9 +13,6 @@
     <Filter Include="Annwvyn\Core">
       <UniqueIdentifier>{9c9fb862-e814-46a3-bf12-0f38f3eca234}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Internaly packaged libraries\BtOgre">
-      <UniqueIdentifier>{5ebdfa49-14be-4e50-a3bd-28d4b94ec4b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Internaly packaged libraries\Ogre::Euler">
       <UniqueIdentifier>{0d9d99de-a238-4239-9f8f-936a74e088b6}</UniqueIdentifier>
     </Filter>
@@ -135,15 +132,6 @@
     <ClInclude Include="..\..\include\AnnXmlLevel.hpp">
       <Filter>Annwvyn\SubSystems\LevelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\BtOgrePG.h">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\BtOgreGP.h">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\BtOgreExtras.h">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\AnnAudioEngine.hpp">
       <Filter>Annwvyn\SubSystems\Audio</Filter>
     </ClInclude>
@@ -248,9 +236,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\AnnStringUtility.hpp">
       <Filter>Annwvyn\Core\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\BtOgre.hpp">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\systemMacro.h">
       <Filter>Annwvyn\GameObject</Filter>
@@ -376,15 +361,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\AnnStringUtility.cpp">
       <Filter>Annwvyn\Core\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\BtOgreGP.cpp">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\BtOgrePG.cpp">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\BtOgreExtras.cpp">
-      <Filter>Internaly packaged libraries\BtOgre</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
