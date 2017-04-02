@@ -7,10 +7,11 @@
 #include "AnnTypes.h"
 #include "OgreVRRender.hpp"
 #include <memory>
+#include <algorithm>
 
 namespace Annwvyn
 {
-	///Scenery Manager, scene configuration for lighting and sky.
+	///Scenery Manager. Set the scene rendering parameters, like the exposure or the ambient lighting...
 	class DLL AnnSceneryManager : public AnnSubSystem
 	{
 	public:
@@ -27,23 +28,19 @@ namespace Annwvyn
 		/// \param curvature curvature of the texture
 		/// \param tiling tilling of the texture
 		void setSkyDomeMaterial(bool activate,
-								const char materialName[],
-								float curvature = 2.0f,
-								float tiling = 1.0f) const; //scene
+			const std::string& materialName,
+			float curvature = 2.0f,
+			float tiling = 1.0f) const;
 
-							///Set the ogre material for the sky-box with params
-							/// \param activate if true put the sky-box on the scene
-							/// \param materialName name of a material declared on the resource manager
-							/// \param distance distance of the sky from the camera
-							/// \param renderedFirst if true, the sky-box will be the first thing rendered
+		///Set the ogre material for the sky-box with params
+		/// \param activate if true put the sky-box on the scene
+		/// \param materialName name of a material declared on the resource manager
+		/// \param distance distance of the sky from the camera
+		/// \param renderedFirst if true, the sky-box will be the first thing rendered
 		void setSkyBoxMaterial(bool activate,
-							   const char materialName[],
-							   float distance = 8000,
-							   bool renderedFirst = true) const;
-
-						   ///Set the view-ports background color
-						   /// \param color background color
-		void setWorldBackgroundColor(AnnColor color = AnnColor(0, 0.56f, 1)) const;
+			const std::string& materialName,
+			float distance = 8000,
+			bool renderedFirst = true) const;
 
 		///Remove the sky dome
 		void removeSkyDome() const;
@@ -51,9 +48,32 @@ namespace Annwvyn
 		///Remove the sky box
 		void removeSkyBox() const;
 
-		///Set the ambient light
-		/// \param color the color of the light
-		void setAmbientLight(AnnColor color) const;
+		///Set the ambient light. Ambiant light is 2 hemisphere, and upper one and a lower one. HDR light values are color * multiplier
+		void setAmbientLight(AnnColor upperColor, float upperMul, AnnColor lowerColor, float lowerMul, AnnVect3 direction, float environementMapScaling = 16) const;
+
+		///Set the defautl ambient light
+		void setDefaultAmbientLight() const;
+
+		///Set the exposure value in "ev" (what's used in photography for exposure compensation). Also set the delta of adjustmen
+		void setExposure(float exposure, float minExposure, float maxExposure) const;
+
+		///Reset the default exposure
+		void setDefaultExposure() const;
+
+		///Set the color of the sky. Converted into HDR light values with the multiplier
+		void setSkyColor(AnnColor color, float multiplier) const;
+
+		///Reset the engine default sky color
+		void setDefaultSkyColor() const;
+
+		///Set the threshold that define where to put the bloom effect
+		void setBloomThreshold(float threshold) const;
+
+		///Reset the default bloom effect
+		void setDefaultBloomThreshold() const;
+
+		///Reset everything to engine default
+		void resetSceneParameters() const;
 
 	private:
 		///Scene manager created by the VR renderer
@@ -61,6 +81,11 @@ namespace Annwvyn
 
 		///Pointer to the VR renderer
 		std::shared_ptr<OgreVRRender> renderer;
+
+		///Defaults environmental floats
+		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutoExposure, defaultSkyColorMultiplier, defaultBloom, defaultUpperAmbientLightMul, defaultLowerAmbientLightMul;
+		///Default sky color
+		const AnnColor defaultSkyColor, defaultUpperAmbient, defaultLowerAmbient;
 	};
 }
 

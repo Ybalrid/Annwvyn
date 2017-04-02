@@ -7,7 +7,6 @@
 OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
 
 OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
-noVRViewport(nullptr),
 running(true)
 {
 	rendererName = "OpenGL/NoVR";
@@ -19,14 +18,17 @@ void OgreNoVRRender::initVrHmd()
 
 void OgreNoVRRender::initScene()
 {
-	smgr = root->createSceneManager("OctreeSceneManager", "OSMSMGR");
-	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
+	createMainSmgr();
 }
 
 void OgreNoVRRender::initRttRendering()
 {
-	noVRViewport = window->addViewport(monoCam);
-	noVRViewport->setBackgroundColour(backgroundColor);
+	auto compositor = getRoot()->getCompositorManager2();
+
+	//compositor->createBasicWorkspaceDef(monoscopicWorkspaceName, backgroundColor);
+	//compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, monoscopicCompositor, true, 0, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 1, 1), 0x03, 0x03);
+	//We loaded the HDR workspace from file earlier already
+	compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
 }
 
 void OgreNoVRRender::initClientHmdRendering()
@@ -51,30 +53,18 @@ void OgreNoVRRender::getTrackingPoseAndVRTiming()
 
 void OgreNoVRRender::renderAndSubmitFrame()
 {
-	Ogre::WindowEventUtilities::messagePump();
+	handleWindowMessages();
 	if (window->isClosed())
 	{
 		running = false;
 		return;
 	}
 
-	root->_fireFrameRenderingQueued();
-	noVRViewport->update();
-	window->update();
-
-	//Sleep for one ms
-	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	root->renderOneFrame();
 }
 
 void OgreNoVRRender::recenter()
 {}
-
-void OgreNoVRRender::changeViewportBackgroundColor(Ogre::ColourValue color)
-{
-	backgroundColor = color;
-
-	noVRViewport->setBackgroundColour(color);
-}
 
 void OgreNoVRRender::showDebug(DebugMode mode)
 {}
@@ -103,7 +93,5 @@ void OgreNoVRRender::handleIPDChange()
 
 OgreNoVRRender::~OgreNoVRRender()
 {
-	root->destroySceneManager(smgr);
 	noVRself = nullptr;
-	rttTexture.setNull();
 }

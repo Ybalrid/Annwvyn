@@ -35,17 +35,38 @@
 #include <functional>
 
 //Object-Oriented Graphical Rendering Engine
-#include <Ogre.h>
 #include <OgrePrerequisites.h>
+#include <Ogre.h>
+#include <OgreLogManager.h>
 #include <OgreVector3.h>
+#include <OgreHardwareBufferManager.h>
 #include <OgreQuaternion.h>
 #include <OgreSceneNode.h>
+#include <OgreSimpleRenderable.h>
+#include <OgreCamera.h>
 #include <OgreEntity.h>
 #include <OgreLight.h>
 #include <OgreMatrix3.h>
-//For the console, we use the font system of the Overlay
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
+#include <Compositor/OgreCompositorManager2.h>
+#include <Compositor/OgreCompositorWorkspaceDef.h>
+#include <Compositor/OgreCompositorWorkspace.h>
+#include <Compositor/OgreCompositorNode.h>
+#include <Compositor/OgreCompositorNodeDef.h>
+#include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
+#include <OgreMaterialManager.h>
+#include <OgreMaterial.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
+#include <Hlms/Pbs/OgreHlmsPbs.h>
+#include <Hlms/Unlit/OgreHlmsUnlit.h>
+#include <OgreHlmsManager.h>
+#include <OgreHlms.h>
+#include <OgreMesh.h>
+#include <OgreMesh2.h>
+#include <OgreMeshManager.h>
+#include <OgreMeshManager2.h>
 
 //Object-Oriented Input System
 #include <OIS.h>
@@ -85,5 +106,19 @@
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
-#include <glew.h>
 #endif
+
+//OpenGL stuff :
+
+//GL Extension Wrangler
+#include <glew.h>
+
+//GL FrameWork
+#include <GLFW/glfw3.h>
+
+//Native windows access
+#ifdef _WIN32
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NAVIVE_WGL
+#endif
+#include <GLFW/glfw3native.h>

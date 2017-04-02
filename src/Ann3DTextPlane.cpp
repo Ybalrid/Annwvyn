@@ -21,10 +21,10 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 
 	TexturePtr fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
 
-	HardwarePixelBufferSharedPtr fontBuffer = fontTexture->getBuffer();
-	HardwarePixelBufferSharedPtr destBuffer = destTexture->getBuffer();
+	auto fontBuffer = fontTexture->getBuffer();
+	auto destBuffer = destTexture->getBuffer();
 
-	PixelBox destPb = destBuffer->lock(destRectangle, HardwareBuffer::HBL_NORMAL);
+	PixelBox destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
 
 	// The font texture buffer was created write only...so we cannot read it back :o). One solution is to copy the buffer  instead of locking it. (Maybe there is a way to create a font texture which is not write_only ?)
 
@@ -80,7 +80,7 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 	//if not mono-spaced
 	if (spacewidth != charwidth) spacewidth = size_t(float(spacewidth) * 0.5f);
 
-//	Annwvyn::AnnDebug() << "Width of a space : " << space-width;
+	//	Annwvyn::AnnDebug() << "Width of a space : " << space-width;
 
 	size_t cursorX = 0;
 	size_t cursorY = 0;
@@ -90,96 +90,96 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 	{
 		switch (str[strindex])
 		{
-			case ' ': cursorX += spacewidth;  break;
-			case '\t':cursorX += charwidth * 3; break;
-			case '\n':cursorY += charheight; carriagreturn = true; break;
-			default:
+		case ' ': cursorX += spacewidth;  break;
+		case '\t':cursorX += charwidth * 3; break;
+		case '\n':cursorY += charheight; carriagreturn = true; break;
+		default:
+		{
+			//wrapping
+			if ((cursorX + GlyphTexCoords[strindex].getWidth() > lineend) && !carriagreturn)
 			{
-				//wrapping
-				if ((cursorX + GlyphTexCoords[strindex].getWidth() > lineend) && !carriagreturn)
-				{
-					cursorY += charheight;
-					carriagreturn = true;
-				}
+				cursorY += charheight;
+				carriagreturn = true;
+			}
 
-				//justify
-				if (carriagreturn)
-				{
-					size_t l = strindex;
-					size_t textwidth = 0;
-					size_t wordwidth = 0;
+			//justify
+			if (carriagreturn)
+			{
+				size_t l = strindex;
+				size_t textwidth = 0;
+				size_t wordwidth = 0;
 
-					while ((l < str.size()) && (str[l] != '\n'))
+				while ((l < str.size()) && (str[l] != '\n'))
+				{
+					wordwidth = 0;
+
+					switch (str[l])
 					{
-						wordwidth = 0;
+					case ' ': wordwidth = spacewidth; ++l; break;
+					case '\t': wordwidth = charwidth * 3; ++l; break;
+					case '\n': l = str.size();
+					default: break;
+					}
 
-						switch (str[l])
-						{
-							case ' ': wordwidth = spacewidth; ++l; break;
-							case '\t': wordwidth = charwidth * 3; ++l; break;
-							case '\n': l = str.size();
-							default: break;
-						}
-
-						if (wordwrap)
-							while ((l < str.size()) && (str[l] != ' ') && (str[l] != '\t') && (str[l] != '\n'))
-							{
-								wordwidth += GlyphTexCoords[l].getWidth();
-								++l;
-							}
-						else
+					if (wordwrap)
+						while ((l < str.size()) && (str[l] != ' ') && (str[l] != '\t') && (str[l] != '\n'))
 						{
 							wordwidth += GlyphTexCoords[l].getWidth();
-							l++;
+							++l;
 						}
-
-						if ((textwidth + wordwidth) <= destRectangle.getWidth())
-							textwidth += (wordwidth);
-						else
-							break;
-					}
-
-					if ((textwidth == 0) && (wordwidth > destRectangle.getWidth()))
-						textwidth = destRectangle.getWidth();
-
-					switch (justify)
+					else
 					{
-						case 'c':    cursorX = (destRectangle.getWidth() - textwidth) / 2;
-							lineend = destRectangle.getWidth() - cursorX;
-							break;
-
-						case 'r':    cursorX = (destRectangle.getWidth() - textwidth);
-							lineend = destRectangle.getWidth();
-							break;
-
-						default:    cursorX = 0;
-							lineend = textwidth;
-							break;
+						wordwidth += GlyphTexCoords[l].getWidth();
+						l++;
 					}
 
-					carriagreturn = false;
+					if ((textwidth + wordwidth) <= destRectangle.getWidth())
+						textwidth += (wordwidth);
+					else
+						break;
 				}
 
-				//abort - net enough space to draw
-				if ((cursorY + charheight) > destRectangle.getHeight())
-					goto stop;
+				if ((textwidth == 0) && (wordwidth > destRectangle.getWidth()))
+					textwidth = destRectangle.getWidth();
 
-				//draw pixel by pixel
-				for (size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
-					for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
-					{
-						float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0f);
-						float invalpha = 1.0 - alpha;
-						size_t offset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
+				switch (justify)
+				{
+				case 'c':    cursorX = (destRectangle.getWidth() - textwidth) / 2;
+					lineend = destRectangle.getWidth() - cursorX;
+					break;
 
-						ColourValue pix;
-						PixelUtil::unpackColour(&pix, destPb.format, &destData[offset]);
-						pix = (pix * invalpha) + (color * alpha);
-						PixelUtil::packColour(pix, destPb.format, &destData[offset]);
-					}
+				case 'r':    cursorX = (destRectangle.getWidth() - textwidth);
+					lineend = destRectangle.getWidth();
+					break;
 
-				cursorX += GlyphTexCoords[strindex].getWidth();
-			}//default
+				default:    cursorX = 0;
+					lineend = textwidth;
+					break;
+				}
+
+				carriagreturn = false;
+			}
+
+			//abort - net enough space to draw
+			if ((cursorY + charheight) > destRectangle.getHeight())
+				goto stop;
+
+			//draw pixel by pixel
+			for (size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
+				for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
+				{
+					float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0f);
+					float invalpha = 1.0 - alpha;
+					size_t offset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
+
+					ColourValue pix;
+					PixelUtil::unpackColour(&pix, destPb.format, &destData[offset]);
+					pix = (pix * invalpha) + (color * alpha);
+					PixelUtil::packColour(pix, destPb.format, &destData[offset]);
+				}
+
+			cursorX += GlyphTexCoords[strindex].getWidth();
+		}//default
 		}//switch
 	}//for
 
@@ -236,11 +236,14 @@ Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float res
 
 	createMaterial();
 
-	renderPlane->begin(materialName, Ogre::RenderOperation::OT_TRIANGLE_STRIP);
+	renderPlane->begin(materialName, Ogre::OT_TRIANGLE_STRIP);
 
 	for (char i(0); i < 4; i++)
 	{
 		renderPlane->position(vertices[i]);
+		renderPlane->normal(0, 0, 1);
+		renderPlane->tangent(1, 0, 0);
+		renderPlane->index(i);
 		renderPlane->textureCoord(textureCoords[i]);
 	}
 
@@ -341,24 +344,33 @@ void Ann3DTextPlane::calculateVerticesForPlaneSize()
 void Ann3DTextPlane::createMaterial()
 {
 	generateMaterialName();
-	AnnDebug() << "materialName : " << materialName;
 
-	auto material = Ogre::MaterialManager::getSingleton().create(materialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true);
-	auto materialPass = material.getPointer()->getTechnique(0)->getPass(0);
-	materialPass->setCullingMode(Ogre::CullingMode::CULL_NONE);
-	materialPass->setAlphaRejectSettings(Ogre::CompareFunction::CMPF_EQUAL, 255, true);
-	materialPass->setTextureAnisotropy(8);
-	materialPass->setTextureFiltering(Ogre::TextureFilterOptions::TFO_ANISOTROPIC);
-	auto renderPlaneTextureUnitState = materialPass->createTextureUnitState();
+	//We want theses objects to react to the light and be present in the scene. We will create some kind of dielectric material (aka paint)
+	auto hlms = static_cast<Ogre::HlmsPbs*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_PBS));
+	//auto hlms = static_cast<Ogre::HlmsUnlit*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT));
+	auto datablock = static_cast<Ogre::HlmsPbsDatablock*>(hlms->createDatablock(materialName, materialName, Ogre::HlmsMacroblock(), Ogre::HlmsBlendblock(), Ogre::HlmsParamVec()));
+
+	//Note : if we want to make this run in "unlit" we will need to :
+	// 1) create it as unlit (no kidding)
+	// 2) a normal texture is good, no need of a single slice of an array
+	// 3) need to set a high "diffuse color" underneath the actual texture
+	// 4) no "2 sized lighting", set culling to none.
+	// 5) alpha blending should work the same
 
 	texture = Ogre::TextureManager::getSingleton()
 		.createManual(AnnGetStringUtility()->getRandomString(),
-					  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-					  Ogre::TEX_TYPE_2D,
-					  width * resolutionFactor,
-					  height * resolutionFactor,
-					  0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET | Ogre::TU_AUTOMIPMAP);
-	renderPlaneTextureUnitState->setTexture(texture);
+			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			Ogre::TEX_TYPE_2D_ARRAY,
+			width * resolutionFactor,
+			height * resolutionFactor, 1,
+			12, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET | Ogre::TU_AUTOMIPMAP);
+
+	datablock->setTexture(Ogre::PBSM_DIFFUSE, 0, texture);
+	datablock->setRoughness(0.001);
+	datablock->setSpecular({ 0.25,0.25,0.25 });
+	datablock->setAlphaTest(Ogre::CompareFunction::CMPF_GREATER);
+	datablock->setAlphaTestThreshold(0.33f);
+	datablock->setTwoSidedLighting(true);
 }
 
 void Ann3DTextPlane::autoUpdateCheck()
@@ -443,16 +455,16 @@ void Ann3DTextPlane::renderText()
 {
 	clearTexture();
 	WriteToTexture(caption,
-				   texture,
+		texture,
 
-				   Ogre::Image::Box(pixelMargin, pixelMargin,
-				   width * resolutionFactor - pixelMargin,
-				   height * resolutionFactor - pixelMargin),
+		Ogre::Image::Box(pixelMargin, pixelMargin,
+			width * resolutionFactor - pixelMargin,
+			height * resolutionFactor - pixelMargin),
 
-				   font.getPointer(),
-				   textColor.getOgreColor(),
-				   align,
-				   true);
+		font.getPointer(),
+		textColor.getOgreColor(),
+		align,
+		true);
 
 	needUpdating = false;
 }
@@ -466,12 +478,14 @@ void Ann3DTextPlane::clearTexture()
 	}
 	else
 	{
+		/*TODO fix hardware buffer thing here (texture copy)*/
+
 		auto textureBuffer = texture->getBuffer();
 		const auto w = textureBuffer->getWidth();
 		const auto h = textureBuffer->getHeight();
 
 		Ogre::Image::Box imageBox(0, 0, w, h);
-		auto pixelBox = textureBuffer->lock(imageBox, Ogre::HardwareBuffer::HBL_NORMAL);
+		auto pixelBox = textureBuffer->lock(imageBox, Ogre::v1::HardwareBuffer::HBL_NORMAL);
 
 		for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
 			pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);

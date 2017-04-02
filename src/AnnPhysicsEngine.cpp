@@ -5,8 +5,7 @@
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
-	std::shared_ptr<AnnPlayer> player,
-	AnnGameObjectList & objects,
+	std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects,
 	AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
 	Broadphase(nullptr),
 	CollisionConfiguration(nullptr),
@@ -32,8 +31,9 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	AnnDebug() << "Gravity vector " << defaultGravity;
 
 	debugPhysics = false;//by default
-	debugDrawer = new BtOgre::DebugDrawer(rootNode, DynamicsWorld.get());
-	DynamicsWorld->setDebugDrawer(debugDrawer);
+	debugDrawer = std::make_unique< BtOgre::DebugDrawer>(rootNode, DynamicsWorld.get(), "ANN_MAIN_SMGR");
+	DynamicsWorld->setDebugDrawer(debugDrawer.get());
+	debugDrawer->setUnlitDiffuseMultiplier(16.0f);
 }
 
 AnnPhysicsEngine::~AnnPhysicsEngine()
@@ -111,7 +111,13 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body) const
 void AnnPhysicsEngine::setDebugPhysics(bool state)
 {
 	debugPhysics = state;
-	debugDrawer->setDebugMode(int(state));
+	if (debugPhysics)
+		debugDrawer->setDebugMode(btIDebugDraw::DBG_DrawWireframe
+			| btIDebugDraw::DBG_FastWireframe
+			| btIDebugDraw::DBG_DrawAabb
+			| btIDebugDraw::DBG_DrawContactPoints);
+	else
+		debugDrawer->setDebugMode(0);
 	debugDrawer->step();
 }
 
@@ -152,7 +158,7 @@ void AnnPhysicsEngine::toggleDebugPhysics()
 void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode) const
 {
 	playerObject->setMode(ROOMSCALE);
-	AnnDebug() << "Initializing player's physics in roomscale mode";
+	AnnDebug() << "Initializing player's physics in RoomScale mode";
 	AnnDebug() << "Player can walk around";
 
 	btCollisionShape* sphere;
@@ -169,8 +175,13 @@ void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)
 {
 	playerObject->setMode(STANDING);
 	AnnDebug() << "Initializing player's physics  in standing mode";
-	AnnDebug() << "Capsule rigidbody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
+	AnnDebug() << "Capsule RigidBody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
 	createVirtualBodyShape();
 	createPlayerPhysicalVirtualBody(node);
 	addPlayerPhysicalBodyToDynamicsWorld();
+}
+
+void AnnPhysicsEngine::setDebugDrawerColorMultiplier(float value) const
+{
+	debugDrawer->setUnlitDiffuseMultiplier(value);
 }

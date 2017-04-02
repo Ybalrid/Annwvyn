@@ -214,11 +214,12 @@ AnnEngine::~AnnEngine()
 	log("Game engine stopped. Subsystem are shutting down...");
 	log("Good luck with the real world now! :3");
 	consoleReady = false;
+	FreeConsole();
 }
 
 //All theses getter are for encapsulation purpose. Calling them directly would
-//make very long lines of code. Note that there's a whole bunch of macro in
-//AnnEngine.hpp to help with that
+//make very long lines of code. You can, but you should use the functions in
+//AnnGetter.hpp
 std::shared_ptr<AnnEventManager> AnnEngine::getEventManager() const
 {
 	return eventManager;
@@ -295,13 +296,6 @@ void AnnEngine::log(std::string message, bool flag)
 		singleton->onScreenConsole->append(message);
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
-}
-
-//Don't ask me why this is not part of the Physics engine. Actually it just
-//calls something on the physics engine. Will be probably deleted in the future.
-void AnnEngine::initPlayerPhysics() const
-{
-	initPlayerStandingPhysics();
 }
 
 //Need to be redone.

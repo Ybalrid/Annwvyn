@@ -14,21 +14,19 @@ OgreOculusRender* OgreOculusRender::OculusSelf{ nullptr };
 
 OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 frontierWidth{ 100 },
-Oculus{ nullptr },
-vpts{ {nullptr, nullptr} },
+Oculus(nullptr),
 currentFrameDisplayTime{ 0 },
 lastFrameDisplayTime{ 0 },
 mirrorTexture{ nullptr },
 oculusMirrorTextureGLID{ 0 },
 ogreMirrorTextureGLID{ 0 },
-oculusRenderTextureGLID{ 0 },
-renderTextureGLID{ 0 },
-textureSwapChain{ nullptr },
+oculusRenderTextureCombinedGLID{ 0 },
+ogreRenderTextureCombinedGLID{ 0 },
+textureCombinedSwapChain{ nullptr },
 layers{ nullptr },
 perfHudMode{ ovrPerfHud_Off },
-currentIndex{ 0 },
+currentCombinedIndex{ 0 },
 currentSessionStatusFrameIndex{ 0 },
-debugViewport{ nullptr },
 debugSmgr{ nullptr },
 debugCam{ nullptr },
 debugCamNode{ nullptr },
@@ -60,17 +58,9 @@ lastOculusOrientation{ bodyOrientation }
 OgreOculusRender::~OgreOculusRender()
 {
 	//Destroy any Oculus SDK related objects
-	ovr_DestroyTextureSwapChain(Oculus->getSession(), textureSwapChain);
+	ovr_DestroyTextureSwapChain(Oculus->getSession(), textureCombinedSwapChain);
 	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
 	delete Oculus;
-
-	//Clean the Ogre environment
-	root->destroySceneManager(debugSmgr);
-	root->destroySceneManager(smgr);
-
-	//Release shared pointers from Ogre before deleting Root
-	DebugPlaneMaterial.setNull();
-	rttTexture.setNull();
 }
 
 bool OgreOculusRender::shouldQuit()
@@ -95,21 +85,6 @@ void OgreOculusRender::cycleDebugHud()
 
 	//Set the current perf hud mode
 	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
-}
-
-void OgreOculusRender::changeViewportBackgroundColor(Ogre::ColourValue color)
-{
-	//save the color then apply it to each viewport
-	backgroundColor = color;
-
-	//Render buffers
-	for (auto eye : eyeUpdateOrder)
-		if (vpts[eye])
-			vpts[eye]->setBackgroundColour(backgroundColor);
-
-	//Debug window
-	if (debugViewport && !mirrorHMDView)
-		debugViewport->setBackgroundColour(backgroundColor);
 }
 
 void OgreOculusRender::debugPrint()
@@ -164,61 +139,7 @@ void OgreOculusRender::initScene()
 	if (!debugPlaneSanityCheck())
 		throw AnnInitializationError(ANN_ERR_NOTINIT, "Sanity check failed, check the static buffer in OgreOculusRender.hpp");
 
-	//Create the scene manager for the engine
-	smgr = root->createSceneManager("OctreeSceneManager", "OSM_SMGR");
-	smgr->setShadowTechnique(Ogre::ShadowTechnique::SHADOWTYPE_STENCIL_ADDITIVE);
-
-	//We are done with the main scene. The "smgr" Scene Manager will handle the actual VR world.
-	//To easily display the debug view, we will create a "debugSmgr" scene just for re-projecting the textures to the window
-
-	//Create the scene manager for the debug output
-	debugSmgr = root->createSceneManager(Ogre::ST_GENERIC);
-	debugSmgr->setAmbientLight(Ogre::ColourValue::White); //no shadow
-
-	//Create the camera with a 16:9 ratio in Orthographic projection
-	debugCam = debugSmgr->createCamera("DebugRender");
-	debugCam->setAutoAspectRatio(true);
-	//Don't really care about the depth buffer here. The only geometry is at distance = 1.0f
-	debugCam->setNearClipDistance(0.1f);
-	debugCam->setFarClipDistance(1.1f);
-
-	//Orthographic projection, none of that perspective rubbish here :p
-	debugCam->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
-
-	//Set the orthographic window to match the quad we will construct
-	debugCam->setOrthoWindow(debugPlaneGeometry[0], debugPlaneGeometry[1]);
-
-	//Attach the camera to a node
-	debugCamNode = debugSmgr->getRootSceneNode()->createChildSceneNode();
-	debugCamNode->attachObject(debugCam);
-
-	//Base setup inside the scene manager
-	debugPlaneNode = debugCamNode->createChildSceneNode();
-	debugPlaneNode->setPosition(0, 0, -1);
-
-	//Create a manual object
-	auto debugPlane = debugSmgr->createManualObject("DebugPlane");
-
-	//Create a manual material and add a texture unit state to the default pass
-	DebugPlaneMaterial = Ogre::MaterialManager::getSingleton().create("DebugPlaneMaterial", "General", true);
-	debugTexturePlane = DebugPlaneMaterial.getPointer()->getTechnique(0)->getPass(0)->createTextureUnitState();
-
-	//Describe the manual object
-	debugPlane->begin("DebugPlaneMaterial", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
-
-	//Theses buffers are statically declared on the class.
-	for (const auto point : debugPlaneIndexBuffer)
-	{
-		debugPlane->position(AnnVect3{ debugPlaneVertexBuffer[point].data() });
-		debugPlane->textureCoord(AnnVect2{ debugPlaneTextureCoord[point].data() });
-	}
-
-	//We're done!
-	debugPlane->end();
-
-	//Add it to the scene
-	debugPlaneNode->attachObject(debugPlane);
-	debugPlaneNode->setVisible(true);
+	createMainSmgr();
 }
 
 ///This will create the Oculus Textures and the Ogre textures for rendering and mirror display
@@ -230,8 +151,8 @@ void OgreOculusRender::initRttRendering()
 	loadOpenGLFunctions();
 
 	//Get texture size from ovr with the maximal FOV for each eye
-	const auto texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);
-	const auto texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right], 1.f);
+	texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);
+	texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right], 1.f);
 
 	//Calculate the render buffer size for both eyes. The width of the frontier is the number of unused pixel between the two eye buffer.
 	//Apparently, keeping them glued together make some slight bleeding.
@@ -250,39 +171,81 @@ void OgreOculusRender::initRttRendering()
 		AALevel = 0;
 	}
 	AnnDebug() << "Buffer texture size : " << bufferSize.w << " x " << bufferSize.h << " px";
+	//setup compositor
+	auto compositor = root->getCompositorManager2();
 
-	//Define the creation option of the texture swap chain
-	ovrTextureSwapChainDesc textureSwapChainDesc = {};
-	textureSwapChainDesc.Type = ovrTexture_2D;
-	textureSwapChainDesc.ArraySize = 1;
-	textureSwapChainDesc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
-	textureSwapChainDesc.Width = bufferSize.w;
-	textureSwapChainDesc.Height = bufferSize.h;
-	textureSwapChainDesc.MipLevels = 1;
-	textureSwapChainDesc.SampleCount = 1;
-	textureSwapChainDesc.StaticImage = ovrFalse;
-
-	//Request the creation of an OpenGL swapChain from the Oculus Library
-	if (ovr_CreateTextureSwapChainGL(Oculus->getSession(), &textureSwapChainDesc, &textureSwapChain) != ovrSuccess)
+	if (separateTextures)
 	{
-		//If we can't get the textures, there is no point trying more.
-		AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
-		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
+		ovrTextureSwapChainDesc textureSwapChainDesc = {};
+		textureSwapChainDesc.Type = ovrTexture_2D;
+		textureSwapChainDesc.ArraySize = 1;
+		textureSwapChainDesc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
+		textureSwapChainDesc.Width = texSizeL.w;
+		textureSwapChainDesc.Height = texSizeL.h;
+		textureSwapChainDesc.MipLevels = 1;
+		textureSwapChainDesc.SampleCount = 1;
+		textureSwapChainDesc.StaticImage = ovrFalse;
+
+		//Request the creation of an OpenGL swapChain from the Oculus Library
+		if (ovr_CreateTextureSwapChainGL(Oculus->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[left]) != ovrSuccess)
+		{
+			//If we can't get the textures, there is no point trying more.
+			AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
+			throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
+		}
+
+		textureSwapChainDesc.Width = texSizeR.w;
+		textureSwapChainDesc.Height = texSizeR.h;;
+
+		//Request the creation of an OpenGL swapChain from the Oculus Library
+		if (ovr_CreateTextureSwapChainGL(Oculus->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right]) != ovrSuccess)
+		{
+			//If we can't get the textures, there is no point trying more.
+			AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
+			throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
+		}
+
+		std::array<std::array<size_t, 2>, 2> textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
+		ogreRenderTexturesSeparatedGLID = createSeparatedRenderTextures(textureDimentions);
+
+		compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);
+		compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", true);
+		compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
+	}
+	else
+	{
+		//Define the creation option of the texture swap chain
+		ovrTextureSwapChainDesc textureSwapChainDesc = {};
+		textureSwapChainDesc.Type = ovrTexture_2D;
+		textureSwapChainDesc.ArraySize = 1;
+		textureSwapChainDesc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
+		textureSwapChainDesc.Width = bufferSize.w;
+		textureSwapChainDesc.Height = bufferSize.h;
+		textureSwapChainDesc.MipLevels = 1;
+		textureSwapChainDesc.SampleCount = 1;
+		textureSwapChainDesc.StaticImage = ovrFalse;
+
+		//Request the creation of an OpenGL swapChain from the Oculus Library
+		if (ovr_CreateTextureSwapChainGL(Oculus->getSession(), &textureSwapChainDesc, &textureCombinedSwapChain) != ovrSuccess)
+		{
+			//If we can't get the textures, there is no point trying more.
+			AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
+			throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
+		}
+
+		//Create the texture within the Ogre Texture Manager
+		ogreRenderTextureCombinedGLID = createCombinedRenderTexture(bufferSize.w, bufferSize.h);
+
+		//Calculate the actual width of the desired image on the texture in a % of the width of the buffer (as a float between 0 to 1)
+		auto proportionalWidth = float((bufferSize.w - frontierWidth / 2) / 2) / float(bufferSize.w);
+		AnnDebug() << proportionalWidth;
+
+		compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[left], "HdrWorkspace", true, 1, nullptr, nullptr, nullptr, Ogre::Vector4(0, 0, 0.5f, 1), 0x01, 0x01);
+		compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, window, eyeCameras[right], "HdrWorkspace", true, 2, nullptr, nullptr, nullptr, Ogre::Vector4(0.5f, 0, 0.5f, 1), 0x02, 0x02);
+		compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
 	}
 
-	//Create the texture within the Ogre Texture Manager
-	renderTextureGLID = createRenderTexture(bufferSize.w, bufferSize.h);
-
-	//Calculate the actual width of the desired image on the texture in a % of the width of the buffer (as a float between 0 to 1)
-	auto proportionalWidth = float((bufferSize.w - frontierWidth / 2) / 2) / float(bufferSize.w);
-	AnnDebug() << proportionalWidth;
-
-	//Create viewports on the texture to render the eyeCameras
-	vpts[left] = rttEyes->addViewport(eyeCameras[left], 0, 0, 0, proportionalWidth);
-	vpts[right] = rttEyes->addViewport(eyeCameras[right], 1, 1.f - proportionalWidth, 0, proportionalWidth);
-
-	//Set the background color of each viewport the 1st time
-	changeViewportBackgroundColor(backgroundColor);
+	//auto node = compositor->getNodeDefinitionNonConst("MhHdrPostProcessingNode");
 
 	//Fill in MirrorTexture parameters
 	ovrMirrorTextureDesc mirrorTextureDesc = {};
@@ -295,49 +258,25 @@ void OgreOculusRender::initRttRendering()
 	{
 		//If for some weird reason (stars alignment, dragons, northern gods, reaper invasion) we can't create the mirror texture
 		AnnDebug() << "Cannot create Oculus mirror texture";
-		throw AnnInitializationError(ANN_ERR_RENDER , "Cannot create Oculus mirror texture");
+		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus mirror texture");
 	}
 
 	auto mirror = createAdditionalRenderBuffer(hmdSize.w, hmdSize.h, "MirrorTex");
 	ogreMirrorTextureGLID = std::get<1>(mirror);
 
-	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, 0, &oculusRenderTextureGLID);
-
-	//Attach the camera of the debug render scene to a viewport on the actual application window
-	debugViewport = window->addViewport(debugCam);
-	debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
-	debugTexturePlane->setTextureName("MirrorTex");
-	debugTexturePlane->setTextureFiltering(Ogre::FO_POINT, Ogre::FO_POINT, Ogre::FO_NONE);
-	debugViewport->setAutoUpdated(false);
+	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureCombinedSwapChain, 0, &oculusRenderTextureCombinedGLID);
 }
 
 void OgreOculusRender::showRawView()
 {
-	mirrorHMDView = false;
-	if (!debugTexturePlane) return;
-	OculusSelf->debugViewport->setCamera(OculusSelf->debugCam);
-	debugTexturePlane->setTextureName("RttTex");
-	OculusSelf->debugViewport->setBackgroundColour(OculusSelf->backgroundColor);
-	AnnDebug() << "Switched to Raw view";
 }
 
 void OgreOculusRender::showMirrorView()
 {
-	mirrorHMDView = true;
-	if (!debugTexturePlane) return;
-	OculusSelf->debugViewport->setCamera(OculusSelf->debugCam);
-	debugTexturePlane->setTextureName("MirrorTex");
-	OculusSelf->debugViewport->setBackgroundColour(Ogre::ColourValue::Black);
-	AnnDebug() << "Switched to Oculus Compositor view";
 }
 
 void OgreOculusRender::showMonscopicView()
 {
-	mirrorHMDView = false;
-	if (!OculusSelf) return;
-	OculusSelf->debugViewport->setCamera(OculusSelf->monoCam);
-	OculusSelf->debugViewport->setBackgroundColour(OculusSelf->backgroundColor);
-	AnnDebug() << "Switched to Monoscopic view";
 }
 
 void OgreOculusRender::initClientHmdRendering()
@@ -351,27 +290,47 @@ void OgreOculusRender::initClientHmdRendering()
 	//Create a layer with our single swaptexture on it. Each side is an eye.
 	layer.Header.Type = ovrLayerType_EyeFov;
 	layer.Header.Flags = 0;
-	layer.ColorTexture[left] = textureSwapChain;
-	layer.ColorTexture[right] = textureSwapChain;
+	if (separateTextures)
+	{
+		layer.ColorTexture[left] = texturesSeparatedSwapChain[left];
+		layer.ColorTexture[right] = texturesSeparatedSwapChain[right];
+	}
+	else
+	{
+		layer.ColorTexture[left] = textureCombinedSwapChain;
+		layer.ColorTexture[right] = textureCombinedSwapChain;
+	}
 	layer.Fov[left] = EyeRenderDesc[left].Fov;
 	layer.Fov[right] = EyeRenderDesc[right].Fov;
 
 	//Define the two viewports dimensions :
 	ovrRecti leftRect, rightRect;
-	leftRect.Size = bufferSize;													//same size than the buffer
-	leftRect.Size.w /= 2;
-	leftRect.Size.w -= (frontierWidth / 2);										//but half the width
-	rightRect = leftRect;														//The two rects are of the same size, but not at the same position
 
-	//Give OVR the position of the 2 viewports
-	ovrVector2i leftPos, rightPos;
-	leftPos.x = 0;																//The left one start at the bottom left corner
-	leftPos.y = 0;
-	rightPos = leftPos;
-	rightPos.x = bufferSize.w - (bufferSize.w / 2) + (frontierWidth / 2);		//But the right start at half the buffer width
-	leftRect.Pos = leftPos;
-	rightRect.Pos = rightPos;
+	if (separateTextures)
+	{
+		leftRect.Size = texSizeL;
+		rightRect.Size = texSizeR;
+		leftRect.Pos.x = 0;
+		leftRect.Pos.y = 0;
+		rightRect.Pos.x = 0;
+		rightRect.Pos.y = 0;
+	}
+	else
+	{
+		leftRect.Size = bufferSize;													//same size than the buffer
+		leftRect.Size.w /= 2;
+		leftRect.Size.w -= (frontierWidth / 2);										//but half the width
+		rightRect = leftRect;														//The two rects are of the same size, but not at the same position
 
+		//Give OVR the position of the 2 viewports
+		ovrVector2i leftPos, rightPos;
+		leftPos.x = 0;																//The left one start at the bottom left corner
+		leftPos.y = 0;
+		rightPos = leftPos;
+		rightPos.x = bufferSize.w - (bufferSize.w / 2) + (frontierWidth / 2);		//But the right start at half the buffer width
+		leftRect.Pos = leftPos;
+		rightRect.Pos = rightPos;
+	}
 	//Assign the defined viewport to the layer
 	layer.Viewport[left] = leftRect;
 	layer.Viewport[right] = rightRect;
@@ -405,8 +364,9 @@ void OgreOculusRender::updateProjectionMatrix()
 				//put the number where it should
 				ogreProjectionMatrix[eye][x][y] = oculusProjectionMatrix[eye].M[x][y];
 
-		//Set the matrix
 		eyeCameras[eye]->setCustomProjectionMatrix(true, ogreProjectionMatrix[eye]);
+		eyeCameras[eye]->setNearClipDistance(nearClippingDistance);
+		eyeCameras[eye]->setFarClipDistance(farClippingDistance);
 	}
 }
 
@@ -478,36 +438,66 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 
 void OgreOculusRender::renderAndSubmitFrame()
 {
-	//Process window's message queue
-	Ogre::WindowEventUtilities::messagePump();
+	handleWindowMessages();
+	if (separateTextures)
+	{
+		for (auto i{ 0 }; i < 2; ++i)
+		{
+			ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
+			ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), texturesSeparatedSwapChain[i], currentSeparatedIndex[i], &oculusRenderTexturesSeparatedGLID[i]);
+		}
+	}
+	else
+	{
+		//Select the current render texture and get the opengl id
+		ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureCombinedSwapChain, &currentCombinedIndex);
+		ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureCombinedSwapChain, currentCombinedIndex, &oculusRenderTextureCombinedGLID);
+	}
 
-	//Select the current render texture
-	ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), textureSwapChain, &currentIndex);
-
-	//Update the relevant OpenGL IDs
-	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureSwapChain, currentIndex, &oculusRenderTextureGLID);
 	ovr_GetMirrorTextureBufferGL(Oculus->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
 
-	//Render
-	root->_fireFrameRenderingQueued();
-	vpts[left]->update();
-	vpts[right]->update();
-	rttEyes->update(); //This will resolve the sampling for the anti-aliasing of the texture
-
-	//Copy the rendered image to the Oculus Swap Texture
-	glCopyImageSubData(renderTextureGLID,
-		GL_TEXTURE_2D,
-		0, 0, 0, 0,
-		oculusRenderTextureGLID,
-		GL_TEXTURE_2D,
-		0, 0, 0, 0,
-		bufferSize.w, bufferSize.h, 1);
-
+	root->renderOneFrame();
+	if (separateTextures)
+	{
+		for (auto i{ 0 }; i < 2; ++i)
+		{
+			//Copy the rendered image to the Oculus Swap Texture
+			glCopyImageSubData(ogreRenderTexturesSeparatedGLID[i],
+				GL_TEXTURE_2D,
+				0, 0, 0, 0,
+				oculusRenderTexturesSeparatedGLID[i],
+				GL_TEXTURE_2D,
+				0, 0, 0, 0,
+				texSizeL.w, texSizeL.h, 1);
+		}
+	}
+	else
+	{
+		//Copy the rendered image to the Oculus Swap Texture
+		glCopyImageSubData(ogreRenderTextureCombinedGLID,
+			GL_TEXTURE_2D,
+			0, 0, 0, 0,
+			oculusRenderTextureCombinedGLID,
+			GL_TEXTURE_2D,
+			0, 0, 0, 0,
+			bufferSize.w, bufferSize.h, 1);
+	}
 	//Get the rendering layer
 	layers = &layer.Header;
 
 	//Submit the frame
-	ovr_CommitTextureSwapChain(Oculus->getSession(), textureSwapChain);
+	if (separateTextures)
+	{
+		for (auto i{ 0 }; i < 2; ++i)
+		{
+			ovr_CommitTextureSwapChain(Oculus->getSession(), texturesSeparatedSwapChain[i]);
+		}
+	}
+	else
+	{
+		ovr_CommitTextureSwapChain(Oculus->getSession(), textureCombinedSwapChain);
+	}
+
 	ovr_SubmitFrame(Oculus->getSession(), frameCounter, nullptr, &layers, 1);
 
 	//Update the render debug view if the window is visible
@@ -522,9 +512,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 			0, 0, 0, 0,
 			hmdSize.w, hmdSize.h, 1);
 
-		//Update the window
-		debugViewport->update();
-		window->update();
+		//do something with the mirror texture
 	}
 }
 
@@ -546,7 +534,7 @@ void OgreOculusRender::initializeControllerAxes(const oorEyeType side, std::vect
 	axesVector.push_back(AnnHandControllerAxis{ "GripTrigger X", inputState.HandTrigger[side] });
 }
 
-void OgreOculusRender::ProcessButtonStates(const oorEyeType side) {
+void OgreOculusRender::processButtonStates(const oorEyeType side) {
 	//Extract button states and deduce press/released events
 	pressed.clear(); released.clear();
 	for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
@@ -592,7 +580,7 @@ void OgreOculusRender::updateTouchControllers()
 		axesVector[2].updateValue(inputState.IndexTrigger[side]);
 		axesVector[3].updateValue(inputState.HandTrigger[side]);
 
-		ProcessButtonStates(side);
+		processButtonStates(side);
 
 		//Set all the data on the controller
 		handController->getButtonStateVector() = currentControllerButtonsPressed[side];

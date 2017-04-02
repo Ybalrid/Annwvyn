@@ -19,12 +19,13 @@ AnnLevel::~AnnLevel()
 void AnnLevel::unload()
 {
 	AnnDebug() << "Unloading the level " << this << " From the scene";
+
 	//Remove background music
 	AnnGetAudioEngine()->stopBGM();
-	//Remove the sky
-	AnnGetSceneryManager()->removeSkyDome();
-	//Remove the ambient lighting
-	AnnGetSceneryManager()->setAmbientLight(AnnColor(0, 0, 0));
+
+	//Reset scene
+	AnnGetSceneryManager()->resetSceneParameters();
+
 	//Restore the default gravity
 	AnnGetPhysicsEngine()->resetGravity();
 

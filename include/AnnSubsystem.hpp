@@ -20,8 +20,10 @@ namespace Annwvyn
 
 	protected:
 		friend class AnnEngine;
+
 		///To be called by AnnEngine : update the subsystem for the next frame
 		virtual void update();
+
 		///To be called by AnnEngine : Return if the subsystem wants to be updated
 		virtual bool needUpdate();
 

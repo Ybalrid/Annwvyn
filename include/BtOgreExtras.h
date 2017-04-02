@@ -1,24 +1,20 @@
 /*
- * =====================================================================================
- *
- *       Filename:  BtOgreExtras.h
- *
- *    Description:  Contains the Ogre Mesh to Bullet Shape converters.
- *
- *        Version:  1.0
- *        Created:  27/12/2008 01:45:56 PM
- *
- *         Author:  Nikhilesh (nikki)
- *
- * =====================================================================================
- */
+* =====================================================================================
+*
+*       Filename:  BtOgreExtras.h
+*
+*    Description:  Contains the Ogre Mesh to Bullet Shape converters.
+*
+*        Version:  1.0
+*        Created:  27/12/2008 01:45:56 PM
+*
+*         Author:  Nikhilesh (nikki)
+*
+* =====================================================================================
+*/
 
-#ifndef BTOGRE_EXTRA_H__
-#define BTOGRE_EXTRA_H__
-
-#ifdef _WIN32
-#pragma warning (disable : 4244)
-#endif
+#ifndef _BtOgreShapes_H_
+#define _BtOgreShapes_H_
 
 #include "systemMacro.h"
 
@@ -44,237 +40,115 @@ namespace BtOgre
 		Convert() {};
 		~Convert() {};
 
-		static btQuaternion toBullet(const Ogre::Quaternion &q)
-		{
-			return btQuaternion(q.x, q.y, q.z, q.w);
-		}
+		static btQuaternion toBullet(const Ogre::Quaternion& q);
 
-		static btVector3 toBullet(const Ogre::Vector3 &v)
-		{
-			return btVector3(v.x, v.y, v.z);
-		}
+		static btVector3 toBullet(const Ogre::Vector3& v);
 
-		static Ogre::Quaternion toOgre(const btQuaternion &q)
-		{
-			return Ogre::Quaternion(q.w(), q.x(), q.y(), q.z());
-		}
+		static Ogre::Quaternion toOgre(const btQuaternion& q);
 
-		static Ogre::Vector3 toOgre(const btVector3 &v)
-		{
-			return Ogre::Vector3(v.x(), v.y(), v.z());
-		}
+		static Ogre::Vector3 toOgre(const btVector3& v);
 	};
 
 	//From here on its debug-drawing stuff. ------------------------------------------------------------------
 
-	class DLL DynamicRenderable : public Ogre::SimpleRenderable
+	//Draw the lines Bullet want's you to draw
+	class DLL LineDrawer
 	{
-	public:
-		/// Constructor
-		DynamicRenderable();
-		/// Virtual destructor
-		virtual ~DynamicRenderable();
+		Ogre::String sceneManagerName;
+		///How a line is stored
+		struct line
+		{
+			Ogre::Vector3 start;
+			Ogre::Vector3 end;
+			Ogre::ColourValue vertexColor;
+		};
 
-		/** Initializes the dynamic renderable.
-		 @remarks
-			This function should only be called once. It initializes the
-			render operation, and calls the abstract function
-			createVertexDeclaration().
-		 @param operationType The type of render operation to perform.
-		 @param useIndices Specifies whether to use indices to determine the
-				vertices to use as input. */
-		void initialize(Ogre::RenderOperation::OperationType operationType,
-			bool useIndices);
+		///Where the created objects will be attached
+		Ogre::SceneNode* attachNode;
 
-		/// Implementation of Ogre::SimpleRenderable
-		virtual Ogre::Real getBoundingRadius(void) const;
-		/// Implementation of Ogre::SimpleRenderable
-		virtual Ogre::Real getSquaredViewDepth(const Ogre::Camera* cam) const;
+		///The name of the HLMS datablock to use
+		Ogre::String datablockToUse;
 
-	protected:
-		/// Maximum capacity of the currently allocated vertex buffer.
-		size_t mVertexBufferCapacity;
-		/// Maximum capacity of the currently allocated index buffer.
-		size_t mIndexBufferCapacity;
+		///Array of lines and objects to use
+		std::vector<line> lines;
 
-		/** Creates the vertex declaration.
-		 @remarks
-			Override and set mRenderOp.vertexData->vertexDeclaration here.
-			mRenderOp.vertexData will be created for you before this method
-			is called. */
-		virtual void createVertexDeclaration() = 0;
+		///Manual object used to display the lines
+		Ogre::ManualObject* manualObject;
 
-		/** Prepares the hardware buffers for the requested vertex and index counts.
-		 @remarks
-			This function must be called before locking the buffers in
-			fillHardwareBuffers(). It guarantees that the hardware buffers
-			are large enough to hold at least the requested number of
-			vertices and indices (if using indices). The buffers are
-			possibly reallocated to achieve this.
-		 @par
-			The vertex and index count in the render operation are set to
-			the values of vertexCount and indexCount respectively.
-		 @param vertexCount The number of vertices the buffer must hold.
+		///Pointer to the scene manager containing the physics objects
+		Ogre::SceneManager* smgr;
 
-		 @param indexCount The number of indices the buffer must hold. This
-				parameter is ignored if not using indices. */
-		void prepareHardwareBuffers(size_t vertexCount, size_t indexCount);
-
-		/** Fills the hardware vertex and index buffers with data.
-		 @remarks
-			This function must call prepareHardwareBuffers() before locking
-			the buffers to ensure the they are large enough for the data to
-			be written. Afterwards the vertex and index buffers (if using
-			indices) can be locked, and data can be written to them. */
-		virtual void fillHardwareBuffers() = 0;
-	};
-
-	class DLL DynamicLines : public DynamicRenderable
-	{
-		typedef Ogre::Vector3 Vector3;
-		typedef Ogre::Quaternion Quaternion;
-		typedef Ogre::Camera Camera;
-		typedef Ogre::Real Real;
-		typedef Ogre::RenderOperation::OperationType OperationType;
+		///Vertex index
+		int index;
 
 	public:
-		/// Constructor - see setOperationType() for description of argument.
-		DynamicLines(OperationType opType = Ogre::RenderOperation::OT_LINE_STRIP);
-		virtual ~DynamicLines();
 
-		/// Add a point to the point list
-		void addPoint(const Ogre::Vector3 &p);
-		/// Add a point to the point list
-		void addPoint(Real x, Real y, Real z);
+		///Construct the line drawer, need the name of the scene manager and the datablock (material)
+		LineDrawer(Ogre::SceneNode* node, Ogre::String datablockId, Ogre::String smgrName);
 
-		/// Change the location of an existing point in the point list
-		void setPoint(unsigned short index, const Vector3 &value);
+		~LineDrawer();
 
-		/// Return the location of an existing point in the point list
-		const Vector3& getPoint(unsigned short index) const;
-
-		/// Return the total number of points in the point list
-		unsigned short getNumPoints(void) const;
-
-		/// Remove all points from the point list
+		///Clear the manual object AND the line buffer
 		void clear();
 
-		/// Call this to update the hardware buffer after making changes.
+		///Add a line to the "line buffer", the list of lines that will be shown at next update
+		void addLine(const Ogre::Vector3& start, const Ogre::Vector3& end, const Ogre::ColourValue& value);
+
+		///Check if the material actually exist, if it doesn't create it
+		void checkForMaterial();
+
+		///Update the content of the manual object with the line buffer
 		void update();
-
-		/** Set the type of operation to draw with.
-		 * @param opType Can be one of
-		 *    - RenderOperation::OT_LINE_STRIP
-		 *    - RenderOperation::OT_LINE_LIST
-		 *    - RenderOperation::OT_POINT_LIST
-		 *    - RenderOperation::OT_TRIANGLE_LIST
-		 *    - RenderOperation::OT_TRIANGLE_STRIP
-		 *    - RenderOperation::OT_TRIANGLE_FAN
-		 *    The default is OT_LINE_STRIP.
-		 */
-		void setOperationType(OperationType opType);
-		OperationType getOperationType() const;
-
-	protected:
-		/// Implementation DynamicRenderable, creates a simple vertex-only decl
-		virtual void createVertexDeclaration();
-		/// Implementation DynamicRenderable, pushes point list out to hardware memory
-		virtual void fillHardwareBuffers();
-
-	private:
-		std::vector<Vector3> mPoints;
-		bool mDirty;
 	};
 
-	class DLL DebugDrawer : public btIDebugDraw
+	class DebugDrawer : public btIDebugDraw
 	{
 	protected:
 		Ogre::SceneNode *mNode;
 		btDynamicsWorld *mWorld;
-		DynamicLines *mLineDrawer;
-		bool mDebugOn;
+		int mDebugOn;
+		static constexpr char* unlitDatablockName{ "DebugLinesGenerated" };
+		const Ogre::IdString unlitDatablockId;
+
+		//To accommodate the diffuse color -> light value "change" of meaning of the color of a fragment in HDR pipelines, multiply all colors by this value
+		float unlitDiffuseMultiplier;
+
+		bool stepped;
+		Ogre::String scene;
+		LineDrawer drawer;
 
 	public:
+		///Debug drawer of Bullet.
+		/// \param node SceneNode (usually the Root node) where the lines will be attached. A static child node will be created
+		/// \param world Pointer to the btDynamicsWolrd you're using
+		/// \param smgrName Name of the scene manager you are using
+		DebugDrawer(Ogre::SceneNode* node, btDynamicsWorld* world, Ogre::String smgrName = "MAIN_SMGR");
 
-		DebugDrawer(Ogre::SceneNode *node, btDynamicsWorld *world)
-			: mNode(node),
-			mWorld(world),
-			mDebugOn(true)
-		{
-			mLineDrawer = new DynamicLines(Ogre::RenderOperation::OT_LINE_LIST);
-			mNode->attachObject(mLineDrawer);
+		virtual ~DebugDrawer();
 
-			if (!Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("BtOgre"))
-				Ogre::ResourceGroupManager::getSingleton().createResourceGroup("BtOgre");
-			if (!Ogre::MaterialManager::getSingleton().resourceExists("BtOgre/DebugLines"))
-			{
-				Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create("BtOgre/DebugLines", "BtOgre");
-				mat->setReceiveShadows(false);
-				mat->setSelfIllumination(1, 1, 1);
-			}
+		///Set the value to multiply the texure. >= 1. Usefull only for HDR rendering
+		void setUnlitDiffuseMultiplier(float value);
 
-			mLineDrawer->setMaterial("BtOgre/DebugLines");
-		}
+		///For bullet : add a line to the drawer
+		virtual void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override;
 
-		~DebugDrawer()
-		{
-			Ogre::MaterialManager::getSingleton().remove("BtOgre/DebugLines");
-			Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup("BtOgre");
-			delete mLineDrawer;
-		}
+		///Dummy. Rendering text is hard :D
+		virtual void draw3dText(const btVector3& location, const char* textString) override;
 
-		void step()
-		{
-			if (mDebugOn)
-			{
-				mWorld->debugDrawWorld();
-				mLineDrawer->update();
-				mNode->needUpdate();
-				mLineDrawer->clear();
-			}
-			else
-			{
-				mLineDrawer->clear();
-				mLineDrawer->update();
-				mNode->needUpdate();
-			}
-		}
+		///Just render the contact point wit a line
+		virtual void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color) override;
 
-		void drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
-		{
-			mLineDrawer->addPoint(Convert::toOgre(from));
-			mLineDrawer->addPoint(Convert::toOgre(to));
-		}
+		///Redirect erros to the Ogre default log
+		virtual void reportErrorWarning(const char* warningString) override;
 
-		void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color)
-		{
-			mLineDrawer->addPoint(Convert::toOgre(PointOnB));
-			mLineDrawer->addPoint(Convert::toOgre(PointOnB) + (Convert::toOgre(normalOnB) * distance * 20));
-		}
+		///Set the debug mode. Acceptable values are combinations of the flags defined by btIDebugDraw::DebugDrawModes
+		virtual void setDebugMode(int isOn) override;
 
-		void reportErrorWarning(const char* warningString)
-		{
-			Ogre::LogManager::getSingleton().logMessage(warningString);
-		}
+		///get the current debug mode
+		virtual int getDebugMode() const override;
 
-		void draw3dText(const btVector3& location, const char* textString)
-		{
-		}
-
-		//0 for off, anything else for on.
-		void setDebugMode(int isOn)
-		{
-			mDebugOn = (isOn == 0) ? false : true;
-
-			if (!mDebugOn)
-				mLineDrawer->clear();
-		}
-
-		//0 for off, anything else for on.
-		int	getDebugMode() const
-		{
-			return mDebugOn;
-		}
+		///Step the debug drawer
+		void step();
 	};
 }
 

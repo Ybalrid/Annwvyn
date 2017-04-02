@@ -1,3 +1,8 @@
+# generated shader file in the example and template directiory
+
+example/*.glsl
+template/*.glsl
+
 # Compiled Object files
 *.slo
 *.lo

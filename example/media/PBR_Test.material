@@ -1,0 +1,8 @@
+
+hlms PBR_Test pbs
+{
+    diffuse_map Sphere_Sphere_Diffuse.png
+    normal_map Sphere_Sphere_Normal.png
+    roughness_map Sphere_Sphere_Roughness.png
+    specular_map Sphere_Sphere_Specular.png
+}

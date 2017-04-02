@@ -7,8 +7,33 @@
 #include <array>
 
 #include <Ogre.h>
+#include <OgreSceneNode.h>
+#include <OgreCamera.h>
+#include <Compositor/OgreCompositorManager2.h>
+#include <Compositor/OgreCompositorWorkspaceDef.h>
+#include <Compositor/OgreCompositorWorkspace.h>
+#include <Compositor/OgreCompositorNode.h>
+#include <Compositor/OgreCompositorNodeDef.h>
+#include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
+#include <OgreMaterialManager.h>
+#include <OgreMaterial.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
+#include <Hlms/Pbs/OgreHlmsPbs.h>
+#include <Hlms/Unlit/OgreHlmsUnlit.h>
+#include <OgreHlmsManager.h>
+#include <OgreHlms.h>
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
+
+#include <glew.h>
+#include <GLFW/glfw3.h>
+
+//Native windows access (for getting the handle and the context)
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NAVIVE_WGL
+#include <GLFW/glfw3native.h>
+#include <algorithm>
 
 constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 
@@ -27,11 +52,34 @@ class DLL OgreVRRender
 {
 public:
 	///Name of the rendersystem plugin to load on Ogre
-	static constexpr const char* const PluginRenderSystemGL{ "RenderSystem_GL" };
-	///Name of the scene manager plugin to load on ogre
-	static constexpr const char* const PluginOctreeSceneManager{ "Plugin_OctreeSceneManager" };
+	static constexpr const char* const PluginRenderSystemGL3Plus{ "RenderSystem_GL3Plus" };
 	///Name of the rendersystem to initialize
-	static constexpr const char* const GLRenderSystem{ "OpenGL Rendering Subsystem" };
+	static constexpr const char* const GLRenderSystem3Plus{ "OpenGL 3+ Rendering Subsystem" };
+	///Resource group to load the shaders, material and compositor script for rendering.
+	static constexpr const char* const RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
+
+	///number of hardware threads
+	const size_t numberOfThreads;
+
+	///Indexes of the compositor workspace
+	enum compositorIndex : size_t
+	{
+		leftEyeCompositor = 0,
+		rightEyeCompositor = 1,
+		monoCompositor = 2,
+		nbCompositor = 3,
+	};
+
+	///Liist of the levels of shadow filtering available
+	enum class ShadowFiltering
+	{
+		low,
+		medium,
+		high
+	};
+
+	///Set the shadow filtering level (quality)
+	void setShadowFiltering(ShadowFiltering level);
 
 	///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 	static bool UseSSAA;
@@ -117,10 +165,6 @@ public:
 	///Put the current position as the center of tracking
 	virtual void recenter() = 0;
 
-	///Change the color of the pixels when there is *nothing*
-	/// \param color Color to use as background
-	virtual void changeViewportBackgroundColor(Ogre::ColourValue color) = 0;
-
 	///(Optional) Cycle through the client debug display if available.
 	virtual void cycleDebugHud() {};
 
@@ -129,6 +173,9 @@ public:
 
 	///Set the distance from the viewpoint to the far clipping distance plane
 	void setFarClippingDistance(float distance);
+
+	///Detach camera from their parent node. It seems that Ogre automatically attach new cameras to the root...
+	static void detachCameraFromParent(Ogre::Camera* camera);
 
 	///The projection matrix is generally given by the underlying VR api, generally, using the near/far clipping distances set in this class
 	/// \note this method is called by the set{Near/Far}ClippingDistance() automatically.
@@ -152,11 +199,11 @@ public:
 	///Get the size of the controller array
 	static size_t getHanControllerArraySize();
 
-	///Return the number of non nullptr handControllers. Hand controllers are dynamically allocated by the VRRenderer if presents.
-	DEPRECATED size_t getRecognizedControllerCount();
-
 	///Return true if the hand controllers are available
 	bool handControllersAvailable() const;
+
+	///Make sure a string will be usable as a path for the hlms library/compositor resource group
+	static void makeValidPath(std::string& hlmsFolder);
 
 	///Called when the IPD needs to be taken into account. Translate the cameras along local X to make them match the position of your eyes
 	virtual void handleIPDChange() = 0;
@@ -174,8 +221,11 @@ public:
 	///Load "modern" OpenGL functions for the current OpenGL context.
 	static void loadOpenGLFunctions();
 
-	///This method create a texture with the wanted Anti Aliasing level. It will set the rttTexture and rttEyes member of this class to the correct value, and return the GLID of the texture.
-	unsigned int createRenderTexture(float w, float h);
+	///This method create a texture with the wanted Anti Aliasing level. It will set the rttTextureCombined and rttEyesCombined member of this class to the correct value, and return the GLID of the texture.
+	unsigned int createCombinedRenderTexture(float w, float h);
+
+	///This create a couple of separated render texture
+	std::array<unsigned int, 2> createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions);
 
 	///Create a render buffer with not anti aliasing. return a tuple with a TexturePtr and a GLID. use <code><pre>std::get<></pre></code>
 	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(float w, float h, std::string name = "") const;
@@ -186,8 +236,47 @@ public:
 	///Get the name of this renderer
 	std::string getName() const;
 
+	///Load the HLMS library from the file-system
+	void loadHLMSLibrary(const std::string& path = "./hlms/");
+
+	///Load the compositor resources that are needed to setup the pipeline
+	void loadCompositor(const std::string& path = "./compositor/", const std::string& type = "FileSystem");
+
+	///Set the color used on the "clear" pass of the compositor node given
+	void setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName) const;
+
+	///Set the exposure, need the name of the post process material
+	void setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial = "HDR/DownScale03_SumLumEnd") const;
+
+	///Se the bloom threshold. Need the name of the brightness pass material
+	void setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial = "HDR/BrightPass_Start");
+
+	///Create the main scene manager and set some shadow parameters
+	void createMainSmgr();
+
+private:
+
+	///GL version to use
+	const GLuint glMajor, glMinor;
+
+	///GL FrameWork window
+	GLFWwindow* glfwWindow;
+
+	///Shading language to use
+	static constexpr const char* const SL{ "GLSL" };
+
+	///Window size
+	int windowW, windowH;
+
 protected:
 
+	///Handle the window messages and resize event
+	void handleWindowMessages();
+
+	///Compositor workspaces. 0 = left, 1 = right, 2 = monoscopic, plugged to the render window
+	std::array<Ogre::CompositorWorkspace*, nbCompositor> compositorWorkspaces;
+
+	///Name of the renderer object
 	std::string rendererName;
 
 	///Called if AA level has been updated
@@ -226,9 +315,6 @@ protected:
 	///Node that represent the head base. Move this in 3D to move the viewpoint
 	Ogre::SceneNode* gameplayCharacterRoot;
 
-	///background color of viewports
-	Ogre::ColourValue backgroundColor;
-
 	///Cameras that have to be put where the user's eye is
 	std::array<Ogre::Camera*, 2> eyeCameras;
 
@@ -242,10 +328,10 @@ protected:
 	unsigned long long int frameCounter;
 
 	///Render target that serve as intermediate buffer for the eyeCameras
-	Ogre::RenderTexture* rttEyes;
+	Ogre::RenderTexture* rttEyesCombined;
 
-	///The texture that is used to hold the render target
-	Ogre::TexturePtr rttTexture;
+	///Couple of render textures separated
+	std::array <Ogre::RenderTexture*, 2> rttEyeSeparated;
 
 	///Level of anti aliasing to use.
 	static uint8_t AALevel;
@@ -266,7 +352,8 @@ protected:
 	static constexpr const char* const rttTextureName = { "RttTex" };
 
 private:
-	enum side : uint8_t { left = 0, right = 1 };
+	///left, right enums
+	enum side : uint8_t { left = 0x1, right = 0x2 };
 };
 
 #endif

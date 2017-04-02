@@ -10,13 +10,28 @@ AnnLightObject::AnnLightObject(Ogre::Light* light) :
 	light(light)
 {
 	AnnDebug() << "Light constructor called";
+	if (light)
+	{
+		node = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+		node->attachObject(light);
+	}
 }
 
 AnnLightObject::~AnnLightObject()
 {
 	AnnDebug() << "Light destructor called";
 	if (light)
+	{
+		if (node)
+		{
+			node->detachObject(light);
+			if (node->getParentSceneNode())
+				node->getParentSceneNode()->removeChild(node);
+			AnnGetEngine()->getSceneManager()->destroySceneNode(node);
+			node = nullptr;
+		}
 		AnnGetEngine()->getSceneManager()->destroyLight(light);
+	}
 }
 
 AnnLightObject::LightTypes AnnLightObject::getLightTypeFromString(std::string ltype)
@@ -29,7 +44,7 @@ AnnLightObject::LightTypes AnnLightObject::getLightTypeFromString(std::string lt
 
 void AnnLightObject::setPosition(AnnVect3 position)
 {
-	light->setPosition(position);
+	node->setPosition(position);
 }
 
 void AnnLightObject::setDirection(AnnVect3 direction) const
@@ -64,7 +79,7 @@ AnnColor AnnLightObject::getSpecularColor() const
 
 AnnVect3 AnnLightObject::getPosition()
 {
-	return light->getPosition();
+	return node->getPosition();
 }
 
 void AnnLightObject::setAttenuation(float range, float constant, float linear, float quadratic)
@@ -75,4 +90,14 @@ void AnnLightObject::setAttenuation(float range, float constant, float linear, f
 Ogre::Light* AnnLightObject::getOgreLight()
 {
 	return light;
+}
+
+void AnnLightObject::setPower(float lumens)
+{
+	light->setPowerScale(lumens);
+}
+
+float AnnLightObject::getPower()
+{
+	return light->getPowerScale();
 }

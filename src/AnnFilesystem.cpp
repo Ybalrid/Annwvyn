@@ -26,7 +26,7 @@ void AnnFileWriter::write(shared_ptr<AnnSaveFileData> data)
 
 	//Open the file, abort if the file isn't openable
 	saveFile.open(path); if (!saveFile.is_open())return;
-		//push as plain text all key and data in a "key=data\n" format
+	//push as plain text all key and data in a "key=data\n" format
 	for (auto storedData : data->storedTextData)
 		saveFile << storedData.first
 		<< "="
@@ -328,5 +328,3 @@ AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(string key) const
 		stringToFloat(y),
 		stringToFloat(z));
 }
-
-AnnSaveDataInterpretor::~AnnSaveDataInterpretor() {}

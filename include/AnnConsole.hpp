@@ -16,6 +16,9 @@
 #include <Ogre.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
+#include <OgreRenderOperation.h>
+#include <Hlms/Unlit/OgreHlmsUnlitDatablock.h>
+#include <OgreHardwarePixelBuffer.h>
 
 #include "AnnSubsystem.hpp"
 
@@ -33,6 +36,7 @@ namespace Annwvyn
 
 		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational
 		AnnConsole();
+		~AnnConsole();
 
 		///Add text to the console buffer. The console buffer will keep CONSOLE_BUFFER lines of messages in memory only
 		/// \param string text to append to the console
