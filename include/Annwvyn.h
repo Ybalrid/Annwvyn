@@ -69,7 +69,7 @@
  *
  */
 
-//Some C++ misc utils
+ //Some C++ misc utils
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -195,7 +195,7 @@ namespace Annwvyn
 #ifdef _WIN32
 #include "windows.h"
 
-///Application entry point
+ ///Application entry point
 #define AnnMain() int AnnwvynStart();										\
 std::string detectedHMD;													\
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)		\
@@ -209,7 +209,7 @@ int AnnwvynStart()
 
 #else
 
-///Application entry point
+ ///Application entry point
 #define AnnMain() int AnnwvynStart();										\
 std::string detectedHMD;													\
 int main(int argc, char** argv)												\
