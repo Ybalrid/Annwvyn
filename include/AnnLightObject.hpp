@@ -55,7 +55,7 @@ namespace Annwvyn
 		///Get the specular color of this light source
 		AnnColor getSpecularColor() const;
 
-		///Set the power of this lamp (in lumens) 
+		///Set the power of this lamp (in lumens)
 		void setPower(float lumens);
 
 		///get the current power of this lamp

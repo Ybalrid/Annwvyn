@@ -5,13 +5,13 @@
  * \author A. Brainville
  */
 
-//PLEASE INCLUDE THIS FILE ON ANY ANNWVYN HEADER
+ //PLEASE INCLUDE THIS FILE ON ANY ANNWVYN HEADER
 
-/*This file contains macros and symbols definition that have to be
-* parsed by pre-compiler on each file.
-*/
+ /*This file contains macros and symbols definition that have to be
+ * parsed by pre-compiler on each file.
+ */
 
-//DLL management for visual studio compiler.
+ //DLL management for visual studio compiler.
 #undef DLL
 #ifdef DLLDIR_EX //Defined in Annwvyn MSVC project file only
 	///To construct a DLL, The macro __declspec(dllexport) have to be called in front of the exported symbol

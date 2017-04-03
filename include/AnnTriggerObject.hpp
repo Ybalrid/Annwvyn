@@ -101,8 +101,8 @@ namespace Annwvyn
 	///Create a trigger volume that is aligned with the scene referential.
 	class DLL AnnAlignedBoxTriggerObject : public AnnTriggerObject
 	{
-	///Volume is defined by min/max XYZ boundaries
-	///This is the lowest load in CPU time
+		///Volume is defined by min/max XYZ boundaries
+		///This is the lowest load in CPU time
 
 	public:
 

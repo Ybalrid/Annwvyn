@@ -194,10 +194,10 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
 	ALenum Format;
 	switch (FileInfos.channels)
 	{
-		case 1: AnnEngine::log("Mono 16bits sound loaded");	Format = AL_FORMAT_MONO16;   break;
-		case 2: AnnEngine::log("Stereo 16bits sound loaded");  Format = AL_FORMAT_STEREO16; break;
+	case 1: AnnEngine::log("Mono 16bits sound loaded");	Format = AL_FORMAT_MONO16;   break;
+	case 2: AnnEngine::log("Stereo 16bits sound loaded");  Format = AL_FORMAT_STEREO16; break;
 
-		default: return 0;
+	default: return 0;
 	}
 
 	//create OpenAL buffer
