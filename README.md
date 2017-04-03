@@ -1,7 +1,6 @@
 Annwvyn
 =======
 
-***this Ogre21 brancch is a WIP and should not be used***
 
 Annwvyn Engine is a simple C++ game engine built upon free and open source technologies to easily create applications and games using Virtual Reality HMD.
 Freely distributed under the MIT license.
