@@ -43,6 +43,7 @@ namespace Annwvyn
 	};
 }
 
+///Renderer for OpenVR
 class DLL OgreOpenVRRender : public OgreVRRender
 {
 	///Marker for left and right : "Ogre Open VR Eye Type"

@@ -59,6 +59,8 @@
 namespace Annwvyn
 {
 	class AnnEngine;
+
+	///Utility class for AnnEngine
 	class DLL AnnEngineSingletonReseter
 	{
 	private:

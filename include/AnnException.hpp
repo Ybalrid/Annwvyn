@@ -27,6 +27,7 @@ namespace Annwvyn
 		static std::ostringstream outputFormater;
 	};
 
+	///Exception relating physics setup and parent/child objects
 	class DLL AnnPhysicsSetupChildError : public std::runtime_error
 	{
 	public:
@@ -36,6 +37,7 @@ namespace Annwvyn
 		AnnGameObject* objectWithProblem;
 	};
 
+	///Exception in hand controller "side" detection
 	class DLL AnnInvalidControllerSide : public std::runtime_error
 	{
 	public:
@@ -43,6 +45,7 @@ namespace Annwvyn
 		const char* what() const throw() override;
 	};
 
+	///Exception regarding an AnnGameObject that was null when it wasnt
 	class DLL AnnNullGameObjectError : public std::runtime_error
 	{
 	public:
@@ -50,6 +53,7 @@ namespace Annwvyn
 		const char* what() const throw() override;
 	};
 
+	///Exception regarding engine utilisation. See message
 	class DLL AnnInitializationError : public std::runtime_error
 	{
 	public:

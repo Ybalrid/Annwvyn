@@ -15,6 +15,7 @@
 
 namespace Annwvyn
 {
+	///Abstract movable implementation : Manual plane object with some text rendered on it
 	class DLL Ann3DTextPlane : public AnnAbstractMovable
 	{
 	public:

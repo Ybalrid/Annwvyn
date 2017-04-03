@@ -10,6 +10,8 @@
 namespace Annwvyn
 {
 	class AnnGameObject;
+
+	///Object that reprenset a script defining an object "behavior"
 	class DLL AnnBehaviorScript : LISTENER
 	{
 	public:
