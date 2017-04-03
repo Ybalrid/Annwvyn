@@ -149,7 +149,7 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NOMINMAX;BOOST_ALL_NO_LIB;DLLDIR_EX;WIN32;NDEBUG;_WINDOWS;_USRDLL;ANNWVYN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\glfw-3.2.1.bin.WIN64\include;..\..\..\AL\openal-soft\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext\GL;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\Ogre21SDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;..\..\pch;..\..\..\openvr\headers;..\..\..\chaiscript;..\..\..\tinyxml2\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\glfw-3.2.1.bin.WIN64\include;..\..\..\AL\openal-soft\include\AL;..\..\..\libsndfile\include;..\..\..\AL\openal-soft\OpenAL32\Include;..\..\..\OculusSDK\LibOVR\Src;..\..\..\OculusSDK\3rdParty\glext\GL;..\..\..\OculusSDK\3rdParty\glext;..\..\..\OculusSDK\LibOVRKernel\Src;..\..\..\OculusSDK\LibOVR\Include;..\..\..\bullet3\src;..\..\..\Ogre21SDK\include\OGRE;..\..\..\OIS\include;..\..\..\glew\include;..\..\..\glew\include\GL;..\..\pch;..\..\..\openvr\headers;..\..\..\chaiscript;..\..\..\tinyxml2\;..\..\..\BtOgre21\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/Zm300 %(AdditionalOptions)</AdditionalOptions>
@@ -164,8 +164,8 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\glfw-3.2.1.bin.WIN64\lib-vc2015\;..\..\..\AL\openal-soft\build\Release;..\..\..\bullet3\lib\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\OIS_ReleaseDll;..\..\..\Ogre21SDK\lib\Release\opt;..\..\..\Ogre21SDK\lib\Release;..\..\..\OculusSDK\LibOVR\Lib\Windows\x64\Release\VS2015\;..\..\..\glew\lib\Release\x64;..\..\..\openvr\lib\win64;..\..\..\tinyxml2\tinyxml2\bin\tinyxml2\x64-Release-Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;OgreHlmsPbs.lib;OgreHlmsUnlit.lib;OIS.lib;Setupapi.lib;LibOVR.lib;openvr_api.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\glfw-3.2.1.bin.WIN64\lib-vc2015\;..\..\..\AL\openal-soft\build\Release;..\..\..\bullet3\lib\Release;..\..\..\bullet3\lib;..\..\..\libsndfile\lib;..\..\..\OIS\OIS_ReleaseDll;..\..\..\Ogre21SDK\lib\Release\opt;..\..\..\Ogre21SDK\lib\Release;..\..\..\OculusSDK\LibOVR\Lib\Windows\x64\Release\VS2015\;..\..\..\glew\lib\Release\x64;..\..\..\openvr\lib\win64;..\..\..\tinyxml2\tinyxml2\bin\tinyxml2\x64-Release-Lib\;..\..\..\BtOgre21\build\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;ws2_32.lib;OgreMain.lib;OgreOverlay.lib;OgreHlmsPbs.lib;OgreHlmsUnlit.lib;OIS.lib;Setupapi.lib;LibOVR.lib;openvr_api.lib;Winmm.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;OpenAL32.lib;libsndfile-1.lib;tinyxml2.lib;BtOgre21.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -218,10 +218,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClInclude Include="..\..\include\AnnVect3.hpp" />
     <ClInclude Include="..\..\include\Annwvyn.h" />
     <ClInclude Include="..\..\include\AnnXmlLevel.hpp" />
-    <ClInclude Include="..\..\include\BtOgre.hpp" />
-    <ClInclude Include="..\..\include\BtOgreExtras.h" />
-    <ClInclude Include="..\..\include\BtOgreGP.h" />
-    <ClInclude Include="..\..\include\BtOgrePG.h" />
     <ClInclude Include="..\..\include\doxygen_scriptapi.hpp" />
     <ClInclude Include="..\..\include\euler.h" />
     <ClInclude Include="..\..\include\OculusInterface.hpp" />
@@ -272,9 +268,6 @@ COPY "$(TargetDir)\Annwvyn.pdb" "$(TargetDir)\..\template\"
     <ClCompile Include="..\..\src\AnnUserSpaceSubSystem.cpp" />
     <ClCompile Include="..\..\src\AnnVect3.cpp" />
     <ClCompile Include="..\..\src\AnnXmlLevel.cpp" />
-    <ClCompile Include="..\..\src\BtOgreExtras.cpp" />
-    <ClCompile Include="..\..\src\BtOgreGP.cpp" />
-    <ClCompile Include="..\..\src\BtOgrePG.cpp" />
     <ClCompile Include="..\..\src\OculusInterface.cpp" />
     <ClCompile Include="..\..\src\OgreNoVRRender.cpp" />
     <ClCompile Include="..\..\src\OgreOculusRender.cpp" />
