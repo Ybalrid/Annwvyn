@@ -320,6 +320,7 @@ namespace Annwvyn
 	};
 	class AnnHandController;
 
+	///A hand controller event
 	class DLL AnnHandControllerEvent : public AnnEvent
 	{
 	public:

@@ -7,7 +7,7 @@
 
 namespace Annwvyn
 {
-	///Abstract Class that represent a movable object. Define the API used to move simple objects in 3D space
+	///Abstract Class that represent a an object that you can set the position. Define the API used to move simple objects in 3D space
 	class DLL AnnAbstractTranslatable
 	{
 	public:
@@ -17,6 +17,7 @@ namespace Annwvyn
 		virtual AnnVect3 getPosition() = 0;
 	};
 
+	///Abstract Class that represent an bobject that you can set the orientation.
 	class DLL AnnAbstractMovable : public AnnAbstractTranslatable
 	{
 	protected:
