@@ -72,6 +72,7 @@
 #include <OIS.h>
 
 //Bullet
+#include <BtOgre.hpp>
 #include <btBulletCollisionCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>

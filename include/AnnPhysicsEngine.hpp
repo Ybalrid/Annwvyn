@@ -16,7 +16,7 @@
 #include <btBulletDynamicsCommon.h>
 
 //btOgre
-#include "BtOgre.hpp"
+#include <BtOgre.hpp>
 
 //AnnEngine
 #include "AnnEngine.hpp"
