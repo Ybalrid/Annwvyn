@@ -17,16 +17,14 @@
 #include <OgreEntity.h>
 #include <OgreItem.h>
 
-#include "BtOgreGP.h"
-#include "BtOgrePG.h"
-#include "BtOgreExtras.h"
-
  //Annwvyn
 #include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
 #include "AnnScriptManager.hpp"
 
 #include "AnnAbstractMovable.hpp"
+
+#include <BtOgrePG.h>
 #pragma warning(default:4996)
 
 namespace Annwvyn
