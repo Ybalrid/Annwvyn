@@ -209,9 +209,6 @@ namespace Annwvyn
 		///For engine : set Entity
 		void setItem(Ogre::Item* item);
 
-		///Set the legacy mesh for BtOgre
-		void setPhysicsMesh(Ogre::v1::MeshPtr mesh);
-
 		///For engine : get elapsed time
 		void addAnimationTime(double offsetTime) const;
 
@@ -223,9 +220,6 @@ namespace Annwvyn
 
 		///Entity
 		Ogre::Item* Model;
-
-		///Version 1 of the mesh, to extract data for physics
-		Ogre::v1::MeshPtr v1mesh;
 
 		///Currently selected animation
 		Ogre::SkeletonAnimation* currentAnimation;

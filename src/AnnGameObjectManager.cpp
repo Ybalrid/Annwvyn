@@ -59,6 +59,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	Ogre::v1::MeshPtr v1Mesh;
 	Ogre::MeshPtr v2Mesh;
 	getMesh(meshName, v1Mesh, v2Mesh);
+	v1Mesh.setNull();
 
 	//Create an item
 	Ogre::Item* item = smgr->createItem(v2Mesh);
@@ -72,7 +73,6 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	//Set GameObject members
 	obj->setNode(node);
 	obj->setItem(item);
-	obj->setPhysicsMesh(v1Mesh);
 	obj->audioSource = AnnGetAudioEngine()->createSource();
 
 	//id will be unique to every non-identified object.
