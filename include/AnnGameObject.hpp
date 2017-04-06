@@ -230,6 +230,7 @@ namespace Annwvyn
 		///Bullet rigid body
 		btRigidBody* Body;
 
+		///Mass of the rigid body
 		float bodyMass;
 
 		///AnnAudioEngine audioSource;
