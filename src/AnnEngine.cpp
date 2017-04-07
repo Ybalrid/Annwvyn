@@ -50,6 +50,7 @@ void AnnEngine::startGameplayLoop()
 
 AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	resetGuard(this),
+	applicationQuitRequested(false),
 	renderer(nullptr),
 	resourceManager(nullptr),
 	sceneryManager(nullptr),
@@ -62,8 +63,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	player(nullptr),
 	SceneManager(nullptr),
 	vrRendererPovGameplayPlacement(nullptr),
-	updateTime(-1),
-	applicationQuitRequested(false)
+	updateTime(-1)
 {
 	if (singleton)
 	{

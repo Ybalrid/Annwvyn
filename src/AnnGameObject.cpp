@@ -117,7 +117,7 @@ void AnnGameObject::setOrientation(float w, float x, float y, float z)
 void AnnGameObject::setOrientation(AnnQuaternion orient)
 {
 	//Ogre3D
-	Node->setOrientation(orient);
+	Node->setOrientation(static_cast<Ogre::Quaternion>(orient));
 
 	//bullet
 	if (Body)

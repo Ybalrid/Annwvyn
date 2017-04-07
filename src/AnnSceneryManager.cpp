@@ -12,10 +12,10 @@ defaultExposure(0.0f),
 defaultMinAutoExposure(0),
 defaultMaxAutoExposure(0),
 defaultSkyColorMultiplier(15.f),
-defaultSkyColor(0.05f, 0.45f, 1.f),
 defaultBloom(5),
 defaultUpperAmbientLightMul(2.5f),
 defaultLowerAmbientLightMul(2.925f),
+defaultSkyColor(0.05f, 0.45f, 1.f),
 defaultUpperAmbient(0.3f, 0.5f, 0.7f),
 defaultLowerAmbient(0.6f, 0.45f, 0.3f)
 {

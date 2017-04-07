@@ -200,8 +200,8 @@ void OgreVRRender::initCameras()
 
 void OgreVRRender::applyCameraRigPose(OgrePose pose) const
 {
-	cameraRig->setPosition(pose.position);
-	cameraRig->setOrientation(pose.orientation);
+	cameraRig->setPosition(static_cast<Ogre::Vector3>(pose.position));
+	cameraRig->setOrientation(static_cast<Ogre::Quaternion>(pose.orientation));
 }
 
 void OgreVRRender::syncGameplayBody()

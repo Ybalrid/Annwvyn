@@ -416,7 +416,7 @@ void Ann3DTextPlane::setPosition(AnnVect3 p)
 
 void Ann3DTextPlane::setOrientation(AnnQuaternion q)
 {
-	node->setOrientation(q);
+	node->setOrientation(static_cast<Ogre::Quaternion>(q));
 }
 
 void Ann3DTextPlane::setTextAlign(TextAlign talign)
