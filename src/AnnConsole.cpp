@@ -432,7 +432,7 @@ void AnnConsole::syncConsolePosition() const
 	auto targetOrientaiton = AnnGetVRRenderer()->trackedHeadPose.orientation;
 
 	consoleNode->setPosition(targetPosition);
-	consoleNode->setOrientation(targetOrientaiton);
+	consoleNode->setOrientation(static_cast<Ogre::Quaternion>(targetOrientaiton));
 }
 
 bool AnnConsole::needUpdate()

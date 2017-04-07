@@ -163,7 +163,7 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 
 	btCollisionShape* sphere;
 	sphere = new btSphereShape(0.25f);
-	btRigidBody* body = new btRigidBody(0, nullptr, sphere);
+	auto body = new btRigidBody(0, nullptr, sphere);
 
 	playerObject->setShape(sphere);
 	playerObject->setBody(body);

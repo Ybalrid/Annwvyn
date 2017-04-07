@@ -96,7 +96,7 @@ void AnnHandController::setTrackedPosition(AnnVect3 position)
 void AnnHandController::setTrackedOrientation(AnnQuaternion orientation)
 {
 	tracked = true;
-	node->setOrientation(orientation);
+	node->setOrientation(static_cast<Ogre::Quaternion>(orientation));
 }
 
 void AnnHandController::setTrackedLinearSpeed(AnnVect3 v)
