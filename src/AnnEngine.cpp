@@ -320,19 +320,16 @@ bool AnnEngine::refresh()
 {
 	// Get the rendering delta time (should be roughly equals to
 	// 1/desiredFramerate in seconds)
+	//Update VR form real world
+	syncPov();
+	renderer->updateTracking();
+
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(getFrameTime());
 
 	for (auto& SubSystem : SubSystemList)
 		if (SubSystem->needUpdate())
 			SubSystem->update();
-
-	syncPov();
-
-	//Update VR form real world
-	renderer->updateTracking();
-
-	onScreenConsole->syncConsolePosition();
 
 	//Update view
 	renderer->renderAndSubmitFrame();
