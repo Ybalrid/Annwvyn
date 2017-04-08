@@ -188,6 +188,8 @@ namespace Annwvyn
 
 		void hintRoomscaleUpdateTranslationReference();
 
+		void syncToTrackedPose();
+
 	protected:
 
 		///Object that keep body parameters (= legacy structure)

@@ -333,17 +333,7 @@ void AnnPlayer::engineUpdate(float deltaTime)
 			playerBody->RoomBase += roomTranslation;
 		}
 
-		if (playerBody->Body)
-		{
-			btTransform transform;
-			auto pose = AnnGetVRRenderer()->trackedHeadPose;
-			transform.setOrigin(pose.position.getBtVector());
-			transform.setRotation(pose.orientation.getBtQuaternion());
-			playerBody->Body->setAngularVelocity(btVector3(0, 0, 0));
-			playerBody->Body->setLinearVelocity(btVector3(0, 0, 0));
-			playerBody->Body->setWorldTransform(transform);
-			playerBody->Body->activate(true);
-		}
+		syncToTrackedPose();
 
 		break;
 
@@ -399,4 +389,20 @@ void AnnPlayer::regroundOnPhysicsBody(float length, AnnVect3 preoffset)
 void AnnPlayer::hintRoomscaleUpdateTranslationReference()
 {
 	roomTranslateQuatReference = true;
+}
+
+void AnnPlayer::syncToTrackedPose()
+{
+	if (mode != ROOMSCALE) return;
+	if (playerBody->Body)
+	{
+		btTransform transform;
+		auto pose = AnnGetVRRenderer()->trackedHeadPose;
+		transform.setOrigin(pose.position.getBtVector());
+		transform.setRotation(pose.orientation.getBtQuaternion());
+		playerBody->Body->setAngularVelocity(btVector3(0, 0, 0));
+		playerBody->Body->setLinearVelocity(btVector3(0, 0, 0));
+		playerBody->Body->setWorldTransform(transform);
+		playerBody->Body->activate(true);
+	}
 }
