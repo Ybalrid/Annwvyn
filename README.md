@@ -5,6 +5,8 @@ Annwvyn
 Annwvyn Engine is a simple C++ game engine built upon free and open source technologies to easily create applications and games using Virtual Reality HMD.
 Freely distributed under the MIT license.
 
+For any questions, shout me a mail at developer@annwvyn.org, or at ybalrid@ybalrid.info
+
 Currently the engine supports :
  - Oculus Rift through the Oculus SDK
  - OpenVR
