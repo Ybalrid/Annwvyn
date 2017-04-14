@@ -1,7 +1,9 @@
-cmake_minimum_required(VERSION 2.8.0)
+cmake_minimum_required(VERSION 3.6.3)
 
 
 project(Annwvyn)
+
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE) 
 
 #Annwvyn SDK check
 if(NOT DEFINED ENV{AnnwvynSDK64})
@@ -24,10 +26,32 @@ else()
 
 endif()
 
+#Where to find modules
+set(CMAKE_MODULE_PATH 
+    $ENV{AnnwvynSDK64}/CMakeModules
+    $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
+    $ENV{AnnwvynSDK64}/BtOgre21/CMake
+    )
+
+#Set path required for CMake modules
+set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK)
+set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3)
+set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/)
+
+#Find findable packages
+find_package(OGRE COMPONENTS Overlay HlmsPbs HlmsUnlit REQUIRED)
+find_package(Bullet REQUIRED)
+find_package(BtOgre21 REQUIRED)
+
 #includes from old visual studio solution
 #
 
 include_directories(
+    ${OGRE_INCLUDE_DIRS}
+    ${OGRE_HlmsPbs_INCLUDE_DIRS}
+    ${OGRE_HlmsUnlit_INCLUDE_DIRS}
+    ${BULLET_INCLUDE_DIRS}
+    ${BtOgre21_INCLUDE_DIRS}
     $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/include
     $ENV{AnnwvynSDK64}/AL/openal-soft/include/AL
     $ENV{AnnwvynSDK64}/libsndfile/include
@@ -37,16 +61,12 @@ include_directories(
     $ENV{AnnwvynSDK64}/OculusSDK/3rdParty/glext
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVRKernel/Src
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Include
-    $ENV{AnnwvynSDK64}/bullet3/src
-    $ENV{AnnwvynSDK64}/Ogre21SDK/include/OGRE
     $ENV{AnnwvynSDK64}/OIS/include
     $ENV{AnnwvynSDK64}/glew/include
     $ENV{AnnwvynSDK64}/glew/include/GL
     $ENV{AnnwvynSDK64}/openvr/headers
     $ENV{AnnwvynSDK64}/chaiscript
     $ENV{AnnwvynSDK64}/tinyxml2/
-    $ENV{AnnwvynSDK64}/BtOgre21/include/
-    #TODO handle PCH
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
     )
@@ -55,75 +75,51 @@ include_directories(
 link_directories(
     $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/lib-vc2015/
     $ENV{AnnwvynSDK64}/AL/openal-soft/build/Release
-    $ENV{AnnwvynSDK64}/bullet3/lib/Release
-    $ENV{AnnwvynSDK64}/bullet3/lib
     $ENV{AnnwvynSDK64}/libsndfile/lib
     $ENV{AnnwvynSDK64}/OIS/OIS_ReleaseDll
-    $ENV{AnnwvynSDK64}/Ogre21SDK/lib/Release/opt
-    $ENV{AnnwvynSDK64}/Ogre21SDK/lib/Release
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/
     $ENV{AnnwvynSDK64}/glew/lib/Release/x64
     $ENV{AnnwvynSDK64}/openvr/lib/win64
     $ENV{AnnwvynSDK64}/tinyxml2/tinyxml2/bin/tinyxml2/x64-Release-Lib/
-    $ENV{AnnwvynSDK64}/BtOgre21/build/Release
     )
 
+#List the complete source code
 file(GLOB AnnwvynSources src/*.cpp)
-file(GLOB AnnwvynHeaders include/*.hpp include/*.h) 
+file(GLOB AnnwvynHeaders include/*.hpp include/*.h)
+file(GLOB AnnwvynPCH pch/*)
+set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} ${AnnwvynPCH})
 
-MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar)
-  IF(MSVC)
-    GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
-    SET(PrecompiledBinary "${CMAKE_CURRENT_BINARY_DIR}/${PrecompiledBasename}.pch")
-    SET(Sources ${${SourcesVar}})
-
-    SET_SOURCE_FILES_PROPERTIES(${PrecompiledSource}
-                                PROPERTIES COMPILE_FLAGS "/Yc\"${PrecompiledHeader}\" /Fp\"${PrecompiledBinary}\""
-                                           OBJECT_OUTPUTS "${PrecompiledBinary}")
-    SET_SOURCE_FILES_PROPERTIES(${Sources}
-                                PROPERTIES COMPILE_FLAGS "/Yu\"${PrecompiledHeader}\" /FI\"${PrecompiledHeader}\" /Fp\"${PrecompiledBinary}\""
-                                           OBJECT_DEPENDS "${PrecompiledBinary}")  
-    # Add precompiled header to SourcesVar
-    LIST(APPEND ${SourcesVar} ${PrecompiledSource})
-  ENDIF(MSVC)
-ENDMACRO(ADD_MSVC_PRECOMPILED_HEADER)
-
-set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} pch/stdafx.h pch/stdafx.cpp)
-
-#ADD_MSVC_PRECOMPILED_HEADER( pch/stdafx.h pch/stdafx.cpp AnnwvynCode)
 
 add_library(Annwvyn SHARED ${AnnwvynCode} )
 
 
 #linker input from old VS solution
 target_link_libraries( Annwvyn
+    ${OGRE_LIBRARIES}
+    ${OGRE_HlmsPbs_LIBRARIES}
+    ${OGRE_HlmsUnlit_LIBRARIES}
+    ${OGRE_Overlay_LIBRARIES}
+    ${BULLET_LIBRARIES}
+    ${BtOgre21_LIBRARIES}
     glfw3.lib
     opengl32.lib
     glew32.lib
     ws2_32.lib
-    OgreMain.lib
-    OgreOverlay.lib
-    OgreHlmsPbs.lib
-    OgreHlmsUnlit.lib
     OIS.lib
     Setupapi.lib
     LibOVR.lib
     openvr_api.lib
     Winmm.lib
-    BulletCollision.lib
-    BulletDynamics.lib
-    LinearMath.lib
     OpenAL32.lib
     libsndfile-1.lib
     tinyxml2.lib
-    BtOgre21.lib
     )
 
-
-set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
-set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
-set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
-set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
-
-set_target_properties(Annwvyn PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
-set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
+if(MSVC)
+    set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+    set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
+    set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
+    set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
+    set_target_properties(Annwvyn PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
+    set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
+endif()
