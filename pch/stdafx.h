@@ -112,7 +112,7 @@
 //OpenGL stuff :
 
 //GL Extension Wrangler
-#include <glew.h>
+#include <GL/glew.h>
 
 //GL FrameWork
 #include <GLFW/glfw3.h>

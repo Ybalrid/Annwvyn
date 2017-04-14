@@ -26,7 +26,7 @@
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
 
-#include <glew.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 //Native windows access (for getting the handle and the context)
