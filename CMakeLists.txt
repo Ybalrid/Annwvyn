@@ -4,43 +4,44 @@ cmake_minimum_required(VERSION 3.6.3)
 project(Annwvyn)
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE) 
+if(WIN32)
+    #Annwvyn SDK check
+    if(NOT DEFINED ENV{AnnwvynSDK64})
+        message(FATAL_ERROR "You need to install the Annwvyn SDK. RUNME.bat will set the AnnwvynSDK64 env var that will stop this error!")
+    else()
+        message("Annwvyn SDK installed at " $ENV{AnnwvynSDK64})
+    endif()
 
-#Annwvyn SDK check
-if(NOT DEFINED ENV{AnnwvynSDK64})
-    message(FATAL_ERROR "You need to install the Annwvyn SDK. RUNME.bat will set the AnnwvynSDK64 env var that will stop this error!")
-else()
-    message("Annwvyn SDK installed at " $ENV{AnnwvynSDK64})
-endif()
+    if(NOT MSVC)
+        #TODO The SDK only support MSVC binaries right now due to the format of the VR SDK for rift and vive
+        message(FATAL_ERROR "You should only try to generate a VS solution")
+    else()
+        message("Check for MSVC : passed!!")
+        #This configure the Annwvyn's header to EXPORT symbols to DLL
+        add_definitions(-DDLLDIR_EX)
+        #compiler configuration
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4 /fp:fast /bigobj /Gy /D \"_UNICODE\" /D \"UNICODE\" /D \"NOMINMAX\"")
+        string(REPLACE "/O2" "/Ox" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /Ot /Oi")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+    endif()
 
-if(NOT MSVC)
-    #TODO The SDK only support MSVC binaries right now due to the format of the VR SDK for rift and vive
-    message(FATAL_ERROR "You should only try to generate a VS solution")
-else()
-    message("Check for MSVC : passed!!")
-    #This configure the Annwvyn's header to EXPORT symbols to DLL
-    add_definitions(-DDLLDIR_EX)
-    #compiler configuration
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4 /fp:fast /bigobj /Gy /D \"_UNICODE\" /D \"UNICODE\" /D \"NOMINMAX\"")
-    string(REPLACE "/O2" "/Ox" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /Ot /Oi")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
-endif()
+    #Where to find additional modules
+    set(CMAKE_MODULE_PATH 
+        $ENV{AnnwvynSDK64}/CMakeModules
+        $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
+        $ENV{AnnwvynSDK64}/BtOgre21/CMake
+        )
 
-#Where to find additional modules
-set(CMAKE_MODULE_PATH 
-    $ENV{AnnwvynSDK64}/CMakeModules
-    $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
-    $ENV{AnnwvynSDK64}/BtOgre21/CMake
-    )
-
-#Set path required for CMake modules
-set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK)
-set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3)
-set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/)
-set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS)
-set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install)
-set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/)
-
+    #Set path required for CMake modules
+    set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK)
+    set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3)
+    set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/)
+    set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS)
+    set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install)
+else(UNIX) 
+    set(CMAKE_MODULE_PATH /usr/lib/OGRE/cmake /usr/local/lib/OGRE/cmake /usr/lib/BtOgre21/CMake /usr/local/lib/BtOgre21/CMake)
+endif(WIN32)
 
 #Find findable packages
 find_package(OpenGL REQUIRED)
@@ -51,10 +52,13 @@ find_package(OIS REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(GLFW REQUIRED)
 
-set(CMAKE_PREFIX_PATH $ENV{AnnwvynSDK64}/glew)
-set(CMAKE_LIBRARY_PATH $ENV{AnnwvynSDK64}/glew/lib/Release/x64)
-find_package(GLEW REQUIRED)
+#finding GLEW on windows require the prefix and library path to be modified
+if(WIN32)
+    set(CMAKE_PREFIX_PATH $ENV{AnnwvynSDK64}/glew)
+    set(CMAKE_LIBRARY_PATH $ENV{AnnwvynSDK64}/glew/lib/Release/x64)
+endif(WIN32)
 
+find_package(GLEW REQUIRED)
 #includes from old visual studio solution
 #
 
@@ -98,7 +102,6 @@ link_directories(
     $ENV{AnnwvynSDK64}/openvr/lib/win64
     
     ##Other
-    $ENV{AnnwvynSDK64}/AL/openal-soft/build/Release
     $ENV{AnnwvynSDK64}/libsndfile/lib
     $ENV{AnnwvynSDK64}/tinyxml2/tinyxml2/bin/tinyxml2/x64-Release-Lib/
     )
@@ -115,8 +118,8 @@ add_library(Annwvyn SHARED ${AnnwvynCode} )
 #linker input from old VS solution
 target_link_libraries( Annwvyn
     ##VR SDKS (manually added)
-    LibOVR.lib
-    openvr_api.lib
+    LibOVR.lib          #TODO WIN32 specific
+    openvr_api.lib      #TODO WIN32 specific
     ##Engine dependencies
     ${OGRE_LIBRARIES}
     ${OGRE_HlmsPbs_LIBRARIES}
@@ -135,9 +138,9 @@ target_link_libraries( Annwvyn
     tinyxml2.lib
 
     ##Windows own libraries
-    ws2_32.lib
-    Setupapi.lib
-    Winmm.lib
+    ws2_32.lib      #TODO WIN32 specific
+    Setupapi.lib    #TODO WIN32 specific
+    Winmm.lib       #TODO WIN32 specific
     )
 
 #MSVC specific configuration
