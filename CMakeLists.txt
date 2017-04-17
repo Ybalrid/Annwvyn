@@ -39,6 +39,7 @@ set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3)
 set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/)
 set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS)
 set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install)
+set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/)
 
 
 #Find findable packages
@@ -48,6 +49,7 @@ find_package(Bullet REQUIRED)
 find_package(BtOgre21 REQUIRED)
 find_package(OIS REQUIRED)
 find_package(OpenAL REQUIRED)
+find_package(GLFW REQUIRED)
 
 set(CMAKE_PREFIX_PATH $ENV{AnnwvynSDK64}/glew)
 set(CMAKE_LIBRARY_PATH $ENV{AnnwvynSDK64}/glew/lib/Release/x64)
@@ -77,7 +79,7 @@ include_directories(
     ${OIS_INCLUDE_DIRS}
     #OpengL Support
     ${GLEW_INCLUDE_DIRS}
-    $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/include
+    ${GLFW_INCLUDE_DIR}
     #Audio 
     ${OPENAL_INCLUDE_DIR}
     $ENV{AnnwvynSDK64}/libsndfile/include
@@ -95,8 +97,7 @@ link_directories(
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/
     $ENV{AnnwvynSDK64}/openvr/lib/win64
     
-    ##Pther
-    $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/lib-vc2015/
+    ##Other
     $ENV{AnnwvynSDK64}/AL/openal-soft/build/Release
     $ENV{AnnwvynSDK64}/libsndfile/lib
     $ENV{AnnwvynSDK64}/tinyxml2/tinyxml2/bin/tinyxml2/x64-Release-Lib/
@@ -125,11 +126,11 @@ target_link_libraries( Annwvyn
     ${BtOgre21_LIBRARIES}
     ${OIS_LIBRARIES}
     ${GLEW_LIBRARIES}
+    ${GLFW_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${OPENAL_LIBRARY}
 
     #Additional libraries (not using cmake find mechanism)
-    glfw3.lib
     libsndfile-1.lib
     tinyxml2.lib
 
