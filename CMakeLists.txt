@@ -34,11 +34,15 @@ if(WIN32)
         )
 
     #Set path required for CMake modules
-    set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK)
-    set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3)
-    set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/)
-    set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS)
-    set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install)
+    set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK CACHE PATH "Ogre install")
+    set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3 CACHE PATH "Bullet install")
+    set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/ CACHE PATH "BtOgre21 install")
+    set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS CACHE PATH "OIS install")
+    set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install CACHE PATH "OpenAL install")
+    set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/ CACHE PATH "GLFW install") 
+    set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2 CACHE PATH "TinyXML install")
+    set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "TinyXml2 install")
+
 else(UNIX) 
     set(CMAKE_MODULE_PATH /usr/lib/OGRE/cmake /usr/local/lib/OGRE/cmake /usr/lib/BtOgre21/CMake /usr/local/lib/BtOgre21/CMake)
 endif(WIN32)
@@ -51,6 +55,8 @@ find_package(BtOgre21 REQUIRED)
 find_package(OIS REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(GLFW REQUIRED)
+find_package(TinyXML2 REQUIRED)
+find_package(SNDFILE REQUIRED)
 
 #finding GLEW on windows require the prefix and library path to be modified
 if(WIN32)
@@ -86,10 +92,10 @@ include_directories(
     ${GLFW_INCLUDE_DIR}
     #Audio 
     ${OPENAL_INCLUDE_DIR}
-    $ENV{AnnwvynSDK64}/libsndfile/include
+    ${SNDFILE_INCLUDE_DIRS}
     #Scripting
     $ENV{AnnwvynSDK64}/chaiscript #!This is an header only library!
-    $ENV{AnnwvynSDK64}/tinyxml2/
+    ${TinyXML2_INCLUDE_DIRS}
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
@@ -100,10 +106,6 @@ link_directories(
     #VR SDKs
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/
     $ENV{AnnwvynSDK64}/openvr/lib/win64
-    
-    ##Other
-    $ENV{AnnwvynSDK64}/libsndfile/lib
-    $ENV{AnnwvynSDK64}/tinyxml2/tinyxml2/bin/tinyxml2/x64-Release-Lib/
     )
 
 #List the complete source code
@@ -132,10 +134,8 @@ target_link_libraries( Annwvyn
     ${GLFW_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${OPENAL_LIBRARY}
-
-    #Additional libraries (not using cmake find mechanism)
-    libsndfile-1.lib
-    tinyxml2.lib
+    ${TinyXML2_LIBRARIES}
+    ${SNDFILE_LIBRARIES}
 
     ##Windows own libraries
     ws2_32.lib      #TODO WIN32 specific
@@ -151,4 +151,10 @@ if(MSVC)
     set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
     set_target_properties(Annwvyn PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
     set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
+endif()
+
+#Installation
+if(WIN32)
+    file(GLOB Annwvyn_ARTIFACTS ${CMAKE_BINARY_DIR}/Release/* ${CMAKE_BINARY_DIR}/Debug/*)
+    install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 endif()
