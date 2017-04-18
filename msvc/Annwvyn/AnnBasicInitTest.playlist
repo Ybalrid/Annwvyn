@@ -1,1 +1,0 @@
-<Playlist Version="1.0"><Add Test="AnnwvynUnitTest::AnnBasicInit::AnnInitLessSimpleLevel" /><Add Test="AnnwvynUnitTest::AnnBasicInit::AnnInitMultipleTest" /><Add Test="AnnwvynUnitTest::AnnBasicInit::AnnInitOnceTest" /><Add Test="AnnwvynUnitTest::AnnBasicInit::AnnInitCoreSubSystems" /><Add Test="AnnwvynUnitTest::AnnBasicInit::AnnInitSimpleLevel" /></Playlist>
