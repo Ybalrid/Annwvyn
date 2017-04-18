@@ -52,9 +52,11 @@ But, if you really want to build the engine yourself, here's a simple guide how 
 - Extract it in a folder
 - Clone this repo in the same folder
 - Run the "RUNME.BAT" script from this folder
-- Open /Annwvyn/msvc/Annwvyn/Annwvyn.sln with Visual studio
+- Generate in a "build" directirory a VS2015 x64 solution from the root CMakeFiles.txt
 - Make sure the IDE is set to build in "release" "x64" mode
-- hit Ctrl+Shift+B
+- hit Ctrl+Shift+B to build the whole solution
+- In the solution explorer, build the install target
+- Do the same (without the install part) in the example subdirectory
 - You need to copy a bunch of .dll in the "example" (and template) directories. You can do this automatically by launching the "getLibs.bat" scripts. But here's the list if you want to check
     - Ogre  
         - OgreMain.dll
@@ -77,7 +79,7 @@ If you have an Oculus Rift plugged in (or in Debug HMD mode), or a Vive with Ste
 Using the engine
 ----------------
 
-Make a copy of the "template" directory to a convenient location for you, and you are ready to go. It contains a Visual Studio (Game.sln) project already configured.
+Make a copy of the "template" directory to a convenient location for you, and you are ready to go. It contains a CMakeLists.txt that will permit you to generate buidl files for it (VS2015 64bit) 
 
 **Make sure to put Visual Studio build in release/x64 mode before building!**
 
