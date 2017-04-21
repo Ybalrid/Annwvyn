@@ -13,12 +13,17 @@
 
  //DLL management for visual studio compiler.
 #undef DLL
+
+#ifdef _WIN32
 #ifdef DLLDIR_EX //Defined in Annwvyn MSVC project file only
 	///To construct a DLL, The macro __declspec(dllexport) have to be called in front of the exported symbol
 #define DLL  __declspec(dllexport)   // export DLL information
 #else
 	///Macro to reference symbols from a DLL the macro __declspec(dllimport) have to be called the same way
 #define DLL  __declspec(dllimport)   // import DLL information
+#endif
+#else
+#define DLL
 #endif
 
 //DO NOT FORGET TO CALL THE DLL MACRO AT ANY CLASS AND GLOBAL FUNCTION DECLARATION!

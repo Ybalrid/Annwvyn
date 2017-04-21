@@ -4,6 +4,10 @@
 #include "AnnLogger.hpp"
 #include "Annwvyn.h"
 
+#ifdef __linux__
+#include <X11/Xlib.h>
+#endif
+
 auto logToOgre = [](const std::string& str) {Ogre::LogManager::getSingleton().logMessage(str); };
 
 uint8_t OgreVRRender::AALevel{ 4 };
@@ -305,9 +309,17 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 {
 	windowW = w, windowH = h;
 	auto winName = rendererName + " : " + name + " - monitor output";
+
+#ifdef _WIN32
 	HGLRC context = {};
 	HWND handle = {};
-	auto useGLFW{ true };
+#endif
+
+#ifdef __linux__
+    Window handle = {};
+    void* context = nullptr;
+#endif
+	constexpr const  bool useGLFW{ true };
 
 	if (useGLFW)
 	{
@@ -327,9 +339,12 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 		//Make the created context current
 		glfwMakeContextCurrent(glfwWindow);
 
+#ifdef _WIN32
 		//Get the hwnd and the context :
-		context = wglGetCurrentContext();
+        context = wglGetCurrentContext();
 		handle = glfwGetWin32Window(glfwWindow);
+#endif
+
 	}
 	Ogre::NameValuePairList options;
 	if (useGLFW)

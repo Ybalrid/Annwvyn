@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.6.3)
 
 project(Annwvyn)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE) 
 if(WIN32)
     #Annwvyn SDK check
@@ -102,6 +104,7 @@ include_directories(
     ${SNDFILE_INCLUDE_DIRS}
     #Scripting
     $ENV{AnnwvynSDK64}/chaiscript #!This is an header only library!
+    $ENV{HOME}/AnnwvynDeps/chaiscript #UNIX
     ${TinyXML2_INCLUDE_DIRS}
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
@@ -118,7 +121,9 @@ link_directories(
 #List the complete source code
 file(GLOB AnnwvynSources src/*.cpp)
 file(GLOB AnnwvynHeaders include/*.hpp include/*.h)
-file(GLOB AnnwvynPCH pch/*)
+if(MSVC)
+    file(GLOB AnnwvynPCH pch/*)
+endif()
 set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} ${AnnwvynPCH})
 
 #Set target for project
@@ -126,9 +131,6 @@ add_library(Annwvyn SHARED ${AnnwvynCode} )
 
 #linker input from old VS solution
 target_link_libraries( Annwvyn
-    ##VR SDKS (manually added)
-    LibOVR.lib          #TODO WIN32 specific
-    openvr_api.lib      #TODO WIN32 specific
     ##Engine dependencies
     ${OGRE_LIBRARIES}
     ${OGRE_HlmsPbs_LIBRARIES}
@@ -144,11 +146,21 @@ target_link_libraries( Annwvyn
     ${TinyXML2_LIBRARIES}
     ${SNDFILE_LIBRARIES}
 
+    )
+
+if(WIN32)
+    target_link_libraries(Annwvyn
+    
+    ##VR SDKS (manually added)
+    LibOVR.lib          #TODO WIN32 specific
+    openvr_api.lib      #TODO WIN32 specific
+    
     ##Windows own libraries
     ws2_32.lib      #TODO WIN32 specific
     Setupapi.lib    #TODO WIN32 specific
     Winmm.lib       #TODO WIN32 specific
     )
+endif()
 
 #MSVC specific configuration
 if(MSVC)

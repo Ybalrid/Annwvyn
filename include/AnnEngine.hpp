@@ -60,6 +60,8 @@ namespace Annwvyn
 {
 	class AnnEngine;
 
+    class AnnPhysicsEngine;
+
 	///Utility class for AnnEngine
 	class DLL AnnEngineSingletonReseter
 	{
@@ -217,12 +219,13 @@ namespace Annwvyn
 		void requestQuit();
 
 	private:
-
+        
+#ifdef _WIN32
 		static WORD consoleGreen;
 		static WORD consoleYellow;
 		static WORD consoleWhite;
+#endif
 		static bool consoleReady;
-
 		bool applicationQuitRequested;
 
 		///String Utility;

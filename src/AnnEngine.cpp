@@ -6,9 +6,16 @@
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton(nullptr);
-bool AnnEngine::consoleReady(false);
+
 bool AnnEngine::autosetProcessPriorityHigh(true);
 
+#ifdef _WIN32
+WORD AnnEngine::consoleGreen(0);
+WORD AnnEngine::consoleYellow(0);
+WORD AnnEngine::consoleWhite(0);
+#endif
+
+bool AnnEngine::consoleReady(false);
 AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
 {
 	engine = address;
@@ -20,11 +27,6 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 	engine->singleton = nullptr;
 	engine->consoleReady = false;
 }
-
-//Log is static. Therefore this has to be static too to be able to write to it.
-WORD AnnEngine::consoleGreen(0);
-WORD AnnEngine::consoleYellow(0);
-WORD AnnEngine::consoleWhite(0);
 
 AnnEngine* AnnEngine::Instance()
 {
@@ -88,6 +90,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		<< hmdCommand << std::endl;
 
 	//Select the correct OgreVRRender class to use :
+#ifdef _WIN32
 	if (hmdCommand == "OgreOculusRender"
 		|| hmdCommand == "OgreDefaultRender")
 		renderer = std::make_shared<OgreOculusRender>(title);
@@ -95,7 +98,6 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		renderer = std::make_shared<OgreOpenVRRender>(title);
 	else if (hmdCommand == "OgreNoVRRender")
 		renderer = std::make_shared<OgreNoVRRender>(title);
-
 	else
 	{
 		displayWin32ErrorMessage(
@@ -117,6 +119,11 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		//exit(ANN_ERR_CANTHMD)
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
+#endif
+
+#ifdef __linux__
+    renderer = std::make_shared<OgreNoVRRender>(title);
+#endif
 
 	renderer->initOgreRoot("Annwvyn.log");
 
@@ -183,7 +190,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	//initialized. And the Resource manager because it wants a font file and an
 	//image background
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
-
+#ifdef _WIN32
 	consoleGreen = FOREGROUND_GREEN |
 		FOREGROUND_INTENSITY;
 	consoleYellow = FOREGROUND_GREEN |
@@ -193,6 +200,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 		FOREGROUND_GREEN |
 		FOREGROUND_BLUE |
 		FOREGROUND_INTENSITY;
+#endif
 
 	consoleReady = true;
 	//Display start banner
@@ -214,7 +222,9 @@ AnnEngine::~AnnEngine()
 	log("Game engine stopped. Subsystem are shutting down...");
 	log("Good luck with the real world now! :3");
 	consoleReady = false;
+#ifdef _WIN32
 	FreeConsole();
+#endif
 }
 
 //All theses getter are for encapsulation purpose. Calling them directly would
@@ -282,11 +292,15 @@ void AnnEngine::log(std::string message, bool flag)
 
 	if (flag)
 	{
+#ifdef _WIN32
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleYellow);
+#endif
 		messageForLog += "Annwvyn - ";
 	}
+#ifdef _WIN32
 	else
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
+#endif
 
 	messageForLog += message;
 	if (Ogre::LogManager::getSingletonPtr())
@@ -294,8 +308,9 @@ void AnnEngine::log(std::string message, bool flag)
 
 	if (consoleReady)
 		singleton->onScreenConsole->append(message);
-
+#ifdef _WIN32
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
+#endif
 }
 
 //Need to be redone.

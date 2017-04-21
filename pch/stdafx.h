@@ -87,9 +87,11 @@
 #include <sndfile.h>
 
 //Oculus VR API
+#ifdef _WIN32
 #include <OVR_CAPI.h>
 #include <OVR_CAPI_GL.h>
 #include <Extras/OVR_Math.h>
+#endif
 
 //Chaisript interpretor
 #pragma warning (disable : 4602)
@@ -100,8 +102,10 @@
 #pragma warning (default: 4602)
 
 //OpenVR (Valve/HTC Vive) API
+#ifdef _WIN32
 #include <openvr.h>
 #include <openvr_capi.h>
+#endif
 
 #ifdef _WIN32
 #include <windows.h>
@@ -122,4 +126,8 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #define GLFW_EXPOSE_NAVIVE_WGL
 #endif
+#ifdef __linux__
+
+#endif
+
 #include <GLFW/glfw3native.h>
