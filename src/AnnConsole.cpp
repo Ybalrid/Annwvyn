@@ -3,7 +3,7 @@
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
 #include "AnnLogger.hpp"
-#include "../../OgreSDK/include/OGRE/OgreHardwarePixelBuffer.h"
+#include <OgreHardwarePixelBuffer.h>
 
 using namespace Annwvyn;
 

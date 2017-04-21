@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#ifdef _WIN32
 #include "OgreOculusRender.hpp"
 
 #include "AnnLogger.hpp"
@@ -614,3 +615,5 @@ AnnOculusTouchController::AnnOculusTouchController(ovrSession session,
 
 	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking | LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback | DiscreteHandGestures;
 }
+
+#endif

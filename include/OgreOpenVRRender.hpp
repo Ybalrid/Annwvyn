@@ -1,6 +1,6 @@
 #ifndef OGRE_OPENVR_RENDER
 #define OGRE_OPENVR_RENDER
-
+#ifdef _WIN32
 #include "systemMacro.h"
 #include "OgreVRRender.hpp"
 
@@ -181,4 +181,5 @@ private:
 	float touchpadXNormalizedValue, touchpadYNormalizedValue, triggerNormalizedValue;
 };
 
+#endif
 #endif

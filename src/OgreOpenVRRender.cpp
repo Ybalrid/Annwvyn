@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#ifdef _WIN32
 #include "OgreOpenVRRender.hpp"
 #include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
@@ -438,3 +439,5 @@ Annwvyn::AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrs
 {
 	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking | LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback;
 }
+
+#endif

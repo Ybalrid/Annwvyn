@@ -50,10 +50,16 @@
  Cannot select the wanted HMD
  */
 
+#ifdef _WIN32
 #include <Windows.h>
+#else
+using LPCWSTR = const wchar_t*;
+#endif
 inline void displayWin32ErrorMessage(LPCWSTR title, LPCWSTR content)
 {
+#ifdef _WIN32
 	MessageBox(nullptr, content, title, MB_ICONERROR);
+#endif
 }
 
 #endif
