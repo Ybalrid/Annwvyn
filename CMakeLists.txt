@@ -44,7 +44,14 @@ if(WIN32)
     set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "TinyXml2 install")
 
 else(UNIX) 
-    set(CMAKE_MODULE_PATH /usr/lib/OGRE/cmake /usr/local/lib/OGRE/cmake /usr/lib/BtOgre21/CMake /usr/local/lib/BtOgre21/CMake)
+    set(CMAKE_MODULE_PATH
+        ${CMAKE_MODULE_PATH}
+        /usr/lib/OGRE/cmake 
+        /usr/local/lib/OGRE/cmake 
+        /usr/lib/BtOgre21/CMake 
+        /usr/local/lib/BtOgre21/CMake
+        ~/AnnwvynDeps/CMakeModules
+        )
 endif(WIN32)
 
 #Find findable packages
