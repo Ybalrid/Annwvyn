@@ -8,6 +8,7 @@
 #include <X11/Xlib.h>
 #endif
 
+
 auto logToOgre = [](const std::string& str) {Ogre::LogManager::getSingleton().logMessage(str); };
 
 uint8_t OgreVRRender::AALevel{ 4 };
@@ -16,6 +17,7 @@ bool OgreVRRender::UseSSAA{ false };
 
 void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
 {
+    static const std::array<const uint8_t, 5> AvailableAALevel {0,2,4,8,16};
 	for (const auto& possibleAALevel : AvailableAALevel)
 		if (possibleAALevel == AA)
 		{
@@ -393,7 +395,11 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 	//Define the shader library to use for HLMS
 	auto library = Ogre::ArchiveVec();
 	auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/" + SL, "FileSystem", true);
+	auto archiveLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/Any", "FileSystem", true);
+	auto archivePbsLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Pbs/Any", "FileSystem", true);
 	library.push_back(archiveLibrary);
+	library.push_back(archiveLibraryAny);
+	library.push_back(archivePbsLibraryAny);
 
 	//Define "unlit" and "PBS" (physics based shader) HLMS
 	auto archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/" + SL, "FileSystem", true);

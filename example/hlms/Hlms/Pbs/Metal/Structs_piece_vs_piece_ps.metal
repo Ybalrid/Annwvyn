@@ -2,6 +2,9 @@
 struct ShadowReceiverData
 {
 	float4x4 texViewProj;
+@property( exponential_shadow_maps )
+	float4 texViewZRow;
+@end
 	float2 shadowDepthRange;
 	float2 padding;
 	float4 invShadowMapSize;
@@ -12,7 +15,7 @@ struct Light
 	float3 position;
 	float3 diffuse;
 	float3 specular;
-@property( hlms_num_shadow_maps )
+@property( hlms_num_shadow_map_lights )
 	float3 attenuation;
 	float3 spotDirection;
 	float3 spotParams;
@@ -27,10 +30,14 @@ struct PassData
 	//Vertex shader (common to both receiver and casters)
 	float4x4 viewProj;
 
+@property( hlms_shadowcaster_point )
+	float4 cameraPosWS;	//Camera position in world space
+@end
+
 @property( !hlms_shadowcaster )
 	//Vertex shader
 	float4x4 view;
-	@property( hlms_num_shadow_maps )ShadowReceiverData shadowRcv[@value(hlms_num_shadow_maps)];@end
+	@property( hlms_num_shadow_map_lights )ShadowReceiverData shadowRcv[@value(hlms_num_shadow_map_lights)];@end
 
 	//-------------------------------------------------------------------------
 
@@ -58,6 +65,7 @@ struct PassData
 	@property( hlms_lights_spot )Light lights[@value(hlms_lights_spot)];@end
 @end @property( hlms_shadowcaster )
 	//Vertex shader
+	@property( exponential_shadow_maps )float4 viewZRow;@end
 	float2 depthRange;
 @end
 
@@ -90,7 +98,7 @@ struct PassData
 };@end
 
 @piece( PassDecl )
-, constant PassData &pass [[buffer(CONST_SLOT_START+0)]]
+, constant PassData &passBuf [[buffer(CONST_SLOT_START+0)]]
 @end
 
 @property( fresnel_scalar )@piece( FresnelType )float3@end @piece( FresnelSwizzle )xyz@end @end
@@ -176,8 +184,9 @@ struct Material
 		@foreach( hlms_uv_count, n )
 			float@value( hlms_uv_count@n ) uv@n;@end
 
-		@foreach( hlms_num_shadow_maps, n )
-			float4 posL@n;@end
+		@foreach( hlms_num_shadow_map_lights, n )
+			@property( !hlms_shadowmap@n_is_point_light )
+				float4 posL@n;@end @end
 
 		@property( hlms_pssm_splits )float depth;@end
 	@end
@@ -188,8 +197,14 @@ struct Material
 			@foreach( hlms_uv_count, n )
 				float@value( hlms_uv_count@n ) uv@n;@end
 		@end
-		@property( !hlms_shadow_uses_depth_texture )
+		@property( (!hlms_shadow_uses_depth_texture || exponential_shadow_maps) && !hlms_shadowcaster_point )
 			float depth;
+		@end
+		@property( hlms_shadowcaster_point )
+			float3 toCameraWS;
+			@property( !exponential_shadow_maps )
+				float constBias [[flat]];
+			@end
 		@end
 	@end
 

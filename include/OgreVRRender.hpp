@@ -53,7 +53,7 @@ class DLL OgreVRRender
 {
 public:
 	///Name of the rendersystem plugin to load on Ogre
-	static constexpr const char* const PluginRenderSystemGL3Plus{ "RenderSystem_GL3Plus" };
+	static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus" };
 	///Name of the rendersystem to initialize
 	static constexpr const char* const GLRenderSystem3Plus{ "OpenGL 3+ Rendering Subsystem" };
 	///Resource group to load the shaders, material and compositor script for rendering.
@@ -345,9 +345,6 @@ protected:
 
 	///Dynamically sized containers for pressed/released events
 	std::vector<uint8_t> pressed, released;
-
-	///List of acceptable Anti Aliasing factors for the render buffer and window
-	static constexpr std::array<const uint8_t, 5> AvailableAALevel{ 0, 2, 4, 8, 16 };
 
 	///Name given to the texture manager for the eyeBuffer
 	static constexpr const char* const rttTextureName = { "RttTex" };
