@@ -29,11 +29,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 //Native windows access (for getting the handle and the context)
-#ifdef _WIN32
-#define GLFW_EXPOSE_NATIVE_WIN32
-#define GLFW_EXPOSE_NAVIVE_WGL
-#endif
-#include <GLFW/glfw3native.h>
+
 #include <algorithm>
 
 constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
