@@ -120,14 +120,3 @@
 
 //GL FrameWork
 #include <GLFW/glfw3.h>
-
-//Native windows access
-#ifdef _WIN32
-#define GLFW_EXPOSE_NATIVE_WIN32
-#define GLFW_EXPOSE_NAVIVE_WGL
-#endif
-#ifdef __linux__
-
-#endif
-
-#include <GLFW/glfw3native.h>

@@ -8,6 +8,17 @@
 #include <X11/Xlib.h>
 #endif
 
+#ifdef _WIN32
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NAVIVE_WGL
+#endif
+
+#ifdef __linux__
+#define GLFW_EXPOSE_NATIVE_X11
+#endif
+
+#include <GLFW/glfw3native.h>
+
 
 auto logToOgre = [](const std::string& str) {Ogre::LogManager::getSingleton().logMessage(str); };
 
@@ -346,13 +357,21 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
         context = wglGetCurrentContext();
 		handle = glfwGetWin32Window(glfwWindow);
 #endif
-
+#ifdef __linux__
+		handle = glfwGetX11Window(glfwWindow);
+#endif
 	}
 	Ogre::NameValuePairList options;
 	if (useGLFW)
 	{
+		#ifdef _WIN32
 		options["externalWindowHandle"] = std::to_string(size_t(handle));
 		options["externalGLContext"] = std::to_string(size_t(context));
+		#endif
+
+		#ifdef __linux__
+		options["parentWindowHandle"] = std::to_string(size_t(handle));
+		#endif
 	}
 	options["FSAA"] = std::to_string(AALevel);
 	options["top"] = "0";
