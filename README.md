@@ -102,3 +102,11 @@ If you want more information about the project, please consult the official webs
 This project is in it's really early phases of development. If you have any question, feel free to contact me directly at ybalrid@ybalrid.info 
 
 License MIT.
+
+______
+
+Some word on the linux support
+------------------------------
+
+The engine is buildable and runnable under linux, but there is **no support** for any HMD under linux at this time. So the game will start in **NoVR** mode.
+
