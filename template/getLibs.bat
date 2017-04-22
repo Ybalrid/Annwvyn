@@ -32,4 +32,4 @@ ECHO OpenVR api - runtime DLL
 COPY %ANNWVYNSDK64%\openvr\bin\win64\openvr_api.dll . 
 
 @ECHO done 
-PAUSE
+

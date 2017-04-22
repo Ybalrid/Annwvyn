@@ -19,4 +19,9 @@
 
 #define float3x3 mat3
 #define float4x4 mat4
+
+#define mul( x, y ) ((x) * (y))
+#define INLINE
+
+#define outVs_Position gl_Position
 @end

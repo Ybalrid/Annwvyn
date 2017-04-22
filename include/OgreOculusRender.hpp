@@ -11,6 +11,7 @@
 
 #ifndef OGRE_OCULUS_RENDERER
 #define OGRE_OCULUS_RENDERER
+#ifdef _WIN32
 
 #include "OgreVRRender.hpp"
 
@@ -326,4 +327,6 @@ public:
 	///Texture unit state of the debug plane
 	static Ogre::TextureUnitState* debugTexturePlane;
 };
+#endif //_WIN32
 #endif //OGRE_OCULUS_RENDERER
+

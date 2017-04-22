@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#ifdef _WIN32
 #include "OculusInterface.hpp"
 #include "AnnLogger.hpp"
 #include "AnnException.hpp"
@@ -93,3 +94,5 @@ ovrSession OculusInterface::getSession() const
 {
 	return session;
 }
+
+#endif

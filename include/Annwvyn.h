@@ -98,6 +98,7 @@
 #include "AnnUserSpaceEvent.hpp"
 #include "AnnException.hpp"
 #include "AnnStringUtility.hpp"
+#include "AnnScriptManager.hpp"
 
 //Other Annwvyn
 #include "AnnTypes.h"
@@ -105,6 +106,10 @@
 #include "AnnQuaternion.hpp"
 
 #include "AnnGetter.hpp"
+
+
+#include "OgreVRRender.hpp"
+
 
 ///Namespace containing the totality of Annwvyn components
 namespace Annwvyn
@@ -216,7 +221,7 @@ int main(int argc, char** argv)												\
 {																			\
 	if(argc < 2) detectedHMD = Annwvyn::getHMDFromCmdLine("");				\
 	else detectedHMD = Annwvyn::getHMDFromCmdLine(argv[1]);					\
-	Annwvyn::presart();														\
+	Annwvyn::preStart();													\
 	return AnnwvynStart();													\
 }																			\
 int AnnwvynStart()
