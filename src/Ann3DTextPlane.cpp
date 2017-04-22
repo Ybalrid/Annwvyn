@@ -347,8 +347,8 @@ void Ann3DTextPlane::createMaterial()
 
 	//We want theses objects to react to the light and be present in the scene. We will create some kind of dielectric material (aka paint)
 	auto hlms = static_cast<Ogre::HlmsPbs*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_PBS));
-	//auto hlms = static_cast<Ogre::HlmsUnlit*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT));
-	auto datablock = static_cast<Ogre::HlmsPbsDatablock*>(hlms->createDatablock(materialName, materialName, Ogre::HlmsMacroblock(), Ogre::HlmsBlendblock(), Ogre::HlmsParamVec()));
+
+	auto datablock = static_cast<Ogre::HlmsPbsDatablock*>(hlms->createDatablock(materialName, materialName, {}, {}, {}));
 
 	//Note : if we want to make this run in "unlit" we will need to :
 	// 1) create it as unlit (no kidding)
@@ -357,7 +357,7 @@ void Ann3DTextPlane::createMaterial()
 	// 4) no "2 sized lighting", set culling to none.
 	// 5) alpha blending should work the same
 
-	texture = Ogre::TextureManager::getSingleton()
+	texture = Ogre::TextureManager::getSingleton() //Texture is a single slice array
 		.createManual(AnnGetStringUtility()->getRandomString(),
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 			Ogre::TEX_TYPE_2D_ARRAY,
@@ -368,8 +368,8 @@ void Ann3DTextPlane::createMaterial()
 	datablock->setTexture(Ogre::PBSM_DIFFUSE, 0, texture);
 	datablock->setRoughness(0.001);
 	datablock->setSpecular({ 0.25,0.25,0.25 });
-	datablock->setAlphaTest(Ogre::CompareFunction::CMPF_GREATER);
-	datablock->setAlphaTestThreshold(0.33f);
+	//Calling this will by default use the "transparent" (not fade) transparency mode, will read alpha from texture and will update the blendblock
+	datablock->setTransparency(1);
 	datablock->setTwoSidedLighting(true);
 }
 
@@ -467,6 +467,8 @@ void Ann3DTextPlane::renderText()
 		true);
 
 	needUpdating = false;
+
+	texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("text", "debug.png");
 }
 
 void Ann3DTextPlane::clearTexture()
