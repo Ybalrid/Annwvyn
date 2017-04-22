@@ -355,7 +355,7 @@ bool AnnEngine::refresh()
 
 // This just move a node where the other node is. Yes I know about parenting.
 // I had reasons to do it that way, but I forgot.
-inline void AnnEngine::syncPov() const
+void AnnEngine::syncPov() const
 {
 	vrRendererPovGameplayPlacement->setPosition(
 		player->getPosition());

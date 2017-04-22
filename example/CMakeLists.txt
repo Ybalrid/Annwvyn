@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.6.3)
 
+set(CMAKE_CXX_STANDARD 14)
 set(ANNWVYN_PROJECT "AnnwvynTest")
 
 #Name of the project
@@ -24,12 +25,13 @@ file(COPY script DESTINATION ${PROJECT_BINARY_DIR})
 file(GLOB scripts *.chai)
 file(COPY ${scripts} DESTINATION ${PROJECT_BINARY_DIR})
 
-#Configure compilation parameters
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4 /fp:fast /bigobj /Gy /D \"_UNICODE\" /D \"UNICODE\" /D \"NOMINMAX\"")
-string(REPLACE "/O2" "/Ox" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /Ot /Oi")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
-
+if(MSVC)
+    #Configure compilation parameters
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4 /fp:fast /bigobj /Gy /D \"_UNICODE\" /D \"UNICODE\" /D \"NOMINMAX\"")
+    string(REPLACE "/O2" "/Ox" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /Ot /Oi")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+endif()
 
 #Set path required for CMake modules
 set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK CACHE PATH "Ogre install")
@@ -40,13 +42,25 @@ set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install CACHE PATH "O
 set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/ CACHE PATH "GLFW install") 
 set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2 CACHE PATH "TinyXML install")
 set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "TinyXml2 install")
-
 #Where to find additional modules
-set(CMAKE_MODULE_PATH 
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
     $ENV{AnnwvynSDK64}/CMakeModules
     $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
     $ENV{AnnwvynSDK64}/BtOgre21/CMake
     )
+
+if(UNIX) 
+    set(CMAKE_MODULE_PATH
+        ${CMAKE_MODULE_PATH}
+        /usr/lib/OGRE/cmake 
+        /usr/local/lib/OGRE/cmake 
+        /usr/lib/BtOgre21/CMake 
+        /usr/local/lib/BtOgre21/CMake
+        ~/AnnwvynDeps/CMakeModules
+        )
+endif()
+
 #Find packages
 find_package(OpenGL REQUIRED)
 find_package(OGRE COMPONENTS Overlay HlmsPbs HlmsUnlit REQUIRED)
@@ -93,30 +107,38 @@ include_directories(
     ${SNDFILE_INCLUDE_DIRS}
     #Scripting
     $ENV{AnnwvynSDK64}/chaiscript #!This is an header only library!
+    $ENV{HOME}/AnnwvynDeps/chaiscript
     ${TinyXML2_INCLUDE_DIRS}
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
-	
-	#Annwvyn Engine
+
+    #Annwvyn Engine
     $ENV{AnnwvynSDK64}/Annwvyn/include
+    $ENV{HOME}/Annwvyn/include
     )
 
 link_directories($ENV{AnnwvynSDK64}/Annwvyn/lib/)
 
 file(GLOB ProjScripts  ${PROJECT_BINARY_DIR}/*.chai)
 
-message("Beware! The files ${ProjScripts} are resources copied inside the binary directory. The COPIED FILES are added to the project. Sale goes the media, compositor and hlms directories.")
+message(STATUS "Beware! The files ${ProjScripts} are resources copied inside the binary directory. The COPIED FILES are added to the project. Sale goes the media, compositor and hlms directories.")
 message("If you want them to be updated you should re-run cmake")
 add_executable(${ANNWVYN_PROJECT} ${ProjSources} ${ProjHeaderss} ${ProjPCH} ${ProjScripts})
 
 target_link_libraries(${ANNWVYN_PROJECT}
-    Annwvyn.lib
+    Annwvyn
     ${OGRE_LIBRARIES}
     ${OGRE_HlmsPbs_LIBRARIES}
     ${OGRE_HlmsUnlit_LIBRARIES}
     ${OGRE_Overlay_LIBRARIES}
     )
+
+if(UNIX)
+    target_link_libraries(${ANNWVYN_PROJECT}
+        ${BULLET_LIBRARIES}
+        )
+endif()
 
 
 #MSVC specific configuration
@@ -125,7 +147,7 @@ if(MSVC)
     set_target_properties(${ANNWVYN_PROJECT} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
     set_target_properties(${ANNWVYN_PROJECT} PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
     set_target_properties(${ANNWVYN_PROJECT} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
-	set_target_properties(${ANNWVYN_PROJECT} PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
+    set_target_properties(${ANNWVYN_PROJECT} PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
     set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
 endif()
 
