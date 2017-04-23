@@ -115,7 +115,8 @@ include_directories(
 
     #Annwvyn Engine
     $ENV{AnnwvynSDK64}/Annwvyn/include
-    $ENV{HOME}/Annwvyn/include
+    #$ENV{HOME}/Annwvyn/include
+    /usr/local/include/Annwvyn
     )
 
 link_directories($ENV{AnnwvynSDK64}/Annwvyn/lib/)
