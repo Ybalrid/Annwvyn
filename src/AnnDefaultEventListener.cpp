@@ -62,11 +62,12 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	//If the corresponding key is pressed, set the direction to true.
 	if (!e.shouldIgnore())
 	{
-		if (e.getKey() == forward)
+        //Z and Q are hacks for supporting french AZERTY keyboard easilly
+		if (e.getKey() == forward || e.getKey() == KeyCode::z)
 			player->walking[walkDirection::forward] = e.isPressed();
 		if (e.getKey() == backward)
 			player->walking[walkDirection::backward] = e.isPressed();
-		if (e.getKey() == straffleft)
+		if (e.getKey() == straffleft || e.getKey() == KeyCode::q)
 			player->walking[left] = e.isPressed();
 		if (e.getKey() == straffright)
 			player->walking[right] = e.isPressed();
