@@ -179,3 +179,8 @@ if(WIN32)
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 endif()
 
+if(UNIX)
+    install(TARGETS Annwvyn LIBRARY DESTINATION lib)
+    install(FILES ${AnnwvynHeaders} DESTINATION include/Annwvyn/)
+endif()
+
