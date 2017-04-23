@@ -108,5 +108,5 @@ ______
 Some word on the linux support
 ------------------------------
 
-The engine is buildable and runnable under linux, but there is **no support** for any HMD under linux at this time. So the game will start in **NoVR** mode.
+The engine is buildable and runnable under linux, but there is **no support** for any HMD under linux at this time. So games using it will only start in **NoVR** mode.
 
