@@ -468,7 +468,6 @@ void Ann3DTextPlane::renderText()
 
 	needUpdating = false;
 
-	texture->getBuffer()->getRenderTarget()->writeContentsToTimestampedFile("text", "debug.png");
 }
 
 void Ann3DTextPlane::clearTexture()
