@@ -112,6 +112,15 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include
     )
 
+if(UNIX)    
+    get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+    message("here's the list of the include flag to put in your .clang_complete")
+    foreach(dir ${dirs})
+        message("-I${dir}")
+    endforeach()
+endif(UNIX)
+
+
 #link directory form old VS solution
 link_directories(
     #VR SDKs
