@@ -77,10 +77,18 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 OgreVRRender::~OgreVRRender()
 {
 	Ogre::LogManager::getSingleton().logMessage("OgreVRRender::~OgreVRRender()");
-	root->destroyRenderTarget(window);
+
+    //For good measure : destroy the Ogre window
+    root->destroyRenderTarget(window);
+
+    //We need to stop OGRE before destroying the GLFW window. 
+    root.reset();
+
+    //Clean GLFW
 	glfwDestroyWindow(glfwWindow);
 	glfwTerminate();
 
+    //Reset the singleton
 	self = nullptr;
 }
 
@@ -371,6 +379,7 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 
 		#ifdef __linux__
 		options["parentWindowHandle"] = std::to_string(size_t(handle));
+		options["externalGLContext"] = std::to_string(size_t(context));
 		#endif
 	}
 	options["FSAA"] = std::to_string(AALevel);
@@ -518,8 +527,11 @@ void OgreVRRender::handleWindowMessages()
 	{
 		windowW = w;
 		windowH = h;
-
+#ifndef __linux__
 		window->windowMovedOrResized();
+#else
+        window->resize(w,h);
+#endif
 	}
 }
 
