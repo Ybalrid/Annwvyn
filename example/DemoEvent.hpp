@@ -2,30 +2,40 @@
 #include <Annwvyn.h>
 #include "TutorialLevel.hpp"
 
-///Event
+// This class define an "user space" event. An event type that can be created from "user space" code
+// For doing that, you just need to inherit from AnnUserSpaceEvent.
+//
+// The interesting bit here is on the constructor. You pass an unique string that identify the type of this
+// Event.
+//
+// This type string is hashed and stored. Listeners will test against this hash to check if an event is of a type
+// They are interested.
 class TextMessageEvent : public Annwvyn::AnnUserSpaceEvent
 {
 public:
+	//Call the constructor of AnnUserSpaceEvent with the string "TextMessage" to identify this type of event.
 	TextMessageEvent(std::string message) : AnnUserSpaceEvent("TextMessage"),
 		enclosedMessage(message)
 	{}
 
-	~TextMessageEvent() = default;
-
+	//Getter for retrieving the message
 	std::string getMessage() const { return enclosedMessage; };
 
 private:
 	std::string enclosedMessage;
 };
 
-///Event Listener
+// This is an event listener defined has any event listener, in the same way you'll define any event listener for Annwvyn.
 class SomeEventListener : LISTENER
 {
 public:
+	//Since we're testing against that hash, we should store it to have it handy in a const member.
 	SomeEventListener() : constructListener(),
 		hashTypeCheckTextEvent(AnnGetStringUtility()->hash("TextMessage"))
 	{}
 
+	//The business part is here. Overriding this method permit you to catch user space events.
+	//You get a reference to the event, and you get a raw pointer to the event "sender".
 	void EventFromUserSubsystem(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* origin) override
 	{
 		if (e.getType() == hashTypeCheckTextEvent)
@@ -35,10 +45,15 @@ public:
 	}
 
 private:
+	//We are storing the hashed value of the type here
 	const AnnUserSpaceEvent::AnnUserSpaceEventTypeHash hashTypeCheckTextEvent;
 };
 
-///A user defined subsystem sending the event declared above regularly
+// A user defined subsystem sending the event declared above regularly.
+// This is a AnnUserSubSystem. AnnUserSubSystem inherit from AnnUserSpaceEventLauncher.
+// Don't really worry about that bit, just know that you have access to the "dispatchEvent" method,
+// You have to give it a shared_ptr to a message instance, but you are NOT supposed to keep the event alive here.
+// The engine will keep it, dispatch it to all the listeners (as a reference to it's pointed content), then be freed.
 class SomeSubSystem : public Annwvyn::AnnUserSubSystem
 {
 public:
@@ -48,6 +63,7 @@ public:
 		delay(updateRate)
 	{}
 
+	//If the time since last "message sent" is higher than the delay, send a message
 	void update() override
 	{
 		now = Annwvyn::AnnGetEngine()->getTimeFromStartupSeconds();
@@ -69,6 +85,7 @@ private:
 	double now, last, delay;
 };
 
+// This level setup the subsystem and listener declared above.
 class DemoEvent : public TutorialLevel
 {
 public:
@@ -92,6 +109,7 @@ public:
 
 		loadBasic();
 
+		//Some text for the user that encourage to go read this file
 		loadTextPannel(
 			"DemoEvent Level :\n"
 			"-----------------\n"
