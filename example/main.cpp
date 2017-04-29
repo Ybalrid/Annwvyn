@@ -14,85 +14,12 @@
 #include <Ann3DTextPlane.hpp>
 #include "TestLevel.hpp"
 #include "DemoLevel.hpp"
+#include "DemoEvent.hpp"
 
 using namespace std;
 using namespace Annwvyn;
 
 constexpr bool isRoomscale{ true };
-
-///Event
-class TextMessageEvent : public AnnUserSpaceEvent
-{
-public:
-	TextMessageEvent(string message) : AnnUserSpaceEvent("TextMessage"),
-		enclosedMessage(message)
-	{
-	}
-
-	~TextMessageEvent()
-	{
-		//This is just to check that everything is in order
-		//AnnDebug() << "event destructed!";
-	}
-
-	string getMessage() const { return enclosedMessage; };
-
-private:
-	string enclosedMessage;
-};
-
-///Event Listener
-class SomeEventListener : LISTENER
-{
-public:
-	SomeEventListener() : constructListener(),
-		hashTypeCheckTextEvent(AnnGetStringUtility()->hash("TextMessage"))
-	{
-	}
-
-	void EventFromUserSubsystem(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* origin) override
-	{
-		if (e.getType() == hashTypeCheckTextEvent)
-			AnnDebug() << "SomeEventListener got the TextMessageEvent \""
-			<< dynamic_cast<TextMessageEvent&>(e).getMessage()
-			<< "\" from " << origin;
-	}
-
-private:
-	const AnnUserSpaceEvent::AnnUserSpaceEventTypeHash hashTypeCheckTextEvent;
-};
-
-///A user defined subsystem sending the event declared above regularly
-class SomeSubSystem : public AnnUserSubSystem
-{
-public:
-	SomeSubSystem(double updateRate = 3) : AnnUserSubSystem("Useless Subsystem"),
-		now(0),
-		last(0),
-		delay(updateRate)
-	{
-	}
-
-	void update() override
-	{
-		now = AnnGetEngine()->getTimeFromStartupSeconds();
-
-		if (now - last > delay)
-		{
-			static unsigned int count = 0;
-			last = now;
-			dispatchEvent(make_shared<TextMessageEvent>("Useless message! " + to_string(++count)));
-		}
-	}
-
-	bool needUpdate() override
-	{
-		return true;
-	}
-
-private:
-	double now, last, delay;
-};
 
 void putGizmoOnHands()
 {
@@ -138,7 +65,7 @@ public:
 	}
 };
 
-std::function<void()> debugHook;
+function<void()> debugHook;
 
 AnnMain()
 {
@@ -157,16 +84,15 @@ AnnMain()
 	AnnGetResourceManager()->addFileLocation("media/environment");
 	AnnGetResourceManager()->initResources();
 
-	//AnnGetLevelManager()->addLevel(make_shared<Demo0>());
-
-	//////create and load level objects
+	//create and load level objects
 	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
 	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
+	AnnGetLevelManager()->addLevel(make_shared<DemoEvent>());
 
 	AnnGetLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getFirstLevelLoaded(), 3));
 
-	////ask the level manager to perform a jump to the last level
+	//ask the level manager to perform a jump to the last level
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
 	AnnDebug() << "Starting the render loop";
 

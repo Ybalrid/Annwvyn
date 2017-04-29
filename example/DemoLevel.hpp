@@ -39,19 +39,16 @@ public:
 		//Add static geometry
 
 		auto pbrTest = addGameObject("SubstanceSphereDecimated.mesh");
-		pbrTest->setPosition({ 0, 1.5f, -2 });
+		pbrTest->setPosition({ -1, 1.5f, -2 });
 		rotating = pbrTest.get();
 
 		auto Ground = addGameObject("floorplane.mesh");
 		Ground->setUpPhysics();
 
-		AnnGetPlayer()->regroundOnPhysicsBody(); //<--- will not work because no physics yet
-
-		//TODO temp hack fix. Remove me :
-		AnnGetPlayer()->reground(Ground->getPosition().y);
+		AnnGetPlayer()->regroundOnPhysicsBody();
 
 		auto StoneDemo0 = addGameObject("DemoStone.mesh");
-		StoneDemo0->setPosition({ -3, 0, -5 });
+		StoneDemo0->setPosition({ -6, 0, -5 });
 		StoneDemo0->setOrientation({ AnnDegree(45), AnnVect3::UNIT_Y });
 		StoneDemo0->setUpPhysics();
 
@@ -69,8 +66,8 @@ public:
 		demo0trig = Demo0Trigger;
 
 		auto StoneTestLevel = addGameObject("DemoStone.mesh");
-		StoneTestLevel->setPosition({ +3, 0, -5 });
-		StoneTestLevel->setOrientation(AnnQuaternion(AnnDegree(-45), AnnVect3::UNIT_Y));
+		StoneTestLevel->setPosition({ +0, 0, -7 });
+		StoneTestLevel->setOrientation(AnnQuaternion(AnnDegree(0), AnnVect3::UNIT_Y));
 		StoneTestLevel->setUpPhysics();
 
 		auto TestLevelText = std::make_shared<Ann3DTextPlane>(2.f, 1.f, "TestLevel\nA simple test level", 512, panelDpi);
@@ -85,6 +82,24 @@ public:
 		TestLevelTrigger->setThreshold(1.5f);
 		TestLevelTrigger->setPosition(StoneTestLevel->getPosition() + AnnVect3(0, 0.5f, 0));
 		testLevelTrig = TestLevelTrigger;
+
+		auto StoneEvent = addGameObject("DemoStone.mesh");
+		StoneEvent->setPosition({ +6, 0, -5 });
+		StoneEvent->setOrientation(AnnQuaternion(AnnDegree(-45), AnnVect3::UNIT_Y));
+		StoneEvent->setUpPhysics();
+
+		auto EventText = std::make_shared<Ann3DTextPlane>(2.f, 1.f, "DemoEvent\nShows user-defined events in action", 512, panelDpi);
+		EventText->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
+		EventText->setTextColor(AnnColor{ 0, 0, 0 });
+		EventText->setPosition(StoneEvent->getPosition() + StoneEvent->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
+		EventText->setOrientation(StoneEvent->getOrientation());
+		EventText->update();
+		addManualMovableObject(EventText);
+
+		auto EventTrigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
+		EventTrigger->setThreshold(1.5f);
+		EventTrigger->setPosition(StoneEvent->getPosition() + AnnVect3(0, 0.5f, 0));
+		EventTrig = EventTrigger;
 
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
@@ -127,6 +142,12 @@ public:
 		if (testLevelTrig.get() == trigger)
 		{
 			AnnGetLevelManager()->jump(getDemo(1));
+			return;
+		}
+		if (EventTrig.get() == trigger)
+		{
+			AnnGetLevelManager()->jump(getDemo(2));
+			return;
 		}
 	}
 
@@ -138,6 +159,7 @@ public:
 private:
 	std::shared_ptr<AnnTriggerObject> demo0trig;
 	std::shared_ptr<AnnTriggerObject> testLevelTrig;
+	std::shared_ptr<AnnTriggerObject> EventTrig;
 
 	AnnGameObject* rotating;
 
