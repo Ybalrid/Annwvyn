@@ -31,7 +31,7 @@ in uint drawId;
 
 @insertpiece( custom_vs_attributes )
 
-@property( !hlms_shadowcaster || !hlms_shadow_uses_depth_texture || alpha_test )
+@property( !hlms_shadowcaster || !hlms_shadow_uses_depth_texture || alpha_test || exponential_shadow_maps )
 out block
 {
 @insertpiece( VStoPS_block )
@@ -113,7 +113,7 @@ layout(binding = 0) uniform samplerBuffer worldMatBuf;
 @end @end //SkeletonTransform // !hlms_skeleton
 
 @property( hlms_skeleton )
-    @piece( worldViewMat )pass.view@end
+	@piece( worldViewMat )passBuf.view@end
 @end @property( !hlms_skeleton )
     @piece( worldViewMat )worldView@end
 @end
@@ -126,7 +126,7 @@ layout(binding = 0) uniform samplerBuffer worldMatBuf;
 	@property( hlms_normal || hlms_qtangent )outVs.normal	= @insertpiece(local_normal) * mat3(@insertpiece( worldViewMat ));@end
 	@property( normal_map )outVs.tangent	= @insertpiece(local_tangent) * mat3(@insertpiece( worldViewMat ));@end
 @property( !hlms_dual_paraboloid_mapping )
-	gl_Position = worldPos * pass.viewProj;@end
+	gl_Position = worldPos * passBuf.viewProj;@end
 @property( hlms_dual_paraboloid_mapping )
 	//Dual Paraboloid Mapping
 	gl_Position.w	= 1.0f;
@@ -136,10 +136,6 @@ layout(binding = 0) uniform samplerBuffer worldMatBuf;
 	gl_Position.z	+= 1.0f;
 	gl_Position.xy	/= gl_Position.z;
 	gl_Position.z	= (L - NearPlane) / (FarPlane - NearPlane);@end
-@end
-@piece( ShadowReceive )
-@foreach( hlms_num_shadow_maps, n )
-	outVs.posL@n = vec4(worldPos.xyz, 1.0f) * pass.shadowRcv[@n].texViewProj;@end
 @end
 
 void main()
@@ -166,28 +162,8 @@ void main()
 	@insertpiece( SkeletonTransform )
 	@insertpiece( VertexTransform )
 
-@property( !hlms_shadowcaster )
-	@insertpiece( ShadowReceive )
-@foreach( hlms_num_shadow_maps, n )
-	outVs.posL@n.z = outVs.posL@n.z * pass.shadowRcv[@n].shadowDepthRange.y;
-	outVs.posL@n.z = (outVs.posL@n.z * 0.5) + 0.5;@end
-
-@property( hlms_pssm_splits )	outVs.depth = gl_Position.z;@end
-
-@end @property( hlms_shadowcaster )
-    float shadowConstantBias = uintBitsToFloat( instance.worldMaterialIdx[drawId].y );
-
-	@property( !hlms_shadow_uses_depth_texture )
-		//Linear depth
-		outVs.depth	= (gl_Position.z + shadowConstantBias * pass.depthRange.y) * pass.depthRange.y;
-		outVs.depth = (outVs.depth * 0.5) + 0.5;
-	@end
-
-	//We can't make the depth buffer linear without Z out in the fragment shader;
-	//however we can use a cheap approximation ("pseudo linear depth")
-	//see http://www.yosoygames.com.ar/wp/2014/01/linear-depth-buffer-my-ass/
-	gl_Position.z = (gl_Position.z + shadowConstantBias * pass.depthRange.y) * pass.depthRange.y * gl_Position.w;
-@end
+	@insertpiece( DoShadowReceiveVS )
+	@insertpiece( DoShadowCasterVS )
 
 	/// hlms_uv_count will be 0 on shadow caster passes w/out alpha test
 @foreach( hlms_uv_count, n )
@@ -195,6 +171,10 @@ void main()
 
 @property( (!hlms_shadowcaster || alpha_test) && !lower_gpu_overhead )
 	outVs.drawId = drawId;@end
+
+	@property( hlms_use_prepass_msaa > 1 )
+		outVs.zwDepth.xy = outVs.gl_Position.zw;
+	@end
 
 	@insertpiece( custom_vs_posExecution )
 }
