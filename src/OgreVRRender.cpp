@@ -19,7 +19,6 @@
 
 #include <GLFW/glfw3native.h>
 
-
 auto logToOgre = [](const std::string& str) {Ogre::LogManager::getSingleton().logMessage(str); };
 
 uint8_t OgreVRRender::AALevel{ 4 };
@@ -28,7 +27,7 @@ bool OgreVRRender::UseSSAA{ false };
 
 void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
 {
-    static const std::array<const uint8_t, 5> AvailableAALevel {0,2,4,8,16};
+	static const std::array<const uint8_t, 5> AvailableAALevel{ 0,2,4,8,16 };
 	for (const auto& possibleAALevel : AvailableAALevel)
 		if (possibleAALevel == AA)
 		{
@@ -78,17 +77,17 @@ OgreVRRender::~OgreVRRender()
 {
 	Ogre::LogManager::getSingleton().logMessage("OgreVRRender::~OgreVRRender()");
 
-    //For good measure : destroy the Ogre window
-    root->destroyRenderTarget(window);
+	//For good measure : destroy the Ogre window
+	root->destroyRenderTarget(window);
 
-    //We need to stop OGRE before destroying the GLFW window. 
-    root.reset();
+	//We need to stop OGRE before destroying the GLFW window.
+	root.reset();
 
-    //Clean GLFW
+	//Clean GLFW
 	glfwDestroyWindow(glfwWindow);
 	glfwTerminate();
 
-    //Reset the singleton
+	//Reset the singleton
 	self = nullptr;
 }
 
@@ -331,65 +330,47 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	windowW = w, windowH = h;
 	auto winName = rendererName + " : " + name + " - monitor output";
 
+	logToOgre("call glfwInit()");
+	glfwInit();
+	//Specify OpenGL version
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, AALevel);
+
+	logToOgre("Set OpenGL context version " + std::to_string(glMajor) + "." + std::to_string(glMinor));
+
+	//Create a window (and an opengl context with it)
+	glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
+
+	//Make the created context current
+	glfwMakeContextCurrent(glfwWindow);
+
+	Ogre::NameValuePairList options;
+
 #ifdef _WIN32
 	HGLRC context = {};
 	HWND handle = {};
+	//Get the hwnd and the context :
+	context = wglGetCurrentContext();
+	handle = glfwGetWin32Window(glfwWindow);
+	options["externalWindowHandle"] = std::to_string(size_t(handle));
+	options["externalGLContext"] = std::to_string(size_t(context));
 #endif
 
 #ifdef __linux__
-    Window handle = {};
-    void* context = nullptr;
+	Window handle = {};
+	void* context = nullptr;
+	handle = glfwGetX11Window(glfwWindow);
+	options["parentWindowHandle"] = std::to_string(size_t(handle));
+	options["externalGLContext"] = std::to_string(size_t(context));
 #endif
-	constexpr const  bool useGLFW{ true };
 
-	if (useGLFW)
-	{
-		logToOgre("call glfwInit()");
-		glfwInit();
-		//Specify OpenGL version
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_SAMPLES, AALevel);
-
-		logToOgre("Set OpenGL context version " + std::to_string(glMajor) + "." + std::to_string(glMinor));
-
-		//Create a window (and an opengl context with it)
-		glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
-
-		//Make the created context current
-		glfwMakeContextCurrent(glfwWindow);
-
-#ifdef _WIN32
-		//Get the hwnd and the context :
-        context = wglGetCurrentContext();
-		handle = glfwGetWin32Window(glfwWindow);
-#endif
-#ifdef __linux__
-		handle = glfwGetX11Window(glfwWindow);
-#endif
-	}
-	Ogre::NameValuePairList options;
-	if (useGLFW)
-	{
-		#ifdef _WIN32
-		options["externalWindowHandle"] = std::to_string(size_t(handle));
-		options["externalGLContext"] = std::to_string(size_t(context));
-		#endif
-
-		#ifdef __linux__
-		options["parentWindowHandle"] = std::to_string(size_t(handle));
-		options["externalGLContext"] = std::to_string(size_t(context));
-		#endif
-	}
 	options["FSAA"] = std::to_string(AALevel);
 	options["top"] = "0";
 	options["left"] = "0";
 	options["gamma"] = "true";
-	if (vsync)
-		options["vsync"] = "true";
-	else
-		options["vsync"] = "false";
+	options["vsync"] = vsync ? "true" : "false";
 
 	window = root->createRenderWindow(winName, w, h, false, &options);
 }
@@ -530,7 +511,7 @@ void OgreVRRender::handleWindowMessages()
 #ifndef __linux__
 		window->windowMovedOrResized();
 #else
-        window->resize(w,h);
+		window->resize(w, h);
 #endif
 	}
 }
