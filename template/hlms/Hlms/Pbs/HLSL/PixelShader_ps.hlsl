@@ -1,3 +1,4 @@
+@insertpiece( SetCrossPlatformSettings )
 
 // START UNIFORM DECLARATION
 @property( !hlms_shadowcaster || alpha_test )
@@ -24,6 +25,7 @@ struct PS_INPUT
 	@end @property( hlms_use_prepass_msaa )
 		Texture2DMS<unorm float4> gBuf_normals			: register(t@value(gBuf_normals));
 		Texture2DMS<unorm float2> gBuf_shadowRoughness	: register(t@value(gBuf_shadowRoughness));
+		Texture2DMS<float> gBuf_depthTexture			: register(t@value(gBuf_depthTexture));
 	@end
 
 	@property( hlms_use_ssr )
@@ -55,60 +57,6 @@ SamplerState envMapSamplerState : register(s@value(envMapReg));@end
 @property( hlms_qtangent )
 @piece( tbnApplyReflection ) * inPs.biNormalReflection@end
 @end
-@end
-
-@property( hlms_num_shadow_maps )
-Texture2D texShadowMap[@value(hlms_num_shadow_maps)] : register(t@value(textureRegShadowMapStart));
-SamplerComparisonState shadowSampler : register(s@value(textureRegShadowMapStart));
-
-float getShadow( Texture2D shadowMap, float4 psPosLN, float4 invShadowMapSize )
-{
-	float fDepth = psPosLN.z;
-	float2 uv = psPosLN.xy / psPosLN.w;
-	/*float c = shadowMap.SampleCmpLevelZero( shadowSampler, uv.xy, fDepth );
-	return c;*/
-	
-	float retVal = 0;
-
-@property( pcf_3x3 || pcf_4x4 )
-	float2 offsets[@value(pcf_iterations)] =
-	{
-	@property( pcf_3x3 )
-		float2( 0, 0 ),	//0, 0
-		float2( 1, 0 ),	//1, 0
-		float2( 0, 1 ),	//1, 1
-		float2( 0, 0 ) 	//1, 1
-	@end
-	@property( pcf_4x4 )
-		float2( 0, 0 ),	//0, 0
-		float2( 1, 0 ),	//1, 0
-		float2( 1, 0 ),	//2, 0
-
-		float2(-2, 1 ),	//0, 1
-		float2( 1, 0 ),	//1, 1
-		float2( 1, 0 ),	//2, 1
-
-		float2(-2, 1 ),	//0, 2
-		float2( 1, 0 ),	//1, 2
-		float2( 1, 0 )	//2, 2
-	@end
-	};
-@end
-
-	@foreach( pcf_iterations, n )
-		@property( pcf_3x3 || pcf_4x4 )uv += offsets[@n] * invShadowMapSize.xy;@end
-		// 2x2 PCF
-		retVal += shadowMap.SampleCmpLevelZero( shadowSampler, uv.xy, fDepth );
-	@end
-
-	@property( pcf_3x3 )
-		retVal *= 0.25;
-	@end @property( pcf_4x4 )
-		retVal *= 0.11111111111111;
-	@end
-
-	return retVal;
-}
 @end
 
 @property( hlms_lights_spot_textured )@insertpiece( DeclQuat_zAxis )
@@ -164,8 +112,9 @@ float3 qmul( float4 q, float3 v )
 @insertpiece( DeclParallaxLocalCorrect )
 @end
 
-@property( hlms_num_shadow_maps )@piece( DarkenWithShadowFirstLight )* fShadow@end @end
-@property( hlms_num_shadow_maps )@piece( DarkenWithShadow ) * getShadow( texShadowMap[@value(CurrentShadowMap)], inPs.posL@value(CurrentShadowMap), passBuf.shadowRcv[@counter(CurrentShadowMap)].invShadowMapSize )@end @end
+@insertpiece( DeclShadowMapMacros )
+@insertpiece( DeclShadowSamplers )
+@insertpiece( DeclShadowSamplingFuncs )
 
 @insertpiece( DeclOutputType )
 
@@ -309,15 +258,7 @@ float4 diffuseCol;
 		nNormal = normalize( mul( nNormal, TBN ) );
 	@end
 
-	@property( hlms_pssm_splits )
-		float fShadow = 1.0;
-		if( inPs.depth <= passBuf.pssmSplitPoints@value(CurrentShadowMap) )
-			fShadow = getShadow( texShadowMap[@value(CurrentShadowMap)], inPs.posL0, passBuf.shadowRcv[@counter(CurrentShadowMap)].invShadowMapSize );
-	@foreach( hlms_pssm_splits, n, 1 )	else if( inPs.depth <= passBuf.pssmSplitPoints@value(CurrentShadowMap) )
-			fShadow = getShadow( texShadowMap[@value(CurrentShadowMap)], inPs.posL@n, passBuf.shadowRcv[@counter(CurrentShadowMap)].invShadowMapSize );
-	@end @end @property( !hlms_pssm_splits && hlms_num_shadow_maps && hlms_lights_directional )
-		float fShadow = getShadow( texShadowMap[@value(CurrentShadowMap)], inPs.posL0, passBuf.shadowRcv[@counter(CurrentShadowMap)].invShadowMapSize );
-	@end
+	@insertpiece( DoDirectionalShadowMaps )
 
 	@insertpiece( SampleRoughnessMap )
 
@@ -325,7 +266,35 @@ float4 diffuseCol;
 	int2 iFragCoord = int2( gl_FragCoord.xy );
 
 	@property( hlms_use_prepass_msaa )
-		int gBufSubsample = firstbitlow( gl_SampleMask );
+		uint gl_SampleMaskIn = gl_SampleMask;
+		//SV_Coverage/gl_SampleMaskIn is always before depth & stencil tests,
+		//so we need to perform the test ourselves
+		//See http://www.yosoygames.com.ar/wp/2017/02/beware-of-sv_coverage/
+		float msaaDepth;
+		int subsampleDepthMask;
+		float pixelDepthZ;
+		float pixelDepthW;
+		float pixelDepth;
+		int intPixelDepth;
+		int intMsaaDepth;
+		//Unfortunately there are precision errors, so we allow some ulp errors.
+		//200 & 5 are arbitrary, but were empirically found to be very good values.
+		int ulpError = int( lerp( 200, 5, gl_FragCoord.z ) );
+		@foreach( hlms_use_prepass_msaa, n )
+			pixelDepthZ = EvaluateAttributeAtSample( inPs.zwDepth.x, @n );
+			pixelDepthW = EvaluateAttributeAtSample( inPs.zwDepth.y, @n );
+			pixelDepth = pixelDepthZ / pixelDepthW;
+			msaaDepth = gBuf_depthTexture.Load( iFragCoord.xy, @n );
+			intPixelDepth = asint( pixelDepth );
+			intMsaaDepth = asint( msaaDepth );
+			subsampleDepthMask = int( (abs( intPixelDepth - intMsaaDepth ) <= ulpError) ? 0xffffffffu : ~(1u << @nu) );
+			//subsampleDepthMask = int( (pixelDepth <= msaaDepth) ? 0xffffffffu : ~(1u << @nu) );
+			gl_SampleMaskIn &= subsampleDepthMask;
+		@end
+
+		gl_SampleMaskIn = gl_SampleMaskIn == 0 ? 1 : gl_SampleMaskIn;
+
+		int gBufSubsample = firstbitlow( gl_SampleMaskIn );
 
 		nNormal = normalize( gBuf_normals.Load( iFragCoord, gBufSubsample ).xyz * 2.0 - 1.0 );
 		float2 shadowRoughness = gBuf_shadowRoughness.Load( iFragCoord, gBufSubsample ).xy;
@@ -380,7 +349,7 @@ float4 diffuseCol;
 	if( fDistance <= passBuf.lights[@n].attenuation.x )
 	{
 		lightDir *= 1.0 / fDistance;
-		tmpColour = BRDF( lightDir, viewDir, NdotV, passBuf.lights[@n].diffuse, passBuf.lights[@n].specular, material, nNormal @insertpiece( brdfExtraParams ) )@insertpiece( DarkenWithShadow );
+		tmpColour = BRDF( lightDir, viewDir, NdotV, passBuf.lights[@n].diffuse, passBuf.lights[@n].specular, material, nNormal @insertpiece( brdfExtraParams ) )@insertpiece( DarkenWithShadowPoint );
 		float atten = 1.0 / (0.5 + (passBuf.lights[@n].attenuation.y + passBuf.lights[@n].attenuation.z * fDistance) * fDistance );
 		finalColour += tmpColour * atten;
 	}@end
@@ -498,6 +467,10 @@ float4 diffuseCol;
 	@end @property( !hlms_normal && !hlms_qtangent )
 		outPs.colour0 = float4( 1.0, 1.0, 1.0, 1.0 );
 	@end
+
+	@property( debug_pssm_splits )
+		outPs.colour0.xyz = lerp( outPs.colour0.xyz, debugPssmSplit.xyz, 0.2f );
+	@end
 @end @property( hlms_prepass )
 	outPs.normals			= float4( nNormal * 0.5 + 0.5, 1.0 );
 	@property( hlms_pssm_splits )
@@ -507,6 +480,26 @@ float4 diffuseCol;
 	@end
 @end
 
+	@property( hlms_use_prepass_msaa && false )
+		//Useful debug stuff for debugging precision issues.
+		/*float testD = gBuf_depthTexture.Load( iFragCoord.xy, 0 );
+		outPs.colour0.xyz = testD * testD * testD * testD * testD * testD * testD * testD;*/
+		/*float3 col3 = lerp( outPs.colour0.xyz, float3( 1, 1, 1 ), 0.85 );
+		outPs.colour0.xyz = 0;
+		if( gl_SampleMaskIn & 0x1 )
+			outPs.colour0.x = col3.x;
+		if( gl_SampleMaskIn & 0x2 )
+			outPs.colour0.y = col3.y;
+		if( gl_SampleMaskIn & 0x4 )
+			outPs.colour0.z = col3.z;
+		if( gl_SampleMaskIn & 0x8 )
+			outPs.colour0.w = 1.0;*/
+		/*outPs.colour0.x = pixelDepth;
+		outPs.colour0.y = msaaDepth;
+		outPs.colour0.z = 0;
+		outPs.colour0.w = 1;*/
+	@end
+
 	@insertpiece( custom_ps_posExecution )
 
 @property( !hlms_render_depth_only )
@@ -515,8 +508,15 @@ float4 diffuseCol;
 }
 @end
 @property( hlms_shadowcaster )
+
+@insertpiece( DeclShadowCasterMacros )
+
 @property( num_textures )Texture2DArray textureMaps[@value( num_textures )] : register(t@value(textureRegStart));@end
 @property( numSamplerStates )SamplerState samplerStates[@value(numSamplerStates)] : register(s@value(samplerStateStart));@end
+
+@property( hlms_shadowcaster_point || exponential_shadow_maps )
+	@insertpiece( PassDecl )
+@end
 
 @insertpiece( DeclOutputType )
 
@@ -581,12 +581,11 @@ float4 diffuseCol;
 		discard;
 @end /// !alpha_test
 
+	@insertpiece( DoShadowCastPS )
+
 	@insertpiece( custom_ps_posExecution )
 
-@property( !hlms_render_depth_only )
-	outPs.colour0 = inPs.depth;
 	return outPs;
-@end
 }
 @end
 
