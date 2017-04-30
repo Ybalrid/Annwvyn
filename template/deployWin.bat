@@ -9,6 +9,9 @@ rmdir deploy
 @echo done!
 @echo deploying game...
 mkdir deploy
+
+ECHO F | xcopy Release\*.exe Game.exe /y
+
 copy Game.exe deploy\
 copy rift_launcher.bat deploy\
 copy vive_launcher.bat deploy\
