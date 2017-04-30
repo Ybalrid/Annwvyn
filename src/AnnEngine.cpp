@@ -122,10 +122,12 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 #endif
 
 #ifdef __linux__
-    renderer = std::make_shared<OgreNoVRRender>(title);
+	renderer = std::make_shared<OgreNoVRRender>(title);
 #endif
 
 	renderer->initOgreRoot("Annwvyn.log");
+
+	registerCustomResources();
 
 	player = std::make_shared< AnnPlayer>();
 	renderer->initVrHmd();
@@ -513,4 +515,8 @@ void AnnEngine::setProcessPriorityHigh()
 void AnnEngine::requestQuit()
 {
 	applicationQuitRequested = true;
+}
+
+void AnnEngine::registerCustomResources()
+{
 }
