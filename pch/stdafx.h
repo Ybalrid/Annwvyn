@@ -60,7 +60,9 @@
 #include <OgreTechnique.h>
 #include <OgrePass.h>
 #include <Hlms/Pbs/OgreHlmsPbs.h>
+#include <Hlms/Pbs/OgreHlmsPbsDatablock.h>
 #include <Hlms/Unlit/OgreHlmsUnlit.h>
+#include <Hlms/Unlit/OgreHlmsUnlitDatablock.h>
 #include <OgreHlmsManager.h>
 #include <OgreHlms.h>
 #include <OgreMesh.h>
@@ -86,12 +88,31 @@
 //libsndfile
 #include <sndfile.h>
 
-//Oculus VR API
+//TinyXML2
+#include <tinyxml2.h>
+
 #ifdef _WIN32
+//OpenVR (Valve/HTC Vive) API
+#include <openvr.h>
+#include <openvr_capi.h>
 #include <OVR_CAPI.h>
+//Oculus VR API
 #include <OVR_CAPI_GL.h>
 #include <Extras/OVR_Math.h>
+
+//Win32 API
+#include <windows.h>
+#include <io.h>
+#include <fcntl.h>
 #endif
+
+//OpenGL stdduff :
+
+//GL Extension Wrangler
+#include <GL/glew.h>
+
+//GL FrameWork
+#include <GLFW/glfw3.h>
 
 //Chaisript interpretor
 #pragma warning (disable : 4602)
@@ -100,23 +121,3 @@
 #include <chaiscript_stdlib.hpp>
 #include <chaiscript_threading.hpp>
 #pragma warning (default: 4602)
-
-//OpenVR (Valve/HTC Vive) API
-#ifdef _WIN32
-#include <openvr.h>
-#include <openvr_capi.h>
-#endif
-
-#ifdef _WIN32
-#include <windows.h>
-#include <io.h>
-#include <fcntl.h>
-#endif
-
-//OpenGL stuff :
-
-//GL Extension Wrangler
-#include <GL/glew.h>
-
-//GL FrameWork
-#include <GLFW/glfw3.h>
