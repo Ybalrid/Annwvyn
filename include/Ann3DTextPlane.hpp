@@ -25,7 +25,7 @@ namespace Annwvyn
 		///Construct a 3D text plane. Need to provide a caption to auto render text
 		/// \param w Width in meter
 		/// \param h Height in meter
-		/// \param caption Caption
+		/// \param caption Text to print on the plane
 		/// \param size Character size in typographic point
 		/// \param resolution Character "print" resolution in DPI. This will influence the texture resolution
 		/// \param font Your name of the font. To reuse a font configuration
@@ -47,7 +47,7 @@ namespace Annwvyn
 		/// \param color The color of the text
 		void setTextColor(AnnColor color);
 
-		///Change the background color (note: alpha is either one or nothing. Fragments are discarded, not blended)
+		///Change the background color. Alpha blending works
 		void setBackgroundColor(AnnColor color);
 
 		///Call text re-render (if needed)
