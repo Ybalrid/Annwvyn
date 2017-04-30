@@ -108,7 +108,7 @@ file(GLOB ProjScripts  ${PROJECT_BINARY_DIR}/*.chai)
 
 message("Beware! The files ${ProjScripts} are resources copied inside the binary directory. The COPIED FILES are added to the project. Sale goes the media, compositor and hlms directories.")
 message("If you want them to be updated you should re-run cmake")
-add_executable(${ANNWVYN_PROJECT} ${ProjSources} ${ProjHeaderss} ${ProjPCH} ${ProjScripts})
+add_executable(${ANNWVYN_PROJECT} ${ProjSources} ${ProjHeaders} ${ProjPCH} ${ProjScripts})
 
 target_link_libraries(${ANNWVYN_PROJECT}
     Annwvyn.lib
