@@ -1,9 +1,11 @@
 #pragma once
 
+#include "systemMacro.h"
+#include "AnnChaiScriptResource.hpp"
+
 #include <chaiscript.hpp>
 #include <chaiscript_stdlib.hpp>
 
-#include "systemMacro.h"
 #include "AnnSubsystem.hpp"
 #include "AnnEventManager.hpp"
 
@@ -109,6 +111,7 @@ namespace Annwvyn
 
 		///Construct the script manager, initialize ChaiScript and add global functions
 		AnnScriptManager();
+		~AnnScriptManager();
 
 		///This subsystem doesn't need to be updated
 		bool needUpdate() override { return false; }
@@ -129,9 +132,13 @@ namespace Annwvyn
 
 		///ChaiScript engine
 		chaiscript::ChaiScript chai;
+		AnnChaisScriptResourceManager* chaiscriptResourceManager;
 
 		///Register to the script engine all the things that are possible to do. Called by the constructor
 		void registerApi();
+
+		void registerResourceManager();
+		void unregisterResourceManager();
 
 		///The extension of script files
 		static constexpr const char* const scriptExtension{ ".chai" };

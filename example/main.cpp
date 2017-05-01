@@ -82,6 +82,7 @@ AnnMain()
 
 	AnnGetEventManager()->useDefaultEventListener();
 	AnnGetResourceManager()->addFileLocation("media/environment");
+	AnnGetResourceManager()->addFileLocation("script");
 	AnnGetResourceManager()->initResources();
 
 	//create and load level objects
