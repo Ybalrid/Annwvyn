@@ -9,13 +9,15 @@
 
 using namespace Annwvyn;
 
-AnnScriptManager::AnnScriptManager() : AnnSubSystem("ScriptManager")
+AnnScriptManager::AnnScriptManager() : AnnSubSystem("ScriptManager"),
+chaiscriptResourceManager(nullptr)
 //Initialize with compiled-in Std_Lib
 {
 	AnnDebug() << "Initialized ChaiScript Std_Lib";
 	registerApi();
 
 	AnnDebug() << "Using ChaiScript version 6.0";
+	registerResourceManager();
 }
 
 void AnnScriptManager::registerApi()
@@ -445,7 +447,22 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 	try
 	{
 		//Evaluate the file containing the script class if unknown to ChaiScript yet
-		chai.use(file);
+		//chai.use(file);
+
+		auto rawScript = chaiscriptResourceManager->getResourceByName(file).staticCast<AnnChaiScriptResource>();
+		if (!rawScript)
+		{
+			rawScript = chaiscriptResourceManager->load(file, AnnResourceManager::defaultResourceGroupName);
+			if (!rawScript)
+				throw chaiscript::exception::file_not_found_error(file);
+		}
+
+		if (!rawScript->loadedInChaiscriptInterpretor())
+		{
+			AnnDebug() << "now loading " << file << " into the script manager";
+			rawScript->callMeIfYouLoadMe();
+			chai.eval(rawScript->getString());
+		}
 
 		//Increment ID
 		ID++;
@@ -682,4 +699,19 @@ void AnnBehaviorScript::PlayerCollisionEvent(AnnPlayerCollisionEvent e)
 void AnnScriptManager::evalString(const std::string& chaiCode)
 {
 	chai.eval(chaiCode);
+}
+
+void AnnScriptManager::registerResourceManager()
+{
+	chaiscriptResourceManager = new AnnChaisScriptResourceManager;
+}
+
+void AnnScriptManager::unregisterResourceManager()
+{
+	delete chaiscriptResourceManager;
+}
+
+AnnScriptManager::~AnnScriptManager()
+{
+	unregisterResourceManager();
 }
