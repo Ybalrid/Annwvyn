@@ -1,7 +1,7 @@
 #pragma once
 
 #include "systemMacro.h"
-#include "AnnChaiScriptResource.hpp"
+#include "AnnScriptFile.hpp"
 
 #include <chaiscript.hpp>
 #include <chaiscript_stdlib.hpp>
@@ -109,8 +109,10 @@ namespace Annwvyn
 
 		using AnnScriptID = unsigned long long int;
 
-		///Construct the script manager, initialize ChaiScript and add global functions
+		///Construct the script manager, initialize ChaiScript and add global functions. Will initialize the AnnScriptFileManager
 		AnnScriptManager();
+
+		///Destruct the Script Manager. will destroy the AnnScriptFileManager
 		~AnnScriptManager();
 
 		///This subsystem doesn't need to be updated
@@ -132,12 +134,17 @@ namespace Annwvyn
 
 		///ChaiScript engine
 		chaiscript::ChaiScript chai;
-		AnnChaisScriptResourceManager* chaiscriptResourceManager;
+
+		///Pointer to the script manager
+		AnnScriptFileResourceManager* scriptFileManager;
 
 		///Register to the script engine all the things that are possible to do. Called by the constructor
 		void registerApi();
 
+		///Register the scriptFileManager
 		void registerResourceManager();
+
+		///Unregister the scriptFileManager
 		void unregisterResourceManager();
 
 		///The extension of script files
