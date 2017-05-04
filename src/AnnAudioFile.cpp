@@ -18,7 +18,7 @@ void Annwvyn::AnnAudioFile::readFromStream(Ogre::DataStreamPtr& stream)
 void Annwvyn::AnnAudioFile::loadImpl()
 {
 	AnnDebug() << "AnnAudioFile::loadImpl for resource (" << mName << ", " << mGroup << ")";
-	Ogre::DataStreamPtr stream = Ogre::ResourceGroupManager::getSingleton().openResource(mName, mGroup, true, this);
+	auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(mName, mGroup, true, this);
 	readFromStream(stream);
 }
 
@@ -41,7 +41,7 @@ Annwvyn::AnnAudioFile::AnnAudioFile(Ogre::ResourceManager* creator, const Ogre::
 
 Annwvyn::AnnAudioFile::~AnnAudioFile()
 {
-	unload();
+	AnnAudioFile::unload();
 }
 
 const Annwvyn::byte* Annwvyn::AnnAudioFile::getData() const
@@ -122,25 +122,17 @@ sf_count_t Annwvyn::AnnAudioFile::sfVioRead(void* ptr, sf_count_t count, void* a
 {
 	auto file = cast(audioFileRawPtr);
 
-	//Get the absolute start and end position in the array
+	//Get the absolute start position in the array
 	const auto start = file->sf_offset;
-	const auto end = file->sf_offset + count; //Count may overflow, we will not use this value
-
 	//For bound checking
-	const auto stop = std::min(size_t(end), file->getSize());
+	const auto stop = std::min(size_t(start + count), file->getSize());
+	const auto bytesCopied = stop - start;
 
-	//We need to return the number of bytes actually copied
-	size_t bytesCopied{ 0 };
+	//Load bytes into output buffer
+	memcpy(ptr, reinterpret_cast<void*>(file->data.data() + start), bytesCopied);
 
-	for (auto i = start; i < stop; ++i)
-	{
-		reinterpret_cast<byte*>(ptr)[i - start] = file->data[i];
-		++bytesCopied;
-	}
-
-	//Set cursor advance
+	//advance cursor
 	file->sf_offset += bytesCopied;
-
 	return bytesCopied;
 }
 

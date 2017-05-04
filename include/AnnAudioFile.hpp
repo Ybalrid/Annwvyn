@@ -16,6 +16,8 @@ namespace Annwvyn
 
 		void readFromStream(Ogre::DataStreamPtr &stream);
 
+		///Utility class that perform a static_cast<AnnAudioFile*> on the pointer you give it.
+		inline static AnnAudioFile* cast(void* audioFileRawPtr);
 	protected:
 		void loadImpl() override;
 		void unloadImpl() override;
@@ -36,9 +38,6 @@ namespace Annwvyn
 		size_t getSize() const override;
 
 		//Virtual IO interface
-
-		///Utility class that perform a static_cast<AnnAudioFile*> on the pointer you give it.
-		static AnnAudioFile* cast(void* audioFileRawPtr);
 
 		///Structure that will contain function pointers to all the functions defined below
 		static SF_VIRTUAL_IO* sfVioStruct;
