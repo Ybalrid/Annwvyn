@@ -146,39 +146,39 @@ ALuint AnnAudioEngine::isBufferLoader(const std::string& filename)
 	return false;
 }
 
-ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
+ALuint AnnAudioEngine::loadBuffer(const std::string& name)
 {
-	if (ALuint buffer = isBufferLoader(filename))
+	if (ALuint buffer = isBufferLoader(name))
 		return buffer;
 
-	AnnDebug() << filename << " is unknown to the engine. Loading from file...";
+	AnnDebug() << name << " is unknown to the engine. Loading from file...";
 
 	// Open Audio file with libsndfile
 	SF_INFO FileInfos;
-	//SNDFILE* File = sf_open(filename.c_str(), SFM_READ, &FileInfos);
 
-	auto audioFileResource = audioFileManager->getResourceByName(filename).staticCast<AnnAudioFile>();
+	//Attempt to retreive the resource...
+	auto audioFileResource = audioFileManager->getResourceByName(name).staticCast<AnnAudioFile>();
 	if (!audioFileResource) //Cannot get it? Load that resource by hand to see
 	{
-		audioFileResource = audioFileManager->load(filename, AnnGetResourceManager()->defaultResourceGroupName);
+		audioFileResource = audioFileManager->load(name, AnnGetResourceManager()->defaultResourceGroupName);
 		if (!audioFileResource) //Okay, that file doesn't exist or something.
 		{
-			AnnDebug() << "Error, cannot load file " << filename << " as a recognized audio file";
+			AnnDebug() << "Error, cannot load file " << name << " as a recognized audio file";
 			return 0;
 		}
 	}
 
-	SNDFILE* File = sf_open_virtual(audioFileResource->getSndFileVioStruct(), SFM_READ, &FileInfos, audioFileResource.getPointer());
+	auto File = sf_open_virtual(audioFileResource->getSndFileVioStruct(), SFM_READ, &FileInfos, audioFileResource.getPointer());
 
 	//get the number of sample and the sample-rate (in samples by seconds)
-	ALsizei NbSamples = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
-	ALsizei SampleRate = static_cast<ALsizei>(FileInfos.samplerate);
+	auto NbSamples = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
+	auto SampleRate = static_cast<ALsizei>(FileInfos.samplerate);
 
 	AnnDebug() << "Loading " << NbSamples << " samples. Playback sample-rate : " << SampleRate << "Hz";
 
 	//Read samples in 16bits signed
 	std::vector<float> SamplesFloat(NbSamples);
-	sf_count_t readSamples = sf_read_float(File, &SamplesFloat[0], NbSamples);
+	auto readSamples = sf_read_float(File, &SamplesFloat[0], NbSamples);
 	AnnDebug() << "Read " << readSamples << " samples from a " << NbSamples << " samples file";
 
 	//This sometimes happen with OGG files, but it seems to run fine anyway.
@@ -191,7 +191,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 
 	if (sf_error(File) != SF_ERR_NO_ERROR)
 	{
-		lastError = "Error while reading the file " + filename + " through sndfile library: ";
+		lastError = "Error while reading the file " + name + " through sndfile library: ";
 		lastError += sf_error_number(sf_error(File));
 		logError();
 		return 0;
@@ -226,14 +226,14 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	//check errors
 	if (alGetError() != AL_NO_ERROR)
 	{
-		lastError = "Error : cannot create an audio buffer for : " + filename;
+		lastError = "Error : cannot create an audio buffer for : " + name;
 		logError();
 		return 0;
 	}
 
-	AnnDebug() << filename << " successfully loaded into audio engine";
+	AnnDebug() << name << " successfully loaded into audio engine";
 	AnnEngine::log("buffer added to the Audio engine");
-	buffers[filename] = buffer;
+	buffers[name] = buffer;
 	return buffer;
 }
 
@@ -394,7 +394,7 @@ void AnnAudioSource::changeSound(std::string path)
 	if (path.empty()) return;
 	bufferName = path;
 
-	ALuint buffer = AnnGetAudioEngine()->loadBuffer(bufferName);
+	auto buffer = AnnGetAudioEngine()->loadBuffer(bufferName);
 	if (buffer) alSourcei(source, AL_BUFFER, buffer);
 }
 
