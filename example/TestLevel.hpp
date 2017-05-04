@@ -65,7 +65,7 @@ public:
 		//Create objects and register them as content of the level
 		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "SuperSinbad", std::make_shared<Sinbad>());
 		levelContent.push_back(S);
-		S->playSound("media/monster.wav", true, 1);
+		S->playSound("monster.wav", true, 1);
 		S->attachScript("DummyBehavior");
 		S->setUpPhysics(10, boxShape);
 		S->setFrictionCoef(0.75f);
@@ -95,6 +95,7 @@ public:
 		AnnGetPlayer()->setPosition(AnnVect3::ZERO);
 		AnnGetPlayer()->setOrientation(Ogre::Euler(0));
 		AnnGetPlayer()->resetPlayerPhysics();
+		AnnGetPlayer()->regroundOnPhysicsBody(1000, { 0, 100, 0 });
 	}
 
 	void unload() override
@@ -107,7 +108,7 @@ public:
 
 	void runLogic() override
 	{
-		AnnGetPlayer()->regroundOnPhysicsBody(1000, { 0, 100, 0 });
+		//AnnGetPlayer()->regroundOnPhysicsBody(1000, { 0, 100, 0 });
 	}
 
 private:

@@ -26,6 +26,8 @@
 #include <sndfile.h>
 
 #include "AnnSubsystem.hpp"
+#include "AnnAudioFile.hpp"
+#include "AnnScriptFile.hpp"
 
 namespace Annwvyn
 {
@@ -172,6 +174,8 @@ namespace Annwvyn
 		///List of the audio sources object present in the audio engine
 		std::list<std::shared_ptr<AnnAudioSource>> AudioSources;
 		std::vector<std::string> detectedDevices;
+
+		AnnAudioFileManager* audioFileManager;
 	};
 }
 #endif
