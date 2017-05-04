@@ -146,73 +146,71 @@ ALuint AnnAudioEngine::isBufferLoader(const std::string& filename)
 	return false;
 }
 
-ALuint AnnAudioEngine::loadBuffer(const std::string& name)
+ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 {
-	if (ALuint buffer = isBufferLoader(name))
+	if (auto buffer = isBufferLoader(filename))
 		return buffer;
 
-	AnnDebug() << name << " is unknown to the engine. Loading from file...";
+	AnnDebug() << filename << " is unknown to the engine. Loading from file...";
 
-	// Open Audio file with libsndfile
-	SF_INFO FileInfos;
-
-	//Attempt to retreive the resource...
-	auto audioFileResource = audioFileManager->getResourceByName(name).staticCast<AnnAudioFile>();
+	//Attempt to retrieve the resource...
+	auto audioFileResource = audioFileManager->getResourceByName(filename).staticCast<AnnAudioFile>();
 	if (!audioFileResource) //Cannot get it? Load that resource by hand to see
 	{
-		audioFileResource = audioFileManager->load(name, AnnGetResourceManager()->defaultResourceGroupName);
+		audioFileResource = audioFileManager->load(filename, AnnGetResourceManager()->defaultResourceGroupName);
 		if (!audioFileResource) //Okay, that file doesn't exist or something.
 		{
-			AnnDebug() << "Error, cannot load file " << name << " as a recognized audio file";
+			AnnDebug() << "Error, cannot load file " << filename << " as a recognized audio file";
 			return 0;
 		}
 	}
 
-	auto File = sf_open_virtual(audioFileResource->getSndFileVioStruct(), SFM_READ, &FileInfos, audioFileResource.getPointer());
+	// Open Audio file with libsndfile
+	SF_INFO fileInfos;
+	auto File = sf_open_virtual(audioFileResource->getSndFileVioStruct(), SFM_READ, &fileInfos, audioFileResource.getPointer());
 
 	//get the number of sample and the sample-rate (in samples by seconds)
-	auto NbSamples = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
-	auto SampleRate = static_cast<ALsizei>(FileInfos.samplerate);
+	auto nbSamples = static_cast<ALsizei>(fileInfos.channels * fileInfos.frames);
+	auto sampleRate = static_cast<ALsizei>(fileInfos.samplerate);
 
-	AnnDebug() << "Loading " << NbSamples << " samples. Playback sample-rate : " << SampleRate << "Hz";
+	AnnDebug() << "Loading " << nbSamples << " samples. Playback sample-rate : " << sampleRate << "Hz";
 
 	//Read samples in 16bits signed
-	std::vector<float> SamplesFloat(NbSamples);
-	auto readSamples = sf_read_float(File, &SamplesFloat[0], NbSamples);
-	AnnDebug() << "Read " << readSamples << " samples from a " << NbSamples << " samples file";
+	std::vector<float> samplesBuffer(nbSamples);
+	auto readSamples = sf_read_float(File, samplesBuffer.data(), nbSamples);
 
-	//This sometimes happen with OGG files, but it seems to run fine anyway.
-	if (readSamples < NbSamples)
+	//This sometimes happen with OGG files, but it seems to run fine anyway. This is probably due to meta-data/tags present at the end of files
+	if (readSamples < nbSamples)
 	{
-		lastError = "Warning: It looks like the " + (NbSamples - readSamples);
-		lastError += " last samples of the file have been omitted";
+		lastError = "Warning: It looks like the " + (nbSamples - readSamples);
+		lastError += " last samples of the file have been omitted. Ignore if file has meta-data appended at the end. ";
 		logError();
 	}
 
 	if (sf_error(File) != SF_ERR_NO_ERROR)
 	{
-		lastError = "Error while reading the file " + name + " through sndfile library: ";
+		lastError = "Error while reading the file " + filename + " through sndfile library: ";
 		lastError += sf_error_number(sf_error(File));
 		logError();
 		return 0;
 	}
 
-	std::vector<ALshort> Samples(NbSamples);
-	for (size_t i(0); i < Samples.size(); i++)
+	std::vector<ALshort> alSamplesBuffer(nbSamples);
+	for (size_t i(0); i < alSamplesBuffer.size(); i++)
 		//This will step down a bit the amplitude (88% of max) of the signal to prevent saturation while using some formats (OGG)
-		Samples[i] = 0x7FFF * SamplesFloat[i] * 0.88f;
+		alSamplesBuffer[i] = 0x7FFF * samplesBuffer[i] * 0.88f;
 
 	//close file
 	sf_close(File);
 
 	//Read the number of channels. sound effects should be mono and background music should be stereo
 	ALenum Format;
-	switch (FileInfos.channels)
+	switch (fileInfos.channels)
 	{
-	case 1: AnnEngine::log("Mono 16bits sound loaded");	Format = AL_FORMAT_MONO16;   break;
+	case 1: AnnEngine::log("Mono 16bits sound loaded");	Format = AL_FORMAT_MONO16; break;
 	case 2: AnnEngine::log("Stereo 16bits sound loaded");  Format = AL_FORMAT_STEREO16; break;
 
-	default: return 0;
+	default: lastError = "Cannot determine if sound is mono or stereo..."; logError(); return 0;
 	}
 
 	//create OpenAL buffer
@@ -221,32 +219,31 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& name)
 	AnnDebug() << "Created OpenAL buffer at index " << buffer;
 
 	// load buffer
-	alBufferData(buffer, Format, &Samples[0], NbSamples * sizeof(ALshort), SampleRate);
+	alBufferData(buffer, Format, &alSamplesBuffer[0], nbSamples * sizeof(ALshort), sampleRate);
 
 	//check errors
 	if (alGetError() != AL_NO_ERROR)
 	{
-		lastError = "Error : cannot create an audio buffer for : " + name;
+		lastError = "Error : cannot create an audio buffer for : " + filename;
 		logError();
 		return 0;
 	}
 
-	AnnDebug() << name << " successfully loaded into audio engine";
-	AnnEngine::log("buffer added to the Audio engine");
-	buffers[name] = buffer;
+	AnnDebug() << filename << " successfully loaded into audio engine";
+	buffers[filename] = buffer;
 	return buffer;
 }
 
-void AnnAudioEngine::unloadBuffer(const std::string& path)
+void AnnAudioEngine::unloadBuffer(const std::string& filename)
 {
 	if (locked) return;
 
 	//Search for the buffer
-	AnnDebug() << "Unloading sound file " << path;
-	auto query = buffers.find(path);
+	AnnDebug() << "Unloading sound file " << filename;
+	auto query = buffers.find(filename);
 	if (query == buffers.end())
 	{
-		lastError = "Error: cannot unload buffer " + path + " is unknown";
+		lastError = "Error: cannot unload buffer " + filename + " is unknown";
 		logError();
 		return; //if query is equal to iterator::end(), buffer isn't known
 	}
@@ -261,12 +258,12 @@ void AnnAudioEngine::unloadBuffer(const std::string& path)
 	buffers.erase(query);
 }
 
-void AnnAudioEngine::playBGM(const std::string path, const float volume)
+void AnnAudioEngine::playBGM(const std::string filename, const float volume)
 {
-	AnnDebug() << "Using " << path << " as BGM";
+	AnnDebug() << "Using " << filename << " as BGM";
 
 	//Load buffer from disk or cache
-	bgmBuffer = loadBuffer(path);
+	bgmBuffer = loadBuffer(filename);
 
 	//Set parameters to the source
 	alSourcei(bgm, AL_BUFFER, bgmBuffer);
@@ -318,10 +315,10 @@ std::string AnnAudioEngine::getLastError() const
 	return lastError;
 }
 
-std::shared_ptr<AnnAudioSource> AnnAudioEngine::createSource(std::string path)
+std::shared_ptr<AnnAudioSource> AnnAudioEngine::createSource(std::string filename)
 {
 	auto source = createSource();
-	source->changeSound(path);
+	source->changeSound(filename);
 	return source;
 }
 
@@ -389,10 +386,10 @@ void AnnAudioSource::stop() const
 	alSourceStop(source);
 }
 
-void AnnAudioSource::changeSound(std::string path)
+void AnnAudioSource::changeSound(std::string filename)
 {
-	if (path.empty()) return;
-	bufferName = path;
+	if (filename.empty()) return;
+	bufferName = filename;
 
 	auto buffer = AnnGetAudioEngine()->loadBuffer(bufferName);
 	if (buffer) alSourcei(source, AL_BUFFER, buffer);
