@@ -8,7 +8,8 @@ using namespace Annwvyn;
 AnnAudioEngine::AnnAudioEngine() : AnnSubSystem("AudioEngine"),
 lastError("Initialize OpenAL based sound system"),
 Device(nullptr),
-Context(nullptr)
+Context(nullptr),
+audioFileManager(nullptr)
 {
 	//Try to init OpenAL
 	if (!initOpenAL())
@@ -28,6 +29,8 @@ Context(nullptr)
 	//Create a source for the BGM
 	alGenSources(1, &bgm);
 	locked = false;
+
+	audioFileManager = new AnnAudioFileManager;
 }
 
 void AnnAudioEngine::logError() const
@@ -39,6 +42,8 @@ AnnAudioEngine::~AnnAudioEngine()
 {
 	locked = true;
 	shutdownOpenAL();
+
+	delete audioFileManager;
 }
 
 void AnnAudioEngine::detectPlaybackDevices(const char *list)
@@ -124,36 +129,46 @@ void AnnAudioEngine::shutdownOpenAL()
 	alcDestroyContext(Context);
 	alcCloseDevice(Device);
 	alGetError();//Purge pending error.
+
+	AnnAudioFile::clearSndFileVioStruct();
 }
 
-void AnnAudioEngine::preLoadBuffer(const std::string& filepath)
+void AnnAudioEngine::preLoadBuffer(const std::string& filename)
 {
-	loadBuffer(filepath);
+	loadBuffer(filename);
 }
 
-ALuint AnnAudioEngine::isBufferLoader(const std::string& filepath)
+ALuint AnnAudioEngine::isBufferLoader(const std::string& filename)
 {
-	auto query = buffers.find(filepath);
+	auto query = buffers.find(filename);
 	if (query != buffers.end())
 		return query->second;
 	return false;
 }
 
-ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
+ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 {
-	if (ALuint buffer = isBufferLoader(filepath))
+	if (ALuint buffer = isBufferLoader(filename))
 		return buffer;
 
-	AnnDebug() << filepath << " is unknown to the engine. Loading from file...";
+	AnnDebug() << filename << " is unknown to the engine. Loading from file...";
 
 	// Open Audio file with libsndfile
 	SF_INFO FileInfos;
-	SNDFILE* File = sf_open(filepath.c_str(), SFM_READ, &FileInfos);
-	if (!File)
+	//SNDFILE* File = sf_open(filename.c_str(), SFM_READ, &FileInfos);
+
+	auto audioFileResource = audioFileManager->getResourceByName(filename).staticCast<AnnAudioFile>();
+	if (!audioFileResource) //Cannot get it? Load that resource by hand to see
 	{
-		AnnDebug() << "Error, cannot load file " << filepath << " as a recognized audio file";
-		return 0;
+		audioFileResource = audioFileManager->load(filename, AnnGetResourceManager()->defaultResourceGroupName);
+		if (!audioFileResource) //Okay, that file doesn't exist or something.
+		{
+			AnnDebug() << "Error, cannot load file " << filename << " as a recognized audio file";
+			return 0;
+		}
 	}
+
+	SNDFILE* File = sf_open_virtual(audioFileResource->getSndFileVioStruct(), SFM_READ, &FileInfos, audioFileResource.getPointer());
 
 	//get the number of sample and the sample-rate (in samples by seconds)
 	ALsizei NbSamples = static_cast<ALsizei>(FileInfos.channels * FileInfos.frames);
@@ -176,7 +191,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
 
 	if (sf_error(File) != SF_ERR_NO_ERROR)
 	{
-		lastError = "Error while reading the file " + filepath + " through sndfile library: error: ";
+		lastError = "Error while reading the file " + filename + " through sndfile library: ";
 		lastError += sf_error_number(sf_error(File));
 		logError();
 		return 0;
@@ -211,14 +226,14 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filepath)
 	//check errors
 	if (alGetError() != AL_NO_ERROR)
 	{
-		lastError = "Error : cannot create an audio buffer for : " + filepath;
+		lastError = "Error : cannot create an audio buffer for : " + filename;
 		logError();
 		return 0;
 	}
 
-	AnnDebug() << filepath << " successfully loaded into audio engine";
+	AnnDebug() << filename << " successfully loaded into audio engine";
 	AnnEngine::log("buffer added to the Audio engine");
-	buffers[filepath] = buffer;
+	buffers[filename] = buffer;
 	return buffer;
 }
 
