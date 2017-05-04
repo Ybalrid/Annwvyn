@@ -24,7 +24,7 @@ Annwvyn::AnnScriptFile::AnnScriptFile(Ogre::ResourceManager* creator, const Ogre
 	Ogre::Resource(creator, name, handle, group, isManual, loader),
 	loadedByChaiScript(false)
 {
-	createParamDictionary("AnnChaiScriptFile");
+	createParamDictionary("AnnScriptFile");
 }
 
 Annwvyn::AnnScriptFile::~AnnScriptFile()
@@ -75,7 +75,7 @@ template<> Annwvyn::AnnScriptFileResourceManager *Ogre::Singleton<Annwvyn::AnnSc
 
 Annwvyn::AnnScriptFileResourceManager::AnnScriptFileResourceManager()
 {
-	mResourceType = "AnnChaiScriptFile";
+	mResourceType = "AnnScriptFile";
 	mLoadOrder = 1;
 	Ogre::ResourceGroupManager::getSingleton()._registerResourceManager(mResourceType, this);
 }
