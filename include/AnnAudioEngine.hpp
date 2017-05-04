@@ -58,7 +58,7 @@ namespace Annwvyn
 		///Stop playing the sound
 		void stop() const;
 		///Change the sound buffer this source plays
-		void changeSound(std::string path);
+		void changeSound(std::string name);
 
 		///If looping is activated, the sound will replay when finished
 		void setLooping(bool looping = true) const;
@@ -97,8 +97,8 @@ namespace Annwvyn
 		///This permit to pre-load sound files to the engine. If want to avoid loading a
 		///Bunch of sound file (that causes disk I/O access) you can just load the sound file
 		///before the start of your gameplay sequence.
-		/// \param filePath Path of the file you want to load
-		ALuint loadBuffer(const std::string& filePath);
+		/// \param name Name of the file you want to load
+		ALuint loadBuffer(const std::string& name);
 
 		///This method is intended to be used in moments like loading levels
 		///If a buffer is already loaded, getting it with loadBuffer is equivalent at
@@ -106,19 +106,19 @@ namespace Annwvyn
 		///If loadBuffer is called with a "new" sound file, the engine will load it in memory
 		///before doing anything else, delaying stuff because of disk I/O
 		/// \copydoc loadBuffer()
-		void preLoadBuffer(const std::string& filePath);
+		void preLoadBuffer(const std::string& name);
 
 		///Return "false" if buffer not loaded. Return buffer index if buffer is loaded.
-		ALuint isBufferLoader(const std::string& filePath);
+		ALuint isBufferLoader(const std::string& name);
 
 		///Unload a buffer from the engine. The buffer is identified by the sound file it represent
-		/// \param path Path of the file you want to load
-		void unloadBuffer(const std::string& path);
+		/// \param name Path of the file you want to load
+		void unloadBuffer(const std::string& name);
 
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
-		/// \param path path of the audio file to use as background music
+		/// \param name name of the audio file to use as background music
 		/// \param volume Float number between 0 and 1, Loudness of the sound
-		void playBGM(const std::string path, const float volume = 0.5f);
+		void playBGM(const std::string name, const float volume = 0.5f);
 
 		///stop the current background music from playing
 		void stopBGM() const;
@@ -130,7 +130,7 @@ namespace Annwvyn
 		std::shared_ptr<AnnAudioSource> createSource();
 
 		///Create an audio source and attach (and load if necessary) buffer from audio file
-		std::shared_ptr<AnnAudioSource> createSource(std::string path);
+		std::shared_ptr<AnnAudioSource> createSource(std::string name);
 
 		///Remove an audio source frop the engine
 		void removeSource(std::shared_ptr<AnnAudioSource> source);
