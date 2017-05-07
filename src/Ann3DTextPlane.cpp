@@ -385,19 +385,14 @@ void Ann3DTextPlane::generateMaterialName()
 
 void Ann3DTextPlane::setTextColor(AnnColor color)
 {
-	textColor.setRed(color.getRed());
-	textColor.setGreen(color.getGreen());
-	textColor.setBlue(color.getBlue());
+	textColor = color;
 	needUpdating = true;
 	autoUpdateCheck();
 }
 
 void Ann3DTextPlane::setBackgroundColor(AnnColor color)
 {
-	bgColor.setRed(color.getRed());
-	bgColor.setGreen(color.getGreen());
-	bgColor.setBlue(color.getBlue());
-	bgColor.setAlpha(color.getAlpha());
+	bgColor = color;
 	needUpdating = true;
 	autoUpdateCheck();
 }
