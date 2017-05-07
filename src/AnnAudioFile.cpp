@@ -2,97 +2,96 @@
 #include "AnnAudioFile.hpp"
 #include "AnnLogger.hpp"
 
-void Annwvyn::AnnAudioFile::readFromStream(Ogre::DataStreamPtr& stream)
+using namespace Annwvyn;
+using namespace Ogre;
+
+void AnnAudioFile::readFromStream(DataStreamPtr& stream)
 {
 	AnnDebug() << "Reading audio data...";
-	const auto size = stream->size();
-	AnnDebug() << "Will read " << size << " bytes";
-
-	data.resize(size);
-	AnnDebug() << "New size of audio data is " << data.size() << " elements of size " << sizeof data[0] << " bytes";
-	const auto read = stream->read(reinterpret_cast<void*>(data.data()), size);
+	data.resize(stream->size());
+	const auto read = stream->read(reinterpret_cast<void*>(data.data()), data.size());
 	AnnDebug() << "Read " << read << " bytes into audio data vector";
 }
 
 //Ogre's loading from disk
-void Annwvyn::AnnAudioFile::loadImpl()
+void AnnAudioFile::loadImpl()
 {
 	AnnDebug() << "AnnAudioFile::loadImpl for resource (" << mName << ", " << mGroup << ")";
-	auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(mName, mGroup, true, this);
+	auto stream = ResourceGroupManager::getSingleton().openResource(mName, mGroup, true, this);
 	readFromStream(stream);
 }
 
-void Annwvyn::AnnAudioFile::unloadImpl()
+void AnnAudioFile::unloadImpl()
 {
 	data.clear();
 }
 
-size_t Annwvyn::AnnAudioFile::calculateSize() const
+size_t AnnAudioFile::calculateSize() const
 {
 	return getSize();
 }
 
-Annwvyn::AnnAudioFile::AnnAudioFile(Ogre::ResourceManager* creator, const Ogre::String& name, Ogre::ResourceHandle handle, const Ogre::String& group, bool isManual, Ogre::ManualResourceLoader* loader) :
-	Ogre::Resource(creator, name, handle, group, isManual, loader),
+AnnAudioFile::AnnAudioFile(ResourceManager* creator, const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader) :
+	Resource(creator, name, handle, group, isManual, loader),
 	sf_offset(0)
 {
 	createParamDictionary("AnnAudioFile");
 }
 
-Annwvyn::AnnAudioFile::~AnnAudioFile()
+AnnAudioFile::~AnnAudioFile()
 {
 	AnnAudioFile::unload();
 }
 
-const Annwvyn::byte* Annwvyn::AnnAudioFile::getData() const
+const byte* AnnAudioFile::getData() const
 {
 	return data.data();
 }
 
 //Singleton
-template<> Annwvyn::AnnAudioFileManager* Ogre::Singleton <Annwvyn::AnnAudioFileManager>::msSingleton = nullptr;
+template<> AnnAudioFileManager* Singleton <AnnAudioFileManager>::msSingleton = nullptr;
 
-Ogre::Resource* Annwvyn::AnnAudioFileManager::createImpl(const Ogre::String& name, Ogre::ResourceHandle handle, const Ogre::String& group, bool isManual, Ogre::ManualResourceLoader* loader, const Ogre::NameValuePairList* createParams)
+Resource* AnnAudioFileManager::createImpl(const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader, const NameValuePairList* createParams)
 {
 	return new AnnAudioFile(this, name, handle, group, isManual, loader);
 }
 
-Annwvyn::AnnAudioFileManager::AnnAudioFileManager()
+AnnAudioFileManager::AnnAudioFileManager()
 {
 	mResourceType = "AnnAudioFile";
 	mLoadOrder = 2;
-	Ogre::ResourceGroupManager::getSingleton()._registerResourceManager(mResourceType, this);
+	ResourceGroupManager::getSingleton()._registerResourceManager(mResourceType, this);
 }
 
-Annwvyn::AnnAudioFileManager::~AnnAudioFileManager()
+AnnAudioFileManager::~AnnAudioFileManager()
 {
-	Ogre::ResourceGroupManager::getSingleton()._unregisterResourceManager(mResourceType);
+	ResourceGroupManager::getSingleton()._unregisterResourceManager(mResourceType);
 }
 
-Annwvyn::AnnAudioFilePtr Annwvyn::AnnAudioFileManager::load(const Ogre::String& name, const Ogre::String& group)
+AnnAudioFilePtr AnnAudioFileManager::load(const String& name, const String& group)
 {
 	auto file = createOrRetrieve(name, group).first.staticCast<AnnAudioFile>();
 	file->load();
 	return file;
 }
 
-Annwvyn::AnnAudioFileManager& Annwvyn::AnnAudioFileManager::getSingleton()
+AnnAudioFileManager& AnnAudioFileManager::getSingleton()
 {
 	return *msSingleton;
 }
 
-Annwvyn::AnnAudioFileManager* Annwvyn::AnnAudioFileManager::getSingletonPtr()
+AnnAudioFileManager* AnnAudioFileManager::getSingletonPtr()
 {
 	return msSingleton;
 }
 
-sf_count_t Annwvyn::AnnAudioFile::sfVioGetFileLen(void* audioFileRawPtr)
+sf_count_t AnnAudioFile::sfVioGetFileLen(void* audioFileRawPtr)
 {
 	auto file = cast(audioFileRawPtr);
 	return file->getSize();
 }
 
-sf_count_t Annwvyn::AnnAudioFile::sfVioSeek(sf_count_t offset, int whence, void* audioFileRawPtr)
+sf_count_t AnnAudioFile::sfVioSeek(sf_count_t offset, int whence, void* audioFileRawPtr)
 {
 	auto file = cast(audioFileRawPtr);
 
@@ -118,7 +117,7 @@ sf_count_t Annwvyn::AnnAudioFile::sfVioSeek(sf_count_t offset, int whence, void*
 	return file->sf_offset;
 }
 
-sf_count_t Annwvyn::AnnAudioFile::sfVioRead(void* ptr, sf_count_t count, void* audioFileRawPtr)
+sf_count_t AnnAudioFile::sfVioRead(void* ptr, sf_count_t count, void* audioFileRawPtr)
 {
 	auto file = cast(audioFileRawPtr);
 
@@ -136,26 +135,26 @@ sf_count_t Annwvyn::AnnAudioFile::sfVioRead(void* ptr, sf_count_t count, void* a
 	return bytesCopied;
 }
 
-sf_count_t Annwvyn::AnnAudioFile::sfVioWriteDummy(const void*, sf_count_t, void*)
+sf_count_t AnnAudioFile::sfVioWriteDummy(const void*, sf_count_t, void*)
 {
 	return 0; //we do not write.
 }
 
-sf_count_t Annwvyn::AnnAudioFile::sfVioTell(void* audioFileRawPtr)
+sf_count_t AnnAudioFile::sfVioTell(void* audioFileRawPtr)
 {
 	const auto file = cast(audioFileRawPtr);
 	AnnDebug() << "telling sndfile that current cursor position is " << file->sf_offset;
 	return file->sf_offset;
 }
 
-Annwvyn::AnnAudioFile* Annwvyn::AnnAudioFile::cast(void* audioFileRawPtr)
+AnnAudioFile* AnnAudioFile::cast(void* audioFileRawPtr)
 {
 	return static_cast<AnnAudioFile*>(audioFileRawPtr);
 }
 
-SF_VIRTUAL_IO* Annwvyn::AnnAudioFile::sfVioStruct{ nullptr };
+SF_VIRTUAL_IO* AnnAudioFile::sfVioStruct{ nullptr };
 
-SF_VIRTUAL_IO* Annwvyn::AnnAudioFile::getSndFileVioStruct()
+SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 {
 	//Lazy initialize the virtual IO structure
 	if (!sfVioStruct)
@@ -174,13 +173,13 @@ SF_VIRTUAL_IO* Annwvyn::AnnAudioFile::getSndFileVioStruct()
 	return sfVioStruct;
 }
 
-void Annwvyn::AnnAudioFile::clearSndFileVioStruct()
+void AnnAudioFile::clearSndFileVioStruct()
 {
 	if (sfVioStruct) delete sfVioStruct;
 	sfVioStruct = nullptr;
 }
 
-size_t Annwvyn::AnnAudioFile::getSize() const
+size_t AnnAudioFile::getSize() const
 {
 	return data.size();
 }

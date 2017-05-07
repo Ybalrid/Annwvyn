@@ -76,12 +76,19 @@ namespace Annwvyn
 			const Ogre::String &group, bool isManual, Ogre::ManualResourceLoader *loader,
 			const Ogre::NameValuePairList *createParams) override;
 	public:
+		///construct and register an AnnScriptFileResourceManager
 		AnnScriptFileResourceManager();
+
+		///Destruct an AnnScriptFile resource manager
 		virtual ~AnnScriptFileResourceManager();
 
+		///Load a resrouce via this manager
 		virtual AnnScriptFilePtr load(const Ogre::String& name, const Ogre::String& group);
 
+		///Get singleton ref
 		static AnnScriptFileResourceManager& getSingleton();
+
+		///Get singleton ptr
 		static AnnScriptFileResourceManager* getSingletonPtr();
 	};
 }
