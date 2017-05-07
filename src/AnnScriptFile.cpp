@@ -2,103 +2,106 @@
 #include "AnnScriptFile.hpp"
 #include "AnnLogger.hpp"
 
+using namespace Annwvyn;
+using namespace Ogre;
+
 //AnnChaiScriptFile resource ---------------------------------------
-void Annwvyn::AnnScriptFile::loadImpl()
+void AnnScriptFile::loadImpl()
 {
 	AnnScriptFileSerializer serializer;
-	Ogre::DataStreamPtr stream = Ogre::ResourceGroupManager::getSingleton().openResource(mName, mGroup, true, this);
+	auto stream = ResourceGroupManager::getSingleton().openResource(mName, mGroup, true, this);
 	serializer.importSourceCode(stream, this);
 }
 
-void Annwvyn::AnnScriptFile::unloadImpl()
+void AnnScriptFile::unloadImpl()
 {
 	sourceCode.clear();
 }
 
-size_t Annwvyn::AnnScriptFile::calculateSize() const
+size_t AnnScriptFile::calculateSize() const
 {
 	return sourceCode.length();
 }
 
-Annwvyn::AnnScriptFile::AnnScriptFile(Ogre::ResourceManager* creator, const Ogre::String& name, Ogre::ResourceHandle handle, const Ogre::String& group, bool isManual, Ogre::ManualResourceLoader* loader) :
-	Ogre::Resource(creator, name, handle, group, isManual, loader),
+AnnScriptFile::AnnScriptFile(ResourceManager* creator, const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader) :
+	Resource(creator, name, handle, group, isManual, loader),
 	loadedByChaiScript(false)
 {
 	createParamDictionary("AnnScriptFile");
 }
 
-Annwvyn::AnnScriptFile::~AnnScriptFile()
+AnnScriptFile::~AnnScriptFile()
 {
 	AnnScriptFile::unload();
 }
 
-const std::string& Annwvyn::AnnScriptFile::getSourceCode() const
+const std::string& AnnScriptFile::getSourceCode() const
 {
 	return sourceCode;
 }
 
-void Annwvyn::AnnScriptFile::setLoadedSourceCode(const std::string& newSourceCode)
+void AnnScriptFile::setLoadedSourceCode(const std::string& newSourceCode)
 {
 	sourceCode = newSourceCode;
 }
 
-void Annwvyn::AnnScriptFile::signalLoadedInChaiscript()
+void AnnScriptFile::signalLoadedInChaiscript()
 {
 	loadedByChaiScript = true;
 }
 
-bool Annwvyn::AnnScriptFile::loadedInChaiscriptInterpretor() const
+bool AnnScriptFile::loadedInChaiscriptInterpretor() const
 {
 	return loadedByChaiScript;
 }
 
 //AnnChaiScript serializer -------------------------------
-void Annwvyn::AnnScriptFileSerializer::exportChaiscript(const AnnScriptFile* pScriptSource, const Ogre::String& filename)
+void AnnScriptFileSerializer::exportChaiscript(const AnnScriptFile* pScriptSource, const String& filename)
 {
 	std::ofstream outFile;
 	outFile.open(filename, std::ios::out);
 	outFile << pScriptSource->getSourceCode();
 }
 
-void Annwvyn::AnnScriptFileSerializer::importSourceCode(Ogre::DataStreamPtr& stream, AnnScriptFile* pDest)
+void AnnScriptFileSerializer::importSourceCode(DataStreamPtr& stream, AnnScriptFile* pDest)
 {
 	pDest->setLoadedSourceCode(stream->getAsString());
 }
 
-Ogre::Resource* Annwvyn::AnnScriptFileResourceManager::createImpl(const Ogre::String& name, Ogre::ResourceHandle handle, const Ogre::String& group, bool isManual, Ogre::ManualResourceLoader* loader, const Ogre::NameValuePairList* createParams)
+Resource* AnnScriptFileResourceManager::createImpl(const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader, const NameValuePairList* createParams)
 {
 	return new AnnScriptFile(this, name, handle, group, isManual, loader);
 }
 
 //Res Manager
-template<> Annwvyn::AnnScriptFileResourceManager *Ogre::Singleton<Annwvyn::AnnScriptFileResourceManager>::msSingleton = nullptr;
+template<> AnnScriptFileResourceManager *Singleton<AnnScriptFileResourceManager>::msSingleton = nullptr;
 
-Annwvyn::AnnScriptFileResourceManager::AnnScriptFileResourceManager()
+AnnScriptFileResourceManager::AnnScriptFileResourceManager()
 {
 	mResourceType = "AnnScriptFile";
-	mLoadOrder = 1;
-	Ogre::ResourceGroupManager::getSingleton()._registerResourceManager(mResourceType, this);
+	mLoadOrder = 1; //Theses resources are super light, and are part of the gameplay code of the game
+	ResourceGroupManager::getSingleton()._registerResourceManager(mResourceType, this);
 }
 
-Annwvyn::AnnScriptFileResourceManager::~AnnScriptFileResourceManager()
+AnnScriptFileResourceManager::~AnnScriptFileResourceManager()
 {
-	Ogre::ResourceGroupManager::getSingleton()._unregisterResourceManager(mResourceType);
+	ResourceGroupManager::getSingleton()._unregisterResourceManager(mResourceType);
 }
 
-Annwvyn::AnnScriptFilePtr Annwvyn::AnnScriptFileResourceManager::load(const Ogre::String& name, const Ogre::String& group)
+AnnScriptFilePtr AnnScriptFileResourceManager::load(const String& name, const String& group)
 {
-	AnnScriptFilePtr script = createOrRetrieve(name, group).first.staticCast<AnnScriptFile>();
+	auto script = createOrRetrieve(name, group).first.staticCast<AnnScriptFile>();
 	script->load();
 	return script;
 }
 
-Annwvyn::AnnScriptFileResourceManager& Annwvyn::AnnScriptFileResourceManager::getSingleton()
+AnnScriptFileResourceManager& AnnScriptFileResourceManager::getSingleton()
 {
 	assert(msSingleton);
 	return *msSingleton;
 }
 
-Annwvyn::AnnScriptFileResourceManager* Annwvyn::AnnScriptFileResourceManager::getSingletonPtr()
+AnnScriptFileResourceManager* AnnScriptFileResourceManager::getSingletonPtr()
 {
 	return msSingleton;
 }
