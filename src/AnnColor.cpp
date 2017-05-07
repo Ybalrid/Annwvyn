@@ -30,6 +30,15 @@ AnnColor::AnnColor(const AnnColor & color) :
 {
 }
 
+AnnColor& AnnColor::operator=(const AnnColor& color)
+{
+	r = color.r;
+	g = color.g;
+	b = color.b;
+	a = color.a;
+	return *this;
+}
+
 Ogre::ColourValue AnnColor::getOgreColor() const
 {
 	return Ogre::ColourValue(r, g, b, a);
