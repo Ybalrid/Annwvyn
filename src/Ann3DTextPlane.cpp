@@ -192,7 +192,7 @@ stop:
 	free(buffer);
 }
 
-Ann3DTextPlane::Ann3DTextPlane(float w, float h, string str, int size, float resolution, string fName, string TTF) :
+Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str, const int& size, const float& resolution, const string& fName, const string& TTF) :
 	fontName(fName),
 	fontTTF(TTF),
 	caption(str),
@@ -467,7 +467,6 @@ void Ann3DTextPlane::renderText()
 		true);
 
 	needUpdating = false;
-
 }
 
 void Ann3DTextPlane::clearTexture()

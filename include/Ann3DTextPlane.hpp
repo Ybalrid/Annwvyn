@@ -30,7 +30,7 @@ namespace Annwvyn
 		/// \param resolution Character "print" resolution in DPI. This will influence the texture resolution
 		/// \param font Your name of the font. To reuse a font configuration
 		/// \param fontTTF Name of the TTF file known by the resource manager
-		Ann3DTextPlane(float w, float h, std::string caption = "", int size = 128, float resolution = 96.0f, std::string font = "defaultFont", std::string fontTTF = "VeraMono.ttf");
+		Ann3DTextPlane(const float& w, const float& h, const std::string& caption = "", const int& size = 128, const float& resolution = 96.0f, const std::string& font = "defaultFont", const std::string& fontTTF = "VeraMono.ttf");
 
 		///Class destructor
 		~Ann3DTextPlane();
