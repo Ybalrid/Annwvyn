@@ -24,6 +24,8 @@ namespace Annwvyn
 		///Create a color object form a reference to another color object
 		AnnColor(const AnnColor& color);
 
+		AnnColor& operator=(const AnnColor& color);
+
 		///Return a Ogre::ColourValue from the internal color value
 		Ogre::ColourValue getOgreColor() const;
 
