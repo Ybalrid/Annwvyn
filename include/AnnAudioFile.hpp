@@ -22,7 +22,6 @@ namespace Annwvyn
 		inline static AnnAudioFile* cast(void* audioFileRawPtr);
 
 	protected:
-
 		///Actually load the data
 		void loadImpl() override;
 
@@ -88,6 +87,7 @@ namespace Annwvyn
 		Ogre::Resource* createImpl(const Ogre::String &name, Ogre::ResourceHandle handle,
 			const Ogre::String &group, bool isManual, Ogre::ManualResourceLoader *loader,
 			const Ogre::NameValuePairList *createParams) override;
+
 	public:
 		///Construct an AnnAudioFileManager. Will register itsel to the Ogre ResourceGroupManager.
 		AnnAudioFileManager();
