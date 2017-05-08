@@ -1,0 +1,26 @@
+class DummyBehavior
+{
+	attr OwnerRef
+	def DummyBehavior(ownerTag)
+	{
+		AnnDebugLog("Dummy Behavior constructed");
+		print(ownerTag);
+
+		//I have to manage the fact that holding a reference to this object don't mess up the object deletion
+		//Hey, it works now! :-D
+
+		this.OwnerRef := AnnGetGameObject(ownerTag);
+
+	}
+
+	def update()
+	{
+		//AnnDebugLog("Dummy Behavior updated");
+
+		//AnnDebugLog(this.OwnerRef.getPosition());
+		//AnnDebugLog(this.OwnerRef.getOrientation());
+
+		//this.methodThatDontExist();
+
+	}
+}
