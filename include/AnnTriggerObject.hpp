@@ -42,7 +42,7 @@ namespace Annwvyn
 		AnnQuaternion getOrientation() override { return AnnQuaternion::IDENTITY; }
 
 		///Get contact information
-		bool getContactInformation();
+		bool getContactInformation() const;
 
 		///When contact happened
 		virtual void atContact() { return; }
@@ -82,7 +82,7 @@ namespace Annwvyn
 		AnnSphericalTriggerObject();
 
 		///GetThreshold distance
-		float getThreshold();
+		float getThreshold() const;
 
 		///Set contact information
 		/// \param threshold Radius of the "activation sphere" of the trigger"

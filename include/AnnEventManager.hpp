@@ -291,9 +291,9 @@ namespace Annwvyn
 		unsigned int getStickID() const;
 		///Get the "vendor string" of this joystick (could be its name)
 		std::string getVendor() const;
-		///Get the nubmer of PoV controller on this one
+		///Get the number of PoV controller on this one
 		size_t getNbPov() const;
-		///Get the PoV coresponding to this ID
+		///Get the PoV corresponding to this ID
 		AnnStickPov getPov(PovId pov);
 
 		///Return true if this event is from an Xbox controller
@@ -313,7 +313,7 @@ namespace Annwvyn
 		std::vector<unsigned short> pressed;
 		///Released event "queue"
 		std::vector<unsigned short> released;
-		///Joystick "vendor" name (generay the brand and model)
+		///Joystick "vendor" name (generally the brand and model)
 		std::string vendor;
 		///Joystick ID for the engine
 		int stickID;

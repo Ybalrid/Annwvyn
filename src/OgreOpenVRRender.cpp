@@ -6,6 +6,8 @@
 #include "AnnGetter.hpp"
 #include "Annwvyn.h"
 
+using namespace Annwvyn;
+
 OgreOpenVRRender* OgreOpenVRRender::OpenVRSelf(nullptr);
 
 OgreOpenVRRender::OgreOpenVRRender(std::string winName) : OgreVRRender(winName),
@@ -78,14 +80,14 @@ void OgreOpenVRRender::initVrHmd()
 		default:
 			displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
 				L"Non described error when initializing the OpenVR Render object");
-			throw Annwvyn::AnnInitializationError(ANN_ERR_NOTINIT, "Unknown error while initializing OpenVR");
+			throw AnnInitializationError(ANN_ERR_NOTINIT, "Unknown error while initializing OpenVR");
 
 		case vr::VRInitError_Init_HmdNotFound:
 		case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
 			displayWin32ErrorMessage(L"Error: cannot find HMD",
 				L"OpenVR cannot find HMD.\n"
 				L"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
-			throw Annwvyn::AnnInitializationError(ANN_ERR_CANTHMD, "OpenVR can't find an HMD");
+			throw AnnInitializationError(ANN_ERR_CANTHMD, "OpenVR can't find an HMD");
 		}
 
 	//Check if VRCompositor is present
@@ -93,14 +95,14 @@ void OgreOpenVRRender::initVrHmd()
 	{
 		displayWin32ErrorMessage(L"Error: failed to init OpenVR VRCompositor",
 			L"Failed to initialize the VR Compositor");
-		throw Annwvyn::AnnInitializationError(ANN_ERR_NOTINIT, "Failed to init the OpenVR VRCompositor");
+		throw AnnInitializationError(ANN_ERR_NOTINIT, "Failed to init the OpenVR VRCompositor");
 	}
 
 	//Get Driver and Display information
 	strDriver = GetTrackedDeviceString(vrSystem, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_TrackingSystemName_String);
 	strDisplay = GetTrackedDeviceString(vrSystem, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_SerialNumber_String);
-	Annwvyn::AnnDebug() << "Driver : " << strDriver;
-	Annwvyn::AnnDebug() << "Display : " << strDisplay;
+	AnnDebug() << "Driver : " << strDriver;
+	AnnDebug() << "Display : " << strDisplay;
 }
 
 void OgreOpenVRRender::initClientHmdRendering()
@@ -211,7 +213,7 @@ void OgreOpenVRRender::initRttRendering()
 		}
 	}
 
-	Annwvyn::AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
+	AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create the render texture
 	//rttTextureGLID = createCombinedRenderTexture(w, h);
@@ -286,7 +288,7 @@ void OgreOpenVRRender::processVREvents()
 	}
 }
 
-void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, Annwvyn::AnnHandController::AnnHandControllerSide side)
+void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, AnnHandController::AnnHandControllerSide side)
 {
 	//Extract tracking information from the device
 	auto transform = getMatrix4FromSteamVRMatrix34(trackedPoses[controllerDeviceIndex].mDeviceToAbsoluteTracking);
@@ -310,7 +312,7 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	//Dynamically allocate the controller if the controller doesn't exist yet
 	if (!handControllers[side])
 	{
-		handControllers[side] = std::make_shared<Annwvyn::AnnOpenVRMotionController>
+		handControllers[side] = std::make_shared<AnnOpenVRMotionController>
 			(vrSystem, controllerDeviceIndex, smgr->getRootSceneNode()->createChildSceneNode(), size_t(controllerDeviceIndex), side);
 	}
 
@@ -323,9 +325,9 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 
 	if (axesVector.size() == 0)
 	{
-		axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad X", touchpadXNormalizedValue });
-		axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Touchpad Y", touchpadYNormalizedValue });
-		axesVector.push_back(Annwvyn::AnnHandControllerAxis{ "Trigger X", triggerNormalizedValue });
+		axesVector.push_back(AnnHandControllerAxis{ "Touchpad X", touchpadXNormalizedValue });
+		axesVector.push_back(AnnHandControllerAxis{ "Touchpad Y", touchpadYNormalizedValue });
+		axesVector.push_back(AnnHandControllerAxis{ "Trigger X", triggerNormalizedValue });
 	}
 
 	axesVector[0].updateValue(touchpadXNormalizedValue);
@@ -338,8 +340,8 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	handController->getReleasedButtonsVector() = released;
 	handController->setTrackedPosition(feetPosition + bodyOrientation * position);
 	handController->setTrackedOrientation(bodyOrientation * orientation);
-	handController->setTrackedLinearSpeed(Annwvyn::AnnVect3(trackedPoses[controllerDeviceIndex].vVelocity.v));
-	handController->setTrackedAngularSpeed(Annwvyn::AnnVect3(trackedPoses[controllerDeviceIndex].vAngularVelocity.v));
+	handController->setTrackedLinearSpeed(AnnVect3(trackedPoses[controllerDeviceIndex].vVelocity.v));
+	handController->setTrackedAngularSpeed(AnnVect3(trackedPoses[controllerDeviceIndex].vAngularVelocity.v));
 }
 
 void OgreOpenVRRender::extractButtons(size_t side)
@@ -373,15 +375,15 @@ void OgreOpenVRRender::processTrackedDevices()
 
 		//From here we know that "trackedDevice" is the device index of a valid controller that has been tracked by the system
 		//Extract basic information of the device, detect if they are left/right hands
-		Annwvyn::AnnHandController::AnnHandControllerSide side;
+		AnnHandController::AnnHandControllerSide side;
 		switch (vrSystem->GetControllerRoleForTrackedDeviceIndex(trackedDevice))
 		{
 		case vr::ETrackedControllerRole::TrackedControllerRole_LeftHand:
-			side = Annwvyn::AnnHandController::leftHandController;
+			side = AnnHandController::leftHandController;
 			break;
 
 		case vr::ETrackedControllerRole::TrackedControllerRole_RightHand:
-			side = Annwvyn::AnnHandController::rightHandController;
+			side = AnnHandController::rightHandController;
 			break;
 
 		case vr::ETrackedControllerRole::TrackedControllerRole_Invalid:
@@ -412,7 +414,7 @@ inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::H
 	};
 }
 
-void Annwvyn::AnnOpenVRMotionController::rumbleStart(float value)
+void AnnOpenVRMotionController::rumbleStart(float value)
 {
 	current = AnnGetVRRenderer()->getTimer()->getMilliseconds();
 	//Limit frequency to 1/50 hz
@@ -424,12 +426,12 @@ void Annwvyn::AnnOpenVRMotionController::rumbleStart(float value)
 	}
 }
 
-void Annwvyn::AnnOpenVRMotionController::rumbleStop()
+void AnnOpenVRMotionController::rumbleStop()
 {
 	//NB : The "rumbeling" of OpenVR controllers is pulse based. Meaning that telling it to "not move" doesn't make much sense.
 }
 
-Annwvyn::AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem,
+AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem,
 	vr::TrackedDeviceIndex_t OpenVRDeviceIndex,
 	Ogre::SceneNode* handNode,
 	AnnHandControllerID controllerID,

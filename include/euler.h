@@ -27,7 +27,7 @@ namespace Ogre
 	public:
 		/// Default constructor.
 		Euler()
-			: mYaw(Ogre::Radian(0.0f)), mPitch(Ogre::Radian(0.0f)), mRoll(Ogre::Radian(0.0f)), mChanged(true)
+			: mYaw(Radian(0.0f)), mPitch(Radian(0.0f)), mRoll(Radian(0.0f)), mChanged(true)
 		{
 		}
 
@@ -37,7 +37,7 @@ namespace Ogre
 		\param p Starting value for pitch
 		\param r Starting value for roll
 		*/
-		Euler(Ogre::Radian y, Ogre::Radian p = Ogre::Radian(0.0f), Ogre::Radian r = Ogre::Radian(0.0f))
+		Euler(Radian y, Radian p = Radian(0.0f), Radian r = Radian(0.0f))
 			: mYaw(y), mPitch(p), mRoll(r), mChanged(true)
 		{
 		}
@@ -49,7 +49,7 @@ namespace Ogre
 		\param r Starting value for roll [degree]
 		*/
 		Euler(int y, int p = 0, int r = 0)
-			: mYaw(Ogre::Degree(Ogre::Real(y))), mPitch(Ogre::Degree(Ogre::Real(p))), mRoll(Ogre::Degree(Ogre::Real(r))), mChanged(true)
+			: mYaw(Degree(Real(y))), mPitch(Degree(Real(p))), mRoll(Degree(Real(r))), mChanged(true)
 		{
 		}
 
@@ -59,8 +59,8 @@ namespace Ogre
 		\param p Starting value for pitch [radian]
 		\param r Starting value for roll [radian]
 		*/
-		Euler(Ogre::Real y, Ogre::Real p = 0.0f, Ogre::Real r = 0.0f)
-			: mYaw(Ogre::Radian(y)), mPitch(Ogre::Radian(p)), mRoll(Ogre::Radian(r)), mChanged(true)
+		Euler(Real y, Real p = 0.0f, Real r = 0.0f)
+			: mYaw(Radian(y)), mPitch(Radian(p)), mRoll(Radian(r)), mChanged(true)
 		{
 		}
 
@@ -68,8 +68,8 @@ namespace Ogre
 		\brief Default constructor with presets.
 		\param axvec Starting values as a combined vector
 		*/
-		Euler(Ogre::Vector3 axvec)
-			: mYaw(Ogre::Radian(axvec.y)), mPitch(Ogre::Radian(axvec.x)), mRoll(Ogre::Radian(axvec.z)), mChanged(true)
+		Euler(Vector3 axvec)
+			: mYaw(Radian(axvec.y)), mPitch(Radian(axvec.x)), mRoll(Radian(axvec.z)), mChanged(true)
 		{
 		}
 
@@ -77,25 +77,25 @@ namespace Ogre
 		\brief Default constructor with presets.
 		\param quaternion Calculate starting values from this quaternion
 		*/
-		explicit Euler(Ogre::Quaternion quaternion)
+		explicit Euler(Quaternion quaternion)
 		{
 			fromQuaternion(quaternion);
 		}
 
 		/// Get the Yaw angle.
-		inline Ogre::Radian getYaw() const { return mYaw; }
+		inline Radian getYaw() const { return mYaw; }
 
 		/// Get the Pitch angle.
-		inline Ogre::Radian getPitch() const { return mPitch; }
+		inline Radian getPitch() const { return mPitch; }
 
 		/// Get the Roll angle.
-		inline Ogre::Radian getRoll() const { return mRoll; }
+		inline Radian getRoll() const { return mRoll; }
 
 		/**
 		\brief Set the yaw.
 		\param y New value for yaw
 		*/
-		inline Euler &setYaw(Ogre::Radian y)
+		inline Euler &setYaw(Radian y)
 		{
 			mYaw = y;
 			mChanged = true;
@@ -106,7 +106,7 @@ namespace Ogre
 		\brief Set the pitch.
 		\param p New value for pitch
 		*/
-		inline Euler &setPitch(Ogre::Radian p)
+		inline Euler &setPitch(Radian p)
 		{
 			mPitch = p;
 			mChanged = true;
@@ -117,7 +117,7 @@ namespace Ogre
 		\brief Set the roll.
 		\param r New value for roll
 		*/
-		inline Euler &setRoll(Ogre::Radian r)
+		inline Euler &setRoll(Radian r)
 		{
 			mRoll = r;
 			mChanged = true;
@@ -130,7 +130,7 @@ namespace Ogre
 		\param p New value for pitch
 		\param r New value for roll
 		*/
-		inline Euler &setRotation(Ogre::Radian y, Ogre::Radian p, Ogre::Radian r)
+		inline Euler &setRotation(Radian y, Radian p, Radian r)
 		{
 			mYaw = y;
 			mPitch = p;
@@ -143,7 +143,7 @@ namespace Ogre
 		\brief Apply a relative yaw.
 		\param y Angle to add on current yaw
 		*/
-		inline Euler &yaw(Ogre::Radian y)
+		inline Euler &yaw(Radian y)
 		{
 			mYaw += y;
 			mChanged = true;
@@ -154,7 +154,7 @@ namespace Ogre
 		\brief Apply a relative pitch.
 		\param p Angle to add on current pitch
 		*/
-		inline Euler &pitch(Ogre::Radian p)
+		inline Euler &pitch(Radian p)
 		{
 			mPitch += p;
 			mChanged = true;
@@ -165,7 +165,7 @@ namespace Ogre
 		\brief Apply a relative roll.
 		\param r Angle to add on current roll
 		*/
-		inline Euler &roll(Ogre::Radian r)
+		inline Euler &roll(Radian r)
 		{
 			mRoll += r;
 			mChanged = true;
@@ -178,7 +178,7 @@ namespace Ogre
 		\param p Angle to add on current pitch
 		\param r Angle to add on current roll
 		*/
-		inline Euler &rotate(Ogre::Radian y, Ogre::Radian p, Ogre::Radian r)
+		inline Euler &rotate(Radian y, Radian p, Radian r)
 		{
 			mYaw += y;
 			mPitch += p;
@@ -188,30 +188,30 @@ namespace Ogre
 		}
 
 		/// Get a vector pointing forwards.
-		inline Ogre::Vector3 getForward() { return toQuaternion() * Ogre::Vector3::NEGATIVE_UNIT_Z; }
+		inline Vector3 getForward() { return toQuaternion() * Vector3::NEGATIVE_UNIT_Z; }
 
 		/// Get a vector pointing to the right.
-		inline Ogre::Vector3 getRight() { return toQuaternion() * Ogre::Vector3::UNIT_X; }
+		inline Vector3 getRight() { return toQuaternion() * Vector3::UNIT_X; }
 
 		/// Get a vector pointing up.
-		inline Ogre::Vector3 getUp() { return toQuaternion() * Ogre::Vector3::UNIT_Y; }
+		inline Vector3 getUp() { return toQuaternion() * Vector3::UNIT_Y; }
 
 		/**
 		\brief Calculate the quaternion of the Euler object.
 		\details The result is cached, it is only recalculated when the component Euler angles are changed.
 		*/
-		inline Ogre::Quaternion toQuaternion()
+		inline Quaternion toQuaternion()
 		{
 			if (mChanged)
 			{
-				mCachedQuaternion = Ogre::Quaternion(mYaw, Ogre::Vector3::UNIT_Y) * Ogre::Quaternion(mPitch, Ogre::Vector3::UNIT_X) * Ogre::Quaternion(mRoll, Ogre::Vector3::UNIT_Z);
+				mCachedQuaternion = Quaternion(mYaw, Vector3::UNIT_Y) * Quaternion(mPitch, Vector3::UNIT_X) * Quaternion(mRoll, Vector3::UNIT_Z);
 				mChanged = false;
 			}
 			return mCachedQuaternion;
 		}
 
 		/// Casting operator. This allows any ogre function that wants a Quaternion to accept a Euler instead.
-		inline operator Ogre::Quaternion()
+		inline operator Quaternion()
 		{
 			return toQuaternion();
 		}
@@ -220,20 +220,20 @@ namespace Ogre
 		\brief Calculate the current Euler of a given quaternion object.
 		\param quaternion Quaternion which is used to calculate current euler angles
 		*/
-		inline void fromQuaternion(Ogre::Quaternion quaternion)
+		inline void fromQuaternion(Quaternion quaternion)
 		{
-			mPitch = Ogre::Math::ATan2(2 * quaternion.y * quaternion.w - 2 * quaternion.x * quaternion.z, 1 - 2 * Ogre::Math::Pow(quaternion.y, 2) - 2 * Ogre::Math::Pow(quaternion.z, 2));
-			mRoll = Ogre::Math::ASin(2 * quaternion.x * quaternion.y + 2 * quaternion.z * quaternion.w);
-			mYaw = Ogre::Math::ATan2(2 * quaternion.x * quaternion.w - 2 * quaternion.y * quaternion.z, 1 - 2 * Ogre::Math::Pow(quaternion.x, 2) - 2 * Ogre::Math::Pow(quaternion.z, 2));
+			mPitch = Math::ATan2(2 * quaternion.y * quaternion.w - 2 * quaternion.x * quaternion.z, 1 - 2 * Math::Pow(quaternion.y, 2) - 2 * Math::Pow(quaternion.z, 2));
+			mRoll = Math::ASin(2 * quaternion.x * quaternion.y + 2 * quaternion.z * quaternion.w);
+			mYaw = Math::ATan2(2 * quaternion.x * quaternion.w - 2 * quaternion.y * quaternion.z, 1 - 2 * Math::Pow(quaternion.x, 2) - 2 * Math::Pow(quaternion.z, 2));
 
 			if (quaternion.x * quaternion.y + quaternion.z * quaternion.w == 0.5)
 			{
-				mPitch = 2.0f * Ogre::Math::ATan2(quaternion.x, quaternion.w);
+				mPitch = 2.0f * Math::ATan2(quaternion.x, quaternion.w);
 				mYaw = 0.0f;
 			}
 			else if (quaternion.x * quaternion.y + quaternion.z * quaternion.w == -0.5)
 			{
-				mPitch = -2.0f * Ogre::Math::ATan2(quaternion.x, quaternion.w);
+				mPitch = -2.0f * Math::ATan2(quaternion.x, quaternion.w);
 				mYaw = 0.0f;
 			}
 
@@ -247,13 +247,13 @@ namespace Ogre
 		\param setYaw If false, the yaw isn't changed.
 		\param setPitch If false, the pitch isn't changed.
 		*/
-		inline Euler &setDirection(const Ogre::Vector3 &v, bool setYaw = true, bool setPitch = true)
+		inline Euler &setDirection(const Vector3 &v, bool setYaw = true, bool setPitch = true)
 		{
-			Ogre::Vector3 d(v.normalisedCopy());
+			Vector3 d(v.normalisedCopy());
 			if (setPitch)
-				mPitch = Ogre::Math::ASin(d.y);
+				mPitch = Math::ASin(d.y);
 			if (setYaw)
-				mYaw = Ogre::Math::ATan2(-d.x, -d.z);//+Ogre::Math::PI/2.0;
+				mYaw = Math::ATan2(-d.x, -d.z);//+Ogre::Math::PI/2.0;
 			mChanged = setYaw || setPitch;
 
 			return *this;
@@ -270,23 +270,23 @@ namespace Ogre
 		{
 			if (normYaw)
 			{
-				Ogre::Real yaw = mYaw.valueRadians();
-				if (yaw < -Ogre::Math::PI)
+				Real yaw = mYaw.valueRadians();
+				if (yaw < -Math::PI)
 				{
-					yaw = fmod(yaw, Ogre::Math::PI * 2.0f);
-					if (yaw < -Ogre::Math::PI)
+					yaw = fmod(yaw, Math::PI * 2.0f);
+					if (yaw < -Math::PI)
 					{
-						yaw += Ogre::Math::PI * 2.0f;
+						yaw += Math::PI * 2.0f;
 					}
 					mYaw = yaw;
 					mChanged = true;
 				}
-				else if (yaw > Ogre::Math::PI)
+				else if (yaw > Math::PI)
 				{
-					yaw = fmod(yaw, Ogre::Math::PI * 2.0f);
-					if (yaw > Ogre::Math::PI)
+					yaw = fmod(yaw, Math::PI * 2.0f);
+					if (yaw > Math::PI)
 					{
-						yaw -= Ogre::Math::PI * 2.0f;
+						yaw -= Math::PI * 2.0f;
 					}
 					mYaw = yaw;
 					mChanged = true;
@@ -294,23 +294,23 @@ namespace Ogre
 			}
 			if (normPitch)
 			{
-				Ogre::Real pitch = mPitch.valueRadians();
-				if (pitch < -Ogre::Math::PI)
+				Real pitch = mPitch.valueRadians();
+				if (pitch < -Math::PI)
 				{
-					pitch = fmod(pitch, Ogre::Math::PI * 2.0f);
-					if (pitch < -Ogre::Math::PI)
+					pitch = fmod(pitch, Math::PI * 2.0f);
+					if (pitch < -Math::PI)
 					{
-						pitch += Ogre::Math::PI * 2.0f;
+						pitch += Math::PI * 2.0f;
 					}
 					mPitch = pitch;
 					mChanged = true;
 				}
-				else if (pitch > Ogre::Math::PI)
+				else if (pitch > Math::PI)
 				{
-					pitch = fmod(pitch, Ogre::Math::PI * 2.0f);
-					if (pitch > Ogre::Math::PI)
+					pitch = fmod(pitch, Math::PI * 2.0f);
+					if (pitch > Math::PI)
 					{
-						pitch -= Ogre::Math::PI * 2.0f;
+						pitch -= Math::PI * 2.0f;
 					}
 					mPitch = pitch;
 					mChanged = true;
@@ -318,23 +318,23 @@ namespace Ogre
 			}
 			if (normRoll)
 			{
-				Ogre::Real roll = mRoll.valueRadians();
-				if (roll < -Ogre::Math::PI)
+				Real roll = mRoll.valueRadians();
+				if (roll < -Math::PI)
 				{
-					roll = fmod(roll, Ogre::Math::PI * 2.0f);
-					if (roll < -Ogre::Math::PI)
+					roll = fmod(roll, Math::PI * 2.0f);
+					if (roll < -Math::PI)
 					{
-						roll += Ogre::Math::PI * 2.0f;
+						roll += Math::PI * 2.0f;
 					}
 					mRoll = roll;
 					mChanged = true;
 				}
-				else if (roll > Ogre::Math::PI)
+				else if (roll > Math::PI)
 				{
-					roll = fmod(roll, Ogre::Math::PI * 2.0f);
-					if (roll > Ogre::Math::PI)
+					roll = fmod(roll, Math::PI * 2.0f);
+					if (roll > Math::PI)
 					{
-						roll -= Ogre::Math::PI * 2.0f;
+						roll -= Math::PI * 2.0f;
 					}
 					mRoll = roll;
 					mChanged = true;
@@ -353,7 +353,7 @@ namespace Ogre
 		(0,0,-1) will return a -1000 degree yaw. When true, the same yaw and dir would give 80 degrees (1080 degrees faces
 		the same way as (0,0,-1).
 		*/
-		inline Euler getRotationTo(const Ogre::Vector3 &dir, bool setYaw = true, bool setPitch = true, bool shortest = true) const
+		inline Euler getRotationTo(const Vector3 &dir, bool setYaw = true, bool setPitch = true, bool shortest = true) const
 		{
 			Euler t1;
 			Euler t2;
@@ -367,7 +367,7 @@ namespace Ogre
 		}
 
 		/// Clamp the yaw angle to a range of +/-limit.
-		inline Euler &limitYaw(const Ogre::Radian &limit)
+		inline Euler &limitYaw(const Radian &limit)
 		{
 			if (mYaw > limit)
 			{
@@ -383,7 +383,7 @@ namespace Ogre
 		}
 
 		/// Clamp the pitch angle to a range of +/-limit.
-		inline Euler &limitPitch(const Ogre::Radian &limit)
+		inline Euler &limitPitch(const Radian &limit)
 		{
 			if (mPitch > limit)
 			{
@@ -399,7 +399,7 @@ namespace Ogre
 		}
 
 		/// Clamp the roll angle to a range of +/-limit.
-		inline Euler &limitRoll(const Ogre::Radian &limit)
+		inline Euler &limitRoll(const Radian &limit)
 		{
 			if (mRoll > limit)
 			{
@@ -425,7 +425,7 @@ namespace Ogre
 		inline Euler operator+(const Euler &rhs) const { return Euler(mYaw + rhs.mYaw, mPitch + rhs.mPitch, mRoll + rhs.mRoll); }
 
 		/// Add a vector with radiant euler angles.
-		inline Euler operator+(const Ogre::Vector3 &angles) const { return Euler(mYaw + Ogre::Radian(angles.y), mPitch + Ogre::Radian(angles.x), mRoll + Ogre::Radian(angles.z)); }
+		inline Euler operator+(const Vector3 &angles) const { return Euler(mYaw + Radian(angles.y), mPitch + Radian(angles.x), mRoll + Radian(angles.z)); }
 
 		/**
 		\brief Subtract two euler objects.
@@ -434,27 +434,27 @@ namespace Ogre
 		inline Euler operator-(const Euler &rhs) const { return Euler(mYaw - rhs.mYaw, mPitch - rhs.mPitch, mRoll - rhs.mRoll); }
 
 		/// Subtract a vector with radiant euler angles.
-		inline Euler operator-(const Ogre::Vector3 &angles) const { return Euler(mYaw - Ogre::Radian(angles.y), mPitch - Ogre::Radian(angles.x), mRoll - Ogre::Radian(angles.z)); }
+		inline Euler operator-(const Vector3 &angles) const { return Euler(mYaw - Radian(angles.y), mPitch - Radian(angles.x), mRoll - Radian(angles.z)); }
 
 		/// Interpolate the euler angles by rhs.
-		inline Euler operator*(Ogre::Real rhs) const { return Euler(mYaw * rhs, mPitch * rhs, mRoll * rhs); }
+		inline Euler operator*(Real rhs) const { return Euler(mYaw * rhs, mPitch * rhs, mRoll * rhs); }
 
 		/// Interpolate the euler angle by lhs.
-		inline friend Euler operator*(Ogre::Real lhs, const Euler &rhs) { return Euler(lhs * rhs.mYaw, lhs * rhs.mPitch, lhs * rhs.mRoll); }
+		inline friend Euler operator*(Real lhs, const Euler &rhs) { return Euler(lhs * rhs.mYaw, lhs * rhs.mPitch, lhs * rhs.mRoll); }
 
 		/**
 		\brief Multiply two eulers.
 		\details This has the same effect as multiplying quaternions.
 		\returns The result is a quaternion.
 		*/
-		inline Ogre::Quaternion operator*(const Euler &rhs) const
+		inline Quaternion operator*(const Euler &rhs) const
 		{
 			Euler e1(*this), e2(rhs);
 			return e1.toQuaternion()*e2.toQuaternion();
 		}
 
 		/// Apply the euler rotation to the vector rhs.
-		inline Ogre::Vector3 operator*(const Ogre::Vector3 &rhs) { return toQuaternion() * rhs; }
+		inline Vector3 operator*(const Vector3 &rhs) { return toQuaternion() * rhs; }
 
 		/// Copy assignment operator (Euler)
 		inline Euler operator=(Euler src)
@@ -471,17 +471,17 @@ namespace Ogre
 		//}
 
 		/// Copy assignment operator (Vector3)
-		inline Euler operator=(Ogre::Vector3 pyr)
+		inline Euler operator=(Vector3 pyr)
 		{
-			setRotation(Ogre::Radian(pyr.y), Ogre::Radian(pyr.x), Ogre::Radian(pyr.z));
+			setRotation(Radian(pyr.y), Radian(pyr.x), Radian(pyr.z));
 			return *this;
 		}
 
 	protected:
-		Ogre::Radian mYaw;					//!< Rotation around the Y axis.
-		Ogre::Radian mPitch;				//!< Rotation around the X axis.
-		Ogre::Radian mRoll;					//!< Rotation around the Z axis.
-		Ogre::Quaternion mCachedQuaternion;	//!< Cached quaternion equivalent of this Euler object.
+		Radian mYaw;					//!< Rotation around the Y axis.
+		Radian mPitch;				//!< Rotation around the X axis.
+		Radian mRoll;					//!< Rotation around the Z axis.
+		Quaternion mCachedQuaternion;	//!< Cached quaternion equivalent of this Euler object.
 		bool mChanged;						//!< Is the cached quaternion out of date?
 	};
 }

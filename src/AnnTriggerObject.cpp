@@ -22,7 +22,7 @@ void AnnTriggerObject::setPosition(AnnVect3 pos)
 	position = pos;
 }
 
-bool AnnTriggerObject::getContactInformation()
+bool AnnTriggerObject::getContactInformation() const
 {
 	return contactWithPlayer;
 }
@@ -38,7 +38,7 @@ void AnnTriggerObject::setContactInformation(bool contact)
 	contactWithPlayer = contact;
 }
 
-float AnnSphericalTriggerObject::getThreshold()
+float AnnSphericalTriggerObject::getThreshold() const
 {
 	return threshold;
 }
