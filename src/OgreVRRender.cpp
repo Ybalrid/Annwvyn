@@ -297,7 +297,7 @@ std::array<GLuint, 2> OgreVRRender::createSeparatedRenderTextures(const std::arr
 	std::array <GLuint, 2> glid;
 	Annwvyn::AnnDebug() << "Creating separated render textures " << dimentions[0][0] << "x" << dimentions[0][1] << " " << dimentions[1][0] << "x" << dimentions[1][1];
 	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
-	for (size_t i : {0u, 1u})
+	for (auto i : { 0u, 1u })
 	{
 		rttTexturesSeparated[i] = Ogre::TextureManager::getSingleton().createManual(std::string(rttTextureName) + std::to_string(i),
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D,
@@ -349,13 +349,10 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	Ogre::NameValuePairList options;
 
 #ifdef _WIN32
-	HGLRC context = {};
-	HWND handle = {};
 	//Get the hwnd and the context :
-	context = wglGetCurrentContext();
-	handle = glfwGetWin32Window(glfwWindow);
+	auto context = wglGetCurrentContext();
+	auto handle = glfwGetWin32Window(glfwWindow);
 	options["externalWindowHandle"] = std::to_string(size_t(handle));
-	options["externalGLContext"] = std::to_string(size_t(context));
 #endif
 
 #ifdef __linux__
@@ -363,8 +360,9 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	void* context = nullptr;
 	handle = glfwGetX11Window(glfwWindow);
 	options["parentWindowHandle"] = std::to_string(size_t(handle));
-	options["externalGLContext"] = std::to_string(size_t(context));
 #endif
+
+	options["externalGLContext"] = std::to_string(size_t(context));
 
 	options["FSAA"] = std::to_string(AALevel);
 	options["top"] = "0";

@@ -434,9 +434,9 @@ std::shared_ptr<AnnSubSystem> AnnEngine::getSubSystemByName(std::string name)
 
 bool AnnEngine::isUserSubSystem(std::shared_ptr<AnnSubSystem> subsystem)
 {
-	AnnSubSystem* nakedSubSystem(subsystem.get());
+	auto nakedSubSystem(subsystem.get());
 
-	AnnUserSubSystem* result = dynamic_cast<AnnUserSubSystem*>(nakedSubSystem);
+	auto result = dynamic_cast<AnnUserSubSystem*>(nakedSubSystem);
 	if (result != nullptr) return true;
 	return false;
 }

@@ -122,7 +122,7 @@ void AnnGameObject::setOrientation(AnnQuaternion orient)
 	//bullet
 	if (Body)
 	{
-		btTransform t = Body->getCenterOfMassTransform();
+		auto t = Body->getCenterOfMassTransform();
 		t.setRotation(orient.getBtQuaternion());
 		Body->setCenterOfMassTransform(t);
 	}

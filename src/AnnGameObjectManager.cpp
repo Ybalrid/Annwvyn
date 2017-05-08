@@ -62,7 +62,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	v1Mesh.setNull();
 
 	//Create an item
-	Ogre::Item* item = smgr->createItem(v2Mesh);
+	auto item = smgr->createItem(v2Mesh);
 
 	//Create a node
 	auto node = smgr->getRootSceneNode()->createChildSceneNode();

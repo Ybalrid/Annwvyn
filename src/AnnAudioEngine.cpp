@@ -250,7 +250,7 @@ void AnnAudioEngine::unloadBuffer(const std::string& filename)
 
 	//Get the buffer from the iterator
 	AnnDebug() << "Sound file found by the Audio resource system. OpenAL buffer " << query->second;
-	ALuint buffer = query->second;
+	auto buffer = query->second;
 
 	//Free it from memory and remove the object from the buffer list
 	alDeleteBuffers(1, &buffer);
