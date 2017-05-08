@@ -48,6 +48,9 @@ struct OgrePose
 class DLL OgreVRRender
 {
 public:
+
+	void logToOgre(const std::string& str);
+
 	///Name of the rendersystem plugin to load on Ogre
 	static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus" };
 	///Name of the rendersystem to initialize

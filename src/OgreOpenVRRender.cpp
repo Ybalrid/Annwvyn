@@ -56,7 +56,7 @@ OgreOpenVRRender::~OgreOpenVRRender()
 	OpenVRSelf = nullptr;
 }
 
-//This function is from VALVe
+//This function is taken straight from VALVe's example.
 std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = nullptr)
 {
 	auto unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, nullptr, 0, peError);
