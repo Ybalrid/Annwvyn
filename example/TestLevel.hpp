@@ -46,7 +46,7 @@ public:
 		//The shape approximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
 		MyObject->setFrictionCoef(0.84f);
 
-		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Hello, Virtual World!\n\nTesting line wrap right now : a bc def ghij klmn opqr stuvw xyz ", 128, 96.0f, "LibSerif", "LiberationSerif-regular.ttf");
+		auto text = std::make_shared<Ann3DTextPlane>(1.0f, 0.5f, "Hello, Virtual World!\n\nTesting line wrap right now : a bc def ghij klmn opqr stuvw xyz ", 128, 96.0f, "LibSerif", "LiberationSerif-Regular.ttf");
 		//text->setTextAlign(text->ALIGN_CENTER);
 		text->setBackgroundColor(AnnColor(0, 1, 0));
 		text->setPosition({ 0, 0.5f, -1 });

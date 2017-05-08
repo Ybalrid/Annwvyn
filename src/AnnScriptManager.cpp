@@ -9,6 +9,9 @@
 
 using namespace Annwvyn;
 
+constexpr const char* const AnnScriptManager::fileErrorPrefix;
+constexpr const char* const AnnScriptManager::logFromScript;
+
 AnnScriptManager::AnnScriptManager() : AnnSubSystem("ScriptManager"),
 scriptFileManager(nullptr)
 //Initialize with compiled-in Std_Lib
