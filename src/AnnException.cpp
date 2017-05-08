@@ -61,7 +61,7 @@ const char* AnnPhysicsSetupChildError::what() const throw()
 	return out.str().c_str();
 }
 
-AnnInvalidControllerSide::AnnInvalidControllerSide() : std::runtime_error("Invalid hand controller side")
+AnnInvalidControllerSide::AnnInvalidControllerSide() : runtime_error("Invalid hand controller side")
 {
 	AnnDebug() << AnnInvalidControllerSide::what();
 }
@@ -74,7 +74,7 @@ const char* AnnInvalidControllerSide::what() const throw()
 	return out.str().c_str();
 }
 
-AnnNullGameObjectError::AnnNullGameObjectError() : std::runtime_error("Error : Trying to do an operation on a null GameObject")
+AnnNullGameObjectError::AnnNullGameObjectError() : runtime_error("Error : Trying to do an operation on a null GameObject")
 {
 	AnnDebug() << AnnNullGameObjectError::what();
 }
@@ -87,7 +87,7 @@ const char* AnnNullGameObjectError::what() const throw()
 	return out.str().c_str();
 }
 
-AnnInitializationError::AnnInitializationError(int errorCode, const std::string& message) : std::runtime_error("Error : " + std::to_string(errorCode) + " " + message)
+AnnInitializationError::AnnInitializationError(int errorCode, const string& message) : runtime_error("Error : " + to_string(errorCode) + " " + message)
 {
 	AnnDebug() << AnnInitializationError::what();
 }

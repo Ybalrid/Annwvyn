@@ -468,7 +468,7 @@ void AnnEventManager::keyboardUsedForText(bool state)
 
 void AnnEventManager::userSpaceDispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* l)
 {
-	userSpaceEventBuffer.push_back(std::make_pair(e, l));
+	userSpaceEventBuffer.push_back(make_pair(e, l));
 }
 
 void AnnEventManager::processUserSpaceEvents()

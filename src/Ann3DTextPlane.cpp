@@ -440,7 +440,7 @@ void Ann3DTextPlane::setMargin(float m)
 	autoUpdateCheck();
 }
 
-void Ann3DTextPlane::setBackgroundImage(const std::string& imgName)
+void Ann3DTextPlane::setBackgroundImage(const string& imgName)
 {
 	bgTexture = Ogre::TextureManager::getSingleton().load(imgName, "ANNWVYN_CORE");
 	useImageAsBackground = true;

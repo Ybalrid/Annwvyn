@@ -6,6 +6,7 @@
 
 #ifdef __linux__
 #include <X11/Xlib.h>
+#define GLFW_EXPOSE_NATIVE_X11
 #endif
 
 #ifdef _WIN32
@@ -13,13 +14,14 @@
 #define GLFW_EXPOSE_NAVIVE_WGL
 #endif
 
-#ifdef __linux__
-#define GLFW_EXPOSE_NATIVE_X11
-#endif
-
 #include <GLFW/glfw3native.h>
 
-auto logToOgre = [](const std::string& str) {Ogre::LogManager::getSingleton().logMessage(str); };
+using namespace Annwvyn;
+
+void logToOgre(const std::string& str)
+{
+	Ogre::LogManager::getSingleton().logMessage(str);
+}
 
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
@@ -27,7 +29,7 @@ bool OgreVRRender::UseSSAA{ false };
 
 void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
 {
-	static const std::array<const uint8_t, 5> AvailableAALevel{ 0,2,4,8,16 };
+	static const std::array<const uint8_t, 5> AvailableAALevel{ 0, 2, 4, 8, 16 };
 	for (const auto& possibleAALevel : AvailableAALevel)
 		if (possibleAALevel == AA)
 		{
@@ -61,7 +63,7 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	if (self)
 	{
 		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialization. OgreOculusRender object already created.");
-		throw Annwvyn::AnnInitializationError(ANN_ERR_CRITIC, "Cannot create more than one OgreVRRenderer object!");
+		throw AnnInitializationError(ANN_ERR_CRITIC, "Cannot create more than one OgreVRRenderer object!");
 	}
 	self = this;
 
@@ -133,7 +135,7 @@ void OgreVRRender::initOgreRoot(std::string loggerName)
 void OgreVRRender::getOgreConfig() const
 {
 	//Ogre as to be initialized
-	if (!root) throw Annwvyn::AnnInitializationError(ANN_ERR_NOTINIT, "Need to initialize Ogre::Root before loading system configuration");
+	if (!root) throw AnnInitializationError(ANN_ERR_NOTINIT, "Need to initialize Ogre::Root before loading system configuration");
 
 	//Load OgrePlugins
 	root->loadPlugin(PluginRenderSystemGL3Plus);
@@ -145,7 +147,7 @@ void OgreVRRender::getOgreConfig() const
 	root->initialise(false);
 }
 
-std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> OgreVRRender::getHandControllerArray() const
+std::array<std::shared_ptr<AnnHandController>, MAX_CONTROLLER_NUMBER> OgreVRRender::getHandControllerArray() const
 {
 	return handControllers;
 }
@@ -244,19 +246,23 @@ void OgreVRRender::calculateTimingFromOgre()
 
 void OgreVRRender::loadOpenGLFunctions()
 {
+	//The version of OpenGL feature set that will be "wrangled" by GLEW depend of the current OpenGL context.
+	//The context version depend on who created the context. Here we used GLFW and hinted for OpenGL 4.3
 	const auto err = glewInit();
 	if (err != GLEW_OK)
 	{
-		Annwvyn::AnnDebug() << "Failed to glewTnit(), error : "
-			<< glewGetString(err);
+		AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
 		exit(ANN_ERR_RENDER);
 	}
-	Annwvyn::AnnDebug() << "Using GLEW version : "
+
+	//Just print some informations about GLEW
+	AnnDebug() << "Using GLEW version : "
 		<< glewGetString(GLEW_VERSION);
 
+	//Check if the function pointer behind glCopyImageSubData is not null
 	if (glCopyImageSubData)
 	{
-		Annwvyn::AnnDebug() << "glCopyImageSubData is available!";
+		AnnDebug() << "glCopyImageSubData is available!";
 	}
 }
 
@@ -295,7 +301,7 @@ GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
 std::array<GLuint, 2> OgreVRRender::createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions)
 {
 	std::array <GLuint, 2> glid;
-	Annwvyn::AnnDebug() << "Creating separated render textures " << dimentions[0][0] << "x" << dimentions[0][1] << " " << dimentions[1][0] << "x" << dimentions[1][1];
+	AnnDebug() << "Creating separated render textures " << dimentions[0][0] << "x" << dimentions[0][1] << " " << dimentions[1][0] << "x" << dimentions[1][1];
 	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
 	for (auto i : { 0u, 1u })
 	{
