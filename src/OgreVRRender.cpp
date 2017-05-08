@@ -18,11 +18,6 @@
 
 using namespace Annwvyn;
 
-void logToOgre(const std::string& str)
-{
-	Ogre::LogManager::getSingleton().logMessage(str);
-}
-
 uint8_t OgreVRRender::AALevel{ 4 };
 OgreVRRender* OgreVRRender::self{ nullptr };
 bool OgreVRRender::UseSSAA{ false };
@@ -518,6 +513,11 @@ void OgreVRRender::handleWindowMessages()
 		window->resize(w, h);
 #endif
 	}
+}
+
+void OgreVRRender::logToOgre(const std::string& str)
+{
+	Ogre::LogManager::getSingleton().logMessage(str);
 }
 
 void OgreVRRender::setShadowFiltering(ShadowFiltering level)
