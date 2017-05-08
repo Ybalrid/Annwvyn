@@ -30,6 +30,10 @@ void AnnSplashLevel::load()
 	AnnGetSceneryManager()->setExposure(ev, ev, ev);
 	AnnGetSceneryManager()->setSkyColor(AnnColor(0, 0, 0), 0);
 
+	auto sun = addLightObject();
+	sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
+	sun->setDirection({ 0, 1, 0.5f });
+
 	//Create manual material
 	auto unlit = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT);
 	auto datablock = unlit->getDatablock("Splash");
