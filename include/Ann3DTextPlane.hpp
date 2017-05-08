@@ -45,10 +45,10 @@ namespace Annwvyn
 
 		///Change the color
 		/// \param color The color of the text
-		void setTextColor(AnnColor color);
+		void setTextColor(const AnnColor& color);
 
 		///Change the background color. Alpha blending works
-		void setBackgroundColor(AnnColor color);
+		void setBackgroundColor(const AnnColor& color);
 
 		///Call text re-render (if needed)
 		void update();
@@ -74,7 +74,7 @@ namespace Annwvyn
 
 		///Set background image
 		/// \param imgName name of an image loaded in the resource manager
-		void setBackgroundImage(std::string imgName);
+		void setBackgroundImage(const std::string& imgName);
 
 	private:
 		///Render the text

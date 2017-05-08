@@ -177,13 +177,13 @@ void AnnConsole::update()
 	lastUpdate = AnnGetEngine()->getTimeFromStartupSeconds();
 
 	//Get the content of the buffer into a static string
-	std::stringstream content; std::string logLine;
+	std::stringstream content;
 
 	//For each line
 	for (auto i{ 0 }; i < CONSOLE_BUFFER; i++)
 	{
 		//Make the len fit the screen
-		logLine = buffer[i].substr(0, MAX_CONSOLE_LOG_WIDTH);
+		auto logLine = buffer[i].substr(0, MAX_CONSOLE_LOG_WIDTH);
 
 		//No newline char
 		for (auto j{ 0 }; j < logLine.size(); j++)

@@ -18,7 +18,7 @@ void AnnFileWriter::write(shared_ptr<AnnSaveFileData> data)
 {
 	//Create the resources needed for the write operation
 	auto fsmanager(AnnGetFileSystemManager());
-	string path(fsmanager->getPathForFileName(data->fileName));
+	auto path(fsmanager->getPathForFileName(data->fileName));
 	ofstream saveFile;
 
 	//Make sure the "user save" directory as been created on the user's personal folder

@@ -24,7 +24,7 @@ void AnnDefaultPlayerActuator::actuate(float delta)
 	//AnnDebug() << "Translation : " << translate;
 
 	//Get current linear velocity
-	btVector3 currentVelocity = player->getBody()->getLinearVelocity();
+	auto currentVelocity = player->getBody()->getLinearVelocity();
 	//AnnDebug() << "CurentVelocity" << currentVelocity;
 
 	//if no  user input, be just pull toward the ground by gravity (not physically realist, but useful)
@@ -47,7 +47,7 @@ void AnnDefaultPlayerActuator::actuate(float delta)
 	if (player->standing)
 	{
 		//Block it's orientation to the Identity quaternion in the rigid body transform
-		btTransform Transform = player->getBody()->getCenterOfMassTransform();
+		auto Transform = player->getBody()->getCenterOfMassTransform();
 		Transform.setRotation(AnnQuaternion(0, 0, 0, 1).getBtQuaternion());
 		player->getBody()->setCenterOfMassTransform(Transform);
 	}

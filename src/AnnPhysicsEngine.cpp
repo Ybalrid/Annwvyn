@@ -161,8 +161,7 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 	AnnDebug() << "Initializing player's physics in RoomScale mode";
 	AnnDebug() << "Player can walk around";
 
-	btCollisionShape* sphere;
-	sphere = new btSphereShape(0.25f);
+	btCollisionShape* sphere = new btSphereShape(0.25f);
 	auto body = new btRigidBody(0, nullptr, sphere);
 
 	playerObject->setShape(sphere);

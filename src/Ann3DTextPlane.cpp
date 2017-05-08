@@ -383,14 +383,14 @@ void Ann3DTextPlane::generateMaterialName()
 	materialName = AnnGetStringUtility()->getRandomString(materialNameLen);
 }
 
-void Ann3DTextPlane::setTextColor(AnnColor color)
+void Ann3DTextPlane::setTextColor(const AnnColor& color)
 {
 	textColor = color;
 	needUpdating = true;
 	autoUpdateCheck();
 }
 
-void Ann3DTextPlane::setBackgroundColor(AnnColor color)
+void Ann3DTextPlane::setBackgroundColor(const AnnColor& color)
 {
 	bgColor = color;
 	needUpdating = true;
@@ -440,7 +440,7 @@ void Ann3DTextPlane::setMargin(float m)
 	autoUpdateCheck();
 }
 
-void Ann3DTextPlane::setBackgroundImage(string imgName)
+void Ann3DTextPlane::setBackgroundImage(const std::string& imgName)
 {
 	bgTexture = Ogre::TextureManager::getSingleton().load(imgName, "ANNWVYN_CORE");
 	useImageAsBackground = true;

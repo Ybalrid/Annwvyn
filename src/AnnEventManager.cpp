@@ -14,7 +14,7 @@ AnnEventListener::AnnEventListener() :
 float AnnEventListener::trim(float v, float dz)
 {
 	//Compute absolute value of v
-	float abs(v);
+	auto abs(v);
 	if (v < 0) abs = -v;
 
 	//The test is done on the abs value. Return the actual value, or 0 if under the dead-zone
@@ -338,7 +338,7 @@ void AnnEventManager::processInput()
 
 timerID AnnEventManager::fireTimerMillisec(double delay)
 {
-	timerID newID = lastTimerCreated++;
+	auto newID = lastTimerCreated++;
 	futureTimers.push_back(AnnTimer(newID, delay));
 	return newID;
 }

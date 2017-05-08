@@ -64,7 +64,7 @@ void AnnSplashLevel::load()
 	const auto CurveC(1.f);
 	const auto CurveB(CurveC / 4.0f);
 
-	int index = 0;
+	auto index = 0;
 	//10 vertex:
 	//1
 	CurvedPlane->position(-2, -2, CurveC);

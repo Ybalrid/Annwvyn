@@ -360,7 +360,7 @@ bool AnnStickEvent::isPressed(ButtonId id)
 	//if id is not a valid button
 	if (id >= buttons.size()) return false;
 
-	for (ButtonId i(0); i < pressed.size(); i++)
+	for (auto i(0); i < pressed.size(); i++)
 		if (pressed[i] == id) return true;
 	return false;
 }
@@ -370,7 +370,7 @@ bool AnnStickEvent::isReleased(ButtonId id)
 	//if id is not a valid button
 	if (id >= buttons.size()) return false;
 
-	for (ButtonId i(0); i < released.size(); i++)
+	for (auto i(0); i < released.size(); i++)
 		if (released[i] == id) return true;
 	return false;
 }

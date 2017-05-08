@@ -71,9 +71,9 @@ namespace Annwvyn
 		float r, g, b, a;
 
 	private:
-		const unsigned char MAX8BIT;
+		static constexpr const unsigned char MAX8BIT = 0xFF;
 		///Return f*MAX8BIT
-		unsigned char f2i(float f) const;
+		static unsigned char f2i(float f);
 		///Return true if f is inside interval [0;1]
 		static bool isInFloatRange(float f);
 	};

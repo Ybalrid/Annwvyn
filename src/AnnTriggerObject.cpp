@@ -82,7 +82,7 @@ void AnnAlignedBoxTriggerObject::setBoundaries(float x1, float x2, float y1, flo
 
 bool AnnAlignedBoxTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer> player)
 {
-	AnnVect3 pos(player->getPosition());
+	auto pos(player->getPosition());
 
 	if ((pos.x >= xMin && pos.x <= xMax) &&
 		(pos.y >= yMin && pos.y <= yMax) &&

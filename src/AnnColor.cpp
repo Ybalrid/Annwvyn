@@ -7,8 +7,7 @@ AnnColor::AnnColor(float red, float green, float blue, float alpha) :
 	r(red),
 	g(green),
 	b(blue),
-	a(alpha),
-	MAX8BIT(255)
+	a(alpha)
 {
 }
 
@@ -16,8 +15,7 @@ AnnColor::AnnColor(Ogre::ColourValue color) :
 	r(color.r),
 	g(color.g),
 	b(color.b),
-	a(color.a),
-	MAX8BIT(255)
+	a(color.a)
 {
 }
 
@@ -25,8 +23,7 @@ AnnColor::AnnColor(const AnnColor & color) :
 	r(color.r),
 	g(color.g),
 	b(color.b),
-	a(color.a),
-	MAX8BIT(255)
+	a(color.a)
 {
 }
 
@@ -64,7 +61,7 @@ float AnnColor::getAlpha() const
 	return a;
 }
 
-unsigned char AnnColor::f2i(float f) const
+unsigned char AnnColor::f2i(float f)
 {
 	return static_cast<unsigned char>(f * MAX8BIT);
 }
