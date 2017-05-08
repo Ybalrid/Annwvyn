@@ -140,9 +140,6 @@ public:
 	void handleIPDChange() override;
 private:
 
-	///If we are using separated textures
-	static constexpr bool separateTextures = true;
-
 	///Render textures sizes
 	ovrSizei texSizeL, texSizeR;
 
@@ -329,4 +326,3 @@ public:
 };
 #endif //_WIN32
 #endif //OGRE_OCULUS_RENDERER
-
