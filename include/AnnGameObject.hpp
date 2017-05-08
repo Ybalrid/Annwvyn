@@ -123,10 +123,10 @@ namespace Annwvyn
 		float getDistance(AnnGameObject* otherObject) const;
 
 		///Play a sound file
-		/// \param path Path to the audio file
+		/// \param name Name of the audio file in a resource location
 		/// \param loop If set to true, will play the sound in loop
 		/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
-		void playSound(std::string path, bool loop = false, float volume = 1.0f) const;
+		void playSound(std::string name, bool loop = false, float volume = 1.0f) const;
 
 		///Set currently playing animation
 		/// \param name Name of the animation as defined by the 3D entity

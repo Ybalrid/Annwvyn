@@ -40,6 +40,7 @@ public:
 
 		auto pbrTest = addGameObject("SubstanceSphereDecimated.mesh");
 		pbrTest->setPosition({ -1, 1.5f, -2 });
+		pbrTest->playSound("beep.wav", true, 0.5);
 		rotating = pbrTest.get();
 
 		auto Ground = addGameObject("floorplane.mesh");
