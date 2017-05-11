@@ -53,9 +53,6 @@ namespace Annwvyn
 		///Process the collision query system
 		void processCollisionTesting() const;
 
-		///Process triggers contact event
-		void processTriggersContacts() const;
-
 		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body) const;
 

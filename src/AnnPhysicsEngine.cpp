@@ -121,17 +121,6 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 	debugDrawer->step();
 }
 
-void AnnPhysicsEngine::processTriggersContacts() const
-{
-	for (auto trigger : triggerObjects)
-	{
-		trigger->setContactInformation(trigger->computeVolumetricTest(playerObject));
-		if (!trigger->lastFrameContactWithPlayer && trigger->contactWithPlayer ||
-			trigger->lastFrameContactWithPlayer && !trigger->contactWithPlayer)
-			AnnGetEventManager()->spatialTrigger(trigger);
-	}
-}
-
 void AnnPhysicsEngine::changeGravity(AnnVect3 gravity) const
 {
 	DynamicsWorld->setGravity(gravity.getBtVector());
@@ -144,7 +133,6 @@ void AnnPhysicsEngine::resetGravity() const
 
 void AnnPhysicsEngine::update()
 {
-	processTriggersContacts();
 	stepDebugDrawer();
 	step(AnnGetEngine()->getFrameTime());
 	processCollisionTesting();

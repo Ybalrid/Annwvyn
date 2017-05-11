@@ -61,11 +61,11 @@ public:
 		TextPane->update();
 		addManualMovableObject(TextPane);
 
-		auto Demo0Trigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
-		Demo0Trigger->setThreshold(1.5f);
-		Demo0Trigger->setPosition(StoneDemo0->getPosition() + AnnVect3(0, 0.5f, 0));
-		demo0trig = Demo0Trigger;
-
+		/*	auto Demo0Trigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
+			Demo0Trigger->setThreshold(1.5f);
+			Demo0Trigger->setPosition(StoneDemo0->getPosition() + AnnVect3(0, 0.5f, 0));
+			demo0trig = Demo0Trigger;
+			*/
 		auto StoneTestLevel = addGameObject("DemoStone.mesh");
 		StoneTestLevel->setPosition({ +0, 0, -7 });
 		StoneTestLevel->setOrientation(AnnQuaternion(AnnDegree(0), AnnVect3::UNIT_Y));
@@ -79,11 +79,11 @@ public:
 		TestLevelText->update();
 		addManualMovableObject(TestLevelText);
 
-		auto TestLevelTrigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
+		/*auto TestLevelTrigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
 		TestLevelTrigger->setThreshold(1.5f);
 		TestLevelTrigger->setPosition(StoneTestLevel->getPosition() + AnnVect3(0, 0.5f, 0));
 		testLevelTrig = TestLevelTrigger;
-
+		*/
 		auto StoneEvent = addGameObject("DemoStone.mesh");
 		StoneEvent->setPosition({ +6, 0, -5 });
 		StoneEvent->setOrientation(AnnQuaternion(AnnDegree(-45), AnnVect3::UNIT_Y));
@@ -97,11 +97,12 @@ public:
 		EventText->update();
 		addManualMovableObject(EventText);
 
+		/*
 		auto EventTrigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
 		EventTrigger->setThreshold(1.5f);
 		EventTrigger->setPosition(StoneEvent->getPosition() + AnnVect3(0, 0.5f, 0));
 		EventTrig = EventTrigger;
-
+		*/
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
