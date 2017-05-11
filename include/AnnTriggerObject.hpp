@@ -18,11 +18,17 @@ namespace Annwvyn
 	class AnnEngine;
 	class AnnPhysicsGameEngine;
 
+	///Shape generator. Just a bunch of static methods. You will need to de-alliocate them by hand.
 	class DLL AnnTriggerObjectShapeGenerator
 	{
 	public:
+		///Deleted constructor. This class is just a collection of static methods
 		AnnTriggerObjectShapeGenerator() = delete;
+
+		///Generate a box shape. w, h and l are the dimentions on the x, y and z
 		static btCollisionShape* box(const float& w, const float& h, const float& l);
+
+		///Generate a sphere shape
 		static btCollisionShape* sphere(const float& r);
 	};
 
@@ -52,9 +58,6 @@ namespace Annwvyn
 		///Get contact information
 		bool getContactInformation() const;
 
-		///When contact happened
-		DEPRECATED virtual void atContact() { return; }
-
 		///Set the shape of the object
 		void setShape(btCollisionShape* shp);
 
@@ -74,10 +77,10 @@ namespace Annwvyn
 		///State of the last frame
 		bool lastFrameContactWithPlayer;
 
-		///After initialization
-		DEPRECATED virtual void postInit() { return; }
-
+		///Pointer to the body
 		std::unique_ptr<btRigidBody> body;
+
+		///Pointer to the shape
 		std::unique_ptr<btCollisionShape> shape;
 	};
 }

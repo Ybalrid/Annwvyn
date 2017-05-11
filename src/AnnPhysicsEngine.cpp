@@ -89,7 +89,7 @@ void AnnPhysicsEngine::stepDebugDrawer() const
 
 void AnnPhysicsEngine::processCollisionTesting() const
 {
-	auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
+	const auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
 	for (auto i{ 0 }; i < nbManifold; ++i)
 	{
 		auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
@@ -145,7 +145,6 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 {
 	playerObject->setMode(ROOMSCALE);
 	AnnDebug() << "Initializing player's physics in RoomScale mode";
-	AnnDebug() << "Player can walk around";
 
 	btCollisionShape* sphere = new btSphereShape(0.25f);
 	auto body = new btRigidBody(0, nullptr, sphere);
@@ -159,8 +158,7 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)
 {
 	playerObject->setMode(STANDING);
-	AnnDebug() << "Initializing player's physics  in standing mode";
-	AnnDebug() << "Capsule RigidBody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
+	AnnDebug() << "Player's Capsule RigidBody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
 	createVirtualBodyShape();
 	createPlayerPhysicalVirtualBody(node);
 	addPlayerPhysicalBodyToDynamicsWorld();
