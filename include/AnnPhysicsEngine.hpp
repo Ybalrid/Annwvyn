@@ -29,7 +29,7 @@ namespace Annwvyn
 	public:
 
 		///Create the physics engine
-		AnnPhysicsEngine(Ogre::SceneNode* rootNode, std::shared_ptr<AnnPlayer> player, AnnGameObjectList& objects, AnnTriggerObjectList& triggers);
+		AnnPhysicsEngine(Ogre::SceneNode* rootNode, std::shared_ptr<AnnPlayer> player, AnnGameObjectList& objects);
 
 		///Destroy the physics engine
 		~AnnPhysicsEngine();
@@ -112,9 +112,6 @@ namespace Annwvyn
 
 		///Reference to the list of all game object
 		AnnGameObjectList& gameObjects;
-
-		///Reference to the list of all trigger objects
-		AnnTriggerObjectList& triggerObjects;
 
 		///Shared pointer to the player
 		std::shared_ptr<AnnPlayer> playerObject;

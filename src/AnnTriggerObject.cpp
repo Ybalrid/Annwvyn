@@ -27,6 +27,7 @@ AnnTriggerObject::AnnTriggerObject() :
 AnnTriggerObject::~AnnTriggerObject()
 {
 	AnnDebug() << "AnnTriggerObject destructor called";
+	AnnGetPhysicsEngine()->removeRigidBody(body.get());
 }
 
 void AnnTriggerObject::setPosition(AnnVect3 pos)
@@ -68,20 +69,19 @@ void AnnTriggerObject::setShape(btCollisionShape* shp)
 {
 	if (shape)
 	{
-		delete shape;
 		shape = nullptr;
 	}
 	if (body)
 	{
-		AnnGetPhysicsEngine()->removeRigidBody(body);
-		delete body;
+		AnnGetPhysicsEngine()->removeRigidBody(body.get());
 		body = nullptr;
 	}
 
-	shape = shp;
-	body = new btRigidBody(0, nullptr, shape);
+	shape.reset(shp);
+	body = std::make_unique<btRigidBody>(0, nullptr, shape.get());
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 	body->setUserPointer(static_cast<void*>(this));
+	AnnGetPhysicsEngine()->getWorld()->addRigidBody(body.get());
 }
 
 void AnnTriggerObject::setContactInformation(bool contact)
