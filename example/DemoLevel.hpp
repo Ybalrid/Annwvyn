@@ -61,11 +61,11 @@ public:
 		TextPane->update();
 		addManualMovableObject(TextPane);
 
-		/*	auto Demo0Trigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
-			Demo0Trigger->setThreshold(1.5f);
-			Demo0Trigger->setPosition(StoneDemo0->getPosition() + AnnVect3(0, 0.5f, 0));
-			demo0trig = Demo0Trigger;
-			*/
+		auto Demo0Trigger(addTrggerObject());
+		Demo0Trigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
+		Demo0Trigger->setPosition(StoneDemo0->getPosition() + AnnVect3(0, 0.5f, 0));
+		Demo0Trig = Demo0Trigger;
+
 		auto StoneTestLevel = addGameObject("DemoStone.mesh");
 		StoneTestLevel->setPosition({ +0, 0, -7 });
 		StoneTestLevel->setOrientation(AnnQuaternion(AnnDegree(0), AnnVect3::UNIT_Y));
@@ -79,11 +79,11 @@ public:
 		TestLevelText->update();
 		addManualMovableObject(TestLevelText);
 
-		/*auto TestLevelTrigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
-		TestLevelTrigger->setThreshold(1.5f);
+		auto TestLevelTrigger = (addTrggerObject());
+		TestLevelTrigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
 		TestLevelTrigger->setPosition(StoneTestLevel->getPosition() + AnnVect3(0, 0.5f, 0));
-		testLevelTrig = TestLevelTrigger;
-		*/
+		TestLevelTrig = TestLevelTrigger;
+
 		auto StoneEvent = addGameObject("DemoStone.mesh");
 		StoneEvent->setPosition({ +6, 0, -5 });
 		StoneEvent->setOrientation(AnnQuaternion(AnnDegree(-45), AnnVect3::UNIT_Y));
@@ -97,12 +97,11 @@ public:
 		EventText->update();
 		addManualMovableObject(EventText);
 
-		/*
-		auto EventTrigger = std::static_pointer_cast<AnnSphericalTriggerObject>(addTrggerObject());
-		EventTrigger->setThreshold(1.5f);
+		auto EventTrigger = (addTrggerObject());
+		EventTrigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
 		EventTrigger->setPosition(StoneEvent->getPosition() + AnnVect3(0, 0.5f, 0));
 		EventTrig = EventTrigger;
-		*/
+
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		Sun->setDirection({ 0, -1, -0.5 });
@@ -123,25 +122,27 @@ public:
 		//Unregister the listener
 		AnnGetEventManager()->removeListener(getSharedListener());
 		AnnLevel::unload();
-		demo0trig.reset();
-		testLevelTrig.reset();
+		Demo0Trig.reset();
+		TestLevelTrig.reset();
+		EventTrig.reset();
 		rotating = nullptr;
 	}
 
 	void TriggerEvent(AnnTriggerEvent e) override
 	{
+		AnnDebug() << "got trigger event";
 		if (e.getContactStatus())
 			jumpToLevelTriggeredBy(e.getSender());
 	}
 
 	void jumpToLevelTriggeredBy(AnnTriggerObject* trigger) const
 	{
-		if (demo0trig.get() == trigger)
+		if (Demo0Trig.get() == trigger)
 		{
 			AnnGetLevelManager()->jump(getDemo(0));
 			return;
 		}
-		if (testLevelTrig.get() == trigger)
+		if (TestLevelTrig.get() == trigger)
 		{
 			AnnGetLevelManager()->jump(getDemo(1));
 			return;
@@ -159,8 +160,8 @@ public:
 	}
 
 private:
-	std::shared_ptr<AnnTriggerObject> demo0trig;
-	std::shared_ptr<AnnTriggerObject> testLevelTrig;
+	std::shared_ptr<AnnTriggerObject> Demo0Trig;
+	std::shared_ptr<AnnTriggerObject> TestLevelTrig;
 	std::shared_ptr<AnnTriggerObject> EventTrig;
 
 	AnnGameObject* rotating;

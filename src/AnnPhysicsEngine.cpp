@@ -5,8 +5,7 @@
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
-	std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects,
-	AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+	std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects) : AnnSubSystem("PhysicsEngie"),
 	Broadphase(nullptr),
 	CollisionConfiguration(nullptr),
 	Solver(nullptr),
@@ -14,7 +13,6 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	debugDrawer(nullptr),
 	playerRigidBodyState(nullptr),
 	gameObjects(objects),
-	triggerObjects(triggers),
 	playerObject(player),
 	defaultGravity(0, -9.81f, 0)
 {

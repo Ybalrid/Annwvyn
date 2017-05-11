@@ -468,6 +468,7 @@ void AnnEventManager::playerCollision(void* object)
 		e.sender = triggerObject;
 		e.contact = true;
 		e.populate();
+		triggerEventBuffer.push_back(e);
 	}
 }
 

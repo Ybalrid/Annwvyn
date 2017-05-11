@@ -77,8 +77,8 @@ namespace Annwvyn
 		///After initialization
 		DEPRECATED virtual void postInit() { return; }
 
-		btRigidBody* body;
-		btCollisionShape* shape;
+		std::unique_ptr<btRigidBody> body;
+		std::unique_ptr<btCollisionShape> shape;
 	};
 }
 
