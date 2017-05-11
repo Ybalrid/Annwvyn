@@ -19,6 +19,8 @@ AnnQuaternion::AnnQuaternion(const AnnVect3* vectorArray) : Quaternion(vectorArr
 
 AnnQuaternion::AnnQuaternion(float* floatArray) : Quaternion(floatArray) { init(); }
 
+AnnQuaternion::AnnQuaternion(const btQuaternion& q) : Quaternion(q.w(), q.x(), q.y(), q.z()) { init(); }
+
 AnnQuaternion::AnnQuaternion(bool validState) : Quaternion() { init(); valid = validState; }
 
 AnnVect3 AnnQuaternion::getAtVector() const

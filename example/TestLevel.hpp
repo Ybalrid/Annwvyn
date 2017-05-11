@@ -84,10 +84,6 @@ public:
 		Sign->setUpPhysics(0, staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
-		auto t(AnnGetGameObjectManager()->createTriggerObject(std::make_shared<AnnAlignedBoxTriggerObject>()));
-		dynamic_cast<AnnAlignedBoxTriggerObject*>(t.get())->setBoundaries(-1, 1, -1, 1, -1, 1);
-		levelTrigger.push_back(t);
-
 		//Put some music here
 		//AnnGetAudioEngine()->playBGM("media/bgm/bensound-happyrock.ogg", 0.4);
 

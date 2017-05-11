@@ -37,6 +37,8 @@ namespace Annwvyn
 		AnnQuaternion(const AnnVect3* vectorArray);
 		///Construct from a float array
 		AnnQuaternion(float* floatArray);
+		///Constrruct from a bullet Quaternion
+		AnnQuaternion(const btQuaternion& q);
 
 		//Custom Annwvyn part
 
@@ -55,7 +57,7 @@ namespace Annwvyn
 		AnnQuaternion(bool validState);
 	private:
 		///Set valid to true
-		void init();
+		inline void init();
 		///Validity boolean
 		bool valid;
 	};

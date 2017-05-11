@@ -387,7 +387,6 @@ void AnnEventManager::processTriggerEvents()
 			(*triggerIterator).validate();
 			if (auto listener = (*listenerIterator).lock())
 				listener->TriggerEvent(*triggerIterator);
-			(*triggerIterator).getSender()->atContact();
 		}
 	triggerEventBuffer.clear();
 }
@@ -458,7 +457,18 @@ void AnnEventManager::detectedCollision(void* a, void* b)
 
 void AnnEventManager::playerCollision(void* object)
 {
-	playerCollisionBuffer.push_back(static_cast<AnnGameObject*>(object));
+	auto movable = static_cast<AnnAbstractMovable*>(object);
+	if (auto gameObject = dynamic_cast<AnnGameObject*>(movable))
+	{
+		playerCollisionBuffer.push_back(gameObject);
+	}
+	else if (auto triggerObject = dynamic_cast<AnnTriggerObject*>(movable))
+	{
+		AnnTriggerEvent e;
+		e.sender = triggerObject;
+		e.contact = true;
+		e.populate();
+	}
 }
 
 void AnnEventManager::keyboardUsedForText(bool state)
