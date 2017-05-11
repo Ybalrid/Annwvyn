@@ -71,9 +71,9 @@ void AnnLevel::addManualMovableObject(std::shared_ptr<AnnAbstractMovable> movabl
 	levelMovable.push_back(movable);
 }
 
-std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::shared_ptr<AnnTriggerObject> obj, std::string id)
+std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::string id)
 {
-	AnnGetGameObjectManager()->createTriggerObject(obj);
+	auto obj = AnnGetGameObjectManager()->createTriggerObject();
 	levelTrigger.push_back(obj);
 	levelTriggerIdMap[id] = obj;
 	return obj;

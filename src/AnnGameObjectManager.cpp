@@ -129,11 +129,11 @@ std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject()
 	return Light;
 }
 
-std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
+std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject()
 {
 	AnnDebug("Creating a trigger object");
+	auto trigger = std::make_shared <AnnTriggerObject>();
 	Triggers.push_back(trigger);
-	trigger->postInit();
 	return trigger;
 }
 

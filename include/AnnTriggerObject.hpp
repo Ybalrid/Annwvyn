@@ -18,6 +18,14 @@ namespace Annwvyn
 	class AnnEngine;
 	class AnnPhysicsGameEngine;
 
+	class DLL AnnTriggerObjectShapeGenerator
+	{
+	public:
+		AnnTriggerObjectShapeGenerator() = delete;
+		static btCollisionShape* box(const float& w, const float& h, const float& l);
+		static btCollisionShape* sphere(const float& r);
+	};
+
 	///Object for representing a volume that trigger an event
 	class DLL AnnTriggerObject : public AnnAbstractMovable
 	{
@@ -46,6 +54,9 @@ namespace Annwvyn
 
 		///When contact happened
 		DEPRECATED virtual void atContact() { return; }
+
+		///Set the shape of the object
+		void setShape(btCollisionShape* shp);
 
 	private:
 
