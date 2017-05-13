@@ -9,6 +9,8 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 
+build/
+
 # generated shader file in the example and template directiory
 example/*.glsl
 template/*.glsl
