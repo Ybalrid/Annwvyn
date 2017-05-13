@@ -23,10 +23,32 @@ public:
 		AnnDebug() << "Demo hub destructed!";
 	}
 
+	AnnTriggerObject* createStone(const AnnVect3& position, const AnnQuaternion& orientation, const std::string& text)
+	{
+		auto stone = addGameObject("DemoStone.mesh");
+		stone->setPosition(position);
+		stone->setOrientation(orientation);
+		stone->setUpPhysics();
+
+		auto textpane = std::make_shared<Ann3DTextPlane>(2.f, 1.f, text, 512, panelDpi, "PannelFont");
+		textpane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
+		textpane->setTextColor(AnnColor{ 0, 0, 0 });
+		textpane->setPosition(position + orientation * AnnVect3{ 0, 2.f, -0.35f });
+		textpane->setOrientation(stone->getOrientation());
+		textpane->update();
+		addManualMovableObject(textpane);
+
+		auto trigger = addTrggerObject();
+		trigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.f));
+		trigger->setPosition(position + AnnVect3(0, 1.f, 0));
+
+		return trigger.get();
+	}
+
 	void load() override
 	{
 		AnnDebug("DemoHub");
-		////Register ourselves as event listener
+		//Register ourselves as event listener
 		AnnGetEventManager()->addListener(getSharedListener());
 
 		//AnnGetSceneryManager()->setAmbientLight(AnnColor(0, 0, 0), 0, AnnColor(0, 0, 0), 0, AnnVect3::NEGATIVE_UNIT_Y);
@@ -36,8 +58,8 @@ public:
 		//Some ambient lighting is needed
 
 		AnnGetPlayer()->teleport({ 0, 2, 0.125f }, 0);
-		//Add static geometry
 
+		//Add static geometry
 		auto pbrTest = addGameObject("SubstanceSphereDecimated.mesh");
 		pbrTest->setPosition({ -1, 1.5f, -2 });
 		pbrTest->playSound("beep.wav", true, 0.5);
@@ -48,59 +70,9 @@ public:
 
 		AnnGetPlayer()->regroundOnPhysicsBody();
 
-		auto StoneDemo0 = addGameObject("DemoStone.mesh");
-		StoneDemo0->setPosition({ -6, 0, -5 });
-		StoneDemo0->setOrientation({ AnnDegree(45), AnnVect3::UNIT_Y });
-		StoneDemo0->setUpPhysics();
-
-		auto TextPane = std::make_shared<Ann3DTextPlane>(2.f, 1.f, "Demo 0\nDemo the loading of a demo... xD", 512, panelDpi);
-		TextPane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
-		TextPane->setTextColor(AnnColor{ 0, 0, 0 });
-		TextPane->setPosition(StoneDemo0->getPosition() + StoneDemo0->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
-		TextPane->setOrientation(StoneDemo0->getOrientation());
-		TextPane->update();
-		addManualMovableObject(TextPane);
-
-		auto Demo0Trigger(addTrggerObject());
-		Demo0Trigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
-		Demo0Trigger->setPosition(StoneDemo0->getPosition() + AnnVect3(0, 0.5f, 0));
-		Demo0Trig = Demo0Trigger.get();
-
-		auto StoneTestLevel = addGameObject("DemoStone.mesh");
-		StoneTestLevel->setPosition({ +0, 0, -7 });
-		StoneTestLevel->setOrientation(AnnQuaternion(AnnDegree(0), AnnVect3::UNIT_Y));
-		StoneTestLevel->setUpPhysics();
-
-		auto TestLevelText = std::make_shared<Ann3DTextPlane>(2.f, 1.f, "TestLevel\nA simple test level", 512, panelDpi);
-		TestLevelText->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
-		TestLevelText->setTextColor(AnnColor{ 0, 0, 0 });
-		TestLevelText->setPosition(StoneTestLevel->getPosition() + StoneTestLevel->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
-		TestLevelText->setOrientation(StoneTestLevel->getOrientation());
-		TestLevelText->update();
-		addManualMovableObject(TestLevelText);
-
-		auto TestLevelTrigger = (addTrggerObject());
-		TestLevelTrigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
-		TestLevelTrigger->setPosition(StoneTestLevel->getPosition() + AnnVect3(0, 0.5f, 0));
-		TestLevelTrig = TestLevelTrigger.get();
-
-		auto StoneEvent = addGameObject("DemoStone.mesh");
-		StoneEvent->setPosition({ +6, 0, -5 });
-		StoneEvent->setOrientation(AnnQuaternion(AnnDegree(-45), AnnVect3::UNIT_Y));
-		StoneEvent->setUpPhysics();
-
-		auto EventText = std::make_shared<Ann3DTextPlane>(2.f, 1.f, "DemoEvent\nShows user-defined events in action", 512, panelDpi);
-		EventText->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
-		EventText->setTextColor(AnnColor{ 0, 0, 0 });
-		EventText->setPosition(StoneEvent->getPosition() + StoneEvent->getOrientation()*  AnnVect3 { 0, 2, -0.35 });
-		EventText->setOrientation(StoneEvent->getOrientation());
-		EventText->update();
-		addManualMovableObject(EventText);
-
-		auto EventTrigger = (addTrggerObject());
-		EventTrigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
-		EventTrigger->setPosition(StoneEvent->getPosition() + AnnVect3(0, 0.5f, 0));
-		EventTrig = EventTrigger.get();
+		Demo0Trig = createStone({ -6, 0, -5 }, { AnnDegree(45), AnnVect3::UNIT_Y }, "Demo 0\nDemo the loading of a demo... xD");
+		TestLevelTrig = createStone({ 0,0,-7 }, AnnQuaternion::IDENTITY, "TestLevel\nA simple test level");
+		EventTrig = createStone({ 6,0,-5 }, { AnnDegree(-45), AnnVect3::UNIT_Y }, "DemoEvent\nShows user-defined events in action");
 
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
