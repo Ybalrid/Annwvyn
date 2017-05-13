@@ -25,7 +25,7 @@ protected:
 		AnnGetPlayer()->regroundOnPhysicsBody();
 	}
 
-	decltype(auto) loadTextPannel(const std::string& text, const float& w = 2, const float& h = 1.5, const float& fontSize = 200, const float& ppi = 12)
+	decltype(auto) loadTextPannel(const std::string& text, const float& w = 2, const float& h = 1.5, const int& fontSize = 200, const float& ppi = 12)
 	{
 		auto explaination = std::make_shared<Ann3DTextPlane>(w, h, text, fontSize, ppi, "TutorialFont");
 		explaination->setTextAlign(Ann3DTextPlane::TextAlign::ALIGN_LEFT);

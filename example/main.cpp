@@ -91,7 +91,7 @@ AnnMain()
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 	AnnGetLevelManager()->addLevel(make_shared<DemoEvent>());
 
-	AnnGetLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getFirstLevelLoaded(), 1));
+	AnnGetLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getFirstLevelLoaded(), 1.f));
 
 	//ask the level manager to perform a jump to the last level
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
