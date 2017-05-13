@@ -11,7 +11,7 @@ namespace Annwvyn
 	class DLL AnnAbstractTranslatable
 	{
 	public:
-		virtual ~AnnAbstractTranslatable() {}
+		virtual ~AnnAbstractTranslatable() = default;
 	protected:
 		virtual void setPosition(AnnVect3 position) = 0;
 		virtual AnnVect3 getPosition() = 0;
@@ -20,6 +20,8 @@ namespace Annwvyn
 	///Abstract Class that represent an bobject that you can set the orientation.
 	class DLL AnnAbstractMovable : public AnnAbstractTranslatable
 	{
+	public:
+		virtual ~AnnAbstractMovable() = default;
 	protected:
 		virtual void setOrientation(AnnQuaternion quaternion) = 0;
 		virtual AnnQuaternion getOrientation() = 0;

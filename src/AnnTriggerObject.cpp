@@ -5,21 +5,45 @@
 
 using namespace Annwvyn;
 
+btCollisionShape* AnnTriggerObjectShapeGenerator::box(const float& w, const float& h, const float &l)
+{
+	AnnVect3 half = AnnVect3(w, h, l) / 2.f;
+	return new btBoxShape(half.getBtVector());
+}
+
+btCollisionShape* AnnTriggerObjectShapeGenerator::sphere(const float& r)
+{
+	return new btSphereShape(r);
+}
+
 AnnTriggerObject::AnnTriggerObject() :
-	position(Ogre::Vector3(0, 0, 0)),
 	contactWithPlayer(false),
-	lastFrameContactWithPlayer(false)
+	lastFrameContactWithPlayer(false),
+	body(nullptr),
+	shape(nullptr)
 {
 }
 
 AnnTriggerObject::~AnnTriggerObject()
 {
 	AnnDebug() << "AnnTriggerObject destructor called";
+	AnnGetPhysicsEngine()->removeRigidBody(body.get());
 }
 
 void AnnTriggerObject::setPosition(AnnVect3 pos)
 {
-	position = pos;
+	if (!body) return;
+	auto transform = body->getWorldTransform();
+	transform.setOrigin(pos.getBtVector());
+	body->setWorldTransform(transform);
+}
+
+void AnnTriggerObject::setOrientation(AnnQuaternion orient)
+{
+	if (!body) return;
+	auto transform = body->getWorldTransform();
+	transform.setRotation(orient.getBtQuaternion());
+	body->setWorldTransform(transform);
 }
 
 bool AnnTriggerObject::getContactInformation() const
@@ -29,64 +53,39 @@ bool AnnTriggerObject::getContactInformation() const
 
 AnnVect3 AnnTriggerObject::getPosition()
 {
-	return position;
+	if (body)
+		return{ body->getWorldTransform().getOrigin() };
+	return{};
+}
+
+AnnQuaternion AnnTriggerObject::getOrientation()
+{
+	if (body)
+		return{ body->getWorldTransform().getRotation() };
+	return{};
+}
+
+void AnnTriggerObject::setShape(btCollisionShape* shp)
+{
+	if (shape)
+	{
+		shape = nullptr;
+	}
+	if (body)
+	{
+		AnnGetPhysicsEngine()->removeRigidBody(body.get());
+		body = nullptr;
+	}
+
+	shape.reset(shp);
+	body = std::make_unique<btRigidBody>(0, nullptr, shape.get());
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+	body->setUserPointer(static_cast<void*>(this));
+	AnnGetPhysicsEngine()->getWorld()->addRigidBody(body.get());
 }
 
 void AnnTriggerObject::setContactInformation(bool contact)
 {
 	lastFrameContactWithPlayer = contactWithPlayer;
 	contactWithPlayer = contact;
-}
-
-float AnnSphericalTriggerObject::getThreshold() const
-{
-	return threshold;
-}
-
-void AnnSphericalTriggerObject::setThreshold(float newThreshold)
-{
-	threshold = newThreshold;
-	squaredThreshold = threshold*threshold;
-}
-
-AnnSphericalTriggerObject::AnnSphericalTriggerObject() : AnnTriggerObject(),
-threshold(1),
-squaredThreshold()
-{
-}
-
-bool AnnSphericalTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer> player)
-{
-	return getPosition().squaredDistance(player->getPosition()) <= squaredThreshold;
-}
-
-AnnAlignedBoxTriggerObject::AnnAlignedBoxTriggerObject() : AnnTriggerObject(),
-xMin(0),
-xMax(0),
-yMin(0),
-yMax(0),
-zMin(0),
-zMax(0)
-{
-}
-
-void AnnAlignedBoxTriggerObject::setBoundaries(float x1, float x2, float y1, float y2, float z1, float z2)
-{
-	xMin = x1;
-	xMax = x2;
-	yMin = y1;
-	yMax = y2;
-	zMin = z1;
-	zMax = z2;
-}
-
-bool AnnAlignedBoxTriggerObject::computeVolumetricTest(std::shared_ptr<AnnPlayer> player)
-{
-	auto pos(player->getPosition());
-
-	if ((pos.x >= xMin && pos.x <= xMax) &&
-		(pos.y >= yMin && pos.y <= yMax) &&
-		(pos.z >= zMin && pos.z <= zMax))
-		return true;
-	return false;
 }

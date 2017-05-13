@@ -52,7 +52,7 @@ namespace Annwvyn
 
 		///Create a trigger object
 		/// \param trigger an empty trigger object
-		std::shared_ptr<AnnTriggerObject> createTriggerObject(std::shared_ptr<AnnTriggerObject> trigger = std::make_shared<AnnSphericalTriggerObject>()); //object factory
+		std::shared_ptr<AnnTriggerObject> createTriggerObject(); //object factory
 
 		///Remove the object from the engine
 		void removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger);
