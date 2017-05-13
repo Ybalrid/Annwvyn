@@ -5,14 +5,13 @@
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
-	std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects) : AnnSubSystem("PhysicsEngie"),
+	std::shared_ptr<AnnPlayer> player) : AnnSubSystem("PhysicsEngie"),
 	Broadphase(nullptr),
 	CollisionConfiguration(nullptr),
 	Solver(nullptr),
 	DynamicsWorld(nullptr),
 	debugDrawer(nullptr),
 	playerRigidBodyState(nullptr),
-	gameObjects(objects),
 	playerObject(player),
 	defaultGravity(0, -9.81f, 0)
 {
@@ -54,14 +53,16 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 
 	//Get inertia vector
 	btVector3 inertia;
-	playerObject->getShape()->calculateLocalInertia(playerObject->getMass(), inertia);
+	auto playerShape = playerObject->getShape();
+	const auto playerMass = playerObject->getMass();
+	playerShape->calculateLocalInertia(playerMass, inertia);
 
 	//Set the body to the player
 	auto body = new btRigidBody
 	{
-		playerObject->getMass(),
+		playerMass,
 		playerRigidBodyState,
-		playerObject->getShape(),
+		playerShape,
 		inertia
 	};
 
@@ -111,13 +112,18 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body) const
 
 void AnnPhysicsEngine::setDebugPhysics(bool state)
 {
-	debugPhysics = state;
-	if (debugPhysics)
+	if (state)
+	{
 		debugDrawer->setDebugMode(btIDebugDraw::DBG_DrawWireframe
 			| btIDebugDraw::DBG_FastWireframe
 			| btIDebugDraw::DBG_DrawContactPoints);
+	}
 	else
+	{
 		debugDrawer->setDebugMode(0);
+	}
+
+	debugPhysics = state;
 	debugDrawer->step();
 }
 
