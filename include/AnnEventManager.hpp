@@ -671,10 +671,6 @@ namespace Annwvyn
 		///Process user event dispatch()
 		void processUserSpaceEvents();
 
-		// TODO get rid of the shared pointer here
-		///Register trigger event for next triggerProcess by the engine
-		void spatialTrigger(std::shared_ptr<AnnTriggerObject> sender);
-
 		///Hook for the physics engine to signal collisions
 		void detectedCollision(void* a, void* b);
 

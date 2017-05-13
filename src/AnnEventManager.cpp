@@ -39,7 +39,7 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	//If backspace, pop last char if possible
 	if (arg.key == OIS::KC_BACK && !input.empty())
 		input.pop_back();
-	else if ((arg.text < 127 && arg.text > 31) || arg.text == 13 || !asciiOnly)
+	else if (arg.text < 127 && arg.text > 31 || arg.text == 13 || !asciiOnly)
 		//Put typed char into the application
 		input.push_back(char(arg.text));
 	return true;
@@ -385,52 +385,38 @@ void AnnEventManager::processTriggerEvents()
 			(*triggerIterator).validate();
 			if (auto listener = (*listenerIterator).lock())
 				listener->TriggerEvent(*triggerIterator);
-			(*triggerIterator).getSender()->atContact();
 		}
 	triggerEventBuffer.clear();
 }
 
 void AnnEventManager::processCollisionEvents()
 {
-	for (auto weakListener : listeners)
-		if (auto listener = weakListener.lock())
+	for (auto weakListener : listeners) if (auto listener = weakListener.lock())
+	{
+		for (auto& collisionPair : collisionBuffer)
 		{
-			for (auto& collisionPair : collisionBuffer)
+			const auto aMov = static_cast<AnnAbstractMovable*>(collisionPair.first);
+			const auto bMov = static_cast<AnnAbstractMovable*>(collisionPair.second);
+			if (auto a = dynamic_cast<AnnGameObject*>(aMov)) if (auto b = dynamic_cast<AnnGameObject*>(bMov))
 			{
-				AnnCollisionEvent e
-				{
-					static_cast<AnnGameObject*>(collisionPair.first),
-					static_cast<AnnGameObject*>(collisionPair.second)
-				};
-
+				AnnCollisionEvent e{ a, b };
 				e.populate();
 				e.validate();
-
 				listener->CollisionEvent(e);
-			}
-
-			for (auto playerCollision : playerCollisionBuffer)
-			{
-				AnnPlayerCollisionEvent e{ playerCollision };
-
-				e.populate();
-				e.validate();
-
-				listener->PlayerCollisionEvent(e);
 			}
 		}
 
+		for (auto playerCollision : playerCollisionBuffer)
+		{
+			AnnPlayerCollisionEvent e{ playerCollision };
+			e.populate();
+			e.validate();
+			listener->PlayerCollisionEvent(e);
+		}
+	}
+
 	collisionBuffer.clear();
 	playerCollisionBuffer.clear();
-}
-
-void AnnEventManager::spatialTrigger(std::shared_ptr<AnnTriggerObject> sender)
-{
-	AnnTriggerEvent e;
-	e.sender = sender.get();
-	e.contact = sender->getContactInformation();
-	e.populate();
-	triggerEventBuffer.push_back(e);
 }
 
 size_t AnnEventManager::getNbStick() const
@@ -456,7 +442,19 @@ void AnnEventManager::detectedCollision(void* a, void* b)
 
 void AnnEventManager::playerCollision(void* object)
 {
-	playerCollisionBuffer.push_back(static_cast<AnnGameObject*>(object));
+	auto movable = static_cast<AnnAbstractMovable*>(object);
+	if (auto gameObject = dynamic_cast<AnnGameObject*>(movable))
+	{
+		playerCollisionBuffer.push_back(gameObject);
+	}
+	else if (auto triggerObject = dynamic_cast<AnnTriggerObject*>(movable))
+	{
+		AnnTriggerEvent e;
+		e.sender = triggerObject;
+		e.contact = true;
+		e.populate();
+		triggerEventBuffer.push_back(e);
+	}
 }
 
 void AnnEventManager::keyboardUsedForText(bool state)

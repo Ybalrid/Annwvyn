@@ -29,7 +29,7 @@ namespace Annwvyn
 	public:
 
 		///Create the physics engine
-		AnnPhysicsEngine(Ogre::SceneNode* rootNode, std::shared_ptr<AnnPlayer> player, AnnGameObjectList& objects, AnnTriggerObjectList& triggers);
+		AnnPhysicsEngine(Ogre::SceneNode* rootNode, std::shared_ptr<AnnPlayer> player);
 
 		///Destroy the physics engine
 		~AnnPhysicsEngine();
@@ -53,16 +53,13 @@ namespace Annwvyn
 		///Process the collision query system
 		void processCollisionTesting() const;
 
-		///Process triggers contact event
-		void processTriggersContacts() const;
-
 		///Remove a body from simulation
 		void removeRigidBody(btRigidBody* body) const;
 
-		///Init the class "standing" desinged for the Oculus physics where the player is not moving in the room at all
+		///Init the class "standing" designed for the Oculus physics where the player is not moving in the room at all
 		void initPlayerStandingPhysics(Ogre::SceneNode* playerAnchorNode);
 
-		///Init the "roomscale" physics model where the controlls don't break when the player move is ass in the real world
+		///Init the "room-scale" physics model where the controls don't break when the player move is ass in the real world
 		void initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorNode) const;
 
 		///Set the debug drawer state
@@ -110,14 +107,8 @@ namespace Annwvyn
 		///Debug drawer object from BtOgre
 		std::unique_ptr<BtOgre::DebugDrawer> debugDrawer;
 
-		///Rigid body state from Bt ogre for the Player object
+		///Rigid body state from BtOgre for the Player object
 		BtOgre::RigidBodyState* playerRigidBodyState;
-
-		///Reference to the list of all game object
-		AnnGameObjectList& gameObjects;
-
-		///Reference to the list of all trigger objects
-		AnnTriggerObjectList& triggerObjects;
 
 		///Shared pointer to the player
 		std::shared_ptr<AnnPlayer> playerObject;

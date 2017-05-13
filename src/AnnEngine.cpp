@@ -155,9 +155,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	SubSystemList.push_back
 	(physicsEngine = std::make_shared<AnnPhysicsEngine>(
 		getSceneManager()->getRootSceneNode(),
-		player,
-		gameObjectManager->Objects,
-		gameObjectManager->Triggers));
+		player));
 
 	SubSystemList.push_back
 	(eventManager = std::make_shared< AnnEventManager>

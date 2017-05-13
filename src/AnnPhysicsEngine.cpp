@@ -5,16 +5,13 @@
 using namespace Annwvyn;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
-	std::shared_ptr<AnnPlayer> player, AnnGameObjectList & objects,
-	AnnTriggerObjectList & triggers) : AnnSubSystem("PhysicsEngie"),
+	std::shared_ptr<AnnPlayer> player) : AnnSubSystem("PhysicsEngie"),
 	Broadphase(nullptr),
 	CollisionConfiguration(nullptr),
 	Solver(nullptr),
 	DynamicsWorld(nullptr),
 	debugDrawer(nullptr),
 	playerRigidBodyState(nullptr),
-	gameObjects(objects),
-	triggerObjects(triggers),
 	playerObject(player),
 	defaultGravity(0, -9.81f, 0)
 {
@@ -56,21 +53,26 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 
 	//Get inertia vector
 	btVector3 inertia;
-	playerObject->getShape()->calculateLocalInertia(playerObject->getMass(), inertia);
+	auto playerShape = playerObject->getShape();
+	const auto playerMass = playerObject->getMass();
+	playerShape->calculateLocalInertia(playerMass, inertia);
 
 	//Set the body to the player
-	auto body = new btRigidBody(
-		playerObject->getMass(),
+	auto body = new btRigidBody
+	{
+		playerMass,
 		playerRigidBodyState,
-		playerObject->getShape(),
-		inertia);
+		playerShape,
+		inertia
+	};
+
 	playerObject->setBody(body);
 }
 
 void AnnPhysicsEngine::createVirtualBodyShape(float radius) const
 {
 	//remove the diameter of the two half sphere on top and bottom of the capsule
-	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
+	playerObject->setShape(new btCapsuleShape{ radius, playerObject->getEyesHeight() - 2 * radius });
 }
 
 btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld() const
@@ -91,7 +93,7 @@ void AnnPhysicsEngine::stepDebugDrawer() const
 
 void AnnPhysicsEngine::processCollisionTesting() const
 {
-	auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
+	const auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
 	for (auto i{ 0 }; i < nbManifold; ++i)
 	{
 		auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
@@ -110,26 +112,19 @@ void AnnPhysicsEngine::removeRigidBody(btRigidBody* body) const
 
 void AnnPhysicsEngine::setDebugPhysics(bool state)
 {
-	debugPhysics = state;
-	if (debugPhysics)
+	if (state)
+	{
 		debugDrawer->setDebugMode(btIDebugDraw::DBG_DrawWireframe
 			| btIDebugDraw::DBG_FastWireframe
-			| btIDebugDraw::DBG_DrawAabb
 			| btIDebugDraw::DBG_DrawContactPoints);
-	else
-		debugDrawer->setDebugMode(0);
-	debugDrawer->step();
-}
-
-void AnnPhysicsEngine::processTriggersContacts() const
-{
-	for (auto trigger : triggerObjects)
-	{
-		trigger->setContactInformation(trigger->computeVolumetricTest(playerObject));
-		if (!trigger->lastFrameContactWithPlayer && trigger->contactWithPlayer ||
-			trigger->lastFrameContactWithPlayer && !trigger->contactWithPlayer)
-			AnnGetEventManager()->spatialTrigger(trigger);
 	}
+	else
+	{
+		debugDrawer->setDebugMode(0);
+	}
+
+	debugPhysics = state;
+	debugDrawer->step();
 }
 
 void AnnPhysicsEngine::changeGravity(AnnVect3 gravity) const
@@ -144,7 +139,6 @@ void AnnPhysicsEngine::resetGravity() const
 
 void AnnPhysicsEngine::update()
 {
-	processTriggersContacts();
 	stepDebugDrawer();
 	step(AnnGetEngine()->getFrameTime());
 	processCollisionTesting();
@@ -159,7 +153,6 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 {
 	playerObject->setMode(ROOMSCALE);
 	AnnDebug() << "Initializing player's physics in RoomScale mode";
-	AnnDebug() << "Player can walk around";
 
 	btCollisionShape* sphere = new btSphereShape(0.25f);
 	auto body = new btRigidBody(0, nullptr, sphere);
@@ -173,8 +166,7 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)
 {
 	playerObject->setMode(STANDING);
-	AnnDebug() << "Initializing player's physics  in standing mode";
-	AnnDebug() << "Capsule RigidBody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
+	AnnDebug() << "Player's Capsule RigidBody : " << playerObject->getMass() << "Kg" << playerObject->getEyesHeight();
 	createVirtualBodyShape();
 	createPlayerPhysicalVirtualBody(node);
 	addPlayerPhysicalBodyToDynamicsWorld();

@@ -72,7 +72,7 @@ namespace Annwvyn
 		std::shared_ptr<AnnLightObject> addLightObject(std::string id = noID);
 
 		///Add a trigger object to the level
-		std::shared_ptr<AnnTriggerObject> addTrggerObject(std::shared_ptr<AnnTriggerObject> obj = std::make_shared<AnnSphericalTriggerObject>(), std::string id = noID);
+		std::shared_ptr<AnnTriggerObject> addTrggerObject(std::string id = noID);
 
 		///Add a Game object to the level
 		std::shared_ptr<AnnGameObject> addGameObject(std::string entityName, std::string name = "");
