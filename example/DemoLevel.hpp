@@ -13,6 +13,9 @@ class DemoHub : LEVEL, LISTENER
 public:
 
 	DemoHub() : constructLevel(), constructListener(),
+		Demo0Trig(nullptr),
+		TestLevelTrig(nullptr),
+		EventTrig(nullptr),
 		rotating(nullptr),
 		panelDpi(18)
 	{
@@ -39,8 +42,8 @@ public:
 		addManualMovableObject(textpane);
 
 		auto trigger = addTrggerObject();
-		trigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.f));
-		trigger->setPosition(position + AnnVect3(0, 1.f, 0));
+		trigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.25f));
+		trigger->setPosition(position + AnnVect3(0, 1.2f, 0));
 
 		return trigger.get();
 	}
@@ -50,12 +53,8 @@ public:
 		AnnDebug("DemoHub");
 		//Register ourselves as event listener
 		AnnGetEventManager()->addListener(getSharedListener());
-
-		//AnnGetSceneryManager()->setAmbientLight(AnnColor(0, 0, 0), 0, AnnColor(0, 0, 0), 0, AnnVect3::NEGATIVE_UNIT_Y);
-
 		AnnGetSceneryManager()->setExposure(1.0f, -2, +2);
 		AnnGetSceneryManager()->setBloomThreshold(8);
-		//Some ambient lighting is needed
 
 		AnnGetPlayer()->teleport({ 0, 2, 0.125f }, 0);
 
@@ -71,8 +70,8 @@ public:
 		AnnGetPlayer()->regroundOnPhysicsBody();
 
 		Demo0Trig = createStone({ -6, 0, -5 }, { AnnDegree(45), AnnVect3::UNIT_Y }, "Demo 0\nDemo the loading of a demo... xD");
-		TestLevelTrig = createStone({ 0,0,-7 }, AnnQuaternion::IDENTITY, "TestLevel\nA simple test level");
-		EventTrig = createStone({ 6,0,-5 }, { AnnDegree(-45), AnnVect3::UNIT_Y }, "DemoEvent\nShows user-defined events in action");
+		TestLevelTrig = createStone({ 0, 0, -7 }, AnnQuaternion::IDENTITY, "TestLevel\nA simple test level");
+		EventTrig = createStone({ 6, 0, -5 }, { AnnDegree(-45), AnnVect3::UNIT_Y }, "DemoEvent\nShows user-defined events in action");
 
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
@@ -176,10 +175,6 @@ public:
 		goBackListener.reset();
 
 		AnnLevel::unload();
-	}
-
-	void triggerEventCallback(AnnTriggerEvent e)
-	{
 	}
 
 	void runLogic() override

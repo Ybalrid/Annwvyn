@@ -57,18 +57,21 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 	playerObject->getShape()->calculateLocalInertia(playerObject->getMass(), inertia);
 
 	//Set the body to the player
-	auto body = new btRigidBody(
+	auto body = new btRigidBody
+	{
 		playerObject->getMass(),
 		playerRigidBodyState,
 		playerObject->getShape(),
-		inertia);
+		inertia
+	};
+
 	playerObject->setBody(body);
 }
 
 void AnnPhysicsEngine::createVirtualBodyShape(float radius) const
 {
 	//remove the diameter of the two half sphere on top and bottom of the capsule
-	playerObject->setShape(new btCapsuleShape(radius, playerObject->getEyesHeight() - 2 * radius));
+	playerObject->setShape(new btCapsuleShape{ radius, playerObject->getEyesHeight() - 2 * radius });
 }
 
 btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld() const
@@ -112,7 +115,6 @@ void AnnPhysicsEngine::setDebugPhysics(bool state)
 	if (debugPhysics)
 		debugDrawer->setDebugMode(btIDebugDraw::DBG_DrawWireframe
 			| btIDebugDraw::DBG_FastWireframe
-			| btIDebugDraw::DBG_DrawAabb
 			| btIDebugDraw::DBG_DrawContactPoints);
 	else
 		debugDrawer->setDebugMode(0);
