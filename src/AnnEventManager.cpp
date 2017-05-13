@@ -42,8 +42,6 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	else if ((arg.text < 127 && arg.text > 31) || arg.text == 13 || !asciiOnly)
 		//Put typed char into the application
 		input.push_back(char(arg.text));
-	//AnnDebug() << "typed char as code " << arg.text;
-	//AnnDebug() << "typed char as char " << char(arg.text);
 	return true;
 }
 
