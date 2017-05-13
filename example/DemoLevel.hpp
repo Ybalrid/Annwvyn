@@ -64,7 +64,7 @@ public:
 		auto Demo0Trigger(addTrggerObject());
 		Demo0Trigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
 		Demo0Trigger->setPosition(StoneDemo0->getPosition() + AnnVect3(0, 0.5f, 0));
-		Demo0Trig = Demo0Trigger;
+		Demo0Trig = Demo0Trigger.get();
 
 		auto StoneTestLevel = addGameObject("DemoStone.mesh");
 		StoneTestLevel->setPosition({ +0, 0, -7 });
@@ -82,7 +82,7 @@ public:
 		auto TestLevelTrigger = (addTrggerObject());
 		TestLevelTrigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
 		TestLevelTrigger->setPosition(StoneTestLevel->getPosition() + AnnVect3(0, 0.5f, 0));
-		TestLevelTrig = TestLevelTrigger;
+		TestLevelTrig = TestLevelTrigger.get();
 
 		auto StoneEvent = addGameObject("DemoStone.mesh");
 		StoneEvent->setPosition({ +6, 0, -5 });
@@ -100,7 +100,7 @@ public:
 		auto EventTrigger = (addTrggerObject());
 		EventTrigger->setShape(AnnTriggerObjectShapeGenerator::sphere(1.5));
 		EventTrigger->setPosition(StoneEvent->getPosition() + AnnVect3(0, 0.5f, 0));
-		EventTrig = EventTrigger;
+		EventTrig = EventTrigger.get();
 
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
@@ -122,9 +122,9 @@ public:
 		//Unregister the listener
 		AnnGetEventManager()->removeListener(getSharedListener());
 		AnnLevel::unload();
-		Demo0Trig.reset();
-		TestLevelTrig.reset();
-		EventTrig.reset();
+		Demo0Trig = nullptr;
+		TestLevelTrig = nullptr;
+		EventTrig = nullptr;
 		rotating = nullptr;
 	}
 
@@ -137,17 +137,17 @@ public:
 
 	void jumpToLevelTriggeredBy(AnnTriggerObject* trigger) const
 	{
-		if (Demo0Trig.get() == trigger)
+		if (Demo0Trig == trigger)
 		{
 			AnnGetLevelManager()->jump(getDemo(0));
 			return;
 		}
-		if (TestLevelTrig.get() == trigger)
+		if (TestLevelTrig == trigger)
 		{
 			AnnGetLevelManager()->jump(getDemo(1));
 			return;
 		}
-		if (EventTrig.get() == trigger)
+		if (EventTrig == trigger)
 		{
 			AnnGetLevelManager()->jump(getDemo(2));
 			return;
@@ -160,9 +160,9 @@ public:
 	}
 
 private:
-	std::shared_ptr<AnnTriggerObject> Demo0Trig;
-	std::shared_ptr<AnnTriggerObject> TestLevelTrig;
-	std::shared_ptr<AnnTriggerObject> EventTrig;
+	AnnTriggerObject* Demo0Trig;
+	AnnTriggerObject* TestLevelTrig;
+	AnnTriggerObject* EventTrig;
 
 	AnnGameObject* rotating;
 
