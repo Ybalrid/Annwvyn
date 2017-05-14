@@ -265,10 +265,7 @@ void OgreVRRender::updateTracking()
 void OgreVRRender::initPipeline()
 {
 	getOgreConfig();
-	if (rendererName.find("NoVR") != std::string::npos)
-		createWindow(1280, 720, true);
-	else
-		createWindow();
+	rendererName.find("NoVR") != std::string::npos ? createWindow(1280, 720, true) : createWindow();
 	initScene();
 	initCameras();
 	loadCompositor();
@@ -507,7 +504,7 @@ void OgreVRRender::handleWindowMessages()
 		window->resize(w, h);
 #endif
 	}
-	}
+}
 
 void OgreVRRender::logToOgre(const std::string& str)
 {
