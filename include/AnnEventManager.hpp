@@ -650,6 +650,12 @@ namespace Annwvyn
 
 		///Engine call for refreshing the event system
 		void update() override;
+		void captureEvents();
+		void processKeyboardEvents();
+		void processMouseEvents();
+		void processJoystickEvents();
+		void processHandControllerEvents();
+		void pushEventsToListeners();
 		///Process user inputs
 		void processInput();
 		///Process timers
@@ -666,6 +672,11 @@ namespace Annwvyn
 
 		///Hook for the physics engine to signal player collision
 		void playerCollision(void* object);
+
+		std::vector<AnnKeyEvent> keyEventBuffer;
+		std::vector<AnnMouseEvent> mouseEventBuffer;
+		std::vector<AnnStickEvent> stickEventBuffer;
+		std::vector<AnnHandControllerEvent> handControllerEventBuffer;
 
 		///OIS Event Manager
 		OIS::InputManager *InputManager;
@@ -701,7 +712,7 @@ namespace Annwvyn
 		std::vector<AnnTriggerEvent> triggerEventBuffer;
 
 		///The text inputer object itself
-		AnnTextInputer* textInputer;
+		std::unique_ptr<AnnTextInputer> textInputer;
 
 		///Default event listener
 		std::shared_ptr<AnnDefaultEventListener> defaultEventListener;
