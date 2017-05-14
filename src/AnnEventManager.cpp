@@ -220,8 +220,6 @@ void AnnEventManager::processInput()
 				AnnKeyEvent e;
 				e.setCode(KeyCode::code(c));
 				e.setPressed();
-				e.populate();
-				e.validate();
 				e.ignored = keyboardIgnore;
 
 				for (auto weak_listener : listeners)
@@ -236,8 +234,6 @@ void AnnEventManager::processInput()
 				AnnKeyEvent e;
 				e.setCode(KeyCode::code(c));
 				e.setReleased();
-				e.populate();
-				e.validate();
 				e.ignored = keyboardIgnore;
 
 				for (auto weak_listener : listeners)
@@ -261,9 +257,6 @@ void AnnEventManager::processInput()
 		e.setAxisInformation(X, AnnMouseAxis(X, state.X.rel, state.X.abs));
 		e.setAxisInformation(Y, AnnMouseAxis(Y, state.Y.rel, state.Y.abs));
 		e.setAxisInformation(Z, AnnMouseAxis(Z, state.Z.rel, state.Z.abs));
-
-		e.populate();
-		e.validate();
 
 		for (auto& weak_listener : listeners)
 			if (auto listener = weak_listener.lock())
@@ -301,8 +294,6 @@ void AnnEventManager::processInput()
 		//Save current buttons state for next frame
 		Joystick->previousStickButtonStates = state.mButtons;
 		e.vendor = Joystick->stick->vendor();
-		e.populate();
-		e.validate();
 		e.stickID = Joystick->getID();
 		if (knowXbox)
 			if (e.stickID == xboxID)
@@ -320,8 +311,6 @@ void AnnEventManager::processInput()
 			if (!handController) continue;
 			AnnHandControllerEvent e;
 			e.sender = handController.get();
-			e.populate();
-			if (e.getController()) e.validate();
 
 			for (auto& weak_listener : listeners)
 				if (auto listener = weak_listener.lock())
@@ -362,9 +351,7 @@ void AnnEventManager::processTimers()
 		if ((*iterator).isTimeout())
 		{
 			AnnTimeEvent e;
-			e.populate();
 			e.setTimerID((*iterator).tID);
-			e.validate();
 			for (size_t i(0); i < listeners.size(); ++i)
 				if (auto listener = listeners[i].lock())
 					listener->TimeEvent(e);
@@ -382,7 +369,6 @@ void AnnEventManager::processTriggerEvents()
 	for (auto triggerIterator = triggerEventBuffer.begin(); triggerIterator != triggerEventBuffer.end(); ++triggerIterator)
 		for (auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); ++listenerIterator)
 		{
-			(*triggerIterator).validate();
 			if (auto listener = (*listenerIterator).lock())
 				listener->TriggerEvent(*triggerIterator);
 		}
@@ -400,8 +386,6 @@ void AnnEventManager::processCollisionEvents()
 			if (auto a = dynamic_cast<AnnGameObject*>(aMov)) if (auto b = dynamic_cast<AnnGameObject*>(bMov))
 			{
 				AnnCollisionEvent e{ a, b };
-				e.populate();
-				e.validate();
 				listener->CollisionEvent(e);
 			}
 		}
@@ -409,8 +393,6 @@ void AnnEventManager::processCollisionEvents()
 		for (auto playerCollision : playerCollisionBuffer)
 		{
 			AnnPlayerCollisionEvent e{ playerCollision };
-			e.populate();
-			e.validate();
 			listener->PlayerCollisionEvent(e);
 		}
 	}
@@ -452,7 +434,6 @@ void AnnEventManager::playerCollision(void* object)
 		AnnTriggerEvent e;
 		e.sender = triggerObject;
 		e.contact = true;
-		e.populate();
 		triggerEventBuffer.push_back(e);
 	}
 }
