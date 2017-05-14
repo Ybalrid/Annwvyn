@@ -1,8 +1,7 @@
 #include "stdafx.h"
-#include "AnnEventManager.hpp"
-#include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+#include "AnnDefaultEventListener.hpp"
 
 using namespace Annwvyn;
 
@@ -62,7 +61,7 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	//If the corresponding key is pressed, set the direction to true.
 	if (!e.shouldIgnore())
 	{
-        //Z and Q are hacks for supporting french AZERTY keyboard easilly
+		//Z and Q are hacks for supporting french AZERTY keyboard easilly
 		if (e.getKey() == forward || e.getKey() == KeyCode::z)
 			player->walking[walkDirection::forward] = e.isPressed();
 		if (e.getKey() == backward)

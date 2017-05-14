@@ -9,6 +9,7 @@ class GoBackToDemoHub : LISTENER
 public:
 	GoBackToDemoHub() : constructListener()
 	{
+		AnnDebug() << "constructed a GoBackToDemoHub listener";
 	}
 
 	void KeyEvent(AnnKeyEvent e) override
@@ -26,10 +27,6 @@ public:
 
 	void HandControllerEvent(AnnHandControllerEvent e) override
 	{
-		//e.getController()->rumbleStart(1);
-		//if (e.getController()->hasBeenPressed(1))
-		//	e.getController()->rumbleStop();
-
 		if (e.getController()->hasBeenPressed(3))
 			switch (e.getController()->getSide())
 			{
@@ -40,9 +37,13 @@ public:
 			}
 	}
 
+	void tick() override
+	{
+	}
+
 private:
 	// ReSharper disable once CppMemberFunctionMayBeStatic
-	void jumpToHub()
+	void jumpToHub() const
 	{
 		AnnGetLevelManager()->jumpToFirstLevel();
 	}
