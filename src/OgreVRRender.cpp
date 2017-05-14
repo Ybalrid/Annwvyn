@@ -24,15 +24,9 @@ bool OgreVRRender::UseSSAA{ false };
 
 void OgreVRRender::setAntiAliasingLevel(const uint8_t AA)
 {
-	static const std::array<const uint8_t, 5> AvailableAALevel{ 0, 2, 4, 8, 16 };
-	for (const auto& possibleAALevel : AvailableAALevel)
-		if (possibleAALevel == AA)
-		{
-			AALevel = AA;
-			if (self)
-				return self->changedAA();
-			break;
-		}
+	AALevel = AA;
+	if (self)
+		return self->changedAA();
 }
 
 OgreVRRender::OgreVRRender(std::string windowName) :
@@ -271,10 +265,7 @@ void OgreVRRender::updateTracking()
 void OgreVRRender::initPipeline()
 {
 	getOgreConfig();
-	if (rendererName.find("NoVR") != std::string::npos)
-		createWindow(1280, 720, true);
-	else
-		createWindow();
+	rendererName.find("NoVR") != std::string::npos ? createWindow(1280, 720, true) : createWindow();
 	initScene();
 	initCameras();
 	loadCompositor();

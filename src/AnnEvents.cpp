@@ -1,27 +1,13 @@
 #include "stdafx.h"
-#include "AnnEventManager.hpp"
+#include "AnnEvents.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
 
 using namespace Annwvyn;
 
 AnnEvent::AnnEvent() :
-	accepted(false),
-	rejected(false),
-	unpopulated(true),
-	valid(false),
 	type(NO_TYPE)
 {
-}
-
-void AnnEvent::validate()
-{
-	valid = true;
-}
-
-void AnnEvent::populate()
-{
-	unpopulated = false;
 }
 
 AnnEventType AnnEvent::getType() const
@@ -33,7 +19,6 @@ AnnEventType AnnEvent::getType() const
 AnnKeyEvent::AnnKeyEvent() : AnnEvent(),
 key(KeyCode::unassigned),
 pressed(false),
-released(false),
 ignored(false)
 {
 	type = USER_INPUT;
@@ -42,13 +27,11 @@ ignored(false)
 void AnnKeyEvent::setPressed()
 {
 	pressed = true;
-	released = false;
 }
 
 void AnnKeyEvent::setReleased()
 {
 	pressed = false;
-	released = true;
 }
 
 void AnnKeyEvent::setCode(KeyCode::code c)
@@ -63,7 +46,7 @@ bool AnnKeyEvent::isPressed() const
 
 bool AnnKeyEvent::isReleased() const
 {
-	return released;
+	return !pressed;
 }
 
 KeyCode::code AnnKeyEvent::getKey() const
