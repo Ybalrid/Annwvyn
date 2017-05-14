@@ -56,16 +56,8 @@ namespace Annwvyn
 		AnnEventType getType() const;
 
 	protected:
-		bool accepted;
-		bool rejected;
-		bool unpopulated;
-		bool valid;
 		AnnEventType type;
 		friend class AnnEventManager;
-		///Class called by the event manager to tell that the event is valid (correctly constructed)
-		void validate();
-		///Method being called by the event manager to signify that the event object has been populated with data
-		void populate();
 	};
 
 	///A keyboard event
@@ -92,8 +84,6 @@ namespace Annwvyn
 		KeyCode::code key;
 		///Pressed state
 		bool pressed;
-		///Released state
-		bool released;
 		///Keyboard event that should be ignored has this flag as "true"
 		bool ignored;
 		///Set the event as a key release event
