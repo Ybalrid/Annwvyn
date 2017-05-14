@@ -213,35 +213,21 @@ void AnnEventManager::processInput()
 		//for each key of the keyboard
 		for (size_t c(0); c < KeyCode::SIZE; c++)
 		{
+			//create a corresponding key event
+			AnnKeyEvent e;
+			e.setCode(KeyCode::code(c));
+			e.setPressed();
+			e.ignored = keyboardIgnore;
+
+			for (auto weak_listener : listeners)
+				if (auto listener = weak_listener.lock())
+					listener->KeyEvent(e);
+
 			//if it's pressed
 			if (Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c])
-			{
-				//create a corresponding key event
-				AnnKeyEvent e;
-				e.setCode(KeyCode::code(c));
-				e.setPressed();
-				e.ignored = keyboardIgnore;
-
-				for (auto weak_listener : listeners)
-					if (auto listener = weak_listener.lock())
-						listener->KeyEvent(e);
-
 				previousKeyStates[c] = true;
-			}
-			else if (!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c]) //key not pressed at the moment
-			{
-				//same thing
-				AnnKeyEvent e;
-				e.setCode(KeyCode::code(c));
-				e.setReleased();
-				e.ignored = keyboardIgnore;
-
-				for (auto weak_listener : listeners)
-					if (auto listener = weak_listener.lock())
-						listener->KeyEvent(e);
-
+			else if (!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c])
 				previousKeyStates[c] = false;
-			}
 		}
 	}
 
