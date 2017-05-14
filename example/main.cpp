@@ -69,7 +69,7 @@ function<void()> debugHook;
 
 AnnMain()
 {
-	OgreVRRender::setAntiAliasingLevel(8);
+	OgreVRRender::setAntiAliasingLevel(16);
 	AnnEngine::openConsole();
 
 	AnnInit("AnnTest");

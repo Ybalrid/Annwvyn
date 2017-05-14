@@ -43,7 +43,7 @@ public:
 
 private:
 	// ReSharper disable once CppMemberFunctionMayBeStatic
-	void jumpToHub()
+	void jumpToHub() const
 	{
 		AnnGetLevelManager()->jumpToFirstLevel();
 	}
