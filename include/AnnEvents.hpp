@@ -288,6 +288,7 @@ namespace Annwvyn
 	{
 	public:
 		AnnHandControllerEvent();
+		AnnHandControllerEvent(AnnHandController* controller);
 
 		///get access to the hand controller this event is related to
 		AnnHandController* getController() const;
