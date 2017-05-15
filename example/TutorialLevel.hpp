@@ -10,7 +10,7 @@ public:
 	}
 
 protected:
-	void loadBasic()
+	void loadBasicTutorialLevel()
 	{
 		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
 		auto floor = addGameObject("floorplane.mesh");
