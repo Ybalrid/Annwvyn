@@ -371,12 +371,10 @@ void AnnEventManager::processTimers()
 
 void AnnEventManager::processTriggerEvents()
 {
-	for (auto triggerIterator = triggerEventBuffer.begin(); triggerIterator != triggerEventBuffer.end(); ++triggerIterator)
-		for (auto listenerIterator = listeners.begin(); listenerIterator != listeners.end(); ++listenerIterator)
-		{
-			if (auto listener = (*listenerIterator).lock())
-				listener->TriggerEvent(*triggerIterator);
-		}
+	for (const auto& triggerEvent : triggerEventBuffer)
+		for (auto weakListener : listeners) if (auto listener = weakListener.lock())
+			listener->TriggerEvent(triggerEvent);
+
 	triggerEventBuffer.clear();
 }
 
