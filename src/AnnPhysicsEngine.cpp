@@ -161,6 +161,7 @@ void AnnPhysicsEngine::initPlayerRoomscalePhysics(Ogre::SceneNode* playerAnchorN
 	playerObject->setBody(body);
 
 	playerObject->setRoomRefNode(playerAnchorNode);
+	playerObject->resetPlayerPhysics();//this will properly put the player at it's intended position and will put it inside the dynamics world.
 }
 
 void AnnPhysicsEngine::initPlayerStandingPhysics(Ogre::SceneNode* node)

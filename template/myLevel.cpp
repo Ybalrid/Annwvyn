@@ -21,6 +21,7 @@ void MyLevel::load()
 	auto Ground(addGameObject("floorplane.mesh"));
 	Ground->setPosition({ 0, 0, 0 });
 	Ground->setUpPhysics();
+    AnnGetPlayer()->regroundOnPhysicsBody();
 
 	//Create a light source
 	auto Sun(addLightObject("MySun"));
