@@ -15,6 +15,7 @@
 #include "TestLevel.hpp"
 #include "DemoLevel.hpp"
 #include "DemoEvent.hpp"
+#include "TutorialTimer.hpp"
 
 using namespace std;
 using namespace Annwvyn;
@@ -90,6 +91,7 @@ AnnMain()
 	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
 	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
 	AnnGetLevelManager()->addLevel(make_shared<DemoEvent>());
+	AnnGetLevelManager()->addLevel(make_shared<TutorialTimer>());
 
 	AnnGetLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getFirstLevelLoaded(), 1.f));
 
