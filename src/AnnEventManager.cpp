@@ -248,56 +248,52 @@ void AnnEventManager::processJoystickEvents()
 	for (auto Joystick : Joysticks)
 	{
 		const auto& state(Joystick->stick->getJoyStickState());
-		AnnStickEvent e;
+		AnnStickEvent stickEvent;
 
 		//Get all buttons immediate data
-		e.buttons = state.mButtons;
+		stickEvent.buttons = state.mButtons;
+		stickEvent.vendor = Joystick->stick->vendor();
+		stickEvent.stickID = Joystick->getID();
 
 		//Get all axes immediate data
-		for (auto i(0u); i < state.mAxes.size(); i++)
+		auto axisID = 0;
+		for (const auto& axis : state.mAxes)
 		{
-			AnnStickAxis axis(i, state.mAxes[i].rel, state.mAxes[i].abs);
-			if (state.mAxes[i].absOnly)
-				axis.noRel = true;
-			e.axes.push_back(axis);
+			AnnStickAxis annAxis{ axisID++, axis.rel, axis.abs };
+			annAxis.noRel = axis.absOnly;
+			stickEvent.axes.push_back(annAxis);
 		}
 
 		//The joystick state object always have 4 Pov but the AnnStickEvent has the number of Pov the stick has
-		for (size_t i(0); i < Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV); i++)
-			e.povs.push_back(AnnStickPov(state.mPOV[i].direction));
+		const auto nbPov = size_t(Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV));
+		for (auto i(0u); i < nbPov; i++)
+			stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
 
 		//Get press and release event lists
-		for (unsigned short i(0); i < state.mButtons.size() && i < Joystick->previousStickButtonStates.size(); i++)
-			if (!Joystick->previousStickButtonStates[i] && state.mButtons[i])
-				e.pressed.push_back(i);
-			else if (Joystick->previousStickButtonStates[i] && !state.mButtons[i])
-				e.released.push_back(i);
+		const auto nbButton{ std::min(state.mButtons.size(), Joystick->previousStickButtonStates.size()) };
+		for (auto button(0u); button < nbButton; button++)
+			if (!Joystick->previousStickButtonStates[button] && state.mButtons[button])
+				stickEvent.pressed.push_back(button);
+			else if (Joystick->previousStickButtonStates[button] && !state.mButtons[button])
+				stickEvent.released.push_back(button);
 
 		//Save current buttons state for next frame
 		Joystick->previousStickButtonStates = state.mButtons;
-		e.vendor = Joystick->stick->vendor();
-		e.stickID = Joystick->getID();
-		if (knowXbox)
-			if (e.stickID == xboxID)
-				e.xbox = true;
+		if (knowXbox) if (stickEvent.stickID == xboxID)
+			stickEvent.xbox = true;
 
-		stickEventBuffer.push_back(e);
+		stickEventBuffer.push_back(stickEvent);
 	}
 }
 
 void AnnEventManager::processHandControllerEvents()
 {
 	if (AnnGetVRRenderer()->handControllersAvailable())
-	{
 		for (auto handController : AnnGetVRRenderer()->getHandControllerArray())
 		{
 			if (!handController) continue;
-			AnnHandControllerEvent e;
-			e.sender = handController.get();
-
-			handControllerEventBuffer.push_back(e);
+			handControllerEventBuffer.push_back({ handController.get() });
 		}
-	}
 }
 
 void AnnEventManager::pushEventsToListeners()
@@ -354,7 +350,7 @@ void AnnEventManager::processTimers()
 
 	//Cleanup
 	std::remove_if(activeTimers.begin(), activeTimers.end(),
-		[&](const AnnTimer& timer) {return timer.isTimeout(); });
+		[&](const AnnTimer& timer) { return timer.isTimeout(); });
 }
 
 void AnnEventManager::processTriggerEvents()
@@ -376,16 +372,12 @@ void AnnEventManager::processCollisionEvents()
 			const auto bMov = static_cast<AnnAbstractMovable*>(collisionPair.second);
 			if (auto a = dynamic_cast<AnnGameObject*>(aMov)) if (auto b = dynamic_cast<AnnGameObject*>(bMov))
 			{
-				AnnCollisionEvent e{ a, b };
-				listener->CollisionEvent(e);
+				listener->CollisionEvent({ a, b });
 			}
 		}
 
 		for (auto playerCollision : playerCollisionBuffer)
-		{
-			AnnPlayerCollisionEvent e{ playerCollision };
-			listener->PlayerCollisionEvent(e);
-		}
+			listener->PlayerCollisionEvent({ playerCollision });
 	}
 
 	collisionBuffer.clear();
@@ -442,9 +434,7 @@ void AnnEventManager::userSpaceDispatchEvent(std::shared_ptr<AnnUserSpaceEvent> 
 void AnnEventManager::processUserSpaceEvents()
 {
 	for (auto userSpaceEvent : userSpaceEventBuffer)
-	{
 		for (auto weakListener : listeners) if (auto listener = weakListener.lock())
 			listener->EventFromUserSubsystem(*userSpaceEvent.first, userSpaceEvent.second);
-	}
 	userSpaceEventBuffer.clear();
 }

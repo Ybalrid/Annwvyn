@@ -468,6 +468,12 @@ AnnHandControllerEvent::AnnHandControllerEvent() :
 	type = HAND_CONTROLLER;
 }
 
+AnnHandControllerEvent::AnnHandControllerEvent(AnnHandController* controller) : AnnEvent(),
+sender{ controller }
+{
+	type = HAND_CONTROLLER;
+}
+
 AnnHandController* AnnHandControllerEvent::getController() const
 {
 	return sender;
