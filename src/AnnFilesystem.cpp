@@ -93,6 +93,10 @@ fileReader(nullptr)
 #pragma warning (default : 4996)
 #endif
 
+#ifdef __linux__
+	pathToUserDir = getenv("HOME");
+#endif
+
 	AnnDebug() << "Path got from operating system : " << pathToUserDir;
 
 	//Forbidden characters in filename
