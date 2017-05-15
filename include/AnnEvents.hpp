@@ -7,6 +7,7 @@
 
 namespace Annwvyn
 {
+	class AnnTimer;
 	class AnnTriggerObject;
 
 	enum AnnEventType
@@ -303,6 +304,8 @@ namespace Annwvyn
 	public:
 		///Create a timer timeout event
 		AnnTimeEvent();
+
+		AnnTimeEvent(const AnnTimer& timer);
 		///Get the ID of this timer
 		timerID getID() const;
 	private:
@@ -412,6 +415,8 @@ namespace Annwvyn
 	///Internal utility class that represent a timer
 	class DLL AnnTimer
 	{
+	public:
+		timerID getID() const;
 	private:
 		friend class AnnEventManager;
 		///Timer object for the EventMAnager
