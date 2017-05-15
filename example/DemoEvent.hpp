@@ -107,7 +107,7 @@ public:
 		//Listeners needs to be added to the event manager to receive events
 		AnnGetEventManager()->addListener(listener);
 
-		loadBasic();
+		loadBasicTutorialLevel();
 
 		//Some text for the user that encourage to go read this file
 		loadTextPannel(
