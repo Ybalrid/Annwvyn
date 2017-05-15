@@ -72,6 +72,7 @@ public:
 		Demo0Trig = createStone({ -6, 0, -5 }, { AnnDegree(45), AnnVect3::UNIT_Y }, "Demo 0\nDemo the loading of a demo... xD");
 		TestLevelTrig = createStone({ 0, 0, -7 }, AnnQuaternion::IDENTITY, "TestLevel\nA simple test level");
 		EventTrig = createStone({ 6, 0, -5 }, { AnnDegree(-45), AnnVect3::UNIT_Y }, "DemoEvent\nShows user-defined events in action");
+		TimerTrig = createStone({ 8, 0, 0 }, { AnnDegree(-90), AnnVect3::UNIT_Y }, "DemoTimer\nShow how timer works");
 
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
@@ -96,6 +97,8 @@ public:
 		Demo0Trig = nullptr;
 		TestLevelTrig = nullptr;
 		EventTrig = nullptr;
+		TimerTrig = nullptr;
+
 		rotating = nullptr;
 	}
 
@@ -123,6 +126,12 @@ public:
 			AnnGetLevelManager()->jump(getDemo(2));
 			return;
 		}
+
+		if (TimerTrig == trigger)
+		{
+			AnnGetLevelManager()->jump(getDemo(3));
+			return;
+		}
 	}
 
 	static level_id getDemo(level_id id)
@@ -134,6 +143,7 @@ private:
 	AnnTriggerObject* Demo0Trig;
 	AnnTriggerObject* TestLevelTrig;
 	AnnTriggerObject* EventTrig;
+	AnnTriggerObject* TimerTrig;
 
 	AnnGameObject* rotating;
 
