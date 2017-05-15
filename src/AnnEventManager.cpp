@@ -342,31 +342,19 @@ timerID AnnEventManager::fireTimer(double delay)
 
 void AnnEventManager::processTimers()
 {
-	//This permit listeners to set timers without invalidating the iterator declared below
-	if (!futureTimers.empty())
-	{
-		for (size_t i(0); i < futureTimers.size(); i++)
-			activeTimers.push_back(futureTimers[i]);
-		futureTimers.clear();
-	}
+	//Append timers
+	for (const auto& futureTimer : futureTimers)
+		activeTimers.push_back(futureTimer);
+	futureTimers.clear();
 
-	auto iterator = activeTimers.begin();
-	while (iterator != activeTimers.end())
-	{
-		if ((*iterator).isTimeout())
-		{
-			AnnTimeEvent e;
-			e.setTimerID((*iterator).tID);
-			for (size_t i(0); i < listeners.size(); ++i)
-				if (auto listener = listeners[i].lock())
-					listener->TimeEvent(e);
-			iterator = activeTimers.erase(iterator);
-		}
-		else
-		{
-			++iterator;
-		}
-	}
+	//Send events
+	for (auto weak_listener : listeners) if (auto listener = weak_listener.lock())
+		for (const auto& timer : activeTimers)
+			if (timer.isTimeout()) listener->TimeEvent({ timer });
+
+	//Cleanup
+	std::remove_if(activeTimers.begin(), activeTimers.end(),
+		[&](const AnnTimer& timer) {return timer.isTimeout(); });
 }
 
 void AnnEventManager::processTriggerEvents()

@@ -472,3 +472,14 @@ AnnHandController* AnnHandControllerEvent::getController() const
 {
 	return sender;
 }
+
+AnnTimeEvent::AnnTimeEvent(const AnnTimer& timer) : AnnEvent(),
+tID{ timer.getID() }
+{
+	type = TIMER_TIMEOUT;
+}
+
+timerID AnnTimer::getID() const
+{
+	return tID;
+}
