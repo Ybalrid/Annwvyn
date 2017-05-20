@@ -254,6 +254,9 @@ public:
 	///Create the main scene manager and set some shadow parameters
 	void createMainSmgr();
 
+	///Return true if you should not react to user inputs, according to the rendering runtime...
+	bool shouldPauseFlag();
+
 private:
 
 	///GL version to use
@@ -347,6 +350,9 @@ protected:
 
 	///Name given to the texture manager for the eyeBuffer
 	static constexpr const char* const rttTextureName = { "RttTex" };
+
+	///Store if we suggest you to pause reacting to user inputs...
+	bool pauseFlag;
 
 private:
 	///left, right enums

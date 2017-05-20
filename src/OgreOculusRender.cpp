@@ -376,7 +376,12 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 void OgreOculusRender::renderAndSubmitFrame()
 {
 	handleWindowMessages();
-	if (!getSessionStatus().IsVisible) return;
+	if (!getSessionStatus().IsVisible)
+	{
+		pauseFlag = true;
+		return;
+	}
+	pauseFlag = false;
 
 	for (auto i{ 0 }; i < 2; ++i)
 	{
