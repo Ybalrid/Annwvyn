@@ -168,7 +168,7 @@ private:
 	OculusInterface* Oculus;
 
 	///Timing in seconds
-	double currentFrameDisplayTime, lastFrameDisplayTime;
+	double currentFrameDisplayTime;
 
 	///Render descriptor for each eye. Indexes are "left" and "right"
 	std::array<ovrEyeRenderDesc, 2> EyeRenderDesc;

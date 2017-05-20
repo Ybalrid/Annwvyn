@@ -17,7 +17,6 @@ OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 frontierWidth{ 100 },
 Oculus(nullptr),
 currentFrameDisplayTime{ 0 },
-lastFrameDisplayTime{ 0 },
 mirrorTexture{ nullptr },
 oculusMirrorTextureGLID{ 0 },
 ogreMirrorTextureGLID{ 0 },
@@ -352,9 +351,7 @@ void OgreOculusRender::handleIPDChange()
 void OgreOculusRender::getTrackingPoseAndVRTiming()
 {
 	//Get timing
-	//lastFrameDisplayTime = currentFrameDisplayTime;
-	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), frameCounter);
-	//updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
+	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter);
 	calculateTimingFromOgre();
 
 	//Reorient the headset if the runtime flags for it
@@ -426,8 +423,6 @@ void OgreOculusRender::renderAndSubmitFrame()
 
 		//do something with the mirror texture
 	}
-
-	frameCounter++;
 }
 
 void OgreOculusRender::initializeHandObjects(const oorEyeType side)
