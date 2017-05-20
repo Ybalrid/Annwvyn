@@ -61,6 +61,8 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 	//If the corresponding key is pressed, set the direction to true.
 	if (!e.shouldIgnore())
 	{
+		if (AnnGetVRRenderer()->shouldPauseFlag()) return;
+
 		//Z and Q are hacks for supporting french AZERTY keyboard easilly
 		if (e.getKey() == forward || e.getKey() == KeyCode::z)
 			player->walking[walkDirection::forward] = e.isPressed();
@@ -112,6 +114,7 @@ void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 //The stick event contain all the data for a specific joystick. In includes buttons current states, press and release events, stick relative and absolute values
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 {
+	if (AnnGetVRRenderer()->shouldPauseFlag()) return;
 	if (!e.isXboxController()) return;
 	if (e.getNbAxis() >= 4) //If we have 2 analog stick (or equivalent) available
 	{
@@ -138,6 +141,7 @@ void AnnDefaultEventListener::reclampDegreeToPositiveRange(float& degree)
 
 void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
+	if (AnnGetVRRenderer()->shouldPauseFlag()) return;
 	auto rightStickThreashold{ 0.0225 };
 	if (e.getController()->getTypeHash() == OculusTouchController) rightStickThreashold = 0.8;
 
