@@ -353,7 +353,7 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 {
 	//Get timing
 	//lastFrameDisplayTime = currentFrameDisplayTime;
-	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter);
+	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), frameCounter);
 	//updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
 	calculateTimingFromOgre();
 
