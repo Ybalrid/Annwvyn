@@ -47,7 +47,8 @@ OgreVRRender::OgreVRRender(std::string windowName) :
 	gameplayCharacterRoot{ nullptr },
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
-	rttEyesCombined{ nullptr }
+	rttEyesCombined{ nullptr },
+	pauseFlag{ false }
 {
 	if (self)
 	{
@@ -467,6 +468,11 @@ void OgreVRRender::createMainSmgr()
 	logToOgre("Setting the shadow distances to 500m");
 	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
 	smgr->setShadowFarDistance(500.0f);
+}
+
+bool OgreVRRender::shouldPauseFlag()
+{
+	return pauseFlag;
 }
 
 void OgreVRRender::setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial)
