@@ -17,6 +17,7 @@
 
 //Oculus Rift Lib
 #include <OVR_CAPI_GL.h>
+#include <OVR_CAPI_Audio.h>
 
 //C++ SDL Includes
 #include <iostream>
