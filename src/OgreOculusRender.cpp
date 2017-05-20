@@ -352,9 +352,10 @@ void OgreOculusRender::handleIPDChange()
 void OgreOculusRender::getTrackingPoseAndVRTiming()
 {
 	//Get timing
-	lastFrameDisplayTime = currentFrameDisplayTime;
+	//lastFrameDisplayTime = currentFrameDisplayTime;
 	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter);
-	updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
+	//updateTime = currentFrameDisplayTime - lastFrameDisplayTime;
+	calculateTimingFromOgre();
 
 	//Reorient the headset if the runtime flags for it
 	if (getSessionStatus().ShouldRecenter) recenter();
@@ -378,6 +379,8 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 void OgreOculusRender::renderAndSubmitFrame()
 {
 	handleWindowMessages();
+	if (!getSessionStatus().IsVisible) return;
+
 	for (auto i{ 0 }; i < 2; ++i)
 	{
 		ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
@@ -423,6 +426,8 @@ void OgreOculusRender::renderAndSubmitFrame()
 
 		//do something with the mirror texture
 	}
+
+	frameCounter++;
 }
 
 void OgreOculusRender::initializeHandObjects(const oorEyeType side)
