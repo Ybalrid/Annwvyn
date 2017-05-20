@@ -1,10 +1,19 @@
 #include "stdafx.h"
 #ifdef _WIN32
+
+#include <string>
+
 #include "OgreOculusRender.hpp"
 
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
 #include "AnnException.hpp"
+
+#pragma comment(lib, "dsound.lib")
+
+#include <windows.h>
+#include <mmsystem.h>
+#include <dsound.h>
 
 using namespace Annwvyn;
 
@@ -325,7 +334,49 @@ bool OgreOculusRender::usesCustomAudioDevice()
 
 std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 {
-	return std::string("Rift Audio");
+	//Cache the result in this static string
+	static std::string audioDeviceName = "";
+	if (!audioDeviceName.empty()) return audioDeviceName;
+	AnnDebug() << "Looking for the audio output selected inside the Oculus App...";
+
+	//Get GUID
+	GUID audioDeviceGuid; ovr_GetAudioDeviceOutGuid(&audioDeviceGuid);
+
+	//Enumerate DirectSound devices
+	struct stupidAudioDescriptor
+	{
+		stupidAudioDescriptor(LPCSTR str, LPGUID pguid) :
+			name(pguid ? str : "NO_GUID"),
+			guid(pguid ? *pguid : GUID()) {}
+		const std::string name;
+		const GUID guid;
+	};
+	using stupidAudioDescriptorVect = std::vector<stupidAudioDescriptor>;
+	stupidAudioDescriptorVect descriptors;
+
+	//Enumerate all DirectSound interfaces, and create stupidAudioDescriptor for them
+	DirectSoundEnumerateA([](LPGUID guid, LPCSTR descr, LPCSTR modname, LPVOID ctx) {
+		auto names = static_cast<stupidAudioDescriptorVect*>(ctx);
+		names->push_back({ descr, guid });
+		return TRUE; }, &descriptors);
+
+	//Try to find the one we need
+	auto result = std::find_if(descriptors.begin(), descriptors.end(), [&](const stupidAudioDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
+
+	//Set the return string
+	if (result != descriptors.end())
+	{
+		stupidAudioDescriptor descriptor = *result; audioDeviceName = descriptor.name;
+		AnnDebug() << "found " << audioDeviceName << " that match Oculus given DirectSound GUID";
+	}
+	else
+	{
+		audioDeviceName = "use windows default";
+		AnnDebug() << "Did not found requested audio device. Will fall back to windows defaults";
+	}
+
+	//Return the return string
+	return audioDeviceName;
 }
 
 void OgreOculusRender::showDebug(DebugMode mode)
