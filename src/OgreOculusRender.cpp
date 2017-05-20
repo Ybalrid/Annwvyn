@@ -379,6 +379,8 @@ void OgreOculusRender::renderAndSubmitFrame()
 	if (!getSessionStatus().IsVisible)
 	{
 		pauseFlag = true;
+		//Still render to the normal window
+		root->renderOneFrame();
 		return;
 	}
 	pauseFlag = false;
