@@ -11,6 +11,7 @@
 
 #pragma comment(lib, "dsound.lib")
 
+#define NOMINMAX
 #include <windows.h>
 #include <mmsystem.h>
 #include <dsound.h>
@@ -435,51 +436,32 @@ void OgreOculusRender::renderAndSubmitFrame()
 		return;
 	}
 	pauseFlag = false;
+	root->renderOneFrame();
 
 	for (auto i{ 0 }; i < 2; ++i)
 	{
 		ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
 		ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), texturesSeparatedSwapChain[i], currentSeparatedIndex[i], &oculusRenderTexturesSeparatedGLID[i]);
-	}
-
-	ovr_GetMirrorTextureBufferGL(Oculus->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
-
-	root->renderOneFrame();
-	for (auto i{ 0 }; i < 2; ++i)
-	{
 		//Copy the rendered image to the Oculus Swap Texture
-		glCopyImageSubData(ogreRenderTexturesSeparatedGLID[i],
-			GL_TEXTURE_2D,
-			0, 0, 0, 0,
+		glEasyCopy(ogreRenderTexturesSeparatedGLID[i],
 			oculusRenderTexturesSeparatedGLID[i],
-			GL_TEXTURE_2D,
-			0, 0, 0, 0,
-			texSizeL.w, texSizeL.h, 1);
-	}
-	//Get the rendering layer
-	layers = &layer.Header;
-
-	//Submit the frame
-	for (auto i{ 0 }; i < 2; ++i)
-	{
+			texSizeL.w, texSizeL.h);
 		ovr_CommitTextureSwapChain(Oculus->getSession(), texturesSeparatedSwapChain[i]);
 	}
 
+	//Submit the frame
+	layers = &layer.Header;
 	ovr_SubmitFrame(Oculus->getSession(), frameCounter, nullptr, &layers, 1);
 
 	//Update the render debug view if the window is visible
-	if (window->isVisible())
+	if (window->isVisible() && mirrorHMDView)
 	{
 		//Put the mirrored view available for Ogre if asked for
-		if (mirrorHMDView) glCopyImageSubData(oculusMirrorTextureGLID,
-			GL_TEXTURE_2D,
-			0, 0, 0, 0,
+		ovr_GetMirrorTextureBufferGL(Oculus->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
+		glEasyCopy(oculusMirrorTextureGLID,
 			ogreMirrorTextureGLID,
-			GL_TEXTURE_2D,
-			0, 0, 0, 0,
-			hmdSize.w, hmdSize.h, 1);
-
-		//do something with the mirror texture
+			hmdSize.w, hmdSize.h
+		);
 	}
 }
 

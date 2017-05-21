@@ -475,6 +475,19 @@ bool OgreVRRender::shouldPauseFlag()
 	return pauseFlag;
 }
 
+///Wrap annoying OpenGL call to something humanly acceptable
+void OgreVRRender::glEasyCopy(GLuint source, GLuint dest, GLuint width, GLuint height)
+{
+	glCopyImageSubData(source,
+		GL_TEXTURE_2D,
+		0, 0, 0, 0,
+		dest,
+		GL_TEXTURE_2D,
+		0, 0, 0, 0,
+		width, height,
+		1);
+}
+
 void OgreVRRender::setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial)
 {
 	auto material = Ogre::MaterialManager::getSingleton().load(

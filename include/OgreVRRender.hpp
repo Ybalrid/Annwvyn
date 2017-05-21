@@ -257,6 +257,9 @@ public:
 	///Return true if you should not react to user inputs, according to the rendering runtime...
 	bool shouldPauseFlag();
 
+	///Wrap annoying OpenGL call to something humanly acceptable
+	static void glEasyCopy(GLuint source, GLuint dest, GLuint width, GLuint height);
+
 private:
 
 	///GL version to use
