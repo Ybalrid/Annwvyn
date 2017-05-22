@@ -11,8 +11,7 @@
 
 #include "systemMacro.h"
 
-#include "AnnVect3.hpp"
-#include "AnnQuaternion.hpp"
+//C++ stdlib
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -25,6 +24,9 @@
 //libsndfile
 #include <sndfile.h>
 
+//Other Annwvyn
+#include "AnnVect3.hpp"
+#include "AnnQuaternion.hpp"
 #include "AnnSubsystem.hpp"
 #include "AnnAudioFile.hpp"
 #include "AnnScriptFile.hpp"
@@ -98,7 +100,7 @@ namespace Annwvyn
 		///Bunch of sound file (that causes disk I/O access) you can just load the sound file
 		///before the start of your gameplay sequence.
 		/// \param name Name of the file you want to load
-		ALuint loadBuffer(const std::string& name);
+		ALuint loadBuffer(const std::string& filename);
 
 		///This method is intended to be used in moments like loading levels
 		///If a buffer is already loaded, getting it with loadBuffer is equivalent at
@@ -106,19 +108,19 @@ namespace Annwvyn
 		///If loadBuffer is called with a "new" sound file, the engine will load it in memory
 		///before doing anything else, delaying stuff because of disk I/O
 		/// \copydoc loadBuffer()
-		void preLoadBuffer(const std::string& name);
+		void preLoadBuffer(const std::string& filename);
 
 		///Return "false" if buffer not loaded. Return buffer index if buffer is loaded.
-		ALuint isBufferLoader(const std::string& name);
+		ALuint isBufferLoader(const std::string& filename);
 
 		///Unload a buffer from the engine. The buffer is identified by the sound file it represent
-		/// \param name Path of the file you want to load
-		void unloadBuffer(const std::string& name);
+		/// \param filename Path of the file you want to load
+		void unloadBuffer(const std::string& filename);
 
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
-		/// \param name name of the audio file to use as background music
-		/// \param volume Float number between 0 and 1, Loudness of the sound
-		void playBGM(const std::string name, const float volume = 0.5f);
+		/// \param filename name of the audio file to use as background music
+		/// \param volume Float number between 0 and 1, Loudness of the sound. At 0.5f by default
+		void playBGM(const std::string& filename, const float volume = 0.5f);
 
 		///stop the current background music from playing
 		void stopBGM() const;
@@ -150,7 +152,7 @@ namespace Annwvyn
 		///For engine : update listener Orientation
 		friend class AnnEngine;
 
-		///Update the listener
+		///Update the subsystem : set the listener position
 		void update() override;
 
 		///Detect playback devices from the device enumeration string
@@ -158,23 +160,27 @@ namespace Annwvyn
 
 		///The last error this class has generated
 		std::string lastError;
-		///AL Device
-		ALCdevice* Device;
+		///AL alDevice
+		ALCdevice* alDevice;
 		///AL Context
-		ALCcontext* Context;
+		ALCcontext* alContext;
 
 		///Audio buffer for background music
 		ALuint bgmBuffer;
 		///Audio source for background music
-		ALuint bgm;
+		ALuint bgmSource;
 
 		///Map between audio filenames and OpenAL buffer
 		std::unordered_map<std::string, ALuint> buffers;
+
+		///Prevent some operation if set to true
 		bool locked;
 		///List of the audio sources object present in the audio engine
-		std::list<std::shared_ptr<AnnAudioSource>> AudioSources;
-		std::vector<std::string> detectedDevices;
+		std::list<std::shared_ptr<AnnAudioSource>> audioSources;
 
+		///List of audio device names
+		std::vector<std::string> detectedDevices;
+		///Custom Ogre resource manager that loads binary files used to load audio files
 		AnnAudioFileManager* audioFileManager;
 	};
 }

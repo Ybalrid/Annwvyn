@@ -21,7 +21,7 @@ using namespace Annwvyn;
 //Static class members
 bool OgreOculusRender::mirrorHMDView{ true };
 Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane{ nullptr };
-OgreOculusRender* OgreOculusRender::OculusSelf{ nullptr };
+OgreOculusRender* OgreOculusRender::oculusSelf{ nullptr };
 
 OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 frontierWidth{ 100 },
@@ -45,7 +45,7 @@ lastOculusPosition{ feetPosition },
 lastOculusOrientation{ bodyOrientation }
 {
 	rendererName = "OpenGL/Oculus";
-	OculusSelf = static_cast<OgreOculusRender*>(self);
+	oculusSelf = static_cast<OgreOculusRender*>(self);
 
 	//List of bitmask for each buttons as we will test them
 	touchControllersButtons[left][0] = ovrButton_X;
@@ -257,18 +257,18 @@ void OgreOculusRender::showMonscopicView()
 void OgreOculusRender::initClientHmdRendering()
 {
 	//Populate OVR structures
-	EyeRenderDesc[left] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left]);
-	EyeRenderDesc[right] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right]);
-	offset[left] = EyeRenderDesc[left].HmdToEyeOffset;
-	offset[right] = EyeRenderDesc[right].HmdToEyeOffset;
+	eyeRenderDescArray[left] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left]);
+	eyeRenderDescArray[right] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right]);
+	offset[left] = eyeRenderDescArray[left].HmdToEyeOffset;
+	offset[right] = eyeRenderDescArray[right].HmdToEyeOffset;
 
 	//Create a layer with our single swaptexture on it. Each side is an eye.
 	layer.Header.Type = ovrLayerType_EyeFov;
 	layer.Header.Flags = 0;
 	layer.ColorTexture[left] = texturesSeparatedSwapChain[left];
 	layer.ColorTexture[right] = texturesSeparatedSwapChain[right];
-	layer.Fov[left] = EyeRenderDesc[left].Fov;
-	layer.Fov[right] = EyeRenderDesc[right].Fov;
+	layer.Fov[left] = eyeRenderDescArray[left].Fov;
+	layer.Fov[right] = eyeRenderDescArray[right].Fov;
 
 	//Define the two viewports dimensions :
 	ovrRecti leftRect, rightRect;
@@ -296,8 +296,8 @@ void OgreOculusRender::updateProjectionMatrix()
 	//Get the matrices from the Oculus library
 	const std::array<ovrMatrix4f, ovrEye_Count> oculusProjectionMatrix
 	{
-		ovrMatrix4f_Projection(EyeRenderDesc[ovrEye_Left].Fov, nearClippingDistance, farClippingDistance, 0),
-		ovrMatrix4f_Projection(EyeRenderDesc[ovrEye_Right].Fov, nearClippingDistance, farClippingDistance, 0)
+		ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Left].Fov, nearClippingDistance, farClippingDistance, 0),
+		ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Right].Fov, nearClippingDistance, farClippingDistance, 0)
 	};
 
 	//Put them in in Ogre's Matrix4 format
@@ -397,7 +397,7 @@ void OgreOculusRender::showDebug(DebugMode mode)
 void OgreOculusRender::handleIPDChange()
 {
 	for (auto eye : eyeUpdateOrder)
-		eyeCameras[eye]->setPosition(oculusToOgreVect3(EyeRenderDesc[eye].HmdToEyeOffset));
+		eyeCameras[eye]->setPosition(oculusToOgreVect3(eyeRenderDescArray[eye].HmdToEyeOffset));
 }
 
 void OgreOculusRender::getTrackingPoseAndVRTiming()

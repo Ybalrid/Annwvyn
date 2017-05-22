@@ -160,7 +160,7 @@ private:
 	int frontierWidth;
 
 	///Pointer to the renderer itself, re-casted as this class, not the parent
-	static OgreOculusRender* OculusSelf;
+	static OgreOculusRender* oculusSelf;
 
 	///Set the Fov for the monoscopic view
 	void setMonoFov(float degreeFov) const;
@@ -172,7 +172,7 @@ private:
 	double currentFrameDisplayTime;
 
 	///Render descriptor for each eye. Indexes are "left" and "right"
-	std::array<ovrEyeRenderDesc, 2> EyeRenderDesc;
+	std::array<ovrEyeRenderDesc, 2> eyeRenderDescArray;
 
 	///Size of texture and headset
 	ovrSizei bufferSize, hmdSize;
@@ -250,7 +250,7 @@ private:
 	Ogre::SceneNode *debugCamNode, *debugPlaneNode;
 
 	///Pointer to the debug plane manual material
-	Ogre::MaterialPtr DebugPlaneMaterial;
+	Ogre::MaterialPtr debugPlaneMaterial;
 
 	/*
 	* This is a 4 vertices quad with a size of 16x9 units with it's origin in the center
