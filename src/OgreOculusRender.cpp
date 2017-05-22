@@ -11,8 +11,6 @@
 
 #pragma comment(lib, "dsound.lib")
 
-#define NOMINMAX
-#include <windows.h>
 #include <mmsystem.h>
 #include <dsound.h>
 

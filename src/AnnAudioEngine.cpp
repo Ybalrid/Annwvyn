@@ -13,18 +13,22 @@ audioFileManager(nullptr)
 {
 	//Try to init OpenAL
 	if (!initOpenAL())
-		lastError = "Cannot Init OpenAL";
-	logError();
+		logError();
 
 	//Set the listener to base position
-	alListener3f(AL_POSITION, 0.0f, 0.0f, 10.0f);
+	const auto player = AnnGetPlayer();
+	const auto position = player->getPosition();
+	alListener3f(AL_POSITION, position.x, position.y, position.z);
 
 	//Define the default orientation
-	ALfloat Orientation[] = { 0.0f, 0.0f, 1.0f, //LookAt vector
-							0.0f, 1.0f, 0.0f }; //Up vector
+	const AnnQuaternion orientation = player->getOrientation().toQuaternion();
+	const auto at = orientation.getAtVector();
+	const auto up = orientation.getUpVector();
+	ALfloat alOrientation[] = { at.x, at.y, at.z, //LookAt vector
+							up.x, up.y, up.z }; //Up vector
 
 	//Apply the orientation
-	alListenerfv(AL_ORIENTATION, Orientation);
+	alListenerfv(AL_ORIENTATION, alOrientation);
 
 	//Create a source for the BGM
 	alGenSources(1, &bgmSource);
@@ -67,11 +71,10 @@ bool AnnAudioEngine::initOpenAL()
 {
 	//Open audio playback device
 	//Check if OpenAL support device enumeration extension here
-	if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE
+	if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT")
 		&& AnnGetVRRenderer()->usesCustomAudioDevice())
 	{
-		AnnDebug() << "This implementation of OpenAL support Audio alDevice enumeration, and the current VR renderer hint to use a specific audio device.";
-		AnnDebug() << "VR device uses this identifier substring : " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString();
+		AnnDebug() << "VR device want's to use : " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString() << " for audio playback...";
 		//Get the list of all devices
 		detectPlaybackDevices(alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER));
 
@@ -80,20 +83,37 @@ bool AnnAudioEngine::initOpenAL()
 			if (deviceName.find(AnnGetVRRenderer()->getAudioDeviceIdentifierSubString())
 				!= std::string::npos)
 			{
-				AnnDebug() << "Found " << deviceName << " as " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString() << " alDevice!";
+				AnnDebug() << "Found " << deviceName << " alDevice!";
 				//Open the selected device
 				alDevice = alcOpenDevice(deviceName.c_str());
 				break;
 			}
 	}
+
 	//If no device has been set above :
-	if (!alDevice) alDevice = alcOpenDevice(nullptr);
-	if (!alDevice) return false;
+	if (!alDevice)
+	{
+		AnnDebug() << "No specific OpenAL device set, opening windows default";
+		alDevice = alcOpenDevice(nullptr);
+	}
+	if (!alDevice)
+	{
+		lastError = "Failed to open an OpenAL device";
+		return false;
+	}
 
 	//Create context and make it current
 	alContext = alcCreateContext(alDevice, nullptr);
-	if (!alContext) return false;
-	if (!alcMakeContextCurrent(alContext)) return false;
+	if (!alContext)
+	{
+		lastError = "Failed to create an OpenAL Context";
+		return false;
+	}
+	if (!alcMakeContextCurrent(alContext))
+	{
+		lastError = "failed to make " + std::to_string(reinterpret_cast<uint64_t>(alContext)) + " as current context";
+		return false;
+	}
 
 	//Display information
 	AnnDebug() << "OpenAL version : " << alGetString(AL_VERSION);
