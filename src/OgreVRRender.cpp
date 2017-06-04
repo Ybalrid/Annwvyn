@@ -540,6 +540,7 @@ void OgreVRRender::setShadowFiltering(ShadowFiltering level)
 		case ShadowFiltering::low:
 			pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_2x2);
 			break;
+		default:
 		case ShadowFiltering::medium:
 			pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_3x3);
 			break;
