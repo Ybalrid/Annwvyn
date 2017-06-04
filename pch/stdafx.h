@@ -1,8 +1,5 @@
 #pragma once
 
-//Remove some visual studio stupidity
-#pragma warning (disable : 4244)
-
 //C STDLIB for C++
 #include <cmath>
 #include <cassert>
@@ -49,26 +46,26 @@
 #include <OgreMatrix3.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
-#include <Compositor/OgreCompositorManager2.h>
-#include <Compositor/OgreCompositorWorkspaceDef.h>
-#include <Compositor/OgreCompositorWorkspace.h>
-#include <Compositor/OgreCompositorNode.h>
-#include <Compositor/OgreCompositorNodeDef.h>
-#include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
 #include <OgreMaterialManager.h>
 #include <OgreMaterial.h>
 #include <OgreTechnique.h>
 #include <OgrePass.h>
-#include <Hlms/Pbs/OgreHlmsPbs.h>
-#include <Hlms/Pbs/OgreHlmsPbsDatablock.h>
-#include <Hlms/Unlit/OgreHlmsUnlit.h>
-#include <Hlms/Unlit/OgreHlmsUnlitDatablock.h>
 #include <OgreHlmsManager.h>
 #include <OgreHlms.h>
 #include <OgreMesh.h>
 #include <OgreMesh2.h>
 #include <OgreMeshManager.h>
 #include <OgreMeshManager2.h>
+#include <Compositor/OgreCompositorManager2.h>
+#include <Compositor/OgreCompositorWorkspaceDef.h>
+#include <Compositor/OgreCompositorWorkspace.h>
+#include <Compositor/OgreCompositorNode.h>
+#include <Compositor/OgreCompositorNodeDef.h>
+#include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
+#include <Hlms/Pbs/OgreHlmsPbs.h>
+#include <Hlms/Pbs/OgreHlmsPbsDatablock.h>
+#include <Hlms/Unlit/OgreHlmsUnlit.h>
+#include <Hlms/Unlit/OgreHlmsUnlitDatablock.h>
 
 //Object-Oriented Input System
 #include <OIS.h>

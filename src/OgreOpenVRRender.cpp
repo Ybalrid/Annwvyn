@@ -33,6 +33,7 @@ triggerNormalizedValue{ 0 }
 	//Get the singleton pointer
 	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
 
+	buttonsToHandle.reserve(5);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
 	buttonsToHandle.push_back(vr::k_EButton_Grip);
 	buttonsToHandle.push_back(vr::k_EButton_A);
