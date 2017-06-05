@@ -211,7 +211,7 @@ void OgreOculusRender::initRttRendering()
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
 	}
 
-	std::array<std::array<size_t, 2>, 2> textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
+	std::array<std::array<unsigned int, 2>, 2> textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
 	ogreRenderTexturesSeparatedGLID = createSeparatedRenderTextures(textureDimentions);
 
 	compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);

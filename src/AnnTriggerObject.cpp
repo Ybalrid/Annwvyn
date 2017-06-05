@@ -78,7 +78,7 @@ void AnnTriggerObject::setShape(btCollisionShape* shp)
 	}
 
 	shape.reset(shp);
-	body = std::make_unique<btRigidBody>(0, nullptr, shape.get());
+	body = std::make_unique<btRigidBody>(0.f, nullptr, shape.get());
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 	body->setUserPointer(static_cast<void*>(this));
 	AnnGetPhysicsEngine()->getWorld()->addRigidBody(body.get());

@@ -275,7 +275,7 @@ void OgreVRRender::initPipeline()
 	loadHLMSLibrary();
 }
 
-GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
+GLuint OgreVRRender::createCombinedRenderTexture(unsigned int w, unsigned int h)
 {
 	GLuint glid;
 	auto rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -285,23 +285,23 @@ GLuint OgreVRRender::createCombinedRenderTexture(float w, float h)
 	return glid;
 }
 
-std::array<GLuint, 2> OgreVRRender::createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions)
+std::array<GLuint, 2> OgreVRRender::createSeparatedRenderTextures(const combinedTextureSizeArray& textureSizes)
 {
 	std::array <GLuint, 2> glid;
-	AnnDebug() << "Creating separated render textures " << dimentions[0][0] << "x" << dimentions[0][1] << " " << dimentions[1][0] << "x" << dimentions[1][1];
+	AnnDebug() << "Creating separated render textures " << textureSizes[0][0] << "x" << textureSizes[0][1] << " " << textureSizes[1][0] << "x" << textureSizes[1][1];
 	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
 	for (auto i : { 0u, 1u })
 	{
 		rttTexturesSeparated[i] = Ogre::TextureManager::getSingleton().createManual(std::string(rttTextureName) + std::to_string(i),
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D,
-			Ogre::uint(dimentions[i][0]), Ogre::uint(dimentions[i][1]), 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
+			Ogre::uint(textureSizes[i][0]), Ogre::uint(textureSizes[i][1]), 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
 		rttTexturesSeparated[i]->getCustomAttribute("GLID", &glid[i]);
 		rttEyeSeparated[i] = rttTexturesSeparated[i]->getBuffer(0)->getRenderTarget(0);
 	}
 	return glid;
 }
 
-std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderBuffer(float w, float h, std::string additionalTextureName) const
+std::tuple<Ogre::TexturePtr, unsigned int> OgreVRRender::createAdditionalRenderBuffer(unsigned int w, unsigned int h, std::string additionalTextureName) const
 {
 	static int counter;
 	if (additionalTextureName.empty())

@@ -140,7 +140,7 @@ void AnnPhysicsEngine::resetGravity() const
 void AnnPhysicsEngine::update()
 {
 	stepDebugDrawer();
-	step(AnnGetEngine()->getFrameTime());
+	step(float(AnnGetEngine()->getFrameTime()));
 	processCollisionTesting();
 }
 

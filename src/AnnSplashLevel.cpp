@@ -139,7 +139,7 @@ void AnnSplashLevel::runLogic()
 			AnnDebug() << "visible";
 			//This set the "startTime" variable, preventing this piece of code to be ran twice
 			AnnDebug() << "Starting time at : " << AnnGetEngine()->getTimeFromStartUp();
-			startTime = AnnGetEngine()->getTimeFromStartUp();
+			startTime = float(AnnGetEngine()->getTimeFromStartUp());
 			//If you put some background music or sound for the splash-screen, we start it
 			if (hasBGM)
 				AnnGetAudioEngine()->playBGM(bgmPath);
@@ -185,5 +185,5 @@ void AnnSplashLevel::setTimeout(float time)
 
 void AnnSplashLevel::setTimeoutMillisec(unsigned time)
 {
-	timeout = time;
+	timeout = float(time);
 }

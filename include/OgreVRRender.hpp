@@ -47,7 +47,8 @@ struct OgrePose
 class DLL OgreVRRender
 {
 public:
-
+	using combinedTextureSizeArray = std::array<std::array<unsigned int, 2>, 2>;
+	
 	void logToOgre(const std::string& str);
 
 	///Name of the rendersystem plugin to load on Ogre
@@ -221,13 +222,13 @@ public:
 	static void loadOpenGLFunctions();
 
 	///This method create a texture with the wanted Anti Aliasing level. It will set the rttTextureCombined and rttEyesCombined member of this class to the correct value, and return the GLID of the texture.
-	unsigned int createCombinedRenderTexture(float w, float h);
+	unsigned int createCombinedRenderTexture(unsigned int w, unsigned int h);
 
 	///This create a couple of separated render texture
-	std::array<unsigned int, 2> createSeparatedRenderTextures(const std::array<std::array<size_t, 2>, 2>& dimentions);
+	std::array<unsigned int, 2> createSeparatedRenderTextures(const combinedTextureSizeArray& textureSizes);
 
 	///Create a render buffer with not anti aliasing. return a tuple with a TexturePtr and a GLID. use <code><pre>std::get<></pre></code>
-	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(float w, float h, std::string name = "") const;
+	std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(unsigned int w, unsigned int h, std::string name = "") const;
 
 	///Create a window. Even if we do VR, the way OGRE is architectured, you need to create a window to initialize the RenderSystem
 	void createWindow(unsigned int w = 1280, unsigned int h = 720, bool vsync = false);

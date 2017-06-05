@@ -42,8 +42,8 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 	const size_t fontPixelSize = PixelUtil::getNumElemBytes(fontPb.format);
 	const size_t destPixelSize = PixelUtil::getNumElemBytes(destPb.format);
 
-	const size_t fontRowPitchBytes = fontPb.rowPitch * fontPixelSize;
-	const size_t destRowPitchBytes = destPb.rowPitch * destPixelSize;
+	const size_t fontRowPitchBytes = size_t(fontPb.rowPitch * fontPixelSize);
+	const size_t destRowPitchBytes = size_t(destPb.rowPitch * destPixelSize);
 
 	Box *GlyphTexCoords;
 	GlyphTexCoords = new Box[str.size()];
@@ -57,10 +57,10 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 		if ((str[i] != '\t') && (str[i] != '\n') && (str[i] != ' '))
 		{
 			glypheTexRect = font->getGlyphTexCoords(str[i]);
-			GlyphTexCoords[i].left = glypheTexRect.left * fontTexture->getSrcWidth();
-			GlyphTexCoords[i].top = glypheTexRect.top * fontTexture->getSrcHeight();
-			GlyphTexCoords[i].right = glypheTexRect.right * fontTexture->getSrcWidth();
-			GlyphTexCoords[i].bottom = glypheTexRect.bottom * fontTexture->getSrcHeight();
+			GlyphTexCoords[i].left = uint32_t(glypheTexRect.left * fontTexture->getSrcWidth());
+			GlyphTexCoords[i].top = uint32_t(glypheTexRect.top * fontTexture->getSrcHeight());
+			GlyphTexCoords[i].right = uint32_t(glypheTexRect.right * fontTexture->getSrcWidth());
+			GlyphTexCoords[i].bottom = uint32_t(glypheTexRect.bottom * fontTexture->getSrcHeight());
 
 			if (GlyphTexCoords[i].getHeight() > charheight)
 				charheight = GlyphTexCoords[i].getHeight();
@@ -73,8 +73,8 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 	//get the size of the glyph '0'
 	glypheTexRect = font->getGlyphTexCoords('0');
 	Box spaceBox;
-	spaceBox.left = glypheTexRect.left * fontTexture->getSrcWidth();
-	spaceBox.right = glypheTexRect.right * fontTexture->getSrcWidth();
+	spaceBox.left = uint32_t(glypheTexRect.left * fontTexture->getSrcWidth());
+	spaceBox.right = uint32_t(glypheTexRect.right * fontTexture->getSrcWidth());
 	spacewidth = spaceBox.getWidth();
 
 	//if not mono-spaced
@@ -169,7 +169,7 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 				for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
 				{
 					float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0f);
-					float invalpha = 1.0 - alpha;
+					float invalpha = float(1.0 - alpha);
 					size_t offset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
 
 					ColourValue pix;
@@ -273,8 +273,8 @@ Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str
 			font->setSource(fontTTF);
 
 			//Set important parameters
-			font->setTrueTypeResolution(dpi);
-			font->setTrueTypeSize(size);
+			font->setTrueTypeResolution(unsigned int(dpi));
+			font->setTrueTypeSize(float(size));
 		}
 	}
 
@@ -361,8 +361,8 @@ void Ann3DTextPlane::createMaterial()
 		.createManual(AnnGetStringUtility()->getRandomString(),
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 			Ogre::TEX_TYPE_2D_ARRAY,
-			width * resolutionFactor,
-			height * resolutionFactor, 1,
+			Ogre::uint(width * resolutionFactor),
+			Ogre::uint(height * resolutionFactor), 1,
 			12, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET | Ogre::TU_AUTOMIPMAP);
 
 	datablock->setTexture(Ogre::PBSM_DIFFUSE, 0, texture);
@@ -434,7 +434,7 @@ AnnQuaternion Ann3DTextPlane::getOrientation()
 void Ann3DTextPlane::setMargin(float m)
 {
 	margin = m;
-	pixelMargin = resolutionFactor*margin;
+	pixelMargin = unsigned int(resolutionFactor*margin);
 
 	needUpdating = true;
 	autoUpdateCheck();
@@ -452,13 +452,13 @@ void Ann3DTextPlane::renderText()
 	WriteToTexture(caption,
 		texture,
 
-		Ogre::Image::Box(pixelMargin, pixelMargin,
-			width * resolutionFactor - pixelMargin,
-			height * resolutionFactor - pixelMargin),
+		Ogre::Image::Box{ pixelMargin, pixelMargin,
+			uint32_t(width * resolutionFactor - pixelMargin),
+			uint32_t(height * resolutionFactor - pixelMargin) },
 
 		font.getPointer(),
 		textColor.getOgreColor(),
-		align,
+		char(align),
 		true);
 
 	needUpdating = false;
