@@ -192,6 +192,20 @@ stop:
 	free(buffer);
 }
 
+void Ann3DTextPlane::createFont(const int& size)
+{
+	//Create the font
+	font = Ogre::FontManager::getSingleton().create(fontName, "ANNWVYN_CORE");
+
+	//Load true-type file
+	font->setType(Ogre::FontType::FT_TRUETYPE);
+	font->setSource(fontTTF);
+
+	//Set important parameters
+	font->setTrueTypeResolution(unsigned int(dpi));
+	font->setTrueTypeSize(float(size));
+}
+
 Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str, const int& size, const float& resolution, const string& fName, const string& TTF) :
 	fontName(fName),
 	fontTTF(TTF),
@@ -208,8 +222,7 @@ Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str
 	margin(0),
 	useImageAsBackground(false)
 {
-	AnnDebug() << "3D Text plane created";
-	AnnDebug() << "Size is : " << width << "x" << height;
+	AnnDebug() << width << "x" << height << "" << dpi << "dpi 3D Text plane created";
 	if (caption.empty())
 		AnnDebug() << "No caption yet";
 
@@ -219,13 +232,8 @@ Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str
 		throw AnnInitializationError(ANN_ERR_NOTINIT, "3D Text plane initialized without a valid font");
 	}
 
-	AnnDebug() << "font : " << fontName;
 	needUpdating = true;
-
 	resolutionFactor /= dpi2dpm;
-	AnnDebug() << "Resolution factor in dot per meters " << resolutionFactor;
-	AnnDebug() << "Texture resolution is : " << size_t(w * resolutionFactor) << "x" << size_t(h * resolutionFactor);
-	AnnDebug() << "Font resolution in DPI is : " << dpi;
 
 	calculateVerticesForPlaneSize();
 
@@ -264,18 +272,7 @@ Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str
 
 		//Need to create the font
 		if (font.isNull())
-		{
-			//Create the font
-			font = Ogre::FontManager::getSingleton().create(fontName, "ANNWVYN_CORE");
-
-			//Load true-type file
-			font->setType(Ogre::FontType::FT_TRUETYPE);
-			font->setSource(fontTTF);
-
-			//Set important parameters
-			font->setTrueTypeResolution(unsigned int(dpi));
-			font->setTrueTypeSize(float(size));
-		}
+			createFont(size);
 	}
 
 	//If there's text to draw, draw it

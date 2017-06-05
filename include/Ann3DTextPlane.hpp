@@ -22,6 +22,7 @@ namespace Annwvyn
 		///Text alignment flag
 		enum TextAlign { ALIGN_LEFT = 'l', ALIGN_CENTER = 'c', ALIGN_RIGHT = 'r' };
 
+		void createFont(const int& size);
 		///Construct a 3D text plane. Need to provide a caption to auto render text
 		/// \param w Width in meter
 		/// \param h Height in meter
