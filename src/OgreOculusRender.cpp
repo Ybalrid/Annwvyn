@@ -9,8 +9,8 @@
 #include "AnnGetter.hpp"
 #include "AnnException.hpp"
 
+//Windows multimedia and sound libraries
 #pragma comment(lib, "dsound.lib")
-
 #include <mmsystem.h>
 #include <dsound.h>
 
@@ -211,14 +211,12 @@ void OgreOculusRender::initRttRendering()
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
 	}
 
-	std::array<std::array<unsigned int, 2>, 2> textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
+	combinedTextureSizeArray textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
 	ogreRenderTexturesSeparatedGLID = createSeparatedRenderTextures(textureDimentions);
 
 	compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);
 	compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", true);
 	compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
-
-	//auto node = compositor->getNodeDefinitionNonConst("MhHdrPostProcessingNode");
 
 	//Fill in MirrorTexture parameters
 	ovrMirrorTextureDesc mirrorTextureDesc = {};
@@ -345,8 +343,8 @@ std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 	struct stupidAudioDescriptor
 	{
 		stupidAudioDescriptor(LPCSTR str, LPGUID pguid) :
-			name(pguid ? str : "NO_GUID"),
-			guid(pguid ? *pguid : GUID()) {}
+			name(pguid ? str : "NO_GUID"), //Sometimes pguid is nullptr, in that case the descriptor is not valid
+			guid(pguid ? *pguid : GUID()) {} //Obviously, dereferencing a nullptr is a bad idea, prevent that. 
 		const std::string name;
 		const GUID guid;
 	};
@@ -355,8 +353,8 @@ std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 
 	//Enumerate all DirectSound interfaces, and create stupidAudioDescriptor for them
 	DirectSoundEnumerateA([](LPGUID guid, LPCSTR descr, LPCSTR modname, LPVOID ctx) {
-		auto names = static_cast<stupidAudioDescriptorVect*>(ctx);
-		names->push_back({ descr, guid });
+		auto names = static_cast<stupidAudioDescriptorVect*>(ctx); //get an usable pointer
+		names->push_back({ descr, guid }); //create a usable descriptor and add it to the list
 		return TRUE; }, &descriptors);
 
 	//Try to find the one we need
@@ -366,7 +364,7 @@ std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 	if (result != descriptors.end())
 	{
 		stupidAudioDescriptor descriptor = *result; audioDeviceName = descriptor.name;
-		AnnDebug() << "found " << audioDeviceName << " that match Oculus given DirectSound GUID";
+		AnnDebug() << "Found " << audioDeviceName << " that match Oculus given DirectSound GUID";
 	}
 	else
 	{
@@ -436,7 +434,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 	pauseFlag = false;
 	root->renderOneFrame();
 
-	for (auto i{ 0 }; i < 2; ++i)
+	for (auto i{ 0U }; i < 2; ++i)
 	{
 		ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
 		ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), texturesSeparatedSwapChain[i], currentSeparatedIndex[i], &oculusRenderTexturesSeparatedGLID[i]);
