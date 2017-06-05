@@ -340,7 +340,7 @@ bool AnnEngine::refresh()
 	renderer->updateTracking();
 
 	updateTime = renderer->getUpdateTime();
-	player->engineUpdate(getFrameTime());
+	player->engineUpdate(float(getFrameTime()));
 
 	for (auto& SubSystem : SubSystemList)
 		if (SubSystem->needUpdate())

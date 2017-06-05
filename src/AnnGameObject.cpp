@@ -303,7 +303,7 @@ void AnnGameObject::loopAnimation(bool loop) const
 
 void AnnGameObject::addAnimationTime(double offset) const
 {
-	if (currentAnimation) currentAnimation->addTime(offset);
+	if (currentAnimation) currentAnimation->addTime(float(offset));
 }
 
 void AnnGameObject::applyImpulse(AnnVect3 force) const

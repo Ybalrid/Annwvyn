@@ -213,7 +213,7 @@ void AnnPlayer::applyRelativeBodyYaw(Ogre::Radian angle)
 
 void AnnPlayer::applyMouseRelativeRotation(int relValue)
 {
-	relValue *= mouseSensitivity;
+	relValue = int(relValue * mouseSensitivity);
 	applyRelativeBodyYaw(Ogre::Radian(-float(relValue) * getTurnSpeed() * updateTime));
 }
 
@@ -288,7 +288,7 @@ void AnnPlayer::teleport(AnnVect3 position)
 
 void AnnPlayer::engineUpdate(float deltaTime)
 {
-	static AnnVect3 roomTranslation = AnnVect3::ZERO;
+	static AnnVect3 roomTranslation;
 	updateTime = deltaTime;
 	switch (mode)
 	{

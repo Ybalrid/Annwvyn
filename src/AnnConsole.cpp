@@ -222,8 +222,8 @@ void AnnConsole::update()
 	}
 	else
 	{
-		float w(texture->getBuffer()->getWidth());
-		float h(texture->getBuffer()->getHeight());
+		auto w(texture->getBuffer()->getWidth());
+		auto h(texture->getBuffer()->getHeight());
 
 		auto texture_out = texture->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::v1::HardwareBuffer::LockOptions::HBL_WRITE_ONLY);
 
@@ -232,7 +232,7 @@ void AnnConsole::update()
 
 		auto background_in = background->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::v1::HardwareBuffer::LockOptions::HBL_READ_ONLY);
 
-		for (auto y(0); y < h; ++y) for (auto x(0); x < w; ++x)
+		for (auto y(0u); y < h; ++y) for (auto x(0u); x < w; ++x)
 			texture_out.setColourAt(background_in.getColourAt(x, y, 0), x, y, 0);
 
 		background->getBuffer()->unlock();
@@ -305,10 +305,10 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 		if ((str[i] != '\t') && (str[i] != '\n') && (str[i] != ' '))
 		{
 			glypheTexRect = font->getGlyphTexCoords(str[i]);
-			GlyphTexCoords[i].left = glypheTexRect.left * fontTexture->getSrcWidth();
-			GlyphTexCoords[i].top = glypheTexRect.top * fontTexture->getSrcHeight();
-			GlyphTexCoords[i].right = glypheTexRect.right * fontTexture->getSrcWidth();
-			GlyphTexCoords[i].bottom = glypheTexRect.bottom * fontTexture->getSrcHeight();
+			GlyphTexCoords[i].left = uint32_t(glypheTexRect.left * fontTexture->getSrcWidth());
+			GlyphTexCoords[i].top = uint32_t(glypheTexRect.top * fontTexture->getSrcHeight());
+			GlyphTexCoords[i].right = uint32_t(glypheTexRect.right * fontTexture->getSrcWidth());
+			GlyphTexCoords[i].bottom = uint32_t(glypheTexRect.bottom * fontTexture->getSrcHeight());
 
 			if (GlyphTexCoords[i].getHeight() > charheight)
 				charheight = GlyphTexCoords[i].getHeight();
@@ -403,9 +403,9 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 			for (size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
 				for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
 				{
-					float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0);
-					float invalpha = 1.0 - alpha;
-					size_t charOffset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
+					auto alpha = float(color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0));
+					auto invalpha = 1.0f - alpha;
+					auto charOffset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
 					ColourValue pix;
 					PixelUtil::unpackColour(&pix, destPb.format, &destData[charOffset]);
 					pix = (pix * invalpha) + (color * alpha);

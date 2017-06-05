@@ -222,7 +222,7 @@ namespace Annwvyn
 		void applyAnalogYaw();
 
 		///time length of the frame
-		double updateTime;
+		float updateTime;
 
 		///Player body physics enabled
 		bool physics;
