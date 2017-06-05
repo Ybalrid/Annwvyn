@@ -200,44 +200,12 @@ void Ann3DTextPlane::createFont(const int& size)
 	//Load true-type file
 	font->setType(Ogre::FontType::FT_TRUETYPE);
 	font->setSource(fontTTF);
-
-	//Set important parameters
 	font->setTrueTypeResolution(unsigned int(dpi));
 	font->setTrueTypeSize(float(size));
 }
 
-Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str, const int& size, const float& resolution, const string& fName, const string& TTF) :
-	fontName(fName),
-	fontTTF(TTF),
-	caption(str),
-	width(w),
-	height(h),
-	resolutionFactor(resolution),
-	textColor(AnnColor(1, 0, 0)),
-	bgColor(AnnColor(0, 0, 0, 0)),
-	autoUpdate(false),
-	fontSize(size),
-	dpi(resolution),
-	pixelMargin(0),
-	margin(0),
-	useImageAsBackground(false)
+void Ann3DTextPlane::createPlane()
 {
-	AnnDebug() << width << "x" << height << "" << dpi << "dpi 3D Text plane created";
-	if (caption.empty())
-		AnnDebug() << "No caption yet";
-
-	if (fontName.empty())
-	{
-		AnnDebug() << "You need set a font to initialize a text render plane";
-		throw AnnInitializationError(ANN_ERR_NOTINIT, "3D Text plane initialized without a valid font");
-	}
-
-	needUpdating = true;
-	resolutionFactor /= dpi2dpm;
-
-	calculateVerticesForPlaneSize();
-
-	//TOTO put this in a separate method
 	auto smgr(AnnGetEngine()->getSceneManager());
 	node = smgr->getRootSceneNode()->createChildSceneNode();
 	renderPlane = smgr->createManualObject();
@@ -258,7 +226,39 @@ Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str
 	renderPlane->end();
 
 	node->attachObject(renderPlane);
-	//end of the thing that should be in it's own method
+}
+
+Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str, const int& size, const float& resolution, const string& fName, const string& TTF) :
+	fontName(fName),
+	fontTTF(TTF),
+	caption(str),
+	width(w),
+	height(h),
+	resolutionFactor(resolution),
+	textColor(AnnColor(1, 0, 0)),
+	bgColor(AnnColor(0, 0, 0, 0)),
+	autoUpdate(false),
+	fontSize(size),
+	dpi(resolution),
+	pixelMargin(0),
+	margin(0),
+	useImageAsBackground(false)
+{
+	AnnDebug() << width << "x" << height << " " << dpi << "dpi 3D Text plane created";
+	if (caption.empty())
+		AnnDebug() << "No caption yet";
+
+	if (fontName.empty())
+	{
+		AnnDebug() << "You need set a font to initialize a text render plane";
+		throw AnnInitializationError(ANN_ERR_NOTINIT, "3D Text plane initialized without a valid font");
+	}
+
+	needUpdating = true;
+	resolutionFactor /= dpi2dpm;
+
+	calculateVerticesForPlaneSize();
+	createPlane();
 
 	//Create or retrieve the font from the font manager. Will also create the font manager if not available yet (unlikely since the font manager is initialized by the on screen console)
 	if (!fontName.empty())
@@ -282,20 +282,18 @@ Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str
 Ann3DTextPlane::~Ann3DTextPlane()
 {
 	AnnDebug() << "Destructing a 3D Text plane!";
-	auto smgr = AnnGetEngine()->getSceneManager();
+	const auto smgr = AnnGetEngine()->getSceneManager();
 
 	node->detachObject(renderPlane);
 	smgr->destroyManualObject(renderPlane);
-
 	Ogre::MaterialManager::getSingleton().remove(materialName);
-
-	auto textureName = texture->getName();
-	Ogre::TextureManager::getSingleton().remove(textureName);
+	Ogre::TextureManager::getSingleton().remove(texture->getName());
+	texture.setNull();
 
 	if (!bgTexture.isNull())
 	{
-		textureName = texture->getName();
-		Ogre::TextureManager::getSingleton().remove(textureName);
+		Ogre::TextureManager::getSingleton().remove(bgTexture->getName());
+		bgTexture.setNull();
 	}
 
 	smgr->destroySceneNode(node);
