@@ -64,7 +64,8 @@ void AnnSplashLevel::load()
 	CurvedPlane = smgr->createManualObject(Ogre::SCENE_DYNAMIC);
 
 	CurvedPlane->begin("Splash", Ogre::OT_TRIANGLE_STRIP);
-
+	
+	//TODO loop this and increse resolution. This is SO UGLY
 	const auto CurveC(1.f);
 	const auto CurveB(CurveC / 4.0f);
 
