@@ -200,7 +200,7 @@ void Ann3DTextPlane::createFont(const int& size)
 	//Load true-type file
 	font->setType(Ogre::FontType::FT_TRUETYPE);
 	font->setSource(fontTTF);
-	font->setTrueTypeResolution(unsigned int(dpi));
+	font->setTrueTypeResolution(static_cast<unsigned int>(dpi));
 	font->setTrueTypeSize(float(size));
 }
 
@@ -429,7 +429,7 @@ AnnQuaternion Ann3DTextPlane::getOrientation()
 void Ann3DTextPlane::setMargin(float m)
 {
 	margin = m;
-	pixelMargin = unsigned int(resolutionFactor*margin);
+	pixelMargin = static_cast<unsigned int>(resolutionFactor*margin);
 
 	needUpdating = true;
 	autoUpdateCheck();
