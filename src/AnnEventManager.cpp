@@ -273,9 +273,9 @@ void AnnEventManager::processJoystickEvents()
 		const auto nbButton{ std::min(state.mButtons.size(), Joystick->previousStickButtonStates.size()) };
 		for (auto button(0u); button < nbButton; button++)
 			if (!Joystick->previousStickButtonStates[button] && state.mButtons[button])
-				stickEvent.pressed.push_back(unsigned short(button));
+				stickEvent.pressed.push_back(static_cast<unsigned short>(button));
 			else if (Joystick->previousStickButtonStates[button] && !state.mButtons[button])
-				stickEvent.released.push_back(unsigned short(button));
+				stickEvent.released.push_back(static_cast<unsigned short>(button));
 
 		//Save current buttons state for next frame
 		Joystick->previousStickButtonStates = state.mButtons;
