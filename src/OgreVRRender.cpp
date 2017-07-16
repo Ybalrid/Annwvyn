@@ -397,9 +397,11 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 	auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/" + SL, "FileSystem", true);
 	auto archiveLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/Any", "FileSystem", true);
 	auto archivePbsLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Pbs/Any", "FileSystem", true);
+	auto archiveUnlitLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/Any", "FileSystem", true);
 	library.push_back(archiveLibrary);
 	library.push_back(archiveLibraryAny);
 	library.push_back(archivePbsLibraryAny);
+	library.push_back(archiveUnlitLibraryAny);
 
 	//Define "unlit" and "PBS" (physics based shader) HLMS
 	auto archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/" + SL, "FileSystem", true);
