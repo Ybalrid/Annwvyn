@@ -420,7 +420,7 @@ void OgreVRRender::loadCompositor(const std::string& path, const std::string& ty
 	auto resourceGroupManager = Ogre::ResourceGroupManager::getSingletonPtr();
 	//TODO maybe package the compositor differently
 	resourceGroupManager->addResourceLocation(compositorFolder, type, RESOURCE_GROUP_COMPOSITOR);
-	resourceGroupManager->initialiseResourceGroup(RESOURCE_GROUP_COMPOSITOR);
+	resourceGroupManager->initialiseResourceGroup(RESOURCE_GROUP_COMPOSITOR, false);
 }
 
 void OgreVRRender::setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName) const

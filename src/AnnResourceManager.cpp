@@ -32,7 +32,7 @@ void AnnResourceManager::addDefaultResourceLocation() const
 	AnnDebug("Adding Annwvyn CORE resource locations");
 	ResourceGroupManager->addResourceLocation("media/CORE.zip", "Zip", reservedResourceGroupName);
 	ResourceGroupManager->addResourceLocation("media", "FileSystem", reservedResourceGroupName, true);
-	ResourceGroupManager->initialiseResourceGroup(reservedResourceGroupName);
+	ResourceGroupManager->initialiseResourceGroup(reservedResourceGroupName, false);
 }
 
 void AnnResourceManager::loadReseourceFile(const std::string& path) const
@@ -65,7 +65,7 @@ void AnnResourceManager::loadReseourceFile(const std::string& path) const
 void AnnResourceManager::initResources() const
 {
 	//addDefaultResourceLocaton();
-	ResourceGroupManager->initialiseAllResourceGroups();
+	ResourceGroupManager->initialiseAllResourceGroups(false);
 	AnnDebug("Resources initialized");
 }
 
