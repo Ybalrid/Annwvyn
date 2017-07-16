@@ -4,12 +4,7 @@ cbuffer PassBuffer : register(b0)
 {
 	struct PassData
 	{
-	//Vertex shader
-	float4x4 viewProj[2];
-	@property( hlms_shadowcaster )
-		float4 depthRange;
-	@end
-	@insertpiece( custom_passBuffer )
+	@insertpiece( PassInternalDecl )
 	} passBuf;
 };
 @end
@@ -26,7 +21,7 @@ struct Material
 
 cbuffer materialArray : register(b1)
 {
-	Material materialArray[@insertpiece( materials_per_buffer )];
+	Material materialArray[@value( materials_per_buffer )];
 };
 @end
 
@@ -44,9 +39,13 @@ cbuffer instance : register(b2)
     //Must be loaded with uintBitsToFloat
     //
     //.z =
-    //Contains 0 or 1 to index into pass.viewProj[]. Only used
-    //if hlms_identity_viewproj_dynamic is set.
-	uint4 materialIdx[4096];
+	//Contains 0 or 1 to index into passBuf.viewProj[]. Only used
+	//if hlms_identity_viewproj_dynamic is set.
+	@property( fast_shader_build_hack )
+		uint4 worldMaterialIdx[2];
+	@end @property( !fast_shader_build_hack )
+		uint4 worldMaterialIdx[4096];
+	@end
 };
 @end
 
@@ -60,6 +59,16 @@ cbuffer instance : register(b2)
 		@foreach( out_uv_half_count, n )
 			float@value( out_uv_half_count@n ) uv@n	: TEXCOORD@counter(texcoord);@end
 	@end
-	@property( hlms_shadowcaster )	float depth	: TEXCOORD@counter(texcoord);@end
+	@property( hlms_shadowcaster )
+		@property( (!hlms_shadow_uses_depth_texture || exponential_shadow_maps) && !hlms_shadowcaster_point )
+			float depth	: TEXCOORD@counter(texcoord);
+		@end
+		@property( hlms_shadowcaster_point )
+			float3 toCameraWS	: TEXCOORD@counter(texcoord);
+			@property( !exponential_shadow_maps )
+				nointerpolation float constBias	: TEXCOORD@counter(texcoord);
+			@end
+		@end
+	@end
 	@insertpiece( custom_VStoPS )
 @end

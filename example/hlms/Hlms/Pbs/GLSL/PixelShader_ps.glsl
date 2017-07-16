@@ -34,6 +34,8 @@ layout(std140) uniform;
 	@end
 @end
 
+@insertpiece( DeclPlanarReflTextures )
+
 @property( hlms_vpos )
 in vec4 gl_FragCoord;
 @end
@@ -333,7 +335,7 @@ void main()
 
 @property( !hlms_prepass )
 	//Everything's in Camera space
-@property( hlms_lights_spot || ambient_hemisphere || use_envprobe_map || hlms_forwardplus )
+@property( hlms_lights_spot || use_envprobe_map || hlms_use_ssr || use_planar_reflections || hlms_forwardplus )
 	vec3 viewDir	= normalize( -inPs.pos );
 	float NdotV		= clamp( dot( nNormal, viewDir ), 0.0, 1.0 );
 @end
@@ -404,7 +406,7 @@ void main()
 @insertpiece( forward3dLighting )
 @insertpiece( applyIrradianceVolumes )
 
-@property( use_envprobe_map || ambient_hemisphere )
+@property( use_envprobe_map || hlms_use_ssr || use_planar_reflections || ambient_hemisphere )
 	vec3 reflDir = 2.0 * dot( viewDir, nNormal ) * nNormal - viewDir;
 
 	@property( use_envprobe_map )
@@ -452,14 +454,16 @@ void main()
 		@end
 	@end
 
+	@insertpiece( DoPlanarReflectionsPS )
+
 	@property( ambient_hemisphere )
 		float ambientWD = dot( passBuf.ambientHemisphereDir.xyz, nNormal ) * 0.5 + 0.5;
 		float ambientWS = dot( passBuf.ambientHemisphereDir.xyz, reflDir ) * 0.5 + 0.5;
 
-		@property( use_envprobe_map || hlms_use_ssr )
+		@property( use_envprobe_map || hlms_use_ssr || use_planar_reflections )
 			envColourS	+= mix( passBuf.ambientLowerHemi.xyz, passBuf.ambientUpperHemi.xyz, ambientWD );
 			envColourD	+= mix( passBuf.ambientLowerHemi.xyz, passBuf.ambientUpperHemi.xyz, ambientWS );
-		@end @property( !use_envprobe_map && !hlms_use_ssr )
+		@end @property( !use_envprobe_map && !hlms_use_ssr && !use_planar_reflections )
 			vec3 envColourS = mix( passBuf.ambientLowerHemi.xyz, passBuf.ambientUpperHemi.xyz, ambientWD );
 			vec3 envColourD = mix( passBuf.ambientLowerHemi.xyz, passBuf.ambientUpperHemi.xyz, ambientWS );
 		@end
