@@ -84,7 +84,7 @@ void AnnXmlLevel::load()
 				if (!type.empty() && !path.empty())
 					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dirPath + "/" + path, type, name);
 			} while ((resourceLocation = resourceLocation->NextSiblingElement()) != nullptr);
-			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(name, false);
+			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(name, true);
 			resourceLocAdded = true;
 		}
 	}
