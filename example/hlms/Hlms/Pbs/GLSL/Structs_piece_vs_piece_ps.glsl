@@ -29,6 +29,10 @@ layout(binding = 0) uniform PassBuffer
 	//Vertex shader (common to both receiver and casters)
 	mat4 viewProj;
 
+@property( hlms_global_clip_distances )
+	vec4 clipPlane0;
+@end
+
 @property( hlms_shadowcaster_point )
 	vec4 cameraPosWS;	//Camera position in world space
 @end
@@ -92,6 +96,8 @@ layout(binding = 0) uniform PassBuffer
 	@end
 @end
 
+	@insertpiece( DeclPlanarReflUniforms )
+
 @property( parallax_correct_cubemaps )
 	CubemapProbe autoProbe;
 @end
@@ -128,7 +134,7 @@ struct Material
 
 layout(binding = 1) uniform MaterialBuf
 {
-	Material m[@insertpiece( materials_per_buffer )];
+	Material m[@value( materials_per_buffer )];
 } materialArray;
 @end
 
