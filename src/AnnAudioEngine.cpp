@@ -211,7 +211,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	std::vector<ALshort> alSamplesBuffer(nbSamples);
 	for (size_t i(0); i < alSamplesBuffer.size(); i++)
 		//This will step down a bit the amplitude (88% of max) of the signal to prevent saturation while using some formats (OGG)
-		alSamplesBuffer[i] = 0x7FFF * ALshort(samplesBuffer[i] * 0.88f);
+		alSamplesBuffer[i] = 0x7FFF * samplesBuffer[i] * 0.88f;
 
 	//close file
 	sf_close(File);
