@@ -32,6 +32,10 @@ cbuffer PassBuffer : register(b0)
 	//Vertex shader (common to both receiver and casters)
 	float4x4 viewProj;
 
+@property( hlms_global_clip_distances )
+	float4 clipPlane0;
+@end
+
 @property( hlms_shadowcaster_point )
 	float4 cameraPosWS;	//Camera position in world space
 @end
@@ -93,6 +97,8 @@ cbuffer PassBuffer : register(b0)
 	@end
 @end
 
+	@insertpiece( DeclPlanarReflUniforms )
+
 @property( parallax_correct_cubemaps )
 	CubemapProbe autoProbe;
 @end
@@ -130,7 +136,7 @@ struct Material
 
 cbuffer MaterialBuf : register(b1)
 {
-	Material materialArray[@insertpiece( materials_per_buffer )];
+	Material materialArray[@value( materials_per_buffer )];
 };
 @end
 
@@ -147,7 +153,11 @@ cbuffer InstanceBuffer : register(b2)
     //shadowConstantBias. Send the bias directly to avoid an
     //unnecessary indirection during the shadow mapping pass.
     //Must be loaded with uintBitsToFloat
-	uint4 worldMaterialIdx[4096];
+	@property( fast_shader_build_hack )
+		uint4 worldMaterialIdx[2];
+	@end @property( !fast_shader_build_hack )
+		uint4 worldMaterialIdx[4096];
+	@end
 };
 @end
 
