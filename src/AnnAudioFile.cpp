@@ -10,7 +10,7 @@ void AnnAudioFile::readFromStream(DataStreamPtr& stream)
 	AnnDebug() << "Reading audio data...";
 	data.resize(stream->size());
 	const auto read = stream->read(reinterpret_cast<void*>(data.data()), data.size());
-	AnnDebug() << "Read " << read << " bytes into audio data vector";
+	AnnDebug() << "Read " << read << " raw bytes into audio data vector";
 }
 
 //Ogre's loading from disk
@@ -98,19 +98,19 @@ sf_count_t AnnAudioFile::sfVioSeek(sf_count_t offset, int whence, void* audioFil
 	switch (whence)
 	{
 	case SEEK_CUR:
-		AnnDebug() << "sndfile seek cursor position " << offset << " from current";
+		//AnnDebug() << "sndfile seek cursor position " << offset << " from current";
 		file->sf_offset += offset;
 		break;
 	case SEEK_END:
-		AnnDebug() << "sndfile seek cursor position " << offset << " from end";
+		//AnnDebug() << "sndfile seek cursor position " << offset << " from end";
 		file->sf_offset = file->getSize() - offset;
 		break;
 	case SEEK_SET:
-		AnnDebug() << "sndfile seek cursor position " << offset;
+		//AnnDebug() << "sndfile seek cursor position " << offset;
 		file->sf_offset = offset;
 		break;
 	default:
-		AnnDebug() << "invalid whence when sdVioSeek";
+		AnnDebug() << "invalid whence when sfVioSeek";
 		break;
 	}
 
@@ -143,7 +143,7 @@ sf_count_t AnnAudioFile::sfVioWriteDummy(const void*, sf_count_t, void*)
 sf_count_t AnnAudioFile::sfVioTell(void* audioFileRawPtr)
 {
 	const auto file = cast(audioFileRawPtr);
-	AnnDebug() << "telling sndfile that current cursor position is " << file->sf_offset;
+	//AnnDebug() << "telling sndfile that current cursor position is " << file->sf_offset;
 	return file->sf_offset;
 }
 
