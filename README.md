@@ -91,6 +91,8 @@ Updating the engine
 
 Run "git pull" on the Annwvyn sub-directory. then open the VS solution in msvc/Annwvyn/Annwyvn.sln
 
+Theses days, you may also need to re-build Ogre v2-1 from source and put it inside your dependency package...
+
 Clean and build the solution.
 
 If you have build errors, you should download the newest SDK and put it in place of the older one. You can also replace the content of your SDK folder (except the Annwvyn directory) with the dependency package from http://annwvyn.org/?static2/download
@@ -105,8 +107,8 @@ License MIT.
 
 ______
 
-Some word on the linux support
+Some words on the linux support
 ------------------------------
 
-The engine is buildable and runnable under linux, but there is **no support** for any HMD under linux at this time. So games using it will only start in **NoVR** mode.
+The engine is buildable and runnable under linux, but there is **no support** for any HMD under linux at this time. So games using it will only start in **NoVR** mode. (This may change if we add OSVR support)
 
