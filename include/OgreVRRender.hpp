@@ -237,7 +237,7 @@ public:
 	std::string getName() const;
 
 	///Load the HLMS library from the file-system
-	void loadHLMSLibrary(const std::string& path = "./hlms/");
+	void loadHLMSLibrary(std::string path = "./hlms/");
 
 	///Load the compositor resources that are needed to setup the pipeline
 	void loadCompositor(const std::string& path = "./compositor/", const std::string& type = "FileSystem");

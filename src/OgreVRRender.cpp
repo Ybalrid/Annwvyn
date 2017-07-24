@@ -382,9 +382,8 @@ void OgreVRRender::makeValidPath(std::string& path)
 	else if (path[path.size() - 1] != '/') path += "/";
 }
 
-void OgreVRRender::loadHLMSLibrary(const std::string& path)
+void OgreVRRender::loadHLMSLibrary(std::string hlmsFolder)
 {
-	auto hlmsFolder = path;
 
 	//The hlmsFolder can come from a configuration file where it could be "empty" or set to "." or lacking the trailing "/"
 	makeValidPath(hlmsFolder);
@@ -394,19 +393,22 @@ void OgreVRRender::loadHLMSLibrary(const std::string& path)
 
 	//Define the shader library to use for HLMS
 	auto library = Ogre::ArchiveVec();
-	auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/" + SL, "FileSystem", true);
-	auto archiveLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/Any", "FileSystem", true);
+	auto archiveCommonGLSLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/" + SL, "FileSystem", true);
+	auto archiveCommonAnyLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/Any", "FileSystem", true);
 	auto archivePbsLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Pbs/Any", "FileSystem", true);
 	auto archiveUnlitLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/Any", "FileSystem", true);
-	library.push_back(archiveLibrary);
-	library.push_back(archiveLibraryAny);
-	library.push_back(archivePbsLibraryAny);
-	library.push_back(archiveUnlitLibraryAny);
+	library.push_back(archiveCommonGLSLibrary);
+	library.push_back(archiveCommonAnyLibraryAny);
 
 	//Define "unlit" and "PBS" (physics based shader) HLMS
 	auto archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/" + SL, "FileSystem", true);
 	auto archivePbs = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Pbs/" + SL, "FileSystem", true);
+	library.push_back(archiveUnlitLibraryAny);
+	
 	auto hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveUnlit, &library);
+	library.pop_back();
+
+	library.push_back(archivePbsLibraryAny);
 	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &library);
 	hlmsManager->registerHlms(hlmsUnlit);
 	hlmsManager->registerHlms(hlmsPbs);
