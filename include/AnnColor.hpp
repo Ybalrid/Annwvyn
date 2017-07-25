@@ -24,6 +24,7 @@ namespace Annwvyn
 		///Create a color object form a reference to another color object
 		AnnColor(const AnnColor& color);
 
+		///Assignment operator overload
 		AnnColor& operator=(const AnnColor& color);
 
 		///Return a Ogre::ColourValue from the internal color value
@@ -57,7 +58,7 @@ namespace Annwvyn
 		void setAlpha(float alpha);
 
 		///Prints color object description to output stream
-		DLL friend std::ostream& operator<<(std::ostream& out, const  AnnColor& color)
+		DLL friend std::ostream& operator<<(std::ostream& out, const AnnColor& color)
 		{
 			out << "AnnColor("
 				<< color.r << ", "
