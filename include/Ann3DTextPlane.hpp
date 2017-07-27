@@ -78,7 +78,7 @@ namespace Annwvyn
 
 	private:
 
-		///Create the font 
+		///Create the font
 		void createFont(const int& size);
 
 		///Create the plane geometry
@@ -127,7 +127,7 @@ namespace Annwvyn
 		std::string materialName;
 
 		///Vertex buffer
-		std::array<AnnVect3, 4> verticies;
+		std::array<AnnVect3, 4> vertices;
 
 		///Static texture coordinates
 		const AnnVect2 textureCoords[4] = { {0,0}, {0,1}, {1,0}, {1,1} };
