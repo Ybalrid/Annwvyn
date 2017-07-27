@@ -16,6 +16,7 @@ public:
 		Demo0Trig(nullptr),
 		TestLevelTrig(nullptr),
 		EventTrig(nullptr),
+		TimerTrig(nullptr),
 		rotating(nullptr),
 		panelDpi(18)
 	{
@@ -94,11 +95,11 @@ public:
 		//Unregister the listener
 		AnnGetEventManager()->removeListener(getSharedListener());
 		AnnLevel::unload();
+
 		Demo0Trig = nullptr;
 		TestLevelTrig = nullptr;
 		EventTrig = nullptr;
 		TimerTrig = nullptr;
-
 		rotating = nullptr;
 	}
 
