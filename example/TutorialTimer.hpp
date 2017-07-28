@@ -5,12 +5,13 @@
 
 using namespace Annwvyn;
 
-///Super simple example using a time event to do soemthing
+///Super simple example using a time event to do something
 class TutorialTimer : public TutorialLevel, LISTENER //This level class is also a listener
 {
 public:
 	TutorialTimer() : TutorialLevel(), constructListener(),
-		waitFor{ -1 }
+		waitFor{ -1 },
+		rotator(nullptr)
 	{
 	}
 

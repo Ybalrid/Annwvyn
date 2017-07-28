@@ -384,7 +384,6 @@ void OgreVRRender::makeValidPath(std::string& path)
 
 void OgreVRRender::loadHLMSLibrary(std::string hlmsFolder)
 {
-
 	//The hlmsFolder can come from a configuration file where it could be "empty" or set to "." or lacking the trailing "/"
 	makeValidPath(hlmsFolder);
 
@@ -404,7 +403,7 @@ void OgreVRRender::loadHLMSLibrary(std::string hlmsFolder)
 	auto archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/" + SL, "FileSystem", true);
 	auto archivePbs = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Pbs/" + SL, "FileSystem", true);
 	library.push_back(archiveUnlitLibraryAny);
-	
+
 	auto hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveUnlit, &library);
 	library.pop_back();
 
@@ -527,7 +526,7 @@ void OgreVRRender::handleWindowMessages()
 		window->resize(w, h);
 #endif
 	}
-}
+	}
 
 void OgreVRRender::logToOgre(const std::string& str)
 {
