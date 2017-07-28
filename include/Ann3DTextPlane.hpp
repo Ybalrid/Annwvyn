@@ -130,7 +130,7 @@ namespace Annwvyn
 		std::array<AnnVect3, 4> vertices;
 
 		///Static texture coordinates
-		const AnnVect2 textureCoords[4] = { {0,0}, {0,1}, {1,0}, {1,1} };
+		const std::array<AnnVect2, 4> textureCoords = { { {0,0}, {0,1}, {1,0}, {1,1} } };
 
 		///Various floats for size computation
 		float width, height, resolutionFactor, xOffset, yOffset;
