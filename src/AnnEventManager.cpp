@@ -108,7 +108,7 @@ keyboardIgnore{ false }
 	{
 		//Create joystick object
 		auto Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
-		Joysticks.push_back(new JoystickBuffer(Joystick));
+		Joysticks.push_back(new JoystickBuffer(Joystick)); //TODO why are JoystickBuffer object on the heap? they could live on the stack...
 		AnnDebug() << "Detected joystick : " << Joystick->vendor();
 
 		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)

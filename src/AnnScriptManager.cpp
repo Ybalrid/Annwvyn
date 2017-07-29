@@ -706,7 +706,7 @@ void AnnScriptManager::evalString(const std::string& chaiCode)
 
 void AnnScriptManager::registerResourceManager()
 {
-	scriptFileManager = new AnnScriptFileResourceManager;
+	scriptFileManager = OGRE_NEW AnnScriptFileResourceManager;
 }
 
 void AnnScriptManager::unregisterResourceManager()

@@ -80,7 +80,7 @@ refreshRate{ 1.0 / 15.0 }
 		std::cerr << "FontManager not usable yet. Initializing a new FontManager" << std::endl;
 		// ReSharper disable CppNonReclaimedResourceAcquisition
 		// Reason : Ogre will cleanup the FontManager when cleaning root.
-		new Ogre::FontManager();
+		OGRE_NEW Ogre::FontManager();
 		// ReSharper restore CppNonReclaimedResourceAcquisition
 	}
 
@@ -294,7 +294,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	const size_t destRowPitchBytes = destPb.rowPitch * destPixelSize;
 
 	Box *GlyphTexCoords;
-	GlyphTexCoords = new Box[str.size()];
+	GlyphTexCoords = new Box[str.size()]; //TODO do not use new[]/delete[]
 
 	Font::UVRect glypheTexRect;
 	size_t charheight = 0;

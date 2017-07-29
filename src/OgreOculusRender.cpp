@@ -122,6 +122,7 @@ void OgreOculusRender::recenter()
 void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
+	//TODO don't use new and delete here. Use an unique_ptr
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	updateTime = 1.0 / double(Oculus->getHmdDesc().DisplayRefreshRate);
@@ -344,7 +345,7 @@ std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 	{
 		stupidAudioDescriptor(LPCSTR str, LPGUID pguid) :
 			name(pguid ? str : "NO_GUID"), //Sometimes pguid is nullptr, in that case the descriptor is not valid
-			guid(pguid ? *pguid : GUID()) {} //Obviously, dereferencing a nullptr is a bad idea, prevent that. 
+			guid(pguid ? *pguid : GUID()) {} //Obviously, dereferencing a nullptr is a bad idea, prevent that.
 		const std::string name;
 		const GUID guid;
 	};
