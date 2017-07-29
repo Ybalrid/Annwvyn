@@ -53,7 +53,7 @@ template<> AnnAudioFileManager* Singleton <AnnAudioFileManager>::msSingleton = n
 
 Resource* AnnAudioFileManager::createImpl(const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader, const NameValuePairList* createParams)
 {
-	return new AnnAudioFile(this, name, handle, group, isManual, loader);
+	return OGRE_NEW AnnAudioFile(this, name, handle, group, isManual, loader);
 }
 
 AnnAudioFileManager::AnnAudioFileManager()
@@ -160,7 +160,7 @@ SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 	if (!sfVioStruct)
 	{
 		AnnDebug() << "Initializing the Virtual I/O callbacks for libsndfile";
-		sfVioStruct = new SF_VIRTUAL_IO;
+		sfVioStruct = new SF_VIRTUAL_IO; //TODO unique_ptr?
 
 		//Fill it with function pointers to static methods...
 		sfVioStruct->get_filelen = &AnnAudioFile::sfVioGetFileLen;

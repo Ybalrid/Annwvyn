@@ -70,7 +70,7 @@ void AnnScriptFileSerializer::importSourceCode(DataStreamPtr& stream, AnnScriptF
 
 Resource* AnnScriptFileResourceManager::createImpl(const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader, const NameValuePairList* createParams)
 {
-	return new AnnScriptFile(this, name, handle, group, isManual, loader);
+	return OGRE_NEW AnnScriptFile(this, name, handle, group, isManual, loader);
 }
 
 //Res Manager

@@ -7,6 +7,7 @@
 using namespace Annwvyn;
 using namespace std;
 
+//TODO refactor and modernize that code...
 void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true)
 {
 	using namespace Ogre;
@@ -265,7 +266,7 @@ Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str
 	{
 		//Be sure that the font manager exist, if not, instantiate one (singleton)
 		// ReSharper disable once CppNonReclaimedResourceAcquisition - Resource cleared by Ogre itself.
-		if (!Ogre::FontManager::getSingletonPtr()) new Ogre::FontManager();
+		if (!Ogre::FontManager::getSingletonPtr()) OGRE_NEW Ogre::FontManager();
 
 		//Attempt to retrieve the font
 		font = Ogre::FontManager::getSingleton().getByName(fontName);
