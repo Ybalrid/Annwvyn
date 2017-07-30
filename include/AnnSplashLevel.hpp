@@ -42,6 +42,20 @@ namespace Annwvyn
 		void setTimeoutMillisec(unsigned time);
 
 	private:
+
+		///Create the plane where the splash will go
+		void createSplashPlane();
+
+		///Create and return the list of points to describe the wanted "curved" plane. Pivot is plane center
+		/// \param curvature The curve is parabolic. The equation that define each Z point is [Z = - (1/curvature) * X^2] (higher values makes plane flatter)
+		/// \param width the Width of the plane
+		/// \param height the Height of the plane
+		/// \param definition The number of points used to describe the plane in the X axis. Higher values makes smoother planes.
+		std::vector<AnnVect3> createCurvedPlaneVertices(float curvature, float width, float height, float definition);
+
+		///Create the hlms unlit datablock
+		void createSplashDatablock(Ogre::Hlms* unlit, Ogre::HlmsUnlitDatablock*& splashDatablock);
+
 		///Time values
 		float timeout, currentTime, startTime;
 
