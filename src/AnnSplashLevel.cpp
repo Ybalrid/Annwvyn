@@ -17,6 +17,85 @@ Splash{ nullptr },
 splashImageName(resourceName),
 hasBGM(false) {}
 
+std::vector<AnnVect3> AnnSplashLevel::createCurvedPlaneVertices(float curvature, float width, float height, float definition)
+{
+	//This will return a vertex list describing a vertical plane with a parabolic curve.
+	//The curvature of the plane follow the equation
+	//
+	//		z = - (1 / curvature) * x^2
+	//
+	//Used as a vertex buffer, the pivot point of the object is in the center of the plane
+	//The definition parameter set the "resolution" of the curve. It's the number of points
+	//in the x axis used to define it.
+
+	//Compute some basic parameters
+	const float resolution = width / definition;
+	const float alpha = 1 / curvature;
+	const float xmax = width / 2;
+	const float xmin = -xmax;
+	const float ymax = height / 2;
+	const float ymin = -ymax;
+
+	//how the z component is calculated
+	auto depth = [=](float x) {return alpha * (x*x); };
+
+	//Where the data is stored. Take advantage of RVO
+	std::vector<AnnVect3> curve; curve.reserve(size_t(definition));
+
+	for (float x = xmin; x < xmax; x += resolution)
+	{
+		curve.emplace_back(x, ymax, depth(x));
+		curve.emplace_back(x, ymin, depth(x));
+	}
+
+	return curve;
+}
+
+void AnnSplashLevel::createSplashPlane()
+{
+	//Create manual object
+	AnnDebug() << "Creating the display \"plane\" for the splash";
+	auto smgr(AnnGetEngine()->getSceneManager());
+	CurvedPlane = smgr->createManualObject(Ogre::SCENE_DYNAMIC);
+
+	CurvedPlane->begin("Splash", Ogre::OT_TRIANGLE_STRIP);
+
+	const float curvature = 50;
+	const float width = 40;
+	const float height = 40;
+	const float definiton = 10;
+
+	auto vertices = createCurvedPlaneVertices(curvature, width, height, definiton);
+
+	Ogre::uint32 index = 0;
+
+	for (const auto& pos : vertices)
+	{
+		CurvedPlane->position(pos);
+		CurvedPlane->textureCoord((pos.x + width / 2.f) / width, 1.0f - ((pos.y + height / 2.f) / height));
+		CurvedPlane->index(index++);
+	}
+
+	CurvedPlane->end();
+
+	AnnDebug() << "Add plane to scene";
+	Splash = smgr->getRootSceneNode()->createChildSceneNode(Ogre::SCENE_DYNAMIC);
+	Splash->attachObject(CurvedPlane);
+}
+
+void AnnSplashLevel::createSplashDatablock(Ogre::Hlms* unlit, Ogre::HlmsUnlitDatablock*& splashDatablock)
+{
+	auto macroblock = Ogre::HlmsMacroblock();
+	auto blendblock = Ogre::HlmsBlendblock();
+	macroblock.mCullMode = Ogre::CULL_NONE;
+	macroblock.mDepthCheck = false;
+	macroblock.mDepthWrite = false;
+	macroblock.mScissorTestEnabled = false;
+	splashDatablock = static_cast<Ogre::HlmsUnlitDatablock*>(
+		unlit->createDatablock("Splash", "Splash", macroblock, blendblock,
+			Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->defaultResourceGroupName));
+}
+
 void AnnSplashLevel::load()
 {
 	AnnDebug() << "Ignore physics";
@@ -36,17 +115,11 @@ void AnnSplashLevel::load()
 
 	//Create manual material
 	auto unlit = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT);
-	auto datablock = unlit->getDatablock("Splash");
+	auto splashDatablock = static_cast<Ogre::HlmsUnlitDatablock*>(unlit->getDatablock("Splash"));
 
-	if (!datablock)
+	if (!splashDatablock)
 	{
-		auto macroblock = Ogre::HlmsMacroblock();
-		auto blendblock = Ogre::HlmsBlendblock();
-		macroblock.mCullMode = Ogre::CULL_NONE;
-		macroblock.mDepthCheck = false;
-		macroblock.mDepthWrite = false;
-		macroblock.mScissorTestEnabled = false;
-		datablock = unlit->createDatablock("Splash", "Splash", macroblock, blendblock, Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->defaultResourceGroupName);
+		createSplashDatablock(unlit, splashDatablock);
 	}
 
 	//Get the texture
@@ -55,69 +128,10 @@ void AnnSplashLevel::load()
 	if (!texture) throw AnnInitializationError(ANN_ERR_NOTINIT, "Texture not found for splash " + splashImageName);
 
 	//Set datablock parameters
-	static_cast<Ogre::HlmsUnlitDatablock*>(datablock)->setColour(Ogre::ColourValue::White * 97);
-	static_cast<Ogre::HlmsUnlitDatablock*>(datablock)->setTexture(Ogre::HlmsTextureManager::TEXTURE_TYPE_DIFFUSE, 0, texture);
+	splashDatablock->setColour(Ogre::ColourValue::White * 97);
+	splashDatablock->setTexture(Ogre::HlmsTextureManager::TEXTURE_TYPE_DIFFUSE, 0, texture);
 
-	//Create manual object
-	AnnDebug() << "Creating the display \"plane\" for the splash";
-	auto smgr(AnnGetEngine()->getSceneManager());
-	CurvedPlane = smgr->createManualObject(Ogre::SCENE_DYNAMIC);
-
-	CurvedPlane->begin("Splash", Ogre::OT_TRIANGLE_STRIP);
-	
-	//TODO loop this and increse resolution. This is SO UGLY
-	const auto CurveC(1.f);
-	const auto CurveB(CurveC / 4.0f);
-
-	auto index = 0;
-	//10 vertex:
-	//1
-	CurvedPlane->position(-2, -2, CurveC);
-	CurvedPlane->textureCoord(0, 1);
-	CurvedPlane->index(index++);
-	//2
-	CurvedPlane->position(-2, 2, CurveC);
-	CurvedPlane->textureCoord(0, 0);
-	CurvedPlane->index(index++);
-	//3
-	CurvedPlane->position(-1, -2, CurveB);
-	CurvedPlane->textureCoord(.25, 1);
-	CurvedPlane->index(index++);
-	//4
-	CurvedPlane->position(-1, 2, CurveB);
-	CurvedPlane->textureCoord(.25, 0);
-	CurvedPlane->index(index++);
-	//5
-	CurvedPlane->position(0, -2, 0);
-	CurvedPlane->textureCoord(.5, 1);
-	CurvedPlane->index(index++);
-	//6
-	CurvedPlane->position(0, 2, 0);
-	CurvedPlane->textureCoord(.5, 0);
-	CurvedPlane->index(index++);
-	//7
-	CurvedPlane->position(1, -2, CurveB);
-	CurvedPlane->textureCoord(.75, 1);
-	CurvedPlane->index(index++);
-	//8
-	CurvedPlane->position(1, 2, CurveB);
-	CurvedPlane->textureCoord(.75, 0);
-	CurvedPlane->index(index++);
-	//9
-	CurvedPlane->position(2, -2, CurveC);
-	CurvedPlane->textureCoord(1, 1);
-	CurvedPlane->index(index++);
-	//10
-	CurvedPlane->position(2, 2, CurveC);
-	CurvedPlane->textureCoord(1, 0);
-	CurvedPlane->index(index);
-
-	CurvedPlane->end();
-
-	AnnDebug() << "Add plane to scene";
-	Splash = smgr->getRootSceneNode()->createChildSceneNode(Ogre::SCENE_DYNAMIC);
-	Splash->attachObject(CurvedPlane);
-	Splash->setScale(10, 10, 10);
+	createSplashPlane();
 }
 
 void AnnSplashLevel::setBGM(std::string path, bool preload)
