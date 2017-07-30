@@ -51,13 +51,13 @@ std::vector<AnnVect3> AnnSplashLevel::createCurvedPlaneVertices(float curvature,
 	return curve;
 }
 
-void AnnSplashLevel::createSplashPlane()
+void AnnSplashLevel::createSplashCurvedPlane()
 {
 	//Create manual object
 	AnnDebug() << "Creating the display \"plane\" for the splash";
 	auto smgr(AnnGetEngine()->getSceneManager());
-	CurvedPlane = smgr->createManualObject(Ogre::SCENE_DYNAMIC);
 
+	CurvedPlane = smgr->createManualObject();
 	CurvedPlane->begin("Splash", Ogre::OT_TRIANGLE_STRIP);
 
 	const float curvature = 50;
@@ -68,7 +68,6 @@ void AnnSplashLevel::createSplashPlane()
 	auto vertices = createCurvedPlaneVertices(curvature, width, height, definiton);
 
 	Ogre::uint32 index = 0;
-
 	for (const auto& pos : vertices)
 	{
 		CurvedPlane->position(pos);
@@ -79,11 +78,11 @@ void AnnSplashLevel::createSplashPlane()
 	CurvedPlane->end();
 
 	AnnDebug() << "Add plane to scene";
-	Splash = smgr->getRootSceneNode()->createChildSceneNode(Ogre::SCENE_DYNAMIC);
+	Splash = smgr->getRootSceneNode()->createChildSceneNode();
 	Splash->attachObject(CurvedPlane);
 }
 
-void AnnSplashLevel::createSplashDatablock(Ogre::Hlms* unlit, Ogre::HlmsUnlitDatablock*& splashDatablock)
+Ogre::HlmsUnlitDatablock* AnnSplashLevel::createSplashDatablock(Ogre::HlmsUnlit* unlit)
 {
 	auto macroblock = Ogre::HlmsMacroblock();
 	auto blendblock = Ogre::HlmsBlendblock();
@@ -91,9 +90,8 @@ void AnnSplashLevel::createSplashDatablock(Ogre::Hlms* unlit, Ogre::HlmsUnlitDat
 	macroblock.mDepthCheck = false;
 	macroblock.mDepthWrite = false;
 	macroblock.mScissorTestEnabled = false;
-	splashDatablock = static_cast<Ogre::HlmsUnlitDatablock*>(
-		unlit->createDatablock("Splash", "Splash", macroblock, blendblock,
-			Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->defaultResourceGroupName));
+	return static_cast<Ogre::HlmsUnlitDatablock*> (unlit->createDatablock("Splash", "Splash", macroblock, blendblock,
+		Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->defaultResourceGroupName));
 }
 
 void AnnSplashLevel::load()
@@ -113,31 +111,28 @@ void AnnSplashLevel::load()
 	sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 	sun->setDirection({ 0, 1, 0.5f });
 
-	//Create manual material
-	auto unlit = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT);
+	//Get splashscreen material
+	auto unlit = static_cast<Ogre::HlmsUnlit*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT));
 	auto splashDatablock = static_cast<Ogre::HlmsUnlitDatablock*>(unlit->getDatablock("Splash"));
+	if (!splashDatablock) splashDatablock = createSplashDatablock(unlit);
 
-	if (!splashDatablock)
-	{
-		createSplashDatablock(unlit, splashDatablock);
-	}
-
-	//Get the texture
-	auto texture = Ogre::TextureManager::getSingleton().getByName(splashImageName);
-	if (!texture) texture = Ogre::TextureManager::getSingleton().load(splashImageName, AnnGetResourceManager()->defaultResourceGroupName, Ogre::TEX_TYPE_2D, 0, 1, false, Ogre::PF_UNKNOWN, true);
+	//Get splashscreen texture
+	auto textureManager = Ogre::TextureManager::getSingletonPtr();
+	auto texture = textureManager->getByName(splashImageName);
+	if (!texture) texture = textureManager->load(splashImageName, AnnGetResourceManager()->defaultResourceGroupName, Ogre::TEX_TYPE_2D, 0, 1, false, Ogre::PF_UNKNOWN, true);
 	if (!texture) throw AnnInitializationError(ANN_ERR_NOTINIT, "Texture not found for splash " + splashImageName);
 
 	//Set datablock parameters
 	splashDatablock->setColour(Ogre::ColourValue::White * 97);
 	splashDatablock->setTexture(Ogre::HlmsTextureManager::TEXTURE_TYPE_DIFFUSE, 0, texture);
 
-	createSplashPlane();
+	createSplashCurvedPlane();
 }
 
-void AnnSplashLevel::setBGM(std::string path, bool preload)
+void AnnSplashLevel::setBGM(std::string name, bool preload)
 {
-	if (preload) AnnGetAudioEngine()->preLoadBuffer(path);
-	bgmPath = path;
+	if (preload) AnnGetAudioEngine()->preLoadBuffer(name);
+	bgmName = name;
 	hasBGM = true;
 }
 
@@ -157,7 +152,7 @@ void AnnSplashLevel::runLogic()
 			startTime = float(AnnGetEngine()->getTimeFromStartUp());
 			//If you put some background music or sound for the splash-screen, we start it
 			if (hasBGM)
-				AnnGetAudioEngine()->playBGM(bgmPath);
+				AnnGetAudioEngine()->playBGM(bgmName);
 		}
 		else return;
 	}

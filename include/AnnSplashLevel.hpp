@@ -30,7 +30,7 @@ namespace Annwvyn
 		void unload() override;
 
 		///Set the background music
-		void setBGM(std::string path, bool preload = true);
+		void setBGM(std::string name, bool preload = true);
 
 		///Set the level to jump to after timeout
 		void setNextLevel(std::shared_ptr<AnnLevel> level);
@@ -44,7 +44,7 @@ namespace Annwvyn
 	private:
 
 		///Create the plane where the splash will go
-		void createSplashPlane();
+		void createSplashCurvedPlane();
 
 		///Create and return the list of points to describe the wanted "curved" plane. Pivot is plane center
 		/// \param curvature The curve is parabolic. The equation that define each Z point is [Z = - (1/curvature) * X^2] (higher values makes plane flatter)
@@ -53,8 +53,9 @@ namespace Annwvyn
 		/// \param definition The number of points used to describe the plane in the X axis. Higher values makes smoother planes.
 		std::vector<AnnVect3> createCurvedPlaneVertices(float curvature, float width, float height, float definition);
 
-		///Create the hlms unlit datablock
-		void createSplashDatablock(Ogre::Hlms* unlit, Ogre::HlmsUnlitDatablock*& splashDatablock);
+		///Create the hlms unlit datablock.
+		/// \param unlit pointer to the HlmsUnlit object
+		Ogre::HlmsUnlitDatablock* createSplashDatablock(Ogre::HlmsUnlit* unlit);
 
 		///Time values
 		float timeout, currentTime, startTime;
@@ -75,7 +76,7 @@ namespace Annwvyn
 		bool hasBGM;
 
 		///Path to the file that is loaded as an audio buffer
-		std::string bgmPath;
+		std::string bgmName;
 	};
 }
 #endif

@@ -103,7 +103,7 @@ Ogre::SceneNode* OgreVRRender::getCameraInformationNode() const
 	return gameplayCharacterRoot;
 }
 
-Ogre::Timer * OgreVRRender::getTimer() const
+Ogre::Timer* OgreVRRender::getTimer() const
 {
 	return root->getTimer();
 }
@@ -346,9 +346,7 @@ void OgreVRRender::createWindow(unsigned int w, unsigned int h, bool vsync)
 	auto context = wglGetCurrentContext();
 	auto handle = glfwGetWin32Window(glfwWindow);
 	options["externalWindowHandle"] = std::to_string(size_t(handle));
-#endif
-
-#ifdef __linux__
+#elif __linux__
 	Window handle = {};
 	void* context = nullptr;
 	handle = glfwGetX11Window(glfwWindow);
@@ -391,26 +389,41 @@ void OgreVRRender::loadHLMSLibrary(std::string hlmsFolder)
 	auto hlmsManager = root->getHlmsManager();
 
 	//Define the shader library to use for HLMS
-	auto library = Ogre::ArchiveVec();
-	auto archiveCommonGLSLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/" + SL, "FileSystem", true);
-	auto archiveCommonAnyLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Common/Any", "FileSystem", true);
-	auto archivePbsLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Pbs/Any", "FileSystem", true);
-	auto archiveUnlitLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/Any", "FileSystem", true);
-	library.push_back(archiveCommonGLSLibrary);
-	library.push_back(archiveCommonAnyLibraryAny);
+	//For retrieval of the paths to the different folders needed
+	Ogre::String dataFolderPath;
+	Ogre::StringVector libraryFoldersPaths;
 
-	//Define "unlit" and "PBS" (physics based shader) HLMS
-	auto archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Unlit/" + SL, "FileSystem", true);
-	auto archivePbs = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + "Hlms/Pbs/" + SL, "FileSystem", true);
-	library.push_back(archiveUnlitLibraryAny);
+	//Get the path to all the subdirectories used by HlmsUnlit
+	Ogre::HlmsUnlit::getDefaultPaths(dataFolderPath, libraryFoldersPaths);
 
-	auto hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveUnlit, &library);
-	library.pop_back();
+	//Create the Ogre::Archive objects needed
+	auto archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + dataFolderPath, "FileSystem", true);
+	Ogre::ArchiveVec archiveUnlitLibraryFolders;
+	for (const auto& libraryFolderPath : libraryFoldersPaths)
+	{
+		auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + libraryFolderPath, "FileSystem", true);
+		archiveUnlitLibraryFolders.push_back(archiveLibrary);
+	}
 
-	library.push_back(archivePbsLibraryAny);
-	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &library);
-	hlmsManager->registerHlms(hlmsUnlit);
-	hlmsManager->registerHlms(hlmsPbs);
+	//Create and register the unlit Hlms
+	auto hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveUnlit, &archiveUnlitLibraryFolders);
+	Ogre::Root::getSingleton().getHlmsManager()->registerHlms(hlmsUnlit);
+
+	//Do the same for HlmsPbs:
+	Ogre::HlmsPbs::getDefaultPaths(dataFolderPath, libraryFoldersPaths);
+	auto archivePbs = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + dataFolderPath, "FileSystem", true);
+
+	//Get the library archive(s)
+	Ogre::ArchiveVec archivePbsLibraryFolders;
+	for (const auto& libraryFolderPath : libraryFoldersPaths)
+	{
+		auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + libraryFolderPath, "FileSystem", true);
+		archivePbsLibraryFolders.push_back(archiveLibrary);
+	}
+
+	//Create and register
+	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &archivePbsLibraryFolders);
+	Ogre::Root::getSingleton().getHlmsManager()->registerHlms(hlmsPbs);
 
 	//Set the best shadows we can do by default
 	hlmsPbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_4x4);
@@ -526,7 +539,7 @@ void OgreVRRender::handleWindowMessages()
 		window->resize(w, h);
 #endif
 	}
-	}
+}
 
 void OgreVRRender::logToOgre(const std::string& str)
 {
