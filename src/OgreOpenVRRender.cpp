@@ -64,11 +64,9 @@ std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t
 	if (unRequiredBufferLen == 0)
 		return "";
 
-	//TODO Don't use new[] and delete[]
-	auto pchBuffer = new char[unRequiredBufferLen];
-	pHmd->GetStringTrackedDeviceProperty(unDevice, prop, pchBuffer, unRequiredBufferLen, peError);
-	std::string sResult = pchBuffer;
-	delete[] pchBuffer;
+	std::vector<char> pchBuffer(unRequiredBufferLen);
+	pHmd->GetStringTrackedDeviceProperty(unDevice, prop, pchBuffer.data(), unRequiredBufferLen, peError);
+	std::string sResult = pchBuffer.data();
 	return sResult;
 }
 
