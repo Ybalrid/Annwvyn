@@ -212,8 +212,8 @@ endif()
 
 #Installation
 if(WIN32)
-    file(GLOB Annwvyn_ARTIFACTS ${CMAKE_BINARY_DIR}/Release/*)
-    install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+    #file(GLOB Annwvyn_ARTIFACTS ${CMAKE_BINARY_DIR}/Release/*)
+    #install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 endif()
 
 if(UNIX)
