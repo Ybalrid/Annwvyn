@@ -31,6 +31,7 @@ if(WIN32)
 
     #Where to find additional modules
     set(CMAKE_MODULE_PATH 
+        ${CMAKE_MODULE_PATH}
         $ENV{AnnwvynSDK64}/CMakeModules
         $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
         $ENV{AnnwvynSDK64}/BtOgre21/CMake
@@ -110,6 +111,7 @@ include_directories(
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/tests
     )
 
 if(UNIX)    
@@ -136,11 +138,13 @@ if(MSVC)
 endif()
 set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} ${AnnwvynPCH})
 
+file(GLOB TestCode tests/*.cpp tests/*.hpp)
+
 #Set target for project
 add_library(Annwvyn SHARED ${AnnwvynCode} )
+add_executable(AnnwvynUnitTest ${TestCode} )
 
-#linker input from old VS solution
-target_link_libraries( Annwvyn
+set (LIBS 
     ##Engine dependencies
     ${OGRE_LIBRARIES}
     ${OGRE_HlmsPbs_LIBRARIES}
@@ -155,21 +159,40 @@ target_link_libraries( Annwvyn
     ${OPENAL_LIBRARY}
     ${TinyXML2_LIBRARIES}
     ${SNDFILE_LIBRARIES}
-
     )
+
+#linker input from old VS solution
+target_link_libraries( Annwvyn
+    ${LIBS}
+    )
+
+target_link_libraries(AnnwvynUnitTest
+    Annwvyn
+    ${OGRE_LIBRARIES}
+    ${OGRE_HlmsPbs_LIBRARIES}
+    ${OGRE_HlmsUnlit_LIBRARIES}
+    ${OGRE_Overlay_LIBRARIES}
+    )
+
 
 if(WIN32)
+
+    set(WIN_ADDITIONAL_LIBS
+        ##VR SDKS (manually added)
+        LibOVR.lib          #TODO WIN32 specific
+        openvr_api.lib      #TODO WIN32 specific
+
+        ##Windows own libraries
+        ws2_32.lib      #TODO WIN32 specific
+        Setupapi.lib    #TODO WIN32 specific
+        Winmm.lib       #TODO WIN32 specific
+        )
+
     target_link_libraries(Annwvyn
-    
-    ##VR SDKS (manually added)
-    LibOVR.lib          #TODO WIN32 specific
-    openvr_api.lib      #TODO WIN32 specific
-    
-    ##Windows own libraries
-    ws2_32.lib      #TODO WIN32 specific
-    Setupapi.lib    #TODO WIN32 specific
-    Winmm.lib       #TODO WIN32 specific
-    )
+        ${WIN_ADDITIONAL_LIBS}
+        )
+
+
 endif()
 
 #MSVC specific configuration
