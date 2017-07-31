@@ -1,3 +1,6 @@
+//To speed up things a bit, we precompile headers
+#include "stdafx.h"
+
 //Include the engine itself
 #include <Annwvyn.h>
 

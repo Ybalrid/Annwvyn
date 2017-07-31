@@ -139,10 +139,13 @@ endif()
 set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} ${AnnwvynPCH})
 
 file(GLOB TestCode tests/*.cpp tests/*.hpp)
+if(MSVC)
+    file(GLOB TestPCH tests/pch/*.cpp tests/pch/*.hpp)
+endif()
 
 #Set target for project
 add_library(Annwvyn SHARED ${AnnwvynCode} )
-add_executable(AnnwvynUnitTest ${TestCode} )
+add_executable(AnnwvynUnitTest ${TestCode} ${TestPCH})
 
 set (LIBS 
     ##Engine dependencies
@@ -203,6 +206,8 @@ if(MSVC)
     set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
     set_target_properties(Annwvyn PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
     set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
+    set_target_properties(AnnwvynUnitTest PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
+    set_source_files_properties(tests/pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
 endif()
 
 #Installation
