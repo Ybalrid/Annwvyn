@@ -72,6 +72,14 @@ OgreVRRender::~OgreVRRender()
 	//For good measure : destroy the Ogre window
 	root->destroyRenderTarget(window);
 
+	//If font manager still loaded
+	if (auto fontManager = Ogre::FontManager::getSingletonPtr())
+	{
+		AnnDebug() << "Will delete FontManager";
+		fontManager->removeAll();
+		OGRE_DELETE fontManager;
+	}
+
 	//We need to stop OGRE before destroying the GLFW window.
 	root.reset();
 
