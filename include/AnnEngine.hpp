@@ -95,6 +95,10 @@ namespace Annwvyn
 		static bool autosetProcessPriorityHigh;
 		static void setProcessPriorityNormal();
 		static void setProcessPriorityHigh();
+		static bool noConsoleColor;
+		static bool manualConsole;
+
+		static void setNoConsoleColor();
 
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();

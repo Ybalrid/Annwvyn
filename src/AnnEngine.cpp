@@ -8,6 +8,8 @@ using namespace Annwvyn;
 AnnEngine* AnnEngine::singleton(nullptr);
 
 bool AnnEngine::autosetProcessPriorityHigh(true);
+bool AnnEngine::noConsoleColor(false);
+bool AnnEngine::manualConsole(false);
 
 #ifdef _WIN32
 WORD AnnEngine::consoleGreen(0);
@@ -26,6 +28,11 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 	//Reset static members of friend class AnnEnigine that will outlive the object itself.
 	engine->singleton = nullptr;
 	engine->consoleReady = false;
+}
+
+void AnnEngine::setNoConsoleColor()
+{
+	noConsoleColor = true;
 }
 
 AnnEngine* AnnEngine::Instance()
@@ -67,6 +74,18 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	vrRendererPovGameplayPlacement(nullptr),
 	updateTime(-1)
 {
+#ifdef _WIN32
+	consoleGreen = FOREGROUND_GREEN |
+		FOREGROUND_INTENSITY;
+	consoleYellow = FOREGROUND_GREEN |
+		FOREGROUND_RED |
+		FOREGROUND_INTENSITY;
+	consoleWhite = FOREGROUND_RED |
+		FOREGROUND_GREEN |
+		FOREGROUND_BLUE |
+		FOREGROUND_INTENSITY;
+#endif
+
 	if (singleton)
 	{
 		log("Can't create 2 instances of the engine!");
@@ -190,17 +209,6 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	//initialized. And the Resource manager because it wants a font file and an
 	//image background
 	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
-#ifdef _WIN32
-	consoleGreen = FOREGROUND_GREEN |
-		FOREGROUND_INTENSITY;
-	consoleYellow = FOREGROUND_GREEN |
-		FOREGROUND_RED |
-		FOREGROUND_INTENSITY;
-	consoleWhite = FOREGROUND_RED |
-		FOREGROUND_GREEN |
-		FOREGROUND_BLUE |
-		FOREGROUND_INTENSITY;
-#endif
 
 	consoleReady = true;
 	//Display start banner
@@ -223,7 +231,7 @@ AnnEngine::~AnnEngine()
 	log("Good luck with the real world now! :3");
 	consoleReady = false;
 #ifdef _WIN32
-	FreeConsole();
+	if (manualConsole) FreeConsole();
 #endif
 }
 
@@ -293,13 +301,17 @@ void AnnEngine::log(std::string message, bool flag)
 	if (flag)
 	{
 #ifdef _WIN32
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleYellow);
+		if (!noConsoleColor)
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleYellow);
 #endif
 		messageForLog += "Annwvyn - ";
 	}
 #ifdef _WIN32
 	else
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
+	{
+		if (!noConsoleColor)
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
+	}
 #endif
 
 	messageForLog += message;
@@ -309,7 +321,8 @@ void AnnEngine::log(std::string message, bool flag)
 	if (consoleReady)
 		singleton->onScreenConsole->append(message);
 #ifdef _WIN32
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
+	if (!noConsoleColor)
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
 #endif
 }
 
@@ -456,14 +469,16 @@ bool AnnEngine::openConsole()
 		//put stdout on this console;
 		FILE* f; freopen_s(&f, "CONOUT$", "w", stdout);
 		if (!f) state = false;
+		manualConsole = true;
 	}
 
 	//Redirect cerr to cout
 	std::cerr.rdbuf(std::cout.rdbuf());
 
 	SetConsoleTitle(L"Annwvyn Debug Console");
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-		consoleWhite);
+	if (!noConsoleColor)
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+			consoleWhite);
 
 #endif
 	return state;
