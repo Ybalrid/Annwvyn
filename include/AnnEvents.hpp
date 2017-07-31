@@ -437,7 +437,7 @@ namespace Annwvyn
 		friend class AnnEventManager;
 		///Private constructor for AnnEventManager
 		///Create a Joystick buffer object, increments a static counter of IDs
-		JoystickBuffer(OIS::JoyStick* joystick) : stick(joystick) { id = idcounter++; }
+		JoystickBuffer(OIS::JoyStick* joystick);
 
 		///Delete the OIS stick at destruction time
 		~JoystickBuffer() { delete stick; }

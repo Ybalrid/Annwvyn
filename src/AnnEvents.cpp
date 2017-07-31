@@ -445,6 +445,11 @@ bool AnnTimer::isTimeout() const
 	return false;
 }
 
+JoystickBuffer::JoystickBuffer(OIS::JoyStick* joystick) : stick(joystick)
+{
+	id = idcounter++;
+}
+
 AnnTriggerEvent::AnnTriggerEvent() : AnnEvent(),
 sender{ nullptr }
 {

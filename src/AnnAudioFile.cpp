@@ -48,13 +48,13 @@ const byte* AnnAudioFile::getData() const
 	return data.data();
 }
 
-//Singleton
-template<> AnnAudioFileManager* Singleton <AnnAudioFileManager>::msSingleton = nullptr;
-
 Resource* AnnAudioFileManager::createImpl(const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader, const NameValuePairList* createParams)
 {
 	return OGRE_NEW AnnAudioFile(this, name, handle, group, isManual, loader);
 }
+
+//Singleton
+template<> AnnAudioFileManager *Singleton<AnnAudioFileManager>::msSingleton = nullptr;
 
 AnnAudioFileManager::AnnAudioFileManager()
 {

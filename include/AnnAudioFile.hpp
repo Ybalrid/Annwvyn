@@ -80,7 +80,7 @@ namespace Annwvyn
 
 	using AnnAudioFilePtr = Ogre::SharedPtr<AnnAudioFile>;
 
-	class DLL AnnAudioFileManager : public Ogre::ResourceManager, public Ogre::Singleton<AnnAudioFileManager>
+	class AnnAudioFileManager : public Ogre::ResourceManager, public Ogre::Singleton<AnnAudioFileManager>
 	{
 	protected:
 		///Create the audio file resource itself
