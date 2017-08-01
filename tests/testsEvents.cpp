@@ -6,6 +6,78 @@
 
 namespace Annwvyn
 {
+	//All tests will need at least this :
+	std::unique_ptr<AnnEngine> setupBase()
+	{
+		//Start engine
+		std::unique_ptr<AnnEngine> GameEngine{ nullptr };
+		GameEngine = std::make_unique<AnnEngine>("TestCollision", RENDERER);
+		REQUIRE(GameEngine);
+
+		//Construct environement
+		auto sun = AnnGetGameObjectManager()->createLightObject(); //physics based shading crash shaders if no light
+		sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
+		sun->setPower(97);
+		sun->setDirection(AnnVect3{ 0, -1, -2 }.normalisedCopy());
+		REQUIRE(sun);
+		//Fixed object in space : the floor
+		auto floor = AnnGetGameObjectManager()->createGameObject("floorplane.mesh", "floor");
+		floor->setUpPhysics();
+		REQUIRE(floor);
+		REQUIRE(floor->getBody());
+		return move(GameEngine);
+	}
+
+	TEST_CASE("TEST TIMER EVENT")
+	{
+		//Nested listener class
+		class TimerTest : LISTENER
+		{
+		public:
+			TimerTest(bool& state) : constructListener(),
+				id(-1), state(state) {}
+
+			//Save the ID we will await for
+			void setID(timerID newID) { id = newID; }
+
+			//If we ever get a time event that corespond to the timer we want, set to true
+			void TimeEvent(AnnTimeEvent e) override
+			{
+				if (e.getID() == id) state = true;
+			}
+
+		private:
+			//timer we check
+			timerID id;
+			//ouside owned boolean
+			bool& state;
+		};
+
+		auto GameEngine = setupBase();
+
+		//Construct and register the listener
+		auto state{ false };
+		auto timerListener = std::make_shared<TimerTest>(state);
+		AnnGetEventManager()->addListener(timerListener);
+
+		//Start a timer, and give it's ID to the listener
+		auto timer = AnnGetEventManager()->fireTimer(5);
+		timerListener->setID(timer);
+
+		//Run 10 seconds of simulation with debug console visible
+		AnnGetOnScreenConsole()->setVisible(true);
+		double sec;
+		while ((sec = GameEngine->getTimeFromStartupSeconds()) < 10)
+		{
+			GameEngine->refresh();
+			AnnDebug() << "Curernt time : " << sec;
+			if (state) AnnDebug() << "Timer event caught!!!";
+		}
+
+		//Assert that result is right
+		REQUIRE(state);
+	}
+
 	TEST_CASE("TEST EVENT COLLISION")
 	{
 		class CollisionTest : LISTENER
@@ -27,22 +99,7 @@ namespace Annwvyn
 			bool& results;
 		};
 
-		//Start engine
-		std::unique_ptr<AnnEngine> GameEngine{ nullptr };
-		GameEngine = std::make_unique<AnnEngine>("TestCollision", RENDERER);
-		REQUIRE(GameEngine);
-
-		//Construct environement
-		auto sun = AnnGetGameObjectManager()->createLightObject(); //physics based shading crash shaders if no light
-		sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		sun->setPower(97);
-		sun->setDirection(AnnVect3{ 0, -1, -2 }.normalisedCopy());
-		REQUIRE(sun);
-		//Fixed object in space : the floor
-		auto floor = AnnGetGameObjectManager()->createGameObject("floorplane.mesh", "floor");
-		floor->setUpPhysics();
-		REQUIRE(floor);
-		REQUIRE(floor->getBody());
+		auto GameEngine = setupBase();
 
 		//Falling object
 		auto sinbad = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "Sinbad");
