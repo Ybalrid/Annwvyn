@@ -235,8 +235,9 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	AnnVect3 scale = getNode()->getScale();
 	Shape->setLocalScaling(scale.getBtVector());
 
-	btVector3 inertia;
-	Shape->calculateLocalInertia(bodyMass, inertia);
+	btVector3 inertia{ 0,0,0 };
+	if (bodyMass > 0.0f)
+		Shape->calculateLocalInertia(bodyMass, inertia);
 
 	//create rigidBody from shape
 	state = new BtOgre::RigidBodyState(Node);
@@ -394,11 +395,25 @@ bool AnnGameObject::checkForBodyInParent()
 
 AnnVect3 AnnGameObject::getWorldPosition() const
 {
+#ifdef _DEBUG
+	if (Node->isCachedTransformOutOfDate())
+	{
+		AnnDebug() << "cached transform was out of date when " << name << " wanted it's own world position";
+		return Node->_getDerivedPositionUpdated();
+	}
+#endif
 	return Node->_getDerivedPosition();
 }
 
 AnnQuaternion AnnGameObject::getWorldOrientation() const
 {
+#ifdef _DEBUG
+	if (Node->isCachedTransformOutOfDate())
+	{
+		AnnDebug() << "cached transofrm was out of date when " << name << " wanted it's own world orientaiton";
+		return Node->_getDerivedOrientationUpdated();
+	}
+#endif
 	return Node->_getDerivedOrientation();
 }
 

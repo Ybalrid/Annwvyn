@@ -201,12 +201,15 @@ void AnnConsole::update()
 	auto command = AnnGetEventManager()->getTextInputer()->getInput();
 
 	//Display with a scrolling window
-	content << command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
-	if (command[command.size() - 1] == '\r')
+	if (!command.empty())
 	{
-		//Execute command code here
-		runInput(command);
-		AnnGetEventManager()->getTextInputer()->clearInput();
+		content << command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
+		if (command[command.size() - 1] == '\r')
+		{
+			//Execute command code here
+			runInput(command);
+			AnnGetEventManager()->getTextInputer()->clearInput();
+		}
 	}
 
 	//Append blinking cursor

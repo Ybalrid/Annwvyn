@@ -48,11 +48,15 @@ class DLL OgreVRRender
 {
 public:
 	using combinedTextureSizeArray = std::array<std::array<unsigned int, 2>, 2>;
-	
+
 	void logToOgre(const std::string& str);
 
 	///Name of the rendersystem plugin to load on Ogre
+#ifndef _DEBUG
 	static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus" };
+#else
+	static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus_d" };
+#endif
 	///Name of the rendersystem to initialize
 	static constexpr const char* const GLRenderSystem3Plus{ "OpenGL 3+ Rendering Subsystem" };
 	///Resource group to load the shaders, material and compositor script for rendering.
