@@ -126,7 +126,8 @@ endif(UNIX)
 #link directory form old VS solution
 link_directories(
     #VR SDKs
-    $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/
+    #optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/
+    #debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/
     $ENV{AnnwvynSDK64}/openvr/lib/win64
     )
 
@@ -154,7 +155,8 @@ set (LIBS
     ${OGRE_HlmsUnlit_LIBRARIES}
     ${OGRE_Overlay_LIBRARIES}
     ${BULLET_LIBRARIES}
-    ${BtOgre21_LIBRARIES}
+    optimized ${BtOgre21_LIBRARIES}
+    debug ${BtOgre21_LIBRARIES_DEBUG}
     ${OIS_LIBRARIES}
     ${GLEW_LIBRARIES}
     ${GLFW_LIBRARIES}
@@ -182,7 +184,8 @@ if(WIN32)
 
     set(WIN_ADDITIONAL_LIBS
         ##VR SDKS (manually added)
-        LibOVR.lib          #TODO WIN32 specific
+        optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib          #TODO WIN32 specific
+        debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/LibOVR.lib
         openvr_api.lib      #TODO WIN32 specific
 
         ##Windows own libraries
