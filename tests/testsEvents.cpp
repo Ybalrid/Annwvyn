@@ -10,8 +10,7 @@ namespace Annwvyn
 	std::unique_ptr<AnnEngine> setupBase()
 	{
 		//Start engine
-		std::unique_ptr<AnnEngine> GameEngine{ nullptr };
-		GameEngine = std::make_unique<AnnEngine>("TestCollision", RENDERER);
+		auto GameEngine = std::make_unique<AnnEngine>("TestCollision", RENDERER);
 		REQUIRE(GameEngine);
 
 		//Construct environement
@@ -20,11 +19,13 @@ namespace Annwvyn
 		sun->setPower(97);
 		sun->setDirection(AnnVect3{ 0, -1, -2 }.normalisedCopy());
 		REQUIRE(sun);
+
 		//Fixed object in space : the floor
 		auto floor = AnnGetGameObjectManager()->createGameObject("floorplane.mesh", "floor");
 		floor->setUpPhysics();
 		REQUIRE(floor);
 		REQUIRE(floor->getBody());
+
 		return move(GameEngine);
 	}
 
@@ -40,7 +41,7 @@ namespace Annwvyn
 			//Save the ID we will await for
 			void setID(timerID newID) { id = newID; }
 
-			//If we ever get a time event that corespond to the timer we want, set to true
+			//If we ever get a time event that correspond to the timer we want, set to true
 			void TimeEvent(AnnTimeEvent e) override
 			{
 				if (e.getID() == id) state = true;
@@ -84,9 +85,7 @@ namespace Annwvyn
 		{
 		public:
 			CollisionTest(bool& res) : constructListener(),
-				results(res)
-			{
-			}
+				results(res) {}
 
 			void CollisionEvent(AnnCollisionEvent e) override
 			{
