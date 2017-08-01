@@ -33,6 +33,9 @@ namespace Annwvyn
 
 		AnnGetOnScreenConsole()->setVisible(true);
 
+		auto renderer = AnnGetVRRenderer();
+		REQUIRE_FALSE(renderer->getName().empty());
+
 		auto duration = 5;
 		double sec;
 		while ((sec = GameEngine->getTimeFromStartupSeconds()) < duration)
@@ -40,6 +43,5 @@ namespace Annwvyn
 			GameEngine->refresh();
 			AnnDebug() << "Running for " << sec << "sec. out of " << duration;
 		}
-		GameEngine->refresh();
 	}
 }
