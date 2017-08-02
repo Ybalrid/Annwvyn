@@ -46,16 +46,24 @@ shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName) const
 
 	//Create the resource needed to the read operation
 	auto fsmanager(AnnGetFileSystemManager());
+
+	//Open the file
+	ifstream ifile;
+	auto fullPath = fsmanager->getPathForFileName(fileName);
+	ifile.open(fullPath);
+
+	if (!ifile)
+	{
+		AnnDebug() << "file " << fullPath << " doesn't exist or is not openable.";
+		return nullptr;
+	}
+
 	auto fileData(fsmanager->crateSaveFileDataObject(fileName));
 	if (!fileData) return nullptr;
-	ifstream ifile;
 	string buffer, key, value;
 
 	//make sure the dataObject don't contain old content
 	fileData->storedTextData.clear();
-
-	//Open the file
-	ifile.open(fsmanager->getPathForFileName(fileName));
 
 	//While we've not reach the end of the file
 	while (!ifile.eof())
@@ -189,7 +197,7 @@ AnnSaveFileData::AnnSaveFileData(string name) :
 	fileName(name),
 	changed(false)
 {
-	AnnDebug() << "SaveFileData object for file " << name << " created";
+	AnnDebug() << "AnnSaveFileData object for file " << name << " created (not on disk!)";
 }
 
 bool AnnSaveFileData::hasUnsavedChanges() const
