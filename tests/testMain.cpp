@@ -22,13 +22,13 @@ namespace Annwvyn
 {
 	TEST_CASE("BASIC ENGINE START")
 	{
-		auto GameEngine = std::make_unique<AnnEngine>("UnitTest0", RENDERER);
+		auto GameEngine = std::make_unique<AnnEngine>("BasicInit", RENDERER);
 		REQUIRE(GameEngine != nullptr);
 	}
 
 	TEST_CASE("BASIC ENGINE START WITH RENDER")
 	{
-		auto GameEngine = std::make_unique<AnnEngine>("UnitTest1", RENDERER);
+		auto GameEngine = std::make_unique<AnnEngine>("BasicInitRender", RENDERER);
 		REQUIRE(GameEngine != nullptr);
 
 		AnnGetOnScreenConsole()->setVisible(true);
@@ -38,6 +38,7 @@ namespace Annwvyn
 
 		auto duration = 5;
 		double sec;
+		GameEngine->getVRRenderer()->getTimer()->reset();
 		while ((sec = GameEngine->getTimeFromStartupSeconds()) < duration)
 		{
 			GameEngine->refresh();

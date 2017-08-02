@@ -1,34 +1,11 @@
 #include "stdafx.h"
-#include "configs.hpp"
+#include "engineBootstrap.hpp"
 
 #include <Annwvyn.h>
 #include <catch/catch.hpp>
 
 namespace Annwvyn
 {
-	//All tests will need at least this :
-	std::unique_ptr<AnnEngine> setupBase()
-	{
-		//Start engine
-		auto GameEngine = std::make_unique<AnnEngine>("TestCollision", RENDERER);
-		REQUIRE(GameEngine);
-
-		//Construct environement
-		auto sun = AnnGetGameObjectManager()->createLightObject(); //physics based shading crash shaders if no light
-		sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		sun->setPower(97);
-		sun->setDirection(AnnVect3{ 0, -1, -2 }.normalisedCopy());
-		REQUIRE(sun);
-
-		//Fixed object in space : the floor
-		auto floor = AnnGetGameObjectManager()->createGameObject("floorplane.mesh", "floor");
-		floor->setUpPhysics();
-		REQUIRE(floor);
-		REQUIRE(floor->getBody());
-
-		return move(GameEngine);
-	}
-
 	TEST_CASE("TEST TIMER EVENT")
 	{
 		//Nested listener class
@@ -54,20 +31,22 @@ namespace Annwvyn
 			bool& state;
 		};
 
-		auto GameEngine = setupBase();
+		auto GameEngine = bootstrapTestEngine("TestTimeEvent");
 
 		//Construct and register the listener
 		auto state{ false };
 		auto timerListener = std::make_shared<TimerTest>(state);
 		AnnGetEventManager()->addListener(timerListener);
+		AnnGetOnScreenConsole()->setVisible(true);
+		GameEngine->refresh();
+		AnnGetVRRenderer()->getTimer()->reset();
+		double sec;
 
 		//Start a timer, and give it's ID to the listener
 		auto timer = AnnGetEventManager()->fireTimer(5);
 		timerListener->setID(timer);
 
 		//Run 10 seconds of simulation with debug console visible
-		AnnGetOnScreenConsole()->setVisible(true);
-		double sec;
 		while ((sec = GameEngine->getTimeFromStartupSeconds()) < 10)
 		{
 			GameEngine->refresh();
@@ -98,7 +77,7 @@ namespace Annwvyn
 			bool& results;
 		};
 
-		auto GameEngine = setupBase();
+		auto GameEngine = bootstrapTestEngine("TestCollision");
 
 		//Falling object
 		auto sinbad = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "Sinbad");
@@ -116,6 +95,7 @@ namespace Annwvyn
 		REQUIRE(eventListener);
 
 		AnnGetPhysicsEngine()->setDebugPhysics(true);
+		AnnGetVRRenderer()->getTimer()->reset();
 		while (GameEngine->getTimeFromStartupSeconds() < 5.0f)
 		{
 			GameEngine->refresh();
