@@ -40,6 +40,7 @@ namespace Annwvyn
 			fsManager->releaseSaveFileDataObject(fileData);
 		}
 
+		//Declare a file data interpretor for this save file (by nesting a class...)
 		class TestFileSystemDataInterpretror : public AnnSaveDataInterpretor
 		{
 		public:
