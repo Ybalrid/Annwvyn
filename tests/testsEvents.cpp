@@ -27,7 +27,7 @@ namespace Annwvyn
 		private:
 			//timer we check
 			timerID id;
-			//ouside owned boolean
+			//outside owned boolean
 			bool& state;
 		};
 
@@ -50,7 +50,7 @@ namespace Annwvyn
 		while ((sec = GameEngine->getTimeFromStartupSeconds()) < 10)
 		{
 			GameEngine->refresh();
-			AnnDebug() << "Curernt time : " << sec;
+			AnnDebug() << "Current time : " << sec;
 			if (state) AnnDebug() << "Timer event caught!!!";
 		}
 
@@ -115,18 +115,14 @@ namespace Annwvyn
 		{
 		public:
 			TickTest(int& counter) : constructListener(),
-				counter(counter)
-			{
-			}
+				counter(counter) {}
 
-			void tick() override
-			{
-				++counter;
-			}
+			void tick() override { ++counter; }
 
 		private:
 			int& counter;
 		};
+
 		auto GameEngine = bootstrapTestEngine("TestTick");
 		auto counter = 0;
 
@@ -136,10 +132,10 @@ namespace Annwvyn
 		AnnGetOnScreenConsole()->setVisible(true);
 
 		auto refCounter = 0;
-		const auto nbFrames = 666;
+		const auto nbFrames = 200;
 		while (refCounter < nbFrames)
 		{
-			++refCounter;
+			AnnDebug() << ++refCounter;
 			GameEngine->refresh();
 		}
 
