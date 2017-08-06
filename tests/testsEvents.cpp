@@ -6,7 +6,7 @@
 
 namespace Annwvyn
 {
-	TEST_CASE("TEST TIMER EVENT")
+	TEST_CASE("Test timer event")
 	{
 		//Nested listener class
 		class TimerTest : LISTENER
@@ -58,7 +58,7 @@ namespace Annwvyn
 		REQUIRE(state);
 	}
 
-	TEST_CASE("TEST EVENT COLLISION")
+	TEST_CASE("Test event collision")
 	{
 		class CollisionTest : LISTENER
 		{

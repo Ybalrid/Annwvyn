@@ -20,13 +20,13 @@ int main(int argc, char* argv[])
 
 namespace Annwvyn
 {
-	TEST_CASE("BASIC ENGINE START")
+	TEST_CASE("Basic engine start")
 	{
 		auto GameEngine = std::make_unique<AnnEngine>("BasicInit", RENDERER);
 		REQUIRE(GameEngine != nullptr);
 	}
 
-	TEST_CASE("BASIC ENGINE START WITH RENDER")
+	TEST_CASE("Basic engine start with render")
 	{
 		auto GameEngine = std::make_unique<AnnEngine>("BasicInitRender", RENDERER);
 		REQUIRE(GameEngine != nullptr);
@@ -36,7 +36,7 @@ namespace Annwvyn
 		auto renderer = AnnGetVRRenderer();
 		REQUIRE_FALSE(renderer->getName().empty());
 
-		auto duration = 5;
+		auto duration = 3;
 		double sec;
 		GameEngine->getVRRenderer()->getTimer()->reset();
 		while ((sec = GameEngine->getTimeFromStartupSeconds()) < duration)
