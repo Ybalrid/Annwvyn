@@ -141,7 +141,7 @@ set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} ${AnnwvynPCH})
 
 file(GLOB TestCode tests/*.cpp tests/*.hpp)
 if(MSVC)
-    file(GLOB TestPCH tests/pch/*.cpp tests/pch/*.hpp)
+    file(GLOB TestPCH tests/pch/*)
 endif()
 
 #Set target for project
