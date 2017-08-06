@@ -78,11 +78,12 @@ namespace Annwvyn
 		};
 
 		auto GameEngine = bootstrapTestEngine("TestCollision");
+		AnnGetOnScreenConsole()->setVisible(true);
 
 		//Falling object
 		auto sinbad = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "Sinbad");
 		sinbad->setScale(AnnVect3::UNIT_SCALE / 2.0f);
-		sinbad->setPosition(0, 5, 0);
+		sinbad->setPosition(-8, 5, 1);
 		sinbad->setUpPhysics(100, boxShape);
 		REQUIRE(sinbad);
 		REQUIRE(sinbad->getBody());
@@ -101,11 +102,48 @@ namespace Annwvyn
 			GameEngine->refresh();
 			if (state)
 			{
-				AnnGetOnScreenConsole()->setVisible(true);
 				AnnDebug() << "Detected collision";
 			}
 		}
 
 		REQUIRE(state);
+	}
+
+	TEST_CASE("Event Listener Tick sanity test")
+	{
+		class TickTest : LISTENER
+		{
+		public:
+			TickTest(int& counter) : constructListener(),
+				counter(counter)
+			{
+			}
+
+			void tick() override
+			{
+				++counter;
+			}
+
+		private:
+			int& counter;
+		};
+		auto GameEngine = bootstrapTestEngine("TestTick");
+		auto counter = 0;
+
+		auto tickListener = std::make_shared<TickTest>(counter);
+		AnnGetEventManager()->addListener(tickListener);
+
+		AnnGetOnScreenConsole()->setVisible(true);
+
+		auto refCounter = 0;
+		const auto nbFrames = 666;
+		while (refCounter < nbFrames)
+		{
+			++refCounter;
+			GameEngine->refresh();
+		}
+
+		REQUIRE(counter == refCounter);
+		REQUIRE(counter == nbFrames);
 	}
 }
