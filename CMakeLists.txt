@@ -31,6 +31,7 @@ if(WIN32)
 
     #Where to find additional modules
     set(CMAKE_MODULE_PATH 
+        ${CMAKE_MODULE_PATH}
         $ENV{AnnwvynSDK64}/CMakeModules
         $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
         $ENV{AnnwvynSDK64}/BtOgre21/CMake
@@ -110,6 +111,7 @@ include_directories(
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/tests
     )
 
 if(UNIX)    
@@ -124,7 +126,8 @@ endif(UNIX)
 #link directory form old VS solution
 link_directories(
     #VR SDKs
-    $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/
+    #optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/
+    #debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/
     $ENV{AnnwvynSDK64}/openvr/lib/win64
     )
 
@@ -136,18 +139,24 @@ if(MSVC)
 endif()
 set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} ${AnnwvynPCH})
 
+file(GLOB TestCode tests/*.cpp tests/*.hpp)
+if(MSVC)
+    file(GLOB TestPCH tests/pch/*)
+endif()
+
 #Set target for project
 add_library(Annwvyn SHARED ${AnnwvynCode} )
+add_executable(AnnwvynUnitTest ${TestCode} ${TestPCH})
 
-#linker input from old VS solution
-target_link_libraries( Annwvyn
+set (LIBS 
     ##Engine dependencies
     ${OGRE_LIBRARIES}
     ${OGRE_HlmsPbs_LIBRARIES}
     ${OGRE_HlmsUnlit_LIBRARIES}
     ${OGRE_Overlay_LIBRARIES}
     ${BULLET_LIBRARIES}
-    ${BtOgre21_LIBRARIES}
+    optimized ${BtOgre21_LIBRARIES}
+    debug ${BtOgre21_LIBRARIES_DEBUG}
     ${OIS_LIBRARIES}
     ${GLEW_LIBRARIES}
     ${GLFW_LIBRARIES}
@@ -155,21 +164,41 @@ target_link_libraries( Annwvyn
     ${OPENAL_LIBRARY}
     ${TinyXML2_LIBRARIES}
     ${SNDFILE_LIBRARIES}
-
     )
+
+#linker input from old VS solution
+target_link_libraries( Annwvyn
+    ${LIBS}
+    )
+
+target_link_libraries(AnnwvynUnitTest
+    Annwvyn
+    ${OGRE_LIBRARIES}
+    ${OGRE_HlmsPbs_LIBRARIES}
+    ${OGRE_HlmsUnlit_LIBRARIES}
+    ${OGRE_Overlay_LIBRARIES}
+    )
+
 
 if(WIN32)
+
+    set(WIN_ADDITIONAL_LIBS
+        ##VR SDKS (manually added)
+        optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib          #TODO WIN32 specific
+        debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/LibOVR.lib
+        openvr_api.lib      #TODO WIN32 specific
+
+        ##Windows own libraries
+        ws2_32.lib      #TODO WIN32 specific
+        Setupapi.lib    #TODO WIN32 specific
+        Winmm.lib       #TODO WIN32 specific
+        )
+
     target_link_libraries(Annwvyn
-    
-    ##VR SDKS (manually added)
-    LibOVR.lib          #TODO WIN32 specific
-    openvr_api.lib      #TODO WIN32 specific
-    
-    ##Windows own libraries
-    ws2_32.lib      #TODO WIN32 specific
-    Setupapi.lib    #TODO WIN32 specific
-    Winmm.lib       #TODO WIN32 specific
-    )
+        ${WIN_ADDITIONAL_LIBS}
+        )
+
+
 endif()
 
 #MSVC specific configuration
@@ -180,11 +209,14 @@ if(MSVC)
     set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
     set_target_properties(Annwvyn PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
     set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
+    set_target_properties(AnnwvynUnitTest PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
+    set_source_files_properties(tests/pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
 endif()
 
 #Installation
 if(WIN32)
-    file(GLOB Annwvyn_ARTIFACTS ${CMAKE_BINARY_DIR}/Release/*)
+    set(Annwvyn_INSTALLABLE ${CMAKE_BINARY_DIR}/Release)
+    file(GLOB Annwvyn_ARTIFACTS ${Annwvyn_INSTALLABLE}/Annwvyn.lib ${Annwvyn_INSTALLABLE}/Annwvyn.exp ${Annwvyn_INSTALLABLE}/*.dll)
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 endif()
 

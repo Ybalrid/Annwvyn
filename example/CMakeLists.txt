@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.6.3)
  
 set(CMAKE_CXX_STANDARD 14)
-set(ANNWVYN_PROJECT "AnnwvynTest")
+set(ANNWVYN_PROJECT "AnnwvynSamples")
 
 #Name of the project
 project(${ANNWVYN_PROJECT})

@@ -80,6 +80,8 @@
 #include <chrono>
 #include <ctime>
 
+#include <Ogre.h>
+
 //Annwvyn classes
 #include "AnnEngine.hpp"
 #include "AnnGameObjectManager.hpp"
@@ -107,9 +109,7 @@
 
 #include "AnnGetter.hpp"
 
-
 #include "OgreVRRender.hpp"
-
 
 ///Namespace containing the totality of Annwvyn components
 namespace Annwvyn
