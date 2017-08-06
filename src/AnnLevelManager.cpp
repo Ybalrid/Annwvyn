@@ -21,8 +21,6 @@ AnnLevelManager::~AnnLevelManager()
 
 void AnnLevelManager::jump(level_id levelId)
 {
-	AnnDebug() << "LevelManager jumping to levelId : " << levelId;
-
 	if (!(levelId < levelList.size())) return;
 
 	//Deferred level jump
@@ -33,10 +31,10 @@ void AnnLevelManager::jump(level_id levelId)
 		return;
 	}
 
+	AnnDebug() << "LevelManager jumping to levelId : " << levelId;
 	jumpRequested = false;
 	jumpTo = 0;
-	if (current)
-		current->unload();
+	unloadCurrentLevel();
 	current = levelList[levelId];
 	current->load();
 }
