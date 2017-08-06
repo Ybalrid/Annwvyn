@@ -15,9 +15,8 @@ jumpTo(0)
 
 AnnLevelManager::~AnnLevelManager()
 {
-	AnnGetEngine()->log("Deleting the Level Manager. Destroying every level known by the Level Manager before.");
-	//clear the levels
-	levelList.clear();
+	AnnDebug() << "Deleting the Level Manager. Unloading current level and releasing all level pointers";
+	unloadCurrentLevel();
 }
 
 void AnnLevelManager::jump(level_id levelId)
