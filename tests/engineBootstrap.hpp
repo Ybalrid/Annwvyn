@@ -29,4 +29,12 @@ namespace Annwvyn
 
 		return move(GameEngine);
 	}
+
+	inline std::unique_ptr<AnnEngine> bootstrapEmptyEngine(const std::string& name)
+	{
+		auto GameEngine = std::make_unique<AnnEngine>(name.c_str(), RENDERER);
+		REQUIRE(GameEngine);
+
+		return move(GameEngine);
+	}
 }
