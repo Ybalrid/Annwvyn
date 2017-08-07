@@ -1,5 +1,4 @@
-#include "stdafx.h"
-
+#include <stdafx.h>
 #include <engineBootstrap.hpp>
 
 namespace Annwvyn
@@ -100,5 +99,52 @@ namespace Annwvyn
 
 		REQUIRE(loadStatus);
 		REQUIRE(unloadStatus);
+	}
+
+	TEST_CASE("Level load geometry")
+	{
+		class TestLevelLoadObjects : LEVEL
+		{
+			bool& ogreOk;
+			bool& floorOk;
+		public:
+			TestLevelLoadObjects(bool& forOgre, bool& forFloor) : constructLevel(),
+				ogreOk{ forOgre }, floorOk{ forFloor } {}
+
+			void load() override
+			{
+				auto floor = addGameObject("floorplane.mesh", "Floor");
+				auto ogre = addGameObject("Sinbad.mesh", "Ogre");
+
+				auto sun = addLightObject();
+				sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
+				sun->setDirection({ -0.0625, -1, 1 });
+
+				auto gameObjectManager = AnnGetGameObjectManager();
+				floorOk = gameObjectManager->getObjectFromID("Floor") != nullptr;
+				ogreOk = gameObjectManager->getObjectFromID("Ogre") != nullptr;
+			}
+
+			void runLogic() override {}
+		};
+
+		auto ogreOk{ false }, floorOk{ false };
+
+		//Scope the lifetime of GameEngine this way
+		{
+			auto GameEngine = bootstrapEmptyEngine("TestLevel");
+			auto levelManager = AnnGetLevelManager();
+
+			levelManager->addLevel(std::make_shared<TestLevelLoadObjects>(ogreOk, floorOk));
+			levelManager->jumpToFirstLevel();
+
+			for (auto i = 0; i < 3; ++i)
+			{
+				GameEngine->refresh();
+			}
+		}
+
+		REQUIRE(ogreOk);
+		REQUIRE(floorOk);
 	}
 }

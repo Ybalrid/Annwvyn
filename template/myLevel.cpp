@@ -36,6 +36,11 @@ void MyLevel::load()
 
 	//zenith sunlight
 	Sun->setDirection(AnnVect3{ -1, -1.5f, -1 }.normalisedCopy());
+
+	auto player{ AnnGetPlayer() };
+	player->setPosition({ 0, 1, 10 });
+	player->setOrientation(0);
+	player->resetPlayerPhysics();
 }
 
 void MyLevel::runLogic()
