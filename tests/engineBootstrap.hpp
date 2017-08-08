@@ -14,7 +14,7 @@ namespace Annwvyn
 		auto GameEngine = std::make_unique<AnnEngine>(name.c_str(), RENDERER);
 		REQUIRE(GameEngine);
 
-		//Construct environement
+		//Construct environment
 		auto sun = AnnGetGameObjectManager()->createLightObject(); //physics based shading crash shaders if no light
 		sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		sun->setPower(97);

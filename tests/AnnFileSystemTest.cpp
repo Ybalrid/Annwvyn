@@ -47,15 +47,9 @@ namespace Annwvyn
 			TestFileSystemDataInterpretror(std::shared_ptr<AnnSaveFileData> data) : AnnSaveDataInterpretor(data),
 				IAmTestProgram(false) {}
 
-			bool amITestProgram() const
-			{
-				return IAmTestProgram;
-			}
+			bool amITestProgram() const { return IAmTestProgram; }
 
-			void extract() override
-			{
-				IAmTestProgram = keyStringToInt("IAmTestProgram");
-			}
+			void extract() override { IAmTestProgram = keyStringToInt("IAmTestProgram"); }
 
 		private:
 			bool IAmTestProgram;
