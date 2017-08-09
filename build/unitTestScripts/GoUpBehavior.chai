@@ -1,0 +1,17 @@
+class GoUpBehavior
+{
+    attr OwnerRef
+    def GoUpBehavior(ownerTag)
+    {
+        AnnDebugLog("GoUpBehavior chaiscript object constructed");
+        AnnDebugLog(ownerTag);
+        this.OwnerRef := AnnGetGameObject(ownerTag);
+    }
+
+    def update()
+    {
+        //go up!
+        this.OwnerRef.setPosition(this.OwnerRef.getPosition() + AnnVect3(0,0.02,0))
+        AnnDebugLog(this.OwnerRef.getPosition());
+    }
+}
