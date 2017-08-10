@@ -51,6 +51,7 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](const Vector3& v, const Real w) {return v - w; }), "-");
 	chai.add(fun([](const Real& v, const Vector3& w) {return v - w; }), "-");
 	chai.add(fun([](const Vector3& vector, Real scalar) {return scalar*vector; }), "*");
+	chai.add(fun([](Real scalar, const Vector3& vector) {return scalar*vector; }), "*");
 	chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1*v2; }), "*");
 	chai.add(fun([](const Vector3& vector, Real scalar) {return scalar / vector; }), "/");
 	chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1 / v2; }), "/");
@@ -717,4 +718,9 @@ void AnnScriptManager::unregisterResourceManager()
 AnnScriptManager::~AnnScriptManager()
 {
 	unregisterResourceManager();
+}
+
+chaiscript::ChaiScript* AnnScriptManager::_getEngine()
+{
+	return &chai;
 }

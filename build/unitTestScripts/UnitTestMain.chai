@@ -1,0 +1,22 @@
+AnnDebugLog("Evaluation UnitTestMain.chai");
+
+def returnFortyTwo()
+{
+    return 42
+}
+
+def addVect3(AnnVect3 a, AnnVect3 b)
+{
+    return a+b
+}
+
+def subVect3(AnnVect3 a, AnnVect3 b)
+{
+    return a-b
+}
+
+def scalarVect3(s, AnnVect3 v)
+{
+    return s*v
+}
+

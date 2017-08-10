@@ -34,4 +34,52 @@ namespace Annwvyn
 			REQUIRE(ogre->getPosition().y >= 5);
 		}
 	}
+
+	TEST_CASE("Test scripting API")
+	{
+		using std::function;
+		using Ogre::Vector3;
+
+		auto GameEngine = bootstrapEmptyEngine("TestScript");
+
+		auto ScriptManager = AnnGetScriptManager();
+		const auto result = ScriptManager->evalFile("./unitTestScripts/UnitTestMain.chai");
+		REQUIRE(result);
+
+		//Get direct access to the underlying scripting engine (ChaiScript)
+		auto chai = ScriptManager->_getEngine();
+
+		int fortyTwo;
+		SECTION("Evaluate function call form Chaiscript and get result")
+		{
+			fortyTwo = chai->eval<int>("returnFortyTwo()");
+			REQUIRE(fortyTwo == 42);
+		}
+
+		SECTION("Get a functor to a function defined inside ChaiScript")
+		{
+			fortyTwo = 0;
+			auto returnFortyTwo = chai->eval<function<int()>>("returnFortyTwo");
+			fortyTwo = returnFortyTwo();
+			REQUIRE(returnFortyTwo);
+			REQUIRE(fortyTwo == 42);
+		}
+
+		SECTION("Test vector arithmetic via chaiscript")
+		{
+			const AnnVect3 a{ 1,1,1 };
+			const AnnVect3 b{ 9,9,9 };
+			const auto scalar = 3.14f;
+
+			auto c = 4.0f * a;
+
+			auto addVect3 = chai->eval<function<Vector3(Vector3, Vector3)>>("addVect3");
+			auto subVect3 = chai->eval<function<Vector3(Vector3, Vector3)>>("subVect3");
+			auto scalarVect3 = chai->eval<function<Vector3(float, Vector3)>>("scalarVect3");
+
+			REQUIRE((a + b) == addVect3(a, b));
+			REQUIRE((b - a) == subVect3(b, a));
+			REQUIRE(scalar*a == scalarVect3(scalar, a));
+		}
+	}
 }

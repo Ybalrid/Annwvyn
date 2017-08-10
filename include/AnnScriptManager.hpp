@@ -130,6 +130,9 @@ namespace Annwvyn
 		///Evaluate one line of chaiCode
 		void evalString(const std::string& chaiCode);
 
+		///GetAccess to the chaiscript engine. Only use for special cases.
+		chaiscript::ChaiScript* _getEngine();
+
 	private:
 
 		///ChaiScript engine
