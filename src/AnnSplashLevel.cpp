@@ -129,10 +129,10 @@ void AnnSplashLevel::load()
 	createSplashCurvedPlane();
 }
 
-void AnnSplashLevel::setBGM(std::string name, bool preload)
+void AnnSplashLevel::setBGM(std::string soundfileName, bool preload)
 {
-	if (preload) AnnGetAudioEngine()->preLoadBuffer(name);
-	bgmName = name;
+	if (preload) AnnGetAudioEngine()->preLoadBuffer(soundfileName);
+	bgmName = soundfileName;
 	hasBGM = true;
 }
 
