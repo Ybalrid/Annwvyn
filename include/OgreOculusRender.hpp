@@ -139,6 +139,9 @@ public:
 
 	///Move the cameras according form the hmdToEye translation vector from OVR.
 	void handleIPDChange() override;
+
+	void logHeadsetGeometry();
+
 private:
 
 	///Render textures sizes
@@ -198,8 +201,8 @@ private:
 	///Array of 2 ovrTextureSwapChain
 	std::array<ovrTextureSwapChain, 2> texturesSeparatedSwapChain;
 
-	///offset between render center and camera (for IPD variation)
-	std::array<ovrVector3f, 2> offset;
+	///eyeToHmdPoseOffset between render center and camera (for IPD variation)
+	std::array<ovrPosef, 2> eyeToHmdPoseOffset;
 
 	///Pose (position+orientation)
 	ovrPosef pose;

@@ -256,8 +256,10 @@ void OgreOculusRender::initClientHmdRendering()
 	//Populate OVR structures
 	eyeRenderDescArray[left] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left]);
 	eyeRenderDescArray[right] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right]);
-	offset[left] = eyeRenderDescArray[left].HmdToEyeOffset;
-	offset[right] = eyeRenderDescArray[right].HmdToEyeOffset;
+	eyeToHmdPoseOffset[left] = eyeRenderDescArray[left].HmdToEyePose;
+	eyeToHmdPoseOffset[right] = eyeRenderDescArray[right].HmdToEyePose;
+	//Report on the values given by the SDK
+	logHeadsetGeometry();
 
 	//Create a layer with our single swaptexture on it. Each side is an eye.
 	layer.Header.Type = ovrLayerType_EyeFov;
@@ -394,7 +396,22 @@ void OgreOculusRender::showDebug(DebugMode mode)
 void OgreOculusRender::handleIPDChange()
 {
 	for (auto eye : eyeUpdateOrder)
-		eyeCameras[eye]->setPosition(oculusToOgreVect3(eyeRenderDescArray[eye].HmdToEyeOffset));
+	{
+		const auto eyeOffset = eyeRenderDescArray[eye].HmdToEyePose;
+		eyeCameras[eye]->setPosition(oculusToOgreVect3(eyeOffset.Position));
+		eyeCameras[eye]->setOrientation(oculusToOgreQuat(eyeOffset.Orientation));
+		eyeToHmdPoseOffset[eye] = eyeOffset;
+	}
+}
+
+void OgreOculusRender::logHeadsetGeometry()
+{
+	for (auto eye : eyeUpdateOrder)
+	{
+		AnnDebug() << "For eye : " << eye;
+		AnnDebug() << oculusToOgreVect3(eyeToHmdPoseOffset[eye].Position);
+		AnnDebug() << oculusToOgreQuat(eyeToHmdPoseOffset[eye].Orientation);
+	}
 }
 
 void OgreOculusRender::getTrackingPoseAndVRTiming()
@@ -413,7 +430,7 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 
 	//Update pose and controllers
 	pose = ts.HeadPose.ThePose;
-	ovr_CalcEyePoses(pose, offset.data(), layer.RenderPose);
+	ovr_CalcEyePoses(pose, eyeToHmdPoseOffset.data(), layer.RenderPose);
 	updateTouchControllers();
 	handleIPDChange();
 
