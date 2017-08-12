@@ -23,11 +23,11 @@ Please read the DEPEDENCIES file to know what you need to build it.
 System requirement
 ----------------
 
- - A fairly recent GPU. Support for OpenGL 4.3 is required. Tested on OpenGL 4.0 GPU in "noVR" mode only
+ - A fairly recent GPU. Support for OpenGL **4.3** is **required**. Tested on OpenGL 4.0 GPU in "noVR" mode only
  - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive, or other hardware supported by OpenVR
  - Usable with hand controllers (touch, vive wands...) 
  - 64bit Operating system
- - Oculus Runtime 1.13 (03/07/17) installed from http://oculus.com/setup OR SteamVR installed through Steam http://steampowered.com/
+ - up to date Oculus Home app installed from http://oculus.com/setup OR SteamVR installed through Steam http://steampowered.com/
  - Microsoft Visual Studio 2015 Community (free to download and use from Microsoft)
  
 Installation
@@ -60,8 +60,9 @@ But, if you really want to build the engine yourself, here's a simple guide how 
 - You need to copy a bunch of .dll in the "example" (and template) directories. You can do this automatically by launching the "getLibs.bat" scripts. But here's the list if you want to check
     - Ogre  
         - OgreMain.dll
-        - OgreOverlay.dll  
-        - Plugin_OctreeSceneManager.dll
+        - OgreOverlay.dll 
+        - OgreHlmsPbs.dll
+        - OgreHlmsUnlit.dll
         - RenderSystem_GL.dll
         - OIS.dll
     - OpenAL
