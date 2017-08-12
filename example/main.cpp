@@ -66,8 +66,6 @@ public:
 	}
 };
 
-function<void()> debugHook;
-
 AnnMain()
 {
 	OgreVRRender::setAntiAliasingLevel(8);
@@ -99,7 +97,7 @@ AnnMain()
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
 	AnnDebug() << "Starting the render loop";
 
-	debugHook = []()
+	auto debugHook = []()
 	{
 		putGizmoOnHands();
 	};

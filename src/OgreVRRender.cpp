@@ -415,7 +415,7 @@ void OgreVRRender::loadHLMSLibrary(std::string hlmsFolder)
 
 	//Create and register the unlit Hlms
 	auto hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveUnlit, &archiveUnlitLibraryFolders);
-	Ogre::Root::getSingleton().getHlmsManager()->registerHlms(hlmsUnlit);
+	hlmsManager->registerHlms(hlmsUnlit);
 
 	//Do the same for HlmsPbs:
 	Ogre::HlmsPbs::getDefaultPaths(dataFolderPath, libraryFoldersPaths);
@@ -431,7 +431,7 @@ void OgreVRRender::loadHLMSLibrary(std::string hlmsFolder)
 
 	//Create and register
 	auto hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &archivePbsLibraryFolders);
-	Ogre::Root::getSingleton().getHlmsManager()->registerHlms(hlmsPbs);
+	hlmsManager->registerHlms(hlmsPbs);
 
 	//Set the best shadows we can do by default
 	hlmsPbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_4x4);
