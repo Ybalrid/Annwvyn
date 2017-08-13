@@ -529,7 +529,3 @@ void AnnEngine::requestQuit()
 {
 	applicationQuitRequested = true;
 }
-
-void AnnEngine::registerCustomResources()
-{
-}
