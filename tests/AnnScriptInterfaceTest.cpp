@@ -71,8 +71,6 @@ namespace Annwvyn
 			const AnnVect3 b{ 9,9,9 };
 			const auto scalar = 3.14f;
 
-			auto c = 4.0f * a;
-
 			auto addVect3 = chai->eval<function<Vector3(Vector3, Vector3)>>("addVect3");
 			auto subVect3 = chai->eval<function<Vector3(Vector3, Vector3)>>("subVect3");
 			auto scalarVect3 = chai->eval<function<Vector3(float, Vector3)>>("scalarVect3");

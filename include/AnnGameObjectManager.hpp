@@ -51,7 +51,6 @@ namespace Annwvyn
 		std::shared_ptr<AnnLightObject> createLightObject();
 
 		///Create a trigger object
-		/// \param trigger an empty trigger object
 		std::shared_ptr<AnnTriggerObject> createTriggerObject(); //object factory
 
 		///Remove the object from the engine

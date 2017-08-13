@@ -270,36 +270,34 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	if (!font->isLoaded())
 		font->load();
 
-	TexturePtr fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
+	auto fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
 
 	auto fontBuffer = fontTexture->getBuffer();
 	auto destBuffer = destTexture->getBuffer();
 
-	PixelBox destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
+	auto destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
 
 	// The font texture textureBuffer was created write only...so we cannot read it back :o). One solution is to copy the textureBuffer  instead of locking it. (Maybe there is a way to create a font texture which is not write_only ?)
 
 	// create a textureBuffer
-	size_t nBuffSize = fontBuffer->getSizeInBytes();
-	uint8* textureBuffer = static_cast<uint8*>(calloc(nBuffSize, sizeof(uint8)));
+	auto nBuffSize = fontBuffer->getSizeInBytes();
+	auto textureBuffer = static_cast<uint8*>(calloc(nBuffSize, sizeof(uint8)));
 
 	// create pixel box using the copy of the textureBuffer
 	PixelBox fontPb(fontBuffer->getWidth(), fontBuffer->getHeight(), fontBuffer->getDepth(), fontBuffer->getFormat(), textureBuffer);
 	fontBuffer->blitToMemory(fontPb);
 
-	uint8* fontData = static_cast<uint8*>(fontPb.data);
-	uint8* destData = static_cast<uint8*>(destPb.data);
+	auto fontData = static_cast<uint8*>(fontPb.data);
+	auto destData = static_cast<uint8*>(destPb.data);
 
-	const size_t fontPixelSize = PixelUtil::getNumElemBytes(fontPb.format);
-	const size_t destPixelSize = PixelUtil::getNumElemBytes(destPb.format);
+	const auto fontPixelSize = PixelUtil::getNumElemBytes(fontPb.format);
+	const auto destPixelSize = PixelUtil::getNumElemBytes(destPb.format);
 
-	const size_t fontRowPitchBytes = fontPb.rowPitch * fontPixelSize;
-	const size_t destRowPitchBytes = destPb.rowPitch * destPixelSize;
+	const auto fontRowPitchBytes = fontPb.rowPitch * fontPixelSize;
+	const auto destRowPitchBytes = destPb.rowPitch * destPixelSize;
 
-	Box *GlyphTexCoords;
-	GlyphTexCoords = new Box[str.size()]; //TODO do not use new[]/delete[]
+	Box *GlyphTexCoords = new Box[str.size()]; //TODO do not use new[]/delete[]
 
-	Font::UVRect glypheTexRect;
 	size_t charheight = 0;
 	size_t charwidth = 0;
 
@@ -307,7 +305,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	{
 		if ((str[i] != '\t') && (str[i] != '\n') && (str[i] != ' '))
 		{
-			glypheTexRect = font->getGlyphTexCoords(str[i]);
+			auto glypheTexRect = font->getGlyphTexCoords(str[i]);
 			GlyphTexCoords[i].left = uint32_t(glypheTexRect.left * fontTexture->getSrcWidth());
 			GlyphTexCoords[i].top = uint32_t(glypheTexRect.top * fontTexture->getSrcHeight());
 			GlyphTexCoords[i].right = uint32_t(glypheTexRect.right * fontTexture->getSrcWidth());
@@ -322,8 +320,8 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 
 	size_t cursorX = 0;
 	size_t cursorY = 0;
-	size_t lineend = destRectangle.getWidth();
-	bool carriagreturn = true;
+	auto lineend = destRectangle.getWidth();
+	auto carriagreturn = true;
 	for (unsigned int strindex = 0; strindex < str.size(); strindex++)
 	{
 		switch (str[strindex])
@@ -343,7 +341,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 			//justify
 			if (carriagreturn)
 			{
-				size_t l = strindex;
+				auto l = strindex;
 				size_t textwidth = 0;
 				size_t wordwidth = 0;
 

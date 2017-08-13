@@ -20,34 +20,33 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 	if (!font->isLoaded())
 		font->load();
 
-	TexturePtr fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
+	auto fontTexture = TexturePtr(TextureManager::getSingleton().getByName(font->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName()));
 
 	auto fontBuffer = fontTexture->getBuffer();
 	auto destBuffer = destTexture->getBuffer();
 
-	PixelBox destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
+	auto destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
 
 	// The font texture buffer was created write only...so we cannot read it back :o). One solution is to copy the buffer  instead of locking it. (Maybe there is a way to create a font texture which is not write_only ?)
 
 	// create a buffer
-	size_t nBuffSize = fontBuffer->getSizeInBytes();
-	uint8* buffer = static_cast<uint8*>(calloc(nBuffSize, sizeof(uint8)));
+	auto nBuffSize = fontBuffer->getSizeInBytes();
+	auto buffer = static_cast<uint8*>(calloc(nBuffSize, sizeof(uint8)));
 
 	// create pixel box using the copy of the buffer
 	PixelBox fontPb(fontBuffer->getWidth(), fontBuffer->getHeight(), fontBuffer->getDepth(), fontBuffer->getFormat(), buffer);
 	fontBuffer->blitToMemory(fontPb);
 
-	uint8* fontData = static_cast<uint8*>(fontPb.data);
-	uint8* destData = static_cast<uint8*>(destPb.data);
+	auto fontData = static_cast<uint8*>(fontPb.data);
+	auto destData = static_cast<uint8*>(destPb.data);
 
-	const size_t fontPixelSize = PixelUtil::getNumElemBytes(fontPb.format);
-	const size_t destPixelSize = PixelUtil::getNumElemBytes(destPb.format);
+	const auto fontPixelSize = PixelUtil::getNumElemBytes(fontPb.format);
+	const auto destPixelSize = PixelUtil::getNumElemBytes(destPb.format);
 
-	const size_t fontRowPitchBytes = size_t(fontPb.rowPitch * fontPixelSize);
-	const size_t destRowPitchBytes = size_t(destPb.rowPitch * destPixelSize);
+	const auto fontRowPitchBytes = size_t(fontPb.rowPitch * fontPixelSize);
+	const auto destRowPitchBytes = size_t(destPb.rowPitch * destPixelSize);
 
-	Box *GlyphTexCoords;
-	GlyphTexCoords = new Box[str.size()];
+	auto GlyphTexCoords = new Box[str.size()];
 
 	Font::UVRect glypheTexRect;
 	size_t charheight = 0;
@@ -70,13 +69,12 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 		}
 	}
 
-	size_t spacewidth;
 	//get the size of the glyph '0'
 	glypheTexRect = font->getGlyphTexCoords('0');
 	Box spaceBox;
 	spaceBox.left = uint32_t(glypheTexRect.left * fontTexture->getSrcWidth());
 	spaceBox.right = uint32_t(glypheTexRect.right * fontTexture->getSrcWidth());
-	spacewidth = spaceBox.getWidth();
+	auto spacewidth = spaceBox.getWidth();
 
 	//if not mono-spaced
 	if (spacewidth != charwidth) spacewidth = size_t(float(spacewidth) * 0.5f);
@@ -85,8 +83,8 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 
 	size_t cursorX = 0;
 	size_t cursorY = 0;
-	size_t lineend = destRectangle.getWidth();
-	bool carriagreturn = true;
+	auto lineend = destRectangle.getWidth();
+	auto carriagreturn = true;
 	for (unsigned int strindex = 0; strindex < str.size(); strindex++)
 	{
 		switch (str[strindex])
@@ -106,7 +104,7 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 			//justify
 			if (carriagreturn)
 			{
-				size_t l = strindex;
+				auto l = strindex;
 				size_t textwidth = 0;
 				size_t wordwidth = 0;
 
@@ -169,9 +167,9 @@ void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image
 			for (size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
 				for (size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
 				{
-					float alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0f);
-					float invalpha = float(1.0 - alpha);
-					size_t offset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
+					auto alpha = color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0f);
+					auto invalpha = float(1.0 - alpha);
+					auto offset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
 
 					ColourValue pix;
 					PixelUtil::unpackColour(&pix, destPb.format, &destData[offset]);
