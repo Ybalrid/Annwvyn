@@ -57,7 +57,7 @@ But, if you really want to build the engine yourself, here's a simple guide how 
 - hit Ctrl+Shift+B to build the whole solution
 - In the solution explorer, build the install target
 - Do the same (without the install part) in the example subdirectory
-- You need to copy a bunch of .dll in the "example" (and template) directories. You can do this automatically by launching the "getLibs.bat" scripts. But here's the list if you want to check
+- You need to copy a bunch of .dll in the "example" (and template) build directories. You can do this automatically by launching the "getLibs.bat" *(you really should)* scripts. But here's the list if you want to check
     - Ogre  
         - OgreMain.dll
         - OgreOverlay.dll 
