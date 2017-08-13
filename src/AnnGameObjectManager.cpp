@@ -26,7 +26,7 @@ void AnnGameObjectManager::update()
 	}
 }
 
-Ogre::MeshPtr AnnGameObjectManager::getMesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh)
+Ogre::MeshPtr AnnGameObjectManager::getMesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh) const
 {
 	v1Mesh = Ogre::v1::MeshManager::getSingleton().load(meshName,
 		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,

@@ -88,8 +88,6 @@ namespace Annwvyn
 		friend class AnnEngineSingletonReseter;
 		AnnEngineSingletonReseter resetGuard;
 
-		void registerCustomResources();
-
 	public:
 
 		static bool autosetProcessPriorityHigh;

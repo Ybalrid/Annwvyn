@@ -146,8 +146,6 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	renderer->initOgreRoot("Annwvyn.log");
 
-	registerCustomResources();
-
 	player = std::make_shared< AnnPlayer>();
 	renderer->initVrHmd();
 	renderer->initPipeline();
