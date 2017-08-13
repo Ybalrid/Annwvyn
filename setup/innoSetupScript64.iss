@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AnnwvynSDK64"
-#define MyAppVersion "0.3.0"
+#define MyAppVersion "0.3.2"
 #define MyAppPublisher "Arthur (Ybalrid) Brainville"
 #define MyAppURL "http://annwvyn.org/"
 
