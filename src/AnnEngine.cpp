@@ -57,59 +57,14 @@ void AnnEngine::startGameplayLoop()
 	while (refresh());
 }
 
-AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
-	resetGuard(this),
-	applicationQuitRequested(false),
-	renderer(nullptr),
-	resourceManager(nullptr),
-	sceneryManager(nullptr),
-	filesystemManager(nullptr),
-	audioEngine(nullptr),
-	eventManager(nullptr),
-	physicsEngine(nullptr),
-	gameObjectManager(nullptr),
-	levelManager(nullptr),
-	player(nullptr),
-	SceneManager(nullptr),
-	vrRendererPovGameplayPlacement(nullptr),
-	updateTime(-1)
+void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std::string& title)
 {
-#ifdef _WIN32
-	consoleGreen = FOREGROUND_GREEN |
-		FOREGROUND_INTENSITY;
-	consoleYellow = FOREGROUND_GREEN |
-		FOREGROUND_RED |
-		FOREGROUND_INTENSITY;
-	consoleWhite = FOREGROUND_RED |
-		FOREGROUND_GREEN |
-		FOREGROUND_BLUE |
-		FOREGROUND_INTENSITY;
-#endif
-
-	if (singleton)
-	{
-		log("Can't create 2 instances of the engine!");
-		throw AnnInitializationError(ANN_ERR_MEMORY, "Can't create 2 instances of AnnEngine");
-	}
-	singleton = this;
-
-	stringUtility = std::make_shared<AnnStringUility>();
-
-#ifdef _WIN32
-	//Set current process to high priority.
-	//Looks like the scheduler of Windows sometimes don't give use the time we need to be consistent.
-	//This seems to fixes the problem.
-	if (autosetProcessPriorityHigh)
-		setProcessPriorityHigh();
-#endif
-
-	consoleReady = false;
-
 	std::cerr << "HMD selection from command line routine returned : "
 		<< hmdCommand << std::endl;
 
 	//Select the correct OgreVRRender class to use :
 #ifdef _WIN32
+	//TODO make the default switchable by the client user
 	if (hmdCommand == "OgreOculusRender"
 		|| hmdCommand == "OgreDefaultRender")
 		renderer = std::make_shared<OgreOculusRender>(title);
@@ -141,8 +96,60 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 #endif
 
 #ifdef __linux__
+	//No VR support currently
 	renderer = std::make_shared<OgreNoVRRender>(title);
 #endif
+}
+
+AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
+	resetGuard(this),
+	applicationQuitRequested(false),
+	renderer(nullptr),
+	resourceManager(nullptr),
+	sceneryManager(nullptr),
+	filesystemManager(nullptr),
+	audioEngine(nullptr),
+	eventManager(nullptr),
+	physicsEngine(nullptr),
+	gameObjectManager(nullptr),
+	levelManager(nullptr),
+	player(nullptr),
+	SceneManager(nullptr),
+	vrRendererPovGameplayPlacement(nullptr),
+	updateTime(-1)
+{
+	consoleReady = false;
+#ifdef _WIN32
+
+	//Windows specific setup
+
+	//Set current process to high priority.
+	//Looks like the scheduler of Windows sometimes don't give use the time we need to be consistent.
+	//This seems to fixes the problem.
+	if (autosetProcessPriorityHigh)
+		setProcessPriorityHigh();
+
+	consoleGreen = FOREGROUND_GREEN |
+		FOREGROUND_INTENSITY;
+	consoleYellow = FOREGROUND_GREEN |
+		FOREGROUND_RED |
+		FOREGROUND_INTENSITY;
+	consoleWhite = FOREGROUND_RED |
+		FOREGROUND_GREEN |
+		FOREGROUND_BLUE |
+		FOREGROUND_INTENSITY;
+#endif
+
+	if (singleton)
+	{
+		log("Can't create 2 instances of the engine!");
+		throw AnnInitializationError(ANN_ERR_MEMORY, "Can't create 2 instances of AnnEngine");
+	}
+	singleton = this;
+
+	stringUtility = std::make_shared<AnnStringUility>();
+
+	selectAndCreateRenderer(hmdCommand, title);
 
 	renderer->initOgreRoot("Annwvyn.log");
 

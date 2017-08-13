@@ -82,11 +82,12 @@ namespace Annwvyn
 		//use a singleton for everything" in this article
 		//http://gameprogrammingpatterns.com/singleton.html
 
-	private:
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
 		friend class AnnEngineSingletonReseter;
 		AnnEngineSingletonReseter resetGuard;
+
+		void selectAndCreateRenderer(const std::string& hmd, const std::string& title);
 
 	public:
 

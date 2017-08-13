@@ -121,7 +121,7 @@ namespace Annwvyn
 			return "OgreDefaultRender";
 
 		//Args should start by a '-'
-		const char argChar = '-';
+		const auto argChar = '-';
 		if (cmd[0] != argChar)
 			return "arg_error";
 
