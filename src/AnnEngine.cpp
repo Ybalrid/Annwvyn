@@ -90,7 +90,6 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 			L"This will display the image on a simple window without attempting"
 			L"to talk to VR hardware"
 		);
-		//exit(ANN_ERR_CANTHMD)
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
 #endif

@@ -250,7 +250,7 @@ void OgreVRRender::loadOpenGLFunctions()
 	if (err != GLEW_OK)
 	{
 		AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
-		exit(ANN_ERR_RENDER); //TODO ISSUE should throw
+		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot load OpenGL functions");
 	}
 
 	//Just print some informations about GLEW
