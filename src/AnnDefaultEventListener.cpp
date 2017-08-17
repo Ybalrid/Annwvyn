@@ -155,7 +155,7 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 		player->analogStraff = controller->getAxis(0).getValue();
 		player->analogWalk = -controller->getAxis(1).getValue();
 
-		//TODO use an hashing system to prevent string compare here
+		//TODO ISSUE use an hashing system to prevent string compare here
 		if (controller->hasBeenPressed(2))
 		{
 			if (controller->getType() == "Oculus Touch")

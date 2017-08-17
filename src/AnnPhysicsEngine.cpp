@@ -39,7 +39,7 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
 
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld() const
 {
-	// TODO define name for the bullet's collision masks
+	// TODO ISSUE define name for the bullet's collision masks
 	DynamicsWorld->addRigidBody(playerObject->getBody(), MASK(0), MASK(1));
 }
 

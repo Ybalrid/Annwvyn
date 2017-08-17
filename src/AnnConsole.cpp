@@ -296,7 +296,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	const auto fontRowPitchBytes = fontPb.rowPitch * fontPixelSize;
 	const auto destRowPitchBytes = destPb.rowPitch * destPixelSize;
 
-	Box *GlyphTexCoords = new Box[str.size()]; //TODO do not use new[]/delete[]
+	Box *GlyphTexCoords = new Box[str.size()]; //TODO ISSUE do not use new[]/delete[]
 
 	size_t charheight = 0;
 	size_t charwidth = 0;

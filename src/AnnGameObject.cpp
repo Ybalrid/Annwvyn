@@ -204,7 +204,7 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 
 	BtOgre::StaticMeshToShapeConverter converter(Model);
 
-	// TODO put this thing inside the Physics engine
+	// TODO ISSUE put this thing inside the Physics engine
 	//create the correct shape
 	switch (type)
 	{
@@ -435,7 +435,7 @@ bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
 {
 	for (auto childNode : parentObj->Node->getChildIterator())
 	{
-		auto node = childNode; //TODO check if this is okay...
+		auto node = childNode;
 		auto childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
 
 		//Is an actual SceneNode

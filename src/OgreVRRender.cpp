@@ -250,7 +250,7 @@ void OgreVRRender::loadOpenGLFunctions()
 	if (err != GLEW_OK)
 	{
 		AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
-		exit(ANN_ERR_RENDER); //TODO should throw
+		exit(ANN_ERR_RENDER); //TODO ISSUE should throw
 	}
 
 	//Just print some informations about GLEW
@@ -442,7 +442,7 @@ void OgreVRRender::loadCompositor(const std::string& path, const std::string& ty
 	auto compositorFolder = path;
 	makeValidPath(compositorFolder);
 	auto resourceGroupManager = Ogre::ResourceGroupManager::getSingletonPtr();
-	//TODO maybe package the compositor differently
+	//TODO ISSUE maybe package the compositor differently
 	resourceGroupManager->addResourceLocation(compositorFolder, type, RESOURCE_GROUP_COMPOSITOR);
 	resourceGroupManager->initialiseResourceGroup(RESOURCE_GROUP_COMPOSITOR, false);
 }

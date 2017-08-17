@@ -122,7 +122,7 @@ void OgreOculusRender::recenter()
 void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
-	//TODO don't use new and delete here. Use an unique_ptr
+	//TODO ISSUE don't use new and delete here. Use an unique_ptr
 	Oculus = new OculusInterface();
 	hmdSize = Oculus->getHmdDesc().Resolution;
 	updateTime = 1.0 / double(Oculus->getHmdDesc().DisplayRefreshRate);

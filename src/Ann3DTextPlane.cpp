@@ -7,7 +7,7 @@
 using namespace Annwvyn;
 using namespace std;
 
-//TODO refactor and modernize that code...
+//TODO ISSUE refactor and modernize that code...
 void WriteToTexture(const string &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = true)
 {
 	using namespace Ogre;
@@ -467,7 +467,7 @@ void Ann3DTextPlane::clearTexture()
 	}
 	else
 	{
-		/*TODO fix hardware buffer thing here (texture copy)*/
+		/*TODO ISSUE try to use Ogre v2 here, not v1 interfaces*/
 
 		auto textureBuffer = texture->getBuffer();
 		const auto w = textureBuffer->getWidth();

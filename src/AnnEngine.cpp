@@ -64,7 +64,7 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 	//Select the correct OgreVRRender class to use :
 #ifdef _WIN32
-	//TODO make the default switchable by the client user
+	//TODO ISSUE make the default switchable by the client user
 	if (hmdCommand == "OgreOculusRender"
 		|| hmdCommand == "OgreDefaultRender")
 		renderer = std::make_shared<OgreOculusRender>(title);

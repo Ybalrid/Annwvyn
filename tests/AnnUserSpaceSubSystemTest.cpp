@@ -96,7 +96,7 @@ namespace Annwvyn
 		REQUIRE(testListener);
 		AnnGetEventManager()->addListener(testListener);
 
-		//TODO make reseting this timer easier
+		//TODO ISSUE make reseting this timer easier
 		AnnGetVRRenderer()->getTimer()->reset();
 
 		while (GameEngine->getTimeFromStartupSeconds() < 6)

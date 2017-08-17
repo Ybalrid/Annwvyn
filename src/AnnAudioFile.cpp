@@ -160,7 +160,7 @@ SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 	if (!sfVioStruct)
 	{
 		AnnDebug() << "Initializing the Virtual I/O callbacks for libsndfile";
-		sfVioStruct = new SF_VIRTUAL_IO; //TODO unique_ptr?
+		sfVioStruct = new SF_VIRTUAL_IO; //TODO ISSUE unique_ptr?
 
 		//Fill it with function pointers to static methods...
 		sfVioStruct->get_filelen = &AnnAudioFile::sfVioGetFileLen;

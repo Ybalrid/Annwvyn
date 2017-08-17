@@ -29,7 +29,7 @@ void AnnScriptManager::registerApi()
 	using namespace chaiscript;
 	using namespace std;
 
-	// TODO Add to chai all the useful types (angles, vectors, quaternions...)
+	// TODO ISSUE Add to chai all the useful types (angles, vectors, quaternions...)
 
 	chai.add(var(&Math::PI), "PI");
 	chai.add(var(&Math::HALF_PI), "HALF_PI");
@@ -161,7 +161,6 @@ void AnnScriptManager::registerApi()
 	chai.add(var(&Quaternion::ZERO), "AnnQuaternion_ZERO");
 	chai.add(var(&Quaternion::IDENTITY), "AnnQuaternion_IDENTITY");
 
-	//TODO Add to chai a way to access useful Annwvyn components
 	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
 	chai.add(fun([](AnnGameObject* o, Vector3 v) {o->setPosition(v); }), "setPosition");
 	chai.add(fun([](AnnGameObject* o, Quaternion q) {o->setOrientation(q); }), "setOrientation");
@@ -279,7 +278,7 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnTriggerEvent e) {return e.getContactStatus(); }), "getContactStatus");
 	chai.add(fun([](AnnTriggerEvent e) {return e.getSender(); }), "getSender");
 
-	// TODO the hand controller event interface is not finished
+	// TODO ISSUE the hand controller event interface is not finished
 	chai.add(user_type<AnnHandController>(), "AnnHandController");
 	chai.add(user_type<AnnHandControllerAxis>(), "AnnHandControllerAxis");
 	chai.add(user_type<AnnHandController::AnnHandControllerSide>(), "AnnHandControllerSide");
