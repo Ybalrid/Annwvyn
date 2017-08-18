@@ -28,8 +28,6 @@ void OculusInterface::abortOnFailure()
 	ovr_Shutdown();
 	//Return an error
 	AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
-	//Destroy Ogre
-	delete Ogre::Root::getSingletonPtr();
 	//Stop program
 	throw AnnInitializationError((ANN_ERR_CRITIC), "Unable to create an Oculus session");
 }
