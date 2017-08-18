@@ -512,6 +512,11 @@ void OgreVRRender::glEasyCopy(GLuint source, GLuint dest, GLuint width, GLuint h
 		1);
 }
 
+void OgreVRRender::_resetOgreTimer()
+{
+	root->getTimer()->reset();
+}
+
 void OgreVRRender::setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial)
 {
 	auto material = Ogre::MaterialManager::getSingleton().load(

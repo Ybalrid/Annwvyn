@@ -49,7 +49,7 @@ namespace Annwvyn
 
 			bool amITestProgram() const { return IAmTestProgram; }
 
-			void extract() override { IAmTestProgram = keyStringToInt("IAmTestProgram"); }
+			void extract() override { IAmTestProgram = (keyStringToInt("IAmTestProgram") == 1); }
 
 		private:
 			bool IAmTestProgram;

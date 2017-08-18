@@ -264,6 +264,9 @@ public:
 	///Wrap annoying OpenGL call to something humanly acceptable
 	static void glEasyCopy(GLuint source, GLuint dest, GLuint width, GLuint height);
 
+	///Advanced : reset ogre internal timer
+	void _resetOgreTimer();
+
 private:
 
 	///GL version to use

@@ -39,7 +39,7 @@ namespace Annwvyn
 		AnnGetEventManager()->addListener(timerListener);
 		AnnGetOnScreenConsole()->setVisible(true);
 		GameEngine->refresh();
-		AnnGetVRRenderer()->getTimer()->reset();
+		AnnGetVRRenderer()->_resetOgreTimer();
 		double sec;
 
 		//Start a timer, and give it's ID to the listener
@@ -96,7 +96,7 @@ namespace Annwvyn
 		REQUIRE(eventListener);
 
 		AnnGetPhysicsEngine()->setDebugPhysics(true);
-		AnnGetVRRenderer()->getTimer()->reset();
+		AnnGetVRRenderer()->_resetOgreTimer();
 		while (GameEngine->getTimeFromStartupSeconds() < 5.0f)
 		{
 			GameEngine->refresh();
