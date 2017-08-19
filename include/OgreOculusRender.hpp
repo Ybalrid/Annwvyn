@@ -169,7 +169,7 @@ private:
 	void setMonoFov(float degreeFov) const;
 
 	///Object for getting informations from the Oculus Rift
-	std::unique_ptr<OculusInterface> Oculus;
+	std::unique_ptr<OculusInterface> oculusInterface;
 
 	///Timing in seconds
 	double currentFrameDisplayTime;

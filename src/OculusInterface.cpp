@@ -29,7 +29,7 @@ void OculusInterface::abortOnFailure()
 	//Return an error
 	AnnDebug() << "Unable to Initialize client library or get a session valid from the Oculus Runtime. Closing program and returning 0xDEAD60D error";
 	//Stop program
-	throw AnnInitializationError((ANN_ERR_CRITIC), "Unable to create an Oculus session");
+	throw AnnInitializationError(ANN_ERR_CRITIC, "Unable to create an Oculus session");
 }
 
 OculusInterface::OculusInterface()
@@ -43,8 +43,8 @@ OculusInterface::OculusInterface()
 	stringstream clientIentifier;
 	clientIentifier << "EngineName: Annwvyn\n";
 	clientIentifier << "EngineVersion: " << AnnEngine::getAnnwvynVersion();
-	AnnDebug() << "Identifier string sent to the Oculus Service : \n" << clientIentifier.str();
 	ovr_IdentifyClient(clientIentifier.str().c_str());
+	AnnDebug() << "Identifier string sent to the Oculus Service : \n" << clientIentifier.str();
 
 	//Attempt to create OVR session
 	if (OVR_FAILURE(ovr_Create(&session, &luid)))
@@ -65,7 +65,7 @@ OculusInterface::~OculusInterface()
 	AnnDebug() << "Shutdown OculusInterface object";
 	ovr_Destroy(getSession());
 	ovr_Shutdown();
-	AnnDebug("LibOVR Shutdown... No longer can communicate with OculusService");
+	AnnDebug() << "LibOVR Shutdown... No longer can communicate with OculusService";
 }
 
 inline Ogre::Vector3 oculusToOgreVect3(const ovrVector3f & v) { return{ v.x, v.y, v.z }; }
@@ -74,7 +74,7 @@ inline Ogre::Quaternion oculusToOgreQuat(const ovrQuatf & q) { return{ q.w, q.x,
 void OculusInterface::customReport() const
 {
 	//Print to the logger a bunch of information
-	AnnDebug() << "========================================================";
+	AnnDebug() << " - Detected Oculus hardware :";
 	AnnDebug() << "OVR version " << ovr_GetVersionString();
 	AnnDebug() << "Detected the following Oculus Rift VR Headset :";
 	AnnDebug() << "Product name : " << hmdDesc.ProductName;
@@ -87,13 +87,20 @@ void OculusInterface::customReport() const
 
 	const auto trackerCount{ ovr_GetTrackerCount(session) };
 	AnnDebug() << "Detected " << trackerCount << " Oculus Sensors";
-
 	for (auto i{ 0u }; i < trackerCount; ++i)
 	{
+		const auto tracker = 1 + i;
 		const auto trackerPose = ovr_GetTrackerPose(session, i).Pose;
-		AnnDebug() << "Tracker_" << i + 1 << " Pose : " << oculusToOgreVect3(trackerPose.Position) << "; " << oculusToOgreQuat(trackerPose.Orientation);
+		const auto desc = ovr_GetTrackerDesc(session, i);
+
+		AnnDebug() << "Tracker_" << tracker << " Pose : " << oculusToOgreVect3(trackerPose.Position) << "; " << oculusToOgreQuat(trackerPose.Orientation);
+
+		AnnDebug() << "Tracker_" << tracker << " Camera Frustum : Near "
+			<< desc.FrustumNearZInMeters << "m Far "
+			<< desc.FrustumFarZInMeters << "m H fov "
+			<< desc.FrustumHFovInRadians << "rad V fov "
+			<< desc.FrustumVFovInRadians << "rad";
 	}
-	AnnDebug() << "========================================================";
 }
 
 ovrHmdDesc OculusInterface::getHmdDesc() const

@@ -23,7 +23,7 @@ OgreOculusRender* OgreOculusRender::oculusSelf{ nullptr };
 
 OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
 frontierWidth{ 100 },
-Oculus(nullptr),
+oculusInterface(nullptr),
 currentFrameDisplayTime{ 0 },
 mirrorTexture{ nullptr },
 oculusMirrorTextureGLID{ 0 },
@@ -66,8 +66,8 @@ lastOculusOrientation{ bodyOrientation }
 OgreOculusRender::~OgreOculusRender()
 {
 	//Destroy any Oculus SDK related objects
-	ovr_DestroyTextureSwapChain(Oculus->getSession(), textureCombinedSwapChain);
-	ovr_DestroyMirrorTexture(Oculus->getSession(), mirrorTexture);
+	ovr_DestroyTextureSwapChain(oculusInterface->getSession(), textureCombinedSwapChain);
+	ovr_DestroyMirrorTexture(oculusInterface->getSession(), mirrorTexture);
 	//delete Oculus;
 }
 
@@ -92,7 +92,7 @@ void OgreOculusRender::cycleDebugHud()
 	perfHudMode = (perfHudMode + 1) % ovrPerfHud_Count;
 
 	//Set the current perf hud mode
-	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
+	ovr_SetInt(oculusInterface->getSession(), "PerfHudMode", perfHudMode);
 }
 
 void OgreOculusRender::debugPrint()
@@ -116,21 +116,21 @@ inline Ogre::Quaternion OgreOculusRender::oculusToOgreQuat(const ovrQuatf & q)
 
 void OgreOculusRender::recenter()
 {
-	ovr_RecenterTrackingOrigin(Oculus->getSession());
+	ovr_RecenterTrackingOrigin(oculusInterface->getSession());
 }
 
 void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	//TODO ISSUE don't use new and delete here. Use an unique_ptr
-	Oculus = std::make_unique<OculusInterface>();
-	hmdSize = Oculus->getHmdDesc().Resolution;
-	updateTime = 1.0 / double(Oculus->getHmdDesc().DisplayRefreshRate);
+	oculusInterface = std::make_unique<OculusInterface>();
+	hmdSize = oculusInterface->getHmdDesc().Resolution;
+	updateTime = 1.0 / double(oculusInterface->getHmdDesc().DisplayRefreshRate);
 
-	ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
-	ovr_SetTrackingOriginType(Oculus->getSession(), ovrTrackingOrigin_FloorLevel);
+	ovr_GetSessionStatus(oculusInterface->getSession(), &sessionStatus);
+	ovr_SetTrackingOriginType(oculusInterface->getSession(), ovrTrackingOrigin_FloorLevel);
 
-	auto playerEyeHeight = ovr_GetFloat(Oculus->getSession(), "EyeHeight", -1.0f);
+	auto playerEyeHeight = ovr_GetFloat(oculusInterface->getSession(), "EyeHeight", -1.0f);
 	if (playerEyeHeight != -1.0f) AnnGetPlayer()->setEyesHeight(playerEyeHeight);
 
 	AnnDebug() << "Player eye height : " << playerEyeHeight << "m";
@@ -160,8 +160,8 @@ void OgreOculusRender::initRttRendering()
 	loadOpenGLFunctions();
 
 	//Get texture size from ovr with the maximal FOV for each eye
-	texSizeL = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left], 1.f);
-	texSizeR = ovr_GetFovTextureSize(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right], 1.f);
+	texSizeL = ovr_GetFovTextureSize(oculusInterface->getSession(), ovrEye_Left, oculusInterface->getHmdDesc().DefaultEyeFov[left], 1.f);
+	texSizeR = ovr_GetFovTextureSize(oculusInterface->getSession(), ovrEye_Right, oculusInterface->getHmdDesc().DefaultEyeFov[right], 1.f);
 
 	//Calculate the render buffer size for both eyes. The width of the frontier is the number of unused pixel between the two eye buffer.
 	//Apparently, keeping them glued together make some slight bleeding.
@@ -194,7 +194,7 @@ void OgreOculusRender::initRttRendering()
 	textureSwapChainDesc.StaticImage = ovrFalse;
 
 	//Request the creation of an OpenGL swapChain from the Oculus Library
-	if (ovr_CreateTextureSwapChainGL(Oculus->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[left]) != ovrSuccess)
+	if (ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[left]) != ovrSuccess)
 	{
 		//If we can't get the textures, there is no point trying more.
 		AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
@@ -205,7 +205,7 @@ void OgreOculusRender::initRttRendering()
 	textureSwapChainDesc.Height = texSizeR.h;;
 
 	//Request the creation of an OpenGL swapChain from the Oculus Library
-	if (ovr_CreateTextureSwapChainGL(Oculus->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right]) != ovrSuccess)
+	if (ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right]) != ovrSuccess)
 	{
 		//If we can't get the textures, there is no point trying more.
 		AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
@@ -226,7 +226,7 @@ void OgreOculusRender::initRttRendering()
 	mirrorTextureDesc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 	//Create the Oculus Mirror Texture
-	if (ovr_CreateMirrorTextureGL(Oculus->getSession(), &mirrorTextureDesc, &mirrorTexture) != ovrSuccess)
+	if (ovr_CreateMirrorTextureGL(oculusInterface->getSession(), &mirrorTextureDesc, &mirrorTexture) != ovrSuccess)
 	{
 		//If for some weird reason (stars alignment, dragons, northern gods, reaper invasion) we can't create the mirror texture
 		AnnDebug() << "Cannot create Oculus mirror texture";
@@ -236,7 +236,7 @@ void OgreOculusRender::initRttRendering()
 	auto mirror = createAdditionalRenderBuffer(hmdSize.w, hmdSize.h, "MirrorTex");
 	ogreMirrorTextureGLID = std::get<1>(mirror);
 
-	ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), textureCombinedSwapChain, 0, &oculusRenderTextureCombinedGLID);
+	ovr_GetTextureSwapChainBufferGL(oculusInterface->getSession(), textureCombinedSwapChain, 0, &oculusRenderTextureCombinedGLID);
 }
 
 void OgreOculusRender::showRawView()
@@ -254,8 +254,8 @@ void OgreOculusRender::showMonscopicView()
 void OgreOculusRender::initClientHmdRendering()
 {
 	//Populate OVR structures
-	eyeRenderDescArray[left] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Left, Oculus->getHmdDesc().DefaultEyeFov[left]);
-	eyeRenderDescArray[right] = ovr_GetRenderDesc(Oculus->getSession(), ovrEye_Right, Oculus->getHmdDesc().DefaultEyeFov[right]);
+	eyeRenderDescArray[left] = ovr_GetRenderDesc(oculusInterface->getSession(), ovrEye_Left, oculusInterface->getHmdDesc().DefaultEyeFov[left]);
+	eyeRenderDescArray[right] = ovr_GetRenderDesc(oculusInterface->getSession(), ovrEye_Right, oculusInterface->getHmdDesc().DefaultEyeFov[right]);
 	eyeToHmdPoseOffset[left] = eyeRenderDescArray[left].HmdToEyePose;
 	eyeToHmdPoseOffset[right] = eyeRenderDescArray[right].HmdToEyePose;
 	//Report on the values given by the SDK
@@ -287,7 +287,7 @@ void OgreOculusRender::initClientHmdRendering()
 
 	//Make sure that the perf hud will not show up by himself...
 	perfHudMode = ovrPerfHud_Off;
-	ovr_SetInt(Oculus->getSession(), "PerfHudMode", perfHudMode);
+	ovr_SetInt(oculusInterface->getSession(), "PerfHudMode", perfHudMode);
 }
 
 void OgreOculusRender::updateProjectionMatrix()
@@ -321,7 +321,7 @@ ovrSessionStatus OgreOculusRender::getSessionStatus()
 {
 	if (currentSessionStatusFrameIndex != frameCounter)
 	{
-		ovr_GetSessionStatus(Oculus->getSession(), &sessionStatus);
+		ovr_GetSessionStatus(oculusInterface->getSession(), &sessionStatus);
 		currentSessionStatusFrameIndex = frameCounter;
 	}
 	return sessionStatus;
@@ -417,14 +417,14 @@ void OgreOculusRender::logHeadsetGeometry()
 void OgreOculusRender::getTrackingPoseAndVRTiming()
 {
 	//Get timing
-	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(Oculus->getSession(), ++frameCounter);
+	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(oculusInterface->getSession(), ++frameCounter);
 	calculateTimingFromOgre();
 
 	//Reorient the headset if the runtime flags for it
 	if (getSessionStatus().ShouldRecenter) recenter();
 
 	//Get the tracking state
-	ts = ovr_GetTrackingState(Oculus->getSession(),
+	ts = ovr_GetTrackingState(oculusInterface->getSession(),
 		currentFrameDisplayTime,
 		ovrTrue);
 
@@ -454,24 +454,24 @@ void OgreOculusRender::renderAndSubmitFrame()
 
 	for (auto i{ 0U }; i < 2; ++i)
 	{
-		ovr_GetTextureSwapChainCurrentIndex(Oculus->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
-		ovr_GetTextureSwapChainBufferGL(Oculus->getSession(), texturesSeparatedSwapChain[i], currentSeparatedIndex[i], &oculusRenderTexturesSeparatedGLID[i]);
+		ovr_GetTextureSwapChainCurrentIndex(oculusInterface->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
+		ovr_GetTextureSwapChainBufferGL(oculusInterface->getSession(), texturesSeparatedSwapChain[i], currentSeparatedIndex[i], &oculusRenderTexturesSeparatedGLID[i]);
 		//Copy the rendered image to the Oculus Swap Texture
 		glEasyCopy(ogreRenderTexturesSeparatedGLID[i],
 			oculusRenderTexturesSeparatedGLID[i],
 			texSizeL.w, texSizeL.h);
-		ovr_CommitTextureSwapChain(Oculus->getSession(), texturesSeparatedSwapChain[i]);
+		ovr_CommitTextureSwapChain(oculusInterface->getSession(), texturesSeparatedSwapChain[i]);
 	}
 
 	//Submit the frame
 	layers = &layer.Header;
-	ovr_SubmitFrame(Oculus->getSession(), frameCounter, nullptr, &layers, 1);
+	ovr_SubmitFrame(oculusInterface->getSession(), frameCounter, nullptr, &layers, 1);
 
 	//Update the render debug view if the window is visible
 	if (window->isVisible() && mirrorHMDView)
 	{
 		//Put the mirrored view available for Ogre if asked for
-		ovr_GetMirrorTextureBufferGL(Oculus->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
+		ovr_GetMirrorTextureBufferGL(oculusInterface->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
 		glEasyCopy(oculusMirrorTextureGLID,
 			ogreMirrorTextureGLID,
 			hmdSize.w, hmdSize.h
@@ -485,7 +485,7 @@ void OgreOculusRender::initializeHandObjects(const oorEyeType side)
 	if (!handControllers[side])
 	{
 		handControllers[side] = std::make_shared<AnnOculusTouchController>
-			(Oculus->getSession(), smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
+			(oculusInterface->getSession(), smgr->getRootSceneNode()->createChildSceneNode(), size_t(side), AnnHandController::AnnHandControllerSide(side));
 	}
 }
 
@@ -518,7 +518,7 @@ void OgreOculusRender::processButtonStates(const oorEyeType side) {
 void OgreOculusRender::updateTouchControllers()
 {
 	//Get the controller state
-	if (OVR_FAILURE(ovr_GetInputState(Oculus->getSession(), ovrControllerType_Active, &inputState))) return;
+	if (OVR_FAILURE(ovr_GetInputState(oculusInterface->getSession(), ovrControllerType_Active, &inputState))) return;
 	//Check if there's Oculus Touch Data on this thing
 	if (!(inputState.ControllerType & ovrControllerType_Touch)) return;
 
