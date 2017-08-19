@@ -27,7 +27,7 @@ void OculusInterface::abortOnFailure()
 	//Cleanup
 	ovr_Shutdown();
 	//Return an error
-	AnnDebug("Unable to get a session from the Oculus Runtime. Closing program and returning 0xDEAD60D error");
+	AnnDebug() << "Unable to Initialize client library or get a session valid from the Oculus Runtime. Closing program and returning 0xDEAD60D error";
 	//Stop program
 	throw AnnInitializationError((ANN_ERR_CRITIC), "Unable to create an Oculus session");
 }
@@ -36,7 +36,8 @@ OculusInterface::OculusInterface()
 {
 	AnnDebug() << "Init Oculus Interface object";
 	//Init Oculus Virtual Reality library
-	ovr_Initialize(nullptr);
+	if (OVR_FAILURE(ovr_Initialize(nullptr)))
+		abortOnFailure();
 
 	//Declare this client to the Oculus service
 	stringstream clientIentifier;
@@ -46,7 +47,7 @@ OculusInterface::OculusInterface()
 	ovr_IdentifyClient(clientIentifier.str().c_str());
 
 	//Attempt to create OVR session
-	if (ovr_Create(&session, &luid) != ovrSuccess)
+	if (OVR_FAILURE(ovr_Create(&session, &luid)))
 		abortOnFailure();
 
 	//Fill the hmdDesc structure
@@ -67,6 +68,9 @@ OculusInterface::~OculusInterface()
 	AnnDebug("LibOVR Shutdown... No longer can communicate with OculusService");
 }
 
+inline Ogre::Vector3 oculusToOgreVect3(const ovrVector3f & v) { return{ v.x, v.y, v.z }; }
+inline Ogre::Quaternion oculusToOgreQuat(const ovrQuatf & q) { return{ q.w, q.x, q.y, q.z }; }
+
 void OculusInterface::customReport() const
 {
 	//Print to the logger a bunch of information
@@ -80,6 +84,15 @@ void OculusInterface::customReport() const
 	AnnDebug() << "Display refresh rate : " << hmdDesc.DisplayRefreshRate << "Hz";
 	AnnDebug() << "Type of HMD identifier : " << hmdDesc.Type;
 	AnnDebug() << "Firmware version : " << hmdDesc.FirmwareMajor << "." << hmdDesc.FirmwareMinor;
+
+	const auto trackerCount{ ovr_GetTrackerCount(session) };
+	AnnDebug() << "Detected " << trackerCount << " Oculus Sensors";
+
+	for (auto i{ 0u }; i < trackerCount; ++i)
+	{
+		const auto trackerPose = ovr_GetTrackerPose(session, i).Pose;
+		AnnDebug() << "Tracker_" << i + 1 << " Pose : " << oculusToOgreVect3(trackerPose.Position) << "; " << oculusToOgreQuat(trackerPose.Orientation);
+	}
 	AnnDebug() << "========================================================";
 }
 
