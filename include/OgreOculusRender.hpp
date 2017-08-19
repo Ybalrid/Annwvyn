@@ -25,7 +25,7 @@
 #include <array>
 
 //Accessing Oculus Rift through a class :
-#include "OculusInterface.hpp"
+#include "OculusInterfaceHelper.hpp"
 
 //OS Specific build macro
 #include "systemMacro.h"
@@ -140,6 +140,7 @@ public:
 	///Move the cameras according form the hmdToEye translation vector from OVR.
 	void handleIPDChange() override;
 
+	///Print to the log the relative pose of each rendering frustum (with center of headset as origin)
 	void logHeadsetGeometry();
 
 private:
@@ -169,7 +170,7 @@ private:
 	void setMonoFov(float degreeFov) const;
 
 	///Object for getting informations from the Oculus Rift
-	OculusInterface* Oculus;
+	std::unique_ptr<OculusInterfaceHelper> oculusInterface;
 
 	///Timing in seconds
 	double currentFrameDisplayTime;
@@ -183,8 +184,17 @@ private:
 	///Mirror texture
 	ovrMirrorTexture mirrorTexture;
 
-	///OpenGL Texture ID of the render buffers
-	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureCombinedGLID, ogreRenderTextureCombinedGLID;
+	///OpenGL Texture ID for the Oculus provided mirror texture
+	GLuint oculusMirrorTextureGLID;
+
+	///OpenGL Texture ID for the Ogre provided mirror texture
+	GLuint ogreMirrorTextureGLID;
+
+	///OpenGL Texture ID for the Oculus provided render texture
+	GLuint oculusRenderTextureCombinedGLID;
+
+	///OpenGL Texture ID for the Ogre
+	GLuint ogreRenderTextureCombinedGLID;
 
 	///Array of 2 OpenGL texutre indices
 	std::array<GLuint, 2> oculusRenderTexturesSeparatedGLID, ogreRenderTexturesSeparatedGLID;
@@ -319,12 +329,6 @@ private:
 	}
 
 public:
-	///Position of the rift at the last frame
-	Ogre::Vector3 lastOculusPosition;
-
-	///Orientation of the rift at the last frame
-	Ogre::Quaternion lastOculusOrientation;
-
 	///Texture unit state of the debug plane
 	static Ogre::TextureUnitState* debugTexturePlane;
 };
