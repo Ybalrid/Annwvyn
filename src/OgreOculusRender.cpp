@@ -120,7 +120,6 @@ void OgreOculusRender::recenter()
 void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
-	//TODO ISSUE don't use new and delete here. Use an unique_ptr
 	oculusInterface = std::make_unique<OculusInterfaceHelper>();
 	hmdSize = oculusInterface->getHmdResolution();
 	updateTime = 1.0 / double(oculusInterface->getHmdDisplayRefreshRate());
@@ -341,15 +340,15 @@ std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 	GUID audioDeviceGuid; ovr_GetAudioDeviceOutGuid(&audioDeviceGuid);
 
 	//Enumerate DirectSound devices
-	struct stupidAudioDescriptor
+	struct audioOutputDescriptor
 	{
-		stupidAudioDescriptor(LPCSTR str, LPGUID pguid) :
+		audioOutputDescriptor(LPCSTR str, LPGUID pguid) :
 			name(pguid ? str : "NO_GUID"), //Sometimes pguid is nullptr, in that case the descriptor is not valid
 			guid(pguid ? *pguid : GUID()) {} //Obviously, dereferencing a nullptr is a bad idea, prevent that.
 		const std::string name;
 		const GUID guid;
 	};
-	using stupidAudioDescriptorVect = std::vector<stupidAudioDescriptor>;
+	using stupidAudioDescriptorVect = std::vector<audioOutputDescriptor>;
 	stupidAudioDescriptorVect descriptors;
 
 	//Enumerate all DirectSound interfaces, and create stupidAudioDescriptor for them
@@ -359,12 +358,12 @@ std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 		return TRUE; }, &descriptors);
 
 	//Try to find the one we need
-	auto result = std::find_if(descriptors.begin(), descriptors.end(), [&](const stupidAudioDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
+	auto result = std::find_if(descriptors.begin(), descriptors.end(), [&](const audioOutputDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
 
 	//Set the return string
 	if (result != descriptors.end())
 	{
-		stupidAudioDescriptor descriptor = *result; audioDeviceName = descriptor.name;
+		audioOutputDescriptor descriptor = *result; audioDeviceName = descriptor.name;
 		AnnDebug() << "Found " << audioDeviceName << " that match Oculus given DirectSound GUID";
 	}
 	else
