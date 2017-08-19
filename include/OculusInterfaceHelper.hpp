@@ -38,16 +38,19 @@ public:
 	float getUserEyeHeight() const;
 
 	///Recenter the tracking origin
-	void recenterTrackingOrigin();
+	void recenterTrackingOrigin() const;
 
 	///Set the performance HUD mode
-	void setPerfHudMode(ovrPerfHudMode mode);
+	void setPerfHudMode(ovrPerfHudMode mode) const;
 
 	///get HMD resolution in the Oculus format
-	ovrSizei getHmdResolution();
+	ovrSizei getHmdResolution() const;
 
 	///get HMD Refresh rate. e.g. 90 (or 89.99) for an Oculus Rift CV1
-	float getHmdDisplayRefreshRate();
+	float getHmdDisplayRefreshRate() const;
+
+	///Set the reference point to be a point on the ground, not the "zero" position of the headset
+	void setTrackingOriginToFloorLevel() const;
 
 private:
 	///Print every known characteristics about the hardware to the log output
