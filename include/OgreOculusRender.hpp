@@ -25,7 +25,7 @@
 #include <array>
 
 //Accessing Oculus Rift through a class :
-#include "OculusInterface.hpp"
+#include "OculusInterfaceHelper.hpp"
 
 //OS Specific build macro
 #include "systemMacro.h"
@@ -169,7 +169,7 @@ private:
 	void setMonoFov(float degreeFov) const;
 
 	///Object for getting informations from the Oculus Rift
-	std::unique_ptr<OculusInterface> oculusInterface;
+	std::unique_ptr<OculusInterfaceHelper> oculusInterface;
 
 	///Timing in seconds
 	double currentFrameDisplayTime;
@@ -319,12 +319,6 @@ private:
 	}
 
 public:
-	///Position of the rift at the last frame
-	Ogre::Vector3 lastOculusPosition;
-
-	///Orientation of the rift at the last frame
-	Ogre::Quaternion lastOculusOrientation;
-
 	///Texture unit state of the debug plane
 	static Ogre::TextureUnitState* debugTexturePlane;
 };

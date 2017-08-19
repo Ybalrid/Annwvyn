@@ -1,5 +1,5 @@
 /**
- * \file OculusInterface.hpp
+ * \file OculusInterfaceHelper.hpp
  * \brief Simple class for accessing Oculus Rift data
  * \author A. Brainville (Ybalrid)
  */
@@ -12,21 +12,21 @@
  //Oculus VR API
 #include <OVR_CAPI.h>
 #include <Extras/OVR_Math.h>
+
+#include <Ogre.h>
 #include "systemMacro.h"
 #include "AnnErrorCode.hpp"
-#include <Ogre.h>
-#define USE_OGRE
 
 ///Communicate with the Rift runtime (initialize OVR and get the info)
-class DLL OculusInterface
+class DLL OculusInterfaceHelper
 {
 public:
 
-	///Construct an OculusInterface object. This create an Oculus Session for communication with the Oculus Runtime
-	OculusInterface();
+	///Construct an OculusInterfaceHelper object. This create an Oculus Session for communication with the Oculus Runtime
+	OculusInterfaceHelper();
 
 	///Destructor of Oculus Interface
-	~OculusInterface();
+	~OculusInterfaceHelper();
 
 	///Return the active HmdDesc object
 	ovrHmdDesc getHmdDesc() const;
@@ -34,9 +34,24 @@ public:
 	///Return the current oculus session
 	ovrSession getSession() const;
 
+	///Return the eye's height of the current user
+	float getUserEyeHeight() const;
+
+	///Recenter the tracking origin
+	void recenterTrackingOrigin();
+
+	///Set the performance HUD mode
+	void setPerfHudMode(ovrPerfHudMode mode);
+
+	///get HMD resolution in the Oculus format
+	ovrSizei getHmdResolution();
+
+	///get HMD Refresh rate. e.g. 90 (or 89.99) for an Oculus Rift CV1
+	float getHmdDisplayRefreshRate();
+
 private:
 	///Print every known characteristics about the hardware to the log output
-	void customReport() const;
+	void logHardwareReport() const;
 
 	///Abort, display error, log it and crash the game
 	void abortOnFailure();

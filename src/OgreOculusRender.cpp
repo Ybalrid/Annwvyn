@@ -38,9 +38,7 @@ currentSessionStatusFrameIndex{ 0 },
 debugSmgr{ nullptr },
 debugCam{ nullptr },
 debugCamNode{ nullptr },
-debugPlaneNode{ nullptr },
-lastOculusPosition{ feetPosition },
-lastOculusOrientation{ bodyOrientation }
+debugPlaneNode{ nullptr }
 {
 	rendererName = "OpenGL/Oculus";
 	oculusSelf = static_cast<OgreOculusRender*>(self);
@@ -92,7 +90,7 @@ void OgreOculusRender::cycleDebugHud()
 	perfHudMode = (perfHudMode + 1) % ovrPerfHud_Count;
 
 	//Set the current perf hud mode
-	ovr_SetInt(oculusInterface->getSession(), "PerfHudMode", perfHudMode);
+	oculusInterface->setPerfHudMode(ovrPerfHudMode(perfHudMode));
 }
 
 void OgreOculusRender::debugPrint()
@@ -116,21 +114,21 @@ inline Ogre::Quaternion OgreOculusRender::oculusToOgreQuat(const ovrQuatf & q)
 
 void OgreOculusRender::recenter()
 {
-	ovr_RecenterTrackingOrigin(oculusInterface->getSession());
+	oculusInterface->recenterTrackingOrigin();
 }
 
 void OgreOculusRender::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	//TODO ISSUE don't use new and delete here. Use an unique_ptr
-	oculusInterface = std::make_unique<OculusInterface>();
-	hmdSize = oculusInterface->getHmdDesc().Resolution;
-	updateTime = 1.0 / double(oculusInterface->getHmdDesc().DisplayRefreshRate);
+	oculusInterface = std::make_unique<OculusInterfaceHelper>();
+	hmdSize = oculusInterface->getHmdResolution();
+	updateTime = 1.0 / double(oculusInterface->getHmdDisplayRefreshRate());
 
 	ovr_GetSessionStatus(oculusInterface->getSession(), &sessionStatus);
-	ovr_SetTrackingOriginType(oculusInterface->getSession(), ovrTrackingOrigin_FloorLevel);
+	oculusInterface->setTrackingOriginToFloorLevel();
 
-	auto playerEyeHeight = ovr_GetFloat(oculusInterface->getSession(), "EyeHeight", -1.0f);
+	auto playerEyeHeight = oculusInterface->getUserEyeHeight();
 	if (playerEyeHeight != -1.0f) AnnGetPlayer()->setEyesHeight(playerEyeHeight);
 
 	AnnDebug() << "Player eye height : " << playerEyeHeight << "m";
@@ -287,7 +285,7 @@ void OgreOculusRender::initClientHmdRendering()
 
 	//Make sure that the perf hud will not show up by himself...
 	perfHudMode = ovrPerfHud_Off;
-	ovr_SetInt(oculusInterface->getSession(), "PerfHudMode", perfHudMode);
+	oculusInterface->setPerfHudMode(ovrPerfHud_Off);
 }
 
 void OgreOculusRender::updateProjectionMatrix()
