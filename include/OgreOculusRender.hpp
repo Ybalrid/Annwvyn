@@ -140,6 +140,7 @@ public:
 	///Move the cameras according form the hmdToEye translation vector from OVR.
 	void handleIPDChange() override;
 
+	///Print to the log the relative pose of each rendering frustum (with center of headset as origin)
 	void logHeadsetGeometry();
 
 private:
@@ -183,8 +184,17 @@ private:
 	///Mirror texture
 	ovrMirrorTexture mirrorTexture;
 
-	///OpenGL Texture ID of the render buffers
-	GLuint oculusMirrorTextureGLID, ogreMirrorTextureGLID, oculusRenderTextureCombinedGLID, ogreRenderTextureCombinedGLID;
+	///OpenGL Texture ID for the Oculus provided mirror texture
+	GLuint oculusMirrorTextureGLID;
+
+	///OpenGL Texture ID for the Ogre provided mirror texture
+	GLuint ogreMirrorTextureGLID;
+
+	///OpenGL Texture ID for the Oculus provided render texture
+	GLuint oculusRenderTextureCombinedGLID;
+
+	///OpenGL Texture ID for the Ogre
+	GLuint ogreRenderTextureCombinedGLID;
 
 	///Array of 2 OpenGL texutre indices
 	std::array<GLuint, 2> oculusRenderTexturesSeparatedGLID, ogreRenderTexturesSeparatedGLID;

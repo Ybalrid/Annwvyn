@@ -95,6 +95,7 @@ void OgreOculusRender::cycleDebugHud()
 
 void OgreOculusRender::debugPrint()
 {
+	AnnDebug() << "Eye camera states :";
 	for (auto eye : eyeUpdateOrder)
 	{
 		AnnDebug() << "eyeCamera " << eye << " " << eyeCameras[eye]->getPosition();
@@ -572,7 +573,8 @@ AnnOculusTouchController::AnnOculusTouchController(ovrSession session,
 	if (side == leftHandController) myControllerType = ovrControllerType_LTouch;
 	else if (side == rightHandController) myControllerType = ovrControllerType_RTouch;
 
-	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking | LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback | DiscreteHandGestures;
+	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking
+		| LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback | DiscreteHandGestures;
 }
 
 #endif
