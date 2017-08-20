@@ -68,7 +68,7 @@ public:
 
 AnnMain()
 {
-	OgreVRRender::setAntiAliasingLevel(8);
+	AnnOgreVRRenderer::setAntiAliasingLevel(8);
 	AnnEngine::openConsole();
 
 	AnnInit("AnnTest");
