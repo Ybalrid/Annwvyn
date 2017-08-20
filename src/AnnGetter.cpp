@@ -15,7 +15,7 @@ namespace Annwvyn
 	shared_ptr<AnnPlayer> AnnGetPlayer() { return AnnGetEngine()->getPlayer(); };
 	shared_ptr<AnnResourceManager> AnnGetResourceManager() { return AnnGetEngine()->getResourceManager(); }
 	shared_ptr<AnnSceneryManager> AnnGetSceneryManager() { return AnnGetEngine()->getSceneryManager(); }
-	shared_ptr<OgreVRRender> AnnGetVRRenderer() { return AnnGetEngine()->getVRRenderer(); }
+	shared_ptr<AnnOgreVRRenderer> AnnGetVRRenderer() { return AnnGetEngine()->getVRRenderer(); }
 	shared_ptr<AnnScriptManager> AnnGetScriptManager() { return AnnGetEngine()->getScriptManager(); }
 	shared_ptr<AnnGameObjectManager> AnnGetGameObjectManager() { return AnnGetEngine()->getGameObjectManager(); }
 	shared_ptr<AnnConsole> AnnGetOnScreenConsole() { return AnnGetEngine()->getOnScreenConsole(); }

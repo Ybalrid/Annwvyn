@@ -5,7 +5,7 @@
 #include "AnnSubsystem.hpp"
 #include "OgreSceneManager.h"
 #include "AnnTypes.h"
-#include "OgreVRRender.hpp"
+#include "AnnOgreVRRenderer.hpp"
 #include <memory>
 #include <algorithm>
 
@@ -17,7 +17,7 @@ namespace Annwvyn
 	public:
 
 		///Construct the AnnSceneryManager
-		AnnSceneryManager(std::shared_ptr<OgreVRRender> renderer);
+		AnnSceneryManager(std::shared_ptr<AnnOgreVRRenderer> renderer);
 
 		///This subsystem doesn't need to be updated
 		bool needUpdate() override { return false; }
@@ -80,7 +80,7 @@ namespace Annwvyn
 		Ogre::SceneManager* smgr;
 
 		///Pointer to the VR renderer
-		std::shared_ptr<OgreVRRender> renderer;
+		std::shared_ptr<AnnOgreVRRenderer> renderer;
 
 		///Defaults environmental floats
 		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutoExposure, defaultSkyColorMultiplier, defaultBloom, defaultUpperAmbientLightMul, defaultLowerAmbientLightMul;

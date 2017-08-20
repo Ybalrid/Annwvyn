@@ -109,7 +109,7 @@
 
 #include "AnnGetter.hpp"
 
-#include "OgreVRRender.hpp"
+#include "AnnOgreVRRenderer.hpp"
 
 ///Namespace containing the totality of Annwvyn components
 namespace Annwvyn

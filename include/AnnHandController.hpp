@@ -6,12 +6,13 @@
 #include "AnnQuaternion.hpp"
 #include <OgreItem.h>
 
-//Forward declaration of the renderer classes that manager VR controllers
-class OgreVRRender;
-class OgreOpenVRRender;
-class OgreOculusRender;
 namespace Annwvyn
 {
+	//Forward declaration of the renderer classes that manager VR controllers
+	class AnnOgreVRRenderer;
+	class AnnOgreOpenVRRenderer;
+	class AnnOgreOculusRenderer;
+
 	///ID of an hand controller is the index of an array. using size_t s
 	using AnnHandControllerID = size_t;
 
@@ -35,9 +36,9 @@ namespace Annwvyn
 		float getValue() const;
 
 	private:
-		friend class OgreVRRender;
-		friend class OgreOpenVRRender;
-		friend class OgreOculusRender;
+		friend class AnnOgreVRRenderer;
+		friend class AnnOgreOpenVRRenderer;
+		friend class AnnOgreOculusRenderer;
 
 		///Change the value of the string.
 		void updateValue(float normalizedValue);
@@ -189,9 +190,9 @@ namespace Annwvyn
 		///Capabilities of this controller
 		HandControllerCapabilites_t capabilites;
 
-		friend class OgreVRRender;
-		friend class OgreOpenVRRender;
-		friend class OgreOculusRender;
+		friend class AnnOgreVRRenderer;
+		friend class AnnOgreOpenVRRenderer;
+		friend class AnnOgreOculusRenderer;
 
 		///Type of the controller, Can be string like "Vive controller" or "Oculus Touch Controller"
 		std::string controllerType;

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "OgreOculusRender.hpp"
+#include "AnnOgreOculusRenderer.hpp"
 
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
@@ -17,13 +17,11 @@
 using namespace Annwvyn;
 
 //Static class members
-bool OgreOculusRender::mirrorHMDView{ true };
-Ogre::TextureUnitState* OgreOculusRender::debugTexturePlane{ nullptr };
-OgreOculusRender* OgreOculusRender::oculusSelf{ nullptr };
+bool AnnOgreOculusRenderer::mirrorHMDView{ true };
+Ogre::TextureUnitState* AnnOgreOculusRenderer::debugTexturePlane{ nullptr };
+AnnOgreOculusRenderer* AnnOgreOculusRenderer::oculusSelf{ nullptr };
 
-OgreOculusRender::OgreOculusRender(std::string winName) : OgreVRRender(winName),
-frontierWidth{ 100 },
-oculusInterface(nullptr),
+AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) : AnnOgreVRRenderer(winName),
 currentFrameDisplayTime{ 0 },
 mirrorTexture{ nullptr },
 oculusMirrorTextureGLID{ 0 },
@@ -41,7 +39,7 @@ debugCamNode{ nullptr },
 debugPlaneNode{ nullptr }
 {
 	rendererName = "OpenGL/Oculus";
-	oculusSelf = static_cast<OgreOculusRender*>(self);
+	oculusSelf = static_cast<AnnOgreOculusRenderer*>(self);
 
 	//List of bitmask for each buttons as we will test them
 	touchControllersButtons[left][0] = ovrButton_X;
@@ -61,30 +59,29 @@ debugPlaneNode{ nullptr }
 	}
 }
 
-OgreOculusRender::~OgreOculusRender()
+AnnOgreOculusRenderer::~AnnOgreOculusRenderer()
 {
 	//Destroy any Oculus SDK related objects
 	ovr_DestroyTextureSwapChain(oculusInterface->getSession(), textureCombinedSwapChain);
 	ovr_DestroyMirrorTexture(oculusInterface->getSession(), mirrorTexture);
-	//delete Oculus;
 }
 
-bool OgreOculusRender::shouldQuit()
+bool AnnOgreOculusRenderer::shouldQuit()
 {
 	return getSessionStatus().ShouldQuit == ovrTrue;
 }
 
-bool OgreOculusRender::shouldRecenter()
+bool AnnOgreOculusRenderer::shouldRecenter()
 {
 	return getSessionStatus().ShouldRecenter == ovrTrue;
 }
 
-bool OgreOculusRender::isVisibleInHmd()
+bool AnnOgreOculusRenderer::isVisibleInHmd()
 {
 	return getSessionStatus().IsVisible == ovrTrue;
 }
 
-void OgreOculusRender::cycleDebugHud()
+void AnnOgreOculusRenderer::cycleDebugHud()
 {
 	//Loop through the perf HUD mode available
 	perfHudMode = (perfHudMode + 1) % ovrPerfHud_Count;
@@ -93,7 +90,7 @@ void OgreOculusRender::cycleDebugHud()
 	oculusInterface->setPerfHudMode(ovrPerfHudMode(perfHudMode));
 }
 
-void OgreOculusRender::debugPrint()
+void AnnOgreOculusRenderer::debugPrint()
 {
 	AnnDebug() << "Eye camera states :";
 	for (auto eye : eyeUpdateOrder)
@@ -103,22 +100,22 @@ void OgreOculusRender::debugPrint()
 	}
 }
 
-inline Ogre::Vector3 OgreOculusRender::oculusToOgreVect3(const ovrVector3f & v)
+inline Ogre::Vector3 AnnOgreOculusRenderer::oculusToOgreVect3(const ovrVector3f & v)
 {
 	return Ogre::Vector3{ v.x, v.y, v.z };
 }
 
-inline Ogre::Quaternion OgreOculusRender::oculusToOgreQuat(const ovrQuatf & q)
+inline Ogre::Quaternion AnnOgreOculusRenderer::oculusToOgreQuat(const ovrQuatf & q)
 {
 	return Ogre::Quaternion{ q.w, q.x, q.y, q.z };
 }
 
-void OgreOculusRender::recenter()
+void AnnOgreOculusRenderer::recenter()
 {
 	oculusInterface->recenterTrackingOrigin();
 }
 
-void OgreOculusRender::initVrHmd()
+void AnnOgreOculusRenderer::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
 	oculusInterface = std::make_unique<OculusInterfaceHelper>();
@@ -135,27 +132,27 @@ void OgreOculusRender::initVrHmd()
 	AnnDebug() << "Eye leveling translation : " << AnnGetPlayer()->getEyeTranslation();
 }
 
-void OgreOculusRender::setMonoFov(float degreeFov) const
+void AnnOgreOculusRenderer::setMonoFov(float degreeFov) const
 {
 	if (monoCam) monoCam->setFOVy(Ogre::Degree(degreeFov));
 }
 
-void OgreOculusRender::initScene()
+void AnnOgreOculusRenderer::initScene()
 {
 	//Get if the complied buffer are correct
 	if (!debugPlaneSanityCheck())
-		throw AnnInitializationError(ANN_ERR_NOTINIT, "Sanity check failed, check the static buffer in OgreOculusRender.hpp");
+		throw AnnInitializationError(ANN_ERR_NOTINIT, "Sanity check failed, check the static buffer in AnnOgreOculusRenderer.hpp");
 
 	createMainSmgr();
 }
 
 ///This will create the Oculus Textures and the Ogre textures for rendering and mirror display
-void OgreOculusRender::initRttRendering()
+void AnnOgreOculusRenderer::initRttRendering()
 {
 	//Init GLEW here to be able to call OpenGL functions
-	AnnDebug() << "Init GL Extension Wrangler";
-
 	loadOpenGLFunctions();
+
+	//Compute size of render textures :
 
 	//Get texture size from ovr with the maximal FOV for each eye
 	texSizeL = ovr_GetFovTextureSize(oculusInterface->getSession(), ovrEye_Left, oculusInterface->getHmdDesc().DefaultEyeFov[left], 1.f);
@@ -163,24 +160,22 @@ void OgreOculusRender::initRttRendering()
 
 	//Calculate the render buffer size for both eyes. The width of the frontier is the number of unused pixel between the two eye buffer.
 	//Apparently, keeping them glued together make some slight bleeding.
-	bufferSize.w = texSizeL.w + texSizeR.w + frontierWidth;
-	bufferSize.h = std::max(texSizeL.h, texSizeR.h);
 
 	//To use SSAA, just make the buffer bigger
 	if (UseSSAA)
 	{
-		if (AALevel / 2 > 0)
+		const auto multiplier = AALevel / 2;
+		if (multiplier > 0)
 		{
-			bufferSize.w *= AALevel / 2;
-			bufferSize.h *= AALevel / 2;
-			frontierWidth *= AALevel / 2;
+			texSizeL.w *= multiplier;
+			texSizeL.h *= multiplier;
+			texSizeR.w *= multiplier;
+			texSizeR.h *= multiplier;
 		}
 		AALevel = 0;
 	}
-	AnnDebug() << "Buffer texture size : " << bufferSize.w << " x " << bufferSize.h << " px";
-	//setup compositor
-	auto compositor = root->getCompositorManager2();
 
+	//Create left eye render texture
 	ovrTextureSwapChainDesc textureSwapChainDesc = {};
 	textureSwapChainDesc.Type = ovrTexture_2D;
 	textureSwapChainDesc.ArraySize = 1;
@@ -190,66 +185,62 @@ void OgreOculusRender::initRttRendering()
 	textureSwapChainDesc.MipLevels = 1;
 	textureSwapChainDesc.SampleCount = 1;
 	textureSwapChainDesc.StaticImage = ovrFalse;
-
-	//Request the creation of an OpenGL swapChain from the Oculus Library
-	if (ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[left]) != ovrSuccess)
+	if (OVR_FAILURE(ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[left])))
 	{
-		//If we can't get the textures, there is no point trying more.
 		AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
 	}
 
+	//Create write eye render texture (same basic configuration, just replace the texture sizes
 	textureSwapChainDesc.Width = texSizeR.w;
 	textureSwapChainDesc.Height = texSizeR.h;;
-
-	//Request the creation of an OpenGL swapChain from the Oculus Library
-	if (ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right]) != ovrSuccess)
+	if (OVR_FAILURE(ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right]) != ovrSuccess))
 	{
 		//If we can't get the textures, there is no point trying more.
 		AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
 	}
 
+	//Create the equivalent textures in Ogre side
 	combinedTextureSizeArray textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
 	ogreRenderTexturesSeparatedGLID = createSeparatedRenderTextures(textureDimentions);
 
+	//Setup Ogre compositor
+	auto compositor = root->getCompositorManager2();
 	compositorWorkspaces[leftEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);
 	compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", true);
 	compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
 
-	//Fill in MirrorTexture parameters
+	//Same deal but for the mirror (debuging) texture
 	ovrMirrorTextureDesc mirrorTextureDesc = {};
 	mirrorTextureDesc.Width = hmdSize.w;
 	mirrorTextureDesc.Height = hmdSize.h;
 	mirrorTextureDesc.Format = OVR_FORMAT_R8G8B8A8_UNORM_SRGB;
-
-	//Create the Oculus Mirror Texture
-	if (ovr_CreateMirrorTextureGL(oculusInterface->getSession(), &mirrorTextureDesc, &mirrorTexture) != ovrSuccess)
+	if (OVR_FAILURE(ovr_CreateMirrorTextureGL(oculusInterface->getSession(), &mirrorTextureDesc, &mirrorTexture)))
 	{
 		//If for some weird reason (stars alignment, dragons, northern gods, reaper invasion) we can't create the mirror texture
 		AnnDebug() << "Cannot create Oculus mirror texture";
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus mirror texture");
 	}
-
 	auto mirror = createAdditionalRenderBuffer(hmdSize.w, hmdSize.h, "MirrorTex");
 	ogreMirrorTextureGLID = std::get<1>(mirror);
 
 	ovr_GetTextureSwapChainBufferGL(oculusInterface->getSession(), textureCombinedSwapChain, 0, &oculusRenderTextureCombinedGLID);
 }
 
-void OgreOculusRender::showRawView()
+void AnnOgreOculusRenderer::showRawView()
 {
 }
 
-void OgreOculusRender::showMirrorView()
+void AnnOgreOculusRenderer::showMirrorView()
 {
 }
 
-void OgreOculusRender::showMonscopicView()
+void AnnOgreOculusRenderer::showMonscopicView()
 {
 }
 
-void OgreOculusRender::initClientHmdRendering()
+void AnnOgreOculusRenderer::initClientHmdRendering()
 {
 	//Populate OVR structures
 	eyeRenderDescArray[left] = ovr_GetRenderDesc(oculusInterface->getSession(), ovrEye_Left, oculusInterface->getHmdDesc().DefaultEyeFov[left]);
@@ -288,7 +279,7 @@ void OgreOculusRender::initClientHmdRendering()
 	oculusInterface->setPerfHudMode(ovrPerfHud_Off);
 }
 
-void OgreOculusRender::updateProjectionMatrix()
+void AnnOgreOculusRenderer::updateProjectionMatrix()
 {
 	//Get the matrices from the Oculus library
 	const std::array<ovrMatrix4f, ovrEye_Count> oculusProjectionMatrix
@@ -315,7 +306,7 @@ void OgreOculusRender::updateProjectionMatrix()
 	}
 }
 
-ovrSessionStatus OgreOculusRender::getSessionStatus()
+ovrSessionStatus AnnOgreOculusRenderer::getSessionStatus()
 {
 	if (currentSessionStatusFrameIndex != frameCounter)
 	{
@@ -325,12 +316,12 @@ ovrSessionStatus OgreOculusRender::getSessionStatus()
 	return sessionStatus;
 }
 
-bool OgreOculusRender::usesCustomAudioDevice()
+bool AnnOgreOculusRenderer::usesCustomAudioDevice()
 {
 	return true;
 }
 
-std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
+std::string AnnOgreOculusRenderer::getAudioDeviceIdentifierSubString()
 {
 	//Cache the result in this static string
 	static std::string audioDeviceName = "";
@@ -377,7 +368,7 @@ std::string OgreOculusRender::getAudioDeviceIdentifierSubString()
 	return audioDeviceName;
 }
 
-void OgreOculusRender::showDebug(DebugMode mode)
+void AnnOgreOculusRenderer::showDebug(DebugMode mode)
 {
 	switch (mode)
 	{
@@ -391,7 +382,7 @@ void OgreOculusRender::showDebug(DebugMode mode)
 	}
 }
 
-void OgreOculusRender::handleIPDChange()
+void AnnOgreOculusRenderer::handleIPDChange()
 {
 	for (auto eye : eyeUpdateOrder)
 	{
@@ -402,7 +393,7 @@ void OgreOculusRender::handleIPDChange()
 	}
 }
 
-void OgreOculusRender::logHeadsetGeometry()
+void AnnOgreOculusRenderer::logHeadsetGeometry()
 {
 	for (auto eye : eyeUpdateOrder)
 	{
@@ -412,7 +403,7 @@ void OgreOculusRender::logHeadsetGeometry()
 	}
 }
 
-void OgreOculusRender::getTrackingPoseAndVRTiming()
+void AnnOgreOculusRenderer::getTrackingPoseAndVRTiming()
 {
 	//Get timing
 	currentFrameDisplayTime = ovr_GetPredictedDisplayTime(oculusInterface->getSession(), ++frameCounter);
@@ -437,7 +428,7 @@ void OgreOculusRender::getTrackingPoseAndVRTiming()
 	trackedHeadPose.position = feetPosition + bodyOrientation * oculusToOgreVect3(pose.Position);
 }
 
-void OgreOculusRender::renderAndSubmitFrame()
+void AnnOgreOculusRenderer::renderAndSubmitFrame()
 {
 	handleWindowMessages();
 	if (!getSessionStatus().IsVisible)
@@ -477,7 +468,7 @@ void OgreOculusRender::renderAndSubmitFrame()
 	}
 }
 
-void OgreOculusRender::initializeHandObjects(const oorEyeType side)
+void AnnOgreOculusRenderer::initializeHandObjects(const oorEyeType side)
 {
 	//If it's the first time we have access data on this hand controller, instantiate the object
 	if (!handControllers[side])
@@ -487,7 +478,7 @@ void OgreOculusRender::initializeHandObjects(const oorEyeType side)
 	}
 }
 
-void OgreOculusRender::initializeControllerAxes(const oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector)
+void AnnOgreOculusRenderer::initializeControllerAxes(const oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector)
 {
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
@@ -495,7 +486,7 @@ void OgreOculusRender::initializeControllerAxes(const oorEyeType side, std::vect
 	axesVector.push_back(AnnHandControllerAxis{ "GripTrigger X", inputState.HandTrigger[side] });
 }
 
-void OgreOculusRender::processButtonStates(const oorEyeType side) {
+void AnnOgreOculusRenderer::processButtonStates(const oorEyeType side) {
 	//Extract button states and deduce press/released events
 	pressed.clear(); released.clear();
 	for (auto i(0); i < currentControllerButtonsPressed[side].size(); i++)
@@ -513,7 +504,7 @@ void OgreOculusRender::processButtonStates(const oorEyeType side) {
 	}
 }
 
-void OgreOculusRender::updateTouchControllers()
+void AnnOgreOculusRenderer::updateTouchControllers()
 {
 	//Get the controller state
 	if (OVR_FAILURE(ovr_GetInputState(oculusInterface->getSession(), ovrControllerType_Active, &inputState))) return;

@@ -45,6 +45,7 @@ OculusInterfaceHelper::OculusInterfaceHelper()
 	clientIentifier << "EngineVersion: " << AnnEngine::getAnnwvynVersion();
 	ovr_IdentifyClient(clientIentifier.str().c_str());
 	AnnDebug() << "Identifier string sent to the Oculus Service : \n" << clientIentifier.str();
+	AnnDebug() << "LibOVR version : " << ovr_GetVersionString();
 
 	//Attempt to create OVR session
 	if (OVR_FAILURE(ovr_Create(&session, &luid)))

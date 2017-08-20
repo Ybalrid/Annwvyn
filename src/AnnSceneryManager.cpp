@@ -5,7 +5,7 @@
 
 using namespace Annwvyn;
 
-AnnSceneryManager::AnnSceneryManager(std::shared_ptr<OgreVRRender> rendererFromEngine) : AnnSubSystem("SceneryManager"),
+AnnSceneryManager::AnnSceneryManager(std::shared_ptr<AnnOgreVRRenderer> rendererFromEngine) : AnnSubSystem("SceneryManager"),
 smgr(AnnGetEngine()->getSceneManager()),
 renderer(rendererFromEngine),
 defaultExposure(0.0f),

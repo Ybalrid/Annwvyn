@@ -25,7 +25,7 @@ namespace Annwvyn
 	///Get the scenery manager
 	DLL std::shared_ptr<AnnSceneryManager> AnnGetSceneryManager();
 	///Get the VR renderer
-	DLL std::shared_ptr<OgreVRRender> AnnGetVRRenderer();
+	DLL std::shared_ptr<AnnOgreVRRenderer> AnnGetVRRenderer();
 	///Get the script manager
 	DLL std::shared_ptr<AnnScriptManager> AnnGetScriptManager();
 	///Get the game-object manager

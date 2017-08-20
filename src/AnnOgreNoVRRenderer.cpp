@@ -1,27 +1,29 @@
 #include "stdafx.h"
-#include "OgreNoVRRender.hpp"
+#include "AnnOgreNoVRRenderer.hpp"
 
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
 
-OgreNoVRRender* OgreNoVRRender::noVRself(nullptr);
+using namespace Annwvyn;
 
-OgreNoVRRender::OgreNoVRRender(std::string name) : OgreVRRender(name),
+AnnOgreNoVRRenderer* AnnOgreNoVRRenderer::noVRself(nullptr);
+
+AnnOgreNoVRRenderer::AnnOgreNoVRRenderer(std::string name) : AnnOgreVRRenderer(name),
 running(true)
 {
 	rendererName = "OpenGL/NoVR";
-	noVRself = dynamic_cast<OgreNoVRRender*>(self);
+	noVRself = dynamic_cast<AnnOgreNoVRRenderer*>(self);
 }
 
-void OgreNoVRRender::initVrHmd()
+void AnnOgreNoVRRenderer::initVrHmd()
 {}
 
-void OgreNoVRRender::initScene()
+void AnnOgreNoVRRenderer::initScene()
 {
 	createMainSmgr();
 }
 
-void OgreNoVRRender::initRttRendering()
+void AnnOgreNoVRRenderer::initRttRendering()
 {
 	auto compositor = getRoot()->getCompositorManager2();
 
@@ -29,19 +31,19 @@ void OgreNoVRRender::initRttRendering()
 	compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true, 0, nullptr, nullptr, nullptr);
 }
 
-void OgreNoVRRender::initClientHmdRendering()
+void AnnOgreNoVRRenderer::initClientHmdRendering()
 {
 	loadOpenGLFunctions();
 
 	//No HMD to initialize rendering for.
 }
 
-bool OgreNoVRRender::shouldQuit()
+bool AnnOgreNoVRRenderer::shouldQuit()
 {
 	return !running;
 }
 
-void OgreNoVRRender::getTrackingPoseAndVRTiming()
+void AnnOgreNoVRRenderer::getTrackingPoseAndVRTiming()
 {
 	calculateTimingFromOgre();
 
@@ -49,7 +51,7 @@ void OgreNoVRRender::getTrackingPoseAndVRTiming()
 	trackedHeadPose.orientation = bodyOrientation;
 }
 
-void OgreNoVRRender::renderAndSubmitFrame()
+void AnnOgreNoVRRenderer::renderAndSubmitFrame()
 {
 	handleWindowMessages();
 	if (window->isClosed())
@@ -61,13 +63,13 @@ void OgreNoVRRender::renderAndSubmitFrame()
 	root->renderOneFrame();
 }
 
-void OgreNoVRRender::recenter()
+void AnnOgreNoVRRenderer::recenter()
 {}
 
-void OgreNoVRRender::showDebug(DebugMode mode)
+void AnnOgreNoVRRenderer::showDebug(DebugMode mode)
 {}
 
-void OgreNoVRRender::updateProjectionMatrix()
+void AnnOgreNoVRRenderer::updateProjectionMatrix()
 {
 	if (!monoCam) return;
 
@@ -76,20 +78,20 @@ void OgreNoVRRender::updateProjectionMatrix()
 	monoCam->setFarClipDistance(farClippingDistance);
 }
 
-bool OgreNoVRRender::shouldRecenter()
+bool AnnOgreNoVRRenderer::shouldRecenter()
 {
 	return false;
 }
 
-bool OgreNoVRRender::isVisibleInHmd()
+bool AnnOgreNoVRRenderer::isVisibleInHmd()
 {
 	return true;
 }
 
-void OgreNoVRRender::handleIPDChange()
+void AnnOgreNoVRRenderer::handleIPDChange()
 {}
 
-OgreNoVRRender::~OgreNoVRRender()
+AnnOgreNoVRRenderer::~AnnOgreNoVRRenderer()
 {
 	noVRself = nullptr;
 }

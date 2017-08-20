@@ -62,16 +62,16 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 	std::cerr << "HMD selection from command line routine returned : "
 		<< hmdCommand << std::endl;
 
-	//Select the correct OgreVRRender class to use :
+	//Select the correct AnnOgreVRRenderer class to use :
 #ifdef _WIN32
 	//TODO ISSUE make the default switchable by the client user
 	if (hmdCommand == "OgreOculusRender"
 		|| hmdCommand == "OgreDefaultRender")
-		renderer = std::make_shared<OgreOculusRender>(title);
+		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
 	else if (hmdCommand == "OgreOpenVRRender")
-		renderer = std::make_shared<OgreOpenVRRender>(title);
+		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
 	else if (hmdCommand == "OgreNoVRRender")
-		renderer = std::make_shared<OgreNoVRRender>(title);
+		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
 	else
 	{
 		displayWin32ErrorMessage(
@@ -96,7 +96,7 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 #ifdef __linux__
 	//No VR support currently
-	renderer = std::make_shared<OgreNoVRRender>(title);
+	renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
 #endif
 }
 
@@ -157,7 +157,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 	renderer->initPipeline();
 	SceneManager = renderer->getSceneManager();
 
-	renderer->showDebug(OgreVRRender::DebugMode::MONOSCOPIC);
+	renderer->showDebug(AnnOgreVRRenderer::DebugMode::MONOSCOPIC);
 
 	log("Setup Annwvyn's subsystems");
 
@@ -267,7 +267,7 @@ std::shared_ptr<AnnScriptManager> AnnEngine::getScriptManager() const
 	return scriptManager;
 }
 
-std::shared_ptr<OgreVRRender> AnnEngine::getVRRenderer() const
+std::shared_ptr<AnnOgreVRRenderer> AnnEngine::getVRRenderer() const
 {
 	return renderer;
 }
@@ -416,11 +416,11 @@ double AnnEngine::getFrameTime() const
 // Raw position and orientation of the head in world space. This is useful if
 // you want to mess around with weird stuff. This has been bodged when I
 // integrated a LEAP motion in that mess.
-OgrePose AnnEngine::getHmdPose() const
+AnnPose AnnEngine::getHmdPose() const
 {
 	if (renderer)
 		return renderer->trackedHeadPose;
-	return OgrePose();
+	return AnnPose();
 }
 
 std::shared_ptr<AnnUserSubSystem>

@@ -22,13 +22,13 @@
 #include <memory>
 
 //Graphic rendering system for the rift
-#include "OgreOculusRender.hpp"
+#include "AnnOgreOculusRenderer.hpp"
 
 //Graphic rendering system for the vive
-#include "OgreOpenVRRender.hpp"
+#include "AnnOgreOpenVRRenderer.hpp"
 
 //Graphic rendering system for NO FREAKING VR SYSTEM
-#include "OgreNoVRRender.hpp"
+#include "AnnOgreNoVRRenderer.hpp"
 
 //Annwvyn
 #include "AnnEventManager.hpp"
@@ -165,7 +165,7 @@ namespace Annwvyn
 		std::shared_ptr<AnnScriptManager> getScriptManager() const;
 
 		///Get the VRRenderer
-		std::shared_ptr<OgreVRRender> getVRRenderer() const;
+		std::shared_ptr<AnnOgreVRRenderer> getVRRenderer() const;
 
 		///Get the console
 		std::shared_ptr<AnnConsole> getOnScreenConsole() const;
@@ -206,7 +206,7 @@ namespace Annwvyn
 		double getFrameTime() const;
 
 		///Get the pose of the HMD in VR world space
-		OgrePose getHmdPose() const;
+		AnnPose getHmdPose() const;
 
 		///Register your own subsystem to be updated by the engine
 		std::shared_ptr<AnnUserSubSystem> registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem);
@@ -236,7 +236,7 @@ namespace Annwvyn
 		///String Utility;
 		std::shared_ptr<AnnStringUility> stringUtility;
 		///VR renderer
-		std::shared_ptr<OgreVRRender> renderer;
+		std::shared_ptr<AnnOgreVRRenderer> renderer;
 		///The onScreenConsole object
 		std::shared_ptr<AnnConsole> onScreenConsole;
 		///ResourceManager

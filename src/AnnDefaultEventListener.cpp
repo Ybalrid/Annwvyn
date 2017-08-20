@@ -88,13 +88,13 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		AnnGetVRRenderer()->cycleDebugHud();
 		break;
 	case KeyCode::f1:
-		AnnGetVRRenderer()->showDebug(OgreVRRender::RAW_BUFFER);
+		AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::RAW_BUFFER);
 		break;
 	case KeyCode::f2:
-		AnnGetVRRenderer()->showDebug(OgreVRRender::HMD_MIRROR);
+		AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::HMD_MIRROR);
 		break;
 	case KeyCode::f3:
-		AnnGetVRRenderer()->showDebug(OgreVRRender::MONOSCOPIC);
+		AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::MONOSCOPIC);
 		break;
 	case KeyCode::f5:
 		AnnGetPhysicsEngine()->toggleDebugPhysics();

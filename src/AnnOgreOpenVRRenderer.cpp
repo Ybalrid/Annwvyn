@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #ifdef _WIN32
-#include "OgreOpenVRRender.hpp"
+#include "AnnOgreOpenVRRenderer.hpp"
 #include "AnnLogger.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
@@ -8,9 +8,9 @@
 
 using namespace Annwvyn;
 
-OgreOpenVRRender* OgreOpenVRRender::OpenVRSelf(nullptr);
+AnnOgreOpenVRRenderer* AnnOgreOpenVRRenderer::OpenVRSelf(nullptr);
 
-OgreOpenVRRender::OgreOpenVRRender(std::string winName) : OgreVRRender(winName),
+AnnOgreOpenVRRenderer::AnnOgreOpenVRRenderer(std::string winName) : AnnOgreVRRenderer(winName),
 vrSystem{ nullptr },
 hmdError{ vr::EVRInitError::VRInitError_None },
 windowWidth{ 1280 },
@@ -31,7 +31,7 @@ triggerNormalizedValue{ 0 }
 {
 	rendererName = "OpengGL/OpenVR";
 	//Get the singleton pointer
-	OpenVRSelf = static_cast<OgreOpenVRRender*>(self);
+	OpenVRSelf = static_cast<AnnOgreOpenVRRenderer*>(self);
 
 	buttonsToHandle.reserve(5);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
@@ -49,7 +49,7 @@ triggerNormalizedValue{ 0 }
 	}
 }
 
-OgreOpenVRRender::~OgreOpenVRRender()
+AnnOgreOpenVRRenderer::~AnnOgreOpenVRRenderer()
 {
 	//Shutdown SteamVR
 	vr::VR_Shutdown();
@@ -70,7 +70,7 @@ std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t
 	return sResult;
 }
 
-void OgreOpenVRRender::initVrHmd()
+void AnnOgreOpenVRRenderer::initVrHmd()
 {
 	//Initialize OpenVR
 	vrSystem = VR_Init(&hmdError, vr::EVRApplicationType::VRApplication_Scene);
@@ -105,7 +105,7 @@ void OgreOpenVRRender::initVrHmd()
 	AnnDebug() << "Display : " << strDisplay;
 }
 
-void OgreOpenVRRender::initClientHmdRendering()
+void AnnOgreOpenVRRenderer::initClientHmdRendering()
 {
 	loadOpenGLFunctions();
 
@@ -132,22 +132,22 @@ void OgreOpenVRRender::initClientHmdRendering()
 	GLBounds[right].vMax = 0;
 }
 
-bool OgreOpenVRRender::shouldQuit()
+bool AnnOgreOpenVRRenderer::shouldQuit()
 {
 	return shouldQuitState;
 }
 
-bool OgreOpenVRRender::shouldRecenter()
+bool AnnOgreOpenVRRenderer::shouldRecenter()
 {
 	return false; //Only useful with the Oculus runtime
 }
 
-bool OgreOpenVRRender::isVisibleInHmd()
+bool AnnOgreOpenVRRenderer::isVisibleInHmd()
 {
 	return true; //Only useful with the oculus runtime
 }
 
-void OgreOpenVRRender::getTrackingPoseAndVRTiming()
+void AnnOgreOpenVRRenderer::getTrackingPoseAndVRTiming()
 {
 	//Wait for next frame pose, get timing and process additional devices (controllers, anything)
 	vr::VRCompositor()->WaitGetPoses(trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
@@ -168,7 +168,7 @@ void OgreOpenVRRender::getTrackingPoseAndVRTiming()
 	trackedHeadPose.orientation = bodyOrientation * getTrackedHMDOrieation();
 }
 
-void OgreOpenVRRender::renderAndSubmitFrame()
+void AnnOgreOpenVRRenderer::renderAndSubmitFrame()
 {
 	handleWindowMessages();
 
@@ -182,21 +182,21 @@ void OgreOpenVRRender::renderAndSubmitFrame()
 	frameCounter++;
 }
 
-void OgreOpenVRRender::recenter()
+void AnnOgreOpenVRRenderer::recenter()
 {
 	//This should do. But the effect of that commend doesn't look to affect a "seated" pose if you're actually standing
 	if (vrSystem) vrSystem->ResetSeatedZeroPose();
 }
 
-void OgreOpenVRRender::showDebug(DebugMode mode)
+void AnnOgreOpenVRRenderer::showDebug(DebugMode mode)
 {}
 
-void OgreOpenVRRender::initScene()
+void AnnOgreOpenVRRenderer::initScene()
 {
 	createMainSmgr();
 }
 
-void OgreOpenVRRender::initRttRendering()
+void AnnOgreOpenVRRenderer::initRttRendering()
 {
 	//Get the render texture size recommended by the OpenVR API for the current Driver/Display
 	unsigned int w, h;
@@ -227,7 +227,7 @@ void OgreOpenVRRender::initRttRendering()
 	compositorWorkspaces[monoCompositor] = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
 }
 
-void OgreOpenVRRender::updateProjectionMatrix()
+void AnnOgreOpenVRRenderer::updateProjectionMatrix()
 {
 	//Get the couple of matrices
 	std::array<vr::HmdMatrix44_t, 2> openVRProjectionMatrix
@@ -250,25 +250,25 @@ void OgreOpenVRRender::updateProjectionMatrix()
 	}
 }
 
-inline vr::EVREye OgreOpenVRRender::getEye(oovrEyeType eye)
+inline vr::EVREye AnnOgreOpenVRRenderer::getEye(oovrEyeType eye)
 {
 	if (eye == left) return vr::Eye_Left;
 	return vr::Eye_Right;
 }
 
-inline Ogre::Vector3 OgreOpenVRRender::getTrackedHMDTranslation() const
+inline Ogre::Vector3 AnnOgreOpenVRRenderer::getTrackedHMDTranslation() const
 {
 	//Extract translation vector from the matrix
 	return hmdAbsoluteTransform.getTrans();
 }
 
-inline Ogre::Quaternion OgreOpenVRRender::getTrackedHMDOrieation() const
+inline Ogre::Quaternion AnnOgreOpenVRRenderer::getTrackedHMDOrieation() const
 {
 	//Orientation/scale as quaternion (the matrix transform has no scale component.
 	return hmdAbsoluteTransform.extractQuaternion();
 }
 
-void OgreOpenVRRender::processVREvents()
+void AnnOgreOpenVRRenderer::processVREvents()
 {
 	vr::VREvent_t event;
 	//Pump the events, and for each event, switch on it type
@@ -288,7 +288,7 @@ void OgreOpenVRRender::processVREvents()
 	}
 }
 
-void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, AnnHandController::AnnHandControllerSide side)
+void AnnOgreOpenVRRenderer::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, AnnHandController::AnnHandControllerSide side)
 {
 	//Extract tracking information from the device
 	auto transform = getMatrix4FromSteamVRMatrix34(trackedPoses[controllerDeviceIndex].mDeviceToAbsoluteTracking);
@@ -344,7 +344,7 @@ void OgreOpenVRRender::processController(vr::TrackedDeviceIndex_t controllerDevi
 	handController->setTrackedAngularSpeed(AnnVect3(trackedPoses[controllerDeviceIndex].vAngularVelocity.v));
 }
 
-void OgreOpenVRRender::extractButtons(size_t side)
+void AnnOgreOpenVRRenderer::extractButtons(size_t side)
 {
 	pressed.clear(); released.clear();
 	for (uint8_t i(0); i < buttonsToHandle.size(); i++)
@@ -358,7 +358,7 @@ void OgreOpenVRRender::extractButtons(size_t side)
 	}
 }
 
-void OgreOpenVRRender::processTrackedDevices()
+void AnnOgreOpenVRRenderer::processTrackedDevices()
 {
 	//Iterate through the possible trackedDeviceIndexes
 	for (auto trackedDevice = vr::k_unTrackedDeviceIndex_Hmd + 1;
@@ -395,7 +395,7 @@ void OgreOpenVRRender::processTrackedDevices()
 	}
 }
 
-void OgreOpenVRRender::handleIPDChange()
+void AnnOgreOpenVRRenderer::handleIPDChange()
 {
 	//Get the eyeToHeadTransform (they contain the IPD translation)
 	for (char i(0); i < 2; i++)
@@ -403,7 +403,7 @@ void OgreOpenVRRender::handleIPDChange()
 			vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i)))).getTrans());
 }
 
-inline Ogre::Matrix4 OgreOpenVRRender::getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat)
+inline Ogre::Matrix4 AnnOgreOpenVRRenderer::getMatrix4FromSteamVRMatrix34(const vr::HmdMatrix34_t& mat)
 {
 	return Ogre::Matrix4
 	{
