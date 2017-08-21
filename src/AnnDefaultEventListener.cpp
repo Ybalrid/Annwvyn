@@ -143,7 +143,7 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
 	if (AnnGetVRRenderer()->shouldPauseFlag()) return;
 	auto rightStickThreashold{ 0.0225 };
-	if (e.getController()->getTypeHash() == OculusTouchController) rightStickThreashold = 0.8;
+	if (e.getController()->getType() == OculusTouchController) rightStickThreashold = 0.8;
 
 	auto controller = e.getController();
 	AnnVect2 analog{ controller->getAxis(0).getValue(), controller->getAxis(1).getValue() };
@@ -157,7 +157,7 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 
 		if (controller->hasBeenPressed(2))
 		{
-			if (controller->getTypeHash() == OculusTouchController)
+			if (controller->getType() == OculusTouchController)
 				AnnGetOnScreenConsole()->toggle();
 		}
 		break;

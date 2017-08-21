@@ -7,7 +7,7 @@
 using namespace Annwvyn;
 
 AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
-	controllerType(type),
+	controllerTypeString(type),
 	controllerTypeHash(AnnGetStringUtility()->hash(type)),
 	id(controllerID),
 	side(controllerSide),
@@ -24,7 +24,7 @@ AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode
 
 	std::cerr << "HandController ID : " << id << " created";
 	std::cerr << "For side : " << getSideAsString(side);
-	std::cerr << "Of type : " << controllerType;
+	std::cerr << "Of type : " << controllerTypeString;
 
 	//Let this variable not initialized
 	capabilites = None;
@@ -156,9 +156,9 @@ AnnHandController::AnnHandControllerSide AnnHandController::getSide() const
 	return side;
 }
 
-std::string AnnHandController::getType() const
+std::string AnnHandController::getTypeString() const
 {
-	return controllerType;
+	return controllerTypeString;
 }
 
 std::vector<AnnHandControllerAxis>& AnnHandController::getAxesVector()
@@ -198,7 +198,7 @@ void AnnHandControllerAxis::updateValue(float normalizedValue)
 
 bool AnnHandControllerAxis::isInRange(float v) { return (v >= -1 && v <= 1); }
 
-AnnHandController::AnnHandControllerTypeHash AnnHandController::getTypeHash() const
+AnnHandController::AnnHandControllerTypeHash AnnHandController::getType() const
 {
 	return controllerTypeHash;
 }

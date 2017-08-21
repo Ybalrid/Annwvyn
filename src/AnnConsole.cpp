@@ -504,7 +504,7 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		if (nbControllers > 0) if (AnnGetVRRenderer()->getHandControllerArray()[0])
 		{
 			append("HandControllers connected");
-			append("HandController types : " + AnnGetVRRenderer()->getHandControllerArray()[0]->getType());
+			append("HandController types : " + AnnGetVRRenderer()->getHandControllerArray()[0]->getTypeString());
 		}
 		else
 		{

@@ -165,11 +165,11 @@ namespace Annwvyn
 		///Get the "hand side" of this particular controller
 		AnnHandControllerSide getSide() const;
 
-		///For test/branching, prefer using getTypeHash(). Get the type of the controller. Can be anything. Expect stuff like "Vive Controller" or "Oculus Touch Controller".
-		std::string getType() const;
+		///For test/branching, prefer using getType(). Get the type of the controller. Can be anything. Expect stuff like "Vive Controller" or "Oculus Touch Controller".
+		std::string getTypeString() const;
 
 		///Get the hash of the type of the controller
-		AnnHandControllerTypeHash getTypeHash() const;
+		AnnHandControllerTypeHash getType() const;
 
 		///Start vibrating the controller with a set amount of "strength". Result will vary between VR systems...
 		virtual void rumbleStart(float factor);
@@ -196,9 +196,9 @@ namespace Annwvyn
 		friend class AnnOgreOculusRenderer;
 
 		///Type of the controller, Can be string like "Vive controller" or "Oculus Touch Controller"
-		std::string controllerType;
+		std::string controllerTypeString;
 
-		///Hash of the type, see controllerType
+		///Hash of the type, see controllerTypeString
 		AnnHandControllerTypeHash controllerTypeHash;
 
 		///Get a reference to the axes vector
