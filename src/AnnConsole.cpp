@@ -100,9 +100,6 @@ refreshRate{ 1.0 / 15.0 }
 		Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8,
 		Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
 
-	//	auto displaySurfaceTextureUniteState = pass->createTextureUnitState();
-	//	displaySurfaceTextureUniteState->setTexture(texture);
-
 	auto datablock = AnnGetVRRenderer()->getRoot()->getHlmsManager()->getDatablock("Console");
 	if (auto unlitDatablock = reinterpret_cast<Ogre::HlmsUnlitDatablock*>(datablock))
 	{
@@ -296,7 +293,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	const auto fontRowPitchBytes = fontPb.rowPitch * fontPixelSize;
 	const auto destRowPitchBytes = destPb.rowPitch * destPixelSize;
 
-	Box *GlyphTexCoords = new Box[str.size()]; //TODO ISSUE do not use new[]/delete[]
+	std::vector<Box> GlyphTexCoords(str.size());
 
 	size_t charheight = 0;
 	size_t charwidth = 0;
@@ -419,7 +416,6 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	}//for
 
 stop:
-	delete[] GlyphTexCoords;
 
 	destBuffer->unlock();
 
@@ -429,7 +425,7 @@ stop:
 
 void AnnConsole::syncConsolePosition() const
 {
-	auto targetPosition = AnnGetVRRenderer()->trackedHeadPose.position + AnnGetVRRenderer()->trackedHeadPose.orientation*offset;
+	auto targetPosition = AnnGetVRRenderer()->trackedHeadPose.position + AnnGetVRRenderer()->trackedHeadPose.orientation * offset;
 	auto targetOrientaiton = AnnGetVRRenderer()->trackedHeadPose.orientation;
 
 	consoleNode->setPosition(targetPosition);
