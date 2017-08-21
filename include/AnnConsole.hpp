@@ -64,6 +64,9 @@ namespace Annwvyn
 		///Array of forbidden keyword to check
 		std::array<const char*, 2> forbidden = { {"var", "auto"} };
 
+		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
+		static void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false);
+
 	private:
 
 		///Cleanup and run the user input.
@@ -74,9 +77,6 @@ namespace Annwvyn
 
 		///Return true if the given string match with any of the forbidden keyword int the array
 		bool isForbdiden(const std::string& keyword);
-
-		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
-		void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false) const;
 
 		///True if content of the buffer has been modified
 		bool modified;

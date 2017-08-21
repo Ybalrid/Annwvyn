@@ -194,7 +194,7 @@ void AnnOgreOculusRenderer::initRttRendering()
 	//Create write eye render texture (same basic configuration, just replace the texture sizes
 	textureSwapChainDesc.Width = texSizeR.w;
 	textureSwapChainDesc.Height = texSizeR.h;;
-	if (OVR_FAILURE(ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right]) != ovrSuccess))
+	if (OVR_FAILURE(ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right])))
 	{
 		//If we can't get the textures, there is no point trying more.
 		AnnDebug() << "Cannot create Oculus OpenGL SwapChain";

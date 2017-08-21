@@ -243,6 +243,7 @@ void AnnConsole::update()
 	WriteToTexture(textToDisplay,																	//Text
 		texture,																					//Texture
 		Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),					//Part of the pixel buffer to write to
+		font.get(),
 		Ogre::ColourValue::Black,																	//Color
 		'l', true);																					//Alignment
 }
@@ -255,7 +256,7 @@ bool AnnConsole::isForbdiden(const std::string& keyword)
 	return false;
 }
 
-void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, const Ogre::ColourValue &color, char justify, bool wordwrap) const
+void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify, bool wordwrap)
 {
 	using namespace Ogre;
 
@@ -314,6 +315,16 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 				charwidth = GlyphTexCoords[i].getWidth();
 		}
 	}
+
+	//get the size of the glyph '0'
+	auto glypheTexRect = font->getGlyphTexCoords('0');
+	Box spaceBox;
+	spaceBox.left = uint32_t(glypheTexRect.left * fontTexture->getSrcWidth());
+	spaceBox.right = uint32_t(glypheTexRect.right * fontTexture->getSrcWidth());
+	auto spacewidth = spaceBox.getWidth();
+
+	//if not mono-spaced
+	if (spacewidth != charwidth) spacewidth = size_t(float(spacewidth) * 0.5f);
 
 	size_t cursorX = 0;
 	size_t cursorY = 0;
