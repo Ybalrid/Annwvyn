@@ -155,10 +155,9 @@ void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 		player->analogStraff = controller->getAxis(0).getValue();
 		player->analogWalk = -controller->getAxis(1).getValue();
 
-		//TODO ISSUE use an hashing system to prevent string compare here
 		if (controller->hasBeenPressed(2))
 		{
-			if (controller->getType() == "Oculus Touch")
+			if (controller->getTypeHash() == OculusTouchController)
 				AnnGetOnScreenConsole()->toggle();
 		}
 		break;

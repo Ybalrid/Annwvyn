@@ -14,12 +14,8 @@ AnnEventListener::AnnEventListener() :
 
 float AnnEventListener::trim(float v, float dz)
 {
-	//Compute absolute value of v
-	auto abs(v);
-	if (v < 0) abs = -v;
-
 	//The test is done on the abs value. Return the actual value, or 0 if under the dead-zone
-	if (abs >= dz) return v;
+	if (std::abs(v) >= dz) return v;
 	return 0.0f;
 }
 
