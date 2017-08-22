@@ -10,7 +10,6 @@
 #include "AnnException.hpp"
 
 //Windows multimedia and sound libraries
-#pragma comment(lib, "dsound.lib")
 #include <mmsystem.h>
 #include <dsound.h>
 
@@ -288,7 +287,7 @@ void AnnOgreOculusRenderer::updateProjectionMatrix()
 		ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Right].Fov, nearClippingDistance, farClippingDistance, 0)
 	};
 
-	//Put them in in Ogre's Matrix4 format
+	//Put them in Ogre's Matrix4 format
 	std::array<Ogre::Matrix4, 2> ogreProjectionMatrix{};
 
 	//For each eye
@@ -323,15 +322,15 @@ bool AnnOgreOculusRenderer::usesCustomAudioDevice()
 
 std::string AnnOgreOculusRenderer::getAudioDeviceIdentifierSubString()
 {
-	//Cache the result in this static string
+	//The result will be stored statically here.
 	static std::string audioDeviceName = "";
+
+	//If we know the string already, return it.
 	if (!audioDeviceName.empty()) return audioDeviceName;
+
 	AnnDebug() << "Looking for the audio output selected inside the Oculus App...";
 
-	//Get GUID
-	GUID audioDeviceGuid; ovr_GetAudioDeviceOutGuid(&audioDeviceGuid);
-
-	//Enumerate DirectSound devices
+	//Container to associate audio device names with their GUID
 	struct audioOutputDescriptor
 	{
 		audioOutputDescriptor(LPCSTR str, LPGUID pguid) :
@@ -340,22 +339,30 @@ std::string AnnOgreOculusRenderer::getAudioDeviceIdentifierSubString()
 		const std::string name;
 		const GUID guid;
 	};
-	using stupidAudioDescriptorVect = std::vector<audioOutputDescriptor>;
-	stupidAudioDescriptorVect descriptors;
 
-	//Enumerate all DirectSound interfaces, and create stupidAudioDescriptor for them
-	DirectSoundEnumerateA([](LPGUID guid, LPCSTR descr, LPCSTR modname, LPVOID ctx) {
-		auto names = static_cast<stupidAudioDescriptorVect*>(ctx); //get an usable pointer
-		names->push_back({ descr, guid }); //create a usable descriptor and add it to the list
-		return TRUE; }, &descriptors);
+	//Create a vector of the "audio output descriptor" declared above
+	using audioOutputDescriptorVect = std::vector<audioOutputDescriptor>;
+	audioOutputDescriptorVect descriptors;
+
+	//Fill the "descriptors" vector :
+	DirectSoundEnumerateA([](LPGUID pguid, LPCSTR descr, LPCSTR modname, LPVOID ctx) //using a lambda function as a callback
+	{
+		auto outputDescriptors = static_cast<audioOutputDescriptorVect*>(ctx); //get an usable pointer
+		outputDescriptors->push_back({ descr, pguid }); //create a usable descriptor and add it to the list
+		return TRUE;
+	}, &descriptors); //Pointer to the vector as "context" given to the callback
+
+	//Get GUID of the device selected in the OculusApp
+	GUID audioDeviceGuid; ovr_GetAudioDeviceOutGuid(&audioDeviceGuid);
 
 	//Try to find the one we need
-	auto result = std::find_if(descriptors.begin(), descriptors.end(), [&](const audioOutputDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
+	const auto result = std::find_if(descriptors.begin(), descriptors.end(), [&](const audioOutputDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
 
 	//Set the return string
 	if (result != descriptors.end())
 	{
-		audioOutputDescriptor descriptor = *result; audioDeviceName = descriptor.name;
+		audioOutputDescriptor descriptor = *result;
+		audioDeviceName = descriptor.name;
 		AnnDebug() << "Found " << audioDeviceName << " that match Oculus given DirectSound GUID";
 	}
 	else

@@ -192,6 +192,7 @@ if(WIN32)
         ws2_32.lib      #TODO WIN32 specific
         Setupapi.lib    #TODO WIN32 specific
         Winmm.lib       #TODO WIN32 specific
+        dsound.lib
         )
 
     target_link_libraries(Annwvyn
