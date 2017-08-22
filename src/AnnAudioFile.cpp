@@ -152,7 +152,7 @@ AnnAudioFile* AnnAudioFile::cast(void* audioFileRawPtr)
 	return static_cast<AnnAudioFile*>(audioFileRawPtr);
 }
 
-SF_VIRTUAL_IO* AnnAudioFile::sfVioStruct{ nullptr };
+std::unique_ptr<SF_VIRTUAL_IO> AnnAudioFile::sfVioStruct{ nullptr };
 
 SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 {
@@ -160,7 +160,7 @@ SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 	if (!sfVioStruct)
 	{
 		AnnDebug() << "Initializing the Virtual I/O callbacks for libsndfile";
-		sfVioStruct = new SF_VIRTUAL_IO; //TODO ISSUE unique_ptr?
+		sfVioStruct = std::make_unique<SF_VIRTUAL_IO>();
 
 		//Fill it with function pointers to static methods...
 		sfVioStruct->get_filelen = &AnnAudioFile::sfVioGetFileLen;
@@ -170,13 +170,12 @@ SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 		sfVioStruct->tell = &AnnAudioFile::sfVioTell;
 	}
 
-	return sfVioStruct;
+	return sfVioStruct.get();
 }
 
 void AnnAudioFile::clearSndFileVioStruct()
 {
-	if (sfVioStruct) delete sfVioStruct;
-	sfVioStruct = nullptr;
+	if (sfVioStruct) sfVioStruct.release();
 }
 
 size_t AnnAudioFile::getSize() const

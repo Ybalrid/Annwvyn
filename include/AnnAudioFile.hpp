@@ -51,7 +51,7 @@ namespace Annwvyn
 		//Virtual IO interface
 
 		///Structure that will contain function pointers to all the functions defined below
-		static SF_VIRTUAL_IO* sfVioStruct;
+		static std::unique_ptr<SF_VIRTUAL_IO> sfVioStruct;
 
 		///Get the length of the file. Give that function pointer to libsndfile.
 		static sf_count_t sfVioGetFileLen(void* audioFileRawPtr);
