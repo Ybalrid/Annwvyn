@@ -40,6 +40,7 @@ namespace Annwvyn
 		///Write the fileData to disc in the appropriate directory
 		static void write(std::shared_ptr<AnnSaveFileData> dataToWrite);
 	};
+	using AnnFileWriterPtr = std::shared_ptr<AnnFileWriter>;
 
 	///Handle opening, reading and closing files
 	class DLL AnnFileReader
@@ -51,8 +52,10 @@ namespace Annwvyn
 		///read the asked file and return a new AnnSaveFileData*
 		std::shared_ptr<AnnSaveFileData> read(std::string filename) const;
 	};
+	using AnnFileReaderPtr = std::shared_ptr<AnnFileReader>;
 
 	class AnnSaveFileData;
+	using AnnSaveFileDataPtr = std::shared_ptr<AnnSaveFileData>;
 
 	///Manage where and how files will be wrote and read from the OS file-system
 	class DLL AnnFilesystemManager : public AnnSubSystem
@@ -75,19 +78,19 @@ namespace Annwvyn
 		void createSaveDirectory() const;
 
 		///Create en empty SaveFileData Object for a specific file
-		std::shared_ptr<AnnSaveFileData> crateSaveFileDataObject(std::string filename);
+		AnnSaveFileDataPtr crateSaveFileDataObject(std::string filename);
 
 		///Get an already existing SaveFileData object for this filename
-		std::shared_ptr<AnnSaveFileData> getCachedSaveFileDataObject(std::string filename);
+		AnnSaveFileDataPtr getCachedSaveFileDataObject(std::string filename);
 
 		///Destroy this SaveFileData Object. Will loose cached data if this file didn't go through the FileWriter
 		void releaseSaveFileDataObject(std::shared_ptr<AnnSaveFileData> data);
 
 		///Get the FileReader object
-		std::shared_ptr<AnnFileReader> getFileReader() const;
+		AnnFileReaderPtr getFileReader() const;
 
 		///Get the FileWriter object
-		std::shared_ptr<AnnFileWriter> getFileWriter() const;
+		AnnFileWriterPtr getFileWriter() const;
 
 	private:
 		///Name of the save directory
@@ -96,22 +99,24 @@ namespace Annwvyn
 		///Path to the save directory
 		std::string pathToUserDir;
 
-		///File writter
-		std::shared_ptr<AnnFileWriter> fileWriter;
+		///File writer
+		AnnFileWriterPtr fileWriter;
 
 		///File reader
-		std::shared_ptr<AnnFileReader> fileReader;
+		AnnFileReaderPtr fileReader;
 
 		///Data cache for saves
-		std::list<std::shared_ptr<AnnSaveFileData>> cachedData;
-	public:
+		std::list<AnnSaveFileDataPtr> cachedData;
 
+	public:
 		///Escape map
 		static std::vector<char> charToEscape;
 
 		///Strip map
 		static std::vector<char> charToStrip;
 	};
+
+	using AnnFilesystemManagerPtr = std::shared_ptr<AnnFilesystemManager>;
 
 	///Class that holds data to read or write
 	class DLL AnnSaveFileData
@@ -195,7 +200,7 @@ namespace Annwvyn
 
 	protected:
 		///Object
-		std::shared_ptr<AnnSaveFileData> dataObject;
+		AnnSaveFileDataPtr dataObject;
 	};
 }
 

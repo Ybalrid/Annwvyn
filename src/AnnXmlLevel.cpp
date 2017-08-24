@@ -214,7 +214,7 @@ void AnnXmlLevel::load()
 
 			AnnGetPlayer()->setPosition(AnnVect3(x, y, z));
 		}
-		else AnnGetPlayer()->setPosition(AnnPlayer::DEFAULT_STARTING_POS);
+		else AnnGetPlayer()->setPosition(AnnPlayerBody::DEFAULT_STARTING_POS);
 
 		playerElement = element->FirstChildElement("Orientation");
 		if (playerElement)
@@ -224,12 +224,12 @@ void AnnXmlLevel::load()
 			AnnDebug() << "Player Yaw : " << yaw;
 			AnnGetPlayer()->setOrientation(Ogre::Euler(Ogre::Degree(yaw).valueRadians()));
 		}
-		else AnnGetPlayer()->setOrientation(AnnPlayer::DEFAULT_STARTING_ORIENT);
+		else AnnGetPlayer()->setOrientation(AnnPlayerBody::DEFAULT_STARTING_ORIENT);
 	}
 	else
 	{
-		AnnGetPlayer()->setPosition(AnnPlayer::DEFAULT_STARTING_POS);
-		AnnGetPlayer()->setOrientation(AnnPlayer::DEFAULT_STARTING_ORIENT);
+		AnnGetPlayer()->setPosition(AnnPlayerBody::DEFAULT_STARTING_POS);
+		AnnGetPlayer()->setOrientation(AnnPlayerBody::DEFAULT_STARTING_ORIENT);
 	}
 	AnnGetPlayer()->resetPlayerPhysics();
 }

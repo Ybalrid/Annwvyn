@@ -48,7 +48,7 @@ void AnnLevel::unload()
 
 	levelMovable.clear();
 
-	AnnGetPlayer()->hintRoomscaleUpdateTranslationReference();
+	AnnGetPlayer()->_hintRoomscaleUpdateTranslationReference();
 }
 
 std::shared_ptr<AnnLightObject> AnnLevel::addLightObject(std::string id)

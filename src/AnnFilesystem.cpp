@@ -40,7 +40,7 @@ AnnFileReader::AnnFileReader()
 	AnnDebug() << "FileReader instantiated";
 }
 
-shared_ptr<AnnSaveFileData> AnnFileReader::read(string fileName) const
+AnnSaveFileDataPtr AnnFileReader::read(string fileName) const
 {
 	AnnDebug() << "Reading file " << fileName << " to memory";
 
@@ -168,14 +168,14 @@ void AnnFilesystemManager::releaseSaveFileDataObject(shared_ptr<AnnSaveFileData>
 	cachedData.remove(data);
 }
 
-shared_ptr<AnnSaveFileData> AnnFilesystemManager::crateSaveFileDataObject(string filename)
+AnnSaveFileDataPtr AnnFilesystemManager::crateSaveFileDataObject(string filename)
 {
 	auto data = make_shared<AnnSaveFileData>(filename);
 	cachedData.push_back(data);
 	return data;
 }
 
-shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
+AnnSaveFileDataPtr AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
 {
 	for (auto dataObject : cachedData)
 		if (dataObject->getFilename() == filename)
@@ -183,12 +183,12 @@ shared_ptr<AnnSaveFileData> AnnFilesystemManager::getCachedSaveFileDataObject(st
 	return nullptr;
 }
 
-shared_ptr<AnnFileReader> AnnFilesystemManager::getFileReader() const
+AnnFileReaderPtr AnnFilesystemManager::getFileReader() const
 {
 	return fileReader;
 }
 
-shared_ptr<AnnFileWriter> AnnFilesystemManager::getFileWriter() const
+AnnFileWriterPtr AnnFilesystemManager::getFileWriter() const
 {
 	return fileWriter;
 }

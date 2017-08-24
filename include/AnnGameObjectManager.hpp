@@ -82,6 +82,8 @@ namespace Annwvyn
 
 		bool halfPos, halfTexCoord, qTan;
 	};
+
+	using AnnGameObjectManagerPtr = std::shared_ptr<AnnGameObjectManager>;
 }
 
 #endif

@@ -32,10 +32,10 @@
 
 //Annwvyn
 #include "AnnEventManager.hpp"
+#include "AnnPhysicsEngine.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
-#include "AnnPhysicsEngine.hpp"
 #include "AnnConsole.hpp"
 #include "AnnLevelManager.hpp"
 #include "AnnFilesystem.hpp"
@@ -118,7 +118,7 @@ namespace Annwvyn
 		static void log(std::string message, bool flag = true); //engine
 
 		///Get the player
-		std::shared_ptr<AnnPlayer> getPlayer() const;
+		AnnPlayerBodyPtr getPlayer() const;
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generally 'OIS::KC_X' where X is the key you want.
 		/// key an OIS key code
@@ -138,40 +138,40 @@ namespace Annwvyn
 		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
 
 		///Get the event manager
-		std::shared_ptr<AnnEventManager> getEventManager() const;
+		AnnEventManagerPtr getEventManager() const;
 
 		///Get the file-system manager
-		std::shared_ptr<AnnFilesystemManager> getFileSystemManager() const;
+		AnnFilesystemManagerPtr getFileSystemManager() const;
 
 		///Return the Annwvyn OpenAL simplified audio engine
-		std::shared_ptr<AnnAudioEngine> getAudioEngine() const; //audio
+		AnnAudioEnginePtr getAudioEngine() const; //audio
 
 		///Return the Physics Engine
-		std::shared_ptr<AnnPhysicsEngine> getPhysicsEngine() const;
+		AnnPhysicsEnginePtr getPhysicsEngine() const;
 
 		///Get the current level manager
-		std::shared_ptr<AnnLevelManager> getLevelManager() const;
+		AnnLevelManagerPtr getLevelManager() const;
 
 		///Get the ResourceManager
-		std::shared_ptr<AnnResourceManager> getResourceManager() const;
+		AnnResourceManagerPtr getResourceManager() const;
 
 		///Get the GameObjectManager
-		std::shared_ptr<AnnGameObjectManager> getGameObjectManager() const;
+		AnnGameObjectManagerPtr getGameObjectManager() const;
 
 		///Get the SceneryManager
-		std::shared_ptr<AnnSceneryManager> getSceneryManager() const;
+		AnnSceneryManagerPtr getSceneryManager() const;
 
 		///Get the ScriptManager
-		std::shared_ptr<AnnScriptManager> getScriptManager() const;
+		AnnScriptManagerPtr getScriptManager() const;
 
 		///Get the VRRenderer
-		std::shared_ptr<AnnOgreVRRenderer> getVRRenderer() const;
+		AnnOgreVRRendererPtr getVRRenderer() const;
 
 		///Get the console
-		std::shared_ptr<AnnConsole> getOnScreenConsole() const;
+		AnnConsolePtr getOnScreenConsole() const;
 
 		///
-		std::shared_ptr<AnnStringUility> getStringUtility() const;
+		AnnStringUtilityPtr getStringUtility() const;
 
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
 
@@ -187,7 +187,7 @@ namespace Annwvyn
 		///Refresh all for you
 		bool refresh(); //engine main loop
 
-		///Set the POV node to the AnnPlayer gameplay defined position/orientation of the player's body
+		///Set the POV node to the AnnPlayerBody gameplay defined position/orientation of the player's body
 		void syncPov() const;
 
 		///This start the render loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
@@ -234,31 +234,31 @@ namespace Annwvyn
 		bool applicationQuitRequested;
 
 		///String Utility;
-		std::shared_ptr<AnnStringUility> stringUtility;
+		AnnStringUtilityPtr stringUtility;
 		///VR renderer
-		std::shared_ptr<AnnOgreVRRenderer> renderer;
+		AnnOgreVRRendererPtr renderer;
 		///The onScreenConsole object
-		std::shared_ptr<AnnConsole> onScreenConsole;
+		AnnConsolePtr onScreenConsole;
 		///ResourceManager
-		std::shared_ptr<AnnResourceManager> resourceManager;
+		AnnResourceManagerPtr resourceManager;
 		///SceneryManager
-		std::shared_ptr<AnnSceneryManager> sceneryManager;
+		AnnSceneryManagerPtr sceneryManager;
 		///FilesystemManager
-		std::shared_ptr<AnnFilesystemManager> filesystemManager;
+		AnnFilesystemManagerPtr filesystemManager;
 		///Audio engine
-		std::shared_ptr<AnnAudioEngine> audioEngine;
+		AnnAudioEnginePtr audioEngine;
 		///Event manager
-		std::shared_ptr<AnnEventManager> eventManager;
+		AnnEventManagerPtr eventManager;
 		///Physics
-		std::shared_ptr<AnnPhysicsEngine> physicsEngine;
+		AnnPhysicsEnginePtr physicsEngine;
 		///GameObjectManager
-		std::shared_ptr<AnnGameObjectManager> gameObjectManager;
+		AnnGameObjectManagerPtr gameObjectManager;
 		///LevelManager
-		std::shared_ptr<AnnLevelManager> levelManager;
+		AnnLevelManagerPtr levelManager;
 		///ScriptManager
-		std::shared_ptr<AnnScriptManager> scriptManager;
+		AnnScriptManagerPtr scriptManager;
 		///Player
-		std::shared_ptr<AnnPlayer> player;
+		AnnPlayerBodyPtr player;
 
 		///The scene manager
 		Ogre::SceneManager* SceneManager;

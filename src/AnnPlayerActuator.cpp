@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "AnnPlayerActuator.hpp"
-#include "AnnPlayer.hpp"
+#include "AnnPlayerBody.hpp"
 #include "AnnLogger.hpp"
 
 using namespace Annwvyn;

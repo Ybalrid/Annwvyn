@@ -9,29 +9,29 @@ namespace Annwvyn
 	DLL AnnEngine* AnnGetEngine();
 
 	///Get the audio engine
-	DLL std::shared_ptr<AnnAudioEngine> AnnGetAudioEngine();
+	DLL AnnAudioEnginePtr AnnGetAudioEngine();
 	///Get the physics engine
-	DLL std::shared_ptr<AnnPhysicsEngine> AnnGetPhysicsEngine();
+	DLL AnnPhysicsEnginePtr AnnGetPhysicsEngine();
 	///Get the file-system manager
-	DLL std::shared_ptr<AnnFilesystemManager> AnnGetFileSystemManager();
+	DLL AnnFilesystemManagerPtr AnnGetFileSystemManager();
 	///Get the level manager
-	DLL std::shared_ptr<AnnLevelManager> AnnGetLevelManager();
+	DLL AnnLevelManagerPtr AnnGetLevelManager();
 	///Get the event manager
-	DLL std::shared_ptr<AnnEventManager> AnnGetEventManager();
+	DLL AnnEventManagerPtr AnnGetEventManager();
 	///Get the player object
-	DLL std::shared_ptr<AnnPlayer>  AnnGetPlayer();
+	DLL AnnPlayerBodyPtr  AnnGetPlayer();
 	///Get the resource manager
-	DLL std::shared_ptr<AnnResourceManager> AnnGetResourceManager();
+	DLL AnnResourceManagerPtr AnnGetResourceManager();
 	///Get the scenery manager
-	DLL std::shared_ptr<AnnSceneryManager> AnnGetSceneryManager();
+	DLL AnnSceneryManagerPtr AnnGetSceneryManager();
 	///Get the VR renderer
-	DLL std::shared_ptr<AnnOgreVRRenderer> AnnGetVRRenderer();
+	DLL AnnOgreVRRendererPtr AnnGetVRRenderer();
 	///Get the script manager
-	DLL std::shared_ptr<AnnScriptManager> AnnGetScriptManager();
+	DLL AnnScriptManagerPtr AnnGetScriptManager();
 	///Get the game-object manager
-	DLL std::shared_ptr<AnnGameObjectManager> AnnGetGameObjectManager();
+	DLL AnnGameObjectManagerPtr AnnGetGameObjectManager();
 	///Get the on screen console
-	DLL std::shared_ptr<AnnConsole> AnnGetOnScreenConsole();
+	DLL AnnConsolePtr AnnGetOnScreenConsole();
 	///Get the string utility object
-	DLL std::shared_ptr<AnnStringUility> AnnGetStringUtility();
+	DLL AnnStringUtilityPtr AnnGetStringUtility();
 }

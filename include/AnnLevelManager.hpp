@@ -33,11 +33,11 @@ namespace Annwvyn
 
 		///Jump to a pointer referenced level
 		///\param level address of a subclass instance of AnnLevel
-		void jump(std::shared_ptr<AnnLevel> level);
+		void jump(AnnLevelPtr level);
 
 		///Add a level to the level manager
 		///\param level address of a subclass instance of AnnLevel
-		void addLevel(std::shared_ptr<AnnLevel> level);
+		void addLevel(AnnLevelPtr level);
 
 		///Jump to the 1st level
 		void jumpToFirstLevel();
@@ -49,16 +49,16 @@ namespace Annwvyn
 		void unloadCurrentLevel();
 
 		///Retrieve the last loaded level pointer
-		std::shared_ptr<AnnLevel> getLastLevelLoaded();
+		AnnLevelPtr getLastLevelLoaded();
 
 		///Retrieve the first loaded level pointer
-		std::shared_ptr<AnnLevel> getFirstLevelLoaded();
+		AnnLevelPtr getFirstLevelLoaded();
 
 		///Retrieve the `id`th  loaded level pointer
-		std::shared_ptr<AnnLevel> getLevelByIndex(level_id id);
+		AnnLevelPtr getLevelByIndex(level_id id);
 
 		///Get the current level
-		std::shared_ptr<AnnLevel> getCurrentLevel() const;
+		AnnLevelPtr getCurrentLevel() const;
 
 		///Add an orphan object to the current level
 		void addToCurrentLevel(std::shared_ptr<AnnGameObject> obj) const;
@@ -69,10 +69,10 @@ namespace Annwvyn
 	private:
 
 		///List of levels
-		std::vector<std::shared_ptr<AnnLevel>> levelList;
+		std::vector<AnnLevelPtr> levelList;
 
 		///Address to the currently running level
-		std::shared_ptr<AnnLevel> current;
+		AnnLevelPtr current;
 
 		///Will jumpt to a level at next update
 		bool jumpRequested;
@@ -80,5 +80,7 @@ namespace Annwvyn
 		///Level to jump to at next update
 		level_id jumpTo;
 	};
+
+	using AnnLevelManagerPtr = std::shared_ptr<AnnLevelManager>;
 }
 #endif //LEVELMANAGER

@@ -79,6 +79,8 @@ namespace Annwvyn
 		bool posRelToPlayer;
 	};
 
+	using AnnAudioSourcePtr = std::shared_ptr<AnnAudioSource>;
+
 	///Class that handle the OpenAL audio.
 	class DLL AnnAudioEngine : public AnnSubSystem
 	{
@@ -129,13 +131,13 @@ namespace Annwvyn
 		std::string getLastError() const;
 
 		///Create an audio source
-		std::shared_ptr<AnnAudioSource> createSource();
+		AnnAudioSourcePtr createSource();
 
 		///Create an audio source and attach (and load if necessary) buffer from audio file
-		std::shared_ptr<AnnAudioSource> createSource(std::string name);
+		AnnAudioSourcePtr createSource(std::string name);
 
 		///Remove an audio source frop the engine
-		void removeSource(std::shared_ptr<AnnAudioSource> source);
+		void removeSource(AnnAudioSourcePtr source);
 
 		///Write last error text to the log
 		void logError() const;
@@ -176,12 +178,14 @@ namespace Annwvyn
 		///Prevent some operation if set to true
 		bool locked;
 		///List of the audio sources object present in the audio engine
-		std::list<std::shared_ptr<AnnAudioSource>> audioSources;
+		std::list<AnnAudioSourcePtr> audioSources;
 
 		///List of audio device names
 		std::vector<std::string> detectedDevices;
 		///Custom Ogre resource manager that loads binary files used to load audio files
 		AnnAudioFileManager* audioFileManager;
 	};
+
+	using AnnAudioEnginePtr = std::shared_ptr<AnnAudioEngine>;
 }
 #endif

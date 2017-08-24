@@ -330,11 +330,11 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 	size_t cursorY = 0;
 	auto lineend = destRectangle.getWidth();
 	auto carriagreturn = true;
-	for (unsigned int strindex = 0; strindex < str.size(); strindex++)
+	for (size_t strindex = 0; strindex < str.size(); strindex++)
 	{
 		switch (str[strindex])
 		{
-		case ' ': cursorX += charwidth;  break;
+		case ' ': cursorX += spacewidth;  break;
 		case '\t':cursorX += charwidth * 3; break;
 		case '\n':cursorY += charheight; carriagreturn = true; break;
 		default:
@@ -389,7 +389,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 				switch (justify)
 				{
 				case 'c':    cursorX = (destRectangle.getWidth() - textwidth) / 2;
-					lineend = destRectangle.getWidth() - cursorX;
+					lineend = destRectangle.getWidth() - uint32(cursorX);
 					break;
 
 				case 'r':    cursorX = (destRectangle.getWidth() - textwidth);
@@ -397,7 +397,7 @@ void AnnConsole::WriteToTexture(const Ogre::String &str, Ogre::TexturePtr destTe
 					break;
 
 				default:    cursorX = 0;
-					lineend = textwidth;
+					lineend = uint32(textwidth);
 					break;
 				}
 

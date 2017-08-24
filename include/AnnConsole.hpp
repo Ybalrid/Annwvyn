@@ -123,6 +123,8 @@ namespace Annwvyn
 		///Delay in seconds to re-refresh the console.
 		const double refreshRate;
 	};
+
+	using AnnConsolePtr = std::shared_ptr<AnnConsole>;
 }
 
 #endif

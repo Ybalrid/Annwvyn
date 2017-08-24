@@ -1,5 +1,5 @@
 /**
-* \file AnnPlayer.hpp
+* \file AnnPlayerBodyBody.hpp
 * \brief class that represent the player
 * \author A. Brainville (Ybalrid)
 */
@@ -21,38 +21,11 @@ namespace Annwvyn
 	enum AnnPlayerMode { STANDING, ROOMSCALE };
 	class AnnEngine; //pre-declaration of AnnEngine
 
-	///Parameters of the user's VirtualBody
-	class DLL bodyParams
-	{
-		/**
-		* That class was a structure. It is kept as a class with public attributes to keep compatibility with legacy code.
-		*/
-	public:
-		///Constructor that handle the default body parameters.
-		bodyParams();
-
-		float eyeHeight;
-		float walkSpeed;
-		float runFactor;
-		float turnSpeed;
-		float mass;
-		AnnVect3 FeetPosition;
-		AnnVect3& RoomBase;
-		Ogre::Euler Orientation;
-		AnnQuaternion HeadOrientation;
-
-		//bullet
-		btCollisionShape* Shape;
-		btRigidBody* Body;
-
-		AnnVect3 getHeadPosition() const { return FeetPosition + eyeHeight*AnnVect3::UNIT_Y; }
-	};
-
 	///Correspondence between array position and walk direction for the "walking" array
 	enum walkDirection { forward, backward, left, right };
 
 	///class that represent the player. This is the user's "Virtual body" in the world. It's the object that you have to move and turn to explore the space.
-	class DLL AnnPlayer
+	class DLL AnnPlayerBody
 	{
 	public:
 
@@ -60,10 +33,10 @@ namespace Annwvyn
 		static const Ogre::Euler DEFAULT_STARTING_ORIENT;
 
 		///Construct the player object
-		AnnPlayer();
+		AnnPlayerBody();
 
 		///Destroy the player object
-		~AnnPlayer();
+		~AnnPlayerBody();
 
 		///Prevent modification of physical parameter
 		void lockParameters();
@@ -73,31 +46,31 @@ namespace Annwvyn
 
 		///Set the position of the player. If physics is enabled you need to call  AnnEngine::resetPlayerPhysics() to recreate player's body.
 		/// \param Position 3D vector representing the position of the player (referenced by the point between his eyes)
-		void setPosition(AnnVect3 Position) const;
+		void setPosition(AnnVect3 Position);
 
 		///Set body orientation
 		/// \param Orientation Euler angle that represent the orientation of the player's BODY. That orientation is used as a "zero point" for the head orientation.
-		void setOrientation(Ogre::Euler Orientation) const;
+		void setOrientation(Ogre::Euler Orientation);
 
 		///Set the head orientation
 		/// \param HeadOrientation A quaternion representing the orientation of the head
-		void setHeadOrientation(AnnQuaternion HeadOrientation) const;
+		void setHeadOrientation(AnnQuaternion HeadOrientation);
 
 		///distance between foot-plane and eyes
 		/// \param eyeHeight floating point number in meter
-		void setEyesHeight(float eyeHeight) const;
+		void setEyesHeight(float eyeHeight);
 
 		///WalkSpeed, meters by second
 		/// \param walkSpeed The speed a the user is walking
-		void setWalkSpeed(float walkSpeed) const;
+		void setWalkSpeed(float walkSpeed);
 
 		///Turn-speed
 		/// \param turnSpeed Angular speed that the user can turn his body
-		void setTurnSpeed(float turnSpeed) const;
+		void setTurnSpeed(float turnSpeed);
 
 		///Mass in Kg
 		/// \param mass Mass of the player in Kg
-		void setMass(float mass) const;
+		void setMass(float mass);
 
 		///Bullet shape
 		/// \param Shape the Bullet collision shape used to simulate player physics
@@ -186,16 +159,38 @@ namespace Annwvyn
 		///Shoot a ray form the player to relative -Y. If it hits a rigidbody, call reground() on the impact position
 		void regroundOnPhysicsBody(float lenght = 1000, AnnVect3 preoffset = AnnVect3::ZERO);
 
-		void hintRoomscaleUpdateTranslationReference();
+		///Advanced : Set the flag that will update the translation reference vector from the head pose "view" direction.
+		void _hintRoomscaleUpdateTranslationReference();
 
+		///Set the player body's pose to match what is tracked by the VR system, and cancel all velocities.
 		void syncToTrackedPose();
 
-	protected:
+	private:
+		///Parameters of the user's VirtualBody
+		struct PhysicalParameters
+		{
+			///Constructor that handle the default body parameters.
+			PhysicalParameters();
+
+			float eyeHeight;
+			float walkSpeed;
+			float runFactor;
+			float turnSpeed;
+			float mass;
+			AnnVect3 FeetPosition;
+			AnnVect3& RoomBase;
+			Ogre::Euler Orientation;
+			AnnQuaternion HeadOrientation;
+
+			//bullet
+			btCollisionShape* Shape;
+			btRigidBody* Body;
+
+			AnnVect3 getHeadPosition() const { return FeetPosition + eyeHeight * AnnVect3::UNIT_Y; }
+		};
 
 		///Object that keep body parameters (= legacy structure)
-		bodyParams* playerBody;
-
-	private:
+		PhysicalParameters physicsParams;
 
 		AnnPlayerMode mode;
 
@@ -208,9 +203,6 @@ namespace Annwvyn
 
 		///Engine update call for each frame
 		void engineUpdate(float time);
-
-		///Get the pointer to bodyParams (compatibility with legacy code here. Highly dangerous, do not mess with whatever is pointed by that vector. Seriously.
-		bodyParams* getLowLevelBodyParams() const;
 
 		///The famous boolean that permit to prevent YOU for breaking my work! :D
 		bool locked;
@@ -255,5 +247,7 @@ namespace Annwvyn
 		float analogStraff;
 		float analogRotate;
 	};
+
+	using AnnPlayerBodyPtr = std::shared_ptr<AnnPlayerBody>;
 }
 #endif //ANN_PLAYER

@@ -17,7 +17,7 @@ namespace Annwvyn
 	public:
 
 		///Construct the AnnSceneryManager
-		AnnSceneryManager(std::shared_ptr<AnnOgreVRRenderer> renderer);
+		AnnSceneryManager(AnnOgreVRRendererPtr renderer);
 
 		///This subsystem doesn't need to be updated
 		bool needUpdate() override { return false; }
@@ -80,13 +80,15 @@ namespace Annwvyn
 		Ogre::SceneManager* smgr;
 
 		///Pointer to the VR renderer
-		std::shared_ptr<AnnOgreVRRenderer> renderer;
+		AnnOgreVRRendererPtr renderer;
 
 		///Defaults environmental floats
 		const float defaultExposure, defaultMinAutoExposure, defaultMaxAutoExposure, defaultSkyColorMultiplier, defaultBloom, defaultUpperAmbientLightMul, defaultLowerAmbientLightMul;
 		///Default sky color
 		const AnnColor defaultSkyColor, defaultUpperAmbient, defaultLowerAmbient;
 	};
+
+	using AnnSceneryManagerPtr = std::shared_ptr<AnnSceneryManager>;
 }
 
 #endif

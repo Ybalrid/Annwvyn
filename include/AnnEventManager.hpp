@@ -14,7 +14,7 @@
 #include <valarray>
 
 #include "AnnKeyCode.h"
-#include "AnnPlayer.hpp"
+#include "AnnPlayerBody.hpp"
 #include "AnnTriggerObject.hpp"
 #include "AnnSubsystem.hpp"
 #include "AnnEvents.hpp"
@@ -58,16 +58,16 @@ namespace Annwvyn
 		/// That event listener is designed as an example of an event listener, and for exploring the environment without having to write a custom event listener
 		void useDefaultEventListener();
 		///Return the default event listener
-		std::shared_ptr<AnnEventListener> getDefaultEventListener() const;
+		AnnEventListenerPtr getDefaultEventListener() const;
 		///Ad a listener to the event manager
 		/// \param listener Pointer to a listener object
-		void addListener(std::shared_ptr<AnnEventListener> listener);
+		void addListener(AnnEventListenerPtr listener);
 		///Remove every listener known from the EventManager.
 		///This doesn't clear any memory
 		void clearListenerList();
 		///Make the event manager forget about the listener
 		/// \param listener A listener object. If NULL (default), it will remove every listener form the manager (see clearListenerList())
-		void removeListener(std::shared_ptr<AnnEventListener> listener = nullptr);
+		void removeListener(AnnEventListenerPtr listener = nullptr);
 		//---------------------------- listener management
 
 		//---------------------------- timer management
@@ -91,14 +91,14 @@ namespace Annwvyn
 		///List of pointer to the listeners.
 		///The use of weak pointers permit to keep access to the listeners without having to own them.
 		///This permit to use any classes of the engine (like levels) to be themselves event listener.
-		std::vector<std::weak_ptr<AnnEventListener>> listeners;
+		std::vector<AnnEventListenerWeakPtr> listeners;
 
 		friend class AnnEngine;
 		friend class AnnPhysicsEngine;
 		friend class AnnUserSpaceEventLauncher;
 
 		///Send the given event to the listeners
-		void userSpaceDispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* sender);
+		void userSpaceDispatchEvent(AnnUserSpaceEventPtr e, AnnUserSpaceEventLauncher* sender);
 		///Engine call for refreshing the event system
 		void update() override;
 		///Capture the event from OIS
@@ -180,7 +180,7 @@ namespace Annwvyn
 		///Default event listener
 		std::shared_ptr<AnnDefaultEventListener> defaultEventListener;
 		///Using a shared ptr to keep ownership of the event object until the event is dealt with. Also, polymorphism.
-		std::vector<std::pair<std::shared_ptr<AnnUserSpaceEvent>, AnnUserSpaceEventLauncher*>> userSpaceEventBuffer;
+		std::vector<std::pair<AnnUserSpaceEventPtr, AnnUserSpaceEventLauncher*>> userSpaceEventBuffer;
 		///ID of an eventual Xbox controller
 		StickAxisId xboxID;
 
@@ -189,6 +189,8 @@ namespace Annwvyn
 		///True if keyboard event should be ignored (keyboard used for "text input")
 		bool keyboardIgnore;
 	};
+
+	using AnnEventManagerPtr = std::shared_ptr<AnnEventManager>;
 }
 
 #endif //ANNEVENTMANAGER

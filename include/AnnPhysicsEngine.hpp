@@ -18,7 +18,12 @@
 //btOgre
 #include <BtOgre.hpp>
 
-//AnnEngine
+namespace Annwvyn
+{
+	class AnnPhysicsEngine;
+	using AnnPhysicsEnginePtr = std::shared_ptr<AnnPhysicsEngine>;
+}
+
 #include "AnnEngine.hpp"
 
 namespace Annwvyn
@@ -29,7 +34,7 @@ namespace Annwvyn
 	public:
 
 		///Create the physics engine
-		AnnPhysicsEngine(Ogre::SceneNode* rootNode, std::shared_ptr<AnnPlayer> player);
+		AnnPhysicsEngine(Ogre::SceneNode* rootNode, AnnPlayerBodyPtr player);
 
 		///Destroy the physics engine
 		~AnnPhysicsEngine();
@@ -111,7 +116,7 @@ namespace Annwvyn
 		BtOgre::RigidBodyState* playerRigidBodyState;
 
 		///Shared pointer to the player
-		std::shared_ptr<AnnPlayer> playerObject;
+		AnnPlayerBodyPtr playerObject;
 
 		///Default value for gravity. Should be initialized to (0, -9.82f, 0) unless something is wrong with this planet.
 		AnnVect3 defaultGravity;

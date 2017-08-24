@@ -29,4 +29,6 @@ namespace Annwvyn
 		///mt engine
 		std::mt19937_64 mt;
 	};
+
+	using AnnStringUtilityPtr = std::shared_ptr<AnnStringUility>;
 }

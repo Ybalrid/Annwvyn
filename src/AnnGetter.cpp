@@ -1,23 +1,23 @@
 #include "stdafx.h"
 #include "AnnGetter.hpp"
 
-using namespace std;
+using std::shared_ptr;
 
 namespace Annwvyn
 {
 	AnnEngine* AnnGetEngine() { return AnnEngine::Instance(); }
 
-	shared_ptr<AnnAudioEngine> AnnGetAudioEngine() { return AnnGetEngine()->getAudioEngine(); }
-	shared_ptr<AnnPhysicsEngine> AnnGetPhysicsEngine() { return AnnGetEngine()->getPhysicsEngine(); }
-	shared_ptr<AnnFilesystemManager> AnnGetFileSystemManager() { return AnnGetEngine()->getFileSystemManager(); }
-	shared_ptr<AnnLevelManager> AnnGetLevelManager() { return AnnGetEngine()->getLevelManager(); }
-	shared_ptr<AnnEventManager> AnnGetEventManager() { return AnnGetEngine()->getEventManager(); }
-	shared_ptr<AnnPlayer> AnnGetPlayer() { return AnnGetEngine()->getPlayer(); };
-	shared_ptr<AnnResourceManager> AnnGetResourceManager() { return AnnGetEngine()->getResourceManager(); }
-	shared_ptr<AnnSceneryManager> AnnGetSceneryManager() { return AnnGetEngine()->getSceneryManager(); }
-	shared_ptr<AnnOgreVRRenderer> AnnGetVRRenderer() { return AnnGetEngine()->getVRRenderer(); }
-	shared_ptr<AnnScriptManager> AnnGetScriptManager() { return AnnGetEngine()->getScriptManager(); }
-	shared_ptr<AnnGameObjectManager> AnnGetGameObjectManager() { return AnnGetEngine()->getGameObjectManager(); }
-	shared_ptr<AnnConsole> AnnGetOnScreenConsole() { return AnnGetEngine()->getOnScreenConsole(); }
-	shared_ptr<AnnStringUility> AnnGetStringUtility() { return AnnGetEngine()->getStringUtility(); }
+	AnnAudioEnginePtr AnnGetAudioEngine() { return AnnGetEngine()->getAudioEngine(); }
+	AnnPhysicsEnginePtr AnnGetPhysicsEngine() { return AnnGetEngine()->getPhysicsEngine(); }
+	AnnFilesystemManagerPtr AnnGetFileSystemManager() { return AnnGetEngine()->getFileSystemManager(); }
+	AnnLevelManagerPtr AnnGetLevelManager() { return AnnGetEngine()->getLevelManager(); }
+	AnnEventManagerPtr AnnGetEventManager() { return AnnGetEngine()->getEventManager(); }
+	AnnPlayerBodyPtr AnnGetPlayer() { return AnnGetEngine()->getPlayer(); };
+	AnnResourceManagerPtr AnnGetResourceManager() { return AnnGetEngine()->getResourceManager(); }
+	AnnSceneryManagerPtr AnnGetSceneryManager() { return AnnGetEngine()->getSceneryManager(); }
+	AnnOgreVRRendererPtr AnnGetVRRenderer() { return AnnGetEngine()->getVRRenderer(); }
+	AnnScriptManagerPtr AnnGetScriptManager() { return AnnGetEngine()->getScriptManager(); }
+	AnnGameObjectManagerPtr AnnGetGameObjectManager() { return AnnGetEngine()->getGameObjectManager(); }
+	AnnConsolePtr AnnGetOnScreenConsole() { return AnnGetEngine()->getOnScreenConsole(); }
+	AnnStringUtilityPtr AnnGetStringUtility() { return AnnGetEngine()->getStringUtility(); }
 }

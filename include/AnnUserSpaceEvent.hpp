@@ -32,6 +32,8 @@ namespace Annwvyn
 		const AnnUserSpaceEventTypeHash eventTypeHash;
 	};
 
+	using AnnUserSpaceEventPtr = std::shared_ptr<AnnUserSpaceEvent>;
+
 	///Class that can send a user space event to the event manager
 	class DLL AnnUserSpaceEventLauncher
 	{
@@ -44,6 +46,6 @@ namespace Annwvyn
 
 	protected:
 		///Dispatch an event via the event manager for you
-		virtual void dispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e);
+		virtual void dispatchEvent(AnnUserSpaceEventPtr e);
 	};
 }

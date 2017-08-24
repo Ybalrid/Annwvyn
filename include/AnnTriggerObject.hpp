@@ -9,7 +9,7 @@
 
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
-#include "AnnPlayer.hpp"
+#include "AnnPlayerBody.hpp"
 #include "AnnAbstractMovable.hpp"
 
 namespace Annwvyn

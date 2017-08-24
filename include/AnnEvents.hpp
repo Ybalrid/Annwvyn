@@ -3,7 +3,7 @@
 #include "systemMacro.h"
 #include "AnnUserSpaceEvent.hpp"
 #include "AnnKeyCode.h"
-#include "AnnPlayer.hpp"
+#include "AnnPlayerBody.hpp"
 
 namespace Annwvyn
 {
@@ -409,9 +409,12 @@ namespace Annwvyn
 		///return a shared_ptr to this listener
 		std::shared_ptr<AnnEventListener> getSharedListener();
 	protected:
-		///Pointer to the player. Set by the constructor, provide easy access to the AnnPlayer
-		AnnPlayer* player;
+		///Pointer to the player. Set by the constructor, provide easy access to the AnnPlayerBody
+		AnnPlayerBody* player;
 	};
+
+	using AnnEventListenerPtr = std::shared_ptr<AnnEventListener>;
+	using AnnEventListenerWeakPtr = std::weak_ptr<AnnEventListener>;
 
 	///Internal utility class that represent a timer
 	class DLL AnnTimer

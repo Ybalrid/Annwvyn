@@ -152,7 +152,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	renderer->initOgreRoot("Annwvyn.log");
 
-	player = std::make_shared< AnnPlayer>();
+	player = std::make_shared< AnnPlayerBody>();
 	renderer->initVrHmd();
 	renderer->initPipeline();
 	SceneManager = renderer->getSceneManager();
@@ -242,17 +242,17 @@ AnnEngine::~AnnEngine()
 //All theses getter are for encapsulation purpose. Calling them directly would
 //make very long lines of code. You can, but you should use the functions in
 //AnnGetter.hpp
-std::shared_ptr<AnnEventManager> AnnEngine::getEventManager() const
+AnnEventManagerPtr AnnEngine::getEventManager() const
 {
 	return eventManager;
 }
 
-std::shared_ptr<AnnResourceManager> AnnEngine::getResourceManager() const
+AnnResourceManagerPtr AnnEngine::getResourceManager() const
 {
 	return resourceManager;
 }
 
-std::shared_ptr<AnnGameObjectManager> AnnEngine::getGameObjectManager() const
+AnnGameObjectManagerPtr AnnEngine::getGameObjectManager() const
 {
 	return gameObjectManager;
 }
@@ -262,37 +262,37 @@ std::shared_ptr<AnnSceneryManager> AnnEngine::getSceneryManager() const
 	return sceneryManager;
 }
 
-std::shared_ptr<AnnScriptManager> AnnEngine::getScriptManager() const
+AnnScriptManagerPtr AnnEngine::getScriptManager() const
 {
 	return scriptManager;
 }
 
-std::shared_ptr<AnnOgreVRRenderer> AnnEngine::getVRRenderer() const
+AnnOgreVRRendererPtr AnnEngine::getVRRenderer() const
 {
 	return renderer;
 }
 
-std::shared_ptr<AnnLevelManager> AnnEngine::getLevelManager() const
+AnnLevelManagerPtr AnnEngine::getLevelManager() const
 {
 	return levelManager;
 }
 
-std::shared_ptr<AnnPlayer> AnnEngine::getPlayer() const
+AnnPlayerBodyPtr AnnEngine::getPlayer() const
 {
 	return player;
 }
 
-std::shared_ptr<AnnFilesystemManager> AnnEngine::getFileSystemManager() const
+AnnFilesystemManagerPtr AnnEngine::getFileSystemManager() const
 {
 	return filesystemManager;
 }
 
-std::shared_ptr<AnnAudioEngine> AnnEngine::getAudioEngine() const
+AnnAudioEnginePtr AnnEngine::getAudioEngine() const
 {
 	return audioEngine;
 }
 
-std::shared_ptr<AnnPhysicsEngine> AnnEngine::getPhysicsEngine() const
+AnnPhysicsEnginePtr AnnEngine::getPhysicsEngine() const
 {
 	return physicsEngine;
 }
@@ -505,12 +505,12 @@ void AnnEngine::initPlayerRoomscalePhysics() const
 	physicsEngine->initPlayerRoomscalePhysics(vrRendererPovGameplayPlacement);
 }
 
-std::shared_ptr<AnnConsole> AnnEngine::getOnScreenConsole() const
+AnnConsolePtr AnnEngine::getOnScreenConsole() const
 {
 	return onScreenConsole;
 }
 
-std::shared_ptr<AnnStringUility> AnnEngine::getStringUtility() const
+AnnStringUtilityPtr AnnEngine::getStringUtility() const
 {
 	return stringUtility;
 }

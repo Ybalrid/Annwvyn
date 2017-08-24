@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "AnnPhysicsEngine.hpp"
+#include "AnnPlayerBody.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+
 using namespace Annwvyn;
+using std::make_unique;
 
 AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
-	std::shared_ptr<AnnPlayer> player) : AnnSubSystem("PhysicsEngie"),
+	AnnPlayerBodyPtr player) : AnnSubSystem("PhysicsEngie"),
 	Broadphase(nullptr),
 	CollisionConfiguration(nullptr),
 	Solver(nullptr),
@@ -16,11 +19,11 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	defaultGravity(0, -9.81f, 0)
 {
 	//Initialize the Bullet world
-	Broadphase = std::make_unique<btDbvtBroadphase>();
-	CollisionConfiguration = std::make_unique<btDefaultCollisionConfiguration>();
-	Dispatcher = std::make_unique<btCollisionDispatcher>(CollisionConfiguration.get());
-	Solver = std::make_unique<btSequentialImpulseConstraintSolver>();
-	DynamicsWorld = std::make_unique<btDiscreteDynamicsWorld>(Dispatcher.get(), Broadphase.get(), Solver.get(), CollisionConfiguration.get());
+	Broadphase = make_unique<btDbvtBroadphase>();
+	CollisionConfiguration = make_unique<btDefaultCollisionConfiguration>();
+	Dispatcher = make_unique<btCollisionDispatcher>(CollisionConfiguration.get());
+	Solver = make_unique<btSequentialImpulseConstraintSolver>();
+	DynamicsWorld = make_unique<btDiscreteDynamicsWorld>(Dispatcher.get(), Broadphase.get(), Solver.get(), CollisionConfiguration.get());
 	AnnDebug() << "btDiscreteDynamicsWorld instantiated";
 
 	//Set gravity vector
@@ -28,7 +31,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	AnnDebug() << "Gravity vector " << defaultGravity;
 
 	debugPhysics = false;//by default
-	debugDrawer = std::make_unique< BtOgre::DebugDrawer>(rootNode, DynamicsWorld.get(), AnnGetEngine()->getSceneManager());
+	debugDrawer = make_unique<BtOgre::DebugDrawer>(rootNode, DynamicsWorld.get(), AnnGetEngine()->getSceneManager());
 	DynamicsWorld->setDebugDrawer(debugDrawer.get());
 	debugDrawer->setUnlitDiffuseMultiplier(16.0f);
 }

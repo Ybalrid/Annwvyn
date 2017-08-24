@@ -204,4 +204,6 @@ def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
 		///Hook the event listener's "methdod" to the script ones, if possible...
 		void tryAndGetEventHooks();
 	};
+
+	using AnnScriptManagerPtr = std::shared_ptr<AnnScriptManager>;
 }

@@ -370,5 +370,7 @@ namespace Annwvyn
 		///left, right enums
 		enum side : uint8_t { left = 0x0, right = 0x1 };
 	};
+
+	using AnnOgreVRRendererPtr = std::shared_ptr<AnnOgreVRRenderer>;
 }
 #endif

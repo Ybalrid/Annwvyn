@@ -83,5 +83,7 @@ namespace Annwvyn
 		///Name of the level
 		std::string name;
 	};
+
+	using AnnLevelPtr = std::shared_ptr<AnnLevel>;
 }
 #endif

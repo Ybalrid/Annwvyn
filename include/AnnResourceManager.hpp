@@ -47,6 +47,8 @@ namespace Annwvyn
 		///Pointer to the resource group manager. We cache the address to prevent calling a static method all the time
 		Ogre::ResourceGroupManager* ResourceGroupManager;
 	};
+
+	using AnnResourceManagerPtr = std::shared_ptr<AnnResourceManager>;
 }
 
 #endif
