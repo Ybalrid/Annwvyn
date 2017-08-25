@@ -9,7 +9,7 @@ namespace Annwvyn
 	class AnnEngine;
 
 	///Parent class of all Annwvyn SubSystem
-	class DLL AnnSubSystem
+	class AnnDllExport AnnSubSystem
 	{
 	public:
 		///Construct a SubSystem

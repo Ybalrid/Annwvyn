@@ -9,7 +9,7 @@
 namespace Annwvyn
 {
 	///Base class of an event created by user space code
-	class DLL AnnUserSpaceEvent
+	class AnnDllExport AnnUserSpaceEvent
 	{
 	public:
 		///Create the event
@@ -35,7 +35,7 @@ namespace Annwvyn
 	using AnnUserSpaceEventPtr = std::shared_ptr<AnnUserSpaceEvent>;
 
 	///Class that can send a user space event to the event manager
-	class DLL AnnUserSpaceEventLauncher
+	class AnnDllExport AnnUserSpaceEventLauncher
 	{
 	public:
 		///Destruct the event launcher

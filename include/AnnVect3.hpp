@@ -13,7 +13,7 @@
 namespace Annwvyn
 {
 	///A 3D Vector
-	class DLL AnnVect3 : public Ogre::Vector3
+	class AnnDllExport AnnVect3 : public Ogre::Vector3
 	{
 	public:
 		//Call of Ogre::Vector3 constructors

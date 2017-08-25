@@ -24,7 +24,7 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 namespace Annwvyn
 {
 	///Base class for all Levels. Is abstract
-	class DLL AnnLevel
+	class AnnDllExport AnnLevel
 	{
 	public:
 

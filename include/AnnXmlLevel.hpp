@@ -15,7 +15,7 @@
 namespace Annwvyn
 {
 	///A level loaded from an XML file
-	class DLL AnnXmlLevel : public AnnLevel
+	class AnnDllExport AnnXmlLevel : public AnnLevel
 	{
 	public:
 		static phyShapeType getShapeTypeFromString(std::string str);

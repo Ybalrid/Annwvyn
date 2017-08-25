@@ -31,7 +31,7 @@ namespace Annwvyn
 	class AnnSaveFileData;
 
 	///Handle opening, writing and closing files
-	class DLL AnnFileWriter
+	class AnnDllExport AnnFileWriter
 	{
 	public:
 		///Construct file writer object
@@ -43,7 +43,7 @@ namespace Annwvyn
 	using AnnFileWriterPtr = std::shared_ptr<AnnFileWriter>;
 
 	///Handle opening, reading and closing files
-	class DLL AnnFileReader
+	class AnnDllExport AnnFileReader
 	{
 	public:
 		///Construct file reader object
@@ -58,7 +58,7 @@ namespace Annwvyn
 	using AnnSaveFileDataPtr = std::shared_ptr<AnnSaveFileData>;
 
 	///Manage where and how files will be wrote and read from the OS file-system
-	class DLL AnnFilesystemManager : public AnnSubSystem
+	class AnnDllExport AnnFilesystemManager : public AnnSubSystem
 	{
 	public:
 
@@ -119,7 +119,7 @@ namespace Annwvyn
 	using AnnFilesystemManagerPtr = std::shared_ptr<AnnFilesystemManager>;
 
 	///Class that holds data to read or write
-	class DLL AnnSaveFileData
+	class AnnDllExport AnnSaveFileData
 	{
 	public:
 		///Private constructor of SaveFileData class.
@@ -170,7 +170,7 @@ namespace Annwvyn
 	};
 
 	///Interface class to switch from text to useful data.
-	class DLL AnnSaveDataInterpretor
+	class AnnDllExport AnnSaveDataInterpretor
 	{
 		//Inherit from this to use your saved data
 

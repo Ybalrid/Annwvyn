@@ -21,7 +21,7 @@ namespace Annwvyn
 		PLAYER_COLLISION
 	};
 	///An input event
-	class DLL AnnEvent
+	class AnnDllExport AnnEvent
 	{
 	public:
 		///Event constructor
@@ -34,7 +34,7 @@ namespace Annwvyn
 	};
 
 	///A keyboard event
-	class DLL AnnKeyEvent : public AnnEvent
+	class AnnDllExport AnnKeyEvent : public AnnEvent
 	{
 		///Keyboard event constructor
 		AnnKeyEvent();
@@ -75,7 +75,7 @@ namespace Annwvyn
 	enum MouseButtonId { Left, Right, Middle, Button3, Button4, Button5, Button6, Button7, nbButtons, invalidButton };
 
 	///A mouse axis information object
-	class DLL AnnMouseAxis
+	class AnnDllExport AnnMouseAxis
 	{
 	public:
 		///Construct a mouse axis information object
@@ -110,7 +110,7 @@ namespace Annwvyn
 	};
 
 	///A mouse event information object
-	class DLL AnnMouseEvent : public AnnEvent
+	class AnnDllExport AnnMouseEvent : public AnnEvent
 	{
 	public:
 		AnnMouseEvent();
@@ -148,7 +148,7 @@ namespace Annwvyn
 	static constexpr float INVALID = 42.0f;
 
 	///A joystick axis
-	class DLL AnnStickAxis
+	class AnnDllExport AnnStickAxis
 	{
 	public:
 		///This constructor will produce an invalid stick axis object
@@ -180,7 +180,7 @@ namespace Annwvyn
 	};
 
 	///Represent a pad's POV controller
-	class DLL AnnStickPov
+	class AnnDllExport AnnStickPov
 	{
 	public:
 		///Construct a Pov with no direction pressed
@@ -225,7 +225,7 @@ namespace Annwvyn
 	};
 
 	///A joystick event
-	class DLL AnnStickEvent : public AnnEvent
+	class AnnDllExport AnnStickEvent : public AnnEvent
 	{
 	public:
 		///Construct a stick event object
@@ -284,7 +284,7 @@ namespace Annwvyn
 	class AnnHandController;
 
 	///A hand controller event
-	class DLL AnnHandControllerEvent : public AnnEvent
+	class AnnDllExport AnnHandControllerEvent : public AnnEvent
 	{
 	public:
 		AnnHandControllerEvent();
@@ -300,7 +300,7 @@ namespace Annwvyn
 	using  timerID = int;
 
 	///A timer timeout event
-	class DLL AnnTimeEvent : public AnnEvent
+	class AnnDllExport AnnTimeEvent : public AnnEvent
 	{
 	public:
 		///Create a timer timeout event
@@ -320,7 +320,7 @@ namespace Annwvyn
 	class AnnGameObject;
 
 	///Collision event between 2 game objects
-	class DLL AnnCollisionEvent : public AnnEvent
+	class AnnDllExport AnnCollisionEvent : public AnnEvent
 	{
 	public:
 		///Event constructor
@@ -339,7 +339,7 @@ namespace Annwvyn
 	};
 
 	///Collision between the player and another object
-	class DLL AnnPlayerCollisionEvent : public AnnEvent
+	class AnnDllExport AnnPlayerCollisionEvent : public AnnEvent
 	{
 	public:
 		///Constructor
@@ -354,7 +354,7 @@ namespace Annwvyn
 	};
 
 	///Trigger in/out event
-	class DLL AnnTriggerEvent : public AnnEvent
+	class AnnDllExport AnnTriggerEvent : public AnnEvent
 	{
 	public:
 		///Construct a trigger in/out event
@@ -372,7 +372,7 @@ namespace Annwvyn
 	};
 
 	///Base class for all event listener
-	class DLL AnnEventListener : public std::enable_shared_from_this<AnnEventListener>
+	class AnnDllExport AnnEventListener : public std::enable_shared_from_this<AnnEventListener>
 	{
 		//Base Event listener class. Technically not abstract since it provides a default implementation for all
 		//virtual members. But theses definitions are pointless because they actually don't do anything.
@@ -417,7 +417,7 @@ namespace Annwvyn
 	using AnnEventListenerWeakPtr = std::weak_ptr<AnnEventListener>;
 
 	///Internal utility class that represent a timer
-	class DLL AnnTimer
+	class AnnDllExport AnnTimer
 	{
 	public:
 		timerID getID() const;
@@ -434,7 +434,7 @@ namespace Annwvyn
 	};
 
 	///Internal utility class that store joystick information
-	class DLL JoystickBuffer
+	class AnnDllExport JoystickBuffer
 	{
 	private:
 		friend class AnnEventManager;
@@ -462,7 +462,7 @@ namespace Annwvyn
 	};
 
 	///This class permit to get text input from the keyboard
-	class DLL AnnTextInputer : public OIS::KeyListener
+	class AnnDllExport AnnTextInputer : public OIS::KeyListener
 	{
 	public:
 		///Object for text input

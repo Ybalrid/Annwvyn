@@ -14,7 +14,7 @@
 namespace Annwvyn
 {
 	///Class that represent a 4 channel color value
-	class DLL AnnColor
+	class AnnDllExport AnnColor
 	{
 	public:
 		///Create a color object. Each channel take a float between 0 and 1
@@ -58,7 +58,7 @@ namespace Annwvyn
 		void setAlpha(float alpha);
 
 		///Prints color object description to output stream
-		DLL friend std::ostream& operator<<(std::ostream& out, const AnnColor& color)
+		AnnDllExport friend std::ostream& operator<<(std::ostream& out, const AnnColor& color)
 		{
 			out << "AnnColor("
 				<< color.r << ", "

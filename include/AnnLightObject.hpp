@@ -19,7 +19,7 @@ namespace Annwvyn
 	class AnnEngine;
 
 	///Light Object : Represent a light source
-	class DLL AnnLightObject : public AnnAbstractTranslatable
+	class AnnDllExport AnnLightObject : public AnnAbstractTranslatable
 	{
 	public:
 		AnnLightObject(Ogre::Light* light);

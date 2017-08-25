@@ -11,23 +11,21 @@
  * parsed by pre-compiler on each file.
  */
 
- //DLL management for visual studio compiler.
-#undef DLL
-
+ //AnnDllExport management for visual studio compiler.
 #ifdef _WIN32
 #ifdef DLLDIR_EX //Defined in Annwvyn MSVC project file only
-	///To construct a DLL, The macro __declspec(dllexport) have to be called in front of the exported symbol
-#define DLL  __declspec(dllexport)   // export DLL information
+	///To construct a AnnDllExport, The macro __declspec(dllexport) have to be called in front of the exported symbol
+#define AnnDllExport  __declspec(dllexport)   // export AnnDllExport information
 #else
-	///Macro to reference symbols from a DLL the macro __declspec(dllimport) have to be called the same way
-#define DLL  __declspec(dllimport)   // import DLL information
+	///Macro to reference symbols from a AnnDllExport the macro __declspec(dllimport) have to be called the same way
+#define AnnDllExport  __declspec(dllimport)   // import AnnDllExport information
 #endif
 #else
-#define DLL
+#define AnnDllExport
 #endif
 
-//DO NOT FORGET TO CALL THE DLL MACRO AT ANY CLASS AND GLOBAL FUNCTION DECLARATION!
-//e.g. class DLL SomeClass {};
+//DO NOT FORGET TO CALL THE AnnDllExport MACRO AT ANY CLASS AND GLOBAL FUNCTION DECLARATION!
+//e.g. class AnnDllExport SomeClass {};
 
 //Thanks to http://stackoverflow.com/a/21265197 for this convenient macro
 #ifdef __GNUC__

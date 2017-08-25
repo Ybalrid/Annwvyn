@@ -29,7 +29,7 @@ namespace Annwvyn
 namespace Annwvyn
 {
 	///Class that abstract the physics engine initialization and collision information queries for Annwvyn.
-	class DLL AnnPhysicsEngine : public AnnSubSystem
+	class AnnDllExport AnnPhysicsEngine : public AnnSubSystem
 	{
 	public:
 

@@ -6,32 +6,32 @@
 namespace Annwvyn
 {
 	///Get the current instance of AnnEngine
-	DLL AnnEngine* AnnGetEngine();
+	AnnDllExport AnnEngine* AnnGetEngine();
 
 	///Get the audio engine
-	DLL AnnAudioEnginePtr AnnGetAudioEngine();
+	AnnDllExport AnnAudioEnginePtr AnnGetAudioEngine();
 	///Get the physics engine
-	DLL AnnPhysicsEnginePtr AnnGetPhysicsEngine();
+	AnnDllExport AnnPhysicsEnginePtr AnnGetPhysicsEngine();
 	///Get the file-system manager
-	DLL AnnFilesystemManagerPtr AnnGetFileSystemManager();
+	AnnDllExport AnnFilesystemManagerPtr AnnGetFileSystemManager();
 	///Get the level manager
-	DLL AnnLevelManagerPtr AnnGetLevelManager();
+	AnnDllExport AnnLevelManagerPtr AnnGetLevelManager();
 	///Get the event manager
-	DLL AnnEventManagerPtr AnnGetEventManager();
+	AnnDllExport AnnEventManagerPtr AnnGetEventManager();
 	///Get the player object
-	DLL AnnPlayerBodyPtr  AnnGetPlayer();
+	AnnDllExport AnnPlayerBodyPtr  AnnGetPlayer();
 	///Get the resource manager
-	DLL AnnResourceManagerPtr AnnGetResourceManager();
+	AnnDllExport AnnResourceManagerPtr AnnGetResourceManager();
 	///Get the scenery manager
-	DLL AnnSceneryManagerPtr AnnGetSceneryManager();
+	AnnDllExport AnnSceneryManagerPtr AnnGetSceneryManager();
 	///Get the VR renderer
-	DLL AnnOgreVRRendererPtr AnnGetVRRenderer();
+	AnnDllExport AnnOgreVRRendererPtr AnnGetVRRenderer();
 	///Get the script manager
-	DLL AnnScriptManagerPtr AnnGetScriptManager();
+	AnnDllExport AnnScriptManagerPtr AnnGetScriptManager();
 	///Get the game-object manager
-	DLL AnnGameObjectManagerPtr AnnGetGameObjectManager();
+	AnnDllExport AnnGameObjectManagerPtr AnnGetGameObjectManager();
 	///Get the on screen console
-	DLL AnnConsolePtr AnnGetOnScreenConsole();
+	AnnDllExport AnnConsolePtr AnnGetOnScreenConsole();
 	///Get the string utility object
-	DLL AnnStringUtilityPtr AnnGetStringUtility();
+	AnnDllExport AnnStringUtilityPtr AnnGetStringUtility();
 }

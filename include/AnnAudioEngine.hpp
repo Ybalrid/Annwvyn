@@ -37,7 +37,7 @@ namespace Annwvyn
 	class AnnAudioEngine;
 
 	///Represent an audio source in the engine
-	class DLL AnnAudioSource
+	class AnnDllExport AnnAudioSource
 	{
 	public:
 		///Private constructor. You have to call AnnAudioEngine::createAudioSource() to get an AnnAudioSource object
@@ -82,7 +82,7 @@ namespace Annwvyn
 	using AnnAudioSourcePtr = std::shared_ptr<AnnAudioSource>;
 
 	///Class that handle the OpenAL audio.
-	class DLL AnnAudioEngine : public AnnSubSystem
+	class AnnDllExport AnnAudioEngine : public AnnSubSystem
 	{
 	public:
 		///class constructor

@@ -46,7 +46,7 @@ namespace Annwvyn
 	};
 
 	///Abstract class for VR Renderers. Serve as interface between Annwvyn, and "OgreHMDRender" object.
-	class DLL AnnOgreVRRenderer
+	class AnnDllExport AnnOgreVRRenderer
 	{
 	public:
 		using combinedTextureSizeArray = std::array<std::array<unsigned int, 2>, 2>;

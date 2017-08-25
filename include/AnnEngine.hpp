@@ -63,7 +63,7 @@ namespace Annwvyn
 	class AnnPhysicsEngine;
 
 	///Utility class for AnnEngine
-	class DLL AnnEngineSingletonReseter
+	class AnnDllExport AnnEngineSingletonReseter
 	{
 	private:
 		AnnEngineSingletonReseter(AnnEngine* address);
@@ -73,7 +73,7 @@ namespace Annwvyn
 	};
 
 	///Main engine class. Creating an instance of this class make the engine start.
-	class DLL AnnEngine
+	class AnnDllExport AnnEngine
 	{
 		//It's more or less a singleton, and will be the only one in the engine
 		//architecture. You can instantiate it like a normal class and bypass the

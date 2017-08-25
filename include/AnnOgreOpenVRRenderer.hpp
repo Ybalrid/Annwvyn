@@ -19,7 +19,7 @@
 namespace Annwvyn
 {
 	///Specialization of AnnHandController for an OpenVR Motion Controller
-	class DLL AnnOpenVRMotionController : public AnnHandController
+	class AnnDllExport AnnOpenVRMotionController : public AnnHandController
 	{
 	public:
 		///Needs a pointer to the currently initialized IVRSystem, and the raw TrackedDeviceIndex of the controller
@@ -43,7 +43,7 @@ namespace Annwvyn
 	};
 
 	///Renderer for OpenVR
-	class DLL AnnOgreOpenVRRenderer : public AnnOgreVRRenderer
+	class AnnDllExport AnnOgreOpenVRRenderer : public AnnOgreVRRenderer
 	{
 		///Marker for left and right : "Ogre Open VR Eye Type"
 		enum oovrEyeType

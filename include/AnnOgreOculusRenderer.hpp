@@ -39,7 +39,7 @@
 namespace Annwvyn
 {
 	///Specialization fo the HandController class for Oculus Touch
-	class DLL AnnOculusTouchController : public AnnHandController
+	class AnnDllExport AnnOculusTouchController : public AnnHandController
 	{
 	public:
 		///Need to get the oculus session of the controller
@@ -60,7 +60,7 @@ namespace Annwvyn
 	};
 
 	///Do the initialization and graphical rendering for the Oculus Rift using Ogre
-	class DLL AnnOgreOculusRenderer : public AnnOgreVRRenderer
+	class AnnDllExport AnnOgreOculusRenderer : public AnnOgreVRRenderer
 	{
 		///OgreOculusRenderEyeType : prefer to use "left" and "right" instead of 0 and 1
 		enum oorEyeType

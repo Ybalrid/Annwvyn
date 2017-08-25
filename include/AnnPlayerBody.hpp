@@ -25,7 +25,7 @@ namespace Annwvyn
 	enum walkDirection { forward, backward, left, right };
 
 	///class that represent the player. This is the user's "Virtual body" in the world. It's the object that you have to move and turn to explore the space.
-	class DLL AnnPlayerBody
+	class AnnDllExport AnnPlayerBody
 	{
 	public:
 

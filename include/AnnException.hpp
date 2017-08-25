@@ -9,7 +9,7 @@
 namespace Annwvyn
 {
 	///Exception to throw when a physics enabled object will cause object coordinates reset
-	class DLL AnnPhysicsSetupParentError : public std::runtime_error
+	class AnnDllExport AnnPhysicsSetupParentError : public std::runtime_error
 	{
 	public:
 		AnnPhysicsSetupParentError(AnnGameObject* origin);
@@ -28,7 +28,7 @@ namespace Annwvyn
 	};
 
 	///Exception relating physics setup and parent/child objects
-	class DLL AnnPhysicsSetupChildError : public std::runtime_error
+	class AnnDllExport AnnPhysicsSetupChildError : public std::runtime_error
 	{
 	public:
 		AnnPhysicsSetupChildError(AnnGameObject* origin);
@@ -38,7 +38,7 @@ namespace Annwvyn
 	};
 
 	///Exception in hand controller "side" detection
-	class DLL AnnInvalidControllerSide : public std::runtime_error
+	class AnnDllExport AnnInvalidControllerSide : public std::runtime_error
 	{
 	public:
 		AnnInvalidControllerSide();
@@ -46,7 +46,7 @@ namespace Annwvyn
 	};
 
 	///Exception regarding an AnnGameObject that was null when it wasnt
-	class DLL AnnNullGameObjectError : public std::runtime_error
+	class AnnDllExport AnnNullGameObjectError : public std::runtime_error
 	{
 	public:
 		AnnNullGameObjectError();
@@ -54,7 +54,7 @@ namespace Annwvyn
 	};
 
 	///Exception regarding engine utilisation. See message
-	class DLL AnnInitializationError : public std::runtime_error
+	class AnnDllExport AnnInitializationError : public std::runtime_error
 	{
 	public:
 		AnnInitializationError(int errorCode, const std::string& message);

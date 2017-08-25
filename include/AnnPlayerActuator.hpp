@@ -13,7 +13,7 @@ namespace Annwvyn
 	class AnnPlayerBody;
 
 	///Callback class that permit you to define how physics is applied to the player.
-	class DLL AnnPlayerActuator
+	class AnnDllExport AnnPlayerActuator
 	{
 	public:
 		virtual ~AnnPlayerActuator();
@@ -28,7 +28,7 @@ namespace Annwvyn
 	};
 
 	///Class that overload the "actuate" method of the abstract actuator.
-	class DLL AnnDefaultPlayerActuator : public AnnPlayerActuator
+	class AnnDllExport AnnDefaultPlayerActuator : public AnnPlayerActuator
 	{
 	public:
 		///Construct the default player actuator

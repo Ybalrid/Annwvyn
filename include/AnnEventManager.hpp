@@ -40,7 +40,7 @@ namespace Annwvyn
 	//You'll crash the engine if you destroy a listener without removing it from the EventManager (the EM will dereference an non-existing pointer)
 
 	///Event Manager : Object that handle the event system
-	class DLL AnnEventManager : public AnnSubSystem
+	class AnnDllExport AnnEventManager : public AnnSubSystem
 	{
 	public:
 		///Construct the event manager

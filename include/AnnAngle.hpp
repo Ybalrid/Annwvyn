@@ -9,7 +9,7 @@ namespace Annwvyn
 	class AnnRadian;
 
 	///An angle in Degree
-	class DLL AnnDegree : public Ogre::Degree
+	class AnnDllExport AnnDegree : public Ogre::Degree
 	{
 	public:
 		AnnDegree(float angle);
@@ -19,7 +19,7 @@ namespace Annwvyn
 	};
 
 	///An angle in Radian
-	class DLL AnnRadian : public Ogre::Radian
+	class AnnDllExport AnnRadian : public Ogre::Radian
 	{
 	public:
 		AnnRadian(float angle);
@@ -29,7 +29,7 @@ namespace Annwvyn
 	};
 
 	///Angle object factory
-	class DLL AnnAngle
+	class AnnDllExport AnnAngle
 	{
 	public:
 		static AnnDegree degree(float value);

@@ -19,7 +19,7 @@ namespace Annwvyn
 	class AnnPhysicsGameEngine;
 
 	///Shape generator. Just a bunch of static methods. You will need to de-alliocate them by hand.
-	class DLL AnnTriggerObjectShapeGenerator
+	class AnnDllExport AnnTriggerObjectShapeGenerator
 	{
 	public:
 		///Deleted constructor. This class is just a collection of static methods
@@ -33,7 +33,7 @@ namespace Annwvyn
 	};
 
 	///Object for representing a volume that trigger an event
-	class DLL AnnTriggerObject : public AnnAbstractMovable
+	class AnnDllExport AnnTriggerObject : public AnnAbstractMovable
 	{
 	public:
 		///Class constructor

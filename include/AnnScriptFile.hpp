@@ -7,7 +7,7 @@
 namespace Annwvyn
 {
 	///Ogre resource that contains the source code of a loaded .chai file
-	class DLL AnnScriptFile : public Ogre::Resource
+	class AnnDllExport AnnScriptFile : public Ogre::Resource
 	{
 		///Actual code of the file
 		std::string sourceCode;
@@ -54,7 +54,7 @@ namespace Annwvyn
 	using AnnScriptFilePtr = Ogre::SharedPtr<AnnScriptFile>;
 
 	///Chaiscript File Serializer
-	class DLL AnnScriptFileSerializer : public Ogre::Serializer
+	class AnnDllExport AnnScriptFileSerializer : public Ogre::Serializer
 	{
 	public:
 		///Default construct a ChaiscriptResourceSerializer

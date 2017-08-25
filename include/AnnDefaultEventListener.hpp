@@ -7,7 +7,7 @@
 namespace Annwvyn
 {
 	///Default event listener
-	class DLL AnnDefaultEventListener : public AnnEventListener
+	class AnnDllExport AnnDefaultEventListener : public AnnEventListener
 	{
 		//The default event listener that make WASD controls move the player
 		//The mouse turns the player's body

@@ -14,7 +14,7 @@ namespace Annwvyn
 	class AnnGameObject;
 
 	///Object that reprenset a script defining an object "behavior"
-	class DLL AnnBehaviorScript : LISTENER
+	class AnnDllExport AnnBehaviorScript : LISTENER
 	{
 	public:
 		///Invalid script constructor
@@ -103,7 +103,7 @@ namespace Annwvyn
 	};
 
 	///Script Manager, serve as an interface between ChaiScript and the rest of the engine
-	class DLL AnnScriptManager : public AnnSubSystem
+	class AnnDllExport AnnScriptManager : public AnnSubSystem
 	{
 	public:
 

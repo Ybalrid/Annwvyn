@@ -25,7 +25,7 @@
 namespace Annwvyn
 {
 	///In engine - On screen floating console
-	class DLL AnnConsole : public AnnSubSystem
+	class AnnDllExport AnnConsole : public AnnSubSystem
 	{
 	public:
 

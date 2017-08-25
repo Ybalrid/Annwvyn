@@ -10,7 +10,7 @@
 
 namespace Annwvyn
 {
-	class DLL AnnAudioFile : public Ogre::Resource
+	class AnnDllExport AnnAudioFile : public Ogre::Resource
 	{
 		///Where the data is actually stored, as bytes.
 		std::vector<byte> data;

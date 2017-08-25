@@ -12,7 +12,7 @@ namespace Annwvyn
 {
 	class AnnEngine;
 	///User defined subsystem base class
-	class DLL AnnUserSubSystem : public AnnSubSystem, AnnUserSpaceEventLauncher
+	class AnnDllExport AnnUserSubSystem : public AnnSubSystem, AnnUserSpaceEventLauncher
 	{
 	public:
 		///Construct the user subsystem. The systemName is mandatory

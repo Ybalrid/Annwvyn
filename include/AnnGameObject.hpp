@@ -29,10 +29,10 @@
 
 namespace Annwvyn
 {
-	class DLL AnnGameObjectManager;
+	class AnnDllExport AnnGameObjectManager;
 
 	///An object that exist in the game. Graphically and Potentially Physically
-	class DLL AnnGameObject : public AnnAbstractMovable
+	class AnnDllExport AnnGameObject : public AnnAbstractMovable
 	{
 	public:
 

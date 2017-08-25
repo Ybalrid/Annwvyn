@@ -8,7 +8,7 @@
 namespace Annwvyn
 {
 	///Dummy VR renderer, just render the scene to a window like a non vr game. Doesn't need special hardware or runtime to run
-	class DLL AnnOgreNoVRRenderer : public AnnOgreVRRenderer
+	class AnnDllExport AnnOgreNoVRRenderer : public AnnOgreVRRenderer
 	{
 	public:
 

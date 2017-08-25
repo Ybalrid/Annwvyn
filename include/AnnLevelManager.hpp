@@ -18,7 +18,7 @@ namespace Annwvyn
 	using level_id = size_t;
 
 	///Class that take care of switching between different levels dynamically and clearing the memory afterwards
-	class DLL AnnLevelManager : public AnnSubSystem
+	class AnnDllExport AnnLevelManager : public AnnSubSystem
 	{
 	public:
 		///Construct LevelManager

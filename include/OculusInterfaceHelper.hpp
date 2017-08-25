@@ -18,7 +18,7 @@
 #include "AnnErrorCode.hpp"
 
 ///Communicate with the Rift runtime (initialize OVR and get the info)
-class DLL OculusInterfaceHelper
+class AnnDllExport OculusInterfaceHelper
 {
 public:
 

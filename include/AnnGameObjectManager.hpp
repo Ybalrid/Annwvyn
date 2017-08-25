@@ -19,7 +19,7 @@ namespace Annwvyn
 	class AnnEngine;
 
 	///Game object manager. Create, destroy and keep track of objects, lights and other movable stuff
-	class DLL AnnGameObjectManager : public AnnSubSystem
+	class AnnDllExport AnnGameObjectManager : public AnnSubSystem
 	{
 	public:
 		AnnGameObjectManager();

@@ -18,7 +18,7 @@
 namespace Annwvyn
 {
 	///Represent a Quaternion
-	class DLL AnnQuaternion : public Ogre::Quaternion
+	class AnnDllExport AnnQuaternion : public Ogre::Quaternion
 	{
 	public:
 		//Call of Ogre::Quaternion constructor

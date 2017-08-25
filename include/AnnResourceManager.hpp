@@ -8,7 +8,7 @@
 namespace Annwvyn
 {
 	///Annwvyn interface class with Ogre's ResourceGroupManager.
-	class DLL AnnResourceManager : public AnnSubSystem
+	class AnnDllExport AnnResourceManager : public AnnSubSystem
 	{
 	public:
 		AnnResourceManager();

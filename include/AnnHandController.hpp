@@ -18,7 +18,7 @@ namespace Annwvyn
 	using AnnHandControllerID = size_t;
 
 	///Represent the axis of an hand controller
-	class DLL AnnHandControllerAxis
+	class AnnDllExport AnnHandControllerAxis
 	{
 	public:
 
@@ -55,7 +55,7 @@ namespace Annwvyn
 	};
 
 	///Represent an hand controller tracked by the VR system and that the user is actively using. Contains position, orientation, buttons and analog inputs
-	class DLL AnnHandController
+	class AnnDllExport AnnHandController
 	{
 	public:
 
