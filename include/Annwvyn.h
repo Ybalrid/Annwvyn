@@ -171,7 +171,7 @@ namespace Annwvyn
 			<< now.tm_min << '-'
 			<< now.tm_sec << ".log";
 
-		auto src{ std::ifstream("Annwvyn.log", std::ios::binary) };
+		auto src{ std::ifstream(AnnEngine::logFileName, std::ios::binary) };
 		auto dst{ std::ofstream(filename.str(), std::ios::binary) };
 
 		dst << "Annwvyn DEVEL LOG\n" << std::endl;
