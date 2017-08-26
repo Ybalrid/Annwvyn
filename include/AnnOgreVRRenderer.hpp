@@ -5,6 +5,7 @@
 
 #include <string>
 #include <array>
+#include <algorithm>
 
 #include <Ogre.h>
 #include <OgreSceneNode.h>
@@ -23,13 +24,12 @@
 #include <Hlms/Unlit/OgreHlmsUnlit.h>
 #include <OgreHlmsManager.h>
 #include <OgreHlms.h>
-#include "AnnErrorCode.hpp"
-#include "AnnHandController.hpp"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <algorithm>
+#include "AnnErrorCode.hpp"
+#include "AnnHandController.hpp"
 
 namespace Annwvyn
 {

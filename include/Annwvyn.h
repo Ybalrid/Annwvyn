@@ -121,12 +121,11 @@ namespace Annwvyn
 			return "OgreDefaultRender";
 
 		//Args should start by a '-'
-		const auto argChar = '-';
-		if (cmd[0] != argChar)
+		if (cmd[0] != '-')
 			return "arg_error";
 
 		//Convert to C++ string object
-		std::string strCmd{ cmd };
+		const std::string strCmd{ cmd };
 
 		//User want to use a rift
 		if (strCmd == "-rift")
