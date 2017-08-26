@@ -128,7 +128,7 @@ namespace Annwvyn
 		const std::string strCmd{ cmd };
 
 		//User want to use a rift
-		if (strCmd == "-rift")
+		if (strCmd == "-rift" || strCmd == "-ovr")
 			return "OgreOculusRender";
 
 		//User want to use a Vive or another OpenVR headset
