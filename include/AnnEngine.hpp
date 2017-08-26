@@ -96,6 +96,7 @@ namespace Annwvyn
 		static void setProcessPriorityHigh();
 		static bool noConsoleColor;
 		static bool manualConsole;
+		static std::string logFileName;
 
 		static void setNoConsoleColor();
 

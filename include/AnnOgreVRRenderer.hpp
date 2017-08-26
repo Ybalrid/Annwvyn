@@ -129,8 +129,9 @@ namespace Annwvyn
 		///Configure the Ogre root engine. Will load all the ogre Plug-ins and components we need.
 		void getOgreConfig() const;
 
-		///Init Ogre, please provide the name of the output log file
-		void initOgreRoot(std::string loggerName);
+		///Initialize the Ogre library (root object)
+		/// \param loggerName name of the log file
+		void initOgreRoot(const std::string& loggerName);
 
 		///Init the VR rendering pipeline
 		virtual void initPipeline() final;

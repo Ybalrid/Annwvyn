@@ -10,6 +10,7 @@ AnnEngine* AnnEngine::singleton(nullptr);
 bool AnnEngine::autosetProcessPriorityHigh(true);
 bool AnnEngine::noConsoleColor(false);
 bool AnnEngine::manualConsole(false);
+std::string AnnEngine::logFileName{ "Annwvyn.log" };
 
 #ifdef _WIN32
 WORD AnnEngine::consoleGreen(0);
@@ -150,7 +151,7 @@ AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
 
 	selectAndCreateRenderer(hmdCommand, title);
 
-	renderer->initOgreRoot("Annwvyn.log");
+	renderer->initOgreRoot(logFileName);
 
 	player = std::make_shared< AnnPlayerBody>();
 	renderer->initVrHmd();

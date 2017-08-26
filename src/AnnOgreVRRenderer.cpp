@@ -121,7 +121,7 @@ double AnnOgreVRRenderer::getUpdateTime() const
 	return updateTime;
 }
 
-void AnnOgreVRRenderer::initOgreRoot(std::string loggerName)
+void AnnOgreVRRenderer::initOgreRoot(const std::string& loggerName)
 {
 	//Create the ogre root with standards Ogre configuration file
 	root = std::make_unique<Ogre::Root>("", "ogre.cfg", loggerName.c_str());
