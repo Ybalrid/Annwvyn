@@ -294,9 +294,9 @@ GLuint AnnOgreVRRenderer::createCombinedRenderTexture(unsigned int w, unsigned i
 	return glid;
 }
 
-std::array<GLuint, 2> AnnOgreVRRenderer::createSeparatedRenderTextures(const combinedTextureSizeArray& textureSizes)
+GLuintPair AnnOgreVRRenderer::createSeparatedRenderTextures(const combinedTextureSizeArray& textureSizes)
 {
-	std::array <GLuint, 2> glid;
+	GLuintPair glid;
 	AnnDebug() << "Creating separated render textures " << textureSizes[0][0] << "x" << textureSizes[0][1] << " " << textureSizes[1][0] << "x" << textureSizes[1][1];
 	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
 	for (auto i : { 0u, 1u })

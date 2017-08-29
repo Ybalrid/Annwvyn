@@ -39,11 +39,13 @@ namespace Annwvyn
 	struct AnnPose
 	{
 		///A 3D vector representing a position
-		Annwvyn::AnnVect3 position;
+		AnnVect3 position;
 
 		///A quaternion representing an orientation
-		Annwvyn::AnnQuaternion orientation;
+		AnnQuaternion orientation;
 	};
+
+	using GLuintPair = std::array<GLuint, 2>;
 
 	///Abstract class for VR Renderers. Serve as interface between Annwvyn, and "OgreHMDRender" object.
 	class AnnDllExport AnnOgreVRRenderer
@@ -201,7 +203,7 @@ namespace Annwvyn
 		virtual void showDebug(DebugMode mode) = 0;
 
 		///Get a naked array of hand controllers
-		std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> getHandControllerArray() const;
+		std::array<AnnHandControllerPtr, MAX_CONTROLLER_NUMBER> getHandControllerArray() const;
 
 		///Get the size of the controller array
 		static size_t getHanControllerArraySize();
@@ -232,7 +234,7 @@ namespace Annwvyn
 		unsigned int createCombinedRenderTexture(unsigned int w, unsigned int h);
 
 		///This create a couple of separated render texture
-		std::array<unsigned int, 2> createSeparatedRenderTextures(const combinedTextureSizeArray& textureSizes);
+		GLuintPair createSeparatedRenderTextures(const combinedTextureSizeArray& textureSizes);
 
 		///Create a render buffer with not anti aliasing. return a tuple with a TexturePtr and a GLID. use <code><pre>std::get<></pre></code>
 		std::tuple<Ogre::TexturePtr, unsigned int> createAdditionalRenderBuffer(unsigned int w, unsigned int h, std::string name = "") const;
@@ -353,7 +355,7 @@ namespace Annwvyn
 		static uint8_t AALevel;
 
 		///Array of hand controller
-		std::array<std::shared_ptr<Annwvyn::AnnHandController>, MAX_CONTROLLER_NUMBER> handControllers;
+		std::array<AnnHandControllerPtr, MAX_CONTROLLER_NUMBER> handControllers;
 
 		///Buffered button states
 		std::array<std::vector<bool>, 2> currentControllerButtonsPressed, lastControllerButtonsPressed;
