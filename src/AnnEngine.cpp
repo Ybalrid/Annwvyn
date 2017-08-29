@@ -440,7 +440,7 @@ AnnEngine::registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem)
 	return userSystem;
 }
 
-std::shared_ptr<AnnSubSystem> AnnEngine::getSubSystemByName(std::string name)
+AnnSubSystemPtr AnnEngine::getSubSystemByName(std::string name)
 {
 	for (auto subsystem : SubSystemList)
 		if (subsystem->name == name)
@@ -448,7 +448,7 @@ std::shared_ptr<AnnSubSystem> AnnEngine::getSubSystemByName(std::string name)
 	return nullptr;
 }
 
-bool AnnEngine::isUserSubSystem(std::shared_ptr<AnnSubSystem> subsystem)
+bool AnnEngine::isUserSubSystem(AnnSubSystemPtr subsystem)
 {
 	auto nakedSubSystem(subsystem.get());
 

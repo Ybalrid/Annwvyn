@@ -14,7 +14,7 @@
  //AnnDllExport management for visual studio compiler.
 #ifdef _WIN32
 #ifdef DLLDIR_EX //Defined in Annwvyn MSVC project file only
-	///To construct a AnnDllExport, The macro __declspec(dllexport) have to be called in front of the exported symbol
+	///To construct a dll, The macro __declspec(dllexport) have to be called in front of the exported symbol
 #define AnnDllExport  __declspec(dllexport)   // export AnnDllExport information
 #else
 	///Macro to reference symbols from a AnnDllExport the macro __declspec(dllimport) have to be called the same way

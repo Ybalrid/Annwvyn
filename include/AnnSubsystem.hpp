@@ -4,6 +4,8 @@
 #include "systemMacro.h"
 
 #include <string>
+#include <memory>
+
 namespace Annwvyn
 {
 	class AnnEngine;
@@ -30,5 +32,7 @@ namespace Annwvyn
 		///Name of the subsystem
 		std::string name;
 	};
+
+	using AnnSubSystemPtr = std::shared_ptr<AnnSubSystem>;
 }
 #endif //ANN_SUB_SYSTEM

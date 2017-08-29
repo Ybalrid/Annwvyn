@@ -122,7 +122,7 @@ namespace Annwvyn
 		AnnPlayerBodyPtr getPlayer() const;
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generally 'OIS::KC_X' where X is the key you want.
-		/// key an OIS key code
+		/// \param key an OIS key code
 		bool isKeyDown(OIS::KeyCode key) const; //event
 
 		///Get ogre camera scene node
@@ -210,16 +210,16 @@ namespace Annwvyn
 		AnnPose getHmdPose() const;
 
 		///Register your own subsystem to be updated by the engine
-		std::shared_ptr<AnnUserSubSystem> registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem);
+		AnnUserSubSystemPtr registerUserSubSystem(AnnUserSubSystemPtr userSystem);
 
 		///Get pointer to a subsystem by name
-		std::shared_ptr<AnnSubSystem> getSubSystemByName(std::string name);
+		AnnSubSystemPtr getSubSystemByName(std::string name);
 
 		///Know if subsystem is user defined
-		static bool isUserSubSystem(std::shared_ptr<AnnSubSystem> subsystem);
+		static bool isUserSubSystem(AnnSubSystemPtr subsystem);
 
 		///Remove a subsystem form the engine. Only works if the system has been user defined.
-		void removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem);
+		void removeUserSubSystem(AnnUserSubSystemPtr subsystem);
 
 		///Permit
 		void requestQuit();
@@ -270,7 +270,7 @@ namespace Annwvyn
 		double updateTime;
 
 		///Container for all the subsystem. Populated in the update/delete order
-		std::list<std::shared_ptr<AnnSubSystem>> SubSystemList;
+		std::list<AnnSubSystemPtr> SubSystemList;
 	};
 }
 #endif ///ANN_ENGINE

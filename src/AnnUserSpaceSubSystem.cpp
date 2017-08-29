@@ -19,7 +19,7 @@ bool AnnUserSubSystem::needUpdate()
 	return false;
 }
 
-void AnnUserSubSystem::dispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e)
+void AnnUserSubSystem::dispatchEvent(AnnUserSpaceEventPtr e)
 {
 	AnnUserSpaceEventLauncher::dispatchEvent(e);
 }
