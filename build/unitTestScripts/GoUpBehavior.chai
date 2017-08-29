@@ -11,7 +11,7 @@ class GoUpBehavior
     def update()
     {
         //go up!
-        this.OwnerRef.setPosition(this.OwnerRef.getPosition() + AnnVect3(0,0.02,0))
+        this.OwnerRef.setPosition(this.OwnerRef.getPosition() + AnnVect3(0,0.02,0)); //not how you are supposed to move things in real code
         AnnDebugLog(this.OwnerRef.getPosition());
     }
 }
