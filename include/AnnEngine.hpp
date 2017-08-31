@@ -65,7 +65,6 @@ namespace Annwvyn
 	///Utility class for AnnEngine
 	class AnnDllExport AnnEngineSingletonReseter
 	{
-	private:
 		AnnEngineSingletonReseter(AnnEngine* address);
 		~AnnEngineSingletonReseter();
 		friend class AnnEngine;
@@ -85,21 +84,32 @@ namespace Annwvyn
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
 		friend class AnnEngineSingletonReseter;
+
+		//We are using RAII. This object will reset the static "singleton" member of this class. We can't do it inside the destructor because
+		//subsystems needs to have a valid pointer to AnnEngine to startup and shutdown properly.
+		//This is some kind of "lock" on the value held by the static pointer. It will be put to nullptr in the AnnEngineSingletonReseter destructor. 
+		//This object is declared first inside the class so that it will be destroyed when rolling out the stack when the actual AnnEngine goes out of 
+		//scope
 		AnnEngineSingletonReseter resetGuard;
 
+		//Private method that configure the rendering from the two given strings. It may call itself again with modified strings in circumstances.
 		void selectAndCreateRenderer(const std::string& hmd, const std::string& title);
-
 	public:
-
+		
+		///Public flag, true by default : will ask Windows to give us high priority
 		static bool autosetProcessPriorityHigh;
-		static void setProcessPriorityNormal();
-		static void setProcessPriorityHigh();
-		static bool noConsoleColor;
-		static bool manualConsole;
+		///Public static parameter : name of the logfile. Please set it before AnnInit or creating an AnnEngine object
 		static std::string logFileName;
+		///Public static parameter : name of the "default" renderer to use. Please set it before AnnInit or creating an AnnEngine object
 		static std::string defaultRenderer;
 
+		///Set a flag that prevent Annwvyn to attempt to put colors on the console window
 		static void setNoConsoleColor();
+
+		///Set the process priority to "normal"
+		static void setProcessPriorityNormal();
+		///Set the process priority to "high"
+		static void setProcessPriorityHigh();
 
 		///Get the current instance of AnnEngine. pointer
 		static AnnEngine* Instance();
@@ -233,6 +243,8 @@ namespace Annwvyn
 		static WORD consoleWhite;
 #endif
 		static bool consoleReady;
+		static bool noConsoleColor;
+		static bool manualConsole;
 		bool applicationQuitRequested;
 
 		///String Utility;
