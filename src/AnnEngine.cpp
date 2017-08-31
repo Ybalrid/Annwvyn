@@ -11,6 +11,7 @@ bool AnnEngine::autosetProcessPriorityHigh(true);
 bool AnnEngine::noConsoleColor(false);
 bool AnnEngine::manualConsole(false);
 std::string AnnEngine::logFileName{ "Annwvyn.log" };
+std::string AnnEngine::defaultRenderer{ "OgreOculusRender" };
 
 #ifdef _WIN32
 WORD AnnEngine::consoleGreen(0);
@@ -65,9 +66,14 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 	//Select the correct AnnOgreVRRenderer class to use :
 #ifdef _WIN32
-	//TODO ISSUE make the default switchable by the client user
-	if (hmdCommand == "OgreOculusRender"
-		|| hmdCommand == "OgreDefaultRender")
+
+	if (hmdCommand == "OgreDefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "OgreDefaultRender")))
+	{
+		std::cerr << "Using the default renderer " << defaultRenderer << " as HMD selector";
+		selectAndCreateRenderer(defaultRenderer, title);
+		return;
+	}
+	if (hmdCommand == "OgreOculusRender")
 		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
 	else if (hmdCommand == "OgreOpenVRRender")
 		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);

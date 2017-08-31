@@ -97,6 +97,7 @@ namespace Annwvyn
 		static bool noConsoleColor;
 		static bool manualConsole;
 		static std::string logFileName;
+		static std::string defaultRenderer;
 
 		static void setNoConsoleColor();
 
