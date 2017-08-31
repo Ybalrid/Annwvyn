@@ -217,7 +217,7 @@ endif()
 #Installation
 if(WIN32)
     set(Annwvyn_INSTALLABLE ${CMAKE_BINARY_DIR}/Release)
-    file(GLOB Annwvyn_ARTIFACTS ${Annwvyn_INSTALLABLE}/Annwvyn.lib ${Annwvyn_INSTALLABLE}/Annwvyn.exp ${Annwvyn_INSTALLABLE}/*.dll)
+    set(Annwvyn_ARTIFACTS ${Annwvyn_INSTALLABLE}/Annwvyn.lib ${Annwvyn_INSTALLABLE}/Annwvyn.dll ${Annwvyn_INSTALLABLE}/Annwvyn.exp)
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 endif()
 
