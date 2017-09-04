@@ -69,7 +69,7 @@ namespace Annwvyn
 			void CollisionEvent(AnnCollisionEvent e) override
 			{
 				auto objectManager = AnnGetGameObjectManager();
-				if (e.hasObject(objectManager->getGameObject("floor").get()) &&
+				if (e.hasObject(objectManager->getGameObject("_internal_test_floor").get()) && //you should store a pointer to the object for performance, not search it each time
 					e.hasObject(objectManager->getGameObject("Sinbad").get()))
 					results = true;
 			}
