@@ -60,7 +60,10 @@ namespace Annwvyn
 		std::shared_ptr<AnnGameObject> playerLookingAt(unsigned short limit = 5); //physics
 
 		///Get an AnnGameObject for the required string; return nullptr if object cannot be found
-		std::shared_ptr<AnnGameObject> getObjectFromID(std::string idString);
+		std::shared_ptr<AnnGameObject> getGameObject(std::string gameObjectName);
+
+		///Get an AnnLightObject from it's name; return nullptr if object not found
+		std::shared_ptr<AnnLightObject> getLightObject(std::string lightObjectName);
 
 		///Set the options to pass while converting Ogre V1 meshes to Ogre V2 meshes
 		void setImportParameter(bool halfPosition, bool halfTextureCoord, bool qTangents);

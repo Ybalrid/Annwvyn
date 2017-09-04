@@ -195,7 +195,7 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnColor& color, float value) {return color.setAlpha(value); }), "setAlpha");
 
 	//Object getter
-	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getObjectFromID(id).get(); }), "AnnGetGameObject");
+	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getGameObject(id).get(); }), "AnnGetGameObject");
 
 	//Level jumper
 	chai.add(fun([](level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
@@ -211,7 +211,7 @@ void AnnScriptManager::registerApi()
 	//Remove object
 	chai.add(fun([](const string& objectName)
 	{
-		auto obj = AnnGetGameObjectManager()->getObjectFromID(objectName);
+		auto obj = AnnGetGameObjectManager()->getGameObject(objectName);
 		if (!obj) return;
 		AnnGetGameObjectManager()->removeGameObject(obj);
 		AnnGetLevelManager()->removeFromCurrentLevel(obj);
