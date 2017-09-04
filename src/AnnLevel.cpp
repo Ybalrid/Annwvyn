@@ -40,7 +40,6 @@ void AnnLevel::unload()
 	levelContent.clear();
 
 	//Remove volumetric event triggers
-	levelTriggerIdMap.clear();
 	for (auto obj : levelTrigger)
 		AnnGetGameObjectManager()->removeTriggerObject(obj);
 	levelTrigger.clear();
@@ -73,7 +72,6 @@ std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::string id)
 {
 	auto obj = AnnGetGameObjectManager()->createTriggerObject();
 	levelTrigger.push_back(obj);
-	levelTriggerIdMap[id] = obj;
 	return obj;
 }
 

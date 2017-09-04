@@ -132,18 +132,20 @@ std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject(std::str
 	return Light;
 }
 
-std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std::string identifier)
+std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std::string triggerObjectName)
 {
 	AnnDebug("Creating a trigger object");
-	auto trigger = std::make_shared <AnnTriggerObject>();
-	if (identifier.empty()) identifier = "trigger" + std::to_string(++autoID);
+	auto trigger = std::make_shared <AnnTriggerObject>(triggerObjectName);
+	if (triggerObjectName.empty()) triggerObjectName = "trigger" + std::to_string(++autoID);
 	Triggers.push_back(trigger);
+	identifiedTriggerObjects[triggerObjectName] = trigger;
 	return trigger;
 }
 
 void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
 {
 	Triggers.remove(trigger);
+	identifiedTriggerObjects.erase(trigger->getName());
 }
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned short limit)
