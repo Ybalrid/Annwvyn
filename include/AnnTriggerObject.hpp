@@ -37,7 +37,9 @@ namespace Annwvyn
 	{
 	public:
 		///Class constructor
-		AnnTriggerObject();
+		AnnTriggerObject(const std::string& name);
+
+		std::string getName() const;
 
 		///Class destructor
 		virtual ~AnnTriggerObject();
@@ -62,6 +64,7 @@ namespace Annwvyn
 		void setShape(btCollisionShape* shp);
 
 	private:
+		const std::string name;
 
 		///For engine : Set contact state
 		/// \param contact Contact state
