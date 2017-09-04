@@ -48,10 +48,10 @@ namespace Annwvyn
 		void removeLightObject(std::shared_ptr<AnnLightObject> light);
 
 		///Add a light source to the scene. return a pointer to the new light
-		std::shared_ptr<AnnLightObject> createLightObject();
+		std::shared_ptr<AnnLightObject> createLightObject(std::string identifier = "");
 
 		///Create a trigger object
-		std::shared_ptr<AnnTriggerObject> createTriggerObject(); //object factory
+		std::shared_ptr<AnnTriggerObject> createTriggerObject(std::string identifier = ""); //object factory
 
 		///Remove the object from the engine
 		void removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger);
@@ -78,7 +78,14 @@ namespace Annwvyn
 		///objects mapped to ID strings
 		std::unordered_map<std::string, std::shared_ptr<AnnGameObject>> identifiedObjects;
 
-		static unsigned long long id;
+		///lights mapped to ID strings
+		std::unordered_map<std::string, std::shared_ptr<AnnLightObject>> identifiedLights;
+
+		///triggers identified to ID string
+		std::unordered_map<std::string, std::shared_ptr<AnnTriggerObject>> identifiedTriggerObjects;
+
+
+		static unsigned long long autoID;
 
 		bool halfPos, halfTexCoord, qTan;
 	};
