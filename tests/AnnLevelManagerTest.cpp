@@ -121,8 +121,8 @@ namespace Annwvyn
 				sun->setDirection({ -0.0625, -1, 1 });
 
 				auto gameObjectManager = AnnGetGameObjectManager();
-				floorOk = gameObjectManager->getObjectFromID("Floor") != nullptr;
-				ogreOk = gameObjectManager->getObjectFromID("Ogre") != nullptr;
+				floorOk = gameObjectManager->getGameObject("Floor") != nullptr;
+				ogreOk = gameObjectManager->getGameObject("Ogre") != nullptr;
 			}
 
 			void runLogic() override {}

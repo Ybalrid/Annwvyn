@@ -69,8 +69,8 @@ namespace Annwvyn
 			void CollisionEvent(AnnCollisionEvent e) override
 			{
 				auto objectManager = AnnGetGameObjectManager();
-				if (e.hasObject(objectManager->getObjectFromID("floor").get()) &&
-					e.hasObject(objectManager->getObjectFromID("Sinbad").get()))
+				if (e.hasObject(objectManager->getGameObject("floor").get()) &&
+					e.hasObject(objectManager->getGameObject("Sinbad").get()))
 					results = true;
 			}
 		private:
