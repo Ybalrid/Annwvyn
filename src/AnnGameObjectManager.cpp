@@ -180,9 +180,9 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 	return getFromNode(result->movable->getParentSceneNode());
 }
 
-std::shared_ptr<AnnGameObject> AnnGameObjectManager::getGameObject(std::string idString)
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::getGameObject(std::string gameObjectName)
 {
-	const auto object = identifiedObjects.find(idString);
+	const auto object = identifiedObjects.find(gameObjectName);
 	if (object != identifiedObjects.end())
 		return object->second;
 	return nullptr;
