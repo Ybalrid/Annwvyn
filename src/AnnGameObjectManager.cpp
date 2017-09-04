@@ -6,12 +6,12 @@
 #include "AnnException.hpp"
 
 using namespace Annwvyn;
-unsigned long long AnnGameObjectManager::id;
+unsigned long long AnnGameObjectManager::autoID;
 
 AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager"), halfPos(true), halfTexCoord(true), qTan(true)
 {
 	//There will only be one manager, set the id to 0
-	id = 0;
+	autoID = 0;
 }
 
 void AnnGameObjectManager::update()
@@ -79,7 +79,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	//The identifier name can be empty, meaning that we have to figure out an unique name.
 	//In that case we will append to the entity name + a number that will always be incremented.
 	if (identifier.empty())
-		identifier = meshName + std::to_string(++id);
+		identifier = meshName + std::to_string(++autoID);
 
 	AnnDebug() << "The object " << identifier << " has been created. Annwvyn memory address " << obj;
 	AnnDebug() << "This object take " << sizeof *obj.get() << " bytes";
@@ -106,10 +106,9 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 {
 	AnnDebug() << "Trying to identify object at address " << static_cast<void*>(node);
 
-	auto result = std::find_if(Objects.begin(), Objects.end(),
+	const auto result = std::find_if(begin(Objects), end(Objects),
 		[&](std::shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
-	if (result != Objects.end())
-		return *result;
+	if (result != end(Objects)) return *result;
 
 	AnnDebug() << "The Scene Node" << static_cast<void*>(node) << " doesn't belong to any AnnGameObject";
 	return nullptr;
@@ -117,22 +116,27 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 
 void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> light)
 {
+	if (!light) throw AnnNullGameObjectError();
 	Lights.remove(light);
+	identifiedLights.erase(light->getName());
 }
 
-std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject()
+std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject(std::string identifier)
 {
 	AnnDebug("Creating a light");
-	auto Light = std::make_shared<AnnLightObject>(AnnGetEngine()->getSceneManager()->createLight());
+	if (identifier.empty()) identifier = "light" + std::to_string(++autoID);
+	auto Light = std::make_shared<AnnLightObject>(AnnGetEngine()->getSceneManager()->createLight(), identifier);
 	Light->setType(AnnLightObject::LightTypes::ANN_LIGHT_POINT);
 	Lights.push_back(Light);
+	identifiedLights[identifier] = Light;
 	return Light;
 }
 
-std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject()
+std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std::string identifier)
 {
 	AnnDebug("Creating a trigger object");
 	auto trigger = std::make_shared <AnnTriggerObject>();
+	if (identifier.empty()) identifier = "trigger" + std::to_string(++autoID);
 	Triggers.push_back(trigger);
 	return trigger;
 }

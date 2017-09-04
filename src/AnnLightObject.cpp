@@ -6,8 +6,9 @@
 
 using namespace Annwvyn;
 
-AnnLightObject::AnnLightObject(Ogre::Light* light) :
-	light(light)
+AnnLightObject::AnnLightObject(Ogre::Light* light, const std::string& name) :
+	light(light),
+	name(name)
 {
 	AnnDebug() << "Light constructor called";
 	if (light)
@@ -87,9 +88,14 @@ void AnnLightObject::setAttenuation(float range, float constant, float linear, f
 	light->setAttenuation(range, constant, linear, quadratic);
 }
 
-Ogre::Light* AnnLightObject::getOgreLight()
+Ogre::Light* AnnLightObject::_getOgreLight()
 {
 	return light;
+}
+
+std::string AnnLightObject::getName() const
+{
+	return name;
 }
 
 void AnnLightObject::setPower(float lumens)

@@ -22,7 +22,7 @@ namespace Annwvyn
 	class AnnDllExport AnnLightObject : public AnnAbstractTranslatable
 	{
 	public:
-		AnnLightObject(Ogre::Light* light);
+		AnnLightObject(Ogre::Light* light, const std::string& name);
 		virtual ~AnnLightObject();
 
 		/// Defines the type of light
@@ -63,13 +63,17 @@ namespace Annwvyn
 
 		void setAttenuation(float range, float constant, float linear, float quadratic);
 
-		Ogre::Light* getOgreLight();
+		Ogre::Light* _getOgreLight();
+		
+		///Get the name of this light
+		std::string getName() const;
 
 	private:
 		friend class AnnEngine;
 		friend class AnnGameObjectManager;
 		Ogre::Light* light;
 		Ogre::SceneNode* node;
+		const std::string name; 
 	};
 }
 
