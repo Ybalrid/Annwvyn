@@ -53,6 +53,11 @@ void AnnLightObject::setDirection(AnnVect3 direction) const
 	light->setDirection(direction);
 }
 
+AnnVect3 AnnLightObject::getDirection() const
+{
+	return light->getDirection();
+}
+
 void AnnLightObject::setType(LightTypes type) const
 {
 	light->setType(Ogre::Light::LightTypes(type));
@@ -103,7 +108,7 @@ void AnnLightObject::setPower(float lumens)
 	light->setPowerScale(lumens);
 }
 
-float AnnLightObject::getPower()
+float AnnLightObject::getPower() const
 {
 	return light->getPowerScale();
 }

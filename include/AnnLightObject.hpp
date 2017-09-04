@@ -44,6 +44,8 @@ namespace Annwvyn
 		AnnVect3 getPosition() override;
 		///Set the direction of the light (if relevant)
 		void setDirection(AnnVect3 direction) const;
+		///Get the direction of the light (if relevant)
+		AnnVect3 getDirection() const;
 		///Set the type of the light
 		void setType(LightTypes type) const;
 		///Set the diffuse color of this light source
@@ -59,7 +61,7 @@ namespace Annwvyn
 		void setPower(float lumens);
 
 		///get the current power of this lamp
-		float getPower();
+		float getPower() const;
 
 		void setAttenuation(float range, float constant, float linear, float quadratic);
 

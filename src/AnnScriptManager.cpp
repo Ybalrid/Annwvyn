@@ -172,6 +172,19 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
 	chai.add(fun([](AnnGameObject* o) {return o->getName(); }), "getName");
 
+	chai.add(user_type<AnnLightObject>(), "AnnLightObject");
+	chai.add(fun([](AnnLightObject* o, Vector3 v) {o->setPosition(v); }), "setPosition");
+	chai.add(fun([](AnnLightObject* o, Vector3 v) {o->setDirection(v); }), "setDirection");
+	chai.add(fun([](AnnLightObject* o, AnnColor c) {o->setDiffuseColor(c); }), "setDiffuseColor");
+	chai.add(fun([](AnnLightObject* o, AnnColor c) {o->setSpecularColor(c); }), "setSpecularColor");
+	chai.add(fun([](AnnLightObject* o, float lumens) {o->setPower(lumens); }), "setPower");
+	chai.add(fun([](AnnLightObject* o) -> Vector3 {return o->getPosition(); }), "getPosition");
+	chai.add(fun([](AnnLightObject* o) -> Vector3 {return o->getDirection(); }), "getDirection");
+	chai.add(fun([](AnnLightObject* o) -> AnnColor {return o->getSpecularColor(); }), "getSpecularColor");
+	chai.add(fun([](AnnLightObject* o) -> AnnColor {return o->getDiffuseColor(); }), "getDiffuseColor");
+	chai.add(fun([](AnnLightObject* o) {return o->getName(); }), "getName");
+
+
 	//Color
 	chai.add(user_type<AnnColor>(), "AnnColor");
 	chai.add(constructor<AnnColor(float, float, float, float)>(), "AnnColor");
@@ -196,6 +209,7 @@ void AnnScriptManager::registerApi()
 
 	//Object getter
 	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getGameObject(id).get(); }), "AnnGetGameObject");
+	chai.add(fun([](string id) { return AnnGetGameObjectManager()->getLightObject(id).get(); }), "AnnGetLightObject");
 
 	//Level jumper
 	chai.add(fun([](level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
