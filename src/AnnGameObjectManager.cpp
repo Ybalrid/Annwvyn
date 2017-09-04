@@ -121,22 +121,22 @@ void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> lig
 	identifiedLights.erase(light->getName());
 }
 
-std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject(std::string identifier)
+std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject(std::string lightObjectName)
 {
 	AnnDebug("Creating a light");
-	if (identifier.empty()) identifier = "light" + std::to_string(++autoID);
-	auto Light = std::make_shared<AnnLightObject>(AnnGetEngine()->getSceneManager()->createLight(), identifier);
+	if (lightObjectName.empty()) lightObjectName = "light" + std::to_string(++autoID);
+	auto Light = std::make_shared<AnnLightObject>(AnnGetEngine()->getSceneManager()->createLight(), lightObjectName);
 	Light->setType(AnnLightObject::LightTypes::ANN_LIGHT_POINT);
 	Lights.push_back(Light);
-	identifiedLights[identifier] = Light;
+	identifiedLights[lightObjectName] = Light;
 	return Light;
 }
 
 std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std::string triggerObjectName)
 {
 	AnnDebug("Creating a trigger object");
-	auto trigger = std::make_shared <AnnTriggerObject>(triggerObjectName);
 	if (triggerObjectName.empty()) triggerObjectName = "trigger" + std::to_string(++autoID);
+	auto trigger = std::make_shared <AnnTriggerObject>(triggerObjectName);
 	Triggers.push_back(trigger);
 	identifiedTriggerObjects[triggerObjectName] = trigger;
 	return trigger;
