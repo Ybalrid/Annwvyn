@@ -30,7 +30,6 @@ void AnnLevel::unload()
 	AnnGetPhysicsEngine()->resetGravity();
 
 	//Remove the level lights
-	levelLightingIdMap.clear();
 	for (auto obj : levelLighting)
 		AnnGetGameObjectManager()->removeLightObject(obj);
 	levelLighting.clear();
@@ -53,9 +52,8 @@ void AnnLevel::unload()
 
 std::shared_ptr<AnnLightObject> AnnLevel::addLightObject(std::string id)
 {
-	auto light(AnnGetGameObjectManager()->createLightObject());
+	auto light(AnnGetGameObjectManager()->createLightObject(id));
 	levelLighting.push_back(light);
-	levelLightingIdMap[id] = light;
 	return light;
 }
 
