@@ -304,37 +304,42 @@ AnnPhysicsEnginePtr AnnEngine::getPhysicsEngine() const
 	return physicsEngine;
 }
 
-//This is static, but actually needs Ogre to be running. So be careful
-void AnnEngine::log(std::string message, bool flag)
+void AnnEngine::setConsoleGreen()
 {
-	Ogre::String messageForLog;
-
-	if (flag)
-	{
-#ifdef _WIN32
-		if (!noConsoleColor)
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleYellow);
-#endif
-		messageForLog += "Annwvyn - ";
-	}
-#ifdef _WIN32
-	else
-	{
-		if (!noConsoleColor)
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
-	}
-#endif
-
-	messageForLog += message;
-	if (Ogre::LogManager::getSingletonPtr())
-		Ogre::LogManager::getSingleton().logMessage(messageForLog);
-
-	if (consoleReady)
-		singleton->onScreenConsole->append(message);
 #ifdef _WIN32
 	if (!noConsoleColor)
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
 #endif
+}
+
+void AnnEngine::setConsoleYellow()
+{
+#ifdef _WIN32
+	if (!noConsoleColor)
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleYellow);
+#endif
+}
+
+//This is static, but actually needs Ogre to be running. So be careful
+void AnnEngine::log(std::string message, bool flag)
+{
+	if (flag)
+	{
+		setConsoleYellow();
+		message = "Annwvyn - " + message;
+	}
+	else
+	{
+		setConsoleGreen();
+	}
+
+	if (Ogre::LogManager::getSingletonPtr())
+		Ogre::LogManager::getSingleton().logMessage(message);
+
+	setConsoleGreen();
+
+	if (consoleReady)
+		singleton->onScreenConsole->append(message);
 }
 
 //Need to be redone.

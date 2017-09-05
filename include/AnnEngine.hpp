@@ -87,15 +87,15 @@ namespace Annwvyn
 
 		//We are using RAII. This object will reset the static "singleton" member of this class. We can't do it inside the destructor because
 		//subsystems needs to have a valid pointer to AnnEngine to startup and shutdown properly.
-		//This is some kind of "lock" on the value held by the static pointer. It will be put to nullptr in the AnnEngineSingletonReseter destructor. 
-		//This object is declared first inside the class so that it will be destroyed when rolling out the stack when the actual AnnEngine goes out of 
+		//This is some kind of "lock" on the value held by the static pointer. It will be put to nullptr in the AnnEngineSingletonReseter destructor.
+		//This object is declared first inside the class so that it will be destroyed when rolling out the stack when the actual AnnEngine goes out of
 		//scope
 		AnnEngineSingletonReseter resetGuard;
 
 		//Private method that configure the rendering from the two given strings. It may call itself again with modified strings in circumstances.
 		void selectAndCreateRenderer(const std::string& hmd, const std::string& title);
 	public:
-		
+
 		///Public flag, true by default : will ask Windows to give us high priority
 		static bool autosetProcessPriorityHigh;
 		///Public static parameter : name of the logfile. Please set it before AnnInit or creating an AnnEngine object
@@ -236,6 +236,9 @@ namespace Annwvyn
 		void requestQuit();
 
 	private:
+
+		static void setConsoleGreen();
+		static void setConsoleYellow();
 
 #ifdef _WIN32
 		static WORD consoleGreen;
