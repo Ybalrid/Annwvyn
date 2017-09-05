@@ -323,6 +323,9 @@ void AnnEngine::setConsoleYellow()
 //This is static, but actually needs Ogre to be running. So be careful
 void AnnEngine::log(std::string message, bool flag)
 {
+	if (consoleReady)
+		singleton->onScreenConsole->append(message);
+
 	if (flag)
 	{
 		setConsoleYellow();
@@ -337,9 +340,6 @@ void AnnEngine::log(std::string message, bool flag)
 		Ogre::LogManager::getSingleton().logMessage(message);
 
 	setConsoleGreen();
-
-	if (consoleReady)
-		singleton->onScreenConsole->append(message);
 }
 
 //Need to be redone.
