@@ -18,6 +18,9 @@
 //btOgre
 #include <BtOgre.hpp>
 
+//easy bitmasks
+#define MASK(x) (1<<(x))
+
 namespace Annwvyn
 {
 	class AnnPhysicsEngine;
@@ -32,6 +35,15 @@ namespace Annwvyn
 	class AnnDllExport AnnPhysicsEngine : public AnnSubSystem
 	{
 	public:
+
+		///Flag for collisions 
+		enum CollisionMasks : int
+		{
+			Player = MASK(0),
+			General = MASK(1),
+
+			ColideWithAll = Player | General,
+		};
 
 		///Create the physics engine
 		AnnPhysicsEngine(Ogre::SceneNode* rootNode, AnnPlayerBodyPtr player);

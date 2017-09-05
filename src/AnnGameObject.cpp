@@ -154,7 +154,7 @@ void AnnGameObject::setScale(AnnVect3 scale, bool scaleMass) const
 		Shape->calculateLocalInertia(scaleLenght * bodyMass, inertia);
 		Body->setMassProps(scaleLenght*bodyMass, inertia);
 
-		world->addRigidBody(Body, MASK(1), MASK(0) | MASK(1));
+		world->addRigidBody(Body, AnnPhysicsEngine::CollisionMasks::General, AnnPhysicsEngine::CollisionMasks::ColideWithAll);
 		Body->activate();
 	}
 }
@@ -244,10 +244,10 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	Body = new btRigidBody(bodyMass, state, Shape, inertia);
 	Body->setUserPointer(this);
 
-	short bulletMask = MASK(0) | MASK(1);
+	short bulletMask = AnnPhysicsEngine::CollisionMasks::ColideWithAll;
 	if (!colideWithPlayer)
-		bulletMask = MASK(1);
-	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, MASK(1), bulletMask);
+		bulletMask = AnnPhysicsEngine::CollisionMasks::General;
+	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, AnnPhysicsEngine::CollisionMasks::General, bulletMask);
 }
 
 Ogre::SceneNode* AnnGameObject::getNode() const
