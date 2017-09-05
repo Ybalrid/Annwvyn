@@ -70,7 +70,7 @@ void AnnLevel::addManualMovableObject(std::shared_ptr<AnnAbstractMovable> movabl
 
 std::shared_ptr<AnnTriggerObject> AnnLevel::addTrggerObject(std::string id)
 {
-	auto obj = AnnGetGameObjectManager()->createTriggerObject();
+	auto obj = AnnGetGameObjectManager()->createTriggerObject(id);
 	levelTrigger.push_back(obj);
 	return obj;
 }

@@ -14,7 +14,7 @@ namespace Annwvyn
 	public:
 		///Construct the string utility
 		AnnStringUility();
-		///
+		///Destruct the string utility
 		~AnnStringUility();
 		///Hash a string with the built-in hash algorithm of C++11
 		size_t hash(const std::string& string) const;

@@ -182,7 +182,7 @@ namespace Annwvyn
 		///Get the console
 		AnnConsolePtr getOnScreenConsole() const;
 
-		///
+		///Get the string utility
 		AnnStringUtilityPtr getStringUtility() const;
 
 		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
