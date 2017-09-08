@@ -270,7 +270,7 @@ void AnnGameObject::setAnimation(const std::string&	animationName)
 	//Check if the item has a skeleton
 	if (!getItem()->hasSkeleton())
 	{
-		AnnDebug() << "Attempting to set a skeleton animation on a skeleton-less object. (" << getName() << " Check yo' programin' bro!";
+		AnnDebug() << "Attempting to set a skeleton animation on a skeleton-less object. (" << getName() << ") Check yo' programin' bro!";
 		return;
 	}
 
