@@ -250,7 +250,7 @@ namespace Annwvyn
 		virtual void postInit() { }
 
 		///Executed at refresh time (each frames)
-		virtual void atRefresh() { }
+		virtual void update() { }
 
 		///Call the update methods of all the script present in the scripts container
 		void callUpdateOnScripts();

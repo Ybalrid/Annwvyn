@@ -6,6 +6,7 @@
 #include "AnnSubsystem.hpp"
 #include "AnnTypes.h"
 #include "AnnTriggerObject.hpp"
+#include "AnnLightObject.hpp"
 
 #include <OgreMesh.h>
 #include <OgreMesh2.h>
@@ -28,7 +29,7 @@ namespace Annwvyn
 		void update() override;
 
 		///Get a MeshPtr by loading a v1Mesh ptr, specify the name and where to put the 2 pointers
-		Ogre::MeshPtr getMesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh) const;
+		Ogre::MeshPtr getAndConvertFromV1Mesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh) const;
 
 		///Create a game object form the name of an entity.
 		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
@@ -65,6 +66,9 @@ namespace Annwvyn
 		///Get an AnnLightObject from it's name; return nullptr if object not found
 		std::shared_ptr<AnnLightObject> getLightObject(std::string lightObjectName);
 
+		///Get an AnnTriggerObject from it's name; return nullptr if object not found
+		std::shared_ptr<AnnTriggerObject> getTriggerObject(std::string triggerObjectName);
+
 		///Set the options to pass while converting Ogre V1 meshes to Ogre V2 meshes
 		void setImportParameter(bool halfPosition, bool halfTextureCoord, bool qTangents);
 
@@ -87,8 +91,8 @@ namespace Annwvyn
 		///triggers identified to ID string
 		std::unordered_map<std::string, std::shared_ptr<AnnTriggerObject>> identifiedTriggerObjects;
 
-
-		static unsigned long long autoID;
+		uID autoID;
+		uID nextID();
 
 		bool halfPos, halfTexCoord, qTan;
 	};

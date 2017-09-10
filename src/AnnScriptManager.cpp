@@ -184,7 +184,6 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnLightObject* o) -> AnnColor {return o->getDiffuseColor(); }), "getDiffuseColor");
 	chai.add(fun([](AnnLightObject* o) {return o->getName(); }), "getName");
 
-
 	//Color
 	chai.add(user_type<AnnColor>(), "AnnColor");
 	chai.add(constructor<AnnColor(float, float, float, float)>(), "AnnColor");
@@ -567,10 +566,10 @@ AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
 	std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
 	std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
 	std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
-	chaiscript::Boxed_Value chaisriptInstance) : constructListener(),
+	chaiscript::Boxed_Value scriptObjectInstance) : constructListener(),
 	valid{ true },
 	name{ scriptName },
-	ScriptObjectInstance{ chaisriptInstance },
+	ScriptObjectInstance{ scriptObjectInstance },
 	callUpdateOnScriptInstance{ updateHook },
 	callKeyEventOnScriptInstance{ KeyEventHook },
 	callMouseEventOnScriptInstance{ MouseEventHook },
@@ -725,7 +724,8 @@ void AnnScriptManager::registerResourceManager()
 
 void AnnScriptManager::unregisterResourceManager()
 {
-	delete scriptFileManager;
+	OGRE_DELETE scriptFileManager;
+	scriptFileManager = nullptr;
 }
 
 AnnScriptManager::~AnnScriptManager()

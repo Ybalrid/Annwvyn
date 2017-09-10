@@ -241,7 +241,7 @@ namespace Annwvyn
 		std::array<int, 2> currentSeparatedIndex;
 
 		///Frame index of the current session status
-		unsigned long long int currentSessionStatusFrameIndex;
+		uID currentSessionStatusFrameIndex;
 
 		///Convert an ovrVector3f to an Ogre::Vector3
 		static Ogre::Vector3 oculusToOgreVect3(const ovrVector3f& v);

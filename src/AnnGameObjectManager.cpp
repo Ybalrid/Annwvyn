@@ -6,7 +6,6 @@
 #include "AnnException.hpp"
 
 using namespace Annwvyn;
-unsigned long long AnnGameObjectManager::autoID;
 
 AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager"), halfPos(true), halfTexCoord(true), qTan(true)
 {
@@ -21,30 +20,31 @@ void AnnGameObjectManager::update()
 	{
 		gameObject->addAnimationTime(AnnGetEngine()->getFrameTime());
 		gameObject->updateOpenAlPos();
-		gameObject->atRefresh();
+		gameObject->update();
 		gameObject->callUpdateOnScripts();
 	}
 }
 
-Ogre::MeshPtr AnnGameObjectManager::getMesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh) const
+Ogre::MeshPtr AnnGameObjectManager::getAndConvertFromV1Mesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh) const
 {
+	static const std::string sufix = "_V2mesh";
+	const auto meshManager = Ogre::MeshManager::getSingletonPtr();
+
 	v1Mesh = Ogre::v1::MeshManager::getSingleton().load(meshName,
 		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
 		Ogre::v1::HardwareBuffer::HBU_STATIC,
 		Ogre::v1::HardwareBuffer::HBU_STATIC);
-
-	static const std::string sufix = "_V2mesh";
 
 	//Generate the name of the v2 mesh
 	auto v2meshName = meshName + sufix;
 	AnnDebug() << "Mesh v2 name : " << v2meshName;
 
 	//v2Mesh
-	v2Mesh = Ogre::MeshManager::getSingleton().getByName(v2meshName);
+	v2Mesh = meshManager->getByName(v2meshName);
 	if (!v2Mesh) //create and import
 	{
 		AnnDebug() << v2meshName << " doesn't exist yet in the v2 MeshManager, creating it and loading the v1 " << meshName << " geometry";
-		v2Mesh = Ogre::MeshManager::getSingleton().createManual(v2meshName, AnnResourceManager::defaultResourceGroupName);
+		v2Mesh = meshManager->createManual(v2meshName, AnnResourceManager::defaultResourceGroupName);
 		v2Mesh->importV1(v1Mesh.get(), halfPos, halfTexCoord, qTan);
 	}
 
@@ -53,12 +53,12 @@ Ogre::MeshPtr AnnGameObjectManager::getMesh(const char* meshName, Ogre::v1::Mesh
 
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char meshName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
 {
-	AnnDebug("Creating a game object from the mesh file :  " + std::string(meshName));
+	AnnDebug("Creating a game object from the mesh file: " + std::string(meshName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
 
 	Ogre::v1::MeshPtr v1Mesh;
 	Ogre::MeshPtr v2Mesh;
-	getMesh(meshName, v1Mesh, v2Mesh);
+	getAndConvertFromV1Mesh(meshName, v1Mesh, v2Mesh);
 	v1Mesh.setNull();
 
 	//Create an item
@@ -79,7 +79,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	//The identifier name can be empty, meaning that we have to figure out an unique name.
 	//In that case we will append to the entity name + a number that will always be incremented.
 	if (identifier.empty())
-		identifier = meshName + std::to_string(++autoID);
+		identifier = meshName + std::to_string(nextID());
 
 	AnnDebug() << "The object " << identifier << " has been created. Annwvyn memory address " << obj;
 	AnnDebug() << "This object take " << sizeof *obj.get() << " bytes";
@@ -124,7 +124,7 @@ void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> lig
 std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject(std::string lightObjectName)
 {
 	AnnDebug("Creating a light");
-	if (lightObjectName.empty()) lightObjectName = "light" + std::to_string(++autoID);
+	if (lightObjectName.empty()) lightObjectName = "light" + std::to_string(nextID());
 	auto Light = std::make_shared<AnnLightObject>(AnnGetEngine()->getSceneManager()->createLight(), lightObjectName);
 	Light->setType(AnnLightObject::LightTypes::ANN_LIGHT_POINT);
 	Lights.push_back(Light);
@@ -135,8 +135,8 @@ std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject(std::str
 std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std::string triggerObjectName)
 {
 	AnnDebug("Creating a trigger object");
-	if (triggerObjectName.empty()) triggerObjectName = "trigger" + std::to_string(++autoID);
-	auto trigger = std::make_shared <AnnTriggerObject>(triggerObjectName);
+	if (triggerObjectName.empty()) triggerObjectName = "trigger" + std::to_string(nextID());
+	auto trigger = std::make_shared<AnnTriggerObject>(triggerObjectName);
 	Triggers.push_back(trigger);
 	identifiedTriggerObjects[triggerObjectName] = trigger;
 	return trigger;
@@ -185,7 +185,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::getGameObject(std::string gameObjectName)
 {
 	const auto object = identifiedObjects.find(gameObjectName);
-	if (object != identifiedObjects.end())
+	if (object != end(identifiedObjects))
 		return object->second;
 	return nullptr;
 }
@@ -193,8 +193,16 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getGameObject(std::string g
 std::shared_ptr<AnnLightObject> AnnGameObjectManager::getLightObject(std::string lightObjectName)
 {
 	const auto light = identifiedLights.find(lightObjectName);
-	if (light != identifiedLights.end())
+	if (light != end(identifiedLights))
 		return light->second;
+	return nullptr;
+}
+
+std::shared_ptr<AnnTriggerObject> Annwvyn::AnnGameObjectManager::getTriggerObject(std::string triggerObjectName)
+{
+	const auto trigger = identifiedTriggerObjects.find(triggerObjectName);
+	if (trigger != end(identifiedTriggerObjects))
+		return trigger->second;
 	return nullptr;
 }
 
@@ -203,4 +211,9 @@ void AnnGameObjectManager::setImportParameter(bool halfPosition, bool halfTextur
 	halfPos = halfPosition;
 	halfTexCoord = halfTextureCoord;
 	qTan = qTangents;
+}
+
+uID AnnGameObjectManager::nextID()
+{
+	return ++autoID;
 }

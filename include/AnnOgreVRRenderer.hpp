@@ -343,7 +343,7 @@ namespace Annwvyn
 		Ogre::SceneNode* cameraRig;
 
 		///Counter of frames
-		unsigned long long int frameCounter;
+		uID frameCounter;
 
 		///Render target that serve as intermediate buffer for the eyeCameras
 		Ogre::RenderTexture* rttEyesCombined;

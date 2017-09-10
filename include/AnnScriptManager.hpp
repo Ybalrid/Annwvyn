@@ -2,12 +2,12 @@
 
 #include "systemMacro.h"
 #include "AnnScriptFile.hpp"
+#include "AnnSubsystem.hpp"
+#include "AnnEventManager.hpp"
 
 #include <chaiscript.hpp>
 #include <chaiscript_stdlib.hpp>
-
-#include "AnnSubsystem.hpp"
-#include "AnnEventManager.hpp"
+#include "AnnTypes.h"
 
 namespace Annwvyn
 {
@@ -32,7 +32,7 @@ namespace Annwvyn
 			std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
 			std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
 
-			chaiscript::Boxed_Value chaisriptInstance);
+			chaiscript::Boxed_Value scriptObjectInstance);
 
 		///Script destructor
 		virtual ~AnnBehaviorScript();
@@ -92,7 +92,7 @@ namespace Annwvyn
 		std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> callHandControllertOnScriptInstance;
 		///Hook for Collision event
 		std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> callCollisionEventOnScriptInstance;
-		///Hook for PlayerCollision evnet
+		///Hook for PlayerCollision event
 		std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> callPlayerCollisionEventOnScriptInstance;
 
 		///Call guards for the hooks above.
@@ -107,7 +107,7 @@ namespace Annwvyn
 	{
 	public:
 
-		using AnnScriptID = unsigned long long int;
+		using AnnScriptID = uID;
 
 		///Construct the script manager, initialize ChaiScript and add global functions. Will initialize the AnnScriptFileManager
 		AnnScriptManager();
@@ -125,7 +125,7 @@ namespace Annwvyn
 		bool evalFile(const std::string& file);
 
 		///Create a instance to the script. Return a shared pointer.
-		std::shared_ptr <AnnBehaviorScript> getBehaviorScript(const std::string& scriptName, AnnGameObject* owner = nullptr);
+		std::shared_ptr<AnnBehaviorScript> getBehaviorScript(const std::string& scriptName, AnnGameObject* owner = nullptr);
 
 		///Evaluate one line of chaiCode
 		void evalString(const std::string& chaiCode);

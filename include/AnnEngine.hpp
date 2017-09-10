@@ -147,8 +147,6 @@ namespace Annwvyn
 		///Get ogre scene manager
 		Ogre::SceneManager* getSceneManager() const; //scene or graphics
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////SUBSYSTEMS
-
 		///Get the event manager
 		AnnEventManagerPtr getEventManager() const;
 
@@ -185,8 +183,6 @@ namespace Annwvyn
 		///Get the string utility
 		AnnStringUtilityPtr getStringUtility() const;
 
-		/////////////////////////////////////////////explicit /////////////////////////////////////////////////END OF SUBSYSTEMS
-
 		///Init the static/standing physics model
 		void initPlayerStandingPhysics() const;
 
@@ -202,7 +198,7 @@ namespace Annwvyn
 		///Set the POV node to the AnnPlayerBody gameplay defined position/orientation of the player's body
 		void syncPov() const;
 
-		///This start the render loop. This also calls objects "atRefresh" and current level "runLogic" methods each frame
+		///This start the render loop. This also calls objects "update" and current level "runLogic" methods each frame
 		void startGameplayLoop();
 
 		///Return true if the app is visible inside the head mounted display
