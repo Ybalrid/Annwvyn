@@ -35,12 +35,39 @@ namespace Annwvyn
 		}
 	}
 
+	TEST_CASE("Object manipulation via scripting")
+	{
+		auto GameEngine = bootstrapTestEngine("TestScriptObject");
+
+		auto renderForSecs = [&](const double duration = 2) {
+			auto time = GameEngine->getTimeFromStartupSeconds() + duration;
+			while (GameEngine->refresh()) if (GameEngine->getTimeFromStartupSeconds() > time) break;
+		};
+
+		const auto scriptManager = AnnGetScriptManager();
+
+		renderForSecs();
+		AnnGetOnScreenConsole()->setVisible();
+		scriptManager->evalString(R"( AnnCreateGameObject("Sinbad.mesh", "sinbad") )");
+		renderForSecs(0.5);
+		AnnGetOnScreenConsole()->setVisible(false);
+
+		REQUIRE(AnnGetGameObjectManager()->getGameObject("sinbad"));
+
+		scriptManager->evalString(R"(
+		AnnGetGameObject("sinbad").setPosition(AnnVect3(0, 2, 8))
+		AnnGetGameObject("sinbad").setScale(AnnVect3(0.2, 0.2, 0.2))
+		)");
+
+		renderForSecs();
+	}
+
 	TEST_CASE("Test scripting API")
 	{
 		using std::function;
 		using Ogre::Vector3;
 
-		auto GameEngine = bootstrapEmptyEngine("TestScript");
+		auto GameEngine = bootstrapEmptyEngine("TestScripts");
 
 		auto ScriptManager = AnnGetScriptManager();
 		const auto result = ScriptManager->evalFile("./unitTestScripts/UnitTestMain.chai");

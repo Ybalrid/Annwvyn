@@ -42,8 +42,8 @@ namespace Annwvyn
 		/// \param string text to append to the console
 		void append(std::string string);
 
-		///Set arbitrary the visibility state of the console
-		void setVisible(bool visibility);
+		///Set arbitrary the visibility state of the console. Visible if no arg given, hide it if visibility = false
+		void setVisible(bool visibility = true);
 
 		///Toggle the console.
 		void toggle();

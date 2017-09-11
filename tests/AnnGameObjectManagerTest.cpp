@@ -32,6 +32,7 @@ namespace Annwvyn
 		REQUIRE(AnnGetGameObjectManager()->getLightObject(name) == sun);
 		REQUIRE(AnnGetGameObjectManager()->getLightObject(name)->getName() == name);
 	}
+
 	TEST_CASE("Trigger Object name storage")
 	{
 		//Init
