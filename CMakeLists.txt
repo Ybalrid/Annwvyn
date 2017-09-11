@@ -1,20 +1,23 @@
 cmake_minimum_required(VERSION 3.6.3)
 
+#We are using C++14 (Visual Studio 2015, G++ 4.9...)
 set(CMAKE_CXX_STANDARD 14)
 
 project(Annwvyn)
 
+#Basic build configuration
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE) 
+
 if(WIN32)
-    #Annwvyn SDK check
+    #Check Annwvyn SDK configuration (This env var should exist)
     if(NOT DEFINED ENV{AnnwvynSDK64})
         message(FATAL_ERROR "You need to install the Annwvyn SDK. RUNME.bat will set the AnnwvynSDK64 env var that will stop this error!")
     else()
         message("Annwvyn SDK installed at " $ENV{AnnwvynSDK64})
     endif()
 
+	#We only support MSVC
     if(NOT MSVC)
         #TODO The SDK only support MSVC binaries right now due to the format of the VR SDK for rift and vive
         message(FATAL_ERROR "You should only try to generate a VS solution")
@@ -47,8 +50,10 @@ if(WIN32)
     set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2 CACHE PATH "TinyXML2 install")
     set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "libsndfile install")
 
+#This is a bit hackish to make the engine technically work on Linux. Even when there's no targetable hardware for the engine that is Linux compatible
 else(UNIX) 
-    set(CMAKE_MODULE_PATH
+    set(
+		CMAKE_MODULE_PATH
         ${CMAKE_MODULE_PATH}
         /usr/lib/OGRE/cmake 
         /usr/local/lib/OGRE/cmake 
@@ -56,7 +61,7 @@ else(UNIX)
         /usr/local/lib/BtOgre21/CMake
         ~/AnnwvynDeps/CMakeModules
         )
-endif(WIN32)
+endif()
 
 #Find findable packages
 find_package(OpenGL REQUIRED)
@@ -123,7 +128,6 @@ if(UNIX)
 endif(UNIX)
 
 
-#link directory form old VS solution
 link_directories(
     #VR SDKs
     $ENV{AnnwvynSDK64}/openvr/lib/win64
@@ -182,7 +186,7 @@ if(WIN32)
 
     set(WIN_ADDITIONAL_LIBS
         ##VR SDKS (manually added)
-        optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib          #TODO WIN32 specific
+        optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib
         debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/LibOVR.lib
         openvr_api.lib      #TODO WIN32 specific
 
@@ -197,15 +201,14 @@ if(WIN32)
         ${WIN_ADDITIONAL_LIBS}
         )
 
-
 endif()
 
 #MSVC specific configuration
 if(MSVC)
     set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
     set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
-    set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
-    set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
+#   set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
+#   set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
     set_target_properties(Annwvyn PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
     set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
     set_target_properties(AnnwvynUnitTest PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
@@ -218,7 +221,6 @@ if(WIN32)
     set(Annwvyn_ARTIFACTS ${Annwvyn_INSTALLABLE}/Annwvyn.lib ${Annwvyn_INSTALLABLE}/Annwvyn.dll ${Annwvyn_INSTALLABLE}/Annwvyn.exp)
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 endif()
-
 if(UNIX)
     install(TARGETS Annwvyn LIBRARY DESTINATION lib)
     install(FILES ${AnnwvynHeaders} DESTINATION include/Annwvyn/)
