@@ -44,8 +44,8 @@ if(WIN32)
     set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS CACHE PATH "OIS install")
     set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install CACHE PATH "OpenAL install")
     set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw-3.2.1.bin.WIN64/ CACHE PATH "GLFW install") 
-    set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2 CACHE PATH "TinyXML install")
-    set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "TinyXml2 install")
+    set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2 CACHE PATH "TinyXML2 install")
+    set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "libsndfile install")
 
 else(UNIX) 
     set(CMAKE_MODULE_PATH
@@ -126,8 +126,6 @@ endif(UNIX)
 #link directory form old VS solution
 link_directories(
     #VR SDKs
-    #optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/
-    #debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/
     $ENV{AnnwvynSDK64}/openvr/lib/win64
     )
 
