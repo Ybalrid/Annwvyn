@@ -19,7 +19,7 @@ public:
 		loopAnimation(true);
 	}
 
-	void atRefresh() override
+	void update() override
 	{
 		//AnnDebug() << "Sinbad position is : " << getPosition();
 		//AnnDebug() << getName();
