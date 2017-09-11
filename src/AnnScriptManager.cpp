@@ -528,13 +528,14 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 			);
 	}
 
-	// TODO I genuinely don't know if we should crash the game or just display an error about a missing or miss-formed script
 	catch (const chaiscript::exception::file_not_found_error& fnfe)
 	{
+		AnnDebug() << "Cannot find behavior script " << file;
 		AnnDebug() << fileErrorPrefix << fnfe.what();
 	}
 	catch (const chaiscript::exception::eval_error& ee)
 	{
+		AnnDebug() << "Error during evaluation of behavior script " << file;
 		AnnDebug() << ee.pretty_print();
 	}
 
