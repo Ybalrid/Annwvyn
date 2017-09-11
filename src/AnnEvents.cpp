@@ -550,6 +550,11 @@ bool AnnHandControllerEvent::buttonState(const uint8_t id) const
 	return controller->getButtonState(id);
 }
 
+AnnHandController::AnnHandControllerSide AnnHandControllerEvent::getSide() const
+{
+	return controller->getSide();
+}
+
 
 AnnHandController::AnnHandControllerTypeHash AnnHandControllerEvent::getType() const
 {

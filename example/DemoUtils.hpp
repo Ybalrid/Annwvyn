@@ -27,8 +27,8 @@ public:
 
 	void HandControllerEvent(AnnHandControllerEvent e) override
 	{
-		if (e.getController()->hasBeenPressed(3))
-			switch (e.getController()->getSide())
+		if (e.buttonPressed(3))
+			switch (e.getSide())
 			{
 			default:break;
 			case AnnHandController::leftHandController:

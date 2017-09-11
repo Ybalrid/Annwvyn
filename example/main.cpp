@@ -59,9 +59,8 @@ public:
 	///Quit app when button zero of left controller is pressed
 	void HandControllerEvent(AnnHandControllerEvent e) override
 	{
-		auto controller = e.getController();
-		if (controller->getSide() == AnnHandController::leftHandController)
-			if (controller->hasBeenPressed(0))
+		if (e.getSide() == AnnHandController::leftHandController)
+			if (e.buttonPressed(0))
 				AnnGetEngine()->requestQuit();
 	}
 };

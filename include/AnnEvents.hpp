@@ -302,6 +302,7 @@ namespace Annwvyn
 		bool buttonPressed(const uint8_t id) const;
 		bool buttonReleased(const uint8_t id) const;
 		bool buttonState(const uint8_t id) const;
+		AnnHandController::AnnHandControllerSide getSide() const;
 
 		AnnHandController::AnnHandControllerTypeHash getType() const;
 
