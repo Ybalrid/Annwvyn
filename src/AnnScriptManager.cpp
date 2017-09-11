@@ -301,7 +301,7 @@ void AnnScriptManager::registerApi()
 
 	// HACK I'm exposing a pointer to the controller for now. This will be encapsulated after
 	//we have access to Oculus's hand controllers (December 2016...)
-	chai.add(fun([](AnnHandControllerEvent e) {return e.getController(); }), "getController");
+	chai.add(fun([](AnnHandControllerEvent e) {return e._getController(); }), "getController");
 
 	chai.add(fun([](AnnHandController* c) {return c->getWorldPosition(); }), "getWorldPosition");
 	chai.add(fun([](AnnHandController* c) {return c->getWorldOrientation(); }), "getWorldOrientation");

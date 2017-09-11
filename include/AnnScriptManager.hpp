@@ -4,6 +4,7 @@
 #include "AnnScriptFile.hpp"
 #include "AnnSubsystem.hpp"
 #include "AnnEventManager.hpp"
+#include "AnnLightObject.hpp"
 
 #include <chaiscript.hpp>
 #include <chaiscript_stdlib.hpp>

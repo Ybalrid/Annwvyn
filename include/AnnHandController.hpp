@@ -71,7 +71,7 @@ namespace Annwvyn
 		using proportionalFingerValues = std::array<float, 5>;
 
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
-		enum AnnHandControllerSide : size_t { leftHandController = 0, rightHandController = 1, invalidHandController = 2 };
+		enum AnnHandControllerSide : uint8_t { leftHandController = 0, rightHandController = 1, invalidHandController = 2 };
 
 		///Fix the bitflag at 16bits wide
 		using HandControllerCapabilites_t = uint16_t;

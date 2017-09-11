@@ -4,6 +4,7 @@
 #include "AnnUserSpaceEvent.hpp"
 #include "AnnKeyCode.h"
 #include "AnnPlayerBody.hpp"
+#include "AnnHandController.hpp"
 
 namespace Annwvyn
 {
@@ -290,11 +291,25 @@ namespace Annwvyn
 		AnnHandControllerEvent();
 		AnnHandControllerEvent(AnnHandController* controller);
 
-		///get access to the hand controller this event is related to
-		AnnHandController* getController() const;
+		AnnVect3 getPosition() const;
+		AnnQuaternion getOrientation() const;
+		AnnVect3 getPointingDirection() const;
+		AnnVect3 getLinearSpeed() const;
+		AnnVect3 getAngularSpeed() const;
+		AnnHandControllerAxis& getAxis(const uint8_t id) const;
+		size_t getNbAxes() const;
+		size_t getNbButton() const;
+		bool buttonPressed(const uint8_t id) const;
+		bool buttonReleased(const uint8_t id) const;
+		bool buttonState(const uint8_t id) const;
+
+		AnnHandController::AnnHandControllerTypeHash getType() const;
+
+		///advanced : get access to the hand controller this event is related to
+		AnnHandController* _getController() const;
 	private:
 		friend class AnnEventManager;
-		AnnHandController* sender;
+		AnnHandController* controller;
 	};
 
 	using  timerID = int;

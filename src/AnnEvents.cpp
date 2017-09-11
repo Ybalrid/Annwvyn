@@ -468,20 +468,20 @@ AnnTriggerObject* AnnTriggerEvent::getSender() const
 }
 
 AnnHandControllerEvent::AnnHandControllerEvent() :
-	sender(nullptr)
+	controller(nullptr)
 {
 	type = HAND_CONTROLLER;
 }
 
 AnnHandControllerEvent::AnnHandControllerEvent(AnnHandController* controller) : AnnEvent(),
-sender{ controller }
+controller{ controller }
 {
 	type = HAND_CONTROLLER;
 }
 
-AnnHandController* AnnHandControllerEvent::getController() const
+AnnHandController* AnnHandControllerEvent::_getController() const
 {
-	return sender;
+	return controller;
 }
 
 AnnTimeEvent::AnnTimeEvent(const AnnTimer& timer) : AnnEvent(),
@@ -493,4 +493,65 @@ tID{ timer.getID() }
 timerID AnnTimer::getID() const
 {
 	return tID;
+}
+
+AnnVect3 AnnHandControllerEvent::getPosition() const
+{
+	return controller->getWorldPosition();
+}
+
+AnnQuaternion AnnHandControllerEvent::getOrientation() const
+{
+	return controller->getWorldOrientation();
+}
+
+AnnVect3 AnnHandControllerEvent::getPointingDirection() const
+{
+	return controller->getPointingDirection();
+}
+
+AnnVect3 AnnHandControllerEvent::getLinearSpeed() const
+{
+	return controller->getLinearSpeed();
+}
+
+AnnVect3 AnnHandControllerEvent::getAngularSpeed() const
+{
+	return controller->getAngularSpeed();
+}
+
+AnnHandControllerAxis& AnnHandControllerEvent::getAxis(const uint8_t id) const
+{
+	return controller->getAxis(id);
+}
+
+size_t AnnHandControllerEvent::getNbAxes() const
+{
+	return controller->getNbAxes();
+}
+
+size_t AnnHandControllerEvent::getNbButton() const
+{
+	return controller->getNbButton();
+}
+
+bool AnnHandControllerEvent::buttonPressed(const uint8_t id) const
+{
+	return controller->hasBeenPressed(id);
+}
+
+bool AnnHandControllerEvent::buttonReleased(const uint8_t id) const
+{
+	return controller->hasBeenReleased(id);
+}
+
+bool AnnHandControllerEvent::buttonState(const uint8_t id) const
+{
+	return controller->getButtonState(id);
+}
+
+
+AnnHandController::AnnHandControllerTypeHash AnnHandControllerEvent::getType() const
+{
+	return controller->getType();
 }
