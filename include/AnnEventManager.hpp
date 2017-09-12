@@ -147,7 +147,7 @@ namespace Annwvyn
 		///parameters for OIS
 		OIS::ParamList pl;
 		///parameter list for OIS
-		std::vector<JoystickBuffer*> Joysticks;
+		std::vector<JoystickBuffer> Joysticks;
 		//----------------------- OIS and other library input objects
 
 		//----------------------- PREVIOUS STATE FOR EVENT DETECTION FROM UNBUFFERED STATE

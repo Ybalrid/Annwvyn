@@ -477,17 +477,17 @@ namespace Annwvyn
 	///Internal utility class that store joystick information
 	class AnnDllExport JoystickBuffer
 	{
-	private:
+	public:
 		friend class AnnEventManager;
 		///Private constructor for AnnEventManager
 		///Create a Joystick buffer object, increments a static counter of IDs
 		JoystickBuffer(OIS::JoyStick* joystick);
 
 		///Delete the OIS stick at destruction time
-		~JoystickBuffer() { delete stick; }
-
+		~JoystickBuffer() { delete oisJoystick; }
+	private:
 		///Joystick object from OIS
-		OIS::JoyStick* stick;
+		OIS::JoyStick* oisJoystick;
 
 		///Array of "bool" for previous buttons
 		std::vector<bool> previousStickButtonStates;
@@ -495,7 +495,6 @@ namespace Annwvyn
 		///Get the ID if this stick
 		unsigned int getID() const { return id; }
 
-	private:
 		///The ID
 		unsigned int id;
 		///The counter

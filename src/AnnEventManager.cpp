@@ -103,16 +103,16 @@ keyboardIgnore{ false }
 	for (auto nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
 	{
 		//Create joystick object
-		auto Joystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
-		Joysticks.push_back(new JoystickBuffer(Joystick)); //TODO ISSUE why are JoystickBuffer object on the heap? they could live on the stack...
-		AnnDebug() << "Detected joystick : " << Joystick->vendor();
+		const auto oisJoystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
+		Joysticks.emplace_back(oisJoystick);
+		AnnDebug() << "Detected joystick : " << oisJoystick->vendor();
 
 		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)
-		if (Joystick->vendor().find("Xbox") != std::string::npos ||
-			Joystick->vendor().find("XBOX") != std::string::npos)
+		if (oisJoystick->vendor().find("Xbox") != std::string::npos ||
+			oisJoystick->vendor().find("XBOX") != std::string::npos)
 		{
 			knowXbox = true;
-			xboxID = StickAxisId(Joystick->getID());
+			xboxID = StickAxisId(oisJoystick->getID());
 			AnnDebug() << "Detected Xbox controller at ID " << xboxID;
 		}
 	}
@@ -133,8 +133,6 @@ AnnEventManager::~AnnEventManager()
 	Keyboard->setEventCallback(nullptr);
 	delete Keyboard;
 	delete Mouse;
-	for (auto Joystick : Joysticks)
-		delete Joystick;
 	Joysticks.clear();
 }
 
@@ -203,7 +201,7 @@ void AnnEventManager::captureEvents()
 	Mouse->capture();
 
 	for (auto& joystick : Joysticks)
-		joystick->stick->capture();
+		joystick.oisJoystick->capture();
 }
 
 void AnnEventManager::processKeyboardEvents()
@@ -243,13 +241,13 @@ void AnnEventManager::processJoystickEvents()
 {
 	for (auto Joystick : Joysticks)
 	{
-		const auto& state(Joystick->stick->getJoyStickState());
+		const auto& state(Joystick.oisJoystick->getJoyStickState());
 		AnnStickEvent stickEvent;
 
 		//Get all buttons immediate data
 		stickEvent.buttons = state.mButtons;
-		stickEvent.vendor = Joystick->stick->vendor();
-		stickEvent.stickID = Joystick->getID();
+		stickEvent.vendor = Joystick.oisJoystick->vendor();
+		stickEvent.stickID = Joystick.getID();
 
 		//Get all axes immediate data
 		auto axisID = 0;
@@ -261,20 +259,20 @@ void AnnEventManager::processJoystickEvents()
 		}
 
 		//The joystick state object always have 4 Pov but the AnnStickEvent has the number of Pov the stick has
-		const auto nbPov = size_t(Joystick->stick->getNumberOfComponents(OIS::ComponentType::OIS_POV));
+		const auto nbPov = size_t(Joystick.oisJoystick->getNumberOfComponents(OIS::ComponentType::OIS_POV));
 		for (auto i(0u); i < nbPov; i++)
 			stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
 
 		//Get press and release event lists
-		const auto nbButton{ std::min(state.mButtons.size(), Joystick->previousStickButtonStates.size()) };
+		const auto nbButton{ std::min(state.mButtons.size(), Joystick.previousStickButtonStates.size()) };
 		for (auto button(0u); button < nbButton; button++)
-			if (!Joystick->previousStickButtonStates[button] && state.mButtons[button])
+			if (!Joystick.previousStickButtonStates[button] && state.mButtons[button])
 				stickEvent.pressed.push_back(static_cast<unsigned short>(button));
-			else if (Joystick->previousStickButtonStates[button] && !state.mButtons[button])
+			else if (Joystick.previousStickButtonStates[button] && !state.mButtons[button])
 				stickEvent.released.push_back(static_cast<unsigned short>(button));
 
 		//Save current buttons state for next frame
-		Joystick->previousStickButtonStates = state.mButtons;
+		Joystick.previousStickButtonStates = state.mButtons;
 		if (knowXbox) if (stickEvent.stickID == xboxID)
 			stickEvent.xbox = true;
 

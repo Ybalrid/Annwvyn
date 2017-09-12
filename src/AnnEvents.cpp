@@ -445,7 +445,7 @@ bool AnnTimer::isTimeout() const
 	return false;
 }
 
-JoystickBuffer::JoystickBuffer(OIS::JoyStick* joystick) : stick(joystick)
+JoystickBuffer::JoystickBuffer(OIS::JoyStick* joystick) : oisJoystick(joystick)
 {
 	id = idcounter++;
 }
