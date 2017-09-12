@@ -1,10 +1,11 @@
 #pragma once
 
-#include <Ogre.h>
 #include "systemMacro.h"
+
+#include <Ogre.h>
+#include <OgreItem.h>
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"
-#include <OgreItem.h>
 #include "AnnTypes.h"
 
 namespace Annwvyn
