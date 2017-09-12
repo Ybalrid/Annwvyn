@@ -290,20 +290,45 @@ namespace Annwvyn
 	public:
 		AnnHandControllerEvent();
 		AnnHandControllerEvent(AnnHandController* controller);
+		
 
+		///Get the world position of the tracked controller
 		AnnVect3 getPosition() const;
+
+		///Get the world orientaiton of the tracked controller
 		AnnQuaternion getOrientation() const;
+
+		///Get a vector that is pointing forward according to the orientation of the controller
 		AnnVect3 getPointingDirection() const;
+
+		///Get the current linear speed of the controller
 		AnnVect3 getLinearSpeed() const;
+
+		///Get the current angular speed of the controller
 		AnnVect3 getAngularSpeed() const;
+
+		///Get a reference to the axis object at specified ID
 		AnnHandControllerAxis& getAxis(const uint8_t id) const;
+
+		///Get the number of axes
 		size_t getNbAxes() const;
+
+		///Get the number of buttons
 		size_t getNbButton() const;
+
+		///Has the asked button just been pressed?
 		bool buttonPressed(const uint8_t id) const;
+
+		///Has the asked button just been released
 		bool buttonReleased(const uint8_t id) const;
+
+		///Get the current state of the button
 		bool buttonState(const uint8_t id) const;
+
+		///Get the handside of the controller
 		AnnHandController::AnnHandControllerSide getSide() const;
 
+		///Get the type of the controller
 		AnnHandController::AnnHandControllerTypeHash getType() const;
 
 		///advanced : get access to the hand controller this event is related to
