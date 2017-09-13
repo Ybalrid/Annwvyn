@@ -5,7 +5,6 @@
 #include "AnnGameObjectManager.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
-#include <stdbool.h>
 
 using namespace Annwvyn;
 
