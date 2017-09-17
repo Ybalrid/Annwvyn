@@ -21,6 +21,11 @@
 #include <Windows.h>
 #endif
 
+#ifdef __linux__
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
 #include "AnnTypes.h"
 #include "AnnVect3.hpp"
 #include "AnnQuaternion.hpp"

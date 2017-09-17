@@ -153,9 +153,14 @@ string AnnFilesystemManager::getSaveDirectoryFullPath() const
 
 void AnnFilesystemManager::createDirectory(string path)
 {
+    //TODO clean that when upgrading to C++17
 #ifdef WIN32
 	CreateDirectory(wstring(path.begin(), path.end()).c_str(), nullptr);
 #endif
+#ifdef __linux__
+    
+#endif
+
 }
 
 void AnnFilesystemManager::createSaveDirectory() const
