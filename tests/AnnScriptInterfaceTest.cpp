@@ -37,14 +37,15 @@ namespace Annwvyn
 
 	TEST_CASE("Object manipulation via scripting")
 	{
+		//Get the engine components
 		auto GameEngine = bootstrapTestEngine("TestScriptObject");
+		const auto scriptManager = AnnGetScriptManager();
 
+		//Function for rendering a few seconds of gameplay
 		auto renderForSecs = [&](const double duration = 2) {
 			auto time = GameEngine->getTimeFromStartupSeconds() + duration;
 			while (GameEngine->refresh()) if (GameEngine->getTimeFromStartupSeconds() > time) break;
 		};
-
-		const auto scriptManager = AnnGetScriptManager();
 
 		renderForSecs();
 		AnnGetOnScreenConsole()->setVisible();
