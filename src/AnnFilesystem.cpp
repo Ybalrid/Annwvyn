@@ -158,7 +158,9 @@ void AnnFilesystemManager::createDirectory(string path)
 	CreateDirectory(wstring(path.begin(), path.end()).c_str(), nullptr);
 #endif
 #ifdef __linux__
-    
+    auto status = mkdir(path.c_str(), S_IRWXU);
+    if(status == 0 || status == EEXIST) return;
+    AnnDebug() << "Warning: mkdir() did not return 0 or EEXIST.";
 #endif
 
 }
