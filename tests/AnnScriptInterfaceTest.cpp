@@ -93,6 +93,28 @@ namespace Annwvyn
 			REQUIRE(fortyTwo == 42);
 		}
 
+		SECTION("Get a functor to a function that return an object from ChaiScript")
+		{
+			std::string annwvyn;
+			auto returnAnnwvyn = chai->eval<function<std::string()>>("returnAnnwvyn");
+			annwvyn = returnAnnwvyn();
+			REQUIRE(returnAnnwvyn);
+			REQUIRE(annwvyn == "Annwvyn");
+		}
+
+		SECTION("Get a functor to a function that takes arguments")
+		{
+			const auto a = 1, b = 2;
+			auto simpleSumInt = chai->eval<function<int(int, int)>>("simpleSum");
+			REQUIRE(simpleSumInt);
+			REQUIRE(simpleSumInt(a, b) == a + b);
+
+			const auto c = 1.2, d = 2.1;
+			auto simpleSumDouble = chai->eval<function<double(double, double)>>("simpleSum");
+			REQUIRE(simpleSumDouble);
+			REQUIRE(simpleSumDouble(c, d) == c + d);
+		}
+
 		SECTION("Test vector arithmetic via chaiscript")
 		{
 			const AnnVect3 a{ 1,1,1 };
