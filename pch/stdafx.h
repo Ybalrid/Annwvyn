@@ -71,6 +71,7 @@
 #include <OIS.h>
 
 //Bullet
+#define BTOGRE_NO_VERBOSE_CHECK
 #include <BtOgre.hpp>
 #include <btBulletCollisionCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
