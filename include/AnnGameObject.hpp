@@ -255,5 +255,7 @@ namespace Annwvyn
 		///Call the update methods of all the script present in the scripts container
 		void callUpdateOnScripts();
 	};
+
+    using AnnGameObjectPtr = std::shared_ptr<AnnGameObject>;
 }
 #endif

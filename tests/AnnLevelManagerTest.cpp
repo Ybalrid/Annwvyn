@@ -147,4 +147,30 @@ namespace Annwvyn
 		REQUIRE(ogreOk);
 		REQUIRE(floorOk);
 	}
+
+    TEST_CASE("Level Manager add geometry via manager")
+    {
+        auto GameEngine = bootstrapTestEngine("TestLevel");
+        auto levelManager = AnnGetLevelManager();
+        auto gameObjectManager = AnnGetGameObjectManager();
+        bool ogre{false}, floor{false};
+        AnnLevelPtr level;
+        levelManager->addLevel(level = std::make_shared<TestLevel>());
+        levelManager->jumpToFirstLevel();
+
+
+
+        for(auto i{0}; i < 3; i++)
+            GameEngine->refresh();
+
+        AnnGameObjectPtr sinbad;
+        levelManager->addToCurrentLevel(sinbad = 
+                gameObjectManager->createGameObject("sinbad.mesh", "MySinbad"));
+
+        REQUIRE(gameObjectManager->getGameObject("MySinbad") == sinbad);
+        auto levelContent = level->getContent();
+        auto result = std::find(std::begin(levelContent), std::end(levelContent), sinbad);
+        REQUIRE(result != std::end(levelContent));
+        REQUIRE(*result == sinbad);
+    }
 }
