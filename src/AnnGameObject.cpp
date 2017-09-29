@@ -200,8 +200,6 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	bodyMass = mass;
 
 	//init shape converter
-	//BtOgre::StaticMeshToShapeConverter converter(v1mesh.get());
-
 	BtOgre::StaticMeshToShapeConverter converter(Model);
 
 	// TODO ISSUE put this thing inside the Physics engine

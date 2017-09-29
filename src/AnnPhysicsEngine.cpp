@@ -181,3 +181,37 @@ void AnnPhysicsEngine::setDebugDrawerColorMultiplier(float value) const
 {
 	debugDrawer->setUnlitDiffuseMultiplier(value);
 }
+
+btCollisionShape* AnnPhysicsEngine::_getGameObjectShape(AnnGameObject*  obj, phyShapeType type)
+{
+    BtOgre::StaticMeshToShapeConverter converter(obj->getItem());
+
+    btCollisionShape* Shape{nullptr};
+
+    switch (type)
+    {
+        case boxShape:
+            Shape = converter.createBox();
+            break;
+        case cylinderShape:
+            Shape = converter.createCylinder();
+            break;
+        case capsuleShape:
+            Shape = converter.createCapsule();
+            break;
+        case convexShape:
+            Shape = converter.createConvex();
+            break;
+        case staticShape:
+            Shape = converter.createTrimesh();
+            break;
+        case sphereShape:
+            Shape = converter.createSphere();
+            break;
+        default:
+            //non valid;
+            AnnDebug() << "Error: Requested shape is invalid";
+            //TODO create exception type here
+    }
+    return Shape;
+}
