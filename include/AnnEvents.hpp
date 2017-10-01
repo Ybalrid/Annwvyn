@@ -485,7 +485,12 @@ namespace Annwvyn
 		///Make class explicitly non construct-copyable
 		JoystickBuffer(const JoystickBuffer&) = delete;
 		///Make class explicitly non copyable
-		JoystickBuffer& operator= (const JoystickBuffer&) = delete;
+		JoystickBuffer& operator=(const JoystickBuffer&) = delete;
+
+		///Let compiler generate move constructor
+		JoystickBuffer(JoystickBuffer&& buffer) = default;
+		///Let compiler generate move operator
+		JoystickBuffer& operator=(JoystickBuffer&& buffer) = default;
 
 		///Delete the OIS stick at destruction time
 		~JoystickBuffer();
