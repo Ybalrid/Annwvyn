@@ -239,7 +239,7 @@ void AnnEventManager::processMouseEvents()
 
 void AnnEventManager::processJoystickEvents()
 {
-	for (auto Joystick : Joysticks)
+	for (auto& Joystick : Joysticks)
 	{
 		const auto& state(Joystick.oisJoystick->getJoyStickState());
 		AnnStickEvent stickEvent;
