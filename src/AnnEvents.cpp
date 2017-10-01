@@ -2,6 +2,7 @@
 #include "AnnEvents.hpp"
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
+#include "AnnLogger.hpp"
 
 using namespace Annwvyn;
 
@@ -450,6 +451,12 @@ JoystickBuffer::JoystickBuffer(OIS::JoyStick* joystick) : oisJoystick(joystick)
 	id = idcounter++;
 }
 
+JoystickBuffer::~JoystickBuffer()
+{
+	AnnDebug() << "Deleted iosJoystick";
+	delete oisJoystick;
+}
+
 AnnTriggerEvent::AnnTriggerEvent() : AnnEvent(),
 sender{ nullptr }
 {
@@ -554,7 +561,6 @@ AnnHandController::AnnHandControllerSide AnnHandControllerEvent::getSide() const
 {
 	return controller->getSide();
 }
-
 
 AnnHandController::AnnHandControllerTypeHash AnnHandControllerEvent::getType() const
 {

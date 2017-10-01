@@ -290,7 +290,6 @@ namespace Annwvyn
 	public:
 		AnnHandControllerEvent();
 		AnnHandControllerEvent(AnnHandController* controller);
-		
 
 		///Get the world position of the tracked controller
 		AnnVect3 getPosition() const;
@@ -474,7 +473,7 @@ namespace Annwvyn
 		double timeoutTime;
 	};
 
-	///Internal utility class that store joystick information
+	///Internal utility class that store joystick information. RAII the oisJoystick object given to constructor
 	class AnnDllExport JoystickBuffer
 	{
 	public:
@@ -483,10 +482,15 @@ namespace Annwvyn
 		///Create a Joystick buffer object, increments a static counter of IDs
 		JoystickBuffer(OIS::JoyStick* joystick);
 
+		///Make class explicitly non construct-copyable
+		JoystickBuffer(const JoystickBuffer&) = delete;
+		///Make class explicitly non copyable
+		JoystickBuffer& operator= (const JoystickBuffer&) = delete;
+
 		///Delete the OIS stick at destruction time
-		~JoystickBuffer() { delete oisJoystick; }
+		~JoystickBuffer();
 	private:
-		///Joystick object from OIS
+		///Joystick object from OIS. Deleted by constructor
 		OIS::JoyStick* oisJoystick;
 
 		///Array of "bool" for previous buttons
