@@ -191,49 +191,23 @@ void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
+
 	//Some sanity checks
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 	if (mass < 0) return;
 
-	//Register the mass
-	bodyMass = mass;
-
-	//init shape converter
-	BtOgre::StaticMeshToShapeConverter converter(Model);
-
-	// TODO ISSUE put this thing inside the Physics engine
-	//create the correct shape
-	switch (type)
-	{
-	case boxShape:
-		Shape = converter.createBox();
-		break;
-	case cylinderShape:
-		Shape = converter.createCylinder();
-		break;
-	case capsuleShape:
-		Shape = converter.createCapsule();
-		break;
-	case convexShape:
-		Shape = converter.createConvex();
-		break;
-	case staticShape:
-		Shape = converter.createTrimesh();
-		break;
-	case sphereShape:
-		Shape = converter.createSphere();
-		break;
-	default:
-		//non valid;
-		AnnDebug() << "Error: Requested shape is invalid";
-		return;
-	}
+    auto physicsEngine = AnnGetPhysicsEngine();
+    
+    //Get the collision shape from the physics engine
+    Shape = physicsEngine->_getGameObjectShape(this, type);
 
 	AnnVect3 scale = getNode()->getScale();
 	Shape->setLocalScaling(scale.getBtVector());
 
 	btVector3 inertia{ 0,0,0 };
+	//Register the mass
+	bodyMass = mass;
 	if (bodyMass > 0.0f)
 		Shape->calculateLocalInertia(bodyMass, inertia);
 
