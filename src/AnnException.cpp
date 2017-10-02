@@ -99,3 +99,18 @@ const char* AnnInitializationError::what() const throw()
 	out << " AnnInitializationError thrown";
 	return out.str().c_str();
 }
+
+AnnInvalidPhysicalShapeError::AnnInvalidPhysicalShapeError(const std::string& objName) : std::runtime_error("Error : Cannot create a physics shape from arguments"),
+    objectName{objName}
+{
+    AnnDebug() << AnnInvalidPhysicalShapeError::what();
+}
+
+const char* AnnInvalidPhysicalShapeError::what() const throw()
+{
+    ostringstream out;
+    out << runtime_error::what();
+    out << " AnnInvalidPhysicalShapeError thrown on object ";
+    out << objectName;
+    return out.str().c_str();
+}

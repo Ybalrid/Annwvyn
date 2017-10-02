@@ -191,51 +191,27 @@ void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
+
 	//Some sanity checks
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 	if (mass < 0) return;
+    
+    //Easy access to physics engine
+    auto physicsEngine = AnnGetPhysicsEngine();
+    
+    //Get the collision shape from the physics engine
+    Shape = physicsEngine->_getGameObjectShape(this, type);
 
-	//Register the mass
-	bodyMass = mass;
-
-	//init shape converter
-	//BtOgre::StaticMeshToShapeConverter converter(v1mesh.get());
-
-	BtOgre::StaticMeshToShapeConverter converter(Model);
-
-	// TODO ISSUE put this thing inside the Physics engine
-	//create the correct shape
-	switch (type)
-	{
-	case boxShape:
-		Shape = converter.createBox();
-		break;
-	case cylinderShape:
-		Shape = converter.createCylinder();
-		break;
-	case capsuleShape:
-		Shape = converter.createCapsule();
-		break;
-	case convexShape:
-		Shape = converter.createConvex();
-		break;
-	case staticShape:
-		Shape = converter.createTrimesh();
-		break;
-	case sphereShape:
-		Shape = converter.createSphere();
-		break;
-	default:
-		//non valid;
-		AnnDebug() << "Error: Requested shape is invalid";
-		return;
-	}
-
+    //Apply local scaling
 	AnnVect3 scale = getNode()->getScale();
 	Shape->setLocalScaling(scale.getBtVector());
 
-	btVector3 inertia{ 0,0,0 };
+	//Register the mass
+	bodyMass = mass;
+	
+    //Calculate inertia
+    btVector3 inertia{ 0,0,0 };
 	if (bodyMass > 0.0f)
 		Shape->calculateLocalInertia(bodyMass, inertia);
 
@@ -244,10 +220,13 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	Body = new btRigidBody(bodyMass, state, Shape, inertia);
 	Body->setUserPointer(this);
 
+    //Add body to the dynamics world while respecting collision masks settings
 	short bulletMask = AnnPhysicsEngine::CollisionMasks::ColideWithAll;
 	if (!colideWithPlayer)
 		bulletMask = AnnPhysicsEngine::CollisionMasks::General;
-	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, AnnPhysicsEngine::CollisionMasks::General, bulletMask);
+
+	physicsEngine->getWorld()->addRigidBody(Body, 
+            AnnPhysicsEngine::CollisionMasks::General, bulletMask);
 }
 
 Ogre::SceneNode* AnnGameObject::getNode() const

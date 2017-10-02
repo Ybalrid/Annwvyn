@@ -60,4 +60,14 @@ namespace Annwvyn
 		AnnInitializationError(int errorCode, const std::string& message);
 		const char* what() const throw() override;
 	};
+
+    ///Exception regarding collision shape creation
+    class AnnDllExport AnnInvalidPhysicalShapeError : public std::runtime_error
+    {
+    public:
+        AnnInvalidPhysicalShapeError(const std::string& objectName);
+        const char* what() const throw() override;
+    private:
+        const std::string objectName;
+    };
 }

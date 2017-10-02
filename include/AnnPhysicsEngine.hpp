@@ -97,6 +97,9 @@ namespace Annwvyn
 		///Set the color multiplier to convert raw color to HDR light value
 		void setDebugDrawerColorMultiplier(float value) const;
 
+        ///advanced : functions called to setup physics by game objects
+        btCollisionShape* _getGameObjectShape(AnnGameObject* obj, phyShapeType type);
+
 	private:
 
 		friend class AnnEngine;
