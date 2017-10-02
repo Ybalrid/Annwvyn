@@ -196,18 +196,22 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 	if (mass < 0) return;
-
+    
+    //Easy access to physics engine
     auto physicsEngine = AnnGetPhysicsEngine();
     
     //Get the collision shape from the physics engine
     Shape = physicsEngine->_getGameObjectShape(this, type);
 
+    //Apply local scaling
 	AnnVect3 scale = getNode()->getScale();
 	Shape->setLocalScaling(scale.getBtVector());
 
-	btVector3 inertia{ 0,0,0 };
 	//Register the mass
 	bodyMass = mass;
+	
+    //Calculate inertia
+    btVector3 inertia{ 0,0,0 };
 	if (bodyMass > 0.0f)
 		Shape->calculateLocalInertia(bodyMass, inertia);
 
@@ -216,10 +220,13 @@ void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithP
 	Body = new btRigidBody(bodyMass, state, Shape, inertia);
 	Body->setUserPointer(this);
 
+    //Add body to the dynamics world while respecting collision masks settings
 	short bulletMask = AnnPhysicsEngine::CollisionMasks::ColideWithAll;
 	if (!colideWithPlayer)
 		bulletMask = AnnPhysicsEngine::CollisionMasks::General;
-	AnnGetPhysicsEngine()->getWorld()->addRigidBody(Body, AnnPhysicsEngine::CollisionMasks::General, bulletMask);
+
+	physicsEngine->getWorld()->addRigidBody(Body, 
+            AnnPhysicsEngine::CollisionMasks::General, bulletMask);
 }
 
 Ogre::SceneNode* AnnGameObject::getNode() const
