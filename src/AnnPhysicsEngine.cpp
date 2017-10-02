@@ -3,6 +3,7 @@
 #include "AnnPlayerBody.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
+#include "AnnException.hpp"
 
 using namespace Annwvyn;
 using std::make_unique;
@@ -42,7 +43,6 @@ AnnPhysicsEngine::~AnnPhysicsEngine()
 
 void AnnPhysicsEngine::addPlayerPhysicalBodyToDynamicsWorld() const
 {
-	// TODO ISSUE define name for the bullet's collision masks
 	DynamicsWorld->addRigidBody(playerObject->getBody(), Player, General);
 }
 
@@ -211,7 +211,7 @@ btCollisionShape* AnnPhysicsEngine::_getGameObjectShape(AnnGameObject*  obj, phy
         default:
             //non valid;
             AnnDebug() << "Error: Requested shape is invalid";
-            //TODO create exception type here
+            throw AnnInvalidPhysicalShapeError(obj->getName());
     }
     return Shape;
 }
