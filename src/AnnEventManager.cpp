@@ -360,13 +360,16 @@ void AnnEventManager::processCollisionEvents()
 {
 	for (auto weakListener : listeners) if (auto listener = weakListener.lock())
 	{
-		for (auto& collisionPair : collisionBuffer)
+		for (const auto& collisionBuffer : collisionBuffers)
 		{
-			const auto aMov = static_cast<AnnAbstractMovable*>(collisionPair.first);
-			const auto bMov = static_cast<AnnAbstractMovable*>(collisionPair.second);
+			const auto aMov = static_cast<AnnAbstractMovable*>(std::get<0>(collisionBuffer));
+			const auto bMov = static_cast<AnnAbstractMovable*>(std::get<1>(collisionBuffer));
+			const auto position = std::get<2>(collisionBuffer);
+			const auto normal = std::get<3>(collisionBuffer);
+
 			if (auto a = dynamic_cast<AnnGameObject*>(aMov)) if (auto b = dynamic_cast<AnnGameObject*>(bMov))
 			{
-				listener->CollisionEvent({ a, b });
+				listener->CollisionEvent({ a, b, position, normal });
 			}
 		}
 
@@ -374,7 +377,7 @@ void AnnEventManager::processCollisionEvents()
 			listener->PlayerCollisionEvent({ playerCollision });
 	}
 
-	collisionBuffer.clear();
+	collisionBuffers.clear();
 	playerCollisionBuffer.clear();
 }
 
@@ -396,7 +399,7 @@ void AnnEventManager::detectedCollision(void* a, void* b, AnnVect3 position, Ann
 	if (!b) return playerCollision(a);
 
 	//push the object-object collision in the buffer
-	collisionBuffer.push_back(std::make_pair(a, b));
+	collisionBuffers.emplace_back(a, b, position, normal);
 }
 
 void AnnEventManager::playerCollision(void* object)

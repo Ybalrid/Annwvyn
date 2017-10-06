@@ -393,9 +393,11 @@ void AnnTimeEvent::setTimerID(timerID id)
 	tID = id;
 }
 
-AnnCollisionEvent::AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second) : AnnEvent(),
-a{ first },
-b{ second }
+AnnCollisionEvent::AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second, AnnVect3 position, AnnVect3 normal) :
+	a{ first },
+	b{ second },
+	position{ position },
+	normal{ normal }
 {
 	type = COLLISION;
 }
@@ -415,6 +417,16 @@ AnnGameObject* AnnCollisionEvent::getA() const
 AnnGameObject* AnnCollisionEvent::getB() const
 {
 	return b;
+}
+
+AnnVect3 AnnCollisionEvent::getPosition() const
+{
+	return position;
+}
+
+AnnVect3 AnnCollisionEvent::getNormal() const
+{
+	return normal;
 }
 
 AnnPlayerCollisionEvent::AnnPlayerCollisionEvent(AnnGameObject* collided) : AnnEvent(),

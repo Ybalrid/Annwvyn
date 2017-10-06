@@ -364,7 +364,7 @@ namespace Annwvyn
 	{
 	public:
 		///Event constructor
-		AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second);
+		AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second, AnnVect3 position, AnnVect3 normal);
 
 		///Check if this event is about that object
 		bool hasObject(AnnGameObject* obj) const;
@@ -373,9 +373,14 @@ namespace Annwvyn
 		AnnGameObject* getA() const;
 		///Get second object
 		AnnGameObject* getB() const;
+		///Get the position of the "contact point" from that collision
+		AnnVect3 getPosition() const;
+		///Get the normal on the "B" body at the "contact point"
+		AnnVect3 getNormal() const;
 	private:
 		///Some naked pointers
 		AnnGameObject *a, *b;
+		const AnnVect3 position, normal;
 	};
 
 	///Collision between the player and another object

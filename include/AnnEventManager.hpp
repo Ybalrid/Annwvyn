@@ -170,7 +170,7 @@ namespace Annwvyn
 
 		//----------------------- COLLISION MANAGEMENT
 		///Collision reported by the physics engine to consider
-		std::vector<std::pair<void*, void*>> collisionBuffer;
+		std::vector<std::tuple<void*, void*, AnnVect3, AnnVect3>> collisionBuffers;
 		///Player collision reported by the physics engine to consider
 		std::vector<AnnGameObject*> playerCollisionBuffer;
 		//----------------------- COLLISION MANAGEMENT
