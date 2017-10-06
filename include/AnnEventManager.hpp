@@ -124,7 +124,7 @@ namespace Annwvyn
 		///Process user event dispatch()
 		void processUserSpaceEvents();
 		///Hook for the physics engine to signal collisions
-		void detectedCollision(void* a, void* b);
+		void detectedCollision(void* a, void* b, AnnVect3 worldPosition, AnnVect3 normalOnB);
 		///Hook for the physics engine to signal player collision
 		void playerCollision(void* object);
 

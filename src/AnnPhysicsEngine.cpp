@@ -102,8 +102,11 @@ void AnnPhysicsEngine::processCollisionTesting() const
 		const auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		if (contactManifold->getNumContacts() > 0)
 			//TODO if we can extract more information about the contatct point(s), we need to pass them *here* the the envent manager
-			AnnGetEventManager()->detectedCollision(contactManifold->getBody0()->getUserPointer(),
-				contactManifold->getBody1()->getUserPointer());
+			AnnGetEventManager()->detectedCollision(
+                contactManifold->getBody0()->getUserPointer(),
+				contactManifold->getBody1()->getUserPointer(),
+                contactManifold->getContactPoint(0).getPositionWorldOnB(),
+                contactManifold->getContactPoint(1).m_normalWorldOnB);
 	}
 }
 

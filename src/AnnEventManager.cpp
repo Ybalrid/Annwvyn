@@ -387,7 +387,7 @@ AnnEventListener::~AnnEventListener()
 {
 }
 
-void AnnEventManager::detectedCollision(void* a, void* b)
+void AnnEventManager::detectedCollision(void* a, void* b, AnnVect3 position, AnnVect3 normal)
 {
 	//The only body that doesn't have an "userPointer" set is the Player's rigidbody.
 	//If one of the pair is null, it's a player collision that has been detected on this manifold.
