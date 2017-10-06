@@ -105,11 +105,13 @@ keyboardIgnore{ false }
 		//Create joystick object
 		const auto oisJoystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		Joysticks.emplace_back(oisJoystick);
-		AnnDebug() << "Detected joystick : " << oisJoystick->vendor();
+
+		const auto& vendor = oisJoystick->vendor();
+		AnnDebug() << "Detected joystick : " << vendor;
 
 		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)
-		if (oisJoystick->vendor().find("Xbox") != std::string::npos ||
-			oisJoystick->vendor().find("XBOX") != std::string::npos)
+		if (vendor.find("Xbox") != std::string::npos ||
+			vendor.find("XBOX") != std::string::npos)
 		{
 			knowXbox = true;
 			xboxID = StickAxisId(oisJoystick->getID());

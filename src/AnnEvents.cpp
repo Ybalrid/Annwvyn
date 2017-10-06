@@ -457,6 +457,11 @@ JoystickBuffer::~JoystickBuffer()
 	delete oisJoystick;
 }
 
+void JoystickBuffer::capture() const
+{
+	oisJoystick->capture();
+}
+
 AnnTriggerEvent::AnnTriggerEvent() : AnnEvent(),
 sender{ nullptr }
 {

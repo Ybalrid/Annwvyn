@@ -494,6 +494,8 @@ namespace Annwvyn
 
 		///Delete the OIS stick at destruction time
 		~JoystickBuffer();
+
+		void capture() const;
 	private:
 		///Joystick object from OIS. Deleted by constructor
 		OIS::JoyStick* oisJoystick;
