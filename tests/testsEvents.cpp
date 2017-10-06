@@ -64,17 +64,28 @@ namespace Annwvyn
 		{
 		public:
 			CollisionTest(bool& res) : constructListener(),
-				results(res) {}
+				results(res),
+				position{ 0, 0, 0 },
+				normal{ 0, 0 ,0 }
+			{}
 
 			void CollisionEvent(AnnCollisionEvent e) override
 			{
 				auto objectManager = AnnGetGameObjectManager();
 				if (e.hasObject(objectManager->getGameObject("_internal_test_floor").get()) && //you should store a pointer to the object for performance, not search it each time
 					e.hasObject(objectManager->getGameObject("Sinbad").get()))
+				{
 					results = true;
+					position = e.getPosition();
+					normal = e.getNormal();
+				}
 			}
+
+			AnnVect3 getPosition() const { return position; }
+			AnnVect3 getNormal() const { return normal; }
 		private:
 			bool& results;
+			AnnVect3 position, normal;
 		};
 
 		auto GameEngine = bootstrapTestEngine("TestCollision");
@@ -103,6 +114,8 @@ namespace Annwvyn
 			if (state)
 			{
 				AnnDebug() << "Detected collision";
+				AnnDebug() << "Position " << eventListener->getPosition();
+				AnnDebug() << "Normal " << eventListener->getNormal();
 			}
 		}
 
