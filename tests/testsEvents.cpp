@@ -78,6 +78,9 @@ namespace Annwvyn
 					results = true;
 					position = e.getPosition();
 					normal = e.getNormal();
+
+					if (e.isGroundCollision()) AnnDebug() << "ground collision";
+					if (e.isWallCollision()) AnnDebug() << "wall collision";
 				}
 			}
 
