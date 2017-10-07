@@ -63,8 +63,9 @@ namespace Annwvyn
 		class CollisionTest : LISTENER
 		{
 		public:
-			CollisionTest(bool& res) : constructListener(),
+			CollisionTest(bool& res, bool& ground) : constructListener(),
 				results(res),
+				groundContact(ground),
 				position{ 0, 0, 0 },
 				normal{ 0, 0 ,0 }
 			{}
@@ -78,9 +79,7 @@ namespace Annwvyn
 					results = true;
 					position = e.getPosition();
 					normal = e.getNormal();
-
-					if (e.isGroundCollision()) AnnDebug() << "ground collision";
-					if (e.isWallCollision()) AnnDebug() << "wall collision";
+					if (e.isGroundCollision()) groundContact = true;
 				}
 			}
 
@@ -88,6 +87,7 @@ namespace Annwvyn
 			AnnVect3 getNormal() const { return normal; }
 		private:
 			bool& results;
+			bool& groundContact;
 			AnnVect3 position, normal;
 		};
 
@@ -105,7 +105,8 @@ namespace Annwvyn
 
 		//Set debug stuff
 		auto state{ false };
-		auto eventListener = std::make_shared<CollisionTest>(state);
+		auto ground{ false };
+		auto eventListener = std::make_shared<CollisionTest>(state, ground);
 		AnnGetEventManager()->addListener(eventListener);
 		REQUIRE(eventListener);
 
@@ -119,10 +120,15 @@ namespace Annwvyn
 				AnnDebug() << "Detected collision";
 				AnnDebug() << "Position " << eventListener->getPosition();
 				AnnDebug() << "Normal " << eventListener->getNormal();
+				if (ground)
+				{
+					AnnDebug() << "we detected that the object touched the ground!";
+				}
 			}
 		}
 
 		REQUIRE(state);
+		REQUIRE(ground);
 	}
 
 	TEST_CASE("Event Listener Tick sanity test")
