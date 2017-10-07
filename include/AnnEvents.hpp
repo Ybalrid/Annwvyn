@@ -385,6 +385,10 @@ namespace Annwvyn
 		///Return true if the collision occurred with an horizontal plane below the object. This is computed by taking !isWallCollision(approx) && normal.y > 0
 		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
 		bool isGroundCollision(const float scalarApprox = 0.125) const;
+
+		///Return true if the collision occured with an horizontal plane above the object. See isGroundCollision, it's the same thing, but testing for a negative y on the normal
+		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
+		bool isCeilingCollision(const float scalarApprox = 0.125) const;
 	private:
 		///Some naked pointers
 		AnnGameObject *a, *b;

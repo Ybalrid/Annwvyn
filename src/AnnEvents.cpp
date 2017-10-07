@@ -434,6 +434,11 @@ bool AnnCollisionEvent::isGroundCollision(const float scalarApprox) const
 	return !isWallCollision(scalarApprox) && normal.y > 0.0f;
 }
 
+bool AnnCollisionEvent::isCeilingCollision(const float scalarApprox) const
+{
+	return !isWallCollision(scalarApprox) && normal.y < 0.0f;
+}
+
 bool AnnCollisionEvent::isWallCollision(const float scalarApprox) const
 {
 	return Ogre::Math::RealEqual(AnnVect3::UNIT_Y.dotProduct(normal), 0, scalarApprox);
