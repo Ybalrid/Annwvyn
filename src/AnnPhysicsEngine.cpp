@@ -103,10 +103,10 @@ void AnnPhysicsEngine::processCollisionTesting() const
 		if (contactManifold->getNumContacts() > 0)
 			//TODO if we can extract more information about the contatct point(s), we need to pass them *here* the the envent manager
 			AnnGetEventManager()->detectedCollision(
-                contactManifold->getBody0()->getUserPointer(),
+				contactManifold->getBody0()->getUserPointer(),
 				contactManifold->getBody1()->getUserPointer(),
-                contactManifold->getContactPoint(0).getPositionWorldOnB(),
-                contactManifold->getContactPoint(1).m_normalWorldOnB);
+				contactManifold->getContactPoint(0).getPositionWorldOnB(),
+				contactManifold->getContactPoint(1).m_normalWorldOnB);
 	}
 }
 
@@ -187,34 +187,34 @@ void AnnPhysicsEngine::setDebugDrawerColorMultiplier(float value) const
 
 btCollisionShape* AnnPhysicsEngine::_getGameObjectShape(AnnGameObject*  obj, phyShapeType type)
 {
-    BtOgre::StaticMeshToShapeConverter converter(obj->getItem());
+	BtOgre::StaticMeshToShapeConverter converter(obj->getItem());
 
-    btCollisionShape* Shape{nullptr};
+	btCollisionShape* Shape{ nullptr };
 
-    switch (type)
-    {
-        case boxShape:
-            Shape = converter.createBox();
-            break;
-        case cylinderShape:
-            Shape = converter.createCylinder();
-            break;
-        case capsuleShape:
-            Shape = converter.createCapsule();
-            break;
-        case convexShape:
-            Shape = converter.createConvex();
-            break;
-        case staticShape:
-            Shape = converter.createTrimesh();
-            break;
-        case sphereShape:
-            Shape = converter.createSphere();
-            break;
-        default:
-            //non valid;
-            AnnDebug() << "Error: Requested shape is invalid";
-            throw AnnInvalidPhysicalShapeError(obj->getName());
-    }
-    return Shape;
+	switch (type)
+	{
+	case boxShape:
+		Shape = converter.createBox();
+		break;
+	case cylinderShape:
+		Shape = converter.createCylinder();
+		break;
+	case capsuleShape:
+		Shape = converter.createCapsule();
+		break;
+	case convexShape:
+		Shape = converter.createConvex();
+		break;
+	case staticShape:
+		Shape = converter.createTrimesh();
+		break;
+	case sphereShape:
+		Shape = converter.createSphere();
+		break;
+	default:
+		//non valid;
+		AnnDebug() << "Error: Requested shape is invalid";
+		throw AnnInvalidPhysicalShapeError(obj->getName());
+	}
+	return Shape;
 }
