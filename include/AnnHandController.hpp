@@ -206,7 +206,7 @@ namespace Annwvyn
 		std::vector<AnnHandControllerAxis>& getAxesVector();
 
 		///Get a reference to the button state vector
-		std::vector<bool>& getButtonStateVector();
+		std::vector<byte>& getButtonStateVector();
 
 		///Get a reference to the pressed event vector
 		std::vector<uint8_t>& getPressedButtonsVector();
@@ -242,7 +242,7 @@ namespace Annwvyn
 		AnnHandControllerAxis invalidAxis;
 
 		///An array of the buttons states
-		std::vector<bool> buttonsState;
+		std::vector<byte> buttonsState;
 
 		///buttons that has been pressed or released
 		std::vector<uint8_t> pressedButtons, releasedButtons;

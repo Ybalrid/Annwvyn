@@ -268,7 +268,7 @@ namespace Annwvyn
 		bool xbox;
 		friend class AnnEventManager;
 		///Button array
-		std::vector<bool> buttons;
+		std::vector<byte> buttons;
 		///Axis array
 		std::vector<AnnStickAxis> axes;
 		///Pov Array
@@ -501,7 +501,7 @@ namespace Annwvyn
 		OIS::JoyStick* oisJoystick;
 
 		///Array of "bool" for previous buttons
-		std::vector<bool> previousStickButtonStates;
+		std::vector<byte> previousStickButtonStates;
 
 		///Get the ID if this stick
 		unsigned int getID() const { return id; }

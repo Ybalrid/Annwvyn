@@ -247,38 +247,45 @@ void AnnEventManager::processJoystickEvents()
 		AnnStickEvent stickEvent;
 
 		//Get all buttons immediate data
-		stickEvent.buttons = state.mButtons;
-		stickEvent.vendor = Joystick.oisJoystick->vendor();
-		stickEvent.stickID = Joystick.getID();
+		//stickEvent.buttons = state.mButtons;
 
-		//Get all axes immediate data
-		auto axisID = 0;
-		for (const auto& axis : state.mAxes)
-		{
-			AnnStickAxis annAxis{ axisID++, axis.rel, axis.abs };
-			annAxis.noRel = axis.absOnly;
-			stickEvent.axes.push_back(annAxis);
-		}
+		const auto buttonSize = state.mButtons.size();
+		stickEvent.buttons.resize(buttonSize);
+		for (auto i = 0u; i < buttonSize; ++i)
+			if (state.mButtons[i]) stickEvent.buttons[i] = 1;
+			else stickEvent.buttons[i] = 0;
 
-		//The joystick state object always have 4 Pov but the AnnStickEvent has the number of Pov the stick has
-		const auto nbPov = size_t(Joystick.oisJoystick->getNumberOfComponents(OIS::ComponentType::OIS_POV));
-		for (auto i(0u); i < nbPov; i++)
-			stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
+			stickEvent.vendor = Joystick.oisJoystick->vendor();
+			stickEvent.stickID = Joystick.getID();
 
-		//Get press and release event lists
-		const auto nbButton{ std::min(state.mButtons.size(), Joystick.previousStickButtonStates.size()) };
-		for (auto button(0u); button < nbButton; button++)
-			if (!Joystick.previousStickButtonStates[button] && state.mButtons[button])
-				stickEvent.pressed.push_back(static_cast<unsigned short>(button));
-			else if (Joystick.previousStickButtonStates[button] && !state.mButtons[button])
-				stickEvent.released.push_back(static_cast<unsigned short>(button));
+			//Get all axes immediate data
+			auto axisID = 0;
+			for (const auto& axis : state.mAxes)
+			{
+				AnnStickAxis annAxis{ axisID++, axis.rel, axis.abs };
+				annAxis.noRel = axis.absOnly;
+				stickEvent.axes.push_back(annAxis);
+			}
 
-		//Save current buttons state for next frame
-		Joystick.previousStickButtonStates = state.mButtons;
-		if (knowXbox) if (stickEvent.stickID == xboxID)
-			stickEvent.xbox = true;
+			//The joystick state object always have 4 Pov but the AnnStickEvent has the number of Pov the stick has
+			const auto nbPov = size_t(Joystick.oisJoystick->getNumberOfComponents(OIS::ComponentType::OIS_POV));
+			for (auto i(0u); i < nbPov; i++)
+				stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
 
-		stickEventBuffer.push_back(stickEvent);
+			//Get press and release event lists
+			const auto nbButton{ std::min(state.mButtons.size(), Joystick.previousStickButtonStates.size()) };
+			for (auto button(0u); button < nbButton; button++)
+				if (!Joystick.previousStickButtonStates[button] && state.mButtons[button])
+					stickEvent.pressed.push_back(static_cast<unsigned short>(button));
+				else if (Joystick.previousStickButtonStates[button] && !state.mButtons[button])
+					stickEvent.released.push_back(static_cast<unsigned short>(button));
+
+			//Save current buttons state for next frame
+			Joystick.previousStickButtonStates = stickEvent.buttons;
+			if (knowXbox) if (stickEvent.stickID == xboxID)
+				stickEvent.xbox = true;
+
+			stickEventBuffer.push_back(stickEvent);
 	}
 }
 

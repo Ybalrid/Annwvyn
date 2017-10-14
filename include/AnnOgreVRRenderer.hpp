@@ -358,7 +358,7 @@ namespace Annwvyn
 		std::array<AnnHandControllerPtr, MAX_CONTROLLER_NUMBER> handControllers;
 
 		///Buffered button states
-		std::array<std::vector<bool>, 2> currentControllerButtonsPressed, lastControllerButtonsPressed;
+		std::array<std::vector<byte>, 2> currentControllerButtonsPressed, lastControllerButtonsPressed;
 
 		///Dynamically sized containers for pressed/released events
 		std::vector<uint8_t> pressed, released;

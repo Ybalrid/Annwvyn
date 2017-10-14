@@ -166,7 +166,7 @@ std::vector<AnnHandControllerAxis>& AnnHandController::getAxesVector()
 	return axes;
 }
 
-std::vector<bool>& AnnHandController::getButtonStateVector()
+std::vector<byte>& AnnHandController::getButtonStateVector()
 {
 	return buttonsState;
 }
