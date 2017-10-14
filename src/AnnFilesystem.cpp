@@ -133,7 +133,7 @@ fileReader(nullptr)
 void AnnFilesystemManager::setSaveDirectoryName(string dirname)
 {
 	for (auto achar : charToEscape)
-		replace(dirname.begin(), dirname.end(), achar, '_');
+		replace(begin(dirname), end(dirname), achar, '_');
 	saveDirectoryName = dirname;
 	AnnDebug() << "Save directory : " << saveDirectoryName;
 	AnnDebug() << "Save directory location : " << getSaveDirectoryFullPath();
@@ -153,16 +153,15 @@ string AnnFilesystemManager::getSaveDirectoryFullPath() const
 
 void AnnFilesystemManager::createDirectory(string path)
 {
-    //TODO clean that when upgrading to C++17
+	//TODO clean that when upgrading to C++17
 #ifdef WIN32
-	CreateDirectory(wstring(path.begin(), path.end()).c_str(), nullptr);
+	CreateDirectory(wstring{ begin(path), end(path) }.c_str(), nullptr);
 #endif
 #ifdef __linux__
-    auto status = mkdir(path.c_str(), S_IRWXU);
-    if(status == 0 || status == EEXIST) return;
-    AnnDebug() << "Warning: mkdir() did not return 0 or EEXIST.";
+	auto status = mkdir(path.c_str(), S_IRWXU);
+	if (status == 0 || status == EEXIST) return;
+	AnnDebug() << "Warning: mkdir() did not return 0 or EEXIST.";
 #endif
-
 }
 
 void AnnFilesystemManager::createSaveDirectory() const
@@ -220,7 +219,7 @@ string AnnSaveFileData::getFilename() const
 string AnnSaveFileData::getValue(string key)
 {
 	//if key exist:
-	if (storedTextData.find(key) != storedTextData.end())
+	if (storedTextData.find(key) != end(storedTextData))
 		return storedTextData[key];
 	//else:
 	return "";
@@ -230,8 +229,8 @@ void AnnSaveFileData::setValue(string key, string value)
 {
 	for (auto achar : AnnFilesystemManager::charToStrip)
 	{
-		replace(key.begin(), key.end(), achar, '_');
-		replace(value.begin(), value.end(), achar, '_');
+		replace(begin(key), end(key), achar, '_');
+		replace(begin(value), end(value), achar, '_');
 	}
 	storedTextData[key] = value;
 	changed = true;

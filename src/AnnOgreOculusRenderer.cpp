@@ -356,7 +356,7 @@ std::string AnnOgreOculusRenderer::getAudioDeviceIdentifierSubString()
 	GUID audioDeviceGuid; ovr_GetAudioDeviceOutGuid(&audioDeviceGuid);
 
 	//Try to find the one we need
-	const auto result = std::find_if(descriptors.begin(), descriptors.end(), [&](const audioOutputDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
+	const auto result = std::find_if(begin(descriptors), end(descriptors), [&](const audioOutputDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
 
 	//Set the return string
 	if (result != descriptors.end())

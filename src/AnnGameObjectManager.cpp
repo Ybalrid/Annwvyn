@@ -168,14 +168,14 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 	auto& results(raySceneQuery->execute());
 
 	//read the result list
-	auto result = std::find_if(results.begin(), results.end(), [](const Ogre::RaySceneQueryResultEntry& entry)
+	auto result = std::find_if(begin(results), end(results), [](const Ogre::RaySceneQueryResultEntry& entry)
 	{
 		if (entry.movable && entry.movable->getMovableType() == "Item") return true;
 		return false;
 	});
 
 	//If can't find it? return nullptr
-	if (result == results.end())
+	if (result == end(results))
 		return nullptr; //means that we don't know what the player is looking at.
 
 	//We got access to the node, we want the object
