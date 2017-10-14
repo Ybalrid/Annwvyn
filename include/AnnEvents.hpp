@@ -264,7 +264,7 @@ namespace Annwvyn
 		bool isXboxController() const;
 
 	private:
-		///set to true if this is an Xbox controller (Xinput)
+		///set to true if this is an Xbox controller (We're not using Xinput tho)
 		bool xbox;
 		friend class AnnEventManager;
 		///Button array
