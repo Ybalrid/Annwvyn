@@ -50,7 +50,7 @@ debugPlaneNode{ nullptr }
 	touchControllersButtons[right][2] = 0; //This button is the Oculus Dashboard button. Be false all the time
 	touchControllersButtons[right][3] = ovrButton_RThumb;
 
-	//Initialize the vector<bool>s that will hold the processed button states
+	//Initialize the vector<byte>s that will hold the processed button states
 	for (const auto side : { left, right })
 	{
 		currentControllerButtonsPressed[side].resize(touchControllersButtons[side].size(), false);

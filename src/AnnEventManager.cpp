@@ -247,7 +247,18 @@ void AnnEventManager::processJoystickEvents()
 		AnnStickEvent stickEvent;
 
 		//Get all buttons immediate data
-		stickEvent.buttons = state.mButtons;
+		//stickEvent.buttons = state.mButtons;
+
+		const auto buttonSize = state.mButtons.size();
+		stickEvent.buttons.resize(buttonSize);
+		for (auto i = 0u; i < buttonSize; ++i)
+		{
+			if (state.mButtons[i])
+				stickEvent.buttons[i] = 1;
+			else
+				stickEvent.buttons[i] = 0;
+		}
+
 		stickEvent.vendor = Joystick.oisJoystick->vendor();
 		stickEvent.stickID = Joystick.getID();
 
@@ -274,7 +285,7 @@ void AnnEventManager::processJoystickEvents()
 				stickEvent.released.push_back(static_cast<unsigned short>(button));
 
 		//Save current buttons state for next frame
-		Joystick.previousStickButtonStates = state.mButtons;
+		Joystick.previousStickButtonStates = stickEvent.buttons;
 		if (knowXbox) if (stickEvent.stickID == xboxID)
 			stickEvent.xbox = true;
 
