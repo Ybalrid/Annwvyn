@@ -118,7 +118,7 @@ bool AnnHandController::isTracked() const
 
 bool AnnHandController::getButtonState(uint8_t buttonIndex)
 {
-	return buttonsState[buttonIndex];
+	return buttonsState[buttonIndex] != 0;
 }
 
 size_t AnnHandController::getNbButton() const

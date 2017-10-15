@@ -311,7 +311,7 @@ unsigned int AnnStickEvent::getStickID() const
 bool AnnStickEvent::isDown(ButtonId id)
 {
 	if (id >= buttons.size()) return false;
-	return buttons[id];
+	return buttons[id] != 0;
 }
 
 size_t AnnStickEvent::getNbButtons() const
