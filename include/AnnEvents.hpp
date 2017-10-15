@@ -364,7 +364,7 @@ namespace Annwvyn
 	{
 	public:
 		///Event constructor
-		AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second);
+		AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second, AnnVect3 position, AnnVect3 normal);
 
 		///Check if this event is about that object
 		bool hasObject(AnnGameObject* obj) const;
@@ -373,9 +373,26 @@ namespace Annwvyn
 		AnnGameObject* getA() const;
 		///Get second object
 		AnnGameObject* getB() const;
+		///Get the position of the "contact point" from that collision
+		AnnVect3 getPosition() const;
+		///Get the normal on the "B" body at the "contact point"
+		AnnVect3 getNormal() const;
+
+		///Return true if the collision occurred with a vertical plane. Computed with testing the dot product of +Y and the normal.
+		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
+		bool isWallCollision(const float scalarApprox = 0.0125) const;
+
+		///Return true if the collision occurred with an horizontal plane below the object. This is computed by taking !isWallCollision(approx) && normal.y > 0
+		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
+		bool isGroundCollision(const float scalarApprox = 0.125) const;
+
+		///Return true if the collision occured with an horizontal plane above the object. See isGroundCollision, it's the same thing, but testing for a negative y on the normal
+		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
+		bool isCeilingCollision(const float scalarApprox = 0.125) const;
 	private:
 		///Some naked pointers
 		AnnGameObject *a, *b;
+		const AnnVect3 position, normal;
 	};
 
 	///Collision between the player and another object

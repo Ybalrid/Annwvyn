@@ -322,6 +322,11 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnCollisionEvent e) {return e.getB(); }), "getBObject");
 	chai.add(fun([](AnnCollisionEvent e) {return e.getA()->getName(); }), "getAObjectName");
 	chai.add(fun([](AnnCollisionEvent e) {return e.getB()->getName(); }), "getBObjectName");
+	chai.add(fun([](AnnCollisionEvent e) -> Vector3 {return e.getPosition(); }), "getPosition");
+	chai.add(fun([](AnnCollisionEvent e) -> Vector3 {return e.getNormal(); }), "getNormal");
+	chai.add(fun([](AnnCollisionEvent e) {return e.isCeilingCollision(); }), "isCeilingCollision");
+	chai.add(fun([](AnnCollisionEvent e) {return e.isGroundCollision(); }), "isGroundCollision");
+	chai.add(fun([](AnnCollisionEvent e) {return e.isWallCollision(); }), "isWallCollision");
 
 	//There's capacitive touch surfaces and haptic feedback that aren't available right now on the AnnHandController class
 

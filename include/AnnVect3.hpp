@@ -35,7 +35,7 @@ namespace Annwvyn
 		AnnVect3(bool validState);
 
 		///Construct from bullet vector
-		AnnVect3(btVector3& v);
+		AnnVect3(const btVector3& v);
 
 		///Return as bullet vector
 		btVector3 getBtVector() const;

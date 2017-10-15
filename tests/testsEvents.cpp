@@ -63,18 +63,32 @@ namespace Annwvyn
 		class CollisionTest : LISTENER
 		{
 		public:
-			CollisionTest(bool& res) : constructListener(),
-				results(res) {}
+			CollisionTest(bool& res, bool& ground) : constructListener(),
+				results(res),
+				groundContact(ground),
+				position{ 0, 0, 0 },
+				normal{ 0, 0 ,0 }
+			{}
 
 			void CollisionEvent(AnnCollisionEvent e) override
 			{
 				auto objectManager = AnnGetGameObjectManager();
 				if (e.hasObject(objectManager->getGameObject("_internal_test_floor").get()) && //you should store a pointer to the object for performance, not search it each time
 					e.hasObject(objectManager->getGameObject("Sinbad").get()))
+				{
 					results = true;
+					position = e.getPosition();
+					normal = e.getNormal();
+					if (e.isGroundCollision()) groundContact = true;
+				}
 			}
+
+			AnnVect3 getPosition() const { return position; }
+			AnnVect3 getNormal() const { return normal; }
 		private:
 			bool& results;
+			bool& groundContact;
+			AnnVect3 position, normal;
 		};
 
 		auto GameEngine = bootstrapTestEngine("TestCollision");
@@ -91,7 +105,8 @@ namespace Annwvyn
 
 		//Set debug stuff
 		auto state{ false };
-		auto eventListener = std::make_shared<CollisionTest>(state);
+		auto ground{ false };
+		auto eventListener = std::make_shared<CollisionTest>(state, ground);
 		AnnGetEventManager()->addListener(eventListener);
 		REQUIRE(eventListener);
 
@@ -103,10 +118,17 @@ namespace Annwvyn
 			if (state)
 			{
 				AnnDebug() << "Detected collision";
+				AnnDebug() << "Position " << eventListener->getPosition();
+				AnnDebug() << "Normal " << eventListener->getNormal();
+				if (ground)
+				{
+					AnnDebug() << "we detected that the object touched the ground!";
+				}
 			}
 		}
 
 		REQUIRE(state);
+		REQUIRE(ground);
 	}
 
 	TEST_CASE("Event Listener Tick sanity test")

@@ -17,7 +17,7 @@ AnnVect3::AnnVect3(float* const r) : Vector3(r) { init(); }
 
 AnnVect3::AnnVect3(const float s) : Vector3(s) { init(); }
 
-AnnVect3::AnnVect3(btVector3& v) : Vector3(v.x(), v.y(), v.z()) { init(); }
+AnnVect3::AnnVect3(const btVector3& v) : Vector3(v.x(), v.y(), v.z()) { init(); }
 
 AnnVect3::AnnVect3(bool validState) : Vector3() { init(); valid = validState; }
 
