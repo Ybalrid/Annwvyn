@@ -68,7 +68,7 @@ void AnnTextInputer::stopListening()
 	listen = false;
 }
 
-void AnnTextInputer::setInput(std::string content)
+void AnnTextInputer::setInput(const std::string& content)
 {
 	input = content;
 }
@@ -177,12 +177,12 @@ void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
 	AnnDebug() << "Removing an event listener : " << l.get();
 	if (l == nullptr) { clearListenerList(); return; }
 
-	std::remove_if(begin(listeners), end(listeners),
+	listeners.erase(std::remove_if(begin(listeners), end(listeners),
 		[&](std::weak_ptr<AnnEventListener> weak_listener)
 	{
 		if (auto listener = weak_listener.lock()) return listener == l;
 		return false;
-	});
+	}), end(listeners));
 }
 
 void AnnEventManager::update()
@@ -356,8 +356,8 @@ void AnnEventManager::processTimers()
 			if (timer.isTimeout()) listener->TimeEvent({ timer });
 
 	//Cleanup
-	std::remove_if(begin(activeTimers), end(activeTimers),
-		[&](const AnnTimer& timer) { return timer.isTimeout(); });
+	activeTimers.erase(std::remove_if(begin(activeTimers), end(activeTimers),
+		[&](const AnnTimer& timer) { return timer.isTimeout(); }), end(activeTimers));
 }
 
 void AnnEventManager::processTriggerEvents()
