@@ -40,7 +40,7 @@ namespace Annwvyn
 
 		///Add text to the console buffer. The console buffer will keep CONSOLE_BUFFER lines of messages in memory only
 		/// \param string text to append to the console
-		void append(std::string string);
+		void append(const std::string& string);
 
 		///Set arbitrary the visibility state of the console. Visible if no arg given, hide it if visibility = false
 		void setVisible(bool visibility = true);

@@ -137,7 +137,7 @@ refreshRate{ 1.0 / 15.0 }
 	}
 }
 
-void AnnConsole::append(std::string str)
+void AnnConsole::append(const std::string& str)
 {
 	//Copy with an offset of 1 the buffer content
 	for (size_t i(1); i < CONSOLE_BUFFER; i++)

@@ -10,19 +10,17 @@ const AnnVect3 AnnPlayerBody::DEFAULT_STARTING_POS{ 0,1,10 };
 const Ogre::Euler AnnPlayerBody::DEFAULT_STARTING_ORIENT{ 0 };
 
 AnnPlayerBody::PhysicalParameters::PhysicalParameters() :
-	RoomBase{ FeetPosition }
-{
-	//these parameters looks good for testing. Customize them before initializing the physics!
-	eyeHeight = 1.59f;
-	walkSpeed = 3;
-	turnSpeed = 0.15f;
-	mass = 80.0f;
-	FeetPosition = AnnVect3(0, 0, 10);
-	HeadOrientation = AnnQuaternion::IDENTITY;
-	Shape = nullptr;
-	Body = nullptr;
-	runFactor = 3;
-}
+	eyeHeight{ 1.59f },
+	walkSpeed{ 3 },
+	runFactor{ 3 },
+	turnSpeed{ 0.15f },
+	mass{ 80 },
+	FeetPosition{ 0, 0, 10 },
+	RoomBase{ FeetPosition },
+	HeadOrientation{ AnnQuaternion::IDENTITY },
+	Shape{ nullptr },
+	Body{ nullptr }
+{}
 
 AnnPlayerBody::AnnPlayerBody()
 {

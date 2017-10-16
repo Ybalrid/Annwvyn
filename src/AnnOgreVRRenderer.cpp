@@ -48,7 +48,11 @@ AnnOgreVRRenderer::AnnOgreVRRenderer(std::string windowName) :
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
 	rttEyesCombined{ nullptr },
-	pauseFlag{ false }
+	pauseFlag{ false },
+	glfwWindow(nullptr),
+	windowW(0),
+	windowH(0),
+	monoCam(nullptr)
 {
 	if (self)
 	{
@@ -296,7 +300,7 @@ GLuint AnnOgreVRRenderer::createCombinedRenderTexture(unsigned int w, unsigned i
 
 GLuintPair AnnOgreVRRenderer::createSeparatedRenderTextures(const combinedTextureSizeArray& textureSizes)
 {
-	GLuintPair glid;
+	GLuintPair glid = { 0 };
 	AnnDebug() << "Creating separated render textures " << textureSizes[0][0] << "x" << textureSizes[0][1] << " " << textureSizes[1][0] << "x" << textureSizes[1][1];
 	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
 	for (auto i : { 0u, 1u })

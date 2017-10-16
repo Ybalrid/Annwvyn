@@ -115,7 +115,7 @@ Ann3DTextPlane::~Ann3DTextPlane()
 	node = nullptr;
 }
 
-void Ann3DTextPlane::setCaption(string newCaption)
+void Ann3DTextPlane::setCaption(const std::string& newCaption)
 {
 	caption = newCaption;
 	needUpdating = true;

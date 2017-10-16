@@ -107,7 +107,7 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 #endif
 }
 
-AnnEngine::AnnEngine(const char title[], std::string hmdCommand) :
+AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 	resetGuard(this),
 	applicationQuitRequested(false),
 	renderer(nullptr),
@@ -451,7 +451,7 @@ AnnEngine::registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem)
 	return userSystem;
 }
 
-AnnSubSystemPtr AnnEngine::getSubSystemByName(std::string name)
+AnnSubSystemPtr AnnEngine::getSubSystemByName(const std::string& name)
 {
 	for (auto subsystem : SubSystemList)
 		if (subsystem->name == name)
@@ -483,8 +483,9 @@ bool AnnEngine::openConsole()
 	if (AllocConsole())
 	{
 		//put stdout on this console;
-		FILE* f; freopen_s(&f, "CONOUT$", "w", stdout);
+		FILE* f; auto err = freopen_s(&f, "CONOUT$", "w", stdout);
 		if (!f) state = false;
+		if (err != 0) state = false;
 		manualConsole = true;
 	}
 

@@ -94,7 +94,7 @@ namespace Annwvyn
 		};
 
 		///Construct a Controller object
-		AnnHandController(std::string Type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
+		AnnHandController(const std::string& Type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
 
 		///Get the side type as a std::string
 		static std::string getSideAsString(AnnHandControllerSide s);
