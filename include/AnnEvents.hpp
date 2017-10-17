@@ -542,7 +542,7 @@ namespace Annwvyn
 		///Return the "input" string object
 		std::string getInput() const;
 		///Permit you to change the content of the input method
-		void setInput(std::string content);
+		void setInput(const std::string& content);
 		///Clear the input string : remove all characters hanging there
 		void clearInput();
 		///Clear input THEN record typed text
