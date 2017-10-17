@@ -163,9 +163,9 @@ void AnnScriptManager::registerApi()
 	chai.add(user_type<AnnGameObject>(), "AnnGameObject");
 	chai.add(fun([](AnnGameObject* o, Vector3 v) {o->setPosition(v); }), "setPosition");
 	chai.add(fun([](AnnGameObject* o, Quaternion q) {o->setOrientation(q); }), "setOrientation");
+	chai.add(fun([](AnnGameObject* o, Vector3 v) {o->setScale(v); }), "setScale");
 	chai.add(fun([](AnnGameObject* o) -> Vector3 {return o->getPosition(); }), "getPosition");
 	chai.add(fun([](AnnGameObject* o) -> Quaternion {return o->getOrientation(); }), "getOrientation");
-	chai.add(fun([](AnnGameObject* o, Vector3 v) {o->setScale(v); }), "setScale");
 	chai.add(fun([](AnnGameObject* o) -> Vector3 {return o->getScale(); }), "getScale");
 	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s); }), "playSound");
 	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
