@@ -14,7 +14,8 @@ offset(0, 0.125f, -0.75f),
 openGL43plus(false),
 visibility(false),
 lastUpdate{ 0 },
-refreshRate{ 1.0 / 15.0 }
+refreshRate{ 1.0 / 15.0 },
+historyStatus{ -1 }
 {
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
@@ -434,8 +435,36 @@ stop:
 	free(textureBuffer);
 }
 
+void AnnConsole::setFromPointedHistory()
+{
+	const auto& command = commandHistory[historyStatus];
+	if (!command.empty())
+		AnnGetEventManager()->getTextInputer()->setInput(command);
+}
+
 void AnnConsole::notifyNavigationKey(KeyCode::code code)
 {
+	if (!visibility) return;
+
+	switch (code)
+	{
+	default: break;
+	case KeyCode::up:
+		//AnnDebug() << "history command!";
+		historyStatus++;
+		if (historyStatus >= CONSOLE_HISTORY) historyStatus = CONSOLE_HISTORY - 1;
+		setFromPointedHistory();
+		break;
+	case KeyCode::down:
+		historyStatus--;
+		if (historyStatus <= -1)
+		{
+			historyStatus = -1;
+			break;
+		}
+		setFromPointedHistory();
+		break;
+	}
 }
 
 void AnnConsole::syncConsolePosition() const
@@ -463,6 +492,12 @@ void AnnConsole::runInput(std::string& input)
 	//remove the \r termination
 	input.pop_back();
 
+	addToHistory(input);
+	historyStatus = -1;
+
+	//Echo the command to the console
+	AnnDebug() << "% - " << input;
+
 	//Prevent to start with some chaiscript symbols in global space.
 	std::string firstWord;
 	std::stringstream inputStream(input);
@@ -486,6 +521,13 @@ void AnnConsole::runInput(std::string& input)
 		AnnDebug() << eval_error.what();
 		AnnDebug() << eval_error.pretty_print();
 	}
+}
+
+void AnnConsole::addToHistory(const std::string& input)
+{
+	if (input.empty()) return;
+	std::rotate(std::rbegin(commandHistory), std::rbegin(commandHistory) + 1, std::rend(commandHistory));
+	commandHistory[0] = input;
 }
 
 bool AnnConsole::runSpecialInput(const std::string& input)

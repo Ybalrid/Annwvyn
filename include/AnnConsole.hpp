@@ -14,6 +14,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <deque>
 #include <Ogre.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
@@ -34,6 +35,7 @@ namespace Annwvyn
 		static constexpr auto MAX_CONSOLE_LOG_WIDTH = 72;
 		static constexpr auto BASE = 256;
 		static constexpr auto MARGIN = 4;
+		static constexpr auto CONSOLE_HISTORY = 10;
 
 		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational
 		AnnConsole();
@@ -67,12 +69,15 @@ namespace Annwvyn
 
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
 		static void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false);
-		
+		void setFromPointedHistory();
+
 		void notifyNavigationKey(KeyCode::code code);
 	private:
 
 		///Cleanup and run the user input.
 		void runInput(std::string& input);
+
+		void addToHistory(const std::string& input);
 
 		///Run input that are not regular script commands
 		bool runSpecialInput(const std::string& input);
@@ -124,6 +129,9 @@ namespace Annwvyn
 
 		///Delay in seconds to re-refresh the console.
 		const double refreshRate;
+
+		std::array<std::string, CONSOLE_HISTORY> commandHistory;
+		int historyStatus;
 	};
 
 	using AnnConsolePtr = std::shared_ptr<AnnConsole>;
