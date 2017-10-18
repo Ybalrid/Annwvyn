@@ -10,6 +10,7 @@
 
 #include "systemMacro.h"
 #include "AnnTypes.h"
+#include "AnnKeyCode.h"
 #include <string>
 #include <iostream>
 #include <algorithm>
@@ -66,7 +67,8 @@ namespace Annwvyn
 
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
 		static void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false);
-
+		
+		void notifyNavigationKey(KeyCode::code code);
 	private:
 
 		///Cleanup and run the user input.

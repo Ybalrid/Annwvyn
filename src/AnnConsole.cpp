@@ -434,6 +434,10 @@ stop:
 	free(textureBuffer);
 }
 
+void AnnConsole::notifyNavigationKey(KeyCode::code code)
+{
+}
+
 void AnnConsole::syncConsolePosition() const
 {
 	auto targetPosition = AnnGetVRRenderer()->trackedHeadPose.position + AnnGetVRRenderer()->trackedHeadPose.orientation * offset;
