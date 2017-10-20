@@ -456,8 +456,10 @@ void AnnConsole::notifyNavigationKey(KeyCode::code code)
 	case KeyCode::up:
 		//AnnDebug() << "history command!";
 		historyStatus++;
-		if (historyStatus >= CONSOLE_HISTORY) historyStatus = CONSOLE_HISTORY - 1;
-		setFromPointedHistory();
+		if (historyStatus >= CONSOLE_HISTORY)
+			historyStatus = CONSOLE_HISTORY - 1;
+		if (setFromPointedHistory())
+			historyStatus--;
 		break;
 	case KeyCode::down:
 		historyStatus--;
