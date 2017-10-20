@@ -435,11 +435,15 @@ stop:
 	free(textureBuffer);
 }
 
-void AnnConsole::setFromPointedHistory()
+bool AnnConsole::setFromPointedHistory()
 {
 	const auto& command = commandHistory[historyStatus];
 	if (!command.empty())
+	{
 		AnnGetEventManager()->getTextInputer()->setInput(command);
+		return false;
+	}
+	return true;
 }
 
 void AnnConsole::notifyNavigationKey(KeyCode::code code)
