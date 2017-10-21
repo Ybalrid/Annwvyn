@@ -29,10 +29,13 @@ void AnnOgreVRRenderer::setAntiAliasingLevel(const uint8_t AA)
 		return self->changedAA();
 }
 
-AnnOgreVRRenderer::AnnOgreVRRenderer(std::string windowName) :
+AnnOgreVRRenderer::AnnOgreVRRenderer(const std::string& windowName) :
 	numberOfThreads(std::thread::hardware_concurrency()),
 	glMajor{ 4 },
 	glMinor{ 3 },
+	glfwWindow{ nullptr },
+	windowW{ 0 },
+	windowH{ 0 },
 	smgr{ nullptr },
 	root{ nullptr },
 	window{ nullptr },
@@ -45,14 +48,11 @@ AnnOgreVRRenderer::AnnOgreVRRenderer(std::string windowName) :
 	bodyOrientation{ Ogre::Quaternion::IDENTITY },
 	name{ windowName },
 	gameplayCharacterRoot{ nullptr },
+	monoCam(nullptr),
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
 	rttEyesCombined{ nullptr },
-	pauseFlag{ false },
-	glfwWindow(nullptr),
-	windowW(0),
-	windowH(0),
-	monoCam(nullptr)
+	pauseFlag{ false }
 {
 	if (self)
 	{
