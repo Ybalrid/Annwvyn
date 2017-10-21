@@ -73,6 +73,10 @@ namespace Ogre
 		{
 		}
 
+		/**
+		\brief Copy constructor
+		\param copyFrom Euler vector the new one is copied from
+		*/
 		Euler(const Euler& copyFrom)
 			: mYaw(copyFrom.mYaw), mPitch(copyFrom.mPitch), mRoll(copyFrom.mRoll), mCachedQuaternion(copyFrom.mCachedQuaternion), mChanged(copyFrom.mChanged)
 		{
