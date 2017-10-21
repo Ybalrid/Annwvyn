@@ -568,7 +568,7 @@ AnnBehaviorScript::AnnBehaviorScript() :
 	AnnDebug() << "Invalid script object created";
 }
 
-AnnBehaviorScript::AnnBehaviorScript(std::string scriptName,
+AnnBehaviorScript::AnnBehaviorScript(const std::string& scriptName,
 	std::function<void(chaiscript::Boxed_Value&)> updateHook,
 	std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
 	std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,

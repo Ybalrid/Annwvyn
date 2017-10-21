@@ -36,7 +36,7 @@ namespace Annwvyn
 			ANN_LIGHT_SPOTLIGHT = Ogre::Light::LightTypes::LT_SPOTLIGHT
 		};
 
-		static LightTypes getLightTypeFromString(std::string ltype);
+		static LightTypes getLightTypeFromString(const std::string& ltype);
 
 		///Set the position of the light (if relevant)
 		void setPosition(AnnVect3 position) override;
@@ -66,7 +66,7 @@ namespace Annwvyn
 		void setAttenuation(float range, float constant, float linear, float quadratic);
 
 		Ogre::Light* _getOgreLight();
-		
+
 		///Get the name of this light
 		std::string getName() const;
 
@@ -75,7 +75,7 @@ namespace Annwvyn
 		friend class AnnGameObjectManager;
 		Ogre::Light* light;
 		Ogre::SceneNode* node;
-		const std::string name; 
+		const std::string name;
 	};
 }
 

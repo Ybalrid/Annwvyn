@@ -138,7 +138,7 @@ historyStatus{ -1 }
 	}
 }
 
-void AnnConsole::append(std::string str)
+void AnnConsole::append(const std::string& str)
 {
 	rotate(begin(buffer), begin(buffer) + 1, end(buffer));
 	buffer[0] = str;

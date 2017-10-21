@@ -13,7 +13,7 @@ namespace Annwvyn
 	{
 	public:
 		///Create the event
-		explicit AnnUserSpaceEvent(std::string typeName);
+		explicit AnnUserSpaceEvent(const std::string& typeName);
 
 		///Destruct the event
 		virtual ~AnnUserSpaceEvent() = default;

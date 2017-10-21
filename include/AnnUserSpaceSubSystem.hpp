@@ -17,7 +17,7 @@ namespace Annwvyn
 	public:
 		///Construct the user subsystem. The systemName is mandatory
 		/// \param systemName The name of the subsystem. Should be unique.
-		AnnUserSubSystem(std::string systemName);
+		AnnUserSubSystem(const std::string& systemName);
 
 	protected:
 

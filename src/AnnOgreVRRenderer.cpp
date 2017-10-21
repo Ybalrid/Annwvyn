@@ -29,10 +29,13 @@ void AnnOgreVRRenderer::setAntiAliasingLevel(const uint8_t AA)
 		return self->changedAA();
 }
 
-AnnOgreVRRenderer::AnnOgreVRRenderer(std::string windowName) :
+AnnOgreVRRenderer::AnnOgreVRRenderer(const std::string& windowName) :
 	numberOfThreads(std::thread::hardware_concurrency()),
 	glMajor{ 4 },
 	glMinor{ 3 },
+	glfwWindow{ nullptr },
+	windowW{ 0 },
+	windowH{ 0 },
 	smgr{ nullptr },
 	root{ nullptr },
 	window{ nullptr },
@@ -45,6 +48,7 @@ AnnOgreVRRenderer::AnnOgreVRRenderer(std::string windowName) :
 	bodyOrientation{ Ogre::Quaternion::IDENTITY },
 	name{ windowName },
 	gameplayCharacterRoot{ nullptr },
+	monoCam(nullptr),
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
 	rttEyesCombined{ nullptr },
@@ -296,7 +300,7 @@ GLuint AnnOgreVRRenderer::createCombinedRenderTexture(unsigned int w, unsigned i
 
 GLuintPair AnnOgreVRRenderer::createSeparatedRenderTextures(const combinedTextureSizeArray& textureSizes)
 {
-	GLuintPair glid;
+	GLuintPair glid = { 0 };
 	AnnDebug() << "Creating separated render textures " << textureSizes[0][0] << "x" << textureSizes[0][1] << " " << textureSizes[1][0] << "x" << textureSizes[1][1];
 	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
 	for (auto i : { 0u, 1u })

@@ -15,7 +15,7 @@ namespace Annwvyn
 	{
 	public:
 		///Construct a SubSystem
-		AnnSubSystem(std::string systemName);
+		AnnSubSystem(const std::string& systemName);
 
 		///Destruct a SubSystem
 		virtual ~AnnSubSystem();

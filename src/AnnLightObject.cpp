@@ -35,7 +35,7 @@ AnnLightObject::~AnnLightObject()
 	}
 }
 
-AnnLightObject::LightTypes AnnLightObject::getLightTypeFromString(std::string ltype)
+AnnLightObject::LightTypes AnnLightObject::getLightTypeFromString(const std::string& ltype)
 {
 	if (ltype == "Point") return ANN_LIGHT_POINT;
 	if (ltype == "Spotlight") return ANN_LIGHT_SPOTLIGHT;

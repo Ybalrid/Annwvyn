@@ -119,7 +119,7 @@ namespace Annwvyn
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
-		AnnEngine(const char title[], std::string hmdCommand);
+		AnnEngine(const char title[], const std::string& hmdCommand);
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();
@@ -220,7 +220,7 @@ namespace Annwvyn
 		AnnUserSubSystemPtr registerUserSubSystem(AnnUserSubSystemPtr userSystem);
 
 		///Get pointer to a subsystem by name
-		AnnSubSystemPtr getSubSystemByName(std::string name);
+		AnnSubSystemPtr getSubSystemByName(const std::string& name);
 
 		///Know if subsystem is user defined
 		static bool isUserSubSystem(AnnSubSystemPtr subsystem);

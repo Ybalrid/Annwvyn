@@ -37,7 +37,7 @@ namespace Annwvyn
 
 		///Set or change the caption
 		/// \param newCaption the new text to display
-		void setCaption(std::string newCaption);
+		void setCaption(const std::string& newCaption);
 
 		///The plane will auto-re-render at changes if set to true
 		/// \param state If true, the text will be updated each time you change something

@@ -6,7 +6,7 @@
 
 using namespace Annwvyn;
 
-AnnHandController::AnnHandController(std::string type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
+AnnHandController::AnnHandController(const std::string& type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
 	controllerTypeString(type),
 	controllerTypeHash(AnnGetStringUtility()->hash(type)),
 	id(controllerID),

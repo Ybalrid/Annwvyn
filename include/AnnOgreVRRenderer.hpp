@@ -105,7 +105,7 @@ namespace Annwvyn
 		};
 
 		///Construct VR Renderer
-		AnnOgreVRRenderer(std::string windowName);
+		AnnOgreVRRenderer(const std::string& windowName);
 
 		///Destruct VR Renderer
 		virtual ~AnnOgreVRRenderer();
