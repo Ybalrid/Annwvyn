@@ -73,12 +73,14 @@ namespace Annwvyn
 		///return true if pointed to an empty slot
 		bool setFromPointedHistory();
 
+		///Method to be called for navigation keys
 		void notifyNavigationKey(KeyCode::code code);
 	private:
 
 		///Cleanup and run the user input.
 		void runInput(std::string& input);
 
+		///Push the inputed text into the command history
 		void addToHistory(const std::string& input);
 
 		///Run input that are not regular script commands
@@ -132,7 +134,10 @@ namespace Annwvyn
 		///Delay in seconds to re-refresh the console.
 		const double refreshRate;
 
+		///Buffer of strings containing past run commands
 		std::array<std::string, CONSOLE_HISTORY> commandHistory;
+
+		///Status of the history
 		int historyStatus;
 	};
 
