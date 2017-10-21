@@ -489,6 +489,12 @@ void JoystickBuffer::capture() const
 	oisJoystick->capture();
 }
 
+void AnnTextInputer::setCursorOffset(int newPos)
+{
+	if (newPos >= 0)
+		cursorOffset = newPos;
+}
+
 AnnTriggerEvent::AnnTriggerEvent() : AnnEvent(),
 sender{ nullptr }
 {

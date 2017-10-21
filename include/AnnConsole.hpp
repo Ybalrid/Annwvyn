@@ -139,6 +139,9 @@ namespace Annwvyn
 
 		///Status of the history
 		int historyStatus;
+
+		///Position of the text cursor, indexed from the end of the string.
+		int cursorPos;
 	};
 
 	using AnnConsolePtr = std::shared_ptr<AnnConsole>;

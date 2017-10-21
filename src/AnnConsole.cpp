@@ -15,7 +15,8 @@ openGL43plus(false),
 visibility(false),
 lastUpdate{ 0 },
 refreshRate{ 1.0 / 15.0 },
-historyStatus{ -1 }
+historyStatus{ -1 },
+cursorPos{ 0 }
 {
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
@@ -243,6 +244,20 @@ void AnnConsole::update()
 		font.get(),
 		Ogre::ColourValue::Black,																	//Color
 		'l', true);																					//Alignment
+	if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2)
+	{
+		std::string cursor;
+		for (int i = 0; i < CONSOLE_BUFFER + 1; ++i) cursor += '\n';
+		cursor += ".  ";
+		for (int i = 0; i < std::max(0, int(strippedCommand.size()) - cursorPos); ++i) cursor += ' ';
+		cursor += '_';
+		WriteToTexture(cursor,
+			texture,
+			Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),					//Part of the pixel buffer to write to
+			font.get(),
+			Ogre::ColourValue::Blue,
+			'l', true);
+	}
 }
 
 bool AnnConsole::isForbdiden(const std::string& keyword)
@@ -466,6 +481,13 @@ void AnnConsole::notifyNavigationKey(KeyCode::code code)
 		}
 		setFromPointedHistory();
 		break;
+	case KeyCode::right:
+		cursorPos--; if (cursorPos < 0) cursorPos = 0;
+		AnnGetEventManager()->getTextInputer()->setCursorOffset(cursorPos);
+		break;
+	case KeyCode::left:
+		cursorPos++;
+		AnnGetEventManager()->getTextInputer()->setCursorOffset(cursorPos);
 	}
 }
 
