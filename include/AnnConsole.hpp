@@ -119,9 +119,6 @@ namespace Annwvyn
 		///OpenGL Texture IDs, to use glCopyImageSubData to clone texture quickly.
 		GLuint backgroundID, textureID;
 
-		///There's a small optimization we can do on the way we copy a texture to another, but the opengl function is available on GL4.3+ hardware only.
-		bool openGL43plus;
-
 		///The font object used, should be Vera Mono in true type format from the Gnome project, included in CORE resources
 		Ogre::FontPtr font;
 

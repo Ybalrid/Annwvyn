@@ -11,7 +11,6 @@ AnnConsole::AnnConsole() : AnnSubSystem("OnScreenConsole"),
 modified(false),
 consoleNode(nullptr),
 offset(0, 0.125f, -0.75f),
-openGL43plus(false),
 visibility(false),
 lastUpdate{ 0 },
 refreshRate{ 1.0 / 15.0 },
@@ -124,17 +123,6 @@ historyStatus{ -1 }
 	{
 		background->getCustomAttribute("GLID", &backgroundID);
 		texture->getCustomAttribute("GLID", &textureID);
-
-		// check if OpenGL version is > at 4.3
-		GLint major, minor;
-		glGetIntegerv(GL_MAJOR_VERSION, &major);
-		glGetIntegerv(GL_MINOR_VERSION, &minor);
-
-		std::stringstream log;
-		log << "AnnConsolen constructor detected OpenGL version " << major << "." << minor;
-		AnnEngine::log(log.str());
-
-		if ((openGL43plus = major >= 4 && minor >= 3)) { AnnEngine::log("This version is 4.3 or greater. Texture copy optimization enabled"); }
 	}
 }
 
@@ -211,30 +199,9 @@ void AnnConsole::update()
 	auto textToDisplay = content.str();
 
 	//Erase plane (draw background)
-	if (openGL43plus)
-	{
-		glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
-			textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
-			texture->getSrcWidth(), texture->getSrcHeight(), 1);
-	}
-	else
-	{
-		auto w(texture->getBuffer()->getWidth());
-		auto h(texture->getBuffer()->getHeight());
-
-		auto texture_out = texture->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::v1::HardwareBuffer::LockOptions::HBL_WRITE_ONLY);
-
-		w = background->getBuffer()->getWidth();
-		h = background->getBuffer()->getHeight();
-
-		auto background_in = background->getBuffer()->lock(Ogre::Image::Box(0, 0, w, h), Ogre::v1::HardwareBuffer::LockOptions::HBL_READ_ONLY);
-
-		for (auto y(0u); y < h; ++y) for (auto x(0u); x < w; ++x)
-			texture_out.setColourAt(background_in.getColourAt(x, y, 0), x, y, 0);
-
-		background->getBuffer()->unlock();
-		texture->getBuffer()->unlock();
-	}
+	glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0,
+		textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
+		texture->getSrcWidth(), texture->getSrcHeight(), 1);
 
 	//Write text to texture
 	WriteToTexture(textToDisplay,																	//Text
