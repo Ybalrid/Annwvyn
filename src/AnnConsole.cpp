@@ -140,12 +140,8 @@ historyStatus{ -1 }
 
 void AnnConsole::append(std::string str)
 {
-	//Copy with an offset of 1 the buffer content
-	for (size_t i(1); i < CONSOLE_BUFFER; i++)
-		buffer[i - 1] = buffer[i];
-
-	//Write the texture to the buffer
-	buffer[CONSOLE_BUFFER - 1] = str;
+	rotate(begin(buffer), begin(buffer) + 1, end(buffer));
+	buffer[0] = str;
 
 	//The console will be redrawn next frame
 	modified = true;
@@ -532,7 +528,7 @@ void AnnConsole::runInput(std::string& input)
 void AnnConsole::addToHistory(const std::string& input)
 {
 	if (input.empty()) return;
-	std::rotate(std::rbegin(commandHistory), std::rbegin(commandHistory) + 1, std::rend(commandHistory));
+	rotate(rbegin(commandHistory), rbegin(commandHistory) + 1, rend(commandHistory));
 	commandHistory[0] = input;
 }
 
