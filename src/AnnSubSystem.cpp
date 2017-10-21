@@ -4,7 +4,7 @@
 
 using namespace Annwvyn;
 
-AnnSubSystem::AnnSubSystem(std::string systemName) :
+AnnSubSystem::AnnSubSystem(const std::string& systemName) :
 	name(systemName)
 {
 	AnnDebug() << "*-*-*-* Starting " << name << " SubSystem";
