@@ -22,7 +22,7 @@ namespace Annwvyn
 		AnnBehaviorScript();
 
 		///Callable script constructor
-		AnnBehaviorScript(std::string name,
+		AnnBehaviorScript(const std::string& name,
 			std::function<void(chaiscript::Boxed_Value&)> updateHook,
 			std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
 			std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
