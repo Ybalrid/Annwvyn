@@ -194,21 +194,23 @@ void AnnConsole::update()
 	//Command Invite
 	content << "\n%> ";
 	auto command = AnnGetEventManager()->getTextInputer()->getInput();
-
+	std::string strippedCommand;
 	//Display with a scrolling window
 	if (!command.empty())
 	{
-		content << command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
+		strippedCommand = command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
+		content << strippedCommand;
 		if (command[command.size() - 1] == '\r')
 		{
 			//Execute command code here
 			runInput(command);
 			AnnGetEventManager()->getTextInputer()->clearInput();
+			cursorPos = 0;
 		}
 	}
 
 	//Append blinking cursor
-	if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
+	//if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
 	auto textToDisplay = content.str();
 
 	//Erase plane (draw background)
