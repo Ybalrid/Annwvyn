@@ -3,7 +3,7 @@
 #include "AnnGetter.hpp"
 using namespace Annwvyn;
 
-AnnUserSpaceEvent::AnnUserSpaceEvent(std::string typeName) :
+AnnUserSpaceEvent::AnnUserSpaceEvent(const std::string& typeName) :
 	eventTypeName(typeName),
 	eventTypeHash(AnnGetStringUtility()->hash(eventTypeName))
 {
