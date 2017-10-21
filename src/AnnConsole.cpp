@@ -141,7 +141,7 @@ historyStatus{ -1 }
 void AnnConsole::append(const std::string& str)
 {
 	rotate(begin(buffer), begin(buffer) + 1, end(buffer));
-	buffer[0] = str;
+	buffer[CONSOLE_BUFFER - 1] = str;
 
 	//The console will be redrawn next frame
 	modified = true;
