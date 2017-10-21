@@ -39,6 +39,8 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	else if (arg.text < 127 && arg.text > 31 || arg.text == 13 || !asciiOnly)
 		//Put typed char into the application
 		input.push_back(char(arg.text));
+	else if (arg.key == OIS::KC_UP || arg.key == OIS::KC_DOWN || arg.key == OIS::KC_LEFT || arg.key == OIS::KC_RIGHT)
+		AnnGetOnScreenConsole()->notifyNavigationKey(KeyCode::code(arg.key));
 	return true;
 }
 

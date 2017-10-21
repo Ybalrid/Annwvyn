@@ -14,7 +14,8 @@ offset(0, 0.125f, -0.75f),
 openGL43plus(false),
 visibility(false),
 lastUpdate{ 0 },
-refreshRate{ 1.0 / 15.0 }
+refreshRate{ 1.0 / 15.0 },
+historyStatus{ -1 }
 {
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
@@ -139,12 +140,8 @@ refreshRate{ 1.0 / 15.0 }
 
 void AnnConsole::append(std::string str)
 {
-	//Copy with an offset of 1 the buffer content
-	for (size_t i(1); i < CONSOLE_BUFFER; i++)
-		buffer[i - 1] = buffer[i];
-
-	//Write the texture to the buffer
-	buffer[CONSOLE_BUFFER - 1] = str;
+	rotate(begin(buffer), begin(buffer) + 1, end(buffer));
+	buffer[0] = str;
 
 	//The console will be redrawn next frame
 	modified = true;
@@ -434,6 +431,44 @@ stop:
 	free(textureBuffer);
 }
 
+bool AnnConsole::setFromPointedHistory()
+{
+	const auto& command = commandHistory[historyStatus];
+	if (!command.empty())
+	{
+		AnnGetEventManager()->getTextInputer()->setInput(command);
+		return false;
+	}
+	return true;
+}
+
+void AnnConsole::notifyNavigationKey(KeyCode::code code)
+{
+	if (!visibility) return;
+
+	switch (code)
+	{
+	default: break;
+	case KeyCode::up:
+		//AnnDebug() << "history command!";
+		historyStatus++;
+		if (historyStatus >= CONSOLE_HISTORY)
+			historyStatus = CONSOLE_HISTORY - 1;
+		if (setFromPointedHistory())
+			historyStatus--;
+		break;
+	case KeyCode::down:
+		historyStatus--;
+		if (historyStatus <= -1)
+		{
+			historyStatus = -1;
+			break;
+		}
+		setFromPointedHistory();
+		break;
+	}
+}
+
 void AnnConsole::syncConsolePosition() const
 {
 	auto targetPosition = AnnGetVRRenderer()->trackedHeadPose.position + AnnGetVRRenderer()->trackedHeadPose.orientation * offset;
@@ -459,6 +494,12 @@ void AnnConsole::runInput(std::string& input)
 	//remove the \r termination
 	input.pop_back();
 
+	addToHistory(input);
+	historyStatus = -1;
+
+	//Echo the command to the console
+	AnnDebug() << "% - " << input;
+
 	//Prevent to start with some chaiscript symbols in global space.
 	std::string firstWord;
 	std::stringstream inputStream(input);
@@ -482,6 +523,13 @@ void AnnConsole::runInput(std::string& input)
 		AnnDebug() << eval_error.what();
 		AnnDebug() << eval_error.pretty_print();
 	}
+}
+
+void AnnConsole::addToHistory(const std::string& input)
+{
+	if (input.empty()) return;
+	rotate(rbegin(commandHistory), rbegin(commandHistory) + 1, rend(commandHistory));
+	commandHistory[0] = input;
 }
 
 bool AnnConsole::runSpecialInput(const std::string& input)
