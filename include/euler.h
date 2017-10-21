@@ -73,6 +73,11 @@ namespace Ogre
 		{
 		}
 
+		Euler(const Euler& copyFrom)
+			: mYaw(copyFrom.mYaw), mPitch(copyFrom.mPitch), mRoll(copyFrom.mRoll), mCachedQuaternion(copyFrom.mCachedQuaternion), mChanged(copyFrom.mChanged)
+		{
+		}
+
 		/**
 		\brief Default constructor with presets.
 		\param quaternion Calculate starting values from this quaternion
