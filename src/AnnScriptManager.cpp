@@ -170,13 +170,12 @@ void AnnScriptManager::registerApi()
 	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s); }), "playSound");
 	chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
 	chai.add(fun([](AnnGameObject* o) {return o->getName(); }), "getName");
-	chai.add(fun([](AnnGameObject* o, const string& name) {o->setAnimation(name); }), "setAnimation");
+	chai.add(fun([](AnnGameObject* o, const string& animName) {o->setAnimation(animName); }), "setAnimation");
 	chai.add(fun([](AnnGameObject* o) {o->playAnimation(); }), "playAnimation");
 	chai.add(fun([](AnnGameObject* o, bool play) {o->playAnimation(play); }), "playAnimation");
 	chai.add(fun([](AnnGameObject* o) {o->loopAnimation(); }), "loopAnimation");
 	chai.add(fun([](AnnGameObject* o, bool play) {o->loopAnimation(play); }), "loopAnimation");
 	chai.add(fun([](AnnGameObject* o) {return o->getName(); }), "getName");
-
 
 	chai.add(user_type<AnnLightObject>(), "AnnLightObject");
 	chai.add(fun([](AnnLightObject* o, Vector3 v) {o->setPosition(v); }), "setPosition");
