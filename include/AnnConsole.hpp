@@ -9,20 +9,21 @@
 #define ANNCONSOLE
 
 #include "systemMacro.h"
-#include "AnnTypes.h"
-#include "AnnKeyCode.h"
-#include <string>
+
 #include <iostream>
+#include <string>
+#include <array>
 #include <algorithm>
-#include <deque>
+
 #include <Ogre.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 #include <OgreRenderOperation.h>
 #include <Hlms/Unlit/OgreHlmsUnlitDatablock.h>
 #include <OgreHardwarePixelBuffer.h>
-
 #include "AnnSubsystem.hpp"
+#include "AnnTypes.h"
+#include "AnnKeyCode.h"
 
 namespace Annwvyn
 {

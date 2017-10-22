@@ -586,7 +586,7 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getContent().size()) + " active objects");
 		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getLights().size()) + " active light sources");
 		size_t nbControllers;
-		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " current controllers");
+		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " max tracked controllers");
 		if (nbControllers > 0) if (AnnGetVRRenderer()->getHandControllerArray()[0])
 		{
 			append("HandControllers connected");
@@ -594,7 +594,7 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		}
 		else
 		{
-			append("HandControllers are not connected");
+			append("No HandControllers active");
 		}
 
 		return true;
