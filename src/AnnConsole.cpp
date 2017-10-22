@@ -193,7 +193,15 @@ void AnnConsole::update()
 
 	//Command Invite
 	content << "\n%> ";
-	auto command = AnnGetEventManager()->getTextInputer()->getInput();
+	auto textInputer = AnnGetEventManager()->getTextInputer();
+	auto command = textInputer->getInput();
+	cursorPos = textInputer->getCursorOffset();
+	if (command.empty())
+	{
+		cursorPos = 0;
+		textInputer->setCursorOffset(cursorPos);
+	}
+
 	std::string strippedCommand;
 	//Display with a scrolling window
 	if (!command.empty())

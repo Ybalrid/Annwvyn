@@ -551,6 +551,7 @@ namespace Annwvyn
 		void stopListening();
 		///Set the cursor offset by hand
 		void setCursorOffset(int newPos);
+		int getCursorOffset() const;
 	private:
 		///String that holds typed text. Characters are push/popped at the back of this string
 		std::string input;

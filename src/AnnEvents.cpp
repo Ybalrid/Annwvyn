@@ -495,6 +495,11 @@ void AnnTextInputer::setCursorOffset(int newPos)
 		cursorOffset = newPos;
 }
 
+int AnnTextInputer::getCursorOffset() const
+{
+	return cursorOffset;
+}
+
 AnnTriggerEvent::AnnTriggerEvent() : AnnEvent(),
 sender{ nullptr }
 {

@@ -37,8 +37,8 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	//If backspace, pop last char if possible
 	if (arg.key == OIS::KC_BACK && !input.empty())
 	{
-		input.erase(begin(input) + std::max(0, int(input.size() - 1) - int(cursorOffset)));
 		if (cursorOffset > input.size()) cursorOffset = int(input.size());
+		if (!input.empty()) input.erase(end(input) - std::min<int>(input.size(), ((1 + (cursorOffset)))));
 	}
 	else if ((arg.text < 127 && arg.text > 31 && arg.text != '\r') || !asciiOnly)
 		//Put typed char into the application
