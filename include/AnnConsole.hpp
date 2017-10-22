@@ -35,7 +35,7 @@ namespace Annwvyn
 		static constexpr auto MAX_CONSOLE_LOG_WIDTH = 72;
 		static constexpr auto BASE = 256;
 		static constexpr auto MARGIN = 4;
-		static constexpr auto CONSOLE_HISTORY = 10;
+		static constexpr auto CONSOLE_HISTORY = 64;
 
 		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational
 		AnnConsole();
