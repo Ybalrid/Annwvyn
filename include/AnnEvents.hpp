@@ -549,6 +549,10 @@ namespace Annwvyn
 		void startListening();
 		///Stop recording typed text
 		void stopListening();
+		///Set the cursor offset by hand
+		void setCursorOffset(int newPos);
+		///Get the current position of the internal cursor
+		int getCursorOffset() const;
 	private:
 		///String that holds typed text. Characters are push/popped at the back of this string
 		std::string input;
@@ -556,5 +560,7 @@ namespace Annwvyn
 		bool listen;
 		///true if this text should be ascii only
 		bool asciiOnly;
+		///Offset from the end of the string where the operations has to be done
+		int cursorOffset;
 	};
 }

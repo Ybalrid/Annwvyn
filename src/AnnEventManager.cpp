@@ -26,21 +26,40 @@ std::shared_ptr<AnnEventListener> AnnEventListener::getSharedListener()
 
 AnnTextInputer::AnnTextInputer() :
 	listen(false),
-	asciiOnly{ true }
+	asciiOnly{ true },
+	cursorOffset{ 0 }
 {
 }
 
 bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 {
 	if (!listen) return true;
-	//If backspace, pop last char if possible
+
+	//Handle backspace
 	if (arg.key == OIS::KC_BACK && !input.empty())
-		input.pop_back();
-	else if (arg.text < 127 && arg.text > 31 || arg.text == 13 || !asciiOnly)
+	{
+		if (cursorOffset > input.size()) cursorOffset = int(input.size());
+		input.erase(end(input) - std::min(int(input.size()), 1 + cursorOffset));
+	}
+
+	//Text
+	else if (arg.text < 0x7F && arg.text > 0x1F || !asciiOnly)
+	{
 		//Put typed char into the application
-		input.push_back(char(arg.text));
+		input.insert(std::max(0, int(input.size()) - int(cursorOffset)), 1, char(arg.text));
+	}
+
+	//Return key
+	else if (arg.text == '\r')
+	{
+		input.push_back('\r');
+	}
+
+	//Arrow Keys
 	else if (arg.key == OIS::KC_UP || arg.key == OIS::KC_DOWN || arg.key == OIS::KC_LEFT || arg.key == OIS::KC_RIGHT)
+	{
 		AnnGetOnScreenConsole()->notifyNavigationKey(KeyCode::code(arg.key));
+	}
 	return true;
 }
 
@@ -57,6 +76,7 @@ std::string AnnTextInputer::getInput() const
 void AnnTextInputer::clearInput()
 {
 	input.clear();
+	cursorOffset = 0;
 }
 
 void AnnTextInputer::startListening()
@@ -73,6 +93,18 @@ void AnnTextInputer::stopListening()
 void AnnTextInputer::setInput(const std::string& content)
 {
 	input = content;
+	cursorOffset = 0;
+}
+
+void AnnTextInputer::setCursorOffset(int newPos)
+{
+	if (newPos >= 0)
+		cursorOffset = newPos;
+}
+
+int AnnTextInputer::getCursorOffset() const
+{
+	return cursorOffset;
 }
 
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) : AnnSubSystem("EventManager"),

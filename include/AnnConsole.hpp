@@ -9,20 +9,21 @@
 #define ANNCONSOLE
 
 #include "systemMacro.h"
-#include "AnnTypes.h"
-#include "AnnKeyCode.h"
-#include <string>
+
 #include <iostream>
+#include <string>
+#include <array>
 #include <algorithm>
-#include <deque>
+
 #include <Ogre.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 #include <OgreRenderOperation.h>
 #include <Hlms/Unlit/OgreHlmsUnlitDatablock.h>
 #include <OgreHardwarePixelBuffer.h>
-
 #include "AnnSubsystem.hpp"
+#include "AnnTypes.h"
+#include "AnnKeyCode.h"
 
 namespace Annwvyn
 {
@@ -39,7 +40,9 @@ namespace Annwvyn
 
 		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational
 		AnnConsole();
-		virtual ~AnnConsole();
+
+		///Destructor
+		~AnnConsole();
 
 		///Add text to the console buffer. The console buffer will keep CONSOLE_BUFFER lines of messages in memory only
 		/// \param string text to append to the console
@@ -93,10 +96,10 @@ namespace Annwvyn
 		bool modified;
 
 		///Array of 3D points to construct the render plane
-		AnnVect3 points[4];
+		std::array<AnnVect3, 4> points;
 
 		///Array of UV coordinates to constructed the render plane
-		AnnVect2 textCoord[4];
+		std::array<AnnVect2, 4> textCoord;
 
 		///Buffer of string objects
 		std::string buffer[CONSOLE_BUFFER];
@@ -136,6 +139,9 @@ namespace Annwvyn
 
 		///Status of the history
 		int historyStatus;
+
+		///Position of the text cursor, indexed from the end of the string.
+		int cursorPos;
 	};
 
 	using AnnConsolePtr = std::shared_ptr<AnnConsole>;

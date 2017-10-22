@@ -14,7 +14,8 @@ offset(0, 0.125f, -0.75f),
 visibility(false),
 lastUpdate{ 0 },
 refreshRate{ 1.0 / 15.0 },
-historyStatus{ -1 }
+historyStatus{ -1 },
+cursorPos{ 0 }
 {
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
@@ -180,22 +181,32 @@ void AnnConsole::update()
 
 	//Command Invite
 	content << "\n%> ";
-	auto command = AnnGetEventManager()->getTextInputer()->getInput();
+	auto textInputer = AnnGetEventManager()->getTextInputer();
+	auto command = textInputer->getInput();
+	cursorPos = textInputer->getCursorOffset();
+	if (command.empty())
+	{
+		cursorPos = 0;
+		textInputer->setCursorOffset(cursorPos);
+	}
 
+	std::string strippedCommand;
 	//Display with a scrolling window
 	if (!command.empty())
 	{
-		content << command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
+		strippedCommand = command.substr(std::max(0, int(command.size()) - (MAX_CONSOLE_LOG_WIDTH - 5)), command.size());
+		content << strippedCommand;
 		if (command[command.size() - 1] == '\r')
 		{
 			//Execute command code here
 			runInput(command);
 			AnnGetEventManager()->getTextInputer()->clearInput();
+			cursorPos = 0;
 		}
 	}
 
 	//Append blinking cursor
-	if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
+	//if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
 	auto textToDisplay = content.str();
 
 	//Erase plane (draw background)
@@ -210,6 +221,19 @@ void AnnConsole::update()
 		font.get(),
 		Ogre::ColourValue::Black,																	//Color
 		'l', true);																					//Alignment
+
+	std::string cursor;
+	for (auto i = 0; i < CONSOLE_BUFFER + 1; ++i) cursor += '\n';
+	cursor += ".  ";
+	for (auto i = 0; i < std::max(0, int(strippedCommand.size()) - cursorPos); ++i) cursor += ' ';
+	cursor += '_';
+
+	WriteToTexture(cursor,
+		texture,
+		Ogre::Image::Box(0 + MARGIN, 0 + MARGIN, 2 * BASE - MARGIN, BASE - MARGIN),					//Part of the pixel buffer to write to
+		font.get(),
+		Ogre::ColourValue::Blue,
+		'l', true);
 }
 
 bool AnnConsole::isForbdiden(const std::string& keyword)
@@ -433,6 +457,13 @@ void AnnConsole::notifyNavigationKey(KeyCode::code code)
 		}
 		setFromPointedHistory();
 		break;
+	case KeyCode::right:
+		cursorPos--; if (cursorPos < 0) cursorPos = 0;
+		AnnGetEventManager()->getTextInputer()->setCursorOffset(cursorPos);
+		break;
+	case KeyCode::left:
+		cursorPos++;
+		AnnGetEventManager()->getTextInputer()->setCursorOffset(cursorPos);
 	}
 }
 
@@ -522,7 +553,7 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getContent().size()) + " active objects");
 		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getLights().size()) + " active light sources");
 		size_t nbControllers;
-		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " current controllers");
+		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " max tracked controllers");
 		if (nbControllers > 0) if (AnnGetVRRenderer()->getHandControllerArray()[0])
 		{
 			append("HandControllers connected");
@@ -530,7 +561,7 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		}
 		else
 		{
-			append("HandControllers are not connected");
+			append("No HandControllers active");
 		}
 
 		return true;
