@@ -43,7 +43,7 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	}
 
 	//Text
-	else if ((arg.text < 127 && arg.text > 31 && arg.text != '\r') || !asciiOnly)
+	else if (arg.text < 0x7F && arg.text > 0x1F || !asciiOnly)
 	{
 		//Put typed char into the application
 		input.insert(std::max(0, int(input.size()) - int(cursorOffset)), 1, char(arg.text));
@@ -94,6 +94,17 @@ void AnnTextInputer::setInput(const std::string& content)
 {
 	input = content;
 	cursorOffset = 0;
+}
+
+void AnnTextInputer::setCursorOffset(int newPos)
+{
+	if (newPos >= 0)
+		cursorOffset = newPos;
+}
+
+int AnnTextInputer::getCursorOffset() const
+{
+	return cursorOffset;
 }
 
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) : AnnSubSystem("EventManager"),
