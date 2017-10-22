@@ -39,7 +39,9 @@ namespace Annwvyn
 
 		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational
 		AnnConsole();
-		virtual ~AnnConsole();
+
+		///Destructor
+		~AnnConsole();
 
 		///Add text to the console buffer. The console buffer will keep CONSOLE_BUFFER lines of messages in memory only
 		/// \param string text to append to the console
@@ -93,10 +95,10 @@ namespace Annwvyn
 		bool modified;
 
 		///Array of 3D points to construct the render plane
-		AnnVect3 points[4];
+		std::array<AnnVect3, 4> points;
 
 		///Array of UV coordinates to constructed the render plane
-		AnnVect2 textCoord[4];
+		std::array<AnnVect2, 4> textCoord;
 
 		///Buffer of string objects
 		std::string buffer[CONSOLE_BUFFER];
