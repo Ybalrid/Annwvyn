@@ -117,8 +117,7 @@ cursorPos{ 0 }
 	for (size_t i(0); i < CONSOLE_BUFFER; i++)
 		buffer[i] = "";
 
-	//To optimize texture copy, make sure to use the most efficient OpenGL method
-
+	//Get the opengl ids
 	if (Ogre::Root::getSingleton().getRenderSystem()->getName()
 		== "OpenGL 3+ Rendering Subsystem")
 	{
