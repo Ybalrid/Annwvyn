@@ -34,19 +34,32 @@ AnnTextInputer::AnnTextInputer() :
 bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 {
 	if (!listen) return true;
-	//If backspace, pop last char if possible
+
+	//Handle backspace
 	if (arg.key == OIS::KC_BACK && !input.empty())
 	{
 		if (cursorOffset > input.size()) cursorOffset = int(input.size());
-		if (!input.empty()) input.erase(end(input) - std::min(int(input.size()), 1 + cursorOffset));
+		input.erase(end(input) - std::min(int(input.size()), 1 + cursorOffset));
 	}
+
+	//Text
 	else if ((arg.text < 127 && arg.text > 31 && arg.text != '\r') || !asciiOnly)
+	{
 		//Put typed char into the application
 		input.insert(std::max(0, int(input.size()) - int(cursorOffset)), 1, char(arg.text));
+	}
+
+	//Return key
 	else if (arg.text == '\r')
+	{
 		input.push_back('\r');
+	}
+
+	//Arrow Keys
 	else if (arg.key == OIS::KC_UP || arg.key == OIS::KC_DOWN || arg.key == OIS::KC_LEFT || arg.key == OIS::KC_RIGHT)
+	{
 		AnnGetOnScreenConsole()->notifyNavigationKey(KeyCode::code(arg.key));
+	}
 	return true;
 }
 
