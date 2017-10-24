@@ -1,6 +1,5 @@
 #ifndef OGRE_OPENVR_RENDER
 #define OGRE_OPENVR_RENDER
-#ifdef _WIN32
 #include "systemMacro.h"
 #include "AnnOgreVRRenderer.hpp"
 
@@ -181,5 +180,4 @@ namespace Annwvyn
 	};
 }
 
-#endif
 #endif
