@@ -23,11 +23,11 @@ COPY %ANNWVYNSDK64%\Ogre21SDK\bin\release\OgreHlmsUnlit.dll .
 ECHO GL Extension Wrangler DLL
 COPY %ANNWVYNSDK64%\glew\bin\Release\x64\glew32.dll .
 ECHO OpenAL runtime DLL 
-COPY %ANNWVYNSDK64%\AL\openal-soft\build\Release\OpenAL32.dll .
+COPY %ANNWVYNSDK64%\AL\openal-soft\build\install\bin\OpenAL32.dll .
 ECHO LibSndFile DLL
 COPY %ANNWVYNSDK64%\libsndfile\bin\libsndfile-1.dll
 ECHO Object-oriented Input System dll
-COPY %ANNWVYNSDK64%\OIS\lib\OIS.dll .
+COPY %ANNWVYNSDK64%\OIS\OIS_ReleaseDll\OIS.dll .
 ECHO OpenVR api - runtime DLL
 COPY %ANNWVYNSDK64%\openvr\bin\win64\openvr_api.dll . 
 
