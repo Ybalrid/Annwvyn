@@ -161,7 +161,7 @@ public:
 
 	void load() override
 	{
-		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
+		goBackListener = AnnGetEventManager()->addListener<GoBackToDemoHub>();
 		auto Ground = addGameObject("floorplane.mesh");
 		Ground->setUpPhysics();
 

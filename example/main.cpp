@@ -86,13 +86,13 @@ AnnMain()
 	AnnGetResourceManager()->initResources();
 
 	//create and load level objects
-	AnnGetLevelManager()->addLevel(make_shared<DemoHub>());
-	AnnGetLevelManager()->addLevel(make_shared<Demo0>());
-	AnnGetLevelManager()->addLevel(make_shared<TestLevel>());
-	AnnGetLevelManager()->addLevel(make_shared<DemoEvent>());
-	AnnGetLevelManager()->addLevel(make_shared<TutorialTimer>());
+	AnnGetLevelManager()->addLevel<DemoHub>();
+	AnnGetLevelManager()->addLevel<Demo0>();
+	AnnGetLevelManager()->addLevel<TestLevel>();
+	AnnGetLevelManager()->addLevel<DemoEvent>();
+	AnnGetLevelManager()->addLevel<TutorialTimer>();
 
-	AnnGetLevelManager()->addLevel(make_shared<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getFirstLevelLoaded(), 1.f));
+	AnnGetLevelManager()->addLevel<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getFirstLevelLoaded(), 1.f);
 
 	//ask the level manager to perform a jump to the last level
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());

@@ -30,7 +30,13 @@ namespace Annwvyn
 		bool needUpdate() override;
 
 		///Give an event to be dispatched to listeners via the event manager
-		void dispatchEvent(AnnUserSpaceEventPtr e) final;
+		void dispatchEvent(AnnUserSpaceEventPtr e);
+
+		///Consruct+distpatch user defined event
+		template <class UserSpaceEventType, class ... Args> void dispatchEvent(Args&& ... args)
+		{
+			dispatchEvent(std::make_shared<UserSpaceEventType>(args ...));
+		}
 	};
 
 	using AnnUserSubSystemPtr = std::shared_ptr<AnnUserSubSystem>;

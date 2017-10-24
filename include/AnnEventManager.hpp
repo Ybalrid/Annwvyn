@@ -59,9 +59,18 @@ namespace Annwvyn
 		void useDefaultEventListener();
 		///Return the default event listener
 		AnnEventListenerPtr getDefaultEventListener() const;
-		///Ad a listener to the event manager
+		///Add a listener to the event manager
 		/// \param listener Pointer to a listener object
 		void addListener(AnnEventListenerPtr listener);
+
+		///Utility class to construct-add a listener to the event manager
+		template <class ListenerType, class ... Args> decltype(auto) addListener(Args&& ... args)
+		{
+			auto listener = std::make_shared<ListenerType>(args ...);
+			addListener(listener);
+			return listener;
+		}
+
 		///Remove every listener known from the EventManager.
 		///This doesn't clear any memory
 		void clearListenerList();

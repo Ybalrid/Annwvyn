@@ -72,7 +72,7 @@ public:
 		{
 			static unsigned int count = 0;
 			last = now;
-			dispatchEvent(std::make_shared<TextMessageEvent>("Useless message! " + std::to_string(++count)));
+			dispatchEvent<TextMessageEvent>("Useless message! " + std::to_string(++count));
 		}
 	}
 
@@ -98,14 +98,12 @@ public:
 	void load() override
 	{
 		//Create an instance of the subsystem class defined above configured to launch it's event once per second
-		subsystem = std::make_shared<SomeSubSystem>(1.0f);
 		//Subsystems needs to be added to the engine to get updated
-		AnnGetEngine()->registerUserSubSystem(subsystem);
+		subsystem = AnnGetEngine()->registerUserSubSystem<SomeSubSystem>(1.0f);
 
 		//Create an instance of a listener that intercept our text message events
-		listener = std::make_shared<SomeEventListener>();
 		//Listeners needs to be added to the event manager to receive events
-		AnnGetEventManager()->addListener(listener);
+		listener = AnnGetEventManager()->addListener<SomeEventListener>();
 
 		loadBasicTutorialLevel();
 

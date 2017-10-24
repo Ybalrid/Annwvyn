@@ -66,8 +66,16 @@ namespace Annwvyn
 		///Add a Game object to the level
 		std::shared_ptr<AnnGameObject> addGameObject(std::string entityName, std::string name = "");
 
-		///Add a manual game b
+		///Add a manual movable object
 		void addManualMovableObject(std::shared_ptr<AnnAbstractMovable> movable);
+
+		///Construct+add a manual movable object
+		template<class AbstractMovableType, class ... Args> decltype(auto) addManualMovableObject(Args&& ... args)
+		{
+			auto movable = std::make_shared<AbstractMovableType>(args ...);
+			addManualMovableObject(movable);
+			return movable;
+		}
 
 		///Name of the level
 		std::string name;

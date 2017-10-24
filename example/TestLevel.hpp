@@ -32,7 +32,7 @@ public:
 	///Construct the Level :
 	void load() override
 	{
-		AnnGetEventManager()->addListener(goBackListener = std::make_shared<GoBackToDemoHub>());
+		goBackListener = AnnGetEventManager()->addListener<GoBackToDemoHub>();
 		//Set some ambient light
 		AnnGetSceneryManager()->setExposure(1, -0.25, +0.25);
 		AnnGetSceneryManager()->setSkyColor(AnnColor(0.05f, 0.45f, 1.f), 15.f);
@@ -62,7 +62,7 @@ public:
 		Sun->setDirection(AnnVect3{ 0.5f, -1.5f, -2.25f }.normalisedCopy());
 		Sun->setPower(97.f);
 
-		//Create objects and register them as content of the level
+		//Create objects and register them as content of the level, using a custom AnnGameObject clas (to put your own postInit and update code)
 		auto S = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "SuperSinbad", std::make_shared<Sinbad>());
 		levelContent.push_back(S);
 		S->playSound("monster.wav", true, 1);

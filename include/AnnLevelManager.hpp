@@ -12,6 +12,7 @@
 #include "AnnLevel.hpp"
 #include "tinyxml2.h"
 #include "AnnSubsystem.hpp"
+#include "AnnGameObject.hpp"
 
 namespace Annwvyn
 {
@@ -39,6 +40,14 @@ namespace Annwvyn
 		///\param level address of a subclass instance of AnnLevel
 		void addLevel(AnnLevelPtr level);
 
+		///Uitility overload to easilly create and add levels at the same time
+		template <class LevelType, class ... Args> decltype(auto) addLevel(Args&& ... args)
+		{
+			auto level = std::make_shared<LevelType>(args...);
+			addLevel(level);
+			return level;
+		}
+
 		///Jump to the 1st level
 		void jumpToFirstLevel();
 
@@ -61,10 +70,10 @@ namespace Annwvyn
 		AnnLevelPtr getCurrentLevel() const;
 
 		///Add an orphan object to the current level
-		void addToCurrentLevel(std::shared_ptr<AnnGameObject> obj) const;
+		void addToCurrentLevel(AnnGameObjectPtr obj) const;
 
 		///Remove an object from the current level (make it orphan)
-		void removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj) const;
+		void removeFromCurrentLevel(AnnGameObjectPtr obj) const;
 
 	private:
 

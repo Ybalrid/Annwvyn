@@ -219,6 +219,15 @@ namespace Annwvyn
 		///Register your own subsystem to be updated by the engine
 		AnnUserSubSystemPtr registerUserSubSystem(AnnUserSubSystemPtr userSystem);
 
+		///Create+Register user event system utility class
+		template <class AnnUserSubSystemType, class ... Args> decltype(auto) registerUserSubSystem(Args&& ... args)
+		{
+			auto subsystem = std::make_shared<AnnUserSubSystemType>(args ...);
+			auto output = registerUserSubSystem(std::static_pointer_cast<AnnUserSubSystem>(subsystem));
+			if (output != nullptr) return subsystem;
+			subsystem = nullptr; return subsystem;
+		}
+
 		///Get pointer to a subsystem by name
 		AnnSubSystemPtr getSubSystemByName(const std::string& name);
 
