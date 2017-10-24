@@ -96,6 +96,7 @@ AnnMain()
 
 	//ask the level manager to perform a jump to the last level
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
+
 	AnnDebug() << "Starting the render loop";
 
 	auto debugHook = []()

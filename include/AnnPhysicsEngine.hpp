@@ -36,7 +36,14 @@ namespace Annwvyn
 	{
 	public:
 
-		///Flag for collisions 
+		static std::string getBulletVersion()
+		{
+			const auto major = BT_BULLET_VERSION / 100;
+			const auto minor = BT_BULLET_VERSION - (major * 100);
+			return std::to_string(major) + "." + std::to_string(minor);
+		}
+
+		///Flag for collisions
 		enum CollisionMasks : int
 		{
 			Player = MASK(0),
@@ -97,8 +104,8 @@ namespace Annwvyn
 		///Set the color multiplier to convert raw color to HDR light value
 		void setDebugDrawerColorMultiplier(float value) const;
 
-        ///advanced : functions called to setup physics by game objects
-        btCollisionShape* _getGameObjectShape(AnnGameObject* obj, phyShapeType type);
+		///advanced : functions called to setup physics by game objects
+		btCollisionShape* _getGameObjectShape(AnnGameObject* obj, phyShapeType type);
 
 	private:
 

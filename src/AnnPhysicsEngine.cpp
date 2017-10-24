@@ -19,6 +19,8 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode * rootNode,
 	playerObject(player),
 	defaultGravity(0, -9.81f, 0)
 {
+	AnnDebug() << "Initializing bullet version " << getBulletVersion();
+
 	//Initialize the Bullet world
 	Broadphase = make_unique<btDbvtBroadphase>();
 	CollisionConfiguration = make_unique<btDefaultCollisionConfiguration>();
@@ -188,7 +190,7 @@ btCollisionShape* AnnPhysicsEngine::_getGameObjectShape(AnnGameObject*  obj, phy
 {
 	BtOgre::StaticMeshToShapeConverter converter(obj->getItem());
 
-	btCollisionShape* Shape{ nullptr };
+	btCollisionShape* Shape;
 
 	switch (type)
 	{
