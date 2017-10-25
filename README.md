@@ -61,7 +61,7 @@ But, if you *really* want to build and setup the engine yourself, here's a simpl
 - Extract it in a folder
 - Clone this repo in the same folder
 - Run the "RUNME.BAT" script from this folder
-- Generate in a "build" directirory a VS2015 x64 solution from the root CMakeFiles.txt
+- Generate in a "build" directirory a VS2017 x64 solution from the root CMakeFiles.txt
 - Make sure the IDE is set to build in "release" "x64" mode
 - hit Ctrl+Shift+B to build the whole solution
 - In the solution explorer, build the install target
