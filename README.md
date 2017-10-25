@@ -22,8 +22,8 @@ It uses Ogre for rendering to OpenGL buffers that are given to each VR libraries
 Please read the DEPEDENCIES file to know what you need to build it.
 
 
-System requirement
-----------------
+System and Software requirement
+-------------------------------
 
  - A fairly recent GPU. Support for OpenGL **4.3** is **required**. This is also a requirement from VR hardware vendor
  - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive, or other hardware supported by OpenVR
@@ -32,12 +32,14 @@ System requirement
  - Up to date runtime software: 
     - Oculus Home app installed from http://oculus.com/setup 
     - SteamVR installed through Steam http://steampowered.com/
- - Microsoft Visual Studio 2015 Community (free to download and use from Microsoft)
+ - Microsoft Visual Studio 2017 Community (free to download and use from Microsoft)
+ 
+ Specifically, the code needs a C++14 compliant compiler, and the dependency package is built with the lattest version of Visual Studio available (15.4.1)
  
 Installation
 ------------
 
-First, please install Visual Studio 2015 (the community version is free) from Microsoft.
+First, please install Visual Studio 2017 (the community version is free) from Microsoft.
 
 Then, go get the SDK installer here http://annwvyn.org/?static2/download and run it. 
 If near the end of the installer, a CMD window open asking about setting up environment variables, say yes.
@@ -51,8 +53,9 @@ Building on Windows
 **Please install Oculus Home, or SteamVR and the lattest drivers from your graphics card manufacturer.**
 
 As stated in the DEPEDENCIES file, you should download the SDK from http://annwvyn.org/
+The SDK has everything to **build** Annwwvyn itself, so you can hack into it by this way to. It's a Source+Binary package.
 
-But, if you really want to build the engine yourself, here's a simple guide how to do it
+But, if you *really* want to build and setup the engine yourself, here's a simple guide how to do it
 
 - Download the "dependency package" from here http://annwvyn.org/?static2/download
 - Extract it in a folder
