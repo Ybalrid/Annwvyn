@@ -25,10 +25,10 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	AnnInit("MyVRGame");
 
 	//Call physics initialization for the player body:
-	AnnGetEngine()->initPlayerStandingPhysics(); //There's an optional "room scale" physics mode too, but it's pretty beta right now.
+	AnnGetEngine()->initPlayerRoomscalePhysics(); //There's an optional "room scale" physics mode too, but it's pretty beta right now.
 
 	//Instantiate and register our basic level and "jump" to it:
-	AnnGetLevelManager()->addLevel(std::make_shared<MyLevel>());
+	AnnGetLevelManager()->addLevel<MyLevel>();
 	AnnGetLevelManager()->jumpToFirstLevel();
 
 	//Use the default event listener. It's a commodity for development, you'll probably want to write your own.
