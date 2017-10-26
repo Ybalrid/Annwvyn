@@ -7,10 +7,6 @@
 #include <openvr.h>
 #include <openvr_capi.h>
 
-#ifdef _WIN32
-#include <Windows.h>
-#endif
-
 #include "AnnErrorCode.hpp"
 #include "AnnTypes.h"
 #include "AnnHandController.hpp"
