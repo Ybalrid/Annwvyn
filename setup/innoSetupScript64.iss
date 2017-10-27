@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AnnwvynSDK64"
-#define MyAppVersion "0.3.2"
+#define MyAppVersion "0.4"
 #define MyAppPublisher "Arthur (Ybalrid) Brainville"
 #define MyAppURL "http://annwvyn.org/"
 
@@ -42,5 +42,5 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Run]
 Filename: "{app}\RUNME-64.BAT"
-Filename: "{app}\Annwvyn\utils\vc_redist.x64.2015.exe";Parameters: "/q"; StatusMsg: "Installing Visual C++ 2015 x64 redistribuable"; Check: IsWin64();
+Filename: "{app}\Annwvyn\utils\VC_redist.x64.2017.exe";Parameters: "/q"; StatusMsg: "Installing Visual C++ 2017 x64 redistribuable"; Check: IsWin64();
 
