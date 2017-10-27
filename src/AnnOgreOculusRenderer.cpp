@@ -447,37 +447,35 @@ void AnnOgreOculusRenderer::renderAndSubmitFrame()
 	}
 	pauseFlag = false;
 
-	(ovr_WaitToBeginFrame(oculusInterface->getSession(), frameCounter));
+	ovr_WaitToBeginFrame(oculusInterface->getSession(), frameCounter);
+	ovr_BeginFrame(oculusInterface->getSession(), frameCounter);
+	root->renderOneFrame();
+
+	for (auto i{ 0U }; i < 2; ++i)
 	{
-		ovr_BeginFrame(oculusInterface->getSession(), frameCounter);
-		root->renderOneFrame();
+		ovr_GetTextureSwapChainCurrentIndex(oculusInterface->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
+		ovr_GetTextureSwapChainBufferGL(oculusInterface->getSession(), texturesSeparatedSwapChain[i], currentSeparatedIndex[i], &oculusRenderTexturesSeparatedGLID[i]);
+		//Copy the rendered image to the Oculus Swap Texture
+		glEasyCopy(ogreRenderTexturesSeparatedGLID[i],
+			oculusRenderTexturesSeparatedGLID[i],
+			texSizeL.w, texSizeL.h);
+		ovr_CommitTextureSwapChain(oculusInterface->getSession(), texturesSeparatedSwapChain[i]);
+	}
 
-		for (auto i{ 0U }; i < 2; ++i)
-		{
-			ovr_GetTextureSwapChainCurrentIndex(oculusInterface->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
-			ovr_GetTextureSwapChainBufferGL(oculusInterface->getSession(), texturesSeparatedSwapChain[i], currentSeparatedIndex[i], &oculusRenderTexturesSeparatedGLID[i]);
-			//Copy the rendered image to the Oculus Swap Texture
-			glEasyCopy(ogreRenderTexturesSeparatedGLID[i],
-				oculusRenderTexturesSeparatedGLID[i],
-				texSizeL.w, texSizeL.h);
-			ovr_CommitTextureSwapChain(oculusInterface->getSession(), texturesSeparatedSwapChain[i]);
-		}
+	//Submit the frame
+	layers = &layer.Header;
+	//ovr_SubmitFrame(oculusInterface->getSession(), frameCounter, nullptr, &layers, 1);
+	ovr_EndFrame(oculusInterface->getSession(), frameCounter, nullptr, &layers, 1);
 
-		//Submit the frame
-		layers = &layer.Header;
-		//ovr_SubmitFrame(oculusInterface->getSession(), frameCounter, nullptr, &layers, 1);
-		ovr_EndFrame(oculusInterface->getSession(), frameCounter, nullptr, &layers, 1);
-
-		//Update the render debug view if the window is visible
-		if (window->isVisible() && mirrorHMDView)
-		{
-			//Put the mirrored view available for Ogre if asked for
-			ovr_GetMirrorTextureBufferGL(oculusInterface->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
-			glEasyCopy(oculusMirrorTextureGLID,
-				ogreMirrorTextureGLID,
-				hmdSize.w, hmdSize.h
-			);
-		}
+	//Update the render debug view if the window is visible
+	if (window->isVisible() && mirrorHMDView)
+	{
+		//Put the mirrored view available for Ogre if asked for
+		ovr_GetMirrorTextureBufferGL(oculusInterface->getSession(), mirrorTexture, &oculusMirrorTextureGLID);
+		glEasyCopy(oculusMirrorTextureGLID,
+			ogreMirrorTextureGLID,
+			hmdSize.w, hmdSize.h
+		);
 	}
 }
 
