@@ -193,15 +193,8 @@ void AnnScriptManager::registerApi()
 	chai.add(user_type<AnnColor>(), "AnnColor");
 	chai.add(constructor<AnnColor(float, float, float, float)>(), "AnnColor");
 	chai.add(constructor<AnnColor(const ColourValue&)>(), "AnnColor");
-	// HACK copy constructor and operator= of AnnColor is broken
-	//chai.add(constructor<AnnColor(const AnnColor&)>, "AnnColor");
-	chai.add(fun([](AnnColor& c1, AnnColor& c2)
-	{
-		c1.setRed(c2.getRed());
-		c1.setGreen(c2.getGreen());
-		c1.setBlue(c2.getBlue());
-		c1.setAlpha(c2.getAlpha());
-	}), "=");
+	chai.add(constructor<AnnColor(const AnnColor&)>(), "AnnColor");
+	chai.add(fun([](AnnColor& c1, AnnColor& c2) { c1 = c2;	}), "=");
 	chai.add(fun([](AnnColor& color) {return color.getRed(); }), "getRed");
 	chai.add(fun([](AnnColor& color) {return color.getGreen(); }), "getGreen");
 	chai.add(fun([](AnnColor& color) {return color.getBlue(); }), "getBlue");
@@ -304,22 +297,23 @@ void AnnScriptManager::registerApi()
 	chai.add(var(AnnHandController::AnnHandControllerSide::rightHandController), "rightHandController");
 	chai.add(var(AnnHandController::AnnHandControllerSide::invalidHandController), "invalidHandController");
 
-	// HACK I'm exposing a pointer to the controller for now. This will be encapsulated after
-	//we have access to Oculus's hand controllers (December 2016...)
-	chai.add(fun([](AnnHandControllerEvent e) {return e._getController(); }), "getController");
-
-	chai.add(fun([](AnnHandController* c) {return c->getWorldPosition(); }), "getWorldPosition");
-	chai.add(fun([](AnnHandController* c) {return c->getWorldOrientation(); }), "getWorldOrientation");
-	chai.add(fun([](AnnHandController* c) {return c->getLinearSpeed(); }), "getLinearSpeed");
-	chai.add(fun([](AnnHandController* c) {return c->getAngularSpeed(); }), "getAngularSpeed");
-	chai.add(fun([](AnnHandController* c) {return c->getPointingDirection(); }), "getPointingDirection");
-	chai.add(fun([](AnnHandController* c) {return c->getNbAxes(); }), "getNbAxes");
-	chai.add(fun([](AnnHandController* c) {return c->getNbButton(); }), "getNbButton");
-	chai.add(fun([](AnnHandController* c) {return c->isTracked(); }), "isTracked");
-	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->getButtonState(i); }), "getButtonState");
-	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->getAxis(i); }), "getAxis");
-	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->hasBeenPressed(i); }), "hasBeenPressed");
-	chai.add(fun([](AnnHandController* c, uint8_t i) {return c->hasBeenReleased(i); }), "hasBeenReleased");
+	chai.add(user_type<AnnHandControllerEvent>(), "AnnHandControllerEvent");
+	chai.add(fun([](AnnHandControllerEvent e) -> Vector3 { return e.getPosition(); }), "getPosition");
+	chai.add(fun([](AnnHandControllerEvent e) -> Quaternion { return e.getOrientation(); }), "getOrientation");
+	chai.add(fun([](AnnHandControllerEvent e) -> Vector3 { return e.getPointingDirection(); }), "getOrientation");
+	chai.add(fun([](AnnHandControllerEvent e) -> Vector3 { return e.getLinearSpeed(); }), "getLinearSpeed");
+	chai.add(fun([](AnnHandControllerEvent e) -> Vector3 { return e.getAngularSpeed(); }), "getAngularSpeed");
+	chai.add(fun([](AnnHandControllerEvent e, const uint8_t id) { return e.getAxis(id); }), "getAxis");
+	chai.add(fun([](AnnHandControllerEvent e) { return e.getNbAxes(); }), "getNbAxes");
+	chai.add(fun([](AnnHandControllerEvent e) { return e.getNbButton(); }), "getNbButton");
+	chai.add(fun([](AnnHandControllerEvent e, const uint8_t id) { return e.buttonPressed(id); }), "buttonPressed");
+	chai.add(fun([](AnnHandControllerEvent e, const uint8_t id) { return e.buttonReleased(id); }), "buttonReleased");
+	chai.add(fun([](AnnHandControllerEvent e, const uint8_t id) { return e.buttonState(id); }), "buttonState");
+	chai.add(user_type<AnnHandController::AnnHandControllerSide>(), "AnnHandControllerSide");
+	chai.add(user_type<AnnHandController::AnnHandControllerTypeHash>(), "AnnHandControllerTypeHash");
+	chai.add(user_type<AnnHandController::AnnHandControllerGestureHash>(), "AnnHandControllerGestureHash");
+	chai.add(fun([](AnnHandControllerEvent e) { return e.getSide(); }), "getSide");
+	chai.add(fun([](AnnHandControllerEvent e) { return e.getType(); }), "getType");
 
 	chai.add(fun([](AnnPlayerCollisionEvent e) {return e.getObject(); }), "getObject");
 	chai.add(fun([](AnnPlayerCollisionEvent e) {return e.getObject()->getName(); }), "getObjectName");
