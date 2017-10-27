@@ -52,7 +52,9 @@ AnnOgreVRRenderer::AnnOgreVRRenderer(const std::string& windowName) :
 	cameraRig{ nullptr },
 	frameCounter{ 0 },
 	rttEyesCombined{ nullptr },
-	pauseFlag{ false }
+	pauseFlag{ false },
+	compositorLoaded{ false },
+	hlmsLoaded{ false }
 {
 	if (self)
 	{
@@ -336,22 +338,23 @@ void AnnOgreVRRenderer::createWindow(unsigned int w, unsigned int h, bool vsync)
 	windowW = w, windowH = h;
 	auto winName = rendererName + " : " + name + " - monitor output";
 
-	logToOgre("call glfwInit()");
+	AnnDebug() << "Initializing GLFW";
+	AnnDebug() << "GLFW version: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION;
 	glfwInit();
+
 	//Specify OpenGL version
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, AALevel);
 
-	logToOgre("Set OpenGL context version " + std::to_string(glMajor) + "." + std::to_string(glMinor));
+	AnnDebug() << "Set OpenGL context version " << glMajor + "." << glMinor;
 
 	//Create a window (and an opengl context with it)
 	glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
 
 	//Make the created context current
 	glfwMakeContextCurrent(glfwWindow);
-
 	Ogre::NameValuePairList options;
 
 #ifdef _WIN32
@@ -367,7 +370,6 @@ void AnnOgreVRRenderer::createWindow(unsigned int w, unsigned int h, bool vsync)
 #endif
 
 	options["externalGLContext"] = std::to_string(size_t(context));
-
 	options["FSAA"] = std::to_string(AALevel);
 	options["top"] = "0";
 	options["left"] = "0";
@@ -440,6 +442,8 @@ void AnnOgreVRRenderer::loadHLMSLibrary(std::string hlmsFolder)
 
 	//Set the best shadows we can do by default
 	hlmsPbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_4x4);
+
+	hlmsLoaded = true;
 }
 
 void AnnOgreVRRenderer::loadCompositor(const std::string& path, const std::string& type)
@@ -450,6 +454,8 @@ void AnnOgreVRRenderer::loadCompositor(const std::string& path, const std::strin
 	//TODO ISSUE maybe package the compositor differently
 	resourceGroupManager->addResourceLocation(compositorFolder, type, RESOURCE_GROUP_COMPOSITOR);
 	resourceGroupManager->initialiseResourceGroup(RESOURCE_GROUP_COMPOSITOR, false);
+
+	compositorLoaded = true;
 }
 
 void AnnOgreVRRenderer::setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName) const
@@ -488,18 +494,16 @@ void AnnOgreVRRenderer::setExposure(float exposure, float minAuto, float maxAuto
 
 void AnnOgreVRRenderer::createMainSmgr()
 {
-	std::ostringstream outstream;
-	outstream << "Detected " << numberOfThreads << " hardware threads.";
-	logToOgre(outstream.str());
+	AnnDebug() << "Detected " << numberOfThreads << " hardware threads.";
 
 	smgr = root->createSceneManager(Ogre::ST_GENERIC, numberOfThreads > 4 ? 4 : numberOfThreads, Ogre::INSTANCING_CULLING_THREADED, "ANN_MAIN_SMGR");
 
-	logToOgre("Setting the shadow distances to 500m");
+	AnnDebug() << "Setting the shadow distances to 500m";
 	smgr->setShadowDirectionalLightExtrusionDistance(500.0f);
 	smgr->setShadowFarDistance(500.0f);
 }
 
-bool AnnOgreVRRenderer::shouldPauseFlag()
+bool AnnOgreVRRenderer::shouldPauseFlag() const
 {
 	return pauseFlag;
 }
@@ -517,9 +521,19 @@ void AnnOgreVRRenderer::glEasyCopy(GLuint source, GLuint dest, GLuint width, GLu
 		1);
 }
 
-void AnnOgreVRRenderer::_resetOgreTimer()
+void AnnOgreVRRenderer::_resetOgreTimer() const
 {
 	root->getTimer()->reset();
+}
+
+bool AnnOgreVRRenderer::isCompositorLoaded() const
+{
+	return compositorLoaded;
+}
+
+bool AnnOgreVRRenderer::isHlmsLibLoaded() const
+{
+	return hlmsLoaded;
 }
 
 void AnnOgreVRRenderer::setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial)
@@ -541,9 +555,11 @@ void AnnOgreVRRenderer::setBloomThreshold(float minThreshold, float fullColorThr
 
 void AnnOgreVRRenderer::handleWindowMessages()
 {
+	//Do the message pumping from the OS
 	Ogre::WindowEventUtilities::messagePump();
 	glfwPollEvents();
 
+	//handle resizable window
 	static int w, h;
 	glfwGetWindowSize(glfwWindow, &w, &h);
 
@@ -551,17 +567,13 @@ void AnnOgreVRRenderer::handleWindowMessages()
 	{
 		windowW = w;
 		windowH = h;
+		//For some reason, windowMovedOrResized() is bugging on linux and doesn't do anything
 #ifndef __linux__
 		window->windowMovedOrResized();
 #else
 		window->resize(w, h);
 #endif
 	}
-}
-
-void AnnOgreVRRenderer::logToOgre(const std::string& str)
-{
-	Ogre::LogManager::getSingleton().logMessage(str);
 }
 
 void AnnOgreVRRenderer::setShadowFiltering(ShadowFiltering level)

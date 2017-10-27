@@ -53,8 +53,6 @@ namespace Annwvyn
 	public:
 		using combinedTextureSizeArray = std::array<std::array<unsigned int, 2>, 2>;
 
-		void logToOgre(const std::string& str);
-
 		///Name of the rendersystem plugin to load on Ogre
 #ifndef _DEBUG
 		static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus" };
@@ -264,13 +262,16 @@ namespace Annwvyn
 		void createMainSmgr();
 
 		///Return true if you should not react to user inputs, according to the rendering runtime...
-		bool shouldPauseFlag();
+		bool shouldPauseFlag() const;
 
 		///Wrap annoying OpenGL call to something humanly acceptable
 		static void glEasyCopy(GLuint source, GLuint dest, GLuint width, GLuint height);
 
 		///Advanced : reset ogre internal timer
-		void _resetOgreTimer();
+		void _resetOgreTimer() const;
+
+		bool isCompositorLoaded() const;
+		bool isHlmsLibLoaded() const;
 
 	private:
 
@@ -368,6 +369,12 @@ namespace Annwvyn
 
 		///Store if we suggest you to pause reacting to user inputs...
 		bool pauseFlag;
+
+		///Compositor resources loaded
+		bool compositorLoaded;
+
+		///Compositor resources loaded
+		bool hlmsLoaded;
 
 	private:
 		///left, right enums

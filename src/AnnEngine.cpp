@@ -435,8 +435,7 @@ AnnPose AnnEngine::getHmdPose() const
 	return AnnPose();
 }
 
-std::shared_ptr<AnnUserSubSystem>
-AnnEngine::registerUserSubSystem(std::shared_ptr<AnnUserSubSystem> userSystem)
+AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSystem)
 {
 	for (auto system : SubSystemList)
 		if (userSystem->name == system->name)
@@ -468,7 +467,7 @@ bool AnnEngine::isUserSubSystem(AnnSubSystemPtr subsystem)
 	return false;
 }
 
-void AnnEngine::removeUserSubSystem(std::shared_ptr<AnnUserSubSystem> subsystem)
+void AnnEngine::removeUserSubSystem(AnnUserSubSystemPtr subsystem)
 {
 	SubSystemList.remove(subsystem);
 }

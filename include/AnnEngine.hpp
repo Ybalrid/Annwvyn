@@ -85,14 +85,15 @@ namespace Annwvyn
 		static AnnEngine* singleton;
 		friend class AnnEngineSingletonReseter;
 
-		//We are using RAII. This object will reset the static "singleton" member of this class. We can't do it inside the destructor because
-		//subsystems needs to have a valid pointer to AnnEngine to startup and shutdown properly.
-		//This is some kind of "lock" on the value held by the static pointer. It will be put to nullptr in the AnnEngineSingletonReseter destructor.
-		//This object is declared first inside the class so that it will be destroyed when rolling out the stack when the actual AnnEngine goes out of
-		//scope
+		/// \brief Object that upon it's destruction will reset the static singleton pointer to nullptr. Declared first, so destructed last.
+		///We are using RAII. This object will reset the static "singleton" member of this class. We can't do it inside the destructor because
+		///subsystems needs to have a valid pointer to AnnEngine to startup and shutdown properly.
+		///This is some kind of "lock" on the value held by the static pointer. It will be put to nullptr in the AnnEngineSingletonReseter destructor.
+		///This object is declared first inside the class so that it will be destroyed last when rolling out the stack when the actual AnnEngine goes out of
+		///scope
 		AnnEngineSingletonReseter resetGuard;
 
-		//Private method that configure the rendering from the two given strings. It may call itself again with modified strings in circumstances.
+		///Private method that configure the rendering from the two given strings. It may call itself again with modified strings in circumstances.
 		void selectAndCreateRenderer(const std::string& hmd, const std::string& title);
 	public:
 
