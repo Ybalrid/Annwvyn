@@ -10,6 +10,7 @@
 
 namespace Annwvyn
 {
+	///Ogre resource that contain the data from a binary file for the audio engine importing
 	class AnnDllExport AnnAudioFile : public Ogre::Resource
 	{
 		///Where the data is actually stored, as bytes.
@@ -80,6 +81,7 @@ namespace Annwvyn
 
 	using AnnAudioFilePtr = Ogre::SharedPtr<AnnAudioFile>;
 
+	///Audio file ResourceManager
 	class AnnAudioFileManager : public Ogre::ResourceManager, public Ogre::Singleton<AnnAudioFileManager>
 	{
 	protected:
