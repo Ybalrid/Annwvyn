@@ -301,7 +301,6 @@ void AnnScriptManager::registerApi()
 		chai.add(var(AnnHandController::AnnHandControllerSide::rightHandController), "rightHandController");
 		chai.add(var(AnnHandController::AnnHandControllerSide::invalidHandController), "invalidHandController");
 
-		chai.add(user_type<AnnHandControllerEvent>(), "AnnHandControllerEvent");
 		chai.add(fun([](AnnHandControllerEvent e) -> Vector3 { return e.getPosition(); }), "getPosition");
 		chai.add(fun([](AnnHandControllerEvent e) -> Quaternion { return e.getOrientation(); }), "getOrientation");
 		chai.add(fun([](AnnHandControllerEvent e) -> Vector3 { return e.getPointingDirection(); }), "getOrientation");
