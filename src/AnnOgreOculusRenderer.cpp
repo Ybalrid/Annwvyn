@@ -447,7 +447,7 @@ void AnnOgreOculusRenderer::renderAndSubmitFrame()
 	}
 	pauseFlag = false;
 
-	if (OVR_SUCCESS(ovr_WaitToBeginFrame(oculusInterface->getSession(), frameCounter)))
+	(ovr_WaitToBeginFrame(oculusInterface->getSession(), frameCounter));
 	{
 		ovr_BeginFrame(oculusInterface->getSession(), frameCounter);
 		root->renderOneFrame();
