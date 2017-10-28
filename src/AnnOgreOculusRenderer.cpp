@@ -438,6 +438,9 @@ void AnnOgreOculusRenderer::getTrackingPoseAndVRTiming()
 void AnnOgreOculusRenderer::renderAndSubmitFrame()
 {
 	handleWindowMessages();
+
+	hideHands = !getSessionStatus().HasInputFocus;
+
 	if (!getSessionStatus().IsVisible)
 	{
 		pauseFlag = true;
@@ -445,6 +448,7 @@ void AnnOgreOculusRenderer::renderAndSubmitFrame()
 		root->renderOneFrame();
 		return;
 	}
+
 	pauseFlag = false;
 
 	ovr_WaitToBeginFrame(oculusInterface->getSession(), frameCounter);
@@ -553,6 +557,8 @@ void AnnOgreOculusRenderer::updateTouchControllers()
 		handController->setTrackedOrientation(bodyOrientation * oculusToOgreQuat(handPoses[side].ThePose.Orientation));
 		handController->setTrackedAngularSpeed(oculusToOgreVect3(handPoses[side].AngularVelocity));
 		handController->setTrackedLinearSpeed(oculusToOgreVect3(handPoses[side].LinearVelocity));
+
+		handController->updateVisibility();
 	}
 }
 

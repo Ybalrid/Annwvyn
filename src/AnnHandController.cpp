@@ -111,6 +111,11 @@ void AnnHandController::setTrackedAngularSpeed(AnnVect3 v)
 	trackedAngularSpeed = v;
 }
 
+void AnnHandController::updateVisibility() const
+{
+	node->setVisible(!AnnGetVRRenderer()->shouldHideHands());
+}
+
 bool AnnHandController::isTracked() const
 {
 	return tracked;

@@ -53,6 +53,7 @@ AnnOgreVRRenderer::AnnOgreVRRenderer(const std::string& windowName) :
 	frameCounter{ 0 },
 	rttEyesCombined{ nullptr },
 	pauseFlag{ false },
+	hideHands{ false },
 	compositorLoaded{ false },
 	hlmsLoaded{ false }
 {
@@ -506,6 +507,11 @@ void AnnOgreVRRenderer::createMainSmgr()
 bool AnnOgreVRRenderer::shouldPauseFlag() const
 {
 	return pauseFlag;
+}
+
+bool AnnOgreVRRenderer::shouldHideHands() const
+{
+	return hideHands;
 }
 
 ///Wrap annoying OpenGL call to something humanly acceptable

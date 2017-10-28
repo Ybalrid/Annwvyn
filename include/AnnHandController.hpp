@@ -138,6 +138,9 @@ namespace Annwvyn
 		///Set the angular velocity of the hand
 		void setTrackedAngularSpeed(AnnVect3 v);
 
+		///Check if controller is visible or not
+		void updateVisibility() const;
+
 		///Return true if the hand controller object has revived updates from the tracking system
 		bool isTracked() const;
 

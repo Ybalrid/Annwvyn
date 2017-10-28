@@ -264,6 +264,9 @@ namespace Annwvyn
 		///Return true if you should not react to user inputs, according to the rendering runtime...
 		bool shouldPauseFlag() const;
 
+		///Return true if you need to hide hand models
+		bool shouldHideHands() const;
+
 		///Wrap annoying OpenGL call to something humanly acceptable
 		static void glEasyCopy(GLuint source, GLuint dest, GLuint width, GLuint height);
 
@@ -369,6 +372,9 @@ namespace Annwvyn
 
 		///Store if we suggest you to pause reacting to user inputs...
 		bool pauseFlag;
+
+		///Store if we should hide the hands
+		bool hideHands;
 
 		///Compositor resources loaded
 		bool compositorLoaded;
