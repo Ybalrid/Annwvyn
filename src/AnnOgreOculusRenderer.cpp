@@ -468,7 +468,6 @@ void AnnOgreOculusRenderer::renderAndSubmitFrame()
 
 	//Submit the frame
 	layers = &layer.Header;
-	//ovr_SubmitFrame(oculusInterface->getSession(), frameCounter, nullptr, &layers, 1);
 	ovr_EndFrame(oculusInterface->getSession(), frameCounter, nullptr, &layers, 1);
 
 	//Update the render debug view if the window is visible
