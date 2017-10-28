@@ -445,7 +445,7 @@ void AnnOgreOculusRenderer::renderAndSubmitFrame()
 	{
 		pauseFlag = true;
 		//Still render to the normal window
-		root->renderOneFrame();
+		//root->renderOneFrame();
 		return;
 	}
 
