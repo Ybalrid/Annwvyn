@@ -35,8 +35,11 @@ void OculusInterfaceHelper::abortOnFailure()
 OculusInterfaceHelper::OculusInterfaceHelper()
 {
 	AnnDebug() << "Init Oculus Interface object";
+
+	ovrInitParams params = { ovrInit_FocusAware };
+
 	//Init Oculus Virtual Reality library
-	if (OVR_FAILURE(ovr_Initialize(nullptr)))
+	if (OVR_FAILURE(ovr_Initialize(&params)))
 		abortOnFailure();
 
 	//Declare this client to the Oculus service
