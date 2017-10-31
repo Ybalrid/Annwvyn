@@ -36,11 +36,19 @@ inline std::string AnnHandController::getSideAsString(AnnHandControllerSide s)
 	return "Right Hand";
 }
 
-void AnnHandController::attachModel(Ogre::Item* handModel)
+void AnnHandController::_attachModelItem(Ogre::Item* handModel)
 {
 	if (model) node->detachObject(model);
 	model = handModel;
 	node->attachObject(model);
+}
+
+void AnnHandController::setHandModel(const std::string& name)
+{
+	Ogre::v1::MeshPtr v1;
+	Ogre::MeshPtr v2;
+	v2 = AnnGetGameObjectManager()->getAndConvertFromV1Mesh(name.c_str(), v1, v2);
+	_attachModelItem(AnnGetEngine()->getSceneManager()->createItem(v2));
 }
 
 void AnnHandController::detachModel()
@@ -49,7 +57,7 @@ void AnnHandController::detachModel()
 	model = nullptr;
 }
 
-Ogre::Item* AnnHandController::getModel() const
+Ogre::Item* AnnHandController::getHandModel() const
 {
 	return model;
 }
