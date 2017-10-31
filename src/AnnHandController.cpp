@@ -48,7 +48,12 @@ void AnnHandController::setHandModel(const std::string& name)
 	Ogre::v1::MeshPtr v1;
 	Ogre::MeshPtr v2;
 	v2 = AnnGetGameObjectManager()->getAndConvertFromV1Mesh(name.c_str(), v1, v2);
+	auto oldModel = getHandModel();
 	_attachModelItem(AnnGetEngine()->getSceneManager()->createItem(v2));
+	if (oldModel)
+	{
+		AnnGetEngine()->getSceneManager()->destroyItem(oldModel);
+	}
 }
 
 void AnnHandController::detachModel()
