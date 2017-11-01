@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.6.3)
 
-#We are using C++14 (Visual Studio 2015, G++ 4.9...)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 project(Annwvyn)
 
