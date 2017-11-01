@@ -99,14 +99,17 @@ namespace Annwvyn
 		///Get the side type as a std::string
 		static std::string getSideAsString(AnnHandControllerSide s);
 
-		///Attach a 3D model to the hand. Previously attached model will be detached
-		void attachModel(Ogre::Item* handModel);
+		///Advanced method: Attach a 3D model to the hand. Previously attached model will be detached
+		void _attachModelItem(Ogre::Item* handModel);
+
+		///Set model by name. IF model already attached, model will be detached, and the item will be destroyed.
+		void setHandModel(const std::string& name);
 
 		///Detach model without destroying it
 		void detachModel();
 
 		///Return the current model :
-		Ogre::Item* getModel() const;
+		Ogre::Item* getHandModel() const;
 
 		///Get position in world space
 		AnnVect3 getWorldPosition() const;

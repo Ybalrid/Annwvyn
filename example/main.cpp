@@ -24,28 +24,16 @@ constexpr bool isRoomscale{ true };
 
 void putGizmoOnHands()
 {
-	static volatile bool done[2] = { false, false };
-	enum sideNames : size_t
+	if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[0])
 	{
-		left = 0x0,
-		right = 0x1
-	};
+		if (controller->getHandModel() == nullptr)
+			controller->setHandModel("Hand_left.mesh");
+	}
 
-	for (auto side : { left, right })
+	if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[1])
 	{
-		if (!done[side])
-		{
-			if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[side])
-			{
-				Ogre::v1::MeshPtr v1; Ogre::MeshPtr v2;
-				if (side == left)
-					v2 = AnnGetGameObjectManager()->getAndConvertFromV1Mesh("Hand_left.mesh", v1, v2);
-				else
-					v2 = AnnGetGameObjectManager()->getAndConvertFromV1Mesh("Hand_right.mesh", v1, v2);
-				controller->attachModel(AnnGetEngine()->getSceneManager()->createItem(v2));
-				done[side] = true;
-			}
-		}
+		if (controller->getHandModel() == nullptr)
+			controller->setHandModel("Hand_right.mesh");
 	}
 }
 
@@ -70,7 +58,7 @@ AnnMain()
 	AnnOgreVRRenderer::setAntiAliasingLevel(8);
 	AnnEngine::openConsole();
 	AnnEngine::logFileName = "Samples.log";
-	AnnEngine::defaultRenderer = "OgreNoVRRender";
+	AnnEngine::defaultRenderer = "OgreOculusRender";
 
 	AnnInit("AnnTest");
 
