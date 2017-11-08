@@ -3,6 +3,7 @@
 #include "OculusInterfaceHelper.hpp"
 #include "AnnLogger.hpp"
 #include "AnnException.hpp"
+#include "AnnEngine.hpp"
 
 using namespace std;
 using namespace OVR;

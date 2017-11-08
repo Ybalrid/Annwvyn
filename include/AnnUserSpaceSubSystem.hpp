@@ -8,6 +8,14 @@
 
 #define AnnUserSystemAs(type) std::dynamic_pointer_cast<type>
 
+#define AnnUserSubSystemPluginBootReturnType Annwvyn::AnnUserSubSystem*
+#define AnnUserSubSystemPluginCatNameImpl(a,b) a##b
+#define AnnUserSubSystemPluginCatName(a,b) AnnUserSubSystemPluginCatNameImpl(a, b)
+#define AnnBootPluginPrefix AnnBootPlugin_
+#define AnnUserSubSystemPluginBootName(AnnUserSubSystemPluginClassName) AnnUserSubSystemPluginCatName(AnnBootPluginPrefix, AnnUserSubSystemPluginClassName)
+#define AnnUserSubSystemPluginBootImpl(AnnUserSubSystemPluginClassName) AnnUserSubSystemPluginBootReturnType AnnUserSubSystemPluginBootName(AnnUserSubSystemPluginClassName)()
+#define AnnUserSubSystemPluginBootDeclare(AnnUserSubSystemPluginClassName)  extern "C" __declspec(dllexport) AnnUserSubSystemPluginBootImpl(AnnUserSubSystemPluginClassName)
+
 namespace Annwvyn
 {
 	class AnnEngine;

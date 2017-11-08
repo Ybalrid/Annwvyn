@@ -55,8 +55,9 @@ public:
 
 AnnMain()
 {
-	AnnOgreVRRenderer::setAntiAliasingLevel(8);
 	AnnEngine::openConsole();
+
+	AnnOgreVRRenderer::setAntiAliasingLevel(8);
 	AnnEngine::logFileName = "Samples.log";
 	AnnEngine::defaultRenderer = "OgreOculusRender";
 
@@ -86,6 +87,8 @@ AnnMain()
 	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
 
 	AnnDebug() << "Starting the render loop";
+
+	AnnGetEngine()->loadUserSubSystemFromPlugin("PluginDLLTest");
 
 	auto debugHook = []()
 	{

@@ -7,8 +7,6 @@
 #define ANN_LOGGER
 
 #include "systemMacro.h"
-//The debug output is opened by the AnnEngine class
-#include "AnnEngine.hpp"
 //We need the standard string format to be accessible
 #include <string>
 #include <iostream>

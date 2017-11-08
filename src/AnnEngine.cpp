@@ -450,6 +450,32 @@ AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSys
 	return userSystem;
 }
 
+void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName)
+{
+	AnnDebug() << "Attempting to load an user subsystem from" << pluginName;
+#ifdef _WIN32
+	if (auto handle = LoadLibraryA(pluginName.c_str()))
+	{
+		AnnDebug() << "Sucessully loadded dynamic libray";
+		if (auto bootstrapPlugin = GetProcAddress(handle, ("AnnBootPlugin_" + pluginName).c_str()))
+		{
+			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
+			AnnDebug() << "Create and register subsystem...";
+			registerUserSubSystem(AnnUserSubSystemPtr{ reinterpret_cast<AnnUserSubSystem*>(bootstrapPlugin()) });
+		}
+		else
+		{
+			AnnDebug() << "Wasn't able to get boostrap function for " << pluginName;
+		}
+	}
+	else
+	{
+		AnnDebug() << "Wasn't able to load dynamic library " << pluginName;
+	}
+
+#endif //WIN32
+}
+
 AnnSubSystemPtr AnnEngine::getSubSystemByName(const std::string& name)
 {
 	for (auto subsystem : SubSystemList)

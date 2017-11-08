@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "AnnLogger.hpp"
+//The debug output is opened by the AnnEngine class
+#include "AnnEngine.hpp"
 
 using namespace Annwvyn;
 
