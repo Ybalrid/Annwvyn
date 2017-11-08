@@ -88,6 +88,7 @@ include_directories(
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVRKernel/Src
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Include
     $ENV{AnnwvynSDK64}/openvr/headers
+    $ENV{HOME}/AnnwvynDeps/openvr/headers
 
     ##Engine dependencies
     #Graphics
@@ -119,7 +120,11 @@ include_directories(
     /usr/local/include/Annwvyn
     )
 
-link_directories($ENV{AnnwvynSDK64}/Annwvyn/lib/)
+link_directories($ENV{AnnwvynSDK64}/Annwvyn/lib/
+
+    $ENV{HOME}/AnnwvynDeps/openvr/lib/linux64/
+
+    )
 
 file(GLOB ProjScripts  ${PROJECT_BINARY_DIR}/*.chai)
 
@@ -138,6 +143,8 @@ target_link_libraries(${ANNWVYN_PROJECT}
 if(UNIX)
     target_link_libraries(${ANNWVYN_PROJECT}
         ${BULLET_LIBRARIES}
+
+        libopenvr_api.so
         )
 endif()
 
