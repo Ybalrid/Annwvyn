@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6.3)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 project(Annwvyn)
 
@@ -111,6 +111,7 @@ include_directories(
     #Scripting
     $ENV{AnnwvynSDK64}/chaiscript #!This is an header only library!
     $ENV{HOME}/AnnwvynDeps/chaiscript #UNIX
+    $ENV{HOME}/AnnwvynDeps/openvr/headers
     ${TinyXML2_INCLUDE_DIRS}
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
@@ -130,6 +131,7 @@ endif(UNIX)
 link_directories(
     #VR SDKs
     $ENV{AnnwvynSDK64}/openvr/lib/win64
+    $ENV{HOME}/AnnwvynDeps/openvr/lib/linux64/
     )
 
 #List the complete source code
@@ -200,6 +202,15 @@ if(WIN32)
         ${WIN_ADDITIONAL_LIBS}
         )
 
+endif()
+    
+if(UNIX)
+    set(LINUX_ADDITIONAL_LIBS
+        libopenvr_api.so
+        )
+    target_link_libraries(Annwvyn
+        ${LINUX_ADDITIONAL_LIBS}
+        )
 endif()
 
 #MSVC specific configuration

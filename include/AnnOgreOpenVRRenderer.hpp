@@ -172,7 +172,9 @@ namespace Annwvyn
 		const size_t numberOfAxes, axoffset;
 
 		///To hold axis values
-		float touchpadXNormalizedValue, touchpadYNormalizedValue, triggerNormalizedValue;
+		float touchpadXNormalizedValue;
+        float touchpadYNormalizedValue;
+        float triggerNormalizedValue;
 	};
 }
 
