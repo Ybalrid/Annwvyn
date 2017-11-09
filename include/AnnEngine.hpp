@@ -221,7 +221,7 @@ namespace Annwvyn
 		AnnUserSubSystemPtr registerUserSubSystem(AnnUserSubSystemPtr userSystem);
 
 		///Load and register an user subsystem from a dynamic library (DLL)
-		void loadUserSubSystemFromPlugin(const std::string& pluginName);
+		void loadUserSubSystemFromPlugin(const std::string& pluginName, bool local = true);
 
 		///Create+Register user event system utility class
 		template <class AnnUserSubSystemType, class ... Args> decltype(auto) registerUserSubSystem(Args&& ... args)

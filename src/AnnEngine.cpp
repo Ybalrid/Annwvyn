@@ -450,14 +450,16 @@ AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSys
 	return userSystem;
 }
 
-void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName)
+void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool local)
 {
 	AnnDebug() << "Attempting to load an user subsystem from" << pluginName;
+    std::string bootstrapName = "AnnBootPlugin_";
+    bootstrapName += pluginName;
 #ifdef _WIN32
 	if (auto handle = LoadLibraryA(pluginName.c_str()))
 	{
 		AnnDebug() << "Sucessully loadded dynamic libray";
-		if (auto bootstrapPlugin = GetProcAddress(handle, ("AnnBootPlugin_" + pluginName).c_str()))
+		if (auto bootstrapPlugin = GetProcAddress(handle, bootstrapName.c_str()))
 		{
 			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
 			AnnDebug() << "Create and register subsystem...";
@@ -473,7 +475,33 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName)
 		AnnDebug() << "Wasn't able to load dynamic library " << pluginName;
 	}
 
-#endif //WIN32
+#else
+    //convert "PluginName" into a "libPluginName.so" format as dlopen need the name of the actual file
+    std::string pluginSoFile = (local ? "./lib" : "lib");
+    pluginSoFile += pluginName;
+    pluginSoFile += ".so";
+
+    if(auto handle = dlopen(pluginSoFile.c_str(), RTLD_NOW))
+    {
+
+		AnnDebug() << "Sucessully loadded dynamic libray";
+        if(auto bootstrapPlugin = (void* (*)()) dlsym(handle, bootstrapName.c_str())) //We need to cast the pointer to a functor of the "void* boostrap()" format
+        {
+			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
+			AnnDebug() << "Create and register subsystem...";
+			registerUserSubSystem(AnnUserSubSystemPtr( reinterpret_cast<AnnUserSubSystem*>(bootstrapPlugin()) ));
+        }
+        else
+        {
+            AnnDebug() << "Wasn't able to get bootsrap function for " << pluginSoFile;
+        }
+    }
+    else
+    {
+        AnnDebug() << "Wasn't able to load dynamic library " << pluginName;
+    }
+
+#endif
 }
 
 AnnSubSystemPtr AnnEngine::getSubSystemByName(const std::string& name)
