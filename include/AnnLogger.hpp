@@ -9,6 +9,7 @@
 #include "systemMacro.h"
 //We need the standard string format to be accessible
 #include <string>
+#include <sstream>
 #include <iostream>
 namespace Annwvyn
 {

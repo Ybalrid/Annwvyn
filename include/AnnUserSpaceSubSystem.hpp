@@ -4,9 +4,20 @@
 #include "systemMacro.h"
 #include "AnnSubsystem.hpp"
 #include "AnnUserSpaceEvent.hpp"
+
+#include <sstream>
+#include <string>
+#include <iostream>
+
 #include <memory>
 
 #define AnnUserSystemAs(type) std::dynamic_pointer_cast<type>
+
+#ifdef _WIN32
+#define AnnUserSubSystemPluginExport __declspec(dllexport)
+#else
+#define AnnUserSubSystemPluginExport //This is dealt with in the compiler call, not in the source code
+#endif
 
 #define AnnUserSubSystemPluginBootReturnType Annwvyn::AnnUserSubSystem*
 #define AnnUserSubSystemPluginCatNameImpl(a,b) a##b
@@ -14,7 +25,7 @@
 #define AnnBootPluginPrefix AnnBootPlugin_
 #define AnnUserSubSystemPluginBootName(AnnUserSubSystemPluginClassName) AnnUserSubSystemPluginCatName(AnnBootPluginPrefix, AnnUserSubSystemPluginClassName)
 #define AnnUserSubSystemPluginBootImpl(AnnUserSubSystemPluginClassName) AnnUserSubSystemPluginBootReturnType AnnUserSubSystemPluginBootName(AnnUserSubSystemPluginClassName)()
-#define AnnUserSubSystemPluginBootDeclare(AnnUserSubSystemPluginClassName)  extern "C" __declspec(dllexport) AnnUserSubSystemPluginBootImpl(AnnUserSubSystemPluginClassName)
+#define AnnUserSubSystemPluginBootDeclare(AnnUserSubSystemPluginClassName)  extern "C" AnnUserSubSystemPluginExport AnnUserSubSystemPluginBootImpl(AnnUserSubSystemPluginClassName)
 
 namespace Annwvyn
 {

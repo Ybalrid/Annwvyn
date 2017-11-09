@@ -88,7 +88,7 @@ AnnMain()
 
 	AnnDebug() << "Starting the render loop";
 
-	AnnGetEngine()->loadUserSubSystemFromPlugin("PluginDLLTest");
+	AnnGetEngine()->loadUserSubSystemFromPlugin("PluginTemplate");
 
 	auto debugHook = []()
 	{
