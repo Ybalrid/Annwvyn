@@ -81,7 +81,6 @@ endif(WIN32)
 
 find_package(GLEW REQUIRED)
 #includes from old visual studio solution
-#
 
 include_directories(
     ##VR SDKs
