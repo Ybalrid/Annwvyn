@@ -21,15 +21,6 @@
 #include <list>
 #include <memory>
 
-//Graphic rendering system for the rift
-#include "AnnOgreOculusRenderer.hpp"
-
-//Graphic rendering system for the vive
-#include "AnnOgreOpenVRRenderer.hpp"
-
-//Graphic rendering system for NO FREAKING VR SYSTEM
-#include "AnnOgreNoVRRenderer.hpp"
-
 //Annwvyn
 #include "AnnEventManager.hpp"
 #include "AnnPhysicsEngine.hpp"

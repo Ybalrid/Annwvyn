@@ -25,6 +25,8 @@
 #include "AnnTypes.h"
 #include "AnnKeyCode.h"
 
+#include <GL/glew.h>
+
 namespace Annwvyn
 {
 	///In engine - On screen floating console
