@@ -1,3 +1,5 @@
+.vscode/
+
 #CMake things
 CMakeCache.txt
 CMakeFiles
