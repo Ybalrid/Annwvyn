@@ -9,5 +9,5 @@ doc/* linguist-vendored
 
 example/hlms/Hlms/*  linguist-vendored
 template/hlms/Hlms/* linguist-vendored
-exapmle/compositor/ linguist-vendored
-template/compositor/ linguist-vendored
+exapmle/compositor/* linguist-vendored
+template/compositor/* linguist-vendored
