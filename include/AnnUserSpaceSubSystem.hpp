@@ -13,12 +13,15 @@
 
 #define AnnUserSystemAs(type) std::dynamic_pointer_cast<type>
 
+//Build configuraiton to export symbols insiside
 #ifdef _WIN32
 #define AnnUserSubSystemPluginExport __declspec(dllexport)
 #else
 #define AnnUserSubSystemPluginExport //This is dealt with in the compiler call, not in the source code
 #endif
 
+//Macro definiton for the plugin "bootstrap" symbol declaration and implementation.
+//AnnEngine expect to find a C function called "AnnBootPlugin_PLUGIN_NAME" inside the DLL
 #define AnnUserSubSystemPluginBootReturnType Annwvyn::AnnUserSubSystem*
 #define AnnUserSubSystemPluginCatNameImpl(a,b) a##b
 #define AnnUserSubSystemPluginCatName(a,b) AnnUserSubSystemPluginCatNameImpl(a, b)
