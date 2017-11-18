@@ -153,9 +153,7 @@ namespace Annwvyn
 		OIS::Keyboard* Keyboard;
 		///Pointer that holds the Mouse
 		OIS::Mouse* Mouse;
-		///parameters for OIS
-		OIS::ParamList pl;
-		///parameter list for OIS
+		///Array of poiners to OIS Joystick
 		std::vector<JoystickBuffer> Joysticks;
 		//----------------------- OIS and other library input objects
 

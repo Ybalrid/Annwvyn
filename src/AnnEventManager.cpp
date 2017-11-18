@@ -6,6 +6,13 @@
 #include "AnnGetter.hpp"
 
 using namespace Annwvyn;
+using std::string;
+using std::to_string;
+using std::unique_ptr;
+using std::shared_ptr;
+using std::abs;
+using std::min;
+using std::max;
 
 AnnEventListener::AnnEventListener() :
 	player(AnnGetPlayer().get())
@@ -15,11 +22,11 @@ AnnEventListener::AnnEventListener() :
 float AnnEventListener::trim(float v, float dz)
 {
 	//The test is done on the abs value. Return the actual value, or 0 if under the dead-zone
-	if (std::abs(v) >= dz) return v;
+	if (abs(v) >= dz) return v;
 	return 0.0f;
 }
 
-std::shared_ptr<AnnEventListener> AnnEventListener::getSharedListener()
+shared_ptr<AnnEventListener> AnnEventListener::getSharedListener()
 {
 	return shared_from_this();
 }
@@ -39,14 +46,14 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_BACK && !input.empty())
 	{
 		if (cursorOffset > input.size()) cursorOffset = int(input.size());
-		input.erase(end(input) - std::min(int(input.size()), 1 + cursorOffset));
+		input.erase(end(input) - min(int(input.size()), 1 + cursorOffset));
 	}
 
 	//Text
 	else if (arg.text < 0x7F && arg.text > 0x1F || !asciiOnly)
 	{
 		//Put typed char into the application
-		input.insert(std::max(0, int(input.size()) - int(cursorOffset)), 1, char(arg.text));
+		input.insert(max(0, int(input.size()) - int(cursorOffset)), 1, char(arg.text));
 	}
 
 	//Return key
@@ -68,7 +75,7 @@ bool AnnTextInputer::keyReleased(const OIS::KeyEvent &arg)
 	return true;
 }
 
-std::string AnnTextInputer::getInput() const
+string AnnTextInputer::getInput() const
 {
 	return input;
 }
@@ -90,7 +97,7 @@ void AnnTextInputer::stopListening()
 	listen = false;
 }
 
-void AnnTextInputer::setInput(const std::string& content)
+void AnnTextInputer::setInput(const string& content)
 {
 	input = content;
 	cursorOffset = 0;
@@ -128,7 +135,8 @@ keyboardIgnore{ false }
 	//Configure and create the input system
 	size_t windowHnd;
 	w->getCustomAttribute("WINDOW", &windowHnd);
-	pl.insert(make_pair(std::string("WINDOW"), std::to_string(windowHnd)));
+	OIS::ParamList pl;
+	pl.insert(make_pair(string("WINDOW"), to_string(windowHnd)));
 	InputManager = OIS::InputManager::createInputSystem(pl);
 
 	//Get the keyboard, mouse and joysticks objects
@@ -144,8 +152,8 @@ keyboardIgnore{ false }
 		AnnDebug() << "Detected joystick : " << vendor;
 
 		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)
-		if (vendor.find("Xbox") != std::string::npos ||
-			vendor.find("XBOX") != std::string::npos)
+		if (vendor.find("Xbox") != string::npos ||
+			vendor.find("XBOX") != string::npos)
 		{
 			knowXbox = true;
 			xboxID = StickAxisId(oisJoystick->getID());
@@ -188,12 +196,12 @@ void AnnEventManager::useDefaultEventListener()
 	addListener(defaultEventListener);
 }
 
-std::shared_ptr<AnnEventListener> AnnEventManager::getDefaultEventListener() const
+shared_ptr<AnnEventListener> AnnEventManager::getDefaultEventListener() const
 {
 	return defaultEventListener;
 }
 
-void AnnEventManager::addListener(std::shared_ptr<AnnEventListener> l)
+void AnnEventManager::addListener(shared_ptr<AnnEventListener> l)
 {
 	AnnDebug() << "Adding an event listener : " << l.get();
 	if (l != nullptr)
@@ -206,12 +214,12 @@ void AnnEventManager::clearListenerList()
 }
 
 //l equals NULL by default
-void AnnEventManager::removeListener(std::shared_ptr<AnnEventListener> l)
+void AnnEventManager::removeListener(shared_ptr<AnnEventListener> l)
 {
 	AnnDebug() << "Removing an event listener : " << l.get();
 	if (l == nullptr) { clearListenerList(); return; }
 
-	listeners.erase(std::remove_if(begin(listeners), end(listeners),
+	listeners.erase(remove_if(begin(listeners), end(listeners),
 		[&](std::weak_ptr<AnnEventListener> weak_listener)
 	{
 		if (auto listener = weak_listener.lock()) return listener == l;
@@ -311,7 +319,7 @@ void AnnEventManager::processJoystickEvents()
 			stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
 
 		//Get press and release event lists
-		const auto nbButton{ std::min(state.mButtons.size(), Joystick.previousStickButtonStates.size()) };
+		const auto nbButton{ min(state.mButtons.size(), Joystick.previousStickButtonStates.size()) };
 		for (auto button(0u); button < nbButton; button++)
 			if (!Joystick.previousStickButtonStates[button] && state.mButtons[button])
 				stickEvent.pressed.push_back(static_cast<unsigned short>(button));
@@ -390,7 +398,7 @@ void AnnEventManager::processTimers()
 			if (timer.isTimeout()) listener->TimeEvent({ timer });
 
 	//Cleanup
-	activeTimers.erase(std::remove_if(begin(activeTimers), end(activeTimers),
+	activeTimers.erase(remove_if(begin(activeTimers), end(activeTimers),
 		[&](const AnnTimer& timer) { return timer.isTimeout(); }), end(activeTimers));
 }
 
@@ -470,7 +478,7 @@ void AnnEventManager::keyboardUsedForText(bool state)
 	keyboardIgnore = state;
 }
 
-void AnnEventManager::userSpaceDispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* l)
+void AnnEventManager::userSpaceDispatchEvent(shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* l)
 {
 	userSpaceEventBuffer.push_back(make_pair(e, l));
 }

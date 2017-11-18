@@ -613,7 +613,10 @@ void AnnBehaviorScript::update()
 	}
 	catch (const chaiscript::exception::eval_error& ee)
 	{
-		std::cerr << "Update script - " << ee.pretty_print();
+		AnnDebug() << "Evaluation error while " 
+		<< name 
+		<< " script update - " 
+		<< ee.pretty_print();
 		//will not crash here.
 	}
 }
