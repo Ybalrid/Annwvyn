@@ -39,7 +39,7 @@
  See log. Something gone wrong and don't have a specific error code.
  */
 
-#define ANN_ERR_NOTINIT 0x207760D
+#define ANN_ERR_NOTINIT 0x207760D // Not_ god
  /*
  See log. Something that should have been initialized beforehand isn't here.
  If there isn't a log, you tried to use something relating ogre before Ogre initialization
@@ -55,10 +55,13 @@
 #else
 using LPCWSTR = const wchar_t*;
 #endif
-inline void displayWin32ErrorMessage(LPCWSTR title, LPCWSTR content)
+
+#include<string>
+
+inline void displayWin32ErrorMessage(const std::string& title, const std::string& content)
 {
 #ifdef _WIN32
-	MessageBox(nullptr, content, title, MB_ICONERROR);
+	MessageBoxA(nullptr, content.c_str(), title.c_str(), MB_ICONERROR);
 #endif
 }
 

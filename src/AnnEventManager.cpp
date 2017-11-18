@@ -201,7 +201,7 @@ shared_ptr<AnnEventListener> AnnEventManager::getDefaultEventListener() const
 	return defaultEventListener;
 }
 
-void AnnEventManager::addListener(shared_ptr<AnnEventListener> l)
+void AnnEventManager::addListener(AnnEventListenerPtr l)
 {
 	AnnDebug() << "Adding an event listener : " << l.get();
 	if (l != nullptr)

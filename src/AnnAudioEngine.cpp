@@ -117,13 +117,14 @@ bool AnnAudioEngine::initOpenAL()
 	}
 
 	//Display information
+	const std::string alVendor{ alGetString(AL_VENDOR) };
 	AnnDebug() << "OpenAL version : " << alGetString(AL_VERSION);
-	AnnDebug() << "OpenAL vendor  : " << alGetString(AL_VENDOR);
+	AnnDebug() << "OpenAL vendor  : " << alVendor;
 
-	if (std::string(alGetString(AL_VENDOR)) != "OpenAL Community")
+	if (alVendor != "OpenAL Community")
 	{
-		displayWin32ErrorMessage(L"Wrong version of OpenAL loaded", L"The audio engine loaded an OpenAL DLL that isn't the implementation from the OpenAL soft project");
-		throw AnnInitializationError(ANN_ERR_NOTINIT, "Loaded OpenAL library shipped by " + std::string(alGetString(AL_VENDOR)) + " Instead of openal-soft");
+		displayWin32ErrorMessage("Wrong version of OpenAL loaded", "The audio engine loaded an OpenAL DLL that isn't the implementation from the OpenAL soft project");
+		throw AnnInitializationError(ANN_ERR_NOTINIT, "Loaded OpenAL library shipped by " + alVendor + " Instead of openal-soft");
 	}
 
 	return true;

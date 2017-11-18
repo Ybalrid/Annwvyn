@@ -87,7 +87,7 @@ AnnAudioFileManager* AnnAudioFileManager::getSingletonPtr()
 
 sf_count_t AnnAudioFile::sfVioGetFileLen(void* audioFileRawPtr)
 {
-	auto file = cast(audioFileRawPtr);
+	const auto file = cast(audioFileRawPtr);
 	return file->getSize();
 }
 

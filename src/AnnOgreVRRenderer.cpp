@@ -59,7 +59,7 @@ AnnOgreVRRenderer::AnnOgreVRRenderer(const std::string& windowName) :
 {
 	if (self)
 	{
-		displayWin32ErrorMessage(L"Fatal Error", L"Fatal error with renderer initialization. OgreOculusRender object already created.");
+		displayWin32ErrorMessage("Fatal Error", "Fatal error with renderer initialization. OgreOculusRender object already created.");
 		throw AnnInitializationError(ANN_ERR_CRITIC, "Cannot create more than one OgreVRRenderer object!");
 	}
 	self = this;

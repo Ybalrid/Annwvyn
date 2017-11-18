@@ -77,23 +77,23 @@ void AnnOgreOpenVRRenderer::initVrHmd()
 		switch (hmdError)
 		{
 		default:
-			displayWin32ErrorMessage(L"Error: failed OpenVR VR_Init",
-				L"Non described error when initializing the OpenVR Render object");
+			displayWin32ErrorMessage("Error: failed OpenVR VR_Init",
+				"Non described error when initializing the OpenVR Render object");
 			throw AnnInitializationError(ANN_ERR_NOTINIT, "Unknown error while initializing OpenVR");
 
 		case vr::VRInitError_Init_HmdNotFound:
 		case vr::VRInitError_Init_HmdNotFoundPresenceFailed:
-			displayWin32ErrorMessage(L"Error: cannot find HMD",
-				L"OpenVR cannot find HMD.\n"
-				L"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
+			displayWin32ErrorMessage("Error: cannot find HMD",
+				"OpenVR cannot find HMD.\n"
+				"Please install SteamVR and launch it, and verify HMD USB and HDMI connection");
 			throw AnnInitializationError(ANN_ERR_CANTHMD, "OpenVR can't find an HMD");
 		}
 
 	//Check if VRCompositor is present
 	if (!vr::VRCompositor())
 	{
-		displayWin32ErrorMessage(L"Error: failed to init OpenVR VRCompositor",
-			L"Failed to initialize the VR Compositor");
+		displayWin32ErrorMessage("Error: failed to init OpenVR VRCompositor",
+			"Failed to initialize the VR Compositor");
 		throw AnnInitializationError(ANN_ERR_NOTINIT, "Failed to init the OpenVR VRCompositor");
 	}
 

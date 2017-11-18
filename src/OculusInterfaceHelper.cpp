@@ -21,9 +21,9 @@ void OculusInterfaceHelper::abortOnFailure()
 	AnnDebug() << "Please make sure Oculus Home is installed on your system and "
 		"please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
 
-	displayWin32ErrorMessage(L"Error: Cannot create Oculus Session!",
-		L"Please make sure Oculus Home is installed on your system\n"
-		L"and check HDMI and USB connection to your Rift and Tracker");
+	displayWin32ErrorMessage("Error: Cannot create Oculus Session!",
+		"Please make sure Oculus Home is installed on your system\n"
+		"and check HDMI and USB connection to your Rift and Tracker");
 
 	//Cleanup
 	ovr_Shutdown();

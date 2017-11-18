@@ -74,7 +74,6 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 		<< hmdCommand << std::endl;
 
 	//Select the correct AnnOgreVRRenderer class to use :
-#ifdef _WIN32
 
 	if (hmdCommand == "OgreDefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "OgreDefaultRender")))
 	{
@@ -90,25 +89,26 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
 	else
 	{
+#ifdef _WIN32
 		displayWin32ErrorMessage(
-			L"Error: Cannot understand VR System you want to use!",
-			L"This program can be used with multiple VR solution.\n"
-			L"The executable should be launched via a dedicated launcher.\n"
-			L"If you're trying to launch it by hand, please check if your"
-			L"command line parameter is correct!\n\n"
-			L"Available command line parameter : \n"
-			L"\t-rift\n"
-			L"\t-vive\n"
-			L"\nIf you don't specify anything, the default system will be used"
-			L"(here it's the Oculus Rift)\n"
-			L"If you don't have (or can't use) VR Hardware, you can launch with"
-			L"-noVR.\n"
-			L"This will display the image on a simple window without attempting"
-			L"to talk to VR hardware"
+			"Error: Cannot understand VR System you want to use!",
+			"This program can be used with multiple VR solution.\n"
+			"The executable should be launched via a dedicated launcher.\n"
+			"If you're trying to launch it by hand, please check if your"
+			"command line parameter is correct!\n\n"
+			"Available command line parameter : \n"
+			"\t-rift\n"
+			"\t-vive\n"
+			"\nIf you don't specify anything, the default system will be used"
+			"(here it's the Oculus Rift)\n"
+			"If you don't have (or can't use) VR Hardware, you can launch with"
+			"-noVR.\n"
+			"This will display the image on a simple window without attempting"
+			"to talk to VR hardware"
 		);
+#endif
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
-#endif
 
 #ifdef __linux__
 	//No VR support currently
