@@ -423,6 +423,7 @@ void AnnOgreVRRenderer::loadHLMSLibrary(std::string hlmsFolder)
 
 	//Create and register the unlit Hlms
 	auto hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveUnlit, &archiveUnlitLibraryFolders);
+	hlmsUnlit->setDebugOutputPath(false, false);
 	hlmsManager->registerHlms(hlmsUnlit);
 
 	//Do the same for HlmsPbs:
@@ -443,6 +444,7 @@ void AnnOgreVRRenderer::loadHLMSLibrary(std::string hlmsFolder)
 
 	//Set the best shadows we can do by default
 	hlmsPbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_4x4);
+	hlmsPbs->setDebugOutputPath(false, false);
 
 	hlmsLoaded = true;
 }

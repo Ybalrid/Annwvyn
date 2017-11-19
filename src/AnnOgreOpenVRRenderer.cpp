@@ -293,8 +293,8 @@ void AnnOgreOpenVRRenderer::processController(vr::TrackedDeviceIndex_t controlle
 	auto transform = getMatrix4FromSteamVRMatrix34(trackedPoses[controllerDeviceIndex].mDeviceToAbsoluteTracking);
 
 	//Extract the pose from the transformation matrix
-	auto position = transform.getTrans();
-	auto orientation = transform.extractQuaternion();
+	const auto position = transform.getTrans();
+	const auto orientation = transform.extractQuaternion();
 
 	//Get the state of the controller. The state contains the buttons and triggers data at the last sample
 	vrSystem->GetControllerState(controllerDeviceIndex, &controllerState, sizeof controllerState);
