@@ -77,16 +77,29 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 	if (hmdCommand == "OgreDefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "OgreDefaultRender")))
 	{
-		std::cerr << "Using the default renderer " << defaultRenderer << " as HMD selector";
+		std::cerr << "Using the default renderer " << defaultRenderer << " as HMD selector\n";
+		std::cerr << "Re-running the renderer selection test..\n";
 		selectAndCreateRenderer(defaultRenderer, title);
 		return;
 	}
+#ifdef _WIN32
 	if (hmdCommand == "OgreOculusRender")
+	{
+		std::cerr << "Using Oculus...\n";
 		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
-	else if (hmdCommand == "OgreOpenVRRender")
-		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
+	}
+	else 
+#endif
+        if (hmdCommand == "OgreOpenVRRender")
+		{
+			std::cerr << "Using OpenVR...\n";
+			renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
+		}
 	else if (hmdCommand == "OgreNoVRRender")
-		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
+		{
+			std::cerr << "Not rendering in VR...\n";
+			renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
+		}
 	else
 	{
 #ifdef _WIN32
@@ -107,13 +120,14 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 			"to talk to VR hardware"
 		);
 #endif
+		std::cerr << "It looks like we can't start the VR renderer. The engine is going to crash\n."
+				  << "Dumping in standard error the current configuration : \n";
+		std::cerr << "The default renderer is:" << defaultRenderer << '\n';
+		std::cerr << "The hmdCommand is: " << hmdCommand << '\n';
+		if(renderer == nullptr) "The renderer is currently nullptr\n";
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
 
-#ifdef __linux__
-	//No VR support currently
-	renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
-#endif
 }
 
 AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
