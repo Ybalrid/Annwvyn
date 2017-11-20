@@ -72,7 +72,7 @@ void AnnEngine::startGameplayLoop()
 void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std::string& title)
 {
 	std::cerr << "HMD selection from command line routine returned : "
-			  << hmdCommand << std::endl;
+		<< hmdCommand << std::endl;
 
 	//Select the correct AnnOgreVRRenderer class to use :
 
@@ -84,7 +84,7 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 		return;
 	}
 
-	auto set{false};
+	auto set{ false };
 #ifdef _WIN32
 	if (hmdCommand == "OgreOculusRender")
 	{
@@ -105,34 +105,33 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
 		set = true;
 	}
-	if(!set)
+	if (!set)
 	{
 #ifdef _WIN32
 		displayWin32ErrorMessage(
-					"Error: Cannot understand VR System you want to use!",
-					"This program can be used with multiple VR solution.\n"
-					"The executable should be launched via a dedicated launcher.\n"
-					"If you're trying to launch it by hand, please check if your"
-					"command line parameter is correct!\n\n"
-					"Available command line parameter : \n"
-					"\t-rift\n"
-					"\t-vive\n"
-					"\nIf you don't specify anything, the default system will be used"
-					"(here it's the Oculus Rift)\n"
-					"If you don't have (or can't use) VR Hardware, you can launch with"
-					"-noVR.\n"
-					"This will display the image on a simple window without attempting"
-					"to talk to VR hardware"
-					);
+			"Error: Cannot understand VR System you want to use!",
+			"This program can be used with multiple VR solution.\n"
+			"The executable should be launched via a dedicated launcher.\n"
+			"If you're trying to launch it by hand, please check if your"
+			"command line parameter is correct!\n\n"
+			"Available command line parameter : \n"
+			"\t-rift\n"
+			"\t-vive\n"
+			"\nIf you don't specify anything, the default system will be used"
+			"(here it's the Oculus Rift)\n"
+			"If you don't have (or can't use) VR Hardware, you can launch with"
+			"-noVR.\n"
+			"This will display the image on a simple window without attempting"
+			"to talk to VR hardware"
+		);
 #endif
 		std::cerr << "It looks like we can't start the VR renderer. The engine is going to crash\n."
-				  << "Dumping in standard error the current configuration : \n";
-		std::cerr << "The default renderer is:" << defaultRenderer << '\n';
-		std::cerr << "The hmdCommand is: " << hmdCommand << '\n';
-		if(renderer == nullptr) "The renderer is currently nullptr\n";
+			<< "Dumping in standard error the current configuration : \n"
+			<< "The default renderer is:" << defaultRenderer << '\n'
+			<< "The hmdCommand is: " << hmdCommand << '\n';
+		if (renderer == nullptr) std::cerr << "The renderer is currently nullptr\n";
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
-
 }
 
 AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
@@ -164,14 +163,14 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 		setProcessPriorityHigh();
 
 	consoleGreen = FOREGROUND_GREEN |
-				   FOREGROUND_INTENSITY;
+		FOREGROUND_INTENSITY;
 	consoleYellow = FOREGROUND_GREEN |
-					FOREGROUND_RED |
-					FOREGROUND_INTENSITY;
+		FOREGROUND_RED |
+		FOREGROUND_INTENSITY;
 	consoleWhite = FOREGROUND_RED |
-				   FOREGROUND_GREEN |
-				   FOREGROUND_BLUE |
-				   FOREGROUND_INTENSITY;
+		FOREGROUND_GREEN |
+		FOREGROUND_BLUE |
+		FOREGROUND_INTENSITY;
 #endif
 
 	if (singleton)
@@ -198,9 +197,9 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 
 	//Element on this list will be updated in order by the engine each frame
 	SubSystemList.push_back(levelManager =
-			std::make_shared<AnnLevelManager>());
+		std::make_shared<AnnLevelManager>());
 	SubSystemList.push_back(gameObjectManager =
-			std::make_shared<AnnGameObjectManager>());
+		std::make_shared<AnnGameObjectManager>());
 
 	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
 
@@ -211,38 +210,38 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 	- then the game can redraw*/
 
 	SubSystemList.push_back
-			(physicsEngine = std::make_shared<AnnPhysicsEngine>(
-								 getSceneManager()->getRootSceneNode(),
-								 player));
+	(physicsEngine = std::make_shared<AnnPhysicsEngine>(
+		getSceneManager()->getRootSceneNode(),
+		player));
 
 	SubSystemList.push_back
-			(eventManager = std::make_shared< AnnEventManager>
-							(renderer->getWindow()));
+	(eventManager = std::make_shared< AnnEventManager>
+		(renderer->getWindow()));
 
 	SubSystemList.push_back
-			(audioEngine = std::make_shared< AnnAudioEngine>());
+	(audioEngine = std::make_shared< AnnAudioEngine>());
 
 	//These could be anywhere
 	SubSystemList.push_back
-			(filesystemManager = std::make_shared<AnnFilesystemManager>
-								 (title));
+	(filesystemManager = std::make_shared<AnnFilesystemManager>
+		(title));
 
 	SubSystemList.push_back
-			(resourceManager = std::make_shared<AnnResourceManager>());
+	(resourceManager = std::make_shared<AnnResourceManager>());
 
 	SubSystemList.push_back
-			(sceneryManager = std::make_shared<AnnSceneryManager>
-							  (renderer));
+	(sceneryManager = std::make_shared<AnnSceneryManager>
+		(renderer));
 
 	SubSystemList.push_back
-			(scriptManager = std::make_shared<AnnScriptManager>());
+	(scriptManager = std::make_shared<AnnScriptManager>());
 
 	renderer->initClientHmdRendering();
 	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();
 	vrRendererPovGameplayPlacement->setPosition(player->getPosition() +
-												AnnVect3(0.0f,
-														 player->getEyesHeight(),
-														 0.0f));
+		AnnVect3(0.0f,
+			player->getEyesHeight(),
+			0.0f));
 
 	//This subsystem need the vrRendererPovGameplayPlacement object to be
 	//initialized. And the Resource manager because it wants a font file and an
@@ -415,9 +414,9 @@ bool AnnEngine::refresh()
 void AnnEngine::syncPov() const
 {
 	vrRendererPovGameplayPlacement->setPosition(
-				player->getPosition());
+		player->getPosition());
 	vrRendererPovGameplayPlacement->setOrientation(
-				player->getOrientation().toQuaternion());
+		player->getOrientation().toQuaternion());
 }
 
 //Bad. Don't use. Register an event listener and use the KeyEvent callback.
@@ -469,8 +468,8 @@ AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSys
 		if (userSystem->name == system->name)
 		{
 			AnnDebug() << "A subsystem with the name "
-					   << userSystem->name
-					   << "is already registered.";
+				<< userSystem->name
+				<< "is already registered.";
 
 			return nullptr;
 		}
@@ -575,7 +574,7 @@ bool AnnEngine::openConsole()
 	SetConsoleTitle(L"Annwvyn Debug Console");
 	if (!noConsoleColor)
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-								consoleWhite);
+			consoleWhite);
 
 #endif
 	return state;

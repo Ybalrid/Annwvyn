@@ -19,9 +19,9 @@ using namespace Annwvyn;
 
 AnnMain() //The application entry point is "AnnMain()". return type int.
 {
-	//Initialize the engine
 	//AnnEngine::openConsole(); //optional : open console in terminal window;
 
+	//Initialize the engine
 	AnnInit("MyVRGame");
 
 	//Call physics initialization for the player body:
