@@ -7,9 +7,9 @@
 using namespace Annwvyn;
 
 AnnGameObject::AnnGameObject() :
-	Node(nullptr), Model(nullptr), currentAnimation(nullptr),
-	Shape(nullptr),
-	Body(nullptr),
+	sceneNode(nullptr), model3D(nullptr), currentAnimation(nullptr),
+	collisionShape(nullptr),
+	rigidBody(nullptr),
 	bodyMass(0),
 	audioSource(nullptr),
 	state(nullptr)
@@ -26,34 +26,34 @@ AnnGameObject::~AnnGameObject()
 		AnnGetAudioEngine()->removeSource(audioSource);
 
 	if (AnnGetPhysicsEngine())
-		AnnGetPhysicsEngine()->removeRigidBody(Body);
+		AnnGetPhysicsEngine()->removeRigidBody(rigidBody);
 
-	if (Body) delete Body;
-	if (Shape)
+	if (rigidBody) delete rigidBody;
+	if (collisionShape)
 	{
-		if (Shape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
-			delete static_cast<btBvhTriangleMeshShape*>(Shape)->getMeshInterface();
-		delete Shape;
+		if (collisionShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
+			delete static_cast<btBvhTriangleMeshShape*>(collisionShape)->getMeshInterface();
+		delete collisionShape;
 	}
 	if (state) delete state;
 
 	//Prevent dereferencing null pointer here. Parent can be something other than root scene node now.
-	if (Node)
+	if (sceneNode)
 	{
-		if (Node->getParent())
-			Node->getParent()->removeChild(Node);
+		if (sceneNode->getParent())
+			sceneNode->getParent()->removeChild(sceneNode);
 		std::vector<Ogre::MovableObject*> attachedObject;
-		for (unsigned short i(0); i < Node->numAttachedObjects(); i++)
-			attachedObject.push_back(Node->getAttachedObject(i));
-		Node->detachAllObjects();
+		for (unsigned short i(0); i < sceneNode->numAttachedObjects(); ++i)
+			attachedObject.push_back(sceneNode->getAttachedObject(i));
+		sceneNode->detachAllObjects();
 		for (auto object : attachedObject)
 			AnnGetEngine()->getSceneManager()->destroyMovableObject(object);
-		AnnGetEngine()->getSceneManager()->destroySceneNode(Node);
-		Node = nullptr;
+		AnnGetEngine()->getSceneManager()->destroySceneNode(sceneNode);
+		sceneNode = nullptr;
 	}
 }
 
-void AnnGameObject::playSound(std::string path, bool loop, float volume) const
+void AnnGameObject::playSound(const std::string& path, bool loop, float volume) const
 {
 	audioSource->changeSound(path);
 	audioSource->setLooping(loop);
@@ -80,24 +80,31 @@ void AnnGameObject::setPosition(float x, float y, float z)
 void AnnGameObject::translate(float x, float y, float z) const
 {
 	//Ogre
-	Node->translate(x, y, z);
+	sceneNode->translate(x, y, z);
 	//Bullet
-	if (Body) Body->translate(btVector3(x, y, z));
+	if (rigidBody)
+	{
+		rigidBody->translate(btVector3(x, y, z));
+		rigidBody->activate();
+	}
 	//OpenAL
 	updateOpenAlPos();
 }
 
 void AnnGameObject::setPosition(AnnVect3 pos)
 {
-	if (Body)
+	if (rigidBody)
 	{
-		auto currentPosition = Node->getPosition();
-		Body->translate(btVector3(pos.x - currentPosition.x,
+		const auto currentPosition = sceneNode->getPosition();
+		rigidBody->translate(btVector3(pos.x - currentPosition.x,
 			pos.y - currentPosition.y,
 			pos.z - currentPosition.z));
+
+		//Activate the body in the physics engine
+		rigidBody->activate();
 	}
 	//change OgrePosition
-	Node->setPosition(pos);
+	sceneNode->setPosition(pos);
 
 	//change OpenAL Source Position
 	updateOpenAlPos();
@@ -105,7 +112,7 @@ void AnnGameObject::setPosition(AnnVect3 pos)
 
 void AnnGameObject::setWorldPosition(AnnVect3 pos) const
 {
-	Node->_setDerivedPosition(pos);
+	sceneNode->_setDerivedPosition(pos);
 	updateOpenAlPos();
 }
 
@@ -117,31 +124,34 @@ void AnnGameObject::setOrientation(float w, float x, float y, float z)
 void AnnGameObject::setOrientation(AnnQuaternion orient)
 {
 	//Ogre3D
-	Node->setOrientation(static_cast<Ogre::Quaternion>(orient));
+	sceneNode->setOrientation(static_cast<Ogre::Quaternion>(orient));
 
 	//bullet
-	if (Body)
+	if (rigidBody)
 	{
-		auto t = Body->getCenterOfMassTransform();
+		auto t = rigidBody->getCenterOfMassTransform();
 		t.setRotation(orient.getBtQuaternion());
-		Body->setCenterOfMassTransform(t);
+		rigidBody->setCenterOfMassTransform(t);
+
+		//activate the body
+		rigidBody->activate();
 	}
 }
 
 void AnnGameObject::setWorldOrientation(AnnQuaternion orient) const
 {
-	Node->_setDerivedOrientation(orient);
+	sceneNode->_setDerivedOrientation(orient);
 }
 
 void AnnGameObject::setScale(AnnVect3 scale, bool scaleMass) const
 {
-	Node->setScale(scale);
-	if (Body&&Shape)
+	sceneNode->setScale(scale);
+	if (rigidBody && collisionShape)
 	{
-		Shape->setLocalScaling(scale.getBtVector());
+		collisionShape->setLocalScaling(scale.getBtVector());
 
 		auto world = AnnGetPhysicsEngine()->getWorld();
-		world->removeRigidBody(Body);
+		world->removeRigidBody(rigidBody);
 
 		btVector3 inertia;
 		float scaleLenght;
@@ -151,11 +161,11 @@ void AnnGameObject::setScale(AnnVect3 scale, bool scaleMass) const
 		else
 			scaleLenght = 1.0f;
 
-		Shape->calculateLocalInertia(scaleLenght * bodyMass, inertia);
-		Body->setMassProps(scaleLenght*bodyMass, inertia);
+		collisionShape->calculateLocalInertia(scaleLenght * bodyMass, inertia);
+		rigidBody->setMassProps(scaleLenght*bodyMass, inertia);
 
-		world->addRigidBody(Body, AnnPhysicsEngine::CollisionMasks::General, AnnPhysicsEngine::CollisionMasks::ColideWithAll);
-		Body->activate();
+		world->addRigidBody(rigidBody, AnnPhysicsEngine::CollisionMasks::General, AnnPhysicsEngine::CollisionMasks::ColideWithAll);
+		rigidBody->activate();
 	}
 }
 
@@ -171,67 +181,63 @@ void AnnGameObject::setScale(float x, float y, float z, bool mass) const
 
 AnnVect3 AnnGameObject::getPosition()
 {
-	return Node->getPosition();
+	return sceneNode->getPosition();
 }
 
 AnnQuaternion AnnGameObject::getOrientation()
 {
-	return Node->getOrientation();
+	return sceneNode->getOrientation();
 }
 
 AnnVect3 AnnGameObject::getScale() const
 {
-	return Node->getScale();
+	return sceneNode->getScale();
 }
 
 void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 {
-	Node = newNode;
+	sceneNode = newNode;
 }
 
 void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
-
 	//Some sanity checks
 	if (checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);
 	if (checkForBodyInChild()) throw AnnPhysicsSetupChildError(this);
 	if (mass < 0) return;
-    
-    //Easy access to physics engine
-    auto physicsEngine = AnnGetPhysicsEngine();
-    
-    //Get the collision shape from the physics engine
-    Shape = physicsEngine->_getGameObjectShape(this, type);
 
-    //Apply local scaling
+	//Easy access to physics engine
+	auto physicsEngine = AnnGetPhysicsEngine();
+
+	//Get the collision shape from the physics engine
+	collisionShape = physicsEngine->_getGameObjectShape(this, type);
+
+	//Apply local scaling
 	AnnVect3 scale = getNode()->getScale();
-	Shape->setLocalScaling(scale.getBtVector());
+	collisionShape->setLocalScaling(scale.getBtVector());
 
 	//Register the mass
 	bodyMass = mass;
-	
-    //Calculate inertia
-    btVector3 inertia{ 0,0,0 };
+
+	//Calculate inertia
+	btVector3 inertia{ 0,0,0 };
 	if (bodyMass > 0.0f)
-		Shape->calculateLocalInertia(bodyMass, inertia);
+		collisionShape->calculateLocalInertia(bodyMass, inertia);
 
 	//create rigidBody from shape
-	state = new BtOgre::RigidBodyState(Node);
-	Body = new btRigidBody(bodyMass, state, Shape, inertia);
-	Body->setUserPointer(this);
+	state = new BtOgre::RigidBodyState(sceneNode);
+	rigidBody = new btRigidBody(bodyMass, state, collisionShape, inertia);
+	rigidBody->setUserPointer(this);
 
-    //Add body to the dynamics world while respecting collision masks settings
-	short bulletMask = AnnPhysicsEngine::CollisionMasks::ColideWithAll;
-	if (!colideWithPlayer)
-		bulletMask = AnnPhysicsEngine::CollisionMasks::General;
-
-	physicsEngine->getWorld()->addRigidBody(Body, 
-            AnnPhysicsEngine::CollisionMasks::General, bulletMask);
+	//Add body to the dynamics world while respecting collision masks settings
+	physicsEngine->getWorld()->addRigidBody(rigidBody,
+		AnnPhysicsEngine::CollisionMasks::General,
+		colideWithPlayer ? AnnPhysicsEngine::CollisionMasks::ColideWithAll : AnnPhysicsEngine::CollisionMasks::General);
 }
 
 Ogre::SceneNode* AnnGameObject::getNode() const
 {
-	return Node;
+	return sceneNode;
 }
 
 float AnnGameObject::getDistance(AnnGameObject *otherObject) const
@@ -241,7 +247,7 @@ float AnnGameObject::getDistance(AnnGameObject *otherObject) const
 
 btRigidBody* AnnGameObject::getBody() const
 {
-	return Body;
+	return rigidBody;
 }
 
 void AnnGameObject::setAnimation(const std::string&	animationName)
@@ -254,7 +260,7 @@ void AnnGameObject::setAnimation(const std::string&	animationName)
 	}
 
 	//Attempt to get the animation
-	auto selectedAnimation = getItem()->getSkeletonInstance()->getAnimation(animationName);
+	const auto selectedAnimation = getItem()->getSkeletonInstance()->getAnimation(animationName);
 	if (!selectedAnimation)
 	{
 		AnnDebug() << "Looks like " << getName() << " doesn't have an animation called " << animationName;
@@ -288,24 +294,24 @@ void AnnGameObject::addAnimationTime(double offset) const
 
 void AnnGameObject::applyImpulse(AnnVect3 force) const
 {
-	Body->applyCentralImpulse(force.getBtVector());
+	rigidBody->applyCentralImpulse(force.getBtVector());
 }
 
 void AnnGameObject::applyForce(AnnVect3 force) const
 {
-	Body->applyCentralForce(force.getBtVector());
+	rigidBody->applyCentralForce(force.getBtVector());
 }
 
 void AnnGameObject::setLinearSpeed(AnnVect3 v) const
 {
-	if (Body)
-		Body->setLinearVelocity(v.getBtVector());
+	if (rigidBody)
+		rigidBody->setLinearVelocity(v.getBtVector());
 }
 
 void AnnGameObject::setFrictionCoef(float coef) const
 {
-	if (Body)
-		Body->setFriction(coef);
+	if (rigidBody)
+		rigidBody->setFriction(coef);
 }
 
 void AnnGameObject::setVisible() const
@@ -323,7 +329,7 @@ std::string AnnGameObject::getName() const
 	return name;
 }
 
-void AnnGameObject::attachScript(const std::string & scriptName)
+void AnnGameObject::attachScript(const std::string& scriptName)
 {
 	auto script = AnnGetScriptManager()->getBehaviorScript(scriptName, this);
 	if (script->isValid())
@@ -333,7 +339,7 @@ void AnnGameObject::attachScript(const std::string & scriptName)
 
 bool AnnGameObject::hasParent() const
 {
-	auto parentSceneNode = Node->getParentSceneNode();
+	auto parentSceneNode = sceneNode->getParentSceneNode();
 
 	if (reinterpret_cast<uint64_t>(parentSceneNode)
 		== reinterpret_cast<uint64_t>(AnnGetEngine()->getSceneManager()->getRootSceneNode()))
@@ -349,22 +355,22 @@ bool AnnGameObject::hasParent() const
 
 std::shared_ptr<AnnGameObject> AnnGameObject::getParent() const
 {
-	return AnnGetGameObjectManager()->getFromNode(Node->getParentSceneNode());
+	return AnnGetGameObjectManager()->getFromNode(sceneNode->getParentSceneNode());
 }
 
 void AnnGameObject::attachChildObject(std::shared_ptr<AnnGameObject> child) const
 {
-	//child->Node has been detached from it's current parent(that was either a node or the root node)
-	child->Node->getParentSceneNode()->removeChild(child->Node);
+	//child->sceneNode has been detached from it's current parent(that was either a node or the root node)
+	child->sceneNode->getParentSceneNode()->removeChild(child->sceneNode);
 
 	//Attach it to the node of this object.
-	Node->addChild(child->Node);
+	sceneNode->addChild(child->sceneNode);
 }
 
 void AnnGameObject::detachFromParent() const
 {
-	Node->getParentSceneNode()->removeChild(Node);
-	AnnGetEngine()->getSceneManager()->getRootSceneNode()->addChild(Node);
+	sceneNode->getParentSceneNode()->removeChild(sceneNode);
+	AnnGetEngine()->getSceneManager()->getRootSceneNode()->addChild(sceneNode);
 }
 
 bool AnnGameObject::checkForBodyInParent()
@@ -375,31 +381,31 @@ bool AnnGameObject::checkForBodyInParent()
 AnnVect3 AnnGameObject::getWorldPosition() const
 {
 #ifdef _DEBUG
-	if (Node->isCachedTransformOutOfDate())
+	if (sceneNode->isCachedTransformOutOfDate())
 	{
 		AnnDebug() << "cached transform was out of date when " << name << " wanted it's own world position";
-		return Node->_getDerivedPositionUpdated();
+		return sceneNode->_getDerivedPositionUpdated();
 	}
 #endif
-	return Node->_getDerivedPosition();
+	return sceneNode->_getDerivedPosition();
 }
 
 AnnQuaternion AnnGameObject::getWorldOrientation() const
 {
 #ifdef _DEBUG
-	if (Node->isCachedTransformOutOfDate())
+	if (sceneNode->isCachedTransformOutOfDate())
 	{
 		AnnDebug() << "cached transofrm was out of date when " << name << " wanted it's own world orientaiton";
-		return Node->_getDerivedOrientationUpdated();
+		return sceneNode->_getDerivedOrientationUpdated();
 	}
 #endif
-	return Node->_getDerivedOrientation();
+	return sceneNode->_getDerivedOrientation();
 }
 
 bool AnnGameObject::parentsHaveBody(AnnGameObject* obj) const
 {
 	if (!hasParent()) return false;
-	auto addr = obj->getParent().get();
+	const auto addr = obj->getParent().get();
 	if (!addr) return false;
 	if (obj->getParent()->getBody()) return true;
 	return parentsHaveBody(addr);
@@ -412,10 +418,10 @@ bool AnnGameObject::checkForBodyInChild()
 
 bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
 {
-	for (auto childNode : parentObj->Node->getChildIterator())
+	for (auto childNode : parentObj->sceneNode->getChildIterator())
 	{
-		auto node = childNode;
-		auto childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
+		const auto node = childNode;
+		const auto childSceneNode = dynamic_cast<Ogre::SceneNode*>(node);
 
 		//Is an actual SceneNode
 		if (childSceneNode != nullptr)
@@ -443,10 +449,10 @@ void AnnGameObject::setWorldPosition(float x, float y, float z) const
 
 void AnnGameObject::setItem(Ogre::Item* item)
 {
-	Model = item;
+	model3D = item;
 }
 
 Ogre::Item* AnnGameObject::getItem() const
 {
-	return Model;
+	return model3D;
 }

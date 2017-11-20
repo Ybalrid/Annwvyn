@@ -115,7 +115,7 @@ namespace Annwvyn
 		///Get the item of this object
 		Ogre::Item* getItem() const;
 
-		///Get Rigid Body
+		///Get Rigid rigidBody
 		btRigidBody* getBody() const;
 
 		///Get distance from another object
@@ -126,7 +126,7 @@ namespace Annwvyn
 		/// \param name Name of the audio file in a resource location
 		/// \param loop If set to true, will play the sound in loop
 		/// \param volume Floating point number between 0 and 1 to set the loudness of the sound
-		void playSound(std::string name, bool loop = false, float volume = 1.0f) const;
+		void playSound(const std::string& name, bool loop = false, float volume = 1.0f) const;
 
 		///Set currently playing animation
 		/// \param name Name of the animation as defined by the 3D entity
@@ -216,19 +216,19 @@ namespace Annwvyn
 		void updateOpenAlPos() const;
 
 		///SceneNode. This also holds the position/orientation/scale of the object
-		Ogre::SceneNode* Node;
+		Ogre::SceneNode* sceneNode;
 
 		///Entity
-		Ogre::Item* Model;
+		Ogre::Item* model3D;
 
 		///Currently selected animation
 		Ogre::SkeletonAnimation* currentAnimation;
 
 		///Bullet shape
-		btCollisionShape* Shape;
+		btCollisionShape* collisionShape;
 
 		///Bullet rigid body
-		btRigidBody* Body;
+		btRigidBody* rigidBody;
 
 		///Mass of the rigid body
 		float bodyMass;
@@ -256,6 +256,6 @@ namespace Annwvyn
 		void callUpdateOnScripts();
 	};
 
-    using AnnGameObjectPtr = std::shared_ptr<AnnGameObject>;
+	using AnnGameObjectPtr = std::shared_ptr<AnnGameObject>;
 }
 #endif
