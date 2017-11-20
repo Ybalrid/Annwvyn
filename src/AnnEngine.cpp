@@ -464,7 +464,7 @@ AnnPose AnnEngine::getHmdPose() const
 
 AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSystem)
 {
-	for (auto system : SubSystemList)
+	for (const auto system : SubSystemList)
 		if (userSystem->name == system->name)
 		{
 			AnnDebug() << "A subsystem with the name "
@@ -483,10 +483,10 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 	std::string bootstrapName = "AnnBootPlugin_";
 	bootstrapName += pluginName;
 #ifdef _WIN32
-	if (auto handle = LoadLibraryA(pluginName.c_str()))
+	if (const auto handle = LoadLibraryA(pluginName.c_str()))
 	{
 		AnnDebug() << "Sucessully loadded dynamic libray";
-		if (auto bootstrapPlugin = GetProcAddress(handle, bootstrapName.c_str()))
+		if (const auto bootstrapPlugin = GetProcAddress(handle, bootstrapName.c_str()))
 		{
 			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
 			AnnDebug() << "Create and register subsystem...";
@@ -511,7 +511,7 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 	if (auto handle = dlopen(pluginSoFile.c_str(), RTLD_NOW))
 	{
 		AnnDebug() << "Sucessully loadded dynamic libray";
-		if (auto bootstrapPlugin = (void* (*)()) dlsym(handle, bootstrapName.c_str())) //We need to cast the pointer to a functor of the "void* boostrap()" format
+		if (auto bootstrapPlugin = (void* (*)()) dlsym(handle, bootstrapName.c_str())) //We need to cast the pointer to a functor of the "void* boostrap(void)" format
 		{
 			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
 			AnnDebug() << "Create and register subsystem...";
@@ -540,11 +540,9 @@ AnnSubSystemPtr AnnEngine::getSubSystemByName(const std::string& name)
 
 bool AnnEngine::isUserSubSystem(AnnSubSystemPtr subsystem)
 {
-	auto nakedSubSystem(subsystem.get());
-
-	auto result = dynamic_cast<AnnUserSubSystem*>(nakedSubSystem);
-	if (result != nullptr) return true;
-	return false;
+	const auto nakedSubSystem(subsystem.get());
+	const auto result = dynamic_cast<AnnUserSubSystem*>(nakedSubSystem);
+	return result != nullptr;
 }
 
 void AnnEngine::removeUserSubSystem(AnnUserSubSystemPtr subsystem)
@@ -562,7 +560,7 @@ bool AnnEngine::openConsole()
 	if (AllocConsole())
 	{
 		//put stdout on this console;
-		FILE* f; auto err = freopen_s(&f, "CONOUT$", "w", stdout);
+		FILE* f; const auto err = freopen_s(&f, "CONOUT$", "w", stdout);
 		if (!f) state = false;
 		if (err != 0) state = false;
 		manualConsole = true;
@@ -571,7 +569,7 @@ bool AnnEngine::openConsole()
 	//Redirect cerr to cout
 	std::cerr.rdbuf(std::cout.rdbuf());
 
-	SetConsoleTitle(L"Annwvyn Debug Console");
+	SetConsoleTitleA("Annwvyn Debug Console");
 	if (!noConsoleColor)
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
 			consoleWhite);

@@ -10,7 +10,7 @@ MyLevel::MyLevel() : constructLevel()
 void MyLevel::load()
 {
 	//Create Sinbad the Ogre
-	auto Sinbad(addGameObject("Sinbad.mesh"));
+	auto Sinbad(addGameObject("Sinbad.mesh", "Sinbad"));
 	Sinbad->setScale(0.5f * AnnVect3::UNIT_SCALE);
 	Sinbad->setPosition({ 0, 1, 0 });
 
