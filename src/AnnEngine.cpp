@@ -20,7 +20,8 @@ bool AnnEngine::autosetProcessPriorityHigh(true);
 bool AnnEngine::noConsoleColor(false);
 bool AnnEngine::manualConsole(false);
 std::string AnnEngine::logFileName{ "Annwvyn.log" };
-std::string AnnEngine::defaultRenderer{ "OgreOculusRender" };
+
+std::string AnnEngine::defaultRenderer{ "OgreNoVRRender" };
 
 #ifdef _WIN32
 WORD AnnEngine::consoleGreen(0);
