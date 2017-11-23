@@ -12,7 +12,7 @@ file(GLOB ProjPCH pch/*)
 
 
 #copy the necessary files from the sources to the runtime directory
-file(GLOB batch *.bat)
+file(GLOB batch *.bat *.sh)
 file(COPY ${batch} DESTINATION ${PROJECT_BINARY_DIR})
 execute_process(COMMAND ${PROJECT_BINARY_DIR}/getLibs.bat ${PROJECT_BINARY_DIR})
 file(COPY hlms DESTINATION ${PROJECT_BINARY_DIR})
