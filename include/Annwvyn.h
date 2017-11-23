@@ -118,7 +118,7 @@ namespace Annwvyn
 	{
 		//If no args, default
 		if (strlen(cmd) == 0)
-			return "OgreDefaultRender";
+			return "DefaultRender";
 
 		//Args should start by a '-'
 		if (cmd[0] != '-')
@@ -129,20 +129,20 @@ namespace Annwvyn
 
 		//User want to use a rift
 		if (strCmd == "-rift" || strCmd == "-ovr")
-			return "OgreOculusRender";
+			return "OculusRender";
 
 		//User want to use a Vive or another OpenVR headset
 		if (strCmd == "-vive" || strCmd == "-openVR")
-			return "OgreOpenVRRender";
+			return "OpenVRRender";
 
 		//Not implemented. I don't have OSVR hardware to try it out.
 		if (strCmd == "-osvr")
-			return "OgreOSVRRender";
+			return "OSVRRender";
 
 		//Bodge to run game on a flat screen on hardware that is not compatible
 		//with
 		if (strCmd == "-noVR")
-			return "OgreNoVRRender";
+			return "NoVRRender";
 
 		return "arg_error";
 	}

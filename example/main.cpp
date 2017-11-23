@@ -59,7 +59,7 @@ AnnMain()
 
 	AnnOgreVRRenderer::setAntiAliasingLevel(8);
 	AnnEngine::logFileName = "Samples.log";
-	AnnEngine::defaultRenderer = "OgreNoVRRender";
+	AnnEngine::defaultRenderer = "NoVRRender";
 
 	AnnInit("AnnTest");
 

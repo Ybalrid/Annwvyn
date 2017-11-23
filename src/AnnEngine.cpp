@@ -21,7 +21,7 @@ bool AnnEngine::noConsoleColor(false);
 bool AnnEngine::manualConsole(false);
 std::string AnnEngine::logFileName{ "Annwvyn.log" };
 
-std::string AnnEngine::defaultRenderer{ "OgreNoVRRender" };
+std::string AnnEngine::defaultRenderer{ "NoVRRender" };
 
 #ifdef _WIN32
 WORD AnnEngine::consoleGreen(0);
@@ -76,7 +76,7 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 	//Select the correct AnnOgreVRRenderer class to use :
 
-	if (hmdCommand == "OgreDefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "OgreDefaultRender")))
+	if (hmdCommand == "DefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "DefaultRender")))
 	{
 		std::cerr << "Using the default renderer " << defaultRenderer << " as HMD selector\n";
 		std::cerr << "Re-running the renderer selection test..\n";
@@ -86,20 +86,20 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 	auto set{ false };
 #ifdef _WIN32
-	if (hmdCommand == "OgreOculusRender")
+	if (hmdCommand == "OculusRender")
 	{
 		std::cerr << "Using Oculus...\n";
 		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
 		set = true;
 	}
 #endif
-	if (hmdCommand == "OgreOpenVRRender")
+	if (hmdCommand == "OpenVRRender")
 	{
 		std::cerr << "Using OpenVR...\n";
 		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
 		set = true;
 	}
-	if (hmdCommand == "OgreNoVRRender")
+	if (hmdCommand == "NoVRRender")
 	{
 		std::cerr << "Not rendering in VR...\n";
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
