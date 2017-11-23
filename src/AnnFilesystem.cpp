@@ -135,6 +135,11 @@ void AnnFilesystemManager::setSaveDirectoryName(string dirname)
 	for (auto achar : charToEscape)
 		replace(begin(dirname), end(dirname), achar, '_');
 	saveDirectoryName = dirname;
+#ifdef __linux__
+	//Put the save directory as "hidden" in user's home directory on Linux.
+	saveDirectoryName = "." + saveDirectoryName;
+#endif
+
 	AnnDebug() << "Save directory : " << saveDirectoryName;
 	AnnDebug() << "Save directory location : " << getSaveDirectoryFullPath();
 }
@@ -155,9 +160,11 @@ void AnnFilesystemManager::createDirectory(string path)
 {
 	//TODO clean that when upgrading to C++17
 #ifdef WIN32
+	//Win32 call to create a directory
 	CreateDirectory(wstring{ begin(path), end(path) }.c_str(), nullptr);
 #endif
 #ifdef __linux__
+	//POSIX call to create a directory
 	auto status = mkdir(path.c_str(), S_IRWXU);
 	if (status == 0 || status == EEXIST) return;
 	AnnDebug() << "Warning: mkdir() did not return 0 or EEXIST.";
