@@ -43,11 +43,11 @@ namespace Annwvyn
 		double sec;
 
 		//Start a timer, and give it's ID to the listener
-		auto timer = AnnGetEventManager()->fireTimer(5);
+		auto timer = AnnGetEventManager()->fireTimer(2);
 		timerListener->setID(timer);
 
 		//Run 10 seconds of simulation with debug console visible
-		while ((sec = GameEngine->getTimeFromStartupSeconds()) < 10)
+		while ((sec = GameEngine->getTimeFromStartupSeconds()) < 4)
 		{
 			GameEngine->refresh();
 			AnnDebug() << "Current time : " << sec;

@@ -1,3 +1,3 @@
 #pragma once
 
-#define RENDERER "OgreNoVRRender"
+#define RENDERER "NoVRRender"
