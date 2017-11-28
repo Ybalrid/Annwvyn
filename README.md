@@ -41,7 +41,7 @@ Installation
 
 First, please install Visual Studio 2017 (the community version is free) from Microsoft.
 
-Then, go get the SDK installer here http://annwvyn.org/?static2/download and run it. 
+Then, go get the SDK installer here https://www.annwvyn.org/download/ and run it. 
 If near the end of the installer, a CMD window open asking about setting up environment variables, say yes.
 
 This is due to the fact that the build configuration file need to locate the SDK installation directory.
@@ -52,12 +52,12 @@ Building on Windows
 -------------------
 **Please install Oculus Home, or SteamVR and the lattest drivers from your graphics card manufacturer.**
 
-As stated in the DEPEDENCIES file, you should download the SDK from http://annwvyn.org/
+As stated in the DEPEDENCIES file, you should download the SDK from https://annwvyn.org/
 The SDK has everything to **build** Annwwvyn itself, so you can hack into it by this way to. It's a Source+Binary package.
 
 But, if you *really* want to build and setup the engine yourself, here's a simple guide how to do it
 
-- Download the "dependency package" from here http://annwvyn.org/?static2/download
+- Download the "dependency package" from here https://www.annwvyn.org/download/
 - Extract it in a folder
 - Clone this repo in the same folder
 - Run the "RUNME.BAT" script from this folder
@@ -104,12 +104,14 @@ Run "git pull" on the Annwvyn sub-directory. then open the VS solution in msvc/A
 
 Clean and build the solution.
 
-If you have build errors, you should download the newest SDK and put it in place of the older one. You can also replace the content of your SDK folder (except the Annwvyn directory) with the dependency package from http://annwvyn.org/?static2/download
+If you have build errors, you should download the newest SDK and put it in place of the older one. You can also replace the content of your SDK folder (except the Annwvyn directory) with the dependency package from https://www.annwvyn.org/download/
 
-If you are getting error regarding functions with name that start's with "VR", you need to upgrade the OpenVR package. Just git pull from the OpenVR directory and copy over the dll.
+If you are getting error regarding functions with names that start's with "VR", you need to upgrade the OpenVR package. Just git pull from the OpenVR directory and copy over the dll.
+
+If you are getting errors regarding functions with names that starts with "ovr_", you need to upgrade the OculusSDK. This require you to rebuild the libtray with /MD(d) runtime linkage, but I'll recomedn you to get the new dependency package.
 ______
 
-If you want more information about the project, please consult the official website (http://annwvyn.org/). It also contains documentation about the code.
+If you want more information about the project, please consult the official website (https://annwvyn.org/). It also contains documentation about the code.
 
 This project is in it's really early phases of development. If you have any question, feel free to contact me directly at ybalrid@ybalrid.info 
 
