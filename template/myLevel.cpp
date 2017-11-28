@@ -30,7 +30,7 @@ void MyLevel::load()
 	Sun->setDirection(AnnVect3{ -0.125, -1, -0.5 }.normalisedCopy());
 	Sun->setPower(97);
 
-	auto OtherLight(addLightObject("Other Light"));
+	auto OtherLight(addLightObject("OtherLight"));
 	OtherLight->setPower(50);
 	OtherLight->setPosition({ 0, 1, 1 });
 

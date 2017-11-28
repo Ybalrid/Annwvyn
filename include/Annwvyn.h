@@ -3,7 +3,6 @@
 * \file Annwvyn.h
 * \brief Main Annwvyn include file (to be used by client application)
 * \author Arthur Brainville
-* \version 0.2.0
 */
 
 /*!
