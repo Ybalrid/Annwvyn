@@ -124,7 +124,7 @@ void AnnOgreOculusRenderer::initVrHmd()
 	ovr_GetSessionStatus(oculusInterface->getSession(), &sessionStatus);
 	oculusInterface->setTrackingOriginToFloorLevel();
 
-	auto playerEyeHeight = oculusInterface->getUserEyeHeight();
+	const auto playerEyeHeight = oculusInterface->getUserEyeHeight();
 	if (playerEyeHeight != -1.0f) AnnGetPlayer()->setEyesHeight(playerEyeHeight);
 
 	AnnDebug() << "Player eye height : " << playerEyeHeight << "m";
@@ -151,28 +151,9 @@ void AnnOgreOculusRenderer::initRttRendering()
 	//Init GLEW here to be able to call OpenGL functions
 	loadOpenGLFunctions();
 
-	//Compute size of render textures :
-
 	//Get texture size from ovr with the maximal FOV for each eye
 	texSizeL = ovr_GetFovTextureSize(oculusInterface->getSession(), ovrEye_Left, oculusInterface->getHmdDesc().DefaultEyeFov[left], 1.f);
 	texSizeR = ovr_GetFovTextureSize(oculusInterface->getSession(), ovrEye_Right, oculusInterface->getHmdDesc().DefaultEyeFov[right], 1.f);
-
-	//Calculate the render buffer size for both eyes. The width of the frontier is the number of unused pixel between the two eye buffer.
-	//Apparently, keeping them glued together make some slight bleeding.
-
-	//To use SSAA, just make the buffer bigger
-	if (UseSSAA)
-	{
-		const auto multiplier = AALevel / 2;
-		if (multiplier > 0)
-		{
-			texSizeL.w *= multiplier;
-			texSizeL.h *= multiplier;
-			texSizeR.w *= multiplier;
-			texSizeR.h *= multiplier;
-		}
-		AALevel = 0;
-	}
 
 	//Create left eye render texture
 	ovrTextureSwapChainDesc textureSwapChainDesc = {};
@@ -190,7 +171,7 @@ void AnnOgreOculusRenderer::initRttRendering()
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
 	}
 
-	//Create write eye render texture (same basic configuration, just replace the texture sizes
+	//Create right eye render texture (same basic configuration, just replace the texture sizes)
 	textureSwapChainDesc.Width = texSizeR.w;
 	textureSwapChainDesc.Height = texSizeR.h;;
 	if (OVR_FAILURE(ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right])))
@@ -201,7 +182,7 @@ void AnnOgreOculusRenderer::initRttRendering()
 	}
 
 	//Create the equivalent textures in Ogre side
-	combinedTextureSizeArray textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
+	const combinedTextureSizeArray textureDimentions{ { {size_t(texSizeL.w), size_t(texSizeL.h) } , {size_t(texSizeR.w), size_t(texSizeR.h) } } };
 	ogreRenderTexturesSeparatedGLID = createSeparatedRenderTextures(textureDimentions);
 
 	//Setup Ogre compositor
@@ -273,7 +254,7 @@ void AnnOgreOculusRenderer::initClientHmdRendering()
 	//Get the projection matrix for the desired near/far clipping from Oculus and apply them to the eyeCameras
 	updateProjectionMatrix();
 
-	//Make sure that the perf hud will not show up by himself...
+	//Make sure that the perf hud will not show up by itself...
 	perfHudMode = ovrPerfHud_Off;
 	oculusInterface->setPerfHudMode(ovrPerfHud_Off);
 }
@@ -331,9 +312,9 @@ std::string AnnOgreOculusRenderer::getAudioDeviceIdentifierSubString()
 	AnnDebug() << "Looking for the audio output selected inside the Oculus App...";
 
 	//Container to associate audio device names with their GUID
-	struct audioOutputDescriptor
+	struct AudioOutputDescriptor
 	{
-		audioOutputDescriptor(LPCSTR str, LPGUID pguid) :
+		AudioOutputDescriptor(LPCSTR str, LPGUID pguid) :
 			name(pguid ? str : "NO_GUID"), //Sometimes pguid is nullptr, in that case the descriptor is not valid
 			guid(pguid ? *pguid : GUID()) {} //Obviously, dereferencing a nullptr is a bad idea, prevent that.
 		const std::string name;
@@ -341,13 +322,13 @@ std::string AnnOgreOculusRenderer::getAudioDeviceIdentifierSubString()
 	};
 
 	//Create a vector of the "audio output descriptor" declared above
-	using audioOutputDescriptorVect = std::vector<audioOutputDescriptor>;
-	audioOutputDescriptorVect descriptors;
+	using AudioOutputDescriptorVect = std::vector<AudioOutputDescriptor>;
+	AudioOutputDescriptorVect descriptors;
 
 	//Fill the "descriptors" vector :
 	DirectSoundEnumerateA([](LPGUID pguid, LPCSTR descr, LPCSTR modname, LPVOID ctx) //using a lambda function as a callback
 	{
-		auto outputDescriptors = static_cast<audioOutputDescriptorVect*>(ctx); //get an usable pointer
+		auto outputDescriptors = static_cast<AudioOutputDescriptorVect*>(ctx); //get an usable pointer
 		outputDescriptors->push_back({ descr, pguid }); //create a usable descriptor and add it to the list
 		return TRUE;
 	}, &descriptors); //Pointer to the vector as "context" given to the callback
@@ -356,12 +337,12 @@ std::string AnnOgreOculusRenderer::getAudioDeviceIdentifierSubString()
 	GUID audioDeviceGuid; ovr_GetAudioDeviceOutGuid(&audioDeviceGuid);
 
 	//Try to find the one we need
-	const auto result = std::find_if(begin(descriptors), end(descriptors), [&](const audioOutputDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
+	const auto result = std::find_if(begin(descriptors), end(descriptors), [&](const AudioOutputDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
 
 	//Set the return string
 	if (result != descriptors.end())
 	{
-		audioOutputDescriptor descriptor = *result;
+		const auto descriptor = *result;
 		audioDeviceName = descriptor.name;
 		AnnDebug() << "Found " << audioDeviceName << " that match Oculus given DirectSound GUID";
 	}
