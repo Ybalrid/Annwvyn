@@ -12,14 +12,19 @@
  * Welcome to the Annwvyn API documentation.
  *
  * Annwvyn is a free and Open-Source Virtual reality development framework.
+ * 
+ * <em>Return to the <a href="https://www.annwvyn.org/">main website</a></em>
  *
- * This site document the whole API of the engine, both internal and external.
- * Some of the files used here aren't really part of the engine. Anything called
- * doxygen_<something>.hpp exist just for making Doxygen generate stuff.
- *
+ * This site document the whole API of the engine, both internal and external. As
+ * it is intended to serve as a resource for the engien developement, and the engine use.
+ * Anything marqued as "public" is available for games using Annwvyn, and for plugins
+ * implementing a subsystem.
+ * 
+ * A partial documentation of the scripting API is available. It's generated from
+ * "fake" C++ headers.
  * If you are looking for the Scripting API, Annwvyn::ChaiScriptAPIDoc is the
  * namespace you should look for. Theses are C++ functions prototypes that match
- * the Script functions you can call, with comments.
+ * the ChaiScript functions you can call, with comments.
  *
  * <em>The project is under constant development and there isn't yet any stable
  * release available. It comes without any warranty and is distributed under the
@@ -38,15 +43,6 @@
  * wiki</a> to get a more comprehensible help to start using the engine,
  * there is a quick-start tutorial you can check-out and more contend will be
  * added regularly
- *
- * The engine is based on Ogre and take for reference Ogre's resource
- * management, file format, data-structures and geometric classes. Although, the
- * user of the engine is not intended to have to know Ogre, some part of the
- * public API still rely directly on Ogre components, notably the Resource
- * management and the materials.<br>
- * Everything 3D related on Annwvyn is handled by Ogre and is only intended to
- * be used with the GL render system, as it will force the call of
- * RenderSystem_GL classes, instead of the parents.
  *
  * The aim of the project is to making an high-level (yet really fast) framework
  * to create Oculus Rift compatible content.
