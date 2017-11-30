@@ -273,7 +273,10 @@ namespace Annwvyn
 		///Advanced : reset ogre internal timer
 		void _resetOgreTimer() const;
 
+		///Return true if the compositor resources are loaded into Ogre
 		bool isCompositorLoaded() const;
+
+		///Return true if the HLMS templates are loaded into Ogre
 		bool isHlmsLibLoaded() const;
 
 	private:
