@@ -44,7 +44,7 @@ Ogre::MeshPtr AnnGameObjectManager::getAndConvertFromV1Mesh(const char* meshName
 	if (!v2Mesh) //create and import
 	{
 		AnnDebug() << v2meshName << " doesn't exist yet in the v2 MeshManager, creating it and loading the v1 " << meshName << " geometry";
-		v2Mesh = meshManager->createManual(v2meshName, AnnResourceManager::defaultResourceGroupName);
+		v2Mesh = meshManager->createManual(v2meshName, AnnResourceManager::getDefaultResourceGroupName());
 		v2Mesh->importV1(v1Mesh.get(), halfPos, halfTexCoord, qTan);
 	}
 

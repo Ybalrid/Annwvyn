@@ -4,19 +4,17 @@
 
 using namespace Annwvyn;
 
-const char* const AnnResourceManager::reservedResourceGroupName = "Annwvyn_CoreEngineResources";
-const char* const AnnResourceManager::defaultResourceGroupName = "Annwvyn_DefaultResourcePool";
 
 AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager"),
 ResourceGroupManager{ Ogre::ResourceGroupManager::getSingletonPtr() }
 {
-	ResourceGroupManager->createResourceGroup(defaultResourceGroupName);
+	ResourceGroupManager->createResourceGroup(getDefaultResourceGroupName());
 	addDefaultResourceLocation();
 }
 
 void AnnResourceManager::addZipLocation(const std::string& path, const std::string& resourceGroupName) const
 {
-	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
+	if (resourceGroupName == getReservedResourceGroupName()) return refuseResource(path, resourceGroupName);
 	AnnDebug("Will load resources from Zip archive :");
 	AnnDebug() << path;
 	ResourceGroupManager->addResourceLocation(path, "Zip", resourceGroupName);
@@ -24,7 +22,7 @@ void AnnResourceManager::addZipLocation(const std::string& path, const std::stri
 
 void AnnResourceManager::addFileLocation(const std::string& path, const std::string& resourceGroupName) const
 {
-	if (resourceGroupName == reservedResourceGroupName) return refuseResource(path, resourceGroupName);
+	if (resourceGroupName == getReservedResourceGroupName()) return refuseResource(path, resourceGroupName);
 	AnnDebug("Will load resources from File-system directory :");
 	AnnDebug() << path;
 	ResourceGroupManager->addResourceLocation(path, "FileSystem", resourceGroupName);
@@ -33,9 +31,9 @@ void AnnResourceManager::addFileLocation(const std::string& path, const std::str
 void AnnResourceManager::addDefaultResourceLocation() const
 {
 	AnnDebug("Adding Annwvyn CORE resource locations");
-	ResourceGroupManager->addResourceLocation("media/CORE.zip", "Zip", reservedResourceGroupName);
-	ResourceGroupManager->addResourceLocation("media", "FileSystem", reservedResourceGroupName, true);
-	ResourceGroupManager->initialiseResourceGroup(reservedResourceGroupName, true);
+	ResourceGroupManager->addResourceLocation("media/CORE.zip", "Zip", getReservedResourceGroupName());
+	ResourceGroupManager->addResourceLocation("media", "FileSystem", getReservedResourceGroupName(), true);
+	ResourceGroupManager->initialiseResourceGroup(getReservedResourceGroupName(), true);
 }
 
 void AnnResourceManager::loadReseourceFile(const std::string& path) const
@@ -49,7 +47,7 @@ void AnnResourceManager::loadReseourceFile(const std::string& path) const
 	{
 		secName = seci.peekNextKey();
 
-		if (secName == reservedResourceGroupName)
+		if (secName == getReservedResourceGroupName())
 		{
 			refuseResource("*Did not read form file*", secName);
 			continue;
@@ -75,6 +73,16 @@ void AnnResourceManager::initResources() const
 void AnnResourceManager::loadGroup(const std::string & groupName) const
 {
 	ResourceGroupManager->loadResourceGroup(groupName);
+}
+
+const char* AnnResourceManager::getDefaultResourceGroupName()
+{
+	return "b";
+}
+
+const char* AnnResourceManager::getReservedResourceGroupName()
+{
+	return "a";
 }
 
 void AnnResourceManager::refuseResource(const std::string& resourceName, const std::string& group)

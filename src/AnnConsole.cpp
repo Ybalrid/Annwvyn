@@ -86,7 +86,7 @@ cursorPos{ 0 }
 	}
 
 	//Create a manual font
-	font = Ogre::FontManager::getSingleton().create("VeraMono", AnnResourceManager::defaultResourceGroupName);
+	font = Ogre::FontManager::getSingleton().create("VeraMono", AnnResourceManager::getDefaultResourceGroupName());
 
 	//Load the VeraMono.ttf file
 	font->setType(Ogre::FontType::FT_TRUETYPE);
@@ -96,7 +96,7 @@ cursorPos{ 0 }
 
 	//Aspect ration of the console is 2:1. The actual size of texture is 2*BASE x BASE
 	//Create an map the texture to the displaySurface
-	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", AnnResourceManager::defaultResourceGroupName,
+	texture = Ogre::TextureManager::getSingleton().createManual("Write Texture", AnnResourceManager::getDefaultResourceGroupName(),
 		Ogre::TEX_TYPE_2D, 2 * BASE, BASE,
 		Ogre::MIP_UNLIMITED, Ogre::PF_X8R8G8B8,
 		Ogre::TU_AUTOMIPMAP | Ogre::TU_RENDERTARGET);
@@ -109,7 +109,7 @@ cursorPos{ 0 }
 	}
 
 	//Load background texture to a buffer
-	background = Ogre::TextureManager::getSingleton().load("background.png", AnnResourceManager::defaultResourceGroupName);
+	background = Ogre::TextureManager::getSingleton().load("background.png", AnnResourceManager::getDefaultResourceGroupName());
 
 	//Initialize the text buffer.
 	//CONSOLE_BUFFER is the number of lines to keep in memory and to load on the texture.

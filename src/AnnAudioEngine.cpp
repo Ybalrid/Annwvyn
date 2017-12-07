@@ -179,7 +179,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	auto audioFileResource = audioFileManager->getResourceByName(filename).staticCast<AnnAudioFile>();
 	if (!audioFileResource) //Cannot get it? Load that resource by hand to see
 	{
-		audioFileResource = audioFileManager->load(filename, AnnGetResourceManager()->defaultResourceGroupName);
+		audioFileResource = audioFileManager->load(filename, AnnGetResourceManager()->getDefaultResourceGroupName());
 		if (!audioFileResource) //Okay, that file doesn't exist or something.
 		{
 			AnnDebug() << "Error, cannot load file " << filename << " as a recognized audio file";

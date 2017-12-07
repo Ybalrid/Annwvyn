@@ -477,7 +477,7 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 		auto rawScript = scriptFileManager->getResourceByName(file).staticCast<AnnScriptFile>();
 		if (!rawScript)
 		{
-			rawScript = scriptFileManager->load(file, AnnResourceManager::defaultResourceGroupName);
+			rawScript = scriptFileManager->load(file, AnnResourceManager::getDefaultResourceGroupName());
 			if (!rawScript)
 				throw chaiscript::exception::file_not_found_error(file);
 		}

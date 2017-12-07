@@ -91,7 +91,7 @@ Ogre::HlmsUnlitDatablock* AnnSplashLevel::createSplashDatablock(Ogre::HlmsUnlit*
 	macroblock.mDepthWrite = false;
 	macroblock.mScissorTestEnabled = false;
 	return static_cast<Ogre::HlmsUnlitDatablock*> (unlit->createDatablock("Splash", "Splash", macroblock, blendblock,
-		Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->defaultResourceGroupName));
+		Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->getDefaultResourceGroupName()));
 }
 
 void AnnSplashLevel::load()
@@ -119,7 +119,7 @@ void AnnSplashLevel::load()
 	//Get splashscreen texture
 	auto textureManager = Ogre::TextureManager::getSingletonPtr();
 	auto texture = textureManager->getByName(splashImageName);
-	if (!texture) texture = textureManager->load(splashImageName, AnnGetResourceManager()->defaultResourceGroupName, Ogre::TEX_TYPE_2D, 0, 1, false, Ogre::PF_UNKNOWN, true);
+	if (!texture) texture = textureManager->load(splashImageName, AnnGetResourceManager()->getDefaultResourceGroupName(), Ogre::TEX_TYPE_2D, 0, 1, false, Ogre::PF_UNKNOWN, true);
 	if (!texture) throw AnnInitializationError(ANN_ERR_NOTINIT, "Texture not found for splash " + splashImageName);
 
 	//Set datablock parameters

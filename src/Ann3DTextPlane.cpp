@@ -10,7 +10,7 @@ using namespace std;
 void Ann3DTextPlane::createFont(const int& size)
 {
 	//Create the font
-	font = Ogre::FontManager::getSingleton().create(fontName, AnnResourceManager::defaultResourceGroupName);
+	font = Ogre::FontManager::getSingleton().create(fontName, AnnResourceManager::getDefaultResourceGroupName());
 
 	//Load true-type file
 	font->setType(Ogre::FontType::FT_TRUETYPE);
@@ -252,7 +252,7 @@ void Ann3DTextPlane::setMargin(float m)
 
 void Ann3DTextPlane::setBackgroundImage(const string& imgName)
 {
-	bgTexture = Ogre::TextureManager::getSingleton().load(imgName, AnnResourceManager::defaultResourceGroupName);
+	bgTexture = Ogre::TextureManager::getSingleton().load(imgName, AnnResourceManager::getDefaultResourceGroupName());
 	useImageAsBackground = true;
 }
 
