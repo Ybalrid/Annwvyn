@@ -4,6 +4,9 @@
 
 using namespace Annwvyn;
 
+const char* const AnnResourceManager::reservedResourceGroupName = "Annwvyn_CoreEngineResources";
+const char* const AnnResourceManager::defaultResourceGroupName = "Annwvyn_DefaultResourcePool";
+
 AnnResourceManager::AnnResourceManager() : AnnSubSystem("ResourceManager"),
 ResourceGroupManager{ Ogre::ResourceGroupManager::getSingletonPtr() }
 {

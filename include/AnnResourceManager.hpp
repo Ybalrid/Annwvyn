@@ -32,10 +32,10 @@ namespace Annwvyn
 		void loadGroup(const std::string& groupName) const;
 
 		///Name of the default resource group
-		static constexpr const char* const defaultResourceGroupName = "Annwvyn_UserDefined_Group";
+		static const char* const defaultResourceGroupName;
 
 		///name of the resource group used to store CORE resources
-		static constexpr const char* const reservedResourceGroupName = "ANNWVYN_CORE";
+		static const char* const reservedResourceGroupName;
 
 	private:
 		///Log the fact that resource location creation as been rejected

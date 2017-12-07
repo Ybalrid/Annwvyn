@@ -204,7 +204,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	//This sometimes happen with OGG files, but it seems to run fine anyway. This is probably due to meta-data/tags present at the end of files
 	if (readSamples < nbSamples)
 	{
-		lastError = "Warning: It looks like the " + (nbSamples - readSamples);
+		lastError = "Warning: It looks like the " + std::to_string(nbSamples - readSamples);
 		lastError += " last samples of the file have been omitted. Ignore if file has meta-data appended at the end. ";
 		logError();
 	}

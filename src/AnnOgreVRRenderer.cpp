@@ -349,7 +349,7 @@ void AnnOgreVRRenderer::createWindow(unsigned int w, unsigned int h, bool vsync)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, AALevel);
 
-	AnnDebug() << "Set OpenGL context version " << glMajor + "." << glMinor;
+	AnnDebug() << "Set OpenGL context version " << glMajor << "." << glMinor;
 
 	//Create a window (and an opengl context with it)
 	glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);

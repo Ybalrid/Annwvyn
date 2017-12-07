@@ -50,7 +50,7 @@ bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
 	}
 
 	//Text
-	else if (arg.text < 0x7F && arg.text > 0x1F || !asciiOnly)
+	else if ((arg.text < 0x7F && arg.text > 0x1F) || !asciiOnly)
 	{
 		//Put typed char into the application
 		input.insert(max(0, int(input.size()) - int(cursorOffset)), 1, char(arg.text));
@@ -252,8 +252,8 @@ void AnnEventManager::processKeyboardEvents()
 {
 	//for each key of the keyboard
 	for (size_t c(0); c < KeyCode::SIZE; c++)
-		if (Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c] ||
-			!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c])
+		if ((Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c]) ||
+			(!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c]))
 		{
 			//create a corresponding key event
 			AnnKeyEvent e;

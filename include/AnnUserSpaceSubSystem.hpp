@@ -52,7 +52,7 @@ namespace Annwvyn
 		bool needUpdate() override;
 
 		///Give an event to be dispatched to listeners via the event manager
-		void dispatchEvent(AnnUserSpaceEventPtr e);
+		void dispatchEvent(AnnUserSpaceEventPtr e) override;
 
 		///Consruct+distpatch user defined event
 		template <class UserSpaceEventType, class ... Args> void dispatchEvent(Args&& ... args)
