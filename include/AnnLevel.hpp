@@ -50,12 +50,18 @@ namespace Annwvyn
 
 	protected:
 		friend class AnnLevelManager;
+
+		//Game object of the level
 		AnnGameObjectList levelContent;
+
+		//Lights in the level
 		AnnLightList levelLighting;
+
+		//Spatial trigger volumes in the level
 		AnnTriggerObjectList levelTrigger;
 
 		///List of movable on the level
-		std::list<std::shared_ptr<AnnAbstractMovable>> levelMovable;
+		std::vector<std::shared_ptr<AnnAbstractMovable>> levelMovable;
 
 		///Add a light object to the level
 		std::shared_ptr<AnnLightObject> addLightObject(std::string id = "");
