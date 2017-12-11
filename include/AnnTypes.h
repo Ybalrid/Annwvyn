@@ -31,9 +31,9 @@ namespace Annwvyn
 	using AnnMatrix4 = Ogre::Matrix4;
 
 	//Remove some ugliness :
-	using AnnTriggerObjectList = std::list<std::shared_ptr<AnnTriggerObject>>;
-	using AnnGameObjectList = std::list<std::shared_ptr<AnnGameObject>>;
-	using AnnLightList = std::list <std::shared_ptr<AnnLightObject>>;
+	using AnnTriggerObjectList = std::vector<std::shared_ptr<AnnTriggerObject>>;
+	using AnnGameObjectList = std::vector<std::shared_ptr<AnnGameObject>>;
+	using AnnLightList = std::vector<std::shared_ptr<AnnLightObject>>;
 
 	///Because sometimes, after one byte you're full...
 	using byte = uint8_t;
