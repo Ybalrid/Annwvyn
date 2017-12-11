@@ -98,7 +98,10 @@ void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> objec
 
 	if (!object) throw AnnNullGameObjectError();
 
-	Objects.remove(object);
+	Objects.erase(
+			std::remove(std::begin(Objects), std::end(Objects), object), 
+			std::end(Objects));
+
 	identifiedObjects.erase(object->getName());
 }
 
@@ -117,7 +120,10 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> light)
 {
 	if (!light) throw AnnNullGameObjectError();
-	Lights.remove(light);
+	Lights.erase(
+			std::remove(std::begin(Lights), std::end(Lights), light), 
+			std::end(Lights));
+
 	identifiedLights.erase(light->getName());
 }
 
@@ -144,7 +150,10 @@ std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std:
 
 void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
 {
-	Triggers.remove(trigger);
+	Triggers.erase(
+			std::remove(std::begin(Triggers), std::end(Triggers), trigger),
+			std::end(Triggers));
+
 	identifiedTriggerObjects.erase(trigger->getName());
 }
 

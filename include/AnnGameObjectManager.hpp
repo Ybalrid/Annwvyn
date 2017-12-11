@@ -76,11 +76,11 @@ namespace Annwvyn
 		friend class AnnEngine;
 
 		///Dynamic container for triggers objects present in engine.
-		std::list<std::shared_ptr<AnnTriggerObject>> Triggers;
+		AnnTriggerObjectList Triggers;
 		///Dynamic container for lights objects present in engine.
-		std::list<std::shared_ptr<AnnLightObject>> Lights;
+		AnnLightList Lights;
 		///Dynamic container for Game objects present in engine
-		std::list<std::shared_ptr<AnnGameObject>> Objects;
+		AnnGameObjectList Objects;
 
 		///objects mapped to ID strings
 		std::unordered_map<std::string, std::shared_ptr<AnnGameObject>> identifiedObjects;

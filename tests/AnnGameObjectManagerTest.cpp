@@ -19,6 +19,23 @@ namespace Annwvyn
 		REQUIRE(AnnGetGameObjectManager()->getGameObject(name)->getName() == name);
 	}
 
+	TEST_CASE("Game object add remove")
+	{
+		auto GameEngine = bootstrapTestEngine("GameObjectManagerTest");
+		
+		auto manager = AnnGetGameObjectManager();
+		{
+		auto object = manager->createGameObject("Sinbad.mesh", "Sinbad");
+
+		for(int i = 0; i < 60; ++i) GameEngine->refresh();
+
+		manager->removeGameObject(object);
+		}
+
+		for(int i = 0; i < 60; ++i) GameEngine->refresh();
+
+	}
+
 	TEST_CASE("Light Object name storage")
 	{
 		//Init
