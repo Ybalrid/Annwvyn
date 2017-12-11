@@ -98,7 +98,9 @@ void AnnLevelManager::addToCurrentLevel(std::shared_ptr<AnnGameObject> obj) cons
 void AnnLevelManager::removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj) const
 {
 	if (!current || !obj) return;
-	current->levelContent.remove(obj);
+	current->levelContent.erase(
+		remove(begin(current->levelContent), end(current->levelContent), obj), 
+		end(current->levelContent));
 }
 
 std::shared_ptr<AnnLevel> AnnLevelManager::getCurrentLevel() const
