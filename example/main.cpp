@@ -22,7 +22,7 @@ using namespace Annwvyn;
 
 constexpr bool isRoomscale{ true };
 
-void putGizmoOnHands()
+void loadHands()
 {
 	if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[0])
 	{
@@ -92,7 +92,7 @@ AnnMain()
 
 	auto debugHook = []()
 	{
-		putGizmoOnHands();
+		loadHands();
 	};
 
 	do
