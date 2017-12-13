@@ -9,10 +9,6 @@
 #include "AnnGetter.hpp"
 #include "AnnException.hpp"
 
-//Windows multimedia and sound libraries
-#include <mmsystem.h>
-#include <dsound.h>
-
 using namespace Annwvyn;
 
 //Static class members
@@ -308,49 +304,11 @@ std::string AnnOgreOculusRenderer::getAudioDeviceIdentifierSubString()
 
 	//If we know the string already, return it.
 	if (!audioDeviceName.empty()) return audioDeviceName;
-
 	AnnDebug() << "Looking for the audio output selected inside the Oculus App...";
 
-	//Container to associate audio device names with their GUID
-	struct AudioOutputDescriptor
-	{
-		AudioOutputDescriptor(LPCSTR str, LPGUID pguid) :
-			name(pguid ? str : "NO_GUID"), //Sometimes pguid is nullptr, in that case the descriptor is not valid
-			guid(pguid ? *pguid : GUID()) {} //Obviously, dereferencing a nullptr is a bad idea, prevent that.
-		const std::string name;
-		const GUID guid;
-	};
-
-	//Create a vector of the "audio output descriptor" declared above
-	using AudioOutputDescriptorVect = std::vector<AudioOutputDescriptor>;
-	AudioOutputDescriptorVect descriptors;
-
-	//Fill the "descriptors" vector :
-	DirectSoundEnumerateA([](LPGUID pguid, LPCSTR descr, LPCSTR modname, LPVOID ctx) //using a lambda function as a callback
-	{
-		auto outputDescriptors = static_cast<AudioOutputDescriptorVect*>(ctx); //get an usable pointer
-		outputDescriptors->push_back({ descr, pguid }); //create a usable descriptor and add it to the list
-		return TRUE;
-	}, &descriptors); //Pointer to the vector as "context" given to the callback
-
-	//Get GUID of the device selected in the OculusApp
+	//Get GUID of device, and get it's equivalent name
 	GUID audioDeviceGuid; ovr_GetAudioDeviceOutGuid(&audioDeviceGuid);
-
-	//Try to find the one we need
-	const auto result = std::find_if(begin(descriptors), end(descriptors), [&](const AudioOutputDescriptor& descriptor) { return descriptor.guid == audioDeviceGuid; });
-
-	//Set the return string
-	if (result != descriptors.end())
-	{
-		const auto descriptor = *result;
-		audioDeviceName = descriptor.name;
-		AnnDebug() << "Found " << audioDeviceName << " that match Oculus given DirectSound GUID";
-	}
-	else
-	{
-		audioDeviceName = "use windows default";
-		AnnDebug() << "Did not found requested audio device. Will fall back to windows defaults";
-	}
+	audioDeviceName = getAudioDeviceNameFromGUID(audioDeviceGuid);
 
 	//Return the return string
 	return audioDeviceName;

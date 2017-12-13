@@ -279,6 +279,9 @@ namespace Annwvyn
 		///Return true if the HLMS templates are loaded into Ogre
 		bool isHlmsLibLoaded() const;
 
+		///Return (if found) the name o the audio device you can use in the audio engine from a Windows only "GUID" for a sound card
+		static std::string getAudioDeviceNameFromGUID(GUID guid);
+
 	private:
 
 		///GL version to use
