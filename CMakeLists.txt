@@ -181,6 +181,14 @@ target_link_libraries(AnnwvynUnitTest
     ${OGRE_Overlay_LIBRARIES}
     )
 
+enable_testing()
+add_test(NAME Run COMMAND AnnwvynUnitTest)
+add_test(NAME ListTests COMMAND AnnwvynUnitTest --list-tests)
+set_tests_properties(ListTests PROPERTIES PASS_REGULAR_EXPRESSION "[0-9]+ test cases")
+add_test(NAME ListTags COMMAND AnnwvynUnitTest --list-tags)
+set_tests_properties(ListTags PROPERTIES PASS_REGULAR_EXPRESSION "[0-9]+ tags")
+
+
 
 if(WIN32)
 
