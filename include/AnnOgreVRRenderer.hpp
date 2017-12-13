@@ -1,5 +1,4 @@
-#ifndef OGREVRRENDER
-#define OGREVRRENDER
+#pragma once
 
 #include "systemMacro.h"
 
@@ -395,4 +394,3 @@ namespace Annwvyn
 
 	using AnnOgreVRRendererPtr = std::shared_ptr<AnnOgreVRRenderer>;
 }
-#endif

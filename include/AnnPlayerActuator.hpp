@@ -4,8 +4,8 @@
 * The VR point of view is relative to the player object.
 * \author A. Brainville (Ybalrid)
 */
-#ifndef PLAYER_ACTUATOR
-#define PLAYER_ACTUATOR
+#pragma once
+
 #include "systemMacro.h"
 
 namespace Annwvyn
@@ -37,5 +37,3 @@ namespace Annwvyn
 		void actuate(float deltaTime) override;
 	};
 }
-
-#endif

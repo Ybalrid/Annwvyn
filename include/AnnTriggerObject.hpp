@@ -4,8 +4,7 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANNTRIGGEROBJECT
-#define ANNTRIGGEROBJECT
+#pragma once
 
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
@@ -87,5 +86,3 @@ namespace Annwvyn
 		std::unique_ptr<btCollisionShape> shape;
 	};
 }
-
-#endif

@@ -9,8 +9,8 @@
  ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
  ///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
 
-#ifndef OGRE_OCULUS_RENDERER
-#define OGRE_OCULUS_RENDERER
+#pragma once
+
 #ifdef _WIN32
 
 #include "AnnOgreVRRenderer.hpp"
@@ -331,4 +331,3 @@ namespace Annwvyn
 }
 
 #endif //_WIN32
-#endif //OGRE_OCULUS_RENDERER

@@ -4,8 +4,7 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANN_SPLASH
-#define ANN_SPLASH
+#pragma once
 
 #include "systemMacro.h"
 #include "AnnLevel.hpp"
@@ -79,4 +78,3 @@ namespace Annwvyn
 		std::string bgmName;
 	};
 }
-#endif

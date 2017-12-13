@@ -3,8 +3,7 @@
  * \brief Define a series of hex code as constant keywords to define error codes.
  * \author A. Brainville (Ybalrid)
  */
-#ifndef ANN_ERROR_CODE
-#define ANN_ERROR_CODE
+#pragma once
 
 #define ANN_ERR_CRITIC 0xDEAD60D // Dead God
  /*
@@ -65,4 +64,3 @@ inline void displayWin32ErrorMessage(const std::string& title, const std::string
 #endif
 }
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef	ANN_SCENERY_MANAGER
-#define ANN_SCENERY_MANAGER
+#pragma once
 
 #include "systemMacro.h"
 #include "AnnSubsystem.hpp"
@@ -90,5 +89,3 @@ namespace Annwvyn
 
 	using AnnSceneryManagerPtr = std::shared_ptr<AnnSceneryManager>;
 }
-
-#endif

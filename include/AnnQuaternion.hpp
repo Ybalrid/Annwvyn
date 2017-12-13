@@ -4,8 +4,7 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANNQUAT
-#define ANNQUAT
+#pragma once
 
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
@@ -62,5 +61,3 @@ namespace Annwvyn
 		bool valid;
 	};
 }
-
-#endif

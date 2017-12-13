@@ -1,5 +1,4 @@
-#ifndef OGRE_NO_VR_RENDER
-#define OGRE_NO_VR_RENDER
+#pragma once
 
 #include "systemMacro.h"
 
@@ -66,5 +65,3 @@ namespace Annwvyn
 		bool running;
 	};
 }
-
-#endif //OGRE_NO_VR_RENDER

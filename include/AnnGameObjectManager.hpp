@@ -1,5 +1,5 @@
-#ifndef ANN_GAME_OBJECT_MANAGER
-#define ANN_GAME_OBJECT_MANAGER
+#pragma once
+
 #include "systemMacro.h"
 
 #include "AnnGameObject.hpp"
@@ -99,5 +99,3 @@ namespace Annwvyn
 
 	using AnnGameObjectManagerPtr = std::shared_ptr<AnnGameObjectManager>;
 }
-
-#endif

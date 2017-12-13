@@ -4,8 +4,8 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANNVECT3
-#define ANNVECT3
+#pragma once
+
 #include "systemMacro.h"
 #include <OgreVector3.h>
 #include <LinearMath/btVector3.h>
@@ -49,5 +49,3 @@ namespace Annwvyn
 		bool valid;
 	};
 }
-
-#endif //ANNVECT3

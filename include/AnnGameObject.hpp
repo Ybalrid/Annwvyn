@@ -4,8 +4,7 @@
  * \author A. Brainville (Ybalrid)
  */
 
-#ifndef ANNGAMEOBJECT
-#define ANNGAMEOBJECT
+#pragma once
 
 #include "systemMacro.h"
 
@@ -258,4 +257,3 @@ namespace Annwvyn
 
 	using AnnGameObjectPtr = std::shared_ptr<AnnGameObject>;
 }
-#endif

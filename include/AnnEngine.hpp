@@ -5,8 +5,7 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANN_ENGINE
-#define ANN_ENGINE
+#pragma once
 
 //Keep track of engine version here
 #define ANN_MAJOR 0
@@ -289,4 +288,3 @@ namespace Annwvyn
 		std::list<AnnSubSystemPtr> SubSystemList;
 	};
 }
-#endif ///ANN_ENGINE

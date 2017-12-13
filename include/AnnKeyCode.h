@@ -4,8 +4,7 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANNKEYCODE
-#define ANNKEYCODE
+#pragma once
 
 #include <OIS.h>
 
@@ -167,4 +166,3 @@ namespace Annwvyn
 	}
 }
 
-#endif //ANNKEYCODE

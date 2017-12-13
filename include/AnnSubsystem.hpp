@@ -1,5 +1,4 @@
-#ifndef ANN_SUB_SYSTEM
-#define ANN_SUB_SYSTEM
+#pragma once
 
 #include "systemMacro.h"
 
@@ -35,4 +34,3 @@ namespace Annwvyn
 
 	using AnnSubSystemPtr = std::shared_ptr<AnnSubSystem>;
 }
-#endif //ANN_SUB_SYSTEM

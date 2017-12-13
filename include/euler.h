@@ -6,8 +6,8 @@
 \author Kojack
 \author Transporter
 */
-#ifndef OGREEULER_H
-#define OGREEULER_H
+
+#pragma once
 
 #include "systemMacro.h"
 
@@ -494,5 +494,3 @@ namespace Ogre
 		bool mChanged;						//!< Is the cached quaternion out of date?
 	};
 }
-
-#endif

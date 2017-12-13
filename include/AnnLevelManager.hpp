@@ -5,8 +5,7 @@
  *		  It also permit to jump from a level to another one.
  * \author A. Brainville (Ybalrid)
  */
-#ifndef ANN_LEVELMANAGER
-#define ANN_LEVELMANAGER
+#pragma once
 
 #include <vector>
 #include "AnnLevel.hpp"
@@ -92,4 +91,3 @@ namespace Annwvyn
 
 	using AnnLevelManagerPtr = std::shared_ptr<AnnLevelManager>;
 }
-#endif //LEVELMANAGER

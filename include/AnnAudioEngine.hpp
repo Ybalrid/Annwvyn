@@ -6,8 +6,7 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANN_AUDIO
-#define ANN_AUDIO
+#pragma once
 
 #include "systemMacro.h"
 
@@ -188,4 +187,3 @@ namespace Annwvyn
 
 	using AnnAudioEnginePtr = std::shared_ptr<AnnAudioEngine>;
 }
-#endif

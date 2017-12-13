@@ -4,8 +4,7 @@
  *		  It also handle collision feedback and triggers
  * \author A. Brainville (Ybalrid)
  */
-#ifndef ANN_PHYSICS_ENGINE
-#define ANN_PHYSICS_ENGINE
+#pragma once
 
 #include "systemMacro.h"
 
@@ -144,5 +143,3 @@ namespace Annwvyn
 		AnnVect3 defaultGravity;
 	};
 }
-
-#endif //ANN_PHYSICS_ENGINE

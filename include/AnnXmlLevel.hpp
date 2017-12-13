@@ -4,8 +4,8 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANN_XML_LEVEL
-#define ANN_XML_LEVEL
+#pragma once
+
 #include "systemMacro.h"
 #include "AnnLevel.hpp"
 #include <tinyxml2.h>
@@ -37,5 +37,3 @@ namespace Annwvyn
 		bool resourceLocAdded;
 	};
 }
-
-#endif //ANN_XML_LEVEL

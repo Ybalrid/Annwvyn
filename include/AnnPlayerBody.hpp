@@ -4,8 +4,7 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANN_PLAYER
-#define ANN_PLAYER
+#pragma once
 
 #include "systemMacro.h"
 #include "AnnVect3.hpp"
@@ -250,4 +249,3 @@ namespace Annwvyn
 
 	using AnnPlayerBodyPtr = std::shared_ptr<AnnPlayerBody>;
 }
-#endif //ANN_PLAYER

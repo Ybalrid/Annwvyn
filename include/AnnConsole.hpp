@@ -5,8 +5,7 @@
  * \author A. Brainville (Ybalrid)
  */
 
-#ifndef	ANNCONSOLE
-#define ANNCONSOLE
+#pragma once
 
 #include "systemMacro.h"
 
@@ -148,5 +147,3 @@ namespace Annwvyn
 
 	using AnnConsolePtr = std::shared_ptr<AnnConsole>;
 }
-
-#endif

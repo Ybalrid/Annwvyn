@@ -5,8 +5,7 @@
 * \version 0.0.2
 */
 
-#ifndef ANNTYPES
-#define ANNTYPES
+#pragma once
 
 #include "systemMacro.h"
 
@@ -50,4 +49,3 @@ namespace Annwvyn
 		sphereShape
 	};
 }
-#endif

@@ -4,8 +4,8 @@
  * \author A. Brainville (Ybalrid)
  */
 
-#ifndef ANNCOLOR
-#define ANNCOLOR
+#pragma once
+
 #include "systemMacro.h"
 #include <iostream>
 #include <ostream>
@@ -79,4 +79,3 @@ namespace Annwvyn
 		static bool isInFloatRange(float f);
 	};
 }
-#endif //ANNCOLOR

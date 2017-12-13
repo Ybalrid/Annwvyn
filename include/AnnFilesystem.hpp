@@ -3,9 +3,8 @@
 * \brief Implement file I/O for saving game data
 * \author A. Brainville (Ybalrid)
 */
+#pragma once
 
-#ifndef ANN_FILESYSTEM
-#define ANN_FILESYSTEM
 #include "systemMacro.h"
 #include <string>
 #include <map>
@@ -208,5 +207,3 @@ namespace Annwvyn
 		AnnSaveFileDataPtr dataObject;
 	};
 }
-
-#endif

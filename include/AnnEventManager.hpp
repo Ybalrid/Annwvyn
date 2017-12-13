@@ -4,8 +4,7 @@
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANNEVENTMANAGER
-#define ANNEVENTMANAGER
+#pragma once
 
 #include "systemMacro.h"
 
@@ -199,5 +198,3 @@ namespace Annwvyn
 
 	using AnnEventManagerPtr = std::shared_ptr<AnnEventManager>;
 }
-
-#endif //ANNEVENTMANAGER

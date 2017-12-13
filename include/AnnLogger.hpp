@@ -3,8 +3,7 @@
 * \brief Create a ostream to the Ogre logger
 * \author A. Brainville (Ybalrid)
 */
-#ifndef ANN_LOGGER
-#define ANN_LOGGER
+#pragma once
 
 #include "systemMacro.h"
 //We need the standard string format to be accessible
@@ -45,5 +44,3 @@ namespace Annwvyn
 		~AnnDebug();
 	};
 }
-
-#endif

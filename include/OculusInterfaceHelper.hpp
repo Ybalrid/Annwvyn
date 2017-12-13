@@ -4,8 +4,7 @@
  * \author A. Brainville (Ybalrid)
  */
 
-#ifndef OCULUS_INTERFACE
-#define OCULUS_INTERFACE
+#pragma once
 
 #include <iostream>
 
@@ -68,4 +67,3 @@ private:
 	///Graphics device identifier (internal for the Rift SDK)
 	ovrGraphicsLuid luid;
 };
-#endif

@@ -1,5 +1,4 @@
-#ifndef ANN_RESOURCE_MANAGER
-#define ANN_RESOURCE_MANAGER
+#pragma once
 
 #include "systemMacro.h"
 #include "OgreResourceGroupManager.h"
@@ -50,5 +49,3 @@ namespace Annwvyn
 
 	using AnnResourceManagerPtr = std::shared_ptr<AnnResourceManager>;
 }
-
-#endif

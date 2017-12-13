@@ -3,8 +3,7 @@
 * \brief Object that represent a light source
 * \author A. Brainville (Ybalrid)
 */
-#ifndef ANN_LIGHT_OBJECT
-#define ANN_LIGHT_OBJECT
+#pragma once
 
 #include "systemMacro.h"
 
@@ -78,5 +77,3 @@ namespace Annwvyn
 		const std::string name;
 	};
 }
-
-#endif

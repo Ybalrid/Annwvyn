@@ -1,5 +1,5 @@
-#ifndef OGRE_OPENVR_RENDER
-#define OGRE_OPENVR_RENDER
+#pragma once
+
 #include "systemMacro.h"
 #include "AnnOgreVRRenderer.hpp"
 
@@ -177,5 +177,3 @@ namespace Annwvyn
         float triggerNormalizedValue;
 	};
 }
-
-#endif

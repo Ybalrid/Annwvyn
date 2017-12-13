@@ -9,8 +9,7 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 * \author A. Brainville (Ybalrid)
 */
 
-#ifndef ANN_LEVEL
-#define ANN_LEVEL
+#pragma once
 
 #include <unordered_map>
 
@@ -89,4 +88,3 @@ namespace Annwvyn
 
 	using AnnLevelPtr = std::shared_ptr<AnnLevel>;
 }
-#endif
