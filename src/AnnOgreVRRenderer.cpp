@@ -17,9 +17,10 @@
 #include <GLFW/glfw3native.h>
 
 //Windows multimedia and sound libraries
+#ifdef _WIN32
 #include <mmsystem.h>
 #include <dsound.h>
-
+#endif
 using namespace Annwvyn;
 
 uint8_t AnnOgreVRRenderer::AALevel{ 4 };
@@ -549,9 +550,9 @@ bool AnnOgreVRRenderer::isHlmsLibLoaded() const
 }
 
 //Container to associate audio device names with their GUID
-
 std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 {
+#ifdef _WIN32
 	struct AudioOutputDescriptor
 	{
 		AudioOutputDescriptor(LPCSTR str, LPGUID pguid) :
@@ -585,6 +586,7 @@ std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 		return descriptor.name;
 	}
 	return "use windows default";
+#endif
 }
 
 void AnnOgreVRRenderer::setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial)
