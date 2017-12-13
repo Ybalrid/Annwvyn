@@ -31,6 +31,11 @@
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
 
+
+#ifndef _WIN32
+using GUID = void*;
+#endif
+
 namespace Annwvyn
 {
 	constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
