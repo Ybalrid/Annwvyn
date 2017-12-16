@@ -258,7 +258,7 @@ namespace Ogre
 		*/
 		inline Euler &setDirection(const Vector3 &v, bool setYaw = true, bool setPitch = true)
 		{
-			Vector3 d(v.normalisedCopy());
+			auto d(v.normalisedCopy());
 			if (setPitch)
 				mPitch = Math::ASin(d.y);
 			if (setYaw)
@@ -279,7 +279,7 @@ namespace Ogre
 		{
 			if (normYaw)
 			{
-				Real yaw = mYaw.valueRadians();
+				auto yaw = mYaw.valueRadians();
 				if (yaw < -Math::PI)
 				{
 					yaw = fmod(yaw, Math::PI * 2.0f);
@@ -303,7 +303,7 @@ namespace Ogre
 			}
 			if (normPitch)
 			{
-				Real pitch = mPitch.valueRadians();
+				auto pitch = mPitch.valueRadians();
 				if (pitch < -Math::PI)
 				{
 					pitch = fmod(pitch, Math::PI * 2.0f);
@@ -327,7 +327,7 @@ namespace Ogre
 			}
 			if (normRoll)
 			{
-				Real roll = mRoll.valueRadians();
+				auto roll = mRoll.valueRadians();
 				if (roll < -Math::PI)
 				{
 					roll = fmod(roll, Math::PI * 2.0f);
@@ -365,9 +365,8 @@ namespace Ogre
 		inline Euler getRotationTo(const Vector3 &dir, bool setYaw = true, bool setPitch = true, bool shortest = true) const
 		{
 			Euler t1;
-			Euler t2;
 			t1.setDirection(dir, setYaw, setPitch);
-			t2 = t1 - *this;
+			auto t2 = t1 - *this;
 			if (shortest && setYaw)
 			{
 				t2.normalise();
@@ -458,7 +457,7 @@ namespace Ogre
 		*/
 		inline Quaternion operator*(const Euler &rhs) const
 		{
-			Euler e1(*this), e2(rhs);
+			auto e1(*this), e2(rhs);
 			return e1.toQuaternion()*e2.toQuaternion();
 		}
 

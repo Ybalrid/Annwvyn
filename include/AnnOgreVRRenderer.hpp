@@ -30,7 +30,6 @@
 #include "AnnErrorCode.hpp"
 #include "AnnHandController.hpp"
 
-
 #ifndef _WIN32
 using GUID = void*;
 #endif
@@ -63,6 +62,7 @@ namespace Annwvyn
 #else
 		static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus_d" };
 #endif
+
 		///Name of the rendersystem to initialize
 		static constexpr const char* const GLRenderSystem3Plus{ "OpenGL 3+ Rendering Subsystem" };
 		///Resource group to load the shaders, material and compositor script for rendering.
@@ -89,7 +89,7 @@ namespace Annwvyn
 		};
 
 		///Set the shadow filtering level (quality)
-		void setShadowFiltering(ShadowFiltering level);
+		void setShadowFiltering(ShadowFiltering level) const;
 
 		///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
 		static bool UseSSAA;

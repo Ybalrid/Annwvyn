@@ -29,12 +29,12 @@ std::vector<AnnVect3> AnnSplashLevel::createCurvedPlaneVertices(float curvature,
 	//in the x axis used to define it.
 
 	//Compute some basic parameters
-	const float resolution = width / definition;
-	const float alpha = 1 / curvature;
-	const float xmax = width / 2;
-	const float xmin = -xmax;
-	const float ymax = height / 2;
-	const float ymin = -ymax;
+	const auto resolution = width / definition;
+	const auto alpha = 1 / curvature;
+	const auto xmax = width / 2;
+	const auto xmin = -xmax;
+	const auto ymax = height / 2;
+	const auto ymin = -ymax;
 
 	//how the z component is calculated
 	auto depth = [=](float x) {return alpha * (x*x); };

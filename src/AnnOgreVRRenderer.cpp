@@ -629,7 +629,7 @@ void AnnOgreVRRenderer::handleWindowMessages()
 	}
 }
 
-void AnnOgreVRRenderer::setShadowFiltering(ShadowFiltering level)
+void AnnOgreVRRenderer::setShadowFiltering(ShadowFiltering level) const
 {
 	if (auto pbs = static_cast<Ogre::HlmsPbs*>
 		(root->getHlmsManager()->getHlms(Ogre::HLMS_PBS)))

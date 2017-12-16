@@ -1,5 +1,5 @@
 /**
-* \file AnnPlayerBodyBody.hpp
+* \file AnnPlayerBody.hpp
 * \brief class that represent the player
 * \author A. Brainville (Ybalrid)
 */
@@ -162,7 +162,7 @@ namespace Annwvyn
 		void _hintRoomscaleUpdateTranslationReference();
 
 		///Set the player body's pose to match what is tracked by the VR system, and cancel all velocities.
-		void syncToTrackedPose();
+		void syncToTrackedPose() const;
 
 	private:
 		///Parameters of the user's VirtualBody

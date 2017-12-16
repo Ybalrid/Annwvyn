@@ -94,6 +94,7 @@ namespace Annwvyn
 		///Construct an AnnAudioFileManager. Will register itsel to the Ogre ResourceGroupManager.
 		AnnAudioFileManager();
 
+		// ReSharper disable once CppHidingFunction
 		///Will unregister itself to the Ogre ResourceGroupManager
 		virtual ~AnnAudioFileManager();
 

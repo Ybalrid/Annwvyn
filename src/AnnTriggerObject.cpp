@@ -17,11 +17,11 @@ btCollisionShape* AnnTriggerObjectShapeGenerator::sphere(const float& r)
 }
 
 AnnTriggerObject::AnnTriggerObject(const std::string& name) :
+	name(name),
 	contactWithPlayer(false),
 	lastFrameContactWithPlayer(false),
 	body(nullptr),
-	shape(nullptr),
-	name(name)
+	shape(nullptr)
 {
 }
 

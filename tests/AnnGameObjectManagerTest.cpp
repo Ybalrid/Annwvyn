@@ -22,18 +22,17 @@ namespace Annwvyn
 	TEST_CASE("Game object add remove")
 	{
 		auto GameEngine = bootstrapTestEngine("GameObjectManagerTest");
-		
+
 		auto manager = AnnGetGameObjectManager();
 		{
-		auto object = manager->createGameObject("Sinbad.mesh", "Sinbad");
+			auto object = manager->createGameObject("Sinbad.mesh", "Sinbad");
 
-		for(int i = 0; i < 60; ++i) GameEngine->refresh();
+			for (auto i = 0; i < 60; ++i) GameEngine->refresh();
 
-		manager->removeGameObject(object);
+			manager->removeGameObject(object);
 		}
 
-		for(int i = 0; i < 60; ++i) GameEngine->refresh();
-
+		for (auto i = 0; i < 60; ++i) GameEngine->refresh();
 	}
 
 	TEST_CASE("Light Object name storage")

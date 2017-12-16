@@ -79,6 +79,7 @@ namespace Annwvyn
 		///construct and register an AnnScriptFileResourceManager
 		AnnScriptFileResourceManager();
 
+		// ReSharper disable once CppHidingFunction
 		///Destruct an AnnScriptFile resource manager
 		virtual ~AnnScriptFileResourceManager();
 

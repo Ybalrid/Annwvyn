@@ -57,14 +57,14 @@ namespace Annwvyn
 		AnnColor getSpecularColor() const;
 
 		///Set the power of this lamp (in lumens)
-		void setPower(float lumens);
+		void setPower(float lumens) const;
 
 		///get the current power of this lamp
 		float getPower() const;
 
-		void setAttenuation(float range, float constant, float linear, float quadratic);
+		void setAttenuation(float range, float constant, float linear, float quadratic) const;
 
-		Ogre::Light* _getOgreLight();
+		Ogre::Light* _getOgreLight() const;
 
 		///Get the name of this light
 		std::string getName() const;

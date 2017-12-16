@@ -49,7 +49,7 @@ void AnnXmlLevel::load()
 	AnnDebug() << "XML Level : " << xmlFilePath << " loaded on XML parser";
 
 	//get the root node of the XML DOM
-	XMLNode* level(xmlInFile.FirstChild());
+	auto level(xmlInFile.FirstChild());
 	if (!level)
 	{
 		AnnDebug() << "Cant get 1st XML Node from " << xmlFilePath;
@@ -57,7 +57,7 @@ void AnnXmlLevel::load()
 	}
 
 	//Get the name of the level
-	XMLElement* element(level->FirstChildElement("Name"));
+	auto element(level->FirstChildElement("Name"));
 	if (!element)
 	{
 		AnnDebug() << "Cant get Level name from " << xmlFilePath;
@@ -77,7 +77,7 @@ void AnnXmlLevel::load()
 		}
 		else
 		{
-			XMLElement* resourceLocation = element->FirstChildElement("ResourceLocation");
+			auto resourceLocation = element->FirstChildElement("ResourceLocation");
 			if (resourceLocation) do
 			{
 				std::string type(resourceLocation->Attribute("Type")), path(resourceLocation->Attribute("Path"));
@@ -98,7 +98,7 @@ void AnnXmlLevel::load()
 		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
 	}
 
-	XMLElement* gameObject = element->FirstChildElement("Object");
+	auto gameObject = element->FirstChildElement("Object");
 	if (!gameObject) AnnDebug() << "No objects declared to load.";
 	else do //Iterate through all game objects
 	{
@@ -107,7 +107,7 @@ void AnnXmlLevel::load()
 		float x, y, z, w;
 		std::string ID(gameObject->Attribute("ID"));
 		AnnDebug() << "Registered ID : " << ID;
-		XMLElement* gameObjectData = gameObject->FirstChildElement("Entity");
+		auto gameObjectData = gameObject->FirstChildElement("Entity");
 		if (gameObjectData)
 			entityName = (gameObjectData->Attribute("EntityName"));
 
@@ -143,21 +143,21 @@ void AnnXmlLevel::load()
 			constructedGameObject->setScale(x, y, z);
 		}
 
-		XMLElement* physics = gameObject->FirstChildElement("Physics");
+		auto physics = gameObject->FirstChildElement("Physics");
 		if (!physics) continue; //no physics section. not mandatory. just ignore
-		XMLElement* state = physics->FirstChildElement("Enabled");
+		auto state = physics->FirstChildElement("Enabled");
 		if (!state) continue;
 		bool phy; state->QueryBoolText(&phy); if (!phy) continue;
 
-		float mass(0); std::string shape;
+		float mass(0);
 
-		XMLElement* phyInfo = physics->FirstChildElement("Mass");
+		auto phyInfo = physics->FirstChildElement("Mass");
 		if (!phyInfo) continue;
 		phyInfo->QueryFloatText(&mass);
 
 		phyInfo = physics->FirstChildElement("Shape");
 		if (!phyInfo) continue;
-		shape = phyInfo->GetText();
+		std::string shape = phyInfo->GetText();
 		if (shape == "static") mass = 0; //this case is weird. Static stuff have always been static, even with mass. Need to see if bullet has changed stuff
 		constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
 
@@ -169,16 +169,15 @@ void AnnXmlLevel::load()
 	else
 	{
 		float x, y, z, dx, dy, dz, r, g, b, a;
-		std::string lightType;
-		XMLElement* source = element->FirstChildElement("Source");
+		auto source = element->FirstChildElement("Source");
 		if (source) do
 		{
 			std::string lightID = source->Attribute("ID");
 
-			XMLElement* position = source->FirstChildElement("Position");
-			XMLElement* color = source->FirstChildElement("Color");
-			XMLElement* type = source->FirstChildElement("Type");
-			XMLElement* direction = source->FirstChildElement("Direction");
+			auto position = source->FirstChildElement("Position");
+			auto color = source->FirstChildElement("Color");
+			auto type = source->FirstChildElement("Type");
+			auto direction = source->FirstChildElement("Direction");
 
 			position->QueryFloatAttribute("X", &x);
 			position->QueryFloatAttribute("Y", &y);
@@ -190,7 +189,7 @@ void AnnXmlLevel::load()
 			color->QueryFloatAttribute("G", &g);
 			color->QueryFloatAttribute("B", &b);
 			color->QueryFloatAttribute("A", &a);
-			lightType = type->GetText();
+			std::string lightType = type->GetText();
 
 			auto lightSource = addLightObject(lightID);
 			lightSource->setPosition(AnnVect3(x, y, z));
@@ -203,7 +202,7 @@ void AnnXmlLevel::load()
 	element = level->FirstChildElement("Player");
 	if (element)
 	{
-		XMLElement* playerElement = element->FirstChildElement("Position");
+		auto playerElement = element->FirstChildElement("Position");
 		if (playerElement)
 		{
 			float x, y, z;

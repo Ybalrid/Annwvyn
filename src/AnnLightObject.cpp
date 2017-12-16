@@ -88,12 +88,12 @@ AnnVect3 AnnLightObject::getPosition()
 	return node->getPosition();
 }
 
-void AnnLightObject::setAttenuation(float range, float constant, float linear, float quadratic)
+void AnnLightObject::setAttenuation(float range, float constant, float linear, float quadratic) const
 {
 	light->setAttenuation(range, constant, linear, quadratic);
 }
 
-Ogre::Light* AnnLightObject::_getOgreLight()
+Ogre::Light* AnnLightObject::_getOgreLight() const
 {
 	return light;
 }
@@ -103,7 +103,7 @@ std::string AnnLightObject::getName() const
 	return name;
 }
 
-void AnnLightObject::setPower(float lumens)
+void AnnLightObject::setPower(float lumens) const
 {
 	light->setPowerScale(lumens);
 }

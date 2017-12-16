@@ -195,7 +195,7 @@ void AnnPlayerBody::applyRelativeBodyYaw(Ogre::Radian angle)
 		physicsParams.RoomBase -= displacement;
 
 		AnnQuaternion rotation(angle, AnnVect3::UNIT_Y);
-		displacement = rotation*displacement;
+		displacement = rotation * displacement;
 		physicsParams.RoomBase += displacement;
 
 		roomTranslateQuatReference = AnnQuaternion(rotation * roomTranslateQuatReference);
@@ -236,7 +236,7 @@ AnnVect3 AnnPlayerBody::getAnalogTranslation() const
 void AnnPlayerBody::applyAnalogYaw()
 {
 	//7 is the value that was more or less feeling good for me.
-	float  value = -7 * analogRotate * getTurnSpeed() * updateTime;
+	auto value = -7 * analogRotate * getTurnSpeed() * updateTime;
 	applyRelativeBodyYaw(Ogre::Radian(value));
 }
 
@@ -311,7 +311,7 @@ void AnnPlayerBody::engineUpdate(float deltaTime)
 		if (needNewRoomTranslateReference)
 			roomTranslateQuatReference = AnnQuaternion{ AnnGetVRRenderer()->trackedHeadPose.orientation.getYaw(), AnnVect3::UNIT_Y };
 
-		roomTranslation = updateTime*getWalkSpeed() *
+		roomTranslation = updateTime * getWalkSpeed() *
 			//(physicsParams.Orientation.toQuaternion() *
 			(roomTranslateQuatReference *
 			(getTranslation() + getAnalogTranslation()));
@@ -382,7 +382,7 @@ void AnnPlayerBody::_hintRoomscaleUpdateTranslationReference()
 	roomTranslateQuatReference = true;
 }
 
-void AnnPlayerBody::syncToTrackedPose()
+void AnnPlayerBody::syncToTrackedPose() const
 {
 	if (mode != ROOMSCALE) return;
 	if (physicsParams.Body)
