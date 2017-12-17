@@ -22,6 +22,7 @@ AnnPlayerBody::PhysicalParameters::PhysicalParameters() :
 	HeadOrientation{ AnnQuaternion::IDENTITY },
 	Shape{ nullptr },
 	Body{ nullptr }
+
 {}
 
 AnnPlayerBody::AnnPlayerBody()
@@ -49,6 +50,9 @@ AnnPlayerBody::AnnPlayerBody()
 	ignorePhysics = false;
 
 	mouseSensitivity = 3;
+    contactWithGround = false;
+    RoomReferenceNode = nullptr;
+    needNewRoomTranslateReference = false;
 }
 
 void AnnPlayerBody::setActuator(AnnPlayerActuator* act)
@@ -130,7 +134,7 @@ void AnnPlayerBody::lockParameters()
 
 void AnnPlayerBody::unlockParameters()
 {
-	locked = true;
+	locked = false;
 }
 
 float AnnPlayerBody::getWalkSpeed() const

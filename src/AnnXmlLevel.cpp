@@ -115,6 +115,7 @@ void AnnXmlLevel::load()
 
 		std::shared_ptr<AnnGameObject> constructedGameObject;
 		if (!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
+        if(!constructedGameObject) throw AnnLevelLoadingError(xmlFilePath, entityName + " game object"),
 
 		gameObjectData = gameObject->FirstChildElement("Position");
 		if (gameObjectData)

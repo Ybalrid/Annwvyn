@@ -177,7 +177,7 @@ SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 
 void AnnAudioFile::clearSndFileVioStruct()
 {
-	if (sfVioStruct) sfVioStruct.release();
+	if (sfVioStruct) sfVioStruct.reset();
 }
 
 size_t AnnAudioFile::getSize() const

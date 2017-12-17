@@ -70,4 +70,14 @@ namespace Annwvyn
     private:
         const std::string objectName;
     };
+
+    class AnnDllExport AnnLevelLoadingError : public std::runtime_error
+    {
+    public:
+        AnnLevelLoadingError(const std::string& levelName, const std::string& objectName);
+        const char* what() const throw() override;
+    private:
+        const std::string levelName;
+        const std::string objectName;
+    };
 }

@@ -116,3 +116,21 @@ const char* AnnInvalidPhysicalShapeError::what() const throw()
     out << objectName;
     return out.str().c_str();
 }
+
+AnnLevelLoadingError::AnnLevelLoadingError(const std::string& level, const std::string& obj) : std::runtime_error("Error : Cannot load level object"),
+    levelName{ level },
+    objectName{ obj }
+{
+    AnnDebug() << AnnLevelLoadingError::what();
+}
+
+const char* AnnLevelLoadingError::what() const throw()
+{
+    ostringstream out;
+    out << runtime_error::what();
+    out << " AnnLevelLoadingError ";
+    out << levelName;
+    out << " Additional object informations : " << objectName;
+    return out.str().c_str();
+}
+

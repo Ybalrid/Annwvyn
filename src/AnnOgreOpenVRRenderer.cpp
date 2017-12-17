@@ -28,7 +28,9 @@ numberOfAxes{ 3 },
 axoffset{ vr::k_EButton_Axis0 },
 touchpadXNormalizedValue{ 0 },
 touchpadYNormalizedValue{ 0 },
-triggerNormalizedValue{ 0 }
+triggerNormalizedValue{ 0 },
+trackedPoses{},
+controllerState{}
 {
 	rendererName = "OpengGL/OpenVR";
 	//Get the singleton pointer
