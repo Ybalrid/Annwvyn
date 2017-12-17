@@ -545,7 +545,7 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		return true;
 	}
 
-	if (input == "status")
+    else if (input == "status")
 	{
 		bufferClear();
 		append("Running VR system: " + AnnGetVRRenderer()->getName());
@@ -553,29 +553,33 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getLights().size()) + " active light sources");
 		size_t nbControllers;
 		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " max tracked controllers");
-		if (nbControllers > 0) if (AnnGetVRRenderer()->getHandControllerArray()[0])
-		{
-			append("HandControllers connected");
-			append("HandController types : " + AnnGetVRRenderer()->getHandControllerArray()[0]->getTypeString());
-		}
-		else
-		{
-			append("No HandControllers active");
-		}
 
-		return true;
-	}
 
-	return false;
+        if (nbControllers > 0)
+        {
+            if (AnnGetVRRenderer()->getHandControllerArray()[0])
+            {
+                append("HandControllers connected");
+                append("HandController types : " + AnnGetVRRenderer()->getHandControllerArray()[0]->getTypeString());
+            }
+            else
+            {
+                append("No HandControllers active");
+            }
+        }
+        return true;
+    }
+
+    return false;
 }
 
 void AnnConsole::bufferClear()
 {
-	for (auto& line : buffer)
-		line.clear();
+    for (auto& line : buffer)
+        line.clear();
 }
 
 AnnConsole::~AnnConsole()
 {
-	font.setNull();
+    font.setNull();
 }
