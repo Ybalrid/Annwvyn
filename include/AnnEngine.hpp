@@ -36,7 +36,6 @@
 #include "AnnScriptManager.hpp"
 #include "AnnStringUtility.hpp"
 
-#include "AnnUserSpaceSubSystem.hpp"
 
 #ifdef _WIN32
 #include <io.h>
@@ -49,7 +48,6 @@
 namespace Annwvyn
 {
 	class AnnEngine;
-
 	class AnnPhysicsEngine;
 
 	///Utility class for AnnEngine
