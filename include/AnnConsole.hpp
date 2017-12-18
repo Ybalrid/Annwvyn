@@ -14,17 +14,13 @@
 #include <array>
 #include <algorithm>
 
-#include <Ogre.h>
-#include <Overlay/OgreFont.h>
-#include <Overlay/OgreFontManager.h>
-#include <OgreRenderOperation.h>
-#include <Hlms/Unlit/OgreHlmsUnlitDatablock.h>
-#include <OgreHardwarePixelBuffer.h>
 #include "AnnSubsystem.hpp"
 #include "AnnTypes.h"
 #include "AnnKeyCode.h"
 
 #include <GL/glew.h>
+
+#include <Overlay/OgreFont.h>
 
 namespace Annwvyn
 {

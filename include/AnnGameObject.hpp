@@ -18,9 +18,6 @@
 
  //Annwvyn
 #include "AnnTypes.h"
-#include "AnnAudioEngine.hpp"
-#include "AnnScriptManager.hpp"
-
 #include "AnnAbstractMovable.hpp"
 
 #include <BtOgrePG.h>
@@ -29,6 +26,8 @@
 namespace Annwvyn
 {
 	class AnnDllExport AnnGameObjectManager;
+	class AnnBehaviorScript;
+	class AnnAudioSource;
 
 	///An object that exist in the game. Graphically and Potentially Physically
 	class AnnDllExport AnnGameObject : public AnnAbstractMovable

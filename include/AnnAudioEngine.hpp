@@ -24,11 +24,9 @@
 #include <sndfile.h>
 
 //Other Annwvyn
-#include "AnnVect3.hpp"
-#include "AnnQuaternion.hpp"
+#include "AnnTypes.h"
 #include "AnnSubsystem.hpp"
 #include "AnnAudioFile.hpp"
-#include "AnnScriptFile.hpp"
 
 namespace Annwvyn
 {

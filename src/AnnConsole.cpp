@@ -5,6 +5,12 @@
 #include "AnnEngine.hpp"
 #include "AnnGetter.hpp"
 #include "AnnLogger.hpp"
+
+#include <Ogre.h>
+#include <Overlay/OgreFont.h>
+#include <Overlay/OgreFontManager.h>
+#include <OgreRenderOperation.h>
+#include <Hlms/Unlit/OgreHlmsUnlitDatablock.h>
 #include <OgreHardwarePixelBuffer.h>
 
 using namespace Annwvyn;
@@ -547,7 +553,7 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		return true;
 	}
 
-    else if (input == "status")
+	else if (input == "status")
 	{
 		bufferClear();
 		append("Running VR system: " + AnnGetVRRenderer()->getName());
@@ -556,32 +562,31 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		size_t nbControllers;
 		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " max tracked controllers");
 
+		if (nbControllers > 0)
+		{
+			if (AnnGetVRRenderer()->getHandControllerArray()[0])
+			{
+				append("HandControllers connected");
+				append("HandController types : " + AnnGetVRRenderer()->getHandControllerArray()[0]->getTypeString());
+			}
+			else
+			{
+				append("No HandControllers active");
+			}
+		}
+		return true;
+	}
 
-        if (nbControllers > 0)
-        {
-            if (AnnGetVRRenderer()->getHandControllerArray()[0])
-            {
-                append("HandControllers connected");
-                append("HandController types : " + AnnGetVRRenderer()->getHandControllerArray()[0]->getTypeString());
-            }
-            else
-            {
-                append("No HandControllers active");
-            }
-        }
-        return true;
-    }
-
-    return false;
+	return false;
 }
 
 void AnnConsole::bufferClear()
 {
-    for (auto& line : buffer)
-        line.clear();
+	for (auto& line : buffer)
+		line.clear();
 }
 
 AnnConsole::~AnnConsole()
 {
-    font.setNull();
+	font.setNull();
 }

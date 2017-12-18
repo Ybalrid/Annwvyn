@@ -1,12 +1,12 @@
 #pragma once
 
 #include "systemMacro.h"
+#include "AnnTypes.h"
+
 #include <OgreSharedPtr.h>
 #include <OgreResourceManager.h>
 #include <vector>
 #include <algorithm>
-#include <sndfile.h>
-#include "AnnTypes.h"
 
 namespace Annwvyn
 {
