@@ -21,10 +21,10 @@
 #include <memory>
 
 //Annwvyn
+#include "AnnTypes.h"
 #include "AnnEventManager.hpp"
 #include "AnnPhysicsEngine.hpp"
 #include "AnnTriggerObject.hpp"
-#include "AnnTypes.h"
 #include "AnnAudioEngine.hpp"
 #include "AnnConsole.hpp"
 #include "AnnLevelManager.hpp"

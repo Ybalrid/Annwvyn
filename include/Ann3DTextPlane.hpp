@@ -1,18 +1,12 @@
 #pragma once
 
 #include "systemMacro.h"
-
-#include <Ogre.h>
-#include <Overlay/OgreFontManager.h>
-#include <Overlay/OgreFont.h>
-#include <OgreRenderOperation.h>
-#include <Hlms/Pbs/OgreHlmsPbsDatablock.h>
-#include <string>
-
 #include "AnnEngine.hpp"
-
 #include "AnnAbstractMovable.hpp"
 
+#include <Overlay/OgreFontManager.h>
+#include <Overlay/OgreFont.h>
+#include <string>
 namespace Annwvyn
 {
 	///Abstract movable implementation : Manual plane object with some text rendered on it
