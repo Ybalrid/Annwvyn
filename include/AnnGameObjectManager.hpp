@@ -1,23 +1,18 @@
 #pragma once
 
 #include "systemMacro.h"
-
-#include "AnnGameObject.hpp"
 #include "AnnSubsystem.hpp"
 #include "AnnTypes.h"
-#include "AnnTriggerObject.hpp"
-#include "AnnLightObject.hpp"
 
 #include <OgreMesh.h>
 #include <OgreMesh2.h>
-#include <OgreMeshManager.h>
-#include <OgreMeshManager2.h>
 
 #include <memory>
 
 namespace Annwvyn
 {
 	class AnnEngine;
+	class AnnGameObject;
 
 	///Game object manager. Create, destroy and keep track of objects, lights and other movable stuff
 	class AnnDllExport AnnGameObjectManager : public AnnSubSystem

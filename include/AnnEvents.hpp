@@ -3,13 +3,13 @@
 #include "systemMacro.h"
 #include "AnnUserSpaceEvent.hpp"
 #include "AnnKeyCode.h"
-#include "AnnPlayerBody.hpp"
 #include "AnnHandController.hpp"
 
 namespace Annwvyn
 {
 	class AnnTimer;
 	class AnnTriggerObject;
+	class AnnPlayerBody;
 
 	enum AnnEventType
 	{

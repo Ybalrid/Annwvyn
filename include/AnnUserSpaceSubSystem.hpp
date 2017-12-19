@@ -4,10 +4,8 @@
 #include "AnnSubsystem.hpp"
 #include "AnnUserSpaceEvent.hpp"
 
-#include <sstream>
 #include <string>
 #include <iostream>
-
 #include <memory>
 
 #define AnnUserSystemAs(type) std::dynamic_pointer_cast<type>

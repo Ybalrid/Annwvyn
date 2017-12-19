@@ -11,10 +11,8 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 
 #pragma once
 
-#include <unordered_map>
-
 #include "AnnTypes.h"
-#include "AnnTriggerObject.hpp"
+
 #define LEVEL public Annwvyn::AnnLevel
 #define constructLevel() AnnLevel()
 

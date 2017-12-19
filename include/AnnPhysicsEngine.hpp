@@ -17,6 +17,10 @@
 //btOgre
 #include <BtOgre.hpp>
 
+//Annwvyn
+#include <AnnTypes.h>
+#include <AnnSubsystem.hpp>
+
 //easy bitmasks
 #define MASK(x) (1<<(x))
 
@@ -24,9 +28,14 @@ namespace Annwvyn
 {
 	class AnnPhysicsEngine;
 	using AnnPhysicsEnginePtr = std::shared_ptr<AnnPhysicsEngine>;
+
+	class AnnPlayerBody;
+	class AnnGameObject;
+	class AnnVect3;
+
+	using AnnPlayerBodyPtr = std::shared_ptr<AnnPlayerBody>;
 }
 
-#include "AnnEngine.hpp"
 
 namespace Annwvyn
 {

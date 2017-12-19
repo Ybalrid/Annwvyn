@@ -480,7 +480,7 @@ void AnnEventManager::keyboardUsedForText(bool state)
 	keyboardIgnore = state;
 }
 
-void AnnEventManager::userSpaceDispatchEvent(shared_ptr<AnnUserSpaceEvent> e, AnnUserSpaceEventLauncher* l)
+void AnnEventManager::userSpaceDispatchEvent(AnnUserSpaceEventPtr e, AnnUserSpaceEventLauncher* l)
 {
 	userSpaceEventBuffer.push_back(make_pair(e, l));
 }

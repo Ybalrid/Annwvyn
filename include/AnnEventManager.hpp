@@ -13,8 +13,6 @@
 #include <valarray>
 
 #include "AnnKeyCode.h"
-#include "AnnPlayerBody.hpp"
-#include "AnnTriggerObject.hpp"
 #include "AnnSubsystem.hpp"
 #include "AnnEvents.hpp"
 #include "AnnUserSpaceSubSystem.hpp"

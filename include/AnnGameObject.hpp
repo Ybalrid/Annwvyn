@@ -10,11 +10,6 @@
 
 #include <string>
 
-#include <OgreVector3.h>
-#include <OgreQuaternion.h>
-#include <OgreSceneNode.h>
-#include <OgreEntity.h>
-#include <OgreItem.h>
 
  //Annwvyn
 #include "AnnTypes.h"
