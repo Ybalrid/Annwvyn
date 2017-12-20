@@ -6,15 +6,13 @@
 
 #pragma once
 
-#include <iostream>
+#include "systemMacro.h"
 
  //Oculus VR API
 #include <OVR_CAPI.h>
 #include <Extras/OVR_Math.h>
-
 #include <Ogre.h>
-#include "systemMacro.h"
-#include "AnnErrorCode.hpp"
+#include <AnnException.hpp>
 
 ///Communicate with the Rift runtime (initialize OVR and get the info)
 class AnnDllExport OculusInterfaceHelper

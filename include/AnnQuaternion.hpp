@@ -7,8 +7,8 @@
 #pragma once
 
 #include "systemMacro.h"
-#include "AnnVect3.hpp"
-#include "AnnAngle.hpp"
+#include <AnnVect3.hpp>
+#include <AnnAngle.hpp>
 #include <OgreQuaternion.h>
 #include <OgreMatrix3.h>
 #include <LinearMath/btQuaternion.h>

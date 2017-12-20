@@ -7,28 +7,12 @@
 #include <algorithm>
 
 #include <Ogre.h>
-#include <OgreSceneNode.h>
-#include <OgreCamera.h>
-#include <Compositor/OgreCompositorManager2.h>
-#include <Compositor/OgreCompositorWorkspaceDef.h>
-#include <Compositor/OgreCompositorWorkspace.h>
-#include <Compositor/OgreCompositorNode.h>
-#include <Compositor/OgreCompositorNodeDef.h>
-#include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
-#include <OgreMaterialManager.h>
-#include <OgreMaterial.h>
-#include <OgreTechnique.h>
-#include <OgrePass.h>
-#include <Hlms/Pbs/OgreHlmsPbs.h>
-#include <Hlms/Unlit/OgreHlmsUnlit.h>
-#include <OgreHlmsManager.h>
-#include <OgreHlms.h>
+
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "AnnErrorCode.hpp"
-#include "AnnHandController.hpp"
+#include <AnnTypes.h>
 
 #ifndef _WIN32
 using GUID = void*;
@@ -36,6 +20,9 @@ using GUID = void*;
 
 namespace Annwvyn
 {
+	class AnnHandController;
+	using AnnHandControllerPtr = std::shared_ptr<AnnHandController>;
+
 	constexpr const size_t MAX_CONTROLLER_NUMBER = 2;
 
 	///A pose refer to the combination of a position and an orientation. It permit to define the placement of an object with 6DOF

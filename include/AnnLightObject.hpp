@@ -8,10 +8,9 @@
 #include "systemMacro.h"
 
 #include "AnnAbstractMovable.hpp"
+#include "AnnTypes.h"
 
 #include <OgreLight.h>
-#include "AnnVect3.hpp"
-#include "AnnColor.hpp"
 
 namespace Annwvyn
 {
@@ -62,8 +61,10 @@ namespace Annwvyn
 		///get the current power of this lamp
 		float getPower() const;
 
+		///Set the attenuation parameters
 		void setAttenuation(float range, float constant, float linear, float quadratic) const;
 
+		///Advanced method : get the underlying Ogre light object
 		Ogre::Light* _getOgreLight() const;
 
 		///Get the name of this light

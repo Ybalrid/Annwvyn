@@ -78,33 +78,31 @@
 #include <Ogre.h>
 
 //Annwvyn classes
-#include "AnnEngine.hpp"
-#include "AnnGameObjectManager.hpp"
-#include "AnnGameObject.hpp"
-#include "AnnTriggerObject.hpp"
-#include "AnnAudioEngine.hpp"
-#include "AnnEventManager.hpp"
-#include "AnnLogger.hpp"
-#include "AnnLevel.hpp"
-#include "AnnXmlLevel.hpp"
-#include "AnnSplashLevel.hpp"
-#include "AnnFilesystem.hpp"
-#include "AnnResourceManager.hpp"
-#include "Ann3DTextPlane.hpp"
-#include "AnnUserSpaceSubSystem.hpp"
-#include "AnnUserSpaceEvent.hpp"
-#include "AnnException.hpp"
-#include "AnnStringUtility.hpp"
-#include "AnnScriptManager.hpp"
+#include <AnnEngine.hpp>
+#include <AnnGameObjectManager.hpp>
+#include <AnnGameObject.hpp>
+#include <AnnTriggerObject.hpp>
+#include <AnnAudioEngine.hpp>
+#include <AnnEventManager.hpp>
+#include <AnnLogger.hpp>
+#include <AnnLevel.hpp>
+#include <AnnXmlLevel.hpp>
+#include <AnnSplashLevel.hpp>
+#include <AnnFilesystem.hpp>
+#include <AnnResourceManager.hpp>
+#include <Ann3DTextPlane.hpp>
+#include <AnnUserSpaceSubSystem.hpp>
+#include <AnnUserSpaceEvent.hpp>
+#include <AnnException.hpp>
+#include <AnnStringUtility.hpp>
+#include <AnnScriptManager.hpp>
 
 //Other Annwvyn
-#include "AnnTypes.h"
-#include "AnnVect3.hpp"
-#include "AnnQuaternion.hpp"
-
-#include "AnnGetter.hpp"
-
-#include "AnnOgreVRRenderer.hpp"
+#include <AnnTypes.h>
+#include <AnnVect3.hpp>
+#include <AnnQuaternion.hpp>
+#include <AnnGetter.hpp>
+#include <AnnOgreVRRenderer.hpp>
 
 ///Namespace containing the totality of Annwvyn components
 namespace Annwvyn

@@ -5,6 +5,7 @@
 #include <exception>
 #include <stdexcept>
 #include <AnnGameObject.hpp>
+#include <AnnErrorCode.hpp>
 
 namespace Annwvyn
 {

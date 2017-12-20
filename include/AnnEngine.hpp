@@ -35,6 +35,7 @@
 #include "AnnSceneryManager.hpp"
 #include "AnnScriptManager.hpp"
 #include "AnnStringUtility.hpp"
+#include "AnnPlayerBody.hpp"
 
 
 #ifdef _WIN32

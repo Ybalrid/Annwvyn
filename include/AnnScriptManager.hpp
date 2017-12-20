@@ -1,14 +1,14 @@
 #pragma once
 
-#include "systemMacro.h"
-#include "AnnScriptFile.hpp"
-#include "AnnSubsystem.hpp"
-#include "AnnEventManager.hpp"
-#include "AnnLightObject.hpp"
+#include <systemMacro.h>
+#include <AnnScriptFile.hpp>
+#include <AnnSubsystem.hpp>
+#include <AnnEventManager.hpp>
+#include <AnnLightObject.hpp>
 
 #include <chaiscript.hpp>
 #include <chaiscript_stdlib.hpp>
-#include "AnnTypes.h"
+#include <AnnTypes.h>
 
 namespace Annwvyn
 {

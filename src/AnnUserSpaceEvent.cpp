@@ -11,7 +11,7 @@ AnnUserSpaceEvent::AnnUserSpaceEvent(const std::string& typeName) :
 {
 }
 
-void AnnUserSpaceEventLauncher::dispatchEvent(std::shared_ptr<AnnUserSpaceEvent> e)
+void AnnUserSpaceEventLauncher::dispatchEvent(AnnUserSpaceEventPtr e)
 {
 	AnnGetEventManager()->userSpaceDispatchEvent(e, this);
 }

@@ -9,7 +9,6 @@
 #include "systemMacro.h"
 #include "AnnLevel.hpp"
 #include <tinyxml2.h>
-#include "AnnTypes.h"
 #include <string>
 
 namespace Annwvyn

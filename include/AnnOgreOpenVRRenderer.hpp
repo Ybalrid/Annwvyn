@@ -7,9 +7,8 @@
 #include <openvr.h>
 #include <openvr_capi.h>
 
-#include "AnnErrorCode.hpp"
-#include "AnnTypes.h"
-#include "AnnHandController.hpp"
+#include <AnnHandController.hpp>
+
 
 namespace Annwvyn
 {

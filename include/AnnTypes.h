@@ -12,10 +12,10 @@
 #include <list>
 #include <vector>
 #include <memory>
-#include "AnnAngle.hpp"
-#include "AnnVect3.hpp"
-#include "AnnQuaternion.hpp"
-#include "AnnColor.hpp"
+#include <AnnAngle.hpp>
+#include <AnnVect3.hpp>
+#include <AnnQuaternion.hpp>
+#include <AnnColor.hpp>
 
 namespace Annwvyn
 {
@@ -24,7 +24,7 @@ namespace Annwvyn
 	class AnnTriggerObject;
 	class AnnLightObject;
 
-	///Harmonize names :
+	//Harmonize names :
 	using AnnVect2 = Ogre::Vector2;
 	using AnnMatrix3 = Ogre::Matrix3;
 	using AnnMatrix4 = Ogre::Matrix4;
@@ -34,7 +34,7 @@ namespace Annwvyn
 	using AnnGameObjectList = std::vector<std::shared_ptr<AnnGameObject>>;
 	using AnnLightList = std::vector<std::shared_ptr<AnnLightObject>>;
 
-	///Because sometimes, after one byte you're full...
+	//Because sometimes, after one byte you're full...
 	using byte = uint8_t;
 	using uID = unsigned long long;
 

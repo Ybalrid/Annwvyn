@@ -33,8 +33,7 @@
 #include <Windows.h>
 #endif
 
-#include "AnnErrorCode.hpp"
-#include "AnnTypes.h"
+#include <AnnHandController.hpp>
 
 namespace Annwvyn
 {

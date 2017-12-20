@@ -1,6 +1,24 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "stdafx.h"
+
+#include <OgreSceneNode.h>
+#include <OgreCamera.h>
+#include <Compositor/OgreCompositorManager2.h>
+#include <Compositor/OgreCompositorWorkspaceDef.h>
+#include <Compositor/OgreCompositorWorkspace.h>
+#include <Compositor/OgreCompositorNode.h>
+#include <Compositor/OgreCompositorNodeDef.h>
+#include <Compositor/Pass/PassClear/OgreCompositorPassClearDef.h>
+#include <OgreMaterialManager.h>
+#include <OgreMaterial.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
+#include <Hlms/Pbs/OgreHlmsPbs.h>
+#include <Hlms/Unlit/OgreHlmsUnlit.h>
+#include <OgreHlmsManager.h>
+#include <OgreHlms.h>
+
 #include "AnnOgreVRRenderer.hpp"
 #include "AnnGetter.hpp"
 #include "AnnLogger.hpp"

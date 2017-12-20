@@ -7,8 +7,7 @@
 #pragma once
 
 #include "systemMacro.h"
-#include "AnnVect3.hpp"
-#include "AnnPlayerBody.hpp"
+#include <AnnTypes.h>
 #include "AnnAbstractMovable.hpp"
 
 namespace Annwvyn

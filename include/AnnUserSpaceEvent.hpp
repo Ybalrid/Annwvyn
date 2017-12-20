@@ -1,10 +1,10 @@
 #pragma once
 
+#include "systemMacro.h"
+
 #include <memory>
 #include <string>
 #include <functional>
-
-#include "systemMacro.h"
 
 namespace Annwvyn
 {
