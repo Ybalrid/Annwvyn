@@ -33,7 +33,14 @@ currentSessionStatusFrameIndex{ 0 },
 debugSmgr{ nullptr },
 debugCam{ nullptr },
 debugCamNode{ nullptr },
-debugPlaneNode{ nullptr }
+debugPlaneNode{ nullptr },
+texSizeL{},
+texSizeR{},
+eyeRenderDescArray{},
+hmdSize{},
+oculusRenderTexturesSeparatedGLID{0},
+ogreRenderTexturesSeparatedGLID{0}
+
 {
 	rendererName = "OpenGL/Oculus";
 	oculusSelf = static_cast<AnnOgreOculusRenderer*>(self);

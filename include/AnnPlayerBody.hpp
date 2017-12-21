@@ -17,7 +17,7 @@
 
 namespace Annwvyn
 {
-	enum AnnPlayerMode { STANDING, ROOMSCALE };
+	enum AnnPlayerMode { STANDING, ROOMSCALE, UNKNOWN };
 	class AnnEngine; //pre-declaration of AnnEngine
 
 	///Correspondence between array position and walk direction for the "walking" array

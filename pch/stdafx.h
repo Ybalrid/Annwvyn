@@ -109,9 +109,11 @@
 #include <GLFW/glfw3.h>
 
 //Chaisript interpretor
+#pragma warning (push)
 #pragma warning (disable : 4602)
 #include <chaiscript.hpp>
 #include <chaiscript_defines.hpp>
 #include <chaiscript_stdlib.hpp>
 #include <chaiscript_threading.hpp>
 #pragma warning (default: 4602)
+#pragma warning (pop)

@@ -233,6 +233,8 @@ namespace Annwvyn
 		AnnStickEvent();
 		///Destroy a stick event object
 		~AnnStickEvent();
+
+
 		///Number of buttons this controller has
 		size_t getNbButtons() const;
 

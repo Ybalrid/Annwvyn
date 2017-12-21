@@ -160,7 +160,7 @@ StickAxisId AnnStickAxis::getAxisId() const
 	return id;
 }
 
-AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs)
+AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs) //TODO: V730 https://www.viva64.com/en/w/V730 It is possible that not all members of a class are initialized inside the constructor. Consider inspecting: noRel.
 {
 	setAxis(ax);
 	setRelValue(rel);

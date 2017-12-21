@@ -342,7 +342,7 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](const AnnColor& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 		chai.add(fun([](KeyCode::code c) {AnnDebug() << logFromScript << "keycode:" << c; }), "AnnDebugLog");
 		chai.add(fun([](MouseAxisId c) {AnnDebug() << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
-		chai.add(fun([](bool b) {string s("true"); if (!b) s = "false"; AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
+		chai.add(fun([](bool b) {string s("true"); if (!b) { s = "false"; } AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
 		chai.add(fun([](int i) {AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
 		chai.add(fun([](float f) {AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
 

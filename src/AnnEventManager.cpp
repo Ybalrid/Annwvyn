@@ -254,7 +254,7 @@ void AnnEventManager::processKeyboardEvents()
 {
 	//for each key of the keyboard
 	for (size_t c(0); c < KeyCode::SIZE; c++)
-		if ((Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c]) ||
+		if ((Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c]) || //TODO: V728 https://www.viva64.com/en/w/V728 An excessive check can be simplified. The '(A && !B) || (!A && B)' expression is equivalent to the 'bool(A) != bool(B)' expression.
 			(!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c]))
 		{
 			//create a corresponding key event
@@ -289,10 +289,10 @@ void AnnEventManager::processJoystickEvents()
 	{
 		const auto& state(Joystick.oisJoystick->getJoyStickState());
 		AnnStickEvent stickEvent;
+		stickEvent.vendor = Joystick.oisJoystick->vendor();
+		stickEvent.stickID = Joystick.getID();
 
 		//Get all buttons immediate data
-		//stickEvent.buttons = state.mButtons;
-
 		const auto buttonSize = state.mButtons.size();
 		stickEvent.buttons.resize(buttonSize);
 		for (auto i = 0u; i < buttonSize; ++i)
@@ -302,9 +302,6 @@ void AnnEventManager::processJoystickEvents()
 			else
 				stickEvent.buttons[i] = 0;
 		}
-
-		stickEvent.vendor = Joystick.oisJoystick->vendor();
-		stickEvent.stickID = Joystick.getID();
 
 		//Get all axes immediate data
 		auto axisID = 0;
@@ -442,6 +439,7 @@ size_t AnnEventManager::getNbStick() const
 {
 	return Joysticks.size();
 }
+
 
 AnnEventListener::~AnnEventListener()
 {

@@ -100,7 +100,7 @@ fileReader(nullptr)
 	// ReSharper disable CppDeprecatedEntity
 	pathToUserDir = getenv("USERPROFILE");
 	// ReSharper restore CppDeprecatedEntity
-#pragma warning (default : 4996)
+#pragma warning (default : 4996) //TODO: V665 https://www.viva64.com/en/w/V665 Possibly, the usage of '#pragma warning(default: X)' is incorrect in this context. The '#pragma warning(push/pop)' should be used instead. Check lines: 99, 103.
 #endif
 
 #ifdef __linux__

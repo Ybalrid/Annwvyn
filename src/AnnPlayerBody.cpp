@@ -53,6 +53,8 @@ AnnPlayerBody::AnnPlayerBody()
     contactWithGround = false;
     RoomReferenceNode = nullptr;
     needNewRoomTranslateReference = false;
+
+	mode = UNKNOWN;
 }
 
 void AnnPlayerBody::setActuator(AnnPlayerActuator* act)
