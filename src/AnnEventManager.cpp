@@ -216,7 +216,7 @@ void AnnEventManager::clearListenerList()
 }
 
 //l equals NULL by default
-void AnnEventManager::removeListener(shared_ptr<AnnEventListener> l)
+void AnnEventManager::removeListener(AnnEventListenerPtr l)
 {
 	AnnDebug() << "Removing an event listener : " << l.get();
 	if (l == nullptr) { clearListenerList(); return; }
@@ -254,17 +254,18 @@ void AnnEventManager::processKeyboardEvents()
 {
 	//for each key of the keyboard
 	for (size_t c(0); c < KeyCode::SIZE; c++)
-		if ((Keyboard->isKeyDown(OIS::KeyCode(c)) && !previousKeyStates[c]) || //TODO: V728 https://www.viva64.com/en/w/V728 An excessive check can be simplified. The '(A && !B) || (!A && B)' expression is equivalent to the 'bool(A) != bool(B)' expression.
-			(!Keyboard->isKeyDown(OIS::KeyCode(c)) && previousKeyStates[c]))
+	{
+		if(Keyboard->isKeyDown(OIS::KeyCode(c)) != previousKeyStates[c])
 		{
 			//create a corresponding key event
 			AnnKeyEvent e;
 			e.setCode(KeyCode::code(c));
 			e.ignored = keyboardIgnore;
-			bool(previousKeyStates[c] = Keyboard->isKeyDown(OIS::KeyCode(c))) ? e.setPressed() : e.setReleased();
+			bool(previousKeyStates[c] = Keyboard->isKeyDown(OIS::KeyCode(c))) ? e.pressed = true : e.pressed = false;
 
 			keyEventBuffer.push_back(e);
 		}
+	}
 }
 
 void AnnEventManager::processMouseEvents()
