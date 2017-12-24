@@ -33,7 +33,7 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "C:\YbalridSoftware\AnnwvynSDK64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs ; Excludes: "*.sdf,*.ipch,*.pch, *.obj"
+Source: "C:\YbalridSoftware\AnnwvynSDK64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs ; Excludes: "*.sdf,*.ipch,*.pch, *.ipch, *.obj, *.codeanalysisast, *.codeanalysis"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
