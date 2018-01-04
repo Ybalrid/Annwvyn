@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.6.3)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 project(Annwvyn)
 
 #Basic build configuration
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE) 
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
 
 if(WIN32)
     #Check Annwvyn SDK configuration (This env var should exist)
@@ -32,7 +32,7 @@ if(WIN32)
     endif()
 
     #Where to find additional modules
-    set(CMAKE_MODULE_PATH 
+    set(CMAKE_MODULE_PATH
         ${CMAKE_MODULE_PATH}
         $ENV{AnnwvynSDK64}/CMakeModules
         $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
@@ -45,18 +45,18 @@ if(WIN32)
     set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/ CACHE PATH "BtOgre21 install")
     set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS CACHE PATH "OIS install")
     set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install CACHE PATH "OpenAL install")
-    set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw/build/install CACHE PATH "GLFW install") 
+    set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw/build/install CACHE PATH "GLFW install")
     set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2/build/install CACHE PATH "TinyXML2 install")
     set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "libsndfile install")
 
 #This is a bit hackish to make the engine technically work on Linux. Even when there's no targetable hardware for the engine that is Linux compatible
-else(UNIX) 
+else(UNIX)
     set(
 		CMAKE_MODULE_PATH
         ${CMAKE_MODULE_PATH}
-        /usr/lib/OGRE/cmake 
-        /usr/local/lib/OGRE/cmake 
-        /usr/lib/BtOgre21/CMake 
+        /usr/lib/OGRE/cmake
+        /usr/local/lib/OGRE/cmake
+        /usr/lib/BtOgre21/CMake
         /usr/local/lib/BtOgre21/CMake
         ~/AnnwvynDeps/CMakeModules
         )
@@ -99,12 +99,12 @@ include_directories(
     #Physics
     ${BULLET_INCLUDE_DIRS}
     ${BtOgre21_INCLUDE_DIRS}
-    #Input 
+    #Input
     ${OIS_INCLUDE_DIRS}
     #OpengL Support
     ${GLEW_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIR}
-    #Audio 
+    #Audio
     ${OPENAL_INCLUDE_DIR}
     ${SNDFILE_INCLUDE_DIRS}
     #Scripting
@@ -118,7 +118,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/tests
     )
 
-if(UNIX)    
+if(UNIX)
     get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
     message("here's the list of the include flag to put in your .clang_complete")
     foreach(dir ${dirs})
@@ -150,7 +150,7 @@ endif()
 add_library(Annwvyn SHARED ${AnnwvynCode} )
 add_executable(AnnwvynUnitTest ${TestCode} ${TestPCH})
 
-set (LIBS 
+set (LIBS
     ##Engine dependencies
     ${OGRE_LIBRARIES}
     ${OGRE_HlmsPbs_LIBRARIES}
@@ -210,7 +210,7 @@ if(WIN32)
         )
 
 endif()
-    
+
 if(UNIX)
     set(LINUX_ADDITIONAL_LIBS
         libopenvr_api.so
