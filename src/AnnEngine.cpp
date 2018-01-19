@@ -5,7 +5,6 @@
 #include "AnnLogger.hpp"
 #include "AnnException.hpp"
 
-//Graphic rendering system for the rift
 #include "AnnOgreOculusRenderer.hpp"
 
 //Graphic rendering system for the vive
@@ -40,7 +39,7 @@ AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
 AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 {
 	//Reset static members of friend class AnnEnigine that will outlive the object itself.
-	engine->singleton = nullptr;
+	engine->singleton	= nullptr;
 	engine->consoleReady = false;
 }
 
@@ -58,27 +57,28 @@ std::string AnnEngine::getAnnwvynVersion(long long int padding)
 {
 	std::stringstream version;
 	version << ANN_MAJOR << "." << ANN_MINOR << "." << ANN_PATCH;
-	if (ANN_EXPERIMENTAL)
+	if(ANN_EXPERIMENTAL)
 		version << "-experimental";
 	padding -= version.str().length();
-	for (long long int i(0); i < padding; i++)
+	for(long long int i(0); i < padding; i++)
 		version << " ";
 	return version.str();
 }
 
 void AnnEngine::startGameplayLoop()
 {
-	while (refresh());
+	while(refresh())
+		;
 }
 
 void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std::string& title)
 {
 	std::cerr << "HMD selection from command line routine returned : "
-		<< hmdCommand << std::endl;
+			  << hmdCommand << std::endl;
 
 	//Select the correct AnnOgreVRRenderer class to use :
 
-	if (hmdCommand == "DefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "DefaultRender")))
+	if(hmdCommand == "DefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "DefaultRender")))
 	{
 		std::cerr << "Using the default renderer " << defaultRenderer << " as HMD selector\n";
 		std::cerr << "Re-running the renderer selection test..\n";
@@ -88,26 +88,26 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 	auto set{ false };
 #ifdef _WIN32
-	if (hmdCommand == "OculusRender")
+	if(hmdCommand == "OculusRender")
 	{
 		std::cerr << "Using Oculus...\n";
 		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
-		set = true;
+		set		 = true;
 	}
 #endif
-	if (hmdCommand == "OpenVRRender")
+	if(hmdCommand == "OpenVRRender")
 	{
 		std::cerr << "Using OpenVR...\n";
 		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
-		set = true;
+		set		 = true;
 	}
-	if (hmdCommand == "NoVRRender")
+	if(hmdCommand == "NoVRRender")
 	{
 		std::cerr << "Not rendering in VR...\n";
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
-		set = true;
+		set		 = true;
 	}
-	if (!set)
+	if(!set)
 	{
 #ifdef _WIN32
 		displayWin32ErrorMessage(
@@ -124,34 +124,33 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 			"If you don't have (or can't use) VR Hardware, you can launch with"
 			"-noVR.\n"
 			"This will display the image on a simple window without attempting"
-			"to talk to VR hardware"
-		);
+			"to talk to VR hardware");
 #endif
 		std::cerr << "It looks like we can't start the VR renderer. The engine is going to crash\n."
-			<< "Dumping in standard error the current configuration : \n"
-			<< "The default renderer is:" << defaultRenderer << '\n'
-			<< "The hmdCommand is: " << hmdCommand << '\n';
-		if (renderer == nullptr) std::cerr << "The renderer is currently nullptr\n";
+				  << "Dumping in standard error the current configuration : \n"
+				  << "The default renderer is:" << defaultRenderer << '\n'
+				  << "The hmdCommand is: " << hmdCommand << '\n';
+		if(renderer == nullptr) std::cerr << "The renderer is currently nullptr\n";
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
 }
 
 AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
-	resetGuard(this),
-	applicationQuitRequested(false),
-	renderer(nullptr),
-	resourceManager(nullptr),
-	sceneryManager(nullptr),
-	filesystemManager(nullptr),
-	audioEngine(nullptr),
-	eventManager(nullptr),
-	physicsEngine(nullptr),
-	gameObjectManager(nullptr),
-	levelManager(nullptr),
-	player(nullptr),
-	SceneManager(nullptr),
-	vrRendererPovGameplayPlacement(nullptr),
-	updateTime(-1)
+ resetGuard(this),
+ applicationQuitRequested(false),
+ renderer(nullptr),
+ resourceManager(nullptr),
+ sceneryManager(nullptr),
+ filesystemManager(nullptr),
+ audioEngine(nullptr),
+ eventManager(nullptr),
+ physicsEngine(nullptr),
+ gameObjectManager(nullptr),
+ levelManager(nullptr),
+ player(nullptr),
+ SceneManager(nullptr),
+ vrRendererPovGameplayPlacement(nullptr),
+ updateTime(-1)
 {
 	consoleReady = false;
 #ifdef _WIN32
@@ -161,21 +160,15 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 	//Set current process to high priority.
 	//Looks like the scheduler of Windows sometimes don't give use the time we need to be consistent.
 	//This seems to fixes the problem.
-	if (autosetProcessPriorityHigh)
+	if(autosetProcessPriorityHigh)
 		setProcessPriorityHigh();
 
-	consoleGreen = FOREGROUND_GREEN |
-		FOREGROUND_INTENSITY;
-	consoleYellow = FOREGROUND_GREEN |
-		FOREGROUND_RED |
-		FOREGROUND_INTENSITY;
-	consoleWhite = FOREGROUND_RED |
-		FOREGROUND_GREEN |
-		FOREGROUND_BLUE |
-		FOREGROUND_INTENSITY;
+	consoleGreen  = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+	consoleYellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+	consoleWhite  = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 #endif
 
-	if (singleton)
+	if(singleton)
 	{
 		log("Can't create 2 instances of the engine!");
 		throw AnnInitializationError(ANN_ERR_MEMORY, "Can't create 2 instances of AnnEngine");
@@ -188,7 +181,7 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 
 	renderer->initOgreRoot(logFileName);
 
-	player = std::make_shared< AnnPlayerBody>();
+	player = std::make_shared<AnnPlayerBody>();
 	renderer->initVrHmd();
 	renderer->initPipeline();
 	SceneManager = renderer->getSceneManager();
@@ -198,10 +191,8 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 	log("Setup Annwvyn's subsystems");
 
 	//Element on this list will be updated in order by the engine each frame
-	SubSystemList.push_back(levelManager =
-		std::make_shared<AnnLevelManager>());
-	SubSystemList.push_back(gameObjectManager =
-		std::make_shared<AnnGameObjectManager>());
+	SubSystemList.push_back(levelManager = std::make_shared<AnnLevelManager>());
+	SubSystemList.push_back(gameObjectManager = std::make_shared<AnnGameObjectManager>());
 
 	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
 
@@ -211,39 +202,26 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 	- audio is synced (sounds comes form where they should)
 	- then the game can redraw*/
 
-	SubSystemList.push_back
-	(physicsEngine = std::make_shared<AnnPhysicsEngine>(
-		getSceneManager()->getRootSceneNode(),
-		player));
+	SubSystemList.push_back(physicsEngine = std::make_shared<AnnPhysicsEngine>(
+								getSceneManager()->getRootSceneNode(),
+								player));
 
-	SubSystemList.push_back
-	(eventManager = std::make_shared< AnnEventManager>
-		(renderer->getWindow()));
+	SubSystemList.push_back(eventManager = std::make_shared<AnnEventManager>(renderer->getWindow()));
 
-	SubSystemList.push_back
-	(audioEngine = std::make_shared< AnnAudioEngine>());
+	SubSystemList.push_back(audioEngine = std::make_shared<AnnAudioEngine>());
 
 	//These could be anywhere
-	SubSystemList.push_back
-	(filesystemManager = std::make_shared<AnnFilesystemManager>
-		(title));
+	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
 
-	SubSystemList.push_back
-	(resourceManager = std::make_shared<AnnResourceManager>());
+	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
 
-	SubSystemList.push_back
-	(sceneryManager = std::make_shared<AnnSceneryManager>
-		(renderer));
+	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
 
-	SubSystemList.push_back
-	(scriptManager = std::make_shared<AnnScriptManager>());
+	SubSystemList.push_back(scriptManager = std::make_shared<AnnScriptManager>());
 
 	renderer->initClientHmdRendering();
 	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();
-	vrRendererPovGameplayPlacement->setPosition(player->getPosition() +
-		AnnVect3(0.0f,
-			player->getEyesHeight(),
-			0.0f));
+	vrRendererPovGameplayPlacement->setPosition(player->getPosition() + AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 
 	//This subsystem need the vrRendererPovGameplayPlacement object to be
 	//initialized. And the Resource manager because it wants a font file and an
@@ -271,7 +249,7 @@ AnnEngine::~AnnEngine()
 	log("Good luck with the real world now! :3");
 	consoleReady = false;
 #ifdef _WIN32
-	if (manualConsole) FreeConsole();
+	if(manualConsole) FreeConsole();
 #endif
 }
 
@@ -336,7 +314,7 @@ AnnPhysicsEnginePtr AnnEngine::getPhysicsEngine() const
 void AnnEngine::setConsoleGreen()
 {
 #ifdef _WIN32
-	if (!noConsoleColor)
+	if(!noConsoleColor)
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleGreen);
 #endif
 }
@@ -344,7 +322,7 @@ void AnnEngine::setConsoleGreen()
 void AnnEngine::setConsoleYellow()
 {
 #ifdef _WIN32
-	if (!noConsoleColor)
+	if(!noConsoleColor)
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), consoleYellow);
 #endif
 }
@@ -352,10 +330,10 @@ void AnnEngine::setConsoleYellow()
 //This is static, but actually needs Ogre to be running. So be careful
 void AnnEngine::log(std::string message, bool flag)
 {
-	if (consoleReady)
+	if(consoleReady)
 		singleton->onScreenConsole->append(message);
 
-	if (flag)
+	if(flag)
 	{
 		setConsoleYellow();
 		message = "Annwvyn - " + message;
@@ -365,7 +343,7 @@ void AnnEngine::log(std::string message, bool flag)
 		setConsoleGreen();
 	}
 
-	if (Ogre::LogManager::getSingletonPtr())
+	if(Ogre::LogManager::getSingletonPtr())
 		Ogre::LogManager::getSingleton().logMessage(message);
 
 	setConsoleGreen();
@@ -375,13 +353,13 @@ void AnnEngine::log(std::string message, bool flag)
 bool AnnEngine::requestStop() const
 {
 	//pres ESC to quit. Stupid but efficient. I like that.
-	if (isKeyDown(OIS::KC_ESCAPE))
+	if(isKeyDown(OIS::KC_ESCAPE))
 		return true;
 	//If the user quit the App from the Oculus Home
-	if (renderer->shouldQuit())
+	if(renderer->shouldQuit())
 		return true;
 
-	if (applicationQuitRequested)
+	if(applicationQuitRequested)
 		return true;
 
 	return false;
@@ -400,8 +378,8 @@ bool AnnEngine::refresh()
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(float(getFrameTime()));
 
-	for (auto& SubSystem : SubSystemList)
-		if (SubSystem->needUpdate())
+	for(auto& SubSystem : SubSystemList)
+		if(SubSystem->needUpdate())
 			SubSystem->update();
 
 	//Update view
@@ -424,7 +402,7 @@ void AnnEngine::syncPov() const
 //Bad. Don't use. Register an event listener and use the KeyEvent callback.
 inline bool AnnEngine::isKeyDown(OIS::KeyCode key) const
 {
-	if (!eventManager) return false;
+	if(!eventManager) return false;
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
@@ -459,19 +437,19 @@ double AnnEngine::getFrameTime() const
 // integrated a LEAP motion in that mess.
 AnnPose AnnEngine::getHmdPose() const
 {
-	if (renderer)
+	if(renderer)
 		return renderer->trackedHeadPose;
 	return AnnPose();
 }
 
 AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSystem)
 {
-	for (const auto system : SubSystemList)
-		if (userSystem->name == system->name)
+	for(const auto system : SubSystemList)
+		if(userSystem->name == system->name)
 		{
 			AnnDebug() << "A subsystem with the name "
-				<< userSystem->name
-				<< "is already registered.";
+					   << userSystem->name
+					   << "is already registered.";
 
 			return nullptr;
 		}
@@ -485,10 +463,10 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 	std::string bootstrapName = "AnnBootPlugin_";
 	bootstrapName += pluginName;
 #ifdef _WIN32
-	if (const auto handle = LoadLibraryA(pluginName.c_str()))
+	if(const auto handle = LoadLibraryA(pluginName.c_str()))
 	{
 		AnnDebug() << "Sucessully loadded dynamic libray";
-		if (const auto bootstrapPlugin = GetProcAddress(handle, bootstrapName.c_str()))
+		if(const auto bootstrapPlugin = GetProcAddress(handle, bootstrapName.c_str()))
 		{
 			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
 			AnnDebug() << "Create and register subsystem...";
@@ -510,10 +488,10 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 	pluginSoFile += pluginName;
 	pluginSoFile += ".so";
 
-	if (auto handle = dlopen(pluginSoFile.c_str(), RTLD_NOW))
+	if(auto handle = dlopen(pluginSoFile.c_str(), RTLD_NOW))
 	{
 		AnnDebug() << "Sucessully loadded dynamic libray";
-		if (auto bootstrapPlugin = (void* (*)()) dlsym(handle, bootstrapName.c_str())) //We need to cast the pointer to a functor of the "void* boostrap(void)" format
+		if(auto bootstrapPlugin = (void* (*)())dlsym(handle, bootstrapName.c_str())) //We need to cast the pointer to a functor of the "void* boostrap(void)" format
 		{
 			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
 			AnnDebug() << "Create and register subsystem...";
@@ -534,8 +512,8 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 
 AnnSubSystemPtr AnnEngine::getSubSystemByName(const std::string& name)
 {
-	for (auto subsystem : SubSystemList)
-		if (subsystem->name == name)
+	for(auto subsystem : SubSystemList)
+		if(subsystem->name == name)
 			return subsystem;
 	return nullptr;
 }
@@ -559,12 +537,13 @@ bool AnnEngine::openConsole()
 #ifdef _WIN32
 
 	//Allocate a console for this app
-	if (AllocConsole())
+	if(AllocConsole())
 	{
 		//put stdout on this console;
-		FILE* f; const auto err = freopen_s(&f, "CONOUT$", "w", stdout);
-		if (!f) state = false;
-		if (err != 0) state = false;
+		FILE* f;
+		const auto err = freopen_s(&f, "CONOUT$", "w", stdout);
+		if(!f) state = false;
+		if(err != 0) state = false;
 		manualConsole = true;
 	}
 
@@ -572,9 +551,9 @@ bool AnnEngine::openConsole()
 	std::cerr.rdbuf(std::cout.rdbuf());
 
 	SetConsoleTitleA("Annwvyn Debug Console");
-	if (!noConsoleColor)
+	if(!noConsoleColor)
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
-			consoleWhite);
+								consoleWhite);
 
 #endif
 	return state;
@@ -582,7 +561,7 @@ bool AnnEngine::openConsole()
 
 bool AnnEngine::appVisibleInHMD() const
 {
-	if (renderer->isVisibleInHmd())
+	if(renderer->isVisibleInHmd())
 		return true;
 	return false;
 }
