@@ -19,7 +19,7 @@ Currently the engine supports :
 
 It uses Ogre for rendering to OpenGL buffers that are given to each VR libraries, Bullet for simulating physics and collisions and OpenAL for spatialized audio playback.
 
-Please read the DEPEDENCIES file to know what you need to build it.
+Please read the DEPENDENCIES file to know what you need to build it.
 
 
 System and Software requirement
