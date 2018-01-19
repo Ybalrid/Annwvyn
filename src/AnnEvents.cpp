@@ -160,7 +160,7 @@ StickAxisId AnnStickAxis::getAxisId() const
 	return id;
 }
 
-AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs) 
+AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs)
 {
 	setAxis(ax);
 	setRelValue(rel);

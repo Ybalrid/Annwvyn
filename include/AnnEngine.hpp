@@ -37,7 +37,6 @@
 #include "AnnStringUtility.hpp"
 #include "AnnPlayerBody.hpp"
 
-
 #ifdef _WIN32
 #include <io.h>
 #include <fcntl.h>

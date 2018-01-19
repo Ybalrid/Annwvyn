@@ -277,7 +277,7 @@ namespace Annwvyn
 		{
 		public:
 			///Get the 1st object in the pair
-			AnnGameObject* getAObject();
+			AnnGameObject * getAObject();
 
 			///Get the 2nd object in the pair
 			AnnGameObject* getBObject();
@@ -294,7 +294,7 @@ namespace Annwvyn
 		{
 		public:
 			///Get the object that collided with the player
-			AnnGameObject* getObject();
+			AnnGameObject * getObject();
 
 			///Get the name of the object that collided with the player
 			std::string getObjectName();

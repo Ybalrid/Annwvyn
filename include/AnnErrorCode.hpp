@@ -63,4 +63,3 @@ inline void displayWin32ErrorMessage(const std::string& title, const std::string
 	MessageBoxA(nullptr, content.c_str(), title.c_str(), MB_ICONERROR);
 #endif
 }
-

@@ -9,7 +9,6 @@
 
 #include <AnnHandController.hpp>
 
-
 namespace Annwvyn
 {
 	///Specialization of AnnHandController for an OpenVR Motion Controller
@@ -172,7 +171,7 @@ namespace Annwvyn
 
 		///To hold axis values
 		float touchpadXNormalizedValue;
-        float touchpadYNormalizedValue;
-        float triggerNormalizedValue;
+		float touchpadYNormalizedValue;
+		float triggerNormalizedValue;
 	};
 }

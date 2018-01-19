@@ -607,7 +607,7 @@ std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 	}
 	return "use windows default";
 #else
-    return "not valid for non-windows platform";
+	return "not valid for non-windows platform";
 #endif
 }
 

@@ -234,7 +234,6 @@ namespace Annwvyn
 		///Destroy a stick event object
 		~AnnStickEvent();
 
-
 		///Number of buttons this controller has
 		size_t getNbButtons() const;
 
@@ -393,7 +392,7 @@ namespace Annwvyn
 		bool isCeilingCollision(const float scalarApprox = 0.125) const;
 	private:
 		///Some naked pointers
-		AnnGameObject *a, *b;
+		AnnGameObject * a, *b;
 		const AnnVect3 position, normal;
 	};
 
@@ -409,7 +408,7 @@ namespace Annwvyn
 
 	private:
 		///Naked pointer to the collider
-		AnnGameObject* col;
+		AnnGameObject * col;
 	};
 
 	///Trigger in/out event
@@ -469,7 +468,7 @@ namespace Annwvyn
 		std::shared_ptr<AnnEventListener> getSharedListener();
 	protected:
 		///Pointer to the player. Set by the constructor, provide easy access to the AnnPlayerBody
-		AnnPlayerBody* player;
+		AnnPlayerBody * player;
 	};
 
 	using AnnEventListenerPtr = std::shared_ptr<AnnEventListener>;

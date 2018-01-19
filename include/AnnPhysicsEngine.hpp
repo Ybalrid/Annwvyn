@@ -36,7 +36,6 @@ namespace Annwvyn
 	using AnnPlayerBodyPtr = std::shared_ptr<AnnPlayerBody>;
 }
 
-
 namespace Annwvyn
 {
 	///Class that abstract the physics engine initialization and collision information queries for Annwvyn.

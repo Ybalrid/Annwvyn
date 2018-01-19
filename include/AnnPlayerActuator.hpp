@@ -23,7 +23,7 @@ namespace Annwvyn
 		///Overload this method to define how the player object should react to physics
 		virtual void actuate(float deltaTime) = 0;
 	protected:
-		AnnPlayerBody* player;
+		AnnPlayerBody * player;
 		friend class AnnPlayerBody;
 	};
 

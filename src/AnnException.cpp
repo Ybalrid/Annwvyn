@@ -103,34 +103,33 @@ const char* AnnInitializationError::what() const throw()
 }
 
 AnnInvalidPhysicalShapeError::AnnInvalidPhysicalShapeError(const std::string& objName) : std::runtime_error("Error : Cannot create a physics shape from arguments"),
-    objectName{objName}
+objectName{ objName }
 {
-    AnnDebug() << AnnInvalidPhysicalShapeError::what();
+	AnnDebug() << AnnInvalidPhysicalShapeError::what();
 }
 
 const char* AnnInvalidPhysicalShapeError::what() const throw()
 {
-    ostringstream out;
-    out << runtime_error::what();
-    out << " AnnInvalidPhysicalShapeError thrown on object ";
-    out << objectName;
-    return out.str().c_str();
+	ostringstream out;
+	out << runtime_error::what();
+	out << " AnnInvalidPhysicalShapeError thrown on object ";
+	out << objectName;
+	return out.str().c_str();
 }
 
 AnnLevelLoadingError::AnnLevelLoadingError(const std::string& level, const std::string& obj) : std::runtime_error("Error : Cannot load level object"),
-    levelName{ level },
-    objectName{ obj }
+levelName{ level },
+objectName{ obj }
 {
-    AnnDebug() << AnnLevelLoadingError::what();
+	AnnDebug() << AnnLevelLoadingError::what();
 }
 
 const char* AnnLevelLoadingError::what() const throw()
 {
-    ostringstream out;
-    out << runtime_error::what();
-    out << " AnnLevelLoadingError ";
-    out << levelName;
-    out << " Additional object informations : " << objectName;
-    return out.str().c_str();
+	ostringstream out;
+	out << runtime_error::what();
+	out << " AnnLevelLoadingError ";
+	out << levelName;
+	out << " Additional object informations : " << objectName;
+	return out.str().c_str();
 }
-

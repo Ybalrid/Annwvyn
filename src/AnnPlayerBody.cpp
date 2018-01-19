@@ -50,9 +50,9 @@ AnnPlayerBody::AnnPlayerBody()
 	ignorePhysics = false;
 
 	mouseSensitivity = 3;
-    contactWithGround = false;
-    RoomReferenceNode = nullptr;
-    needNewRoomTranslateReference = false;
+	contactWithGround = false;
+	RoomReferenceNode = nullptr;
+	needNewRoomTranslateReference = false;
 
 	mode = UNKNOWN;
 }

@@ -35,7 +35,7 @@ namespace Annwvyn
 		AnnPhysicsSetupChildError(AnnGameObject* origin);
 		const char* what() const throw() override;
 	private:
-		AnnGameObject* objectWithProblem;
+		AnnGameObject * objectWithProblem;
 	};
 
 	///Exception in hand controller "side" detection
@@ -62,23 +62,23 @@ namespace Annwvyn
 		const char* what() const throw() override;
 	};
 
-    ///Exception regarding collision shape creation
-    class AnnDllExport AnnInvalidPhysicalShapeError : public std::runtime_error
-    {
-    public:
-        AnnInvalidPhysicalShapeError(const std::string& objectName);
-        const char* what() const throw() override;
-    private:
-        const std::string objectName;
-    };
+	///Exception regarding collision shape creation
+	class AnnDllExport AnnInvalidPhysicalShapeError : public std::runtime_error
+	{
+	public:
+		AnnInvalidPhysicalShapeError(const std::string& objectName);
+		const char* what() const throw() override;
+	private:
+		const std::string objectName;
+	};
 
-    class AnnDllExport AnnLevelLoadingError : public std::runtime_error
-    {
-    public:
-        AnnLevelLoadingError(const std::string& levelName, const std::string& objectName);
-        const char* what() const throw() override;
-    private:
-        const std::string levelName;
-        const std::string objectName;
-    };
+	class AnnDllExport AnnLevelLoadingError : public std::runtime_error
+	{
+	public:
+		AnnLevelLoadingError(const std::string& levelName, const std::string& objectName);
+		const char* what() const throw() override;
+	private:
+		const std::string levelName;
+		const std::string objectName;
+	};
 }

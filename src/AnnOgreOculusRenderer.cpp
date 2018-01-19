@@ -38,8 +38,8 @@ texSizeL{},
 texSizeR{},
 eyeRenderDescArray{},
 hmdSize{},
-oculusRenderTexturesSeparatedGLID{0},
-ogreRenderTexturesSeparatedGLID{0}
+oculusRenderTexturesSeparatedGLID{ 0 },
+ogreRenderTexturesSeparatedGLID{ 0 }
 
 {
 	rendererName = "OpenGL/Oculus";

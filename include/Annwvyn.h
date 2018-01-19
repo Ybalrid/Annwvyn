@@ -12,14 +12,14 @@
  * Welcome to the Annwvyn API documentation.
  *
  * Annwvyn is a free and Open-Source Virtual reality development framework.
- * 
+ *
  * <em>Return to the <a href="https://www.annwvyn.org/">main website</a></em>
  *
  * This site document the whole API of the engine, both internal and external. As
  * it is intended to serve as a resource for the engien developement, and the engine use.
  * Anything marqued as "public" is available for games using Annwvyn, and for plugins
  * implementing a subsystem.
- * 
+ *
  * A partial documentation of the scripting API is available. It's generated from
  * "fake" C++ headers.
  * If you are looking for the Scripting API, Annwvyn::ChaiScriptAPIDoc is the

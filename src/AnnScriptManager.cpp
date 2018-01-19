@@ -53,9 +53,9 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](const Vector3& v, Vector3 w) {return v - w; }), "-");
 		chai.add(fun([](const Vector3& v, const Real w) {return v - w; }), "-");
 		chai.add(fun([](const Real& v, const Vector3& w) {return v - w; }), "-");
-		chai.add(fun([](const Vector3& vector, Real scalar) {return scalar*vector; }), "*");
-		chai.add(fun([](Real scalar, const Vector3& vector) {return scalar*vector; }), "*");
-		chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1*v2; }), "*");
+		chai.add(fun([](const Vector3& vector, Real scalar) {return scalar * vector; }), "*");
+		chai.add(fun([](Real scalar, const Vector3& vector) {return scalar * vector; }), "*");
+		chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1 * v2; }), "*");
 		chai.add(fun([](const Vector3& vector, Real scalar) {return scalar / vector; }), "/");
 		chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1 / v2; }), "/");
 		chai.add(fun([](Vector3& u, Vector3 v) {u *= v; }), "*=");
@@ -615,10 +615,10 @@ void AnnBehaviorScript::update()
 	}
 	catch (const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Evaluation error while " 
-		<< name 
-		<< " script update - " 
-		<< ee.pretty_print();
+		AnnDebug() << "Evaluation error while "
+			<< name
+			<< " script update - "
+			<< ee.pretty_print();
 		//will not crash here.
 	}
 }

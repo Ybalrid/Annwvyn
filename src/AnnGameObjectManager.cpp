@@ -105,8 +105,8 @@ void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> objec
 	if (!object) throw AnnNullGameObjectError();
 
 	Objects.erase(
-			std::remove(std::begin(Objects), std::end(Objects), object), 
-			std::end(Objects));
+		std::remove(std::begin(Objects), std::end(Objects), object),
+		std::end(Objects));
 
 	identifiedObjects.erase(object->getName());
 }
@@ -127,8 +127,8 @@ void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> lig
 {
 	if (!light) throw AnnNullGameObjectError();
 	Lights.erase(
-			std::remove(std::begin(Lights), std::end(Lights), light), 
-			std::end(Lights));
+		std::remove(std::begin(Lights), std::end(Lights), light),
+		std::end(Lights));
 
 	identifiedLights.erase(light->getName());
 }
@@ -157,8 +157,8 @@ std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std:
 void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject> trigger)
 {
 	Triggers.erase(
-			std::remove(std::begin(Triggers), std::end(Triggers), trigger),
-			std::end(Triggers));
+		std::remove(std::begin(Triggers), std::end(Triggers), trigger),
+		std::end(Triggers));
 
 	identifiedTriggerObjects.erase(trigger->getName());
 }

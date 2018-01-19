@@ -255,7 +255,7 @@ void AnnEventManager::processKeyboardEvents()
 	//for each key of the keyboard
 	for (size_t c(0); c < KeyCode::SIZE; c++)
 	{
-		if(Keyboard->isKeyDown(OIS::KeyCode(c)) != previousKeyStates[c])
+		if (Keyboard->isKeyDown(OIS::KeyCode(c)) != previousKeyStates[c])
 		{
 			//create a corresponding key event
 			AnnKeyEvent e;
@@ -440,7 +440,6 @@ size_t AnnEventManager::getNbStick() const
 {
 	return Joysticks.size();
 }
-
 
 AnnEventListener::~AnnEventListener()
 {
