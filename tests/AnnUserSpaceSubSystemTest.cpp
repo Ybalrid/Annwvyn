@@ -7,12 +7,14 @@ namespace Annwvyn
 	class TestEvent : public AnnUserSpaceEvent
 	{
 	public:
-		TestEvent(const std::string& message) : AnnUserSpaceEvent("TestEvent"),
-			storedMessage(message)
+		TestEvent(const std::string& message) :
+		 AnnUserSpaceEvent("TestEvent"),
+		 storedMessage(message)
 		{
 		}
 
 		std::string getMessage() const { return storedMessage; }
+
 	private:
 		std::string storedMessage;
 	};
@@ -20,8 +22,9 @@ namespace Annwvyn
 	class TestSubSystem : public AnnUserSubSystem
 	{
 	public:
-		TestSubSystem() : AnnUserSubSystem("Test Subsystem"),
-			dispatchedYet(false)
+		TestSubSystem() :
+		 AnnUserSubSystem("Test Subsystem"),
+		 dispatchedYet(false)
 		{
 		}
 
@@ -36,9 +39,9 @@ namespace Annwvyn
 
 		void update() override
 		{
-			if (!dispatchedYet)
+			if(!dispatchedYet)
 			{
-				if (AnnGetEngine()->getTimeFromStartupSeconds() > 3)
+				if(AnnGetEngine()->getTimeFromStartupSeconds() > 3)
 				{
 					dispatchEvent(std::make_shared<TestEvent>("Message!"));
 					dispatchedYet = true;
@@ -53,19 +56,21 @@ namespace Annwvyn
 	class TestListener : LISTENER
 	{
 	public:
-		TestListener(bool& state) : constructListener(),
-			hash(AnnGetStringUtility()->hash("TestEvent")),
-			state(state)
+		TestListener(bool& state) :
+		 constructListener(),
+		 hash(AnnGetStringUtility()->hash("TestEvent")),
+		 state(state)
 		{}
 
 		void EventFromUserSubsystem(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* /*origin*/) override
 		{
-			if (e.getType() == hash)
+			if(e.getType() == hash)
 			{
 				AnnDebug() << "got message : " << static_cast<TestEvent&>(e).getMessage();
 				state = true;
 			}
 		}
+
 	private:
 		AnnUserSpaceEvent::AnnUserSpaceEventTypeHash hash;
 		bool& state;
@@ -91,14 +96,14 @@ namespace Annwvyn
 		GameEngine->registerUserSubSystem(testSystem);
 		REQUIRE(GameEngine->isUserSubSystem(testSystem));
 
-		auto state = false;
+		auto state		  = false;
 		auto testListener = std::make_shared<TestListener>(state);
 		REQUIRE(testListener);
 		AnnGetEventManager()->addListener(testListener);
 
 		AnnGetVRRenderer()->_resetOgreTimer();
 
-		while (GameEngine->getTimeFromStartupSeconds() < 6)
+		while(GameEngine->getTimeFromStartupSeconds() < 6)
 			GameEngine->refresh();
 
 		REQUIRE(state);

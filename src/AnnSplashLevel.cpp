@@ -9,15 +9,16 @@
 
 using namespace Annwvyn;
 
-AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, std::shared_ptr<AnnLevel> nextLevel, float timeoutTime) : constructLevel(),
-timeout(timeoutTime * 1000),
-currentTime(0),
-startTime(-1),
-next(nextLevel),
-CurvedPlane{ nullptr },
-Splash{ nullptr },
-splashImageName(resourceName),
-hasBGM(false) {}
+AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, std::shared_ptr<AnnLevel> nextLevel, float timeoutTime) :
+ constructLevel(),
+ timeout(timeoutTime * 1000),
+ currentTime(0),
+ startTime(-1),
+ next(nextLevel),
+ CurvedPlane{ nullptr },
+ Splash{ nullptr },
+ splashImageName(resourceName),
+ hasBGM(false) {}
 
 std::vector<AnnVect3> AnnSplashLevel::createCurvedPlaneVertices(float curvature, float width, float height, float definition)
 {
@@ -32,19 +33,20 @@ std::vector<AnnVect3> AnnSplashLevel::createCurvedPlaneVertices(float curvature,
 
 	//Compute some basic parameters
 	const auto resolution = width / definition;
-	const auto alpha = 1 / curvature;
-	const auto xmax = width / 2;
-	const auto xmin = -xmax;
-	const auto ymax = height / 2;
-	const auto ymin = -ymax;
+	const auto alpha	  = 1 / curvature;
+	const auto xmax		  = width / 2;
+	const auto xmin		  = -xmax;
+	const auto ymax		  = height / 2;
+	const auto ymin		  = -ymax;
 
 	//how the z component is calculated
-	auto depth = [=](float x) {return alpha * (x*x); };
+	auto depth = [=](float x) { return alpha * (x * x); };
 
 	//Where the data is stored. Take advantage of RVO
-	std::vector<AnnVect3> curve; curve.reserve(size_t(definition));
+	std::vector<AnnVect3> curve;
+	curve.reserve(size_t(definition));
 
-	for (float x = xmin; x < xmax; x += resolution)
+	for(float x = xmin; x < xmax; x += resolution)
 	{
 		curve.emplace_back(x, ymax, depth(x));
 		curve.emplace_back(x, ymin, depth(x));
@@ -63,14 +65,14 @@ void AnnSplashLevel::createSplashCurvedPlane()
 	CurvedPlane->begin("Splash", Ogre::OT_TRIANGLE_STRIP);
 
 	const float curvature = 50;
-	const float width = 40;
-	const float height = 40;
+	const float width	 = 40;
+	const float height	= 40;
 	const float definiton = 10;
 
 	auto vertices = createCurvedPlaneVertices(curvature, width, height, definiton);
 
 	Ogre::uint32 index = 0;
-	for (const auto& pos : vertices)
+	for(const auto& pos : vertices)
 	{
 		CurvedPlane->position(pos);
 		CurvedPlane->textureCoord((pos.x + width / 2.f) / width, 1.0f - ((pos.y + height / 2.f) / height));
@@ -86,20 +88,19 @@ void AnnSplashLevel::createSplashCurvedPlane()
 
 Ogre::HlmsUnlitDatablock* AnnSplashLevel::createSplashDatablock(Ogre::HlmsUnlit* unlit)
 {
-	auto macroblock = Ogre::HlmsMacroblock();
-	auto blendblock = Ogre::HlmsBlendblock();
-	macroblock.mCullMode = Ogre::CULL_NONE;
-	macroblock.mDepthCheck = false;
-	macroblock.mDepthWrite = false;
+	auto macroblock				   = Ogre::HlmsMacroblock();
+	auto blendblock				   = Ogre::HlmsBlendblock();
+	macroblock.mCullMode		   = Ogre::CULL_NONE;
+	macroblock.mDepthCheck		   = false;
+	macroblock.mDepthWrite		   = false;
 	macroblock.mScissorTestEnabled = false;
-	return static_cast<Ogre::HlmsUnlitDatablock*> (unlit->createDatablock("Splash", "Splash", macroblock, blendblock,
-		Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->getDefaultResourceGroupName()));
+	return static_cast<Ogre::HlmsUnlitDatablock*>(unlit->createDatablock("Splash", "Splash", macroblock, blendblock, Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->getDefaultResourceGroupName()));
 }
 
 void AnnSplashLevel::load()
 {
 	AnnDebug() << "Ignore physics";
-	AnnGetPlayer()->setPosition({ 0,0,10 });
+	AnnGetPlayer()->setPosition({ 0, 0, 10 });
 	AnnGetPlayer()->resetPlayerPhysics();
 	AnnGetPlayer()->setOrientation(Ogre::Euler(0, 0, 0));
 	AnnGetPlayer()->ignorePhysics = false;
@@ -114,15 +115,15 @@ void AnnSplashLevel::load()
 	sun->setDirection({ 0, 1, 0.5f });
 
 	//Get splashscreen material
-	auto unlit = static_cast<Ogre::HlmsUnlit*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT));
+	auto unlit			 = static_cast<Ogre::HlmsUnlit*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_UNLIT));
 	auto splashDatablock = static_cast<Ogre::HlmsUnlitDatablock*>(unlit->getDatablock("Splash"));
-	if (!splashDatablock) splashDatablock = createSplashDatablock(unlit);
+	if(!splashDatablock) splashDatablock = createSplashDatablock(unlit);
 
 	//Get splashscreen texture
 	auto textureManager = Ogre::TextureManager::getSingletonPtr();
-	auto texture = textureManager->getByName(splashImageName);
-	if (!texture) texture = textureManager->load(splashImageName, AnnGetResourceManager()->getDefaultResourceGroupName(), Ogre::TEX_TYPE_2D, 0, 1, false, Ogre::PF_UNKNOWN, true);
-	if (!texture) throw AnnInitializationError(ANN_ERR_NOTINIT, "Texture not found for splash " + splashImageName);
+	auto texture		= textureManager->getByName(splashImageName);
+	if(!texture) texture = textureManager->load(splashImageName, AnnGetResourceManager()->getDefaultResourceGroupName(), Ogre::TEX_TYPE_2D, 0, 1, false, Ogre::PF_UNKNOWN, true);
+	if(!texture) throw AnnInitializationError(ANN_ERR_NOTINIT, "Texture not found for splash " + splashImageName);
 
 	//Set datablock parameters
 	splashDatablock->setColour(Ogre::ColourValue::White * 97);
@@ -133,35 +134,36 @@ void AnnSplashLevel::load()
 
 void AnnSplashLevel::setBGM(std::string soundfileName, bool preload)
 {
-	if (preload) AnnGetAudioEngine()->preLoadBuffer(soundfileName);
+	if(preload) AnnGetAudioEngine()->preLoadBuffer(soundfileName);
 	bgmName = soundfileName;
-	hasBGM = true;
+	hasBGM  = true;
 }
 
 void AnnSplashLevel::runLogic()
 {
-	Splash->setPosition(AnnGetPlayer()->getPosition() + AnnVect3{ 0,0,-10 });
+	Splash->setPosition(AnnGetPlayer()->getPosition() + AnnVect3{ 0, 0, -10 });
 
 	//If start time not set yet
-	if (startTime == -1)
+	if(startTime == -1)
 	{
 		//The app is "not visible" before the Health and Safety warning is displayed, or when you're inside the Oculus Home menu
-		if (AnnGetEngine()->appVisibleInHMD())
+		if(AnnGetEngine()->appVisibleInHMD())
 		{
 			AnnDebug() << "visible";
 			//This set the "startTime" variable, preventing this piece of code to be ran twice
 			AnnDebug() << "Starting time at : " << AnnGetEngine()->getTimeFromStartUp();
 			startTime = float(AnnGetEngine()->getTimeFromStartUp());
 			//If you put some background music or sound for the splash-screen, we start it
-			if (hasBGM)
+			if(hasBGM)
 				AnnGetAudioEngine()->playBGM(bgmName);
 		}
-		else return;
+		else
+			return;
 	}
 
 	//Run the following only if you set a "next" level to jump to
 	auto nextLevel = next.lock();
-	if (nextLevel && AnnGetEngine()->getTimeFromStartUp() - startTime > timeout)
+	if(nextLevel && AnnGetEngine()->getTimeFromStartUp() - startTime > timeout)
 	{
 		startTime = -1;
 		AnnGetEngine()->getLevelManager()->jump(nextLevel);
@@ -191,7 +193,7 @@ void AnnSplashLevel::setNextLevel(std::shared_ptr<AnnLevel> level)
 
 void AnnSplashLevel::setTimeout(float time)
 {
-	if (time > 0)
+	if(time > 0)
 		timeout = 1000 * time;
 }
 

@@ -184,8 +184,8 @@ namespace Annwvyn
 	GameEngine.reset(nullptr); \
 	Annwvyn::postQuit();
 
-//===================Application Entry-point definition=================//
-/*Main definition :
+	//===================Application Entry-point definition=================//
+	/*Main definition :
  *
  *	For more simplicity, Program start by a "AnnMain" function at the library
  *	user side. This allow to select proper entry point for the application, and
@@ -193,36 +193,36 @@ namespace Annwvyn
  */
 
 #ifdef _WIN32
-#	include "windows.h"
+#include "windows.h"
 
 	///Application entry point
-#	define AnnMain()                                                                       \
-		int AnnwvynStart();                                                                 \
-		std::string detectedHMD;                                                            \
-		INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)               \
-		{                                                                                   \
-			detectedHMD = Annwvyn::getHMDFromCmdLine(static_cast<const char*>(strCmdLine)); \
-			Annwvyn::preStart();                                                            \
-			return AnnwvynStart();                                                          \
-		}                                                                                   \
-		int AnnwvynStart()
+#define AnnMain()                                                                       \
+	int AnnwvynStart();                                                                 \
+	std::string detectedHMD;                                                            \
+	INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)               \
+	{                                                                                   \
+		detectedHMD = Annwvyn::getHMDFromCmdLine(static_cast<const char*>(strCmdLine)); \
+		Annwvyn::preStart();                                                            \
+		return AnnwvynStart();                                                          \
+	}                                                                                   \
+	int AnnwvynStart()
 
 #else
 
 	///Application entry point
-#	define AnnMain()                                              \
-		int AnnwvynStart();                                        \
-		std::string detectedHMD;                                   \
-		int main(int argc, char** argv)                            \
-		{                                                          \
-			if(argc < 2)                                           \
-				detectedHMD = Annwvyn::getHMDFromCmdLine("");      \
-			else                                                   \
-				detectedHMD = Annwvyn::getHMDFromCmdLine(argv[1]); \
-			Annwvyn::preStart();                                   \
-			return AnnwvynStart();                                 \
-		}                                                          \
-		int AnnwvynStart()
+#define AnnMain()                                              \
+	int AnnwvynStart();                                        \
+	std::string detectedHMD;                                   \
+	int main(int argc, char** argv)                            \
+	{                                                          \
+		if(argc < 2)                                           \
+			detectedHMD = Annwvyn::getHMDFromCmdLine("");      \
+		else                                                   \
+			detectedHMD = Annwvyn::getHMDFromCmdLine(argv[1]); \
+		Annwvyn::preStart();                                   \
+		return AnnwvynStart();                                 \
+	}                                                          \
+	int AnnwvynStart()
 
 #endif
 //=======================================================================//

@@ -9,20 +9,20 @@
 using namespace Annwvyn;
 
 AnnHandController::AnnHandController(const std::string& type, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide) :
-	controllerTypeString(type),
-	controllerTypeHash(AnnGetStringUtility()->hash(type)),
-	id(controllerID),
-	side(controllerSide),
-	node(handNode),
-	grabbed(nullptr),
-	model(nullptr),
-	tracked(false),
-	trackedAngularSpeed(AnnVect3::ZERO),
-	trackedLinearSpeed(AnnVect3::ZERO),
-	invalidAxis("INVALID", 0),
-	gestureNotAvailableHash(AnnGetStringUtility()->hash(gestureNotAvailableString))
+ controllerTypeString(type),
+ controllerTypeHash(AnnGetStringUtility()->hash(type)),
+ id(controllerID),
+ side(controllerSide),
+ node(handNode),
+ grabbed(nullptr),
+ model(nullptr),
+ tracked(false),
+ trackedAngularSpeed(AnnVect3::ZERO),
+ trackedLinearSpeed(AnnVect3::ZERO),
+ invalidAxis("INVALID", 0),
+ gestureNotAvailableHash(AnnGetStringUtility()->hash(gestureNotAvailableString))
 {
-	if (side == invalidHandController) throw AnnInvalidControllerSide();
+	if(side == invalidHandController) throw AnnInvalidControllerSide();
 
 	std::cerr << "HandController ID : " << id << " created";
 	std::cerr << "For side : " << getSideAsString(side);
@@ -34,13 +34,13 @@ AnnHandController::AnnHandController(const std::string& type, Ogre::SceneNode* h
 
 inline std::string AnnHandController::getSideAsString(AnnHandControllerSide s)
 {
-	if (s == leftHandController) return "Left Hand";
+	if(s == leftHandController) return "Left Hand";
 	return "Right Hand";
 }
 
 void AnnHandController::_attachModelItem(Ogre::Item* handModel)
 {
-	if (model) node->detachObject(model);
+	if(model) node->detachObject(model);
 	model = handModel;
 	node->attachObject(model);
 }
@@ -49,10 +49,10 @@ void AnnHandController::setHandModel(const std::string& name)
 {
 	Ogre::v1::MeshPtr v1;
 	Ogre::MeshPtr v2;
-	v2 = AnnGetGameObjectManager()->getAndConvertFromV1Mesh(name.c_str(), v1, v2);
+	v2			  = AnnGetGameObjectManager()->getAndConvertFromV1Mesh(name.c_str(), v1, v2);
 	auto oldModel = getHandModel();
 	_attachModelItem(AnnGetEngine()->getSceneManager()->createItem(v2));
-	if (oldModel)
+	if(oldModel)
 	{
 		AnnGetEngine()->getSceneManager()->destroyItem(oldModel);
 	}
@@ -60,7 +60,7 @@ void AnnHandController::setHandModel(const std::string& name)
 
 void AnnHandController::detachModel()
 {
-	if (model) node->detachObject(model);
+	if(model) node->detachObject(model);
 	model = nullptr;
 }
 
@@ -96,7 +96,7 @@ AnnVect3 AnnHandController::getPointingDirection() const
 
 void AnnHandController::attachNode(Ogre::SceneNode* grabbedObject)
 {
-	if (grabbedObject->getParentSceneNode())
+	if(grabbedObject->getParentSceneNode())
 		grabbedObject->getParentSceneNode()->removeChild(grabbedObject);
 	node->addChild(grabbedObject);
 	grabbed = grabbedObject;
@@ -116,13 +116,13 @@ void AnnHandController::setTrackedOrientation(AnnQuaternion orientation)
 
 void AnnHandController::setTrackedLinearSpeed(AnnVect3 v)
 {
-	tracked = true;
+	tracked			   = true;
 	trackedLinearSpeed = v;
 }
 
 void AnnHandController::setTrackedAngularSpeed(AnnVect3 v)
 {
-	tracked = true;
+	tracked				= true;
 	trackedAngularSpeed = v;
 }
 
@@ -148,15 +148,15 @@ size_t AnnHandController::getNbButton() const
 
 bool AnnHandController::hasBeenPressed(uint8_t buttonIndex)
 {
-	for (auto button : pressedButtons)
-		if (button == buttonIndex) return true;
+	for(auto button : pressedButtons)
+		if(button == buttonIndex) return true;
 	return false;
 }
 
 bool AnnHandController::hasBeenReleased(uint8_t buttonIndex)
 {
-	for (auto button : releasedButtons)
-		if (button == buttonIndex) return true;
+	for(auto button : releasedButtons)
+		if(button == buttonIndex) return true;
 	return false;
 }
 
@@ -167,7 +167,7 @@ size_t AnnHandController::getNbAxes() const
 
 AnnHandControllerAxis& AnnHandController::getAxis(size_t index)
 {
-	if (index < axes.size()) return axes[index];
+	if(index < axes.size()) return axes[index];
 	return invalidAxis;
 }
 
@@ -202,8 +202,9 @@ std::vector<uint8_t>& AnnHandController::getReleasedButtonsVector()
 }
 
 AnnHandControllerAxis::AnnHandControllerAxis(const std::string& AxisName, float normalizedValue) :
-	name(AxisName),
-	value(0) {
+ name(AxisName),
+ value(0)
+{
 	updateValue(normalizedValue);
 }
 
@@ -212,7 +213,7 @@ float AnnHandControllerAxis::getValue() const { return value; }
 
 void AnnHandControllerAxis::updateValue(float normalizedValue)
 {
-	if (isInRange(normalizedValue))
+	if(isInRange(normalizedValue))
 		value = normalizedValue;
 }
 

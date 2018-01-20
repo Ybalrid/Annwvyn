@@ -6,7 +6,8 @@
 
 using namespace Annwvyn;
 
-AnnUserSubSystem::AnnUserSubSystem(const std::string& systemName) : AnnSubSystem(systemName)
+AnnUserSubSystem::AnnUserSubSystem(const std::string& systemName) :
+ AnnSubSystem(systemName)
 {
 	AnnDebug() << "^^^^^ This system is user defined.";
 }

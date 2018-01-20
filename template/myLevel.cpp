@@ -3,7 +3,8 @@
 
 using namespace Annwvyn;
 
-MyLevel::MyLevel() : constructLevel()
+MyLevel::MyLevel() :
+ constructLevel()
 {
 }
 

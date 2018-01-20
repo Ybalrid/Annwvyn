@@ -16,7 +16,9 @@ namespace Annwvyn
 	{
 	public:
 		///Text alignment flag
-		enum TextAlign { ALIGN_LEFT = 'l', ALIGN_CENTER = 'c', ALIGN_RIGHT = 'r' };
+		enum TextAlign { ALIGN_LEFT   = 'l',
+						 ALIGN_CENTER = 'c',
+						 ALIGN_RIGHT  = 'r' };
 
 		///Construct a 3D text plane. Need to provide a caption to auto render text
 		/// \param w Width in meter
@@ -73,7 +75,6 @@ namespace Annwvyn
 		void setBackgroundImage(const std::string& imgName);
 
 	private:
-
 		///Create the font
 		void createFont(const int& size);
 
@@ -126,7 +127,7 @@ namespace Annwvyn
 		std::array<AnnVect3, 4> vertices;
 
 		///Static texture coordinates
-		const std::array<AnnVect2, 4> textureCoords = { { {0,0}, {0,1}, {1,0}, {1,1} } };
+		const std::array<AnnVect2, 4> textureCoords = { { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 } } };
 
 		///Various floats for size computation
 		float width, height, resolutionFactor, xOffset, yOffset;

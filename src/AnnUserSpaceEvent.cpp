@@ -6,8 +6,8 @@
 using namespace Annwvyn;
 
 AnnUserSpaceEvent::AnnUserSpaceEvent(const std::string& typeName) :
-	eventTypeName(typeName),
-	eventTypeHash(AnnGetStringUtility()->hash(eventTypeName))
+ eventTypeName(typeName),
+ eventTypeHash(AnnGetStringUtility()->hash(eventTypeName))
 {
 }
 

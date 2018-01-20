@@ -6,26 +6,26 @@
 using namespace Annwvyn;
 
 AnnColor::AnnColor(float red, float green, float blue, float alpha) :
-	r(red),
-	g(green),
-	b(blue),
-	a(alpha)
+ r(red),
+ g(green),
+ b(blue),
+ a(alpha)
 {
 }
 
 AnnColor::AnnColor(Ogre::ColourValue color) :
-	r(color.r),
-	g(color.g),
-	b(color.b),
-	a(color.a)
+ r(color.r),
+ g(color.g),
+ b(color.b),
+ a(color.a)
 {
 }
 
-AnnColor::AnnColor(const AnnColor & color) :
-	r(color.r),
-	g(color.g),
-	b(color.b),
-	a(color.a)
+AnnColor::AnnColor(const AnnColor& color) :
+ r(color.r),
+ g(color.g),
+ b(color.b),
+ a(color.a)
 {
 }
 
@@ -95,24 +95,24 @@ bool AnnColor::isInFloatRange(float f)
 
 void AnnColor::setRed(float red)
 {
-	if (isInFloatRange(red))
+	if(isInFloatRange(red))
 		r = red;
 }
 
 void AnnColor::setGreen(float green)
 {
-	if (isInFloatRange(green))
+	if(isInFloatRange(green))
 		g = green;
 }
 
 void AnnColor::setBlue(float blue)
 {
-	if (isInFloatRange(blue))
+	if(isInFloatRange(blue))
 		b = blue;
 }
 
 void AnnColor::setAlpha(float alpha)
 {
-	if (isInFloatRange(alpha))
+	if(isInFloatRange(alpha))
 		a = alpha;
 }

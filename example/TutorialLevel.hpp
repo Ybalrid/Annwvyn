@@ -5,7 +5,8 @@
 class TutorialLevel : LEVEL
 {
 public:
-	TutorialLevel() : constructLevel()
+	TutorialLevel() :
+	 constructLevel()
 	{
 	}
 
@@ -13,7 +14,7 @@ protected:
 	void loadBasicTutorialLevel()
 	{
 		goBackListener = AnnGetEventManager()->addListener<GoBackToDemoHub>();
-		auto floor = addGameObject("floorplane.mesh");
+		auto floor	 = addGameObject("floorplane.mesh");
 		floor->setUpPhysics();
 
 		auto Sun = addLightObject();
@@ -31,8 +32,8 @@ protected:
 		explaination->setTextAlign(Ann3DTextPlane::TextAlign::ALIGN_LEFT);
 		explaination->setMargin(0.05);
 		explaination->setBackgroundColor(AnnColor(0.9, 0.9, 0.9));
-		explaination->setTextColor(AnnColor{ 0, 0 ,0 });
-		explaination->setPosition({ 0, 1.5f,9 });
+		explaination->setTextColor(AnnColor{ 0, 0, 0 });
+		explaination->setPosition({ 0, 1.5f, 9 });
 		explaination->update();
 		addManualMovableObject(explaination);
 		return explaination;

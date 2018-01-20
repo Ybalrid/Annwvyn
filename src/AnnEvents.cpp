@@ -9,7 +9,7 @@
 using namespace Annwvyn;
 
 AnnEvent::AnnEvent() :
-	type(NO_TYPE)
+ type(NO_TYPE)
 {
 }
 
@@ -19,10 +19,11 @@ AnnEventType AnnEvent::getType() const
 }
 
 //---------------------------------------KEYBOARD
-AnnKeyEvent::AnnKeyEvent() : AnnEvent(),
-key(KeyCode::unassigned),
-pressed(false),
-ignored(false)
+AnnKeyEvent::AnnKeyEvent() :
+ AnnEvent(),
+ key(KeyCode::unassigned),
+ pressed(false),
+ ignored(false)
 {
 	type = USER_INPUT;
 }
@@ -107,9 +108,10 @@ int AnnMouseAxis::getAbsValue() const
 	return abs;
 }
 
-AnnMouseEvent::AnnMouseEvent() : AnnEvent()
+AnnMouseEvent::AnnMouseEvent() :
+ AnnEvent()
 {
-	for (size_t i(0); i < nbButtons; i++)
+	for(size_t i(0); i < nbButtons; i++)
 		buttonsStatus[i] = false;
 
 	type = USER_INPUT;
@@ -117,9 +119,9 @@ AnnMouseEvent::AnnMouseEvent() : AnnEvent()
 
 bool AnnMouseEvent::getButtonState(MouseButtonId id)
 {
-	if (id == invalidButton) return false;
+	if(id == invalidButton) return false;
 
-	if (int(id) < int(nbButtons))
+	if(int(id) < int(nbButtons))
 		return buttonsStatus[id];
 
 	return false;
@@ -127,9 +129,9 @@ bool AnnMouseEvent::getButtonState(MouseButtonId id)
 
 AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
 {
-	if (id == invalidAxis) return AnnMouseAxis(invalidAxis, 0, 0);
+	if(id == invalidAxis) return AnnMouseAxis(invalidAxis, 0, 0);
 
-	if (int(id) < int(nbAxes))
+	if(int(id) < int(nbAxes))
 		return axes[id];
 
 	return AnnMouseAxis(invalidAxis, 0, 0);
@@ -137,13 +139,13 @@ AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
 
 void AnnMouseEvent::setButtonStatus(MouseButtonId id, bool value)
 {
-	if (int(id) < int(nbButtons))
+	if(int(id) < int(nbButtons))
 		buttonsStatus[id] = value;
 }
 
 void AnnMouseEvent::setAxisInformation(MouseAxisId id, AnnMouseAxis information)
 {
-	if (int(id) < int(nbAxes))
+	if(int(id) < int(nbAxes))
 		axes[id] = information;
 }
 
@@ -169,7 +171,7 @@ AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs)
 
 void AnnStickAxis::setRelValue(int rel)
 {
-	r = rel;
+	r	 = rel;
 	noRel = false;
 }
 
@@ -185,7 +187,7 @@ void AnnStickAxis::setAxis(StickAxisId ax)
 
 float AnnStickAxis::getRelValue() const
 {
-	if (noRel) return INVALID;
+	if(noRel) return INVALID;
 	return float(r) / float(OIS::JoyStick::MAX_AXIS);
 }
 
@@ -195,10 +197,10 @@ float AnnStickAxis::getAbsValue() const
 }
 
 AnnStickPov::AnnStickPov() :
-	north(false),
-	south(false),
-	east(false),
-	west(false)
+ north(false),
+ south(false),
+ east(false),
+ west(false)
 {
 }
 
@@ -248,58 +250,59 @@ bool AnnStickPov::isCentred() const
 }
 
 AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
-	north(false),
-	south(false),
-	east(false),
-	west(false)
+ north(false),
+ south(false),
+ east(false),
+ west(false)
 {
-	switch (binaryDirection)
+	switch(binaryDirection)
 	{
-	case OIS::Pov::North:
-		north = true;
-		break;
+		case OIS::Pov::North:
+			north = true;
+			break;
 
-	case OIS::Pov::NorthEast:
-		north = true;
-		east = true;
-		break;
+		case OIS::Pov::NorthEast:
+			north = true;
+			east  = true;
+			break;
 
-	case OIS::Pov::NorthWest:
-		north = true;
-		west = true;
-		break;
+		case OIS::Pov::NorthWest:
+			north = true;
+			west  = true;
+			break;
 
-	case OIS::Pov::South:
-		south = true;
-		break;
+		case OIS::Pov::South:
+			south = true;
+			break;
 
-	case OIS::Pov::SouthEast:
-		south = true;
-		east = true;
-		break;
+		case OIS::Pov::SouthEast:
+			south = true;
+			east  = true;
+			break;
 
-	case OIS::Pov::SouthWest:
-		south = true;
-		west = true;
-		break;
+		case OIS::Pov::SouthWest:
+			south = true;
+			west  = true;
+			break;
 
-	case OIS::Pov::East:
-		east = true;
-		break;
+		case OIS::Pov::East:
+			east = true;
+			break;
 
-	case OIS::Pov::West:
-		west = true;
-		break;
+		case OIS::Pov::West:
+			west = true;
+			break;
 
-	case OIS::Pov::Centered:
-	default:
-		break;
+		case OIS::Pov::Centered:
+		default:
+			break;
 	}
 }
 
-AnnStickEvent::AnnStickEvent() : AnnEvent(),
-xbox(false),
-stickID(-1)
+AnnStickEvent::AnnStickEvent() :
+ AnnEvent(),
+ xbox(false),
+ stickID(-1)
 {
 	type = USER_INPUT;
 }
@@ -313,7 +316,7 @@ unsigned int AnnStickEvent::getStickID() const
 
 bool AnnStickEvent::isDown(ButtonId id)
 {
-	if (id >= buttons.size()) return false;
+	if(id >= buttons.size()) return false;
 	return buttons[id] != 0;
 }
 
@@ -345,20 +348,20 @@ size_t AnnStickEvent::getNbAxis() const
 bool AnnStickEvent::isPressed(ButtonId id)
 {
 	//if id is not a valid button
-	if (id >= buttons.size()) return false;
+	if(id >= buttons.size()) return false;
 
-	for (auto i(0); i < pressed.size(); i++)
-		if (pressed[i] == id) return true;
+	for(auto i(0); i < pressed.size(); i++)
+		if(pressed[i] == id) return true;
 	return false;
 }
 
 bool AnnStickEvent::isReleased(ButtonId id)
 {
 	//if id is not a valid button
-	if (id >= buttons.size()) return false;
+	if(id >= buttons.size()) return false;
 
-	for (auto i(0); i < released.size(); i++)
-		if (released[i] == id) return true;
+	for(auto i(0); i < released.size(); i++)
+		if(released[i] == id) return true;
 	return false;
 }
 
@@ -369,7 +372,7 @@ std::string AnnStickEvent::getVendor() const
 
 AnnStickPov AnnStickEvent::getPov(PovId pov)
 {
-	if (pov < getNbPov())
+	if(pov < getNbPov())
 		return povs[pov];
 	AnnStickPov p;
 	return p;
@@ -385,10 +388,11 @@ size_t AnnStickEvent::getNbPov() const
 	return povs.size();
 }
 
-AnnTimeEvent::AnnTimeEvent() : AnnEvent()
+AnnTimeEvent::AnnTimeEvent() :
+ AnnEvent()
 {
 	type = TIMER_TIMEOUT;
-	tID = -1;
+	tID  = -1;
 }
 
 void AnnTimeEvent::setTimerID(timerID id)
@@ -397,17 +401,17 @@ void AnnTimeEvent::setTimerID(timerID id)
 }
 
 AnnCollisionEvent::AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second, AnnVect3 position, AnnVect3 normal) :
-	a{ first },
-	b{ second },
-	position{ position },
-	normal{ normal }
+ a{ first },
+ b{ second },
+ position{ position },
+ normal{ normal }
 {
 	type = COLLISION;
 }
 
 bool AnnCollisionEvent::hasObject(AnnGameObject* obj) const
 {
-	if (obj == a || obj == b)
+	if(obj == a || obj == b)
 		return true;
 	return false;
 }
@@ -447,8 +451,9 @@ bool AnnCollisionEvent::isWallCollision(const float scalarApprox) const
 	return Ogre::Math::RealEqual(AnnVect3::UNIT_Y.dotProduct(normal), 0, scalarApprox);
 }
 
-AnnPlayerCollisionEvent::AnnPlayerCollisionEvent(AnnGameObject* collided) : AnnEvent(),
-col{ collided }
+AnnPlayerCollisionEvent::AnnPlayerCollisionEvent(AnnGameObject* collided) :
+ AnnEvent(),
+ col{ collided }
 {
 	type = PLAYER_COLLISION;
 }
@@ -465,18 +470,19 @@ timerID AnnTimeEvent::getID() const
 
 AnnTimer::AnnTimer(timerID id, double delay)
 {
-	tID = id;
+	tID			= id;
 	timeoutTime = delay + AnnGetEngine()->getTimeFromStartUp();
 }
 
 bool AnnTimer::isTimeout() const
 {
-	if (AnnGetEngine()->getTimeFromStartUp() >= timeoutTime)
+	if(AnnGetEngine()->getTimeFromStartUp() >= timeoutTime)
 		return true;
 	return false;
 }
 
-JoystickBuffer::JoystickBuffer(OIS::JoyStick* joystick) : oisJoystick(joystick)
+JoystickBuffer::JoystickBuffer(OIS::JoyStick* joystick) :
+ oisJoystick(joystick)
 {
 	id = idcounter++;
 }
@@ -492,10 +498,11 @@ void JoystickBuffer::capture() const
 	oisJoystick->capture();
 }
 
-AnnTriggerEvent::AnnTriggerEvent() : AnnEvent(),
-sender{ nullptr }
+AnnTriggerEvent::AnnTriggerEvent() :
+ AnnEvent(),
+ sender{ nullptr }
 {
-	type = TRIGGER_CONTACT;
+	type	= TRIGGER_CONTACT;
 	contact = false;
 }
 
@@ -510,13 +517,14 @@ AnnTriggerObject* AnnTriggerEvent::getSender() const
 }
 
 AnnHandControllerEvent::AnnHandControllerEvent() :
-	controller(nullptr)
+ controller(nullptr)
 {
 	type = HAND_CONTROLLER;
 }
 
-AnnHandControllerEvent::AnnHandControllerEvent(AnnHandController* controller) : AnnEvent(),
-controller{ controller }
+AnnHandControllerEvent::AnnHandControllerEvent(AnnHandController* controller) :
+ AnnEvent(),
+ controller{ controller }
 {
 	type = HAND_CONTROLLER;
 }
@@ -526,8 +534,9 @@ AnnHandController* AnnHandControllerEvent::_getController() const
 	return controller;
 }
 
-AnnTimeEvent::AnnTimeEvent(const AnnTimer& timer) : AnnEvent(),
-tID{ timer.getID() }
+AnnTimeEvent::AnnTimeEvent(const AnnTimer& timer) :
+ AnnEvent(),
+ tID{ timer.getID() }
 {
 	type = TIMER_TIMEOUT;
 }

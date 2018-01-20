@@ -22,7 +22,6 @@ namespace Annwvyn
 	class AnnDllExport AnnHandControllerAxis
 	{
 	public:
-
 		/// \brief Create an AnnHandControllerAxis object
 		/// \param AxisName Name of the axis
 		/// \param normalizedValue initial value
@@ -59,7 +58,6 @@ namespace Annwvyn
 	class AnnDllExport AnnHandController
 	{
 	public:
-
 		///Destroctor
 		virtual ~AnnHandController() = default;
 
@@ -72,25 +70,26 @@ namespace Annwvyn
 		using proportionalFingerValues = std::array<float, 5>;
 
 		///Identify the controller as "left hand", "right hand" or "invalid hand"
-		enum AnnHandControllerSide : uint8_t { leftHandController = 0, rightHandController = 1, invalidHandController = 2 };
+		enum AnnHandControllerSide : uint8_t { leftHandController	= 0,
+											   rightHandController   = 1,
+											   invalidHandController = 2 };
 
 		///Fix the bitflag at 16bits wide
 		using HandControllerCapabilites_t = uint16_t;
 
 		///List of the capabilities that can be tested against
-		enum HandControllerCapabilites : HandControllerCapabilites_t
-		{
-			None = 0,
-			RotationalTracking = 0b0000000001,		//Can get the orientation of the user hand
-			PositionalTracking = 0b0000000010,		//Can get the position of the user hand
-			AngularAccelerationTracking = 0b0000000100,		//Can get the current angular acceleration
-			LinearAccelerationTracking = 0b0000001000,		//Can get the current linear acceleration
-			ButtonInputs = 0b0000010000,		//Can get inputs form buttons
-			AnalogInputs = 0b0000100000,		//Can get inputs from axes
-			HapticFeedback = 0b0001000000,		//Can produce haptic feedback
-			DiscreteHandGestures = 0b0010000000,		//Can detect some hand gestures (Like the touch controller does)
-			SkeletalFingerTracking = 0b0100000000,		//Can fully get the pose of an hand (Like on the LEAP Motion controller)
-			ProportionalFingerTrackng = 0b1000000000,		//Can get a 5 axis analog representation of the fingers
+		enum HandControllerCapabilites : HandControllerCapabilites_t {
+			None						= 0,
+			RotationalTracking			= 0b0000000001, //Can get the orientation of the user hand
+			PositionalTracking			= 0b0000000010, //Can get the position of the user hand
+			AngularAccelerationTracking = 0b0000000100, //Can get the current angular acceleration
+			LinearAccelerationTracking  = 0b0000001000, //Can get the current linear acceleration
+			ButtonInputs				= 0b0000010000, //Can get inputs form buttons
+			AnalogInputs				= 0b0000100000, //Can get inputs from axes
+			HapticFeedback				= 0b0001000000, //Can produce haptic feedback
+			DiscreteHandGestures		= 0b0010000000, //Can detect some hand gestures (Like the touch controller does)
+			SkeletalFingerTracking		= 0b0100000000, //Can fully get the pose of an hand (Like on the LEAP Motion controller)
+			ProportionalFingerTrackng   = 0b1000000000, //Can get a 5 axis analog representation of the fingers
 		};
 
 		///Construct a Controller object
@@ -194,7 +193,6 @@ namespace Annwvyn
 		virtual AnnHandControllerGestureHash gestcurrentGesturesHash();
 
 	protected:
-
 		///Capabilities of this controller
 		HandControllerCapabilites_t capabilites;
 
@@ -227,7 +225,7 @@ namespace Annwvyn
 		AnnHandControllerSide side;
 
 		///Some Ogre Scene Nodes
-		Ogre::SceneNode* node, *grabbed;
+		Ogre::SceneNode *node, *grabbed;
 
 		///Currently attached entity
 		Ogre::Item* model;

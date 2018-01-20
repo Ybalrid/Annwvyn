@@ -6,7 +6,8 @@ namespace Annwvyn
 	class TestLevel : LEVEL
 	{
 	public:
-		TestLevel() : constructLevel()
+		TestLevel() :
+		 constructLevel()
 		{}
 
 		void load() override
@@ -24,9 +25,10 @@ namespace Annwvyn
 	class TestLevelLoad : public TestLevel
 	{
 	public:
-		TestLevelLoad(bool& loadState, bool& unloadState) : TestLevel(),
-			loadState(loadState),
-			unloadState(unloadState)
+		TestLevelLoad(bool& loadState, bool& unloadState) :
+		 TestLevel(),
+		 loadState(loadState),
+		 unloadState(unloadState)
 		{}
 
 		void load() override
@@ -56,12 +58,12 @@ namespace Annwvyn
 
 	TEST_CASE("Level manager insertion test")
 	{
-		auto GameEngine = bootstrapEmptyEngine("TestLevel");
+		auto GameEngine   = bootstrapEmptyEngine("TestLevel");
 		auto LevelManager = AnnGetLevelManager();
 
-		auto first = std::make_shared<TestLevel>();
+		auto first  = std::make_shared<TestLevel>();
 		auto second = std::make_shared<TestLevel>();
-		auto third = std::make_shared<TestLevel>();
+		auto third  = std::make_shared<TestLevel>();
 
 		LevelManager->addLevel(first);
 		LevelManager->addLevel(second);
@@ -85,7 +87,7 @@ namespace Annwvyn
 		auto loadStatus{ false }, unloadStatus{ false };
 
 		{
-			auto GameEngine = bootstrapEmptyEngine("TestLevel");
+			auto GameEngine   = bootstrapEmptyEngine("TestLevel");
 			auto LevelManager = AnnGetLevelManager();
 
 			LevelManager->addLevel(std::make_shared<TestLevelLoad>(loadStatus, unloadStatus));
@@ -93,9 +95,9 @@ namespace Annwvyn
 
 			AnnGetOnScreenConsole()->setVisible(true);
 
-			for (auto i{ 0 }; i < 3; ++i)
+			for(auto i{ 0 }; i < 3; ++i)
 				GameEngine->refresh();
-		}//Scope "GameEngine"'s lifetime
+		} //Scope "GameEngine"'s lifetime
 
 		REQUIRE(loadStatus);
 		REQUIRE(unloadStatus);
@@ -107,22 +109,24 @@ namespace Annwvyn
 		{
 			bool& ogreOk;
 			bool& floorOk;
+
 		public:
-			TestLevelLoadObjects(bool& forOgre, bool& forFloor) : constructLevel(),
-				ogreOk{ forOgre }, floorOk{ forFloor } {}
+			TestLevelLoadObjects(bool& forOgre, bool& forFloor) :
+			 constructLevel(),
+			 ogreOk{ forOgre }, floorOk{ forFloor } {}
 
 			void load() override
 			{
 				auto floor = addGameObject("floorplane.mesh", "Floor");
-				auto ogre = addGameObject("Sinbad.mesh", "Ogre");
+				auto ogre  = addGameObject("Sinbad.mesh", "Ogre");
 
 				auto sun = addLightObject();
 				sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 				sun->setDirection({ -0.0625, -1, 1 });
 
 				auto gameObjectManager = AnnGetGameObjectManager();
-				floorOk = gameObjectManager->getGameObject("Floor") != nullptr;
-				ogreOk = gameObjectManager->getGameObject("Ogre") != nullptr;
+				floorOk				   = gameObjectManager->getGameObject("Floor") != nullptr;
+				ogreOk				   = gameObjectManager->getGameObject("Ogre") != nullptr;
 			}
 
 			void runLogic() override {}
@@ -132,13 +136,13 @@ namespace Annwvyn
 
 		//Scope the lifetime of GameEngine this way
 		{
-			auto GameEngine = bootstrapEmptyEngine("TestLevel");
+			auto GameEngine   = bootstrapEmptyEngine("TestLevel");
 			auto levelManager = AnnGetLevelManager();
 
 			levelManager->addLevel(std::make_shared<TestLevelLoadObjects>(ogreOk, floorOk));
 			levelManager->jumpToFirstLevel();
 
-			for (auto i = 0; i < 3; ++i)
+			for(auto i = 0; i < 3; ++i)
 			{
 				GameEngine->refresh();
 			}
@@ -150,24 +154,23 @@ namespace Annwvyn
 
 	TEST_CASE("Level Manager add geometry via manager")
 	{
-		auto GameEngine = bootstrapTestEngine("TestLevel");
-		auto levelManager = AnnGetLevelManager();
+		auto GameEngine		   = bootstrapTestEngine("TestLevel");
+		auto levelManager	  = AnnGetLevelManager();
 		auto gameObjectManager = AnnGetGameObjectManager();
 		auto ogre{ false }, floor{ false };
 		AnnLevelPtr level;
 		levelManager->addLevel(level = std::make_shared<TestLevel>());
 		levelManager->jumpToFirstLevel();
 
-		for (auto i{ 0 }; i < 3; i++)
+		for(auto i{ 0 }; i < 3; i++)
 			GameEngine->refresh();
 
 		AnnGameObjectPtr sinbad;
-		levelManager->addToCurrentLevel(sinbad =
-			gameObjectManager->createGameObject("sinbad.mesh", "MySinbad"));
+		levelManager->addToCurrentLevel(sinbad = gameObjectManager->createGameObject("sinbad.mesh", "MySinbad"));
 
 		REQUIRE(gameObjectManager->getGameObject("MySinbad") == sinbad);
 		auto levelContent = level->getContent();
-		auto result = std::find(std::begin(levelContent), std::end(levelContent), sinbad);
+		auto result		  = std::find(std::begin(levelContent), std::end(levelContent), sinbad);
 		REQUIRE(result != std::end(levelContent));
 		REQUIRE(*result == sinbad);
 	}

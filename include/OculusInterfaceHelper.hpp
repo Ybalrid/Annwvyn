@@ -8,7 +8,7 @@
 
 #include "systemMacro.h"
 
- //Oculus VR API
+//Oculus VR API
 #include <OVR_CAPI.h>
 #include <Extras/OVR_Math.h>
 #include <Ogre.h>
@@ -18,7 +18,6 @@
 class AnnDllExport OculusInterfaceHelper
 {
 public:
-
 	///Construct an OculusInterfaceHelper object. This create an Oculus Session for communication with the Oculus Runtime
 	OculusInterfaceHelper();
 

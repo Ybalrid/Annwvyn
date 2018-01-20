@@ -17,7 +17,7 @@ namespace Annwvyn
 		std::vector<byte> data;
 
 		///Read bytes from a data stream and stick them inside the "data" re-sizable array
-		void readFromStream(Ogre::DataStreamPtr &stream);
+		void readFromStream(Ogre::DataStreamPtr& stream);
 
 		///Utility class that perform a static_cast<AnnAudioFile*> on the pointer you give it.
 		inline static AnnAudioFile* cast(void* audioFileRawPtr);
@@ -35,11 +35,11 @@ namespace Annwvyn
 	public:
 		///Create an audio file. This is intended to be called by a resource manager, not by the user.
 		AnnAudioFile(Ogre::ResourceManager* creator,
-			const Ogre::String& name,
-			Ogre::ResourceHandle handle,
-			const Ogre::String& group,
-			bool isManual = false,
-			Ogre::ManualResourceLoader* loader = nullptr);
+					 const Ogre::String& name,
+					 Ogre::ResourceHandle handle,
+					 const Ogre::String& group,
+					 bool isManual						= false,
+					 Ogre::ManualResourceLoader* loader = nullptr);
 
 		virtual ~AnnAudioFile();
 
@@ -64,7 +64,7 @@ namespace Annwvyn
 		static sf_count_t sfVioRead(void* ptr, sf_count_t count, void* audiFileRawPtr);
 
 		///Do nothing. Dummy function just to fill up the interface. Give that function pointer to libsndfile.
-		static sf_count_t sfVioWriteDummy(const void *, sf_count_t, void*);
+		static sf_count_t sfVioWriteDummy(const void*, sf_count_t, void*);
 
 		///return current cursor position. Give that function pointer to libsndfile.
 		static sf_count_t sfVioTell(void* audioFileRawPtr);
@@ -86,9 +86,7 @@ namespace Annwvyn
 	{
 	protected:
 		///Create the audio file resource itself
-		Ogre::Resource* createImpl(const Ogre::String &name, Ogre::ResourceHandle handle,
-			const Ogre::String &group, bool isManual, Ogre::ManualResourceLoader *loader,
-			const Ogre::NameValuePairList *createParams) override;
+		Ogre::Resource* createImpl(const Ogre::String& name, Ogre::ResourceHandle handle, const Ogre::String& group, bool isManual, Ogre::ManualResourceLoader* loader, const Ogre::NameValuePairList* createParams) override;
 
 	public:
 		///Construct an AnnAudioFileManager. Will register itsel to the Ogre ResourceGroupManager.

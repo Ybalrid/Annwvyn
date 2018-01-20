@@ -26,8 +26,8 @@ size_t AnnScriptFile::calculateSize() const
 }
 
 AnnScriptFile::AnnScriptFile(ResourceManager* creator, const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader) :
-	Resource(creator, name, handle, group, isManual, loader),
-	loadedByChaiScript(false)
+ Resource(creator, name, handle, group, isManual, loader),
+ loadedByChaiScript(false)
 {
 	createParamDictionary("AnnScriptFile");
 }
@@ -76,12 +76,13 @@ Resource* AnnScriptFileResourceManager::createImpl(const String& name, ResourceH
 }
 
 //Res Manager
-template<> AnnScriptFileResourceManager *Singleton<AnnScriptFileResourceManager>::msSingleton = nullptr;
+template <>
+AnnScriptFileResourceManager* Singleton<AnnScriptFileResourceManager>::msSingleton = nullptr;
 
 AnnScriptFileResourceManager::AnnScriptFileResourceManager()
 {
 	mResourceType = "AnnScriptFile";
-	mLoadOrder = 1; //Theses resources are super light, and are part of the gameplay code of the game
+	mLoadOrder	= 1; //Theses resources are super light, and are part of the gameplay code of the game
 	ResourceGroupManager::getSingleton()._registerResourceManager(mResourceType, this);
 }
 

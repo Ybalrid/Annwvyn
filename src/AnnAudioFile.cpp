@@ -36,8 +36,8 @@ size_t AnnAudioFile::calculateSize() const
 }
 
 AnnAudioFile::AnnAudioFile(ResourceManager* creator, const String& name, ResourceHandle handle, const String& group, bool isManual, ManualResourceLoader* loader) :
-	Resource(creator, name, handle, group, isManual, loader),
-	sf_offset(0)
+ Resource(creator, name, handle, group, isManual, loader),
+ sf_offset(0)
 {
 	createParamDictionary("AnnAudioFile");
 }
@@ -58,12 +58,13 @@ Resource* AnnAudioFileManager::createImpl(const String& name, ResourceHandle han
 }
 
 //Singleton
-template<> AnnAudioFileManager *Singleton<AnnAudioFileManager>::msSingleton = nullptr;
+template <>
+AnnAudioFileManager* Singleton<AnnAudioFileManager>::msSingleton = nullptr;
 
 AnnAudioFileManager::AnnAudioFileManager()
 {
 	mResourceType = "AnnAudioFile";
-	mLoadOrder = 2;
+	mLoadOrder	= 2;
 	ResourceGroupManager::getSingleton()._registerResourceManager(mResourceType, this);
 }
 
@@ -99,23 +100,23 @@ sf_count_t AnnAudioFile::sfVioSeek(sf_count_t offset, int whence, void* audioFil
 {
 	auto file = cast(audioFileRawPtr);
 
-	switch (whence)
+	switch(whence)
 	{
-	case SEEK_CUR:
-		//AnnDebug() << "sndfile seek cursor position " << offset << " from current";
-		file->sf_offset += offset;
-		break;
-	case SEEK_END:
-		//AnnDebug() << "sndfile seek cursor position " << offset << " from end";
-		file->sf_offset = file->getSize() - offset;
-		break;
-	case SEEK_SET:
-		//AnnDebug() << "sndfile seek cursor position " << offset;
-		file->sf_offset = offset;
-		break;
-	default:
-		AnnDebug() << "invalid whence when sfVioSeek";
-		break;
+		case SEEK_CUR:
+			//AnnDebug() << "sndfile seek cursor position " << offset << " from current";
+			file->sf_offset += offset;
+			break;
+		case SEEK_END:
+			//AnnDebug() << "sndfile seek cursor position " << offset << " from end";
+			file->sf_offset = file->getSize() - offset;
+			break;
+		case SEEK_SET:
+			//AnnDebug() << "sndfile seek cursor position " << offset;
+			file->sf_offset = offset;
+			break;
+		default:
+			AnnDebug() << "invalid whence when sfVioSeek";
+			break;
 	}
 
 	return file->sf_offset;
@@ -128,7 +129,7 @@ sf_count_t AnnAudioFile::sfVioRead(void* ptr, sf_count_t count, void* audioFileR
 	//Get the absolute start position in the array
 	const auto start = file->sf_offset;
 	//For bound checking
-	const auto stop = std::min(size_t(start + count), file->getSize());
+	const auto stop		   = std::min(size_t(start + count), file->getSize());
 	const auto bytesCopied = stop - start;
 
 	//Load bytes into output buffer
@@ -161,17 +162,17 @@ std::unique_ptr<SF_VIRTUAL_IO> AnnAudioFile::sfVioStruct{ nullptr };
 SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 {
 	//Lazy initialize the virtual IO structure
-	if (!sfVioStruct)
+	if(!sfVioStruct)
 	{
 		AnnDebug() << "Initializing the Virtual I/O callbacks for libsndfile";
 		sfVioStruct = std::make_unique<SF_VIRTUAL_IO>();
 
 		//Fill it with function pointers to static methods...
 		sfVioStruct->get_filelen = &AnnAudioFile::sfVioGetFileLen;
-		sfVioStruct->read = &AnnAudioFile::sfVioRead;
-		sfVioStruct->write = &AnnAudioFile::sfVioWriteDummy;
-		sfVioStruct->seek = &AnnAudioFile::sfVioSeek;
-		sfVioStruct->tell = &AnnAudioFile::sfVioTell;
+		sfVioStruct->read		 = &AnnAudioFile::sfVioRead;
+		sfVioStruct->write		 = &AnnAudioFile::sfVioWriteDummy;
+		sfVioStruct->seek		 = &AnnAudioFile::sfVioSeek;
+		sfVioStruct->tell		 = &AnnAudioFile::sfVioTell;
 	}
 
 	return sfVioStruct.get();
@@ -179,7 +180,7 @@ SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 
 void AnnAudioFile::clearSndFileVioStruct()
 {
-	if (sfVioStruct) sfVioStruct.reset();
+	if(sfVioStruct) sfVioStruct.reset();
 }
 
 size_t AnnAudioFile::getSize() const

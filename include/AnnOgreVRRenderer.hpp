@@ -58,17 +58,15 @@ namespace Annwvyn
 		const size_t numberOfThreads;
 
 		///Indexes of the compositor workspace
-		enum compositorIndex : size_t
-		{
-			leftEyeCompositor = 0,
+		enum compositorIndex : size_t {
+			leftEyeCompositor  = 0,
 			rightEyeCompositor = 1,
-			monoCompositor = 2,
-			nbCompositor = 3,
+			monoCompositor	 = 2,
+			nbCompositor	   = 3,
 		};
 
 		///Liist of the levels of shadow filtering available
-		enum class ShadowFiltering
-		{
+		enum class ShadowFiltering {
 			low,
 			medium,
 			high
@@ -85,8 +83,7 @@ namespace Annwvyn
 		static void setAntiAliasingLevel(const uint8_t AA);
 
 		///Type of Debug render you can do
-		enum DebugMode
-		{
+		enum DebugMode {
 			RAW_BUFFER,
 			HMD_MIRROR,
 			MONOSCOPIC,
@@ -163,7 +160,7 @@ namespace Annwvyn
 		virtual void recenter() = 0;
 
 		///(Optional) Cycle through the client debug display if available.
-		virtual void cycleDebugHud() {};
+		virtual void cycleDebugHud(){};
 
 		///Set the distance from the viewpoint to the near clipping distance plane
 		void setNearClippingDistance(float distance);
@@ -273,7 +270,6 @@ namespace Annwvyn
 		static std::string getAudioDeviceNameFromGUID(GUID guid);
 
 	private:
-
 		///GL version to use
 		const GLuint glMajor, glMinor;
 
@@ -287,7 +283,6 @@ namespace Annwvyn
 		int windowW, windowH;
 
 	protected:
-
 		///Handle the window messages and resize event
 		void handleWindowMessages();
 
@@ -349,7 +344,7 @@ namespace Annwvyn
 		Ogre::RenderTexture* rttEyesCombined;
 
 		///Couple of render textures separated
-		std::array <Ogre::RenderTexture*, 2> rttEyeSeparated;
+		std::array<Ogre::RenderTexture*, 2> rttEyeSeparated;
 
 		///Level of anti aliasing to use.
 		static uint8_t AALevel;
@@ -380,7 +375,8 @@ namespace Annwvyn
 
 	private:
 		///left, right enums
-		enum side : uint8_t { left = 0x0, right = 0x1 };
+		enum side : uint8_t { left  = 0x0,
+							  right = 0x1 };
 	};
 
 	using AnnOgreVRRendererPtr = std::shared_ptr<AnnOgreVRRenderer>;

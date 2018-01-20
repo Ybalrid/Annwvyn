@@ -28,12 +28,11 @@ namespace Annwvyn
 	class AnnDllExport AnnConsole : public AnnSubSystem
 	{
 	public:
-
-		static constexpr auto CONSOLE_BUFFER = 17;
+		static constexpr auto CONSOLE_BUFFER		= 17;
 		static constexpr auto MAX_CONSOLE_LOG_WIDTH = 72;
-		static constexpr auto BASE = 256;
-		static constexpr auto MARGIN = 4;
-		static constexpr auto CONSOLE_HISTORY = 64;
+		static constexpr auto BASE					= 256;
+		static constexpr auto MARGIN				= 4;
+		static constexpr auto CONSOLE_HISTORY		= 64;
 
 		///Construct the console. This should only be called by AnnEngine itself when the camera and ogre are operational
 		AnnConsole();
@@ -65,18 +64,18 @@ namespace Annwvyn
 		void bufferClear();
 
 		///Array of forbidden keyword to check
-		std::array<const char*, 2> forbidden = { {"var", "auto"} };
+		std::array<const char*, 2> forbidden = { { "var", "auto" } };
 
 		///This piece of code if from the Ogre Wiki. Write text to a texture using Ogre::FontManager to create glyphs
-		static void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue &color, char justify = 'l', bool wordwrap = false);
+		static void WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTexture, Ogre::Image::Box destRectangle, Ogre::Font* font, const Ogre::ColourValue& color, char justify = 'l', bool wordwrap = false);
 
 		///return true if pointed to an empty slot
 		bool setFromPointedHistory();
 
 		///Method to be called for navigation keys
 		void notifyNavigationKey(KeyCode::code code);
-	private:
 
+	private:
 		///Cleanup and run the user input.
 		void runInput(std::string& input);
 

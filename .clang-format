@@ -23,7 +23,6 @@ BraceWrapping:
   AfterFunction: true
   AfterNamespace: true
   AfterUnion: true
-  AfterExternBlock: true
   BeforeCatch: true
   BeforeElse: true
   IndentBraces: false
@@ -35,7 +34,6 @@ ColumnLimit: 0
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 1
 IndentCaseLabels: true
-IndentPPDirectives: AfterHash
 Language: Cpp
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: All

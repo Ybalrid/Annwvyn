@@ -10,7 +10,6 @@ namespace Annwvyn
 	class AnnDllExport AnnOgreNoVRRenderer : public AnnOgreVRRenderer
 	{
 	public:
-
 		///Create the no vr renderer. This will not output to a VR system but can be useful for trying stuff anyway.
 		AnnOgreNoVRRenderer(std::string winName = "OgreVRNoVRRender");
 
@@ -57,7 +56,6 @@ namespace Annwvyn
 		void handleIPDChange() override;
 
 	private:
-
 		///Singleton pointer
 		static AnnOgreNoVRRenderer* noVRself;
 

@@ -28,14 +28,14 @@ void Ann3DTextPlane::createFont(const int& size)
 void Ann3DTextPlane::createPlane()
 {
 	auto smgr(AnnGetEngine()->getSceneManager());
-	node = smgr->getRootSceneNode()->createChildSceneNode();
+	node		= smgr->getRootSceneNode()->createChildSceneNode();
 	renderPlane = smgr->createManualObject();
 
 	createMaterial();
 
 	renderPlane->begin(materialName, Ogre::OT_TRIANGLE_STRIP);
 
-	for (char i(0); i < 4; i++)
+	for(char i(0); i < 4; i++)
 	{
 		renderPlane->position(vertices[i]);
 		renderPlane->normal(0, 0, 1);
@@ -50,26 +50,26 @@ void Ann3DTextPlane::createPlane()
 }
 
 Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str, const int& size, const float& resolution, const string& fName, const string& TTF) :
-	fontName(fName),
-	fontTTF(TTF),
-	caption(str),
-	width(w),
-	height(h),
-	resolutionFactor(resolution),
-	textColor(AnnColor(1, 0, 0)),
-	bgColor(AnnColor(0, 0, 0, 0)),
-	autoUpdate(false),
-	fontSize(size),
-	dpi(resolution),
-	pixelMargin(0),
-	margin(0),
-	useImageAsBackground(false)
+ fontName(fName),
+ fontTTF(TTF),
+ caption(str),
+ width(w),
+ height(h),
+ resolutionFactor(resolution),
+ textColor(AnnColor(1, 0, 0)),
+ bgColor(AnnColor(0, 0, 0, 0)),
+ autoUpdate(false),
+ fontSize(size),
+ dpi(resolution),
+ pixelMargin(0),
+ margin(0),
+ useImageAsBackground(false)
 {
 	AnnDebug() << width << "x" << height << " " << dpi << "dpi 3D Text plane created";
-	if (caption.empty())
+	if(caption.empty())
 		AnnDebug() << "No caption yet";
 
-	if (fontName.empty())
+	if(fontName.empty())
 	{
 		AnnDebug() << "You need set a font to initialize a text render plane";
 		throw AnnInitializationError(ANN_ERR_NOTINIT, "3D Text plane initialized without a valid font");
@@ -82,22 +82,22 @@ Ann3DTextPlane::Ann3DTextPlane(const float& w, const float& h, const string& str
 	createPlane();
 
 	//Create or retrieve the font from the font manager. Will also create the font manager if not available yet (unlikely since the font manager is initialized by the on screen console)
-	if (!fontName.empty())
+	if(!fontName.empty())
 	{
 		//Be sure that the font manager exist, if not, instantiate one (singleton)
 		// ReSharper disable once CppNonReclaimedResourceAcquisition - Resource cleared by Ogre itself.
-		if (!Ogre::FontManager::getSingletonPtr()) OGRE_NEW Ogre::FontManager();
+		if(!Ogre::FontManager::getSingletonPtr()) OGRE_NEW Ogre::FontManager();
 
 		//Attempt to retrieve the font
 		font = Ogre::FontManager::getSingleton().getByName(fontName);
 
 		//Need to create the font
-		if (font.isNull())
+		if(font.isNull())
 			createFont(size);
 	}
 
 	//If there's text to draw, draw it
-	if (!caption.empty()) update();
+	if(!caption.empty()) update();
 }
 
 Ann3DTextPlane::~Ann3DTextPlane()
@@ -111,7 +111,7 @@ Ann3DTextPlane::~Ann3DTextPlane()
 	Ogre::TextureManager::getSingleton().remove(texture->getName());
 	texture.setNull();
 
-	if (!bgTexture.isNull())
+	if(!bgTexture.isNull())
 	{
 		Ogre::TextureManager::getSingleton().remove(bgTexture->getName());
 		bgTexture.setNull();
@@ -123,7 +123,7 @@ Ann3DTextPlane::~Ann3DTextPlane()
 
 void Ann3DTextPlane::setCaption(const std::string& newCaption)
 {
-	caption = newCaption;
+	caption		 = newCaption;
 	needUpdating = true;
 	autoUpdateCheck();
 }
@@ -174,16 +174,19 @@ void Ann3DTextPlane::createMaterial()
 	// 5) alpha blending should work the same
 
 	texture = Ogre::TextureManager::getSingleton() //Texture is a single slice array
-		.createManual(AnnGetStringUtility()->getRandomString(),
-			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			Ogre::TEX_TYPE_2D_ARRAY,
-			Ogre::uint(width * resolutionFactor),
-			Ogre::uint(height * resolutionFactor), 1,
-			12, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET | Ogre::TU_AUTOMIPMAP);
+				  .createManual(AnnGetStringUtility()->getRandomString(),
+								Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+								Ogre::TEX_TYPE_2D_ARRAY,
+								Ogre::uint(width * resolutionFactor),
+								Ogre::uint(height * resolutionFactor),
+								1,
+								12,
+								Ogre::PF_R8G8B8A8,
+								Ogre::TU_RENDERTARGET | Ogre::TU_AUTOMIPMAP);
 
 	datablock->setTexture(Ogre::PBSM_DIFFUSE, 0, texture);
 	datablock->setRoughness(0.001);
-	datablock->setSpecular({ 0.25,0.25,0.25 });
+	datablock->setSpecular({ 0.25, 0.25, 0.25 });
 	//Calling this will by default use the "transparent" (not fade) transparency mode, will read alpha from texture and will update the blendblock
 	datablock->setTransparency(1);
 	datablock->setTwoSidedLighting(true);
@@ -191,7 +194,7 @@ void Ann3DTextPlane::createMaterial()
 
 void Ann3DTextPlane::autoUpdateCheck()
 {
-	if (autoUpdate) update();
+	if(autoUpdate) update();
 }
 
 void Ann3DTextPlane::generateMaterialName()
@@ -201,21 +204,21 @@ void Ann3DTextPlane::generateMaterialName()
 
 void Ann3DTextPlane::setTextColor(const AnnColor& color)
 {
-	textColor = color;
+	textColor	= color;
 	needUpdating = true;
 	autoUpdateCheck();
 }
 
 void Ann3DTextPlane::setBackgroundColor(const AnnColor& color)
 {
-	bgColor = color;
+	bgColor		 = color;
 	needUpdating = true;
 	autoUpdateCheck();
 }
 
 void Ann3DTextPlane::update()
 {
-	if (!needUpdating) return;
+	if(!needUpdating) return;
 	renderText();
 	needUpdating = false;
 }
@@ -237,20 +240,20 @@ void Ann3DTextPlane::setTextAlign(TextAlign talign)
 
 AnnVect3 Ann3DTextPlane::getPosition()
 {
-	if (node) return node->getPosition();
+	if(node) return node->getPosition();
 	return AnnVect3();
 }
 
 AnnQuaternion Ann3DTextPlane::getOrientation()
 {
-	if (node) return node->getOrientation();
+	if(node) return node->getOrientation();
 	return AnnQuaternion();
 }
 
 void Ann3DTextPlane::setMargin(float m)
 {
-	margin = m;
-	pixelMargin = static_cast<unsigned int>(resolutionFactor*margin);
+	margin		= m;
+	pixelMargin = static_cast<unsigned int>(resolutionFactor * margin);
 
 	needUpdating = true;
 	autoUpdateCheck();
@@ -258,7 +261,7 @@ void Ann3DTextPlane::setMargin(float m)
 
 void Ann3DTextPlane::setBackgroundImage(const string& imgName)
 {
-	bgTexture = Ogre::TextureManager::getSingleton().load(imgName, AnnResourceManager::getDefaultResourceGroupName());
+	bgTexture			 = Ogre::TextureManager::getSingleton().load(imgName, AnnResourceManager::getDefaultResourceGroupName());
 	useImageAsBackground = true;
 }
 
@@ -266,23 +269,21 @@ void Ann3DTextPlane::renderText()
 {
 	clearTexture();
 	AnnConsole::WriteToTexture(caption,
-		texture,
+							   texture,
 
-		Ogre::Image::Box{ pixelMargin, pixelMargin,
-			uint32_t(width * resolutionFactor - pixelMargin),
-			uint32_t(height * resolutionFactor - pixelMargin) },
+							   Ogre::Image::Box{ pixelMargin, pixelMargin, uint32_t(width * resolutionFactor - pixelMargin), uint32_t(height * resolutionFactor - pixelMargin) },
 
-		font.getPointer(),
-		textColor.getOgreColor(),
-		char(align),
-		true);
+							   font.getPointer(),
+							   textColor.getOgreColor(),
+							   char(align),
+							   true);
 
 	needUpdating = false;
 }
 
 void Ann3DTextPlane::clearTexture()
 {
-	if (useImageAsBackground)
+	if(useImageAsBackground)
 	{
 		//Clear the texture with the content of the background
 		bgTexture->copyToTexture(texture);
@@ -292,14 +293,15 @@ void Ann3DTextPlane::clearTexture()
 		/*TODO ISSUE try to use Ogre v2 here, not v1 interfaces*/
 
 		auto textureBuffer = texture->getBuffer();
-		const auto w = textureBuffer->getWidth();
-		const auto h = textureBuffer->getHeight();
+		const auto w	   = textureBuffer->getWidth();
+		const auto h	   = textureBuffer->getHeight();
 
 		Ogre::Image::Box imageBox(0, 0, w, h);
 		auto pixelBox = textureBuffer->lock(imageBox, Ogre::v1::HardwareBuffer::HBL_NORMAL);
 
-		for (size_t j(0); j < h; j++) for (size_t i(0); i < w; i++)
-			pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
+		for(size_t j(0); j < h; j++)
+			for(size_t i(0); i < w; i++)
+				pixelBox.setColourAt(bgColor.getOgreColor(), i, j, 0);
 
 		textureBuffer->unlock();
 	}

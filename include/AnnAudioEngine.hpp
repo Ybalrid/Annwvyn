@@ -155,7 +155,7 @@ namespace Annwvyn
 		void update() override;
 
 		///Detect playback devices from the device enumeration string
-		void detectPlaybackDevices(const char *list);
+		void detectPlaybackDevices(const char* list);
 
 		///The last error this class has generated
 		std::string lastError;

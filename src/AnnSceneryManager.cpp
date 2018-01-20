@@ -7,19 +7,20 @@
 
 using namespace Annwvyn;
 
-AnnSceneryManager::AnnSceneryManager(AnnOgreVRRendererPtr rendererFromEngine) : AnnSubSystem("SceneryManager"),
-smgr(AnnGetEngine()->getSceneManager()),
-renderer(rendererFromEngine),
-defaultExposure(0.0f),
-defaultMinAutoExposure(0),
-defaultMaxAutoExposure(0),
-defaultSkyColorMultiplier(15.f),
-defaultBloom(5),
-defaultUpperAmbientLightMul(2.5f),
-defaultLowerAmbientLightMul(2.925f),
-defaultSkyColor(0.05f, 0.45f, 1.f),
-defaultUpperAmbient(0.3f, 0.5f, 0.7f),
-defaultLowerAmbient(0.6f, 0.45f, 0.3f)
+AnnSceneryManager::AnnSceneryManager(AnnOgreVRRendererPtr rendererFromEngine) :
+ AnnSubSystem("SceneryManager"),
+ smgr(AnnGetEngine()->getSceneManager()),
+ renderer(rendererFromEngine),
+ defaultExposure(0.0f),
+ defaultMinAutoExposure(0),
+ defaultMaxAutoExposure(0),
+ defaultSkyColorMultiplier(15.f),
+ defaultBloom(5),
+ defaultUpperAmbientLightMul(2.5f),
+ defaultLowerAmbientLightMul(2.925f),
+ defaultSkyColor(0.05f, 0.45f, 1.f),
+ defaultUpperAmbient(0.3f, 0.5f, 0.7f),
+ defaultLowerAmbient(0.6f, 0.45f, 0.3f)
 {
 	setDefaultExposure();
 	setDefaultSkyColor();
@@ -30,14 +31,14 @@ defaultLowerAmbient(0.6f, 0.45f, 0.3f)
 void AnnSceneryManager::setAmbientLight(AnnColor upperColor, float upperMul, AnnColor lowerColor, float lowerMul, AnnVect3 direction, float environementMapScaling) const
 {
 	AnnDebug() << "Setting the ambient light to"
-		<< upperColor.getOgreColor()*upperMul << " "
-		<< lowerColor.getOgreColor()*lowerMul << " "
-		<< direction << environementMapScaling;
+			   << upperColor.getOgreColor() * upperMul << " "
+			   << lowerColor.getOgreColor() * lowerMul << " "
+			   << direction << environementMapScaling;
 
 	smgr->setAmbientLight(upperColor.getOgreColor() * upperMul,
-		lowerColor.getOgreColor() * lowerMul,
-		direction,
-		environementMapScaling);
+						  lowerColor.getOgreColor() * lowerMul,
+						  direction,
+						  environementMapScaling);
 }
 
 void AnnSceneryManager::setSkyDomeMaterial(bool activate, const std::string& materialName, float curvature, float tiling) const

@@ -13,7 +13,8 @@
 
 using namespace Annwvyn;
 
-AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager"), halfPos(true), halfTexCoord(true), qTan(true)
+AnnGameObjectManager::AnnGameObjectManager() :
+ AnnSubSystem("GameObjectManager"), halfPos(true), halfTexCoord(true), qTan(true)
 {
 	//There will only be one manager, set the id to 0
 	autoID = 0;
@@ -22,7 +23,7 @@ AnnGameObjectManager::AnnGameObjectManager() : AnnSubSystem("GameObjectManager")
 void AnnGameObjectManager::update()
 {
 	//Run animations and update OpenAL sources position
-	for (auto gameObject : Objects)
+	for(auto gameObject : Objects)
 	{
 		gameObject->addAnimationTime(AnnGetEngine()->getFrameTime());
 		gameObject->updateOpenAlPos();
@@ -34,12 +35,12 @@ void AnnGameObjectManager::update()
 Ogre::MeshPtr AnnGameObjectManager::getAndConvertFromV1Mesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh) const
 {
 	static const std::string sufix = "_V2mesh";
-	const auto meshManager = Ogre::MeshManager::getSingletonPtr();
+	const auto meshManager		   = Ogre::MeshManager::getSingletonPtr();
 
 	v1Mesh = Ogre::v1::MeshManager::getSingleton().load(meshName,
-		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
-		Ogre::v1::HardwareBuffer::HBU_STATIC,
-		Ogre::v1::HardwareBuffer::HBU_STATIC);
+														Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+														Ogre::v1::HardwareBuffer::HBU_STATIC,
+														Ogre::v1::HardwareBuffer::HBU_STATIC);
 
 	//Generate the name of the v2 mesh
 	auto v2meshName = meshName + sufix;
@@ -47,7 +48,7 @@ Ogre::MeshPtr AnnGameObjectManager::getAndConvertFromV1Mesh(const char* meshName
 
 	//v2Mesh
 	v2Mesh = meshManager->getByName(v2meshName);
-	if (!v2Mesh) //create and import
+	if(!v2Mesh) //create and import
 	{
 		AnnDebug() << v2meshName << " doesn't exist yet in the v2 MeshManager, creating it and loading the v1 " << meshName << " geometry";
 		v2Mesh = meshManager->createManual(v2meshName, AnnResourceManager::getDefaultResourceGroupName());
@@ -84,13 +85,13 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char
 	//id will be unique to every non-identified object.
 	//The identifier name can be empty, meaning that we have to figure out an unique name.
 	//In that case we will append to the entity name + a number that will always be incremented.
-	if (identifier.empty())
+	if(identifier.empty())
 		identifier = meshName + std::to_string(nextID());
 
 	AnnDebug() << "The object " << identifier << " has been created. Annwvyn memory address " << obj;
 	AnnDebug() << "This object take " << sizeof *obj.get() << " bytes";
 
-	obj->name = identifier;
+	obj->name					  = identifier;
 	identifiedObjects[identifier] = obj;
 	Objects.push_back(obj);
 
@@ -102,7 +103,7 @@ void AnnGameObjectManager::removeGameObject(std::shared_ptr<AnnGameObject> objec
 {
 	AnnDebug() << "Removed object " << object->getName();
 
-	if (!object) throw AnnNullGameObjectError();
+	if(!object) throw AnnNullGameObjectError();
 
 	Objects.erase(
 		std::remove(std::begin(Objects), std::end(Objects), object),
@@ -115,9 +116,8 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 {
 	AnnDebug() << "Trying to identify object at address " << static_cast<void*>(node);
 
-	const auto result = std::find_if(begin(Objects), end(Objects),
-		[&](std::shared_ptr<AnnGameObject> object) {return object->getNode() == node; });
-	if (result != end(Objects)) return *result;
+	const auto result = std::find_if(begin(Objects), end(Objects), [&](std::shared_ptr<AnnGameObject> object) { return object->getNode() == node; });
+	if(result != end(Objects)) return *result;
 
 	AnnDebug() << "The Scene Node" << static_cast<void*>(node) << " doesn't belong to any AnnGameObject";
 	return nullptr;
@@ -125,7 +125,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getFromNode(Ogre::SceneNode
 
 void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> light)
 {
-	if (!light) throw AnnNullGameObjectError();
+	if(!light) throw AnnNullGameObjectError();
 	Lights.erase(
 		std::remove(std::begin(Lights), std::end(Lights), light),
 		std::end(Lights));
@@ -136,7 +136,7 @@ void AnnGameObjectManager::removeLightObject(std::shared_ptr<AnnLightObject> lig
 std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject(std::string lightObjectName)
 {
 	AnnDebug("Creating a light");
-	if (lightObjectName.empty()) lightObjectName = "light" + std::to_string(nextID());
+	if(lightObjectName.empty()) lightObjectName = "light" + std::to_string(nextID());
 	auto Light = std::make_shared<AnnLightObject>(AnnGetEngine()->getSceneManager()->createLight(), lightObjectName);
 	Light->setType(AnnLightObject::LightTypes::ANN_LIGHT_POINT);
 	Lights.push_back(Light);
@@ -147,7 +147,7 @@ std::shared_ptr<AnnLightObject> AnnGameObjectManager::createLightObject(std::str
 std::shared_ptr<AnnTriggerObject> AnnGameObjectManager::createTriggerObject(std::string triggerObjectName)
 {
 	AnnDebug("Creating a trigger object");
-	if (triggerObjectName.empty()) triggerObjectName = "trigger" + std::to_string(nextID());
+	if(triggerObjectName.empty()) triggerObjectName = "trigger" + std::to_string(nextID());
 	auto trigger = std::make_shared<AnnTriggerObject>(triggerObjectName);
 	Triggers.push_back(trigger);
 	identifiedTriggerObjects[triggerObjectName] = trigger;
@@ -183,14 +183,13 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 	auto& results(raySceneQuery->execute());
 
 	//read the result list
-	auto result = std::find_if(begin(results), end(results), [](const Ogre::RaySceneQueryResultEntry& entry)
-	{
-		if (entry.movable && entry.movable->getMovableType() == "Item") return true;
+	auto result = std::find_if(begin(results), end(results), [](const Ogre::RaySceneQueryResultEntry& entry) {
+		if(entry.movable && entry.movable->getMovableType() == "Item") return true;
 		return false;
 	});
 
 	//If can't find it? return nullptr
-	if (result == end(results))
+	if(result == end(results))
 		return nullptr; //means that we don't know what the player is looking at.
 
 	//We got access to the node, we want the object
@@ -200,7 +199,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::getGameObject(std::string gameObjectName)
 {
 	const auto object = identifiedObjects.find(gameObjectName);
-	if (object != end(identifiedObjects))
+	if(object != end(identifiedObjects))
 		return object->second;
 	return nullptr;
 }
@@ -208,7 +207,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::getGameObject(std::string g
 std::shared_ptr<AnnLightObject> AnnGameObjectManager::getLightObject(std::string lightObjectName)
 {
 	const auto light = identifiedLights.find(lightObjectName);
-	if (light != end(identifiedLights))
+	if(light != end(identifiedLights))
 		return light->second;
 	return nullptr;
 }
@@ -216,16 +215,16 @@ std::shared_ptr<AnnLightObject> AnnGameObjectManager::getLightObject(std::string
 std::shared_ptr<AnnTriggerObject> Annwvyn::AnnGameObjectManager::getTriggerObject(std::string triggerObjectName)
 {
 	const auto trigger = identifiedTriggerObjects.find(triggerObjectName);
-	if (trigger != end(identifiedTriggerObjects))
+	if(trigger != end(identifiedTriggerObjects))
 		return trigger->second;
 	return nullptr;
 }
 
 void AnnGameObjectManager::setImportParameter(bool halfPosition, bool halfTextureCoord, bool qTangents)
 {
-	halfPos = halfPosition;
+	halfPos		 = halfPosition;
 	halfTexCoord = halfTextureCoord;
-	qTan = qTangents;
+	qTan		 = qTangents;
 }
 
 uID AnnGameObjectManager::nextID()

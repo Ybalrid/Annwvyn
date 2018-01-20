@@ -65,7 +65,6 @@ namespace Annwvyn
 	class AnnDllExport AnnFilesystemManager : public AnnSubSystem
 	{
 	public:
-
 		///Construct FileSystem manager
 		AnnFilesystemManager(std::string title);
 
@@ -179,7 +178,6 @@ namespace Annwvyn
 		//Inherit from this to use your saved data
 
 	public:
-
 		///Default destructor
 		virtual ~AnnSaveDataInterpretor() = default;
 

@@ -7,7 +7,7 @@
 
 using namespace Annwvyn;
 
-btCollisionShape* AnnTriggerObjectShapeGenerator::box(const float& w, const float& h, const float &l)
+btCollisionShape* AnnTriggerObjectShapeGenerator::box(const float& w, const float& h, const float& l)
 {
 	AnnVect3 half = AnnVect3(w, h, l) / 2.f;
 	return new btBoxShape(half.getBtVector());
@@ -19,11 +19,11 @@ btCollisionShape* AnnTriggerObjectShapeGenerator::sphere(const float& r)
 }
 
 AnnTriggerObject::AnnTriggerObject(const std::string& name) :
-	name(name),
-	contactWithPlayer(false),
-	lastFrameContactWithPlayer(false),
-	body(nullptr),
-	shape(nullptr)
+ name(name),
+ contactWithPlayer(false),
+ lastFrameContactWithPlayer(false),
+ body(nullptr),
+ shape(nullptr)
 {
 }
 
@@ -40,7 +40,7 @@ AnnTriggerObject::~AnnTriggerObject()
 
 void AnnTriggerObject::setPosition(AnnVect3 pos)
 {
-	if (!body) return;
+	if(!body) return;
 	auto transform = body->getWorldTransform();
 	transform.setOrigin(pos.getBtVector());
 	body->setWorldTransform(transform);
@@ -48,7 +48,7 @@ void AnnTriggerObject::setPosition(AnnVect3 pos)
 
 void AnnTriggerObject::setOrientation(AnnQuaternion orient)
 {
-	if (!body) return;
+	if(!body) return;
 	auto transform = body->getWorldTransform();
 	transform.setRotation(orient.getBtQuaternion());
 	body->setWorldTransform(transform);
@@ -61,25 +61,25 @@ bool AnnTriggerObject::getContactInformation() const
 
 AnnVect3 AnnTriggerObject::getPosition()
 {
-	if (body)
-		return{ body->getWorldTransform().getOrigin() };
-	return{};
+	if(body)
+		return { body->getWorldTransform().getOrigin() };
+	return {};
 }
 
 AnnQuaternion AnnTriggerObject::getOrientation()
 {
-	if (body)
-		return{ body->getWorldTransform().getRotation() };
-	return{};
+	if(body)
+		return { body->getWorldTransform().getRotation() };
+	return {};
 }
 
 void AnnTriggerObject::setShape(btCollisionShape* shp)
 {
-	if (shape)
+	if(shape)
 	{
 		shape = nullptr;
 	}
-	if (body)
+	if(body)
 	{
 		AnnGetPhysicsEngine()->removeRigidBody(body.get());
 		body = nullptr;
@@ -95,5 +95,5 @@ void AnnTriggerObject::setShape(btCollisionShape* shp)
 void AnnTriggerObject::setContactInformation(bool contact)
 {
 	lastFrameContactWithPlayer = contactWithPlayer;
-	contactWithPlayer = contact;
+	contactWithPlayer		   = contact;
 }

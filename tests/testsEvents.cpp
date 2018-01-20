@@ -12,8 +12,9 @@ namespace Annwvyn
 		class TimerTest : LISTENER
 		{
 		public:
-			TimerTest(bool& state) : constructListener(),
-				id(-1), state(state) {}
+			TimerTest(bool& state) :
+			 constructListener(),
+			 id(-1), state(state) {}
 
 			//Save the ID we will await for
 			void setID(timerID newID) { id = newID; }
@@ -21,7 +22,7 @@ namespace Annwvyn
 			//If we ever get a time event that correspond to the timer we want, set to true
 			void TimeEvent(AnnTimeEvent e) override
 			{
-				if (e.getID() == id) state = true;
+				if(e.getID() == id) state = true;
 			}
 
 		private:
@@ -47,11 +48,11 @@ namespace Annwvyn
 		timerListener->setID(timer);
 
 		//Run 10 seconds of simulation with debug console visible
-		while ((sec = GameEngine->getTimeFromStartupSeconds()) < 4)
+		while((sec = GameEngine->getTimeFromStartupSeconds()) < 4)
 		{
 			GameEngine->refresh();
 			AnnDebug() << "Current time : " << sec;
-			if (state) AnnDebug() << "Timer event caught!!!";
+			if(state) AnnDebug() << "Timer event caught!!!";
 		}
 
 		//Assert that result is right
@@ -63,28 +64,30 @@ namespace Annwvyn
 		class CollisionTest : LISTENER
 		{
 		public:
-			CollisionTest(bool& res, bool& ground) : constructListener(),
-				results(res),
-				groundContact(ground),
-				position{ 0, 0, 0 },
-				normal{ 0, 0 ,0 }
+			CollisionTest(bool& res, bool& ground) :
+			 constructListener(),
+			 results(res),
+			 groundContact(ground),
+			 position{ 0, 0, 0 },
+			 normal{ 0, 0, 0 }
 			{}
 
 			void CollisionEvent(AnnCollisionEvent e) override
 			{
 				auto objectManager = AnnGetGameObjectManager();
-				if (e.hasObject(objectManager->getGameObject("_internal_test_floor").get()) && //you should store a pointer to the object for performance, not search it each time
-					e.hasObject(objectManager->getGameObject("Sinbad").get()))
+				if(e.hasObject(objectManager->getGameObject("_internal_test_floor").get()) && //you should store a pointer to the object for performance, not search it each time
+				   e.hasObject(objectManager->getGameObject("Sinbad").get()))
 				{
-					results = true;
+					results  = true;
 					position = e.getPosition();
-					normal = e.getNormal();
-					if (e.isGroundCollision()) groundContact = true;
+					normal   = e.getNormal();
+					if(e.isGroundCollision()) groundContact = true;
 				}
 			}
 
 			AnnVect3 getPosition() const { return position; }
 			AnnVect3 getNormal() const { return normal; }
+
 		private:
 			bool& results;
 			bool& groundContact;
@@ -112,15 +115,15 @@ namespace Annwvyn
 
 		AnnGetPhysicsEngine()->setDebugPhysics(true);
 		AnnGetVRRenderer()->_resetOgreTimer();
-		while (GameEngine->getTimeFromStartupSeconds() < 5.0f)
+		while(GameEngine->getTimeFromStartupSeconds() < 5.0f)
 		{
 			GameEngine->refresh();
-			if (state)
+			if(state)
 			{
 				AnnDebug() << "Detected collision";
 				AnnDebug() << "Position " << eventListener->getPosition();
 				AnnDebug() << "Normal " << eventListener->getNormal();
-				if (ground)
+				if(ground)
 				{
 					AnnDebug() << "we detected that the object touched the ground!";
 				}
@@ -136,8 +139,9 @@ namespace Annwvyn
 		class TickTest : LISTENER
 		{
 		public:
-			TickTest(int& counter) : constructListener(),
-				counter(counter) {}
+			TickTest(int& counter) :
+			 constructListener(),
+			 counter(counter) {}
 
 			void tick() override { ++counter; }
 
@@ -146,16 +150,16 @@ namespace Annwvyn
 		};
 
 		auto GameEngine = bootstrapTestEngine("TestTick");
-		auto counter = 0;
+		auto counter	= 0;
 
 		auto tickListener = std::make_shared<TickTest>(counter);
 		AnnGetEventManager()->addListener(tickListener);
 
 		AnnGetOnScreenConsole()->setVisible(true);
 
-		auto refCounter = 0;
+		auto refCounter		= 0;
 		const auto nbFrames = 200;
-		while (refCounter < nbFrames)
+		while(refCounter < nbFrames)
 		{
 			AnnDebug() << ++refCounter;
 			GameEngine->refresh();

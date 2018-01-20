@@ -32,12 +32,13 @@ namespace Annwvyn
 
 		///Set all the key-codes for the controls
 		void setKeys(KeyCode::code fw,
-			KeyCode::code bw,
-			KeyCode::code sl,
-			KeyCode::code sr,
-			KeyCode::code jmp,
-			KeyCode::code rn);
-		enum turnStickMode { NORMAL, WHEEL };
+					 KeyCode::code bw,
+					 KeyCode::code sl,
+					 KeyCode::code sr,
+					 KeyCode::code jmp,
+					 KeyCode::code rn);
+		enum turnStickMode { NORMAL,
+							 WHEEL };
 		turnStickMode turnMode;
 
 	protected:
@@ -63,10 +64,17 @@ namespace Annwvyn
 		float stickCurrentAngleDegree;
 		float computedWheelValue;
 		///Axes
-		enum { ax_walk, ax_straff, ax_rotate, ax_size };
+		enum { ax_walk,
+			   ax_straff,
+			   ax_rotate,
+			   ax_size };
 		StickAxisId axes[ax_size];
 		///Buttons
-		enum { b_jump, b_run, b_console, b_debug, b_size };
+		enum { b_jump,
+			   b_run,
+			   b_console,
+			   b_debug,
+			   b_size };
 		ButtonId buttons[b_size];
 
 		float lastAngle;

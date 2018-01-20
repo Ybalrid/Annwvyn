@@ -10,7 +10,7 @@
 
 #include <memory>
 
- //Bullet
+//Bullet
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 
@@ -22,7 +22,7 @@
 #include <AnnSubsystem.hpp>
 
 //easy bitmasks
-#define MASK(x) (1<<(x))
+#define MASK(x) (1 << (x))
 
 namespace Annwvyn
 {
@@ -42,7 +42,6 @@ namespace Annwvyn
 	class AnnDllExport AnnPhysicsEngine : public AnnSubSystem
 	{
 	public:
-
 		static std::string getBulletVersion()
 		{
 			const auto major = BT_BULLET_VERSION / 100;
@@ -51,9 +50,8 @@ namespace Annwvyn
 		}
 
 		///Flag for collisions
-		enum CollisionMasks : int
-		{
-			Player = MASK(0),
+		enum CollisionMasks : int {
+			Player  = MASK(0),
 			General = MASK(1),
 
 			ColideWithAll = Player | General,
@@ -115,7 +113,6 @@ namespace Annwvyn
 		btCollisionShape* _getGameObjectShape(AnnGameObject* obj, phyShapeType type);
 
 	private:
-
 		friend class AnnEngine;
 		///Update by steeping simulation by one frame time. Should be called only once, and only by AnnEngine
 		void update() override;

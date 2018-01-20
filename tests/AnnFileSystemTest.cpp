@@ -15,7 +15,7 @@ namespace Annwvyn
 
 	TEST_CASE("FileSystem attempting to read non-existing file")
 	{
-		auto GameEngine = bootstrapTestEngine("TestFileSystem");
+		auto GameEngine						= bootstrapTestEngine("TestFileSystem");
 		auto doNotExistFileSystemDataObject = AnnGetFileSystemManager()->getFileReader()->read("doNotExist");
 		REQUIRE_FALSE(doNotExistFileSystemDataObject);
 	}
@@ -23,7 +23,7 @@ namespace Annwvyn
 	TEST_CASE("FileSystem write data to save file and read it back")
 	{
 		auto GameEngine = bootstrapTestEngine("TestFileSystem");
-		auto fsManager = AnnGetFileSystemManager();
+		auto fsManager  = AnnGetFileSystemManager();
 		//Write
 		{
 			auto fileData = fsManager->crateSaveFileDataObject("TestSave");
@@ -44,8 +44,9 @@ namespace Annwvyn
 		class TestFileSystemDataInterpretror : public AnnSaveDataInterpretor
 		{
 		public:
-			TestFileSystemDataInterpretror(std::shared_ptr<AnnSaveFileData> data) : AnnSaveDataInterpretor(data),
-				IAmTestProgram(false) {}
+			TestFileSystemDataInterpretror(std::shared_ptr<AnnSaveFileData> data) :
+			 AnnSaveDataInterpretor(data),
+			 IAmTestProgram(false) {}
 
 			bool amITestProgram() const { return IAmTestProgram; }
 
@@ -57,7 +58,7 @@ namespace Annwvyn
 
 		//Using a data interpretor
 		{
-			auto fileData = AnnGetFileSystemManager()->getFileReader()->read("TestSave");
+			auto fileData		 = AnnGetFileSystemManager()->getFileReader()->read("TestSave");
 			auto dataInterpretor = TestFileSystemDataInterpretror(fileData);
 			dataInterpretor.extract();
 			REQUIRE(dataInterpretor.amITestProgram());

@@ -43,7 +43,7 @@
 #endif
 
 //Get the deprecated warnings
-#pragma warning(default:4996)
+#pragma warning(default : 4996)
 
 namespace Annwvyn
 {
@@ -83,8 +83,8 @@ namespace Annwvyn
 
 		///Private method that configure the rendering from the two given strings. It may call itself again with modified strings in circumstances.
 		void selectAndCreateRenderer(const std::string& hmd, const std::string& title);
-	public:
 
+	public:
 		///Public flag, true by default : will ask Windows to give us high priority
 		static bool autosetProcessPriorityHigh;
 		///Public static parameter : name of the logfile. Please set it before AnnInit or creating an AnnEngine object
@@ -194,7 +194,7 @@ namespace Annwvyn
 		bool appVisibleInHMD() const;
 
 		///Get elapsed time from engine startup in millisecond
-		unsigned long getTimeFromStartUp() const;//engine
+		unsigned long getTimeFromStartUp() const; //engine
 
 		///Get elapsed time from engine startup in seconds
 		double getTimeFromStartupSeconds() const;
@@ -212,12 +212,14 @@ namespace Annwvyn
 		void loadUserSubSystemFromPlugin(const std::string& pluginName, bool local = true);
 
 		///Create+Register user event system utility class
-		template <class AnnUserSubSystemType, class ... Args> decltype(auto) registerUserSubSystem(Args&& ... args)
+		template <class AnnUserSubSystemType, class... Args>
+		decltype(auto) registerUserSubSystem(Args&&... args)
 		{
-			auto subsystem = std::make_shared<AnnUserSubSystemType>(args ...);
-			auto output = registerUserSubSystem(std::static_pointer_cast<AnnUserSubSystem>(subsystem));
-			if (output != nullptr) return subsystem;
-			subsystem = nullptr; return subsystem;
+			auto subsystem = std::make_shared<AnnUserSubSystemType>(args...);
+			auto output	= registerUserSubSystem(std::static_pointer_cast<AnnUserSubSystem>(subsystem));
+			if(output != nullptr) return subsystem;
+			subsystem = nullptr;
+			return subsystem;
 		}
 
 		///Get pointer to a subsystem by name
@@ -233,7 +235,6 @@ namespace Annwvyn
 		void requestQuit();
 
 	private:
-
 		static void setConsoleGreen();
 		static void setConsoleYellow();
 

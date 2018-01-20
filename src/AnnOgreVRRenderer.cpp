@@ -50,50 +50,50 @@ bool AnnOgreVRRenderer::UseSSAA{ false };
 void AnnOgreVRRenderer::setAntiAliasingLevel(const uint8_t AA)
 {
 	AALevel = AA;
-	if (self)
+	if(self)
 		return self->changedAA();
 }
 
 AnnOgreVRRenderer::AnnOgreVRRenderer(const std::string& windowName) :
-	numberOfThreads(std::thread::hardware_concurrency()),
-	glMajor{ 4 },
-	glMinor{ 3 },
-	glfwWindow{ nullptr },
-	windowW{ 0 },
-	windowH{ 0 },
-	smgr{ nullptr },
-	root{ nullptr },
-	window{ nullptr },
-	updateTime{ 0 },
-	then{ 0 },
-	now{ 0 },
-	nearClippingDistance{ 0.01f },
-	farClippingDistance{ 500.0f },
-	feetPosition{ 0, 0, 10 },
-	bodyOrientation{ Ogre::Quaternion::IDENTITY },
-	name{ windowName },
-	gameplayCharacterRoot{ nullptr },
-	monoCam(nullptr),
-	cameraRig{ nullptr },
-	frameCounter{ 0 },
-	rttEyesCombined{ nullptr },
-	pauseFlag{ false },
-	hideHands{ false },
-	compositorLoaded{ false },
-	hlmsLoaded{ false }
+ numberOfThreads(std::thread::hardware_concurrency()),
+ glMajor{ 4 },
+ glMinor{ 3 },
+ glfwWindow{ nullptr },
+ windowW{ 0 },
+ windowH{ 0 },
+ smgr{ nullptr },
+ root{ nullptr },
+ window{ nullptr },
+ updateTime{ 0 },
+ then{ 0 },
+ now{ 0 },
+ nearClippingDistance{ 0.01f },
+ farClippingDistance{ 500.0f },
+ feetPosition{ 0, 0, 10 },
+ bodyOrientation{ Ogre::Quaternion::IDENTITY },
+ name{ windowName },
+ gameplayCharacterRoot{ nullptr },
+ monoCam(nullptr),
+ cameraRig{ nullptr },
+ frameCounter{ 0 },
+ rttEyesCombined{ nullptr },
+ pauseFlag{ false },
+ hideHands{ false },
+ compositorLoaded{ false },
+ hlmsLoaded{ false }
 {
-	if (self)
+	if(self)
 	{
 		displayWin32ErrorMessage("Fatal Error", "Fatal error with renderer initialization. OgreOculusRender object already created.");
 		throw AnnInitializationError(ANN_ERR_CRITIC, "Cannot create more than one OgreVRRenderer object!");
 	}
 	self = this;
 
-	for (auto& eyeCamera : eyeCameras)
+	for(auto& eyeCamera : eyeCameras)
 		eyeCamera = nullptr;
-	for (auto& handController : handControllers)
+	for(auto& handController : handControllers)
 		handController = nullptr;
-	for (auto& compositor : compositorWorkspaces)
+	for(auto& compositor : compositorWorkspaces)
 		compositor = nullptr;
 }
 
@@ -105,7 +105,7 @@ AnnOgreVRRenderer::~AnnOgreVRRenderer()
 	root->destroyRenderTarget(window);
 
 	//If font manager still loaded
-	if (auto fontManager = Ogre::FontManager::getSingletonPtr())
+	if(auto fontManager = Ogre::FontManager::getSingletonPtr())
 	{
 		AnnDebug() << "Will delete FontManager";
 		fontManager->removeAll();
@@ -165,7 +165,7 @@ void AnnOgreVRRenderer::initOgreRoot(const std::string& loggerName)
 void AnnOgreVRRenderer::getOgreConfig() const
 {
 	//Ogre as to be initialized
-	if (!root) throw AnnInitializationError(ANN_ERR_NOTINIT, "Need to initialize Ogre::Root before loading system configuration");
+	if(!root) throw AnnInitializationError(ANN_ERR_NOTINIT, "Need to initialize Ogre::Root before loading system configuration");
 
 	//Load OgrePlugins
 	root->loadPlugin(PluginRenderSystemGL3Plus);
@@ -192,17 +192,17 @@ void AnnOgreVRRenderer::changedAA() const
 	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 	window->setFSAA(AALevel, "");
 	auto textureManager = Ogre::TextureManager::getSingletonPtr();
-	auto texture = textureManager->getByName(rttTextureName);
-	if (texture)
+	auto texture		= textureManager->getByName(rttTextureName);
+	if(texture)
 	{
 		texture->setFSAA(AALevel, "", false);
 	}
 	else
 	{
-		for (auto i{ 0 }; i < 2; i++)
+		for(auto i{ 0 }; i < 2; i++)
 		{
 			texture = textureManager->getByName(rttTextureName + std::to_string(i));
-			if (texture) texture->setFSAA(AALevel, "", false);
+			if(texture) texture->setFSAA(AALevel, "", false);
 		}
 	}
 }
@@ -221,7 +221,7 @@ void AnnOgreVRRenderer::setFarClippingDistance(float distance)
 
 void AnnOgreVRRenderer::detachCameraFromParent(Ogre::Camera* camera)
 {
-	if (auto parent = camera->getParentSceneNode())
+	if(auto parent = camera->getParentSceneNode())
 		parent->detachObject(camera);
 }
 
@@ -263,14 +263,14 @@ void AnnOgreVRRenderer::applyCameraRigPose(AnnPose pose) const
 void AnnOgreVRRenderer::syncGameplayBody()
 {
 	//Get current camera base information
-	feetPosition = gameplayCharacterRoot->getPosition();
+	feetPosition	= gameplayCharacterRoot->getPosition();
 	bodyOrientation = gameplayCharacterRoot->getOrientation();
 }
 
 void AnnOgreVRRenderer::calculateTimingFromOgre()
 {
-	then = now;
-	now = getTimer()->getMilliseconds() / 1000.0;
+	then	   = now;
+	now		   = getTimer()->getMilliseconds() / 1000.0;
 	updateTime = now - then;
 }
 
@@ -280,7 +280,7 @@ void AnnOgreVRRenderer::loadOpenGLFunctions()
 	//The version of OpenGL feature set that will be "wrangled" by GLEW depend of the current OpenGL context.
 	//The context version depend on who created the context. Here we used GLFW and hinted for OpenGL 4.3
 	const auto err = glewInit();
-	if (err != GLEW_OK)
+	if(err != GLEW_OK)
 	{
 		AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot load OpenGL functions");
@@ -288,10 +288,10 @@ void AnnOgreVRRenderer::loadOpenGLFunctions()
 
 	//Just print some informations about GLEW
 	AnnDebug() << "Using GLEW version : "
-		<< glewGetString(GLEW_VERSION);
+			   << glewGetString(GLEW_VERSION);
 
 	//Check if the function pointer behind glCopyImageSubData is not null
-	if (glCopyImageSubData)
+	if(glCopyImageSubData)
 	{
 		AnnDebug() << "glCopyImageSubData is available!";
 	}
@@ -319,8 +319,7 @@ void AnnOgreVRRenderer::initPipeline()
 GLuint AnnOgreVRRenderer::createCombinedRenderTexture(unsigned int w, unsigned int h)
 {
 	GLuint glid;
-	auto rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-		Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
+	auto rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
 	rttTextureCombined->getCustomAttribute("GLID", &glid);
 	rttEyesCombined = rttTextureCombined->getBuffer()->getRenderTarget();
 	return glid;
@@ -331,11 +330,19 @@ GLuintPair AnnOgreVRRenderer::createSeparatedRenderTextures(const combinedTextur
 	GLuintPair glid = { 0 };
 	AnnDebug() << "Creating separated render textures " << textureSizes[0][0] << "x" << textureSizes[0][1] << " " << textureSizes[1][0] << "x" << textureSizes[1][1];
 	std::array<Ogre::TexturePtr, 2> rttTexturesSeparated;
-	for (auto i : { 0u, 1u })
+	for(auto i : { 0u, 1u })
 	{
 		rttTexturesSeparated[i] = Ogre::TextureManager::getSingleton().createManual(std::string(rttTextureName) + std::to_string(i),
-			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D,
-			Ogre::uint(textureSizes[i][0]), Ogre::uint(textureSizes[i][1]), 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
+																					Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+																					Ogre::TEX_TYPE_2D,
+																					Ogre::uint(textureSizes[i][0]),
+																					Ogre::uint(textureSizes[i][1]),
+																					0,
+																					Ogre::PF_R8G8B8A8,
+																					Ogre::TU_RENDERTARGET,
+																					nullptr,
+																					true,
+																					AALevel);
 		rttTexturesSeparated[i]->getCustomAttribute("GLID", &glid[i]);
 		rttEyeSeparated[i] = rttTexturesSeparated[i]->getBuffer(0)->getRenderTarget(0);
 	}
@@ -345,14 +352,16 @@ GLuintPair AnnOgreVRRenderer::createSeparatedRenderTextures(const combinedTextur
 std::tuple<Ogre::TexturePtr, unsigned int> AnnOgreVRRenderer::createAdditionalRenderBuffer(unsigned int w, unsigned int h, std::string additionalTextureName) const
 {
 	static int counter;
-	if (additionalTextureName.empty())
+	if(additionalTextureName.empty())
 		additionalTextureName = "additionalTexture" + std::to_string(counter++);
 
-	auto texture{ Ogre::TextureManager::getSingleton().createManual
-		(additionalTextureName,
-					 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-					 Ogre::TEX_TYPE_2D, w, h, 9,
-					 Ogre::PF_R8G8B8A8) };
+	auto texture{ Ogre::TextureManager::getSingleton().createManual(additionalTextureName,
+																	Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+																	Ogre::TEX_TYPE_2D,
+																	w,
+																	h,
+																	9,
+																	Ogre::PF_R8G8B8A8) };
 
 	unsigned int glid;
 	texture->getCustomAttribute("GLID", &glid);
@@ -385,22 +394,22 @@ void AnnOgreVRRenderer::createWindow(unsigned int w, unsigned int h, bool vsync)
 
 #ifdef _WIN32
 	//Get the hwnd and the context :
-	auto context = wglGetCurrentContext();
-	auto handle = glfwGetWin32Window(glfwWindow);
+	auto context					= wglGetCurrentContext();
+	auto handle						= glfwGetWin32Window(glfwWindow);
 	options["externalWindowHandle"] = std::to_string(size_t(handle));
 #elif __linux__
-	Window handle = {};
-	void* context = nullptr;
-	handle = glfwGetX11Window(glfwWindow);
+	Window handle				  = {};
+	void* context				  = nullptr;
+	handle						  = glfwGetX11Window(glfwWindow);
 	options["parentWindowHandle"] = std::to_string(size_t(handle));
 #endif
 
 	options["externalGLContext"] = std::to_string(size_t(context));
-	options["FSAA"] = std::to_string(AALevel);
-	options["top"] = "0";
-	options["left"] = "0";
-	options["gamma"] = "true";
-	options["vsync"] = vsync ? "true" : "false";
+	options["FSAA"]				 = std::to_string(AALevel);
+	options["top"]				 = "0";
+	options["left"]				 = "0";
+	options["gamma"]			 = "true";
+	options["vsync"]			 = vsync ? "true" : "false";
 
 	window = root->createRenderWindow(winName, w, h, false, &options);
 }
@@ -417,8 +426,10 @@ bool AnnOgreVRRenderer::handControllersAvailable() const
 
 void AnnOgreVRRenderer::makeValidPath(std::string& path)
 {
-	if (path.empty()) path = "./";
-	else if (path[path.size() - 1] != '/') path += "/";
+	if(path.empty())
+		path = "./";
+	else if(path[path.size() - 1] != '/')
+		path += "/";
 }
 
 void AnnOgreVRRenderer::loadHLMSLibrary(std::string hlmsFolder)
@@ -440,7 +451,7 @@ void AnnOgreVRRenderer::loadHLMSLibrary(std::string hlmsFolder)
 	//Create the Ogre::Archive objects needed
 	auto archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + dataFolderPath, "FileSystem", true);
 	Ogre::ArchiveVec archiveUnlitLibraryFolders;
-	for (const auto& libraryFolderPath : libraryFoldersPaths)
+	for(const auto& libraryFolderPath : libraryFoldersPaths)
 	{
 		auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + libraryFolderPath, "FileSystem", true);
 		archiveUnlitLibraryFolders.push_back(archiveLibrary);
@@ -457,7 +468,7 @@ void AnnOgreVRRenderer::loadHLMSLibrary(std::string hlmsFolder)
 
 	//Get the library archive(s)
 	Ogre::ArchiveVec archivePbsLibraryFolders;
-	for (const auto& libraryFolderPath : libraryFoldersPaths)
+	for(const auto& libraryFolderPath : libraryFoldersPaths)
 	{
 		auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(hlmsFolder + libraryFolderPath, "FileSystem", true);
 		archivePbsLibraryFolders.push_back(archiveLibrary);
@@ -488,30 +499,30 @@ void AnnOgreVRRenderer::loadCompositor(const std::string& path, const std::strin
 
 void AnnOgreVRRenderer::setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName) const
 {
-	auto compositor = root->getCompositorManager2();
+	auto compositor		  = root->getCompositorManager2();
 	auto renderingNodeDef = compositor->getNodeDefinitionNonConst(renderingNodeName);
-	auto targetDef = renderingNodeDef->getTargetPass(0);
-	auto& passDefs = targetDef->getCompositorPasses();
-	for (auto pass : passDefs) if (pass->getType() == Ogre::PASS_CLEAR)
-	{
-		auto clearDef = dynamic_cast<Ogre::CompositorPassClearDef*>(pass);
-		if (clearDef)
+	auto targetDef		  = renderingNodeDef->getTargetPass(0);
+	auto& passDefs		  = targetDef->getCompositorPasses();
+	for(auto pass : passDefs)
+		if(pass->getType() == Ogre::PASS_CLEAR)
 		{
-			clearDef->mColourValue = skyColor * multiplier;
+			auto clearDef = dynamic_cast<Ogre::CompositorPassClearDef*>(pass);
+			if(clearDef)
+			{
+				clearDef->mColourValue = skyColor * multiplier;
+			}
 		}
-	}
 }
 
 void AnnOgreVRRenderer::setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial) const
 {
 	auto materialManager = Ogre::MaterialManager::getSingletonPtr();
-	auto material = materialManager->load(postProcessMaterial, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME).staticCast<Ogre::Material>();
+	auto material		 = materialManager->load(postProcessMaterial, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME).staticCast<Ogre::Material>();
 
-	auto pass = material->getTechnique(0)->getPass(0);
+	auto pass	 = material->getTechnique(0)->getPass(0);
 	auto psParams = pass->getFragmentProgramParameters();
 
-	const Ogre::Vector3 exposureParams
-	{
+	const Ogre::Vector3 exposureParams{
 		1024.0f * expf(exposure - 2.0f),
 		7.5f - maxAuto,
 		7.5f - minAuto
@@ -545,13 +556,20 @@ bool AnnOgreVRRenderer::shouldHideHands() const
 void AnnOgreVRRenderer::glEasyCopy(GLuint source, GLuint dest, GLuint width, GLuint height)
 {
 	glCopyImageSubData(source,
-		GL_TEXTURE_2D,
-		0, 0, 0, 0,
-		dest,
-		GL_TEXTURE_2D,
-		0, 0, 0, 0,
-		width, height,
-		1);
+					   GL_TEXTURE_2D,
+					   0,
+					   0,
+					   0,
+					   0,
+					   dest,
+					   GL_TEXTURE_2D,
+					   0,
+					   0,
+					   0,
+					   0,
+					   width,
+					   height,
+					   1);
 }
 
 void AnnOgreVRRenderer::_resetOgreTimer() const
@@ -576,8 +594,9 @@ std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 	struct AudioOutputDescriptor
 	{
 		AudioOutputDescriptor(LPCSTR str, LPGUID pguid) :
-			name(pguid ? str : "NO_GUID"), //Sometimes pguid is nullptr, in that case the descriptor is not valid
-			guid(pguid ? *pguid : GUID()) {} //Obviously, dereferencing a nullptr is a bad idea, prevent that.
+		 name(pguid ? str : "NO_GUID"), //Sometimes pguid is nullptr, in that case the descriptor is not valid
+		 guid(pguid ? *pguid : GUID())
+		{} //Obviously, dereferencing a nullptr is a bad idea, prevent that.
 		const std::string name;
 		const GUID guid;
 	};
@@ -589,17 +608,18 @@ std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 	//Fill the "descriptors" vector :
 
 	DirectSoundEnumerateA([](LPGUID pguid, LPCSTR descr, LPCSTR modname, LPVOID ctx) //using a non capturing lambda function as a callback
-	{
-		auto outputDescriptors = static_cast<AudioOutputDescriptorVect*>(ctx); //get an usable pointer
-		outputDescriptors->push_back({ descr, pguid }); //create a usable descriptor and add it to the list
-		return TRUE;
-	}, &descriptors); //Pointer to the vector as "context" given to the callback
+						  {
+							  auto outputDescriptors = static_cast<AudioOutputDescriptorVect*>(ctx); //get an usable pointer
+							  outputDescriptors->push_back({ descr, pguid });						 //create a usable descriptor and add it to the list
+							  return TRUE;
+						  },
+						  &descriptors); //Pointer to the vector as "context" given to the callback
 
-															  //Try to find the one we need
+	//Try to find the one we need
 	const auto result = std::find_if(begin(descriptors), end(descriptors), [&](const AudioOutputDescriptor& descriptor) { return descriptor.guid == guid; });
 
 	//Set the return string
-	if (result != descriptors.end())
+	if(result != descriptors.end())
 	{
 		const auto descriptor = *result;
 		AnnDebug() << "Found " << descriptor.name << " that match Oculus given DirectSound GUID";
@@ -614,18 +634,19 @@ std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 void AnnOgreVRRenderer::setBloomThreshold(float minThreshold, float fullColorThreshold, const char* brightnessPassMaterial)
 {
 	auto material = Ogre::MaterialManager::getSingleton().load(
-		brightnessPassMaterial,
-		Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME).
-		staticCast<Ogre::Material>();
+															 brightnessPassMaterial,
+															 Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME)
+						.staticCast<Ogre::Material>();
 
 	auto pass = material->getTechnique(0)->getPass(0);
 
 	auto psParams = pass->getFragmentProgramParameters();
 	psParams->setNamedConstant("brightThreshold",
-		Ogre::Vector4(
-			minThreshold,
-			1.0f / (fullColorThreshold - minThreshold),
-			0, 0));
+							   Ogre::Vector4(
+								   minThreshold,
+								   1.0f / (fullColorThreshold - minThreshold),
+								   0,
+								   0));
 }
 
 void AnnOgreVRRenderer::handleWindowMessages()
@@ -638,7 +659,7 @@ void AnnOgreVRRenderer::handleWindowMessages()
 	static int w, h;
 	glfwGetWindowSize(glfwWindow, &w, &h);
 
-	if (windowW != w || windowH != h)
+	if(windowW != w || windowH != h)
 	{
 		windowW = w;
 		windowH = h;
@@ -653,21 +674,20 @@ void AnnOgreVRRenderer::handleWindowMessages()
 
 void AnnOgreVRRenderer::setShadowFiltering(ShadowFiltering level) const
 {
-	if (auto pbs = static_cast<Ogre::HlmsPbs*>
-		(root->getHlmsManager()->getHlms(Ogre::HLMS_PBS)))
+	if(auto pbs = static_cast<Ogre::HlmsPbs*>(root->getHlmsManager()->getHlms(Ogre::HLMS_PBS)))
 	{
-		switch (level)
+		switch(level)
 		{
-		case ShadowFiltering::low:
-			pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_2x2);
-			break;
-		default:
-		case ShadowFiltering::medium:
-			pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_3x3);
-			break;
-		case ShadowFiltering::high:
-			pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_4x4);
-			break;
+			case ShadowFiltering::low:
+				pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_2x2);
+				break;
+			default:
+			case ShadowFiltering::medium:
+				pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_3x3);
+				break;
+			case ShadowFiltering::high:
+				pbs->setShadowSettings(Ogre::HlmsPbs::ShadowFilter::PCF_4x4);
+				break;
 		}
 	}
 }

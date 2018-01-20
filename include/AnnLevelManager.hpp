@@ -40,7 +40,8 @@ namespace Annwvyn
 		void addLevel(AnnLevelPtr level);
 
 		///Uitility overload to easilly create and add levels at the same time
-		template <class LevelType, class ... Args> decltype(auto) addLevel(Args&& ... args)
+		template <class LevelType, class... Args>
+		decltype(auto) addLevel(Args&&... args)
 		{
 			auto level = std::make_shared<LevelType>(args...);
 			addLevel(level);
@@ -75,7 +76,6 @@ namespace Annwvyn
 		void removeFromCurrentLevel(AnnGameObjectPtr obj) const;
 
 	private:
-
 		///List of levels
 		std::vector<AnnLevelPtr> levelList;
 

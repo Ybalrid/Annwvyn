@@ -14,7 +14,6 @@ namespace Annwvyn
 	class AnnDllExport AnnSceneryManager : public AnnSubSystem
 	{
 	public:
-
 		///Construct the AnnSceneryManager
 		AnnSceneryManager(AnnOgreVRRendererPtr renderer);
 
@@ -27,9 +26,9 @@ namespace Annwvyn
 		/// \param curvature curvature of the texture
 		/// \param tiling tilling of the texture
 		void setSkyDomeMaterial(bool activate,
-			const std::string& materialName,
-			float curvature = 2.0f,
-			float tiling = 1.0f) const;
+								const std::string& materialName,
+								float curvature = 2.0f,
+								float tiling	= 1.0f) const;
 
 		///Set the ogre material for the sky-box with params
 		/// \param activate if true put the sky-box on the scene
@@ -37,9 +36,9 @@ namespace Annwvyn
 		/// \param distance distance of the sky from the camera
 		/// \param renderedFirst if true, the sky-box will be the first thing rendered
 		void setSkyBoxMaterial(bool activate,
-			const std::string& materialName,
-			float distance = 8000,
-			bool renderedFirst = true) const;
+							   const std::string& materialName,
+							   float distance	 = 8000,
+							   bool renderedFirst = true) const;
 
 		///Remove the sky dome
 		void removeSkyDome() const;

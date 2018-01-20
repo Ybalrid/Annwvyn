@@ -10,8 +10,8 @@ using namespace Annwvyn;
 ostringstream AnnPhysicsSetupParentError::outputFormater;
 
 AnnPhysicsSetupParentError::AnnPhysicsSetupParentError(AnnGameObject* origin) :
-	runtime_error{ "Cannot setup physics for object " },
-	objectWithProblem{ origin }
+ runtime_error{ "Cannot setup physics for object " },
+ objectWithProblem{ origin }
 {
 	AnnDebug() << AnnPhysicsSetupParentError::what();
 }
@@ -22,15 +22,15 @@ const char* AnnPhysicsSetupParentError::what() const throw()
 
 	outputFormater << runtime_error::what() << " : " << objectWithProblem->getName();
 
-	if (objectWithProblem->hasParent())
+	if(objectWithProblem->hasParent())
 	{
 		outputFormater << " child of : " << objectWithProblem->getParent()->getName() << '\n';
 		outputFormater << "The parent with a physics body is : " << getParentWithBody()->getName();
 	}
 
 	outputFormater << "\nSetting up physics of a child object with parent"
-		" break the parent/transform derivation because the Physics engine"
-		" move object in world position.";
+					  " break the parent/transform derivation because the Physics engine"
+					  " move object in world position.";
 
 	outputFormater << "\n Consider not parenting theses two object if you want them to be independent physics objects.";
 
@@ -43,13 +43,13 @@ AnnGameObject* AnnPhysicsSetupParentError::getParentWithBody() const { return re
 
 AnnGameObject* AnnPhysicsSetupParentError::recurToBody(AnnGameObject* start)
 {
-	if (start->getParent()->getBody()) return start->getParent().get();
+	if(start->getParent()->getBody()) return start->getParent().get();
 	return recurToBody(start->getParent().get());
 }
 
 AnnPhysicsSetupChildError::AnnPhysicsSetupChildError(AnnGameObject* origin) :
-	runtime_error{ "Cannot setup physics for Object " },
-	objectWithProblem{ origin }
+ runtime_error{ "Cannot setup physics for Object " },
+ objectWithProblem{ origin }
 {
 	AnnDebug() << AnnPhysicsSetupChildError::what();
 }
@@ -63,7 +63,8 @@ const char* AnnPhysicsSetupChildError::what() const throw()
 	return out.str().c_str();
 }
 
-AnnInvalidControllerSide::AnnInvalidControllerSide() : runtime_error("Invalid hand controller side")
+AnnInvalidControllerSide::AnnInvalidControllerSide() :
+ runtime_error("Invalid hand controller side")
 {
 	AnnDebug() << AnnInvalidControllerSide::what();
 }
@@ -76,7 +77,8 @@ const char* AnnInvalidControllerSide::what() const throw()
 	return out.str().c_str();
 }
 
-AnnNullGameObjectError::AnnNullGameObjectError() : runtime_error("Error : Trying to do an operation on a null GameObject")
+AnnNullGameObjectError::AnnNullGameObjectError() :
+ runtime_error("Error : Trying to do an operation on a null GameObject")
 {
 	AnnDebug() << AnnNullGameObjectError::what();
 }
@@ -89,7 +91,8 @@ const char* AnnNullGameObjectError::what() const throw()
 	return out.str().c_str();
 }
 
-AnnInitializationError::AnnInitializationError(int errorCode, const string& message) : runtime_error("Error : " + to_string(errorCode) + " " + message)
+AnnInitializationError::AnnInitializationError(int errorCode, const string& message) :
+ runtime_error("Error : " + to_string(errorCode) + " " + message)
 {
 	AnnDebug() << AnnInitializationError::what();
 }
@@ -102,8 +105,9 @@ const char* AnnInitializationError::what() const throw()
 	return out.str().c_str();
 }
 
-AnnInvalidPhysicalShapeError::AnnInvalidPhysicalShapeError(const std::string& objName) : std::runtime_error("Error : Cannot create a physics shape from arguments"),
-objectName{ objName }
+AnnInvalidPhysicalShapeError::AnnInvalidPhysicalShapeError(const std::string& objName) :
+ std::runtime_error("Error : Cannot create a physics shape from arguments"),
+ objectName{ objName }
 {
 	AnnDebug() << AnnInvalidPhysicalShapeError::what();
 }
@@ -117,9 +121,10 @@ const char* AnnInvalidPhysicalShapeError::what() const throw()
 	return out.str().c_str();
 }
 
-AnnLevelLoadingError::AnnLevelLoadingError(const std::string& level, const std::string& obj) : std::runtime_error("Error : Cannot load level object"),
-levelName{ level },
-objectName{ obj }
+AnnLevelLoadingError::AnnLevelLoadingError(const std::string& level, const std::string& obj) :
+ std::runtime_error("Error : Cannot load level object"),
+ levelName{ level },
+ objectName{ obj }
 {
 	AnnDebug() << AnnLevelLoadingError::what();
 }

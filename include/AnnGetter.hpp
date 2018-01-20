@@ -19,7 +19,7 @@ namespace Annwvyn
 	///Get the event manager
 	AnnDllExport AnnEventManagerPtr AnnGetEventManager();
 	///Get the player object
-	AnnDllExport AnnPlayerBodyPtr  AnnGetPlayer();
+	AnnDllExport AnnPlayerBodyPtr AnnGetPlayer();
 	///Get the resource manager
 	AnnDllExport AnnResourceManagerPtr AnnGetResourceManager();
 	///Get the scenery manager

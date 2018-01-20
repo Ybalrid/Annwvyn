@@ -11,24 +11,25 @@ using namespace Annwvyn;
 
 inline phyShapeType AnnXmlLevel::getShapeTypeFromString(std::string str)
 {
-	if (str == "static")
+	if(str == "static")
 		return staticShape;
-	if (str == "convex")
+	if(str == "convex")
 		return convexShape;
-	if (str == "box")
+	if(str == "box")
 		return boxShape;
-	if (str == "cylinder")
+	if(str == "cylinder")
 		return cylinderShape;
-	if (str == "capsule")
+	if(str == "capsule")
 		return capsuleShape;
-	if (str == "sphere")
+	if(str == "sphere")
 		return sphereShape;
 	return phyShapeType(0);
 }
 
-AnnXmlLevel::AnnXmlLevel(std::string path) : constructLevel(),
-xmlFilePath(path),
-resourceLocAdded(false)
+AnnXmlLevel::AnnXmlLevel(std::string path) :
+ constructLevel(),
+ xmlFilePath(path),
+ resourceLocAdded(false)
 {
 }
 
@@ -37,13 +38,13 @@ void AnnXmlLevel::load()
 	//Get the parent directory of the file (all file path are in "UNIX style")
 	std::string dirPath;
 	const auto last_slash = xmlFilePath.rfind('/');
-	if (std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
+	if(std::string::npos != last_slash) dirPath = xmlFilePath.substr(0, last_slash);
 	AnnDebug() << "Working directory of the level file : " << dirPath;
 
 	//Start reading the XML file
 	XMLDocument xmlInFile;
 	//open the file
-	if (xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS)
+	if(xmlInFile.LoadFile(xmlFilePath.c_str()) != XML_SUCCESS)
 	{
 		AnnDebug() << "Cant load XML level : " << xmlFilePath;
 		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
@@ -52,7 +53,7 @@ void AnnXmlLevel::load()
 
 	//get the root node of the XML DOM
 	auto level(xmlInFile.FirstChild());
-	if (!level)
+	if(!level)
 	{
 		AnnDebug() << "Cant get 1st XML Node from " << xmlFilePath;
 		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
@@ -60,7 +61,7 @@ void AnnXmlLevel::load()
 
 	//Get the name of the level
 	auto element(level->FirstChildElement("Name"));
-	if (!element)
+	if(!element)
 	{
 		AnnDebug() << "Cant get Level name from " << xmlFilePath;
 		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
@@ -70,22 +71,22 @@ void AnnXmlLevel::load()
 	AnnDebug() << "This will be the resource group name for Level Specific resource location declaration";
 
 	//Add resource location to the Ogre Resource Group Manager
-	if (!resourceLocAdded)
+	if(!resourceLocAdded)
 	{
 		element = level->FirstChildElement("ResourceLocations");
-		if (!element)
+		if(!element)
 		{
 			AnnDebug() << xmlFilePath << "Does not appear to have a 'ResourceLocations' section";
 		}
 		else
 		{
 			auto resourceLocation = element->FirstChildElement("ResourceLocation");
-			if (resourceLocation) do
-			{
-				std::string type(resourceLocation->Attribute("Type")), path(resourceLocation->Attribute("Path"));
-				if (!type.empty() && !path.empty())
-					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dirPath + "/" + path, type, name);
-			} while ((resourceLocation = resourceLocation->NextSiblingElement()) != nullptr);
+			if(resourceLocation) do
+				{
+					std::string type(resourceLocation->Attribute("Type")), path(resourceLocation->Attribute("Path"));
+					if(!type.empty() && !path.empty())
+						Ogre::ResourceGroupManager::getSingleton().addResourceLocation(dirPath + "/" + path, type, name);
+				} while((resourceLocation = resourceLocation->NextSiblingElement()) != nullptr);
 			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(name, true);
 			resourceLocAdded = true;
 		}
@@ -94,119 +95,125 @@ void AnnXmlLevel::load()
 	//Get level content
 	element = level->FirstChildElement("LevelContent");
 
-	if (!element)
+	if(!element)
 	{
 		AnnDebug() << xmlFilePath << "Don't have a 'LevelContent' section. This mean the level can't be loaded";
 		throw AnnInitializationError(ANN_ERR_INFILE, "Error while reading XML Level file");
 	}
 
 	auto gameObject = element->FirstChildElement("Object");
-	if (!gameObject) AnnDebug() << "No objects declared to load.";
-	else do //Iterate through all game objects
-	{
-		std::string entityName;
-		AnnDebug() << "Fond object to load";
-		float x, y, z, w;
-		std::string ID(gameObject->Attribute("ID"));
-		AnnDebug() << "Registered ID : " << ID;
-		auto gameObjectData = gameObject->FirstChildElement("Entity");
-		if (gameObjectData)
-			entityName = (gameObjectData->Attribute("EntityName"));
-
-		std::shared_ptr<AnnGameObject> constructedGameObject;
-		if (!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
-		if (!constructedGameObject) throw AnnLevelLoadingError(xmlFilePath, entityName + " game object"),
-
-			gameObjectData = gameObject->FirstChildElement("Position");
-		if (gameObjectData)
+	if(!gameObject)
+		AnnDebug() << "No objects declared to load.";
+	else
+		do //Iterate through all game objects
 		{
-			gameObjectData->QueryFloatAttribute("X", &x);
-			gameObjectData->QueryFloatAttribute("Y", &y);
-			gameObjectData->QueryFloatAttribute("Z", &z);
-			AnnDebug() << "Object at position : " << "(" << x << "," << y << "," << z << ")";
-			constructedGameObject->setPosition(x, y, z);
-		}
+			std::string entityName;
+			AnnDebug() << "Fond object to load";
+			float x, y, z, w;
+			std::string ID(gameObject->Attribute("ID"));
+			AnnDebug() << "Registered ID : " << ID;
+			auto gameObjectData = gameObject->FirstChildElement("Entity");
+			if(gameObjectData)
+				entityName = (gameObjectData->Attribute("EntityName"));
 
-		gameObjectData = gameObject->FirstChildElement("Orientation");
-		if (gameObjectData)
-		{
-			gameObjectData->QueryFloatAttribute("X", &x);
-			gameObjectData->QueryFloatAttribute("Y", &y);
-			gameObjectData->QueryFloatAttribute("Z", &z);
-			gameObjectData->QueryFloatAttribute("W", &w);
-			constructedGameObject->setOrientation(w, x, y, z);
-		}
+			std::shared_ptr<AnnGameObject> constructedGameObject;
+			if(!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
+			if(!constructedGameObject) throw AnnLevelLoadingError(xmlFilePath, entityName + " game object"),
 
-		gameObjectData = gameObject->FirstChildElement("Scale");
-		if (gameObjectData)
-		{
-			gameObjectData->QueryFloatAttribute("X", &x);
-			gameObjectData->QueryFloatAttribute("Y", &y);
-			gameObjectData->QueryFloatAttribute("Z", &z);
-			constructedGameObject->setScale(x, y, z);
-		}
+									   gameObjectData = gameObject->FirstChildElement("Position");
+			if(gameObjectData)
+			{
+				gameObjectData->QueryFloatAttribute("X", &x);
+				gameObjectData->QueryFloatAttribute("Y", &y);
+				gameObjectData->QueryFloatAttribute("Z", &z);
+				AnnDebug() << "Object at position : "
+						   << "(" << x << "," << y << "," << z << ")";
+				constructedGameObject->setPosition(x, y, z);
+			}
 
-		auto physics = gameObject->FirstChildElement("Physics");
-		if (!physics) continue; //no physics section. not mandatory. just ignore
-		auto state = physics->FirstChildElement("Enabled");
-		if (!state) continue;
-		bool phy; state->QueryBoolText(&phy); if (!phy) continue;
+			gameObjectData = gameObject->FirstChildElement("Orientation");
+			if(gameObjectData)
+			{
+				gameObjectData->QueryFloatAttribute("X", &x);
+				gameObjectData->QueryFloatAttribute("Y", &y);
+				gameObjectData->QueryFloatAttribute("Z", &z);
+				gameObjectData->QueryFloatAttribute("W", &w);
+				constructedGameObject->setOrientation(w, x, y, z);
+			}
 
-		float mass(0);
+			gameObjectData = gameObject->FirstChildElement("Scale");
+			if(gameObjectData)
+			{
+				gameObjectData->QueryFloatAttribute("X", &x);
+				gameObjectData->QueryFloatAttribute("Y", &y);
+				gameObjectData->QueryFloatAttribute("Z", &z);
+				constructedGameObject->setScale(x, y, z);
+			}
 
-		auto phyInfo = physics->FirstChildElement("Mass");
-		if (!phyInfo) continue;
-		phyInfo->QueryFloatText(&mass);
+			auto physics = gameObject->FirstChildElement("Physics");
+			if(!physics) continue; //no physics section. not mandatory. just ignore
+			auto state = physics->FirstChildElement("Enabled");
+			if(!state) continue;
+			bool phy;
+			state->QueryBoolText(&phy);
+			if(!phy) continue;
 
-		phyInfo = physics->FirstChildElement("Shape");
-		if (!phyInfo) continue;
-		std::string shape = phyInfo->GetText();
-		if (shape == "static") mass = 0; //this case is weird. Static stuff have always been static, even with mass. Need to see if bullet has changed stuff
-		constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
+			float mass(0);
 
-		levelContent.push_back(constructedGameObject);
-	} while ((gameObject = gameObject->NextSiblingElement()) != nullptr);
+			auto phyInfo = physics->FirstChildElement("Mass");
+			if(!phyInfo) continue;
+			phyInfo->QueryFloatText(&mass);
+
+			phyInfo = physics->FirstChildElement("Shape");
+			if(!phyInfo) continue;
+			std::string shape = phyInfo->GetText();
+			if(shape == "static") mass = 0; //this case is weird. Static stuff have always been static, even with mass. Need to see if bullet has changed stuff
+			constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
+
+			levelContent.push_back(constructedGameObject);
+		} while((gameObject = gameObject->NextSiblingElement()) != nullptr);
 
 	element = level->FirstChildElement("LevelLighting");
-	if (!element) AnnDebug() << "No lights declared";
+	if(!element)
+		AnnDebug() << "No lights declared";
 	else
 	{
 		float x, y, z, dx, dy, dz, r, g, b, a;
 		auto source = element->FirstChildElement("Source");
-		if (source) do
-		{
-			std::string lightID = source->Attribute("ID");
+		if(source) do
+			{
+				std::string lightID = source->Attribute("ID");
 
-			auto position = source->FirstChildElement("Position");
-			auto color = source->FirstChildElement("Color");
-			auto type = source->FirstChildElement("Type");
-			auto direction = source->FirstChildElement("Direction");
+				auto position  = source->FirstChildElement("Position");
+				auto color	 = source->FirstChildElement("Color");
+				auto type	  = source->FirstChildElement("Type");
+				auto direction = source->FirstChildElement("Direction");
 
-			position->QueryFloatAttribute("X", &x);
-			position->QueryFloatAttribute("Y", &y);
-			position->QueryFloatAttribute("Z", &z);
-			direction->QueryFloatAttribute("X", &dx);
-			direction->QueryFloatAttribute("Y", &dy);
-			direction->QueryFloatAttribute("Z", &dz);
-			color->QueryFloatAttribute("R", &r);
-			color->QueryFloatAttribute("G", &g);
-			color->QueryFloatAttribute("B", &b);
-			color->QueryFloatAttribute("A", &a);
-			std::string lightType = type->GetText();
+				position->QueryFloatAttribute("X", &x);
+				position->QueryFloatAttribute("Y", &y);
+				position->QueryFloatAttribute("Z", &z);
+				direction->QueryFloatAttribute("X", &dx);
+				direction->QueryFloatAttribute("Y", &dy);
+				direction->QueryFloatAttribute("Z", &dz);
+				color->QueryFloatAttribute("R", &r);
+				color->QueryFloatAttribute("G", &g);
+				color->QueryFloatAttribute("B", &b);
+				color->QueryFloatAttribute("A", &a);
+				std::string lightType = type->GetText();
 
-			auto lightSource = addLightObject(lightID);
-			lightSource->setPosition(AnnVect3(x, y, z));
-			lightSource->setType(AnnLightObject::getLightTypeFromString(lightType));
-			lightSource->setDirection(AnnVect3(dx, dy, dz));
-			lightSource->setDiffuseColor(AnnColor(r, g, b, a));
-		} while ((source = source->NextSiblingElement()) != nullptr);
+				auto lightSource = addLightObject(lightID);
+				lightSource->setPosition(AnnVect3(x, y, z));
+				lightSource->setType(AnnLightObject::getLightTypeFromString(lightType));
+				lightSource->setDirection(AnnVect3(dx, dy, dz));
+				lightSource->setDiffuseColor(AnnColor(r, g, b, a));
+			} while((source = source->NextSiblingElement()) != nullptr);
 	}
 
 	element = level->FirstChildElement("Player");
-	if (element)
+	if(element)
 	{
 		auto playerElement = element->FirstChildElement("Position");
-		if (playerElement)
+		if(playerElement)
 		{
 			float x, y, z;
 			playerElement->QueryFloatAttribute("X", &x);
@@ -216,17 +223,19 @@ void AnnXmlLevel::load()
 
 			AnnGetPlayer()->setPosition(AnnVect3(x, y, z));
 		}
-		else AnnGetPlayer()->setPosition(AnnPlayerBody::DEFAULT_STARTING_POS);
+		else
+			AnnGetPlayer()->setPosition(AnnPlayerBody::DEFAULT_STARTING_POS);
 
 		playerElement = element->FirstChildElement("Orientation");
-		if (playerElement)
+		if(playerElement)
 		{
 			float yaw;
 			playerElement->QueryFloatAttribute("Yaw", &yaw);
 			AnnDebug() << "Player Yaw : " << yaw;
 			AnnGetPlayer()->setOrientation(Ogre::Euler(Ogre::Degree(yaw).valueRadians()));
 		}
-		else AnnGetPlayer()->setOrientation(AnnPlayerBody::DEFAULT_STARTING_ORIENT);
+		else
+			AnnGetPlayer()->setOrientation(AnnPlayerBody::DEFAULT_STARTING_ORIENT);
 	}
 	else
 	{

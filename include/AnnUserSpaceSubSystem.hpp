@@ -20,12 +20,12 @@
 //Macro definiton for the plugin "bootstrap" symbol declaration and implementation.
 //AnnEngine expect to find a C function called "AnnBootPlugin_PLUGIN_NAME" inside the DLL
 #define AnnUserSubSystemPluginBootReturnType Annwvyn::AnnUserSubSystem*
-#define AnnUserSubSystemPluginCatNameImpl(a,b) a##b
-#define AnnUserSubSystemPluginCatName(a,b) AnnUserSubSystemPluginCatNameImpl(a, b)
+#define AnnUserSubSystemPluginCatNameImpl(a, b) a##b
+#define AnnUserSubSystemPluginCatName(a, b) AnnUserSubSystemPluginCatNameImpl(a, b)
 #define AnnBootPluginPrefix AnnBootPlugin_
 #define AnnUserSubSystemPluginBootName(AnnUserSubSystemPluginClassName) AnnUserSubSystemPluginCatName(AnnBootPluginPrefix, AnnUserSubSystemPluginClassName)
 #define AnnUserSubSystemPluginBootImpl(AnnUserSubSystemPluginClassName) AnnUserSubSystemPluginBootReturnType AnnUserSubSystemPluginBootName(AnnUserSubSystemPluginClassName)()
-#define AnnUserSubSystemPluginBootDeclare(AnnUserSubSystemPluginClassName)  extern "C" AnnUserSubSystemPluginExport AnnUserSubSystemPluginBootImpl(AnnUserSubSystemPluginClassName)
+#define AnnUserSubSystemPluginBootDeclare(AnnUserSubSystemPluginClassName) extern "C" AnnUserSubSystemPluginExport AnnUserSubSystemPluginBootImpl(AnnUserSubSystemPluginClassName)
 
 namespace Annwvyn
 {
@@ -39,7 +39,6 @@ namespace Annwvyn
 		AnnUserSubSystem(const std::string& systemName);
 
 	protected:
-
 		friend class AnnEngine;
 
 		///Called at each refresh if this->needUpdate() returns true
@@ -52,9 +51,10 @@ namespace Annwvyn
 		void dispatchEvent(AnnUserSpaceEventPtr e) override;
 
 		///Consruct+distpatch user defined event
-		template <class UserSpaceEventType, class ... Args> void dispatchEvent(Args&& ... args)
+		template <class UserSpaceEventType, class... Args>
+		void dispatchEvent(Args&&... args)
 		{
-			dispatchEvent(std::make_shared<UserSpaceEventType>(args ...));
+			dispatchEvent(std::make_shared<UserSpaceEventType>(args...));
 		}
 	};
 

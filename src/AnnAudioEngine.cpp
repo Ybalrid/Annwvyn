@@ -8,27 +8,30 @@
 
 using namespace Annwvyn;
 
-AnnAudioEngine::AnnAudioEngine() : AnnSubSystem("AudioEngine"),
-lastError("Initialize OpenAL based sound system"),
-alDevice(nullptr),
-alContext(nullptr),
-audioFileManager(nullptr)
+AnnAudioEngine::AnnAudioEngine() :
+ AnnSubSystem("AudioEngine"),
+ lastError("Initialize OpenAL based sound system"),
+ alDevice(nullptr),
+ alContext(nullptr),
+ audioFileManager(nullptr)
 {
 	//Try to init OpenAL
-	if (!initOpenAL())
+	if(!initOpenAL())
 		logError();
 
 	//Set the listener to base position
-	const auto player = AnnGetPlayer();
+	const auto player   = AnnGetPlayer();
 	const auto position = player->getPosition();
 	alListener3f(AL_POSITION, position.x, position.y, position.z);
 
 	//Define the default orientation
 	const AnnQuaternion orientation = player->getOrientation().toQuaternion();
-	const auto at = orientation.getAtVector();
-	const auto up = orientation.getUpVector();
-	ALfloat alOrientation[] = { at.x, at.y, at.z, //LookAt vector
-							up.x, up.y, up.z }; //Up vector
+	const auto at					= orientation.getAtVector();
+	const auto up					= orientation.getUpVector();
+	ALfloat alOrientation[]			= { at.x, at.y, at.z, //LookAt vector
+								up.x,
+								up.y,
+								up.z }; //Up vector
 
 	//Apply the orientation
 	alListenerfv(AL_ORIENTATION, alOrientation);
@@ -53,38 +56,39 @@ AnnAudioEngine::~AnnAudioEngine()
 	delete audioFileManager;
 }
 
-void AnnAudioEngine::detectPlaybackDevices(const char *list)
+void AnnAudioEngine::detectPlaybackDevices(const char* list)
 {
 	//If list not null or fist character end of string
-	if (!list || *list == '\0')
+	if(!list || *list == '\0')
 		AnnDebug("    !!! none !!!\n");
-	else do
-	{
-		//Get the first string from the list
-		std::string deviceName(list);
+	else
+		do
+		{
+			//Get the first string from the list
+			std::string deviceName(list);
 
-		AnnDebug() << "detected device : " << deviceName;
-		detectedDevices.push_back(deviceName);
+			AnnDebug() << "detected device : " << deviceName;
+			detectedDevices.push_back(deviceName);
 
-		list += strlen(list) + 1; //This advance the start of the string after the end of the current one, because sizeof(char) = 1
-	} while (*list != '\0');//End of the list is marked by \0\0 instead of \0
+			list += strlen(list) + 1; //This advance the start of the string after the end of the current one, because sizeof(char) = 1
+		} while(*list != '\0');		  //End of the list is marked by \0\0 instead of \0
 }
 
 bool AnnAudioEngine::initOpenAL()
 {
 	//Open audio playback device
 	//Check if OpenAL support device enumeration extension here
-	if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT")
-		&& AnnGetVRRenderer()->usesCustomAudioDevice())
+	if(alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT")
+	   && AnnGetVRRenderer()->usesCustomAudioDevice())
 	{
 		AnnDebug() << "VR device want's to use : " << AnnGetVRRenderer()->getAudioDeviceIdentifierSubString() << " for audio playback...";
 		//Get the list of all devices
 		detectPlaybackDevices(alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER));
 
 		//Iterate through the name of each device and check if we can find the substring the renderer ask for
-		for (auto& deviceName : detectedDevices)
-			if (deviceName.find(AnnGetVRRenderer()->getAudioDeviceIdentifierSubString())
-				!= std::string::npos)
+		for(auto& deviceName : detectedDevices)
+			if(deviceName.find(AnnGetVRRenderer()->getAudioDeviceIdentifierSubString())
+			   != std::string::npos)
 			{
 				AnnDebug() << "Found " << deviceName << " alDevice!";
 				//Open the selected device
@@ -94,12 +98,12 @@ bool AnnAudioEngine::initOpenAL()
 	}
 
 	//If no device has been set above :
-	if (!alDevice)
+	if(!alDevice)
 	{
 		AnnDebug() << "No specific OpenAL device set, opening windows default";
 		alDevice = alcOpenDevice(nullptr);
 	}
-	if (!alDevice)
+	if(!alDevice)
 	{
 		lastError = "Failed to open an OpenAL device";
 		return false;
@@ -107,12 +111,12 @@ bool AnnAudioEngine::initOpenAL()
 
 	//Create context and make it current
 	alContext = alcCreateContext(alDevice, nullptr);
-	if (!alContext)
+	if(!alContext)
 	{
 		lastError = "Failed to create an OpenAL Context";
 		return false;
 	}
-	if (!alcMakeContextCurrent(alContext))
+	if(!alcMakeContextCurrent(alContext))
 	{
 		lastError = "failed to make " + std::to_string(reinterpret_cast<uint64_t>(alContext)) + " as current context";
 		return false;
@@ -123,7 +127,7 @@ bool AnnAudioEngine::initOpenAL()
 	AnnDebug() << "OpenAL version : " << alGetString(AL_VERSION);
 	AnnDebug() << "OpenAL vendor  : " << alVendor;
 
-	if (alVendor != "OpenAL Community")
+	if(alVendor != "OpenAL Community")
 	{
 		displayWin32ErrorMessage("Wrong version of OpenAL loaded", "The audio engine loaded an OpenAL DLL that isn't the implementation from the OpenAL soft project");
 		throw AnnInitializationError(ANN_ERR_NOTINIT, "Loaded OpenAL library shipped by " + alVendor + " Instead of openal-soft");
@@ -142,18 +146,18 @@ void AnnAudioEngine::shutdownOpenAL()
 	audioSources.clear();
 
 	//Delete the BGM buffer if it has been initialized
-	if (alIsBuffer(bgmBuffer) == AL_TRUE)
+	if(alIsBuffer(bgmBuffer) == AL_TRUE)
 		alDeleteBuffers(1, &bgmBuffer);
 
 	//Delete all buffers created here
-	for (auto buffer : buffers)
+	for(auto buffer : buffers)
 		alDeleteBuffers(1, &buffer.second);
 
 	//Close the AL environment
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(alContext);
 	alcCloseDevice(alDevice);
-	alGetError();//Purge pending error.
+	alGetError(); //Purge pending error.
 
 	AnnAudioFile::clearSndFileVioStruct();
 }
@@ -166,23 +170,23 @@ void AnnAudioEngine::preLoadBuffer(const std::string& filename)
 ALuint AnnAudioEngine::isBufferLoader(const std::string& filename)
 {
 	auto query = buffers.find(filename);
-	if (query != buffers.end())
+	if(query != buffers.end())
 		return query->second;
 	return false;
 }
 
 ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 {
-	if (auto buffer = isBufferLoader(filename)) return buffer;
+	if(auto buffer = isBufferLoader(filename)) return buffer;
 
 	AnnDebug() << filename << " Not loaded on an OpenAL buffer, loading from file...";
 
 	//Attempt to retrieve the resource...
 	auto audioFileResource = audioFileManager->getResourceByName(filename).staticCast<AnnAudioFile>();
-	if (!audioFileResource) //Cannot get it? Load that resource by hand to see
+	if(!audioFileResource) //Cannot get it? Load that resource by hand to see
 	{
 		audioFileResource = audioFileManager->load(filename, AnnGetResourceManager()->getDefaultResourceGroupName());
-		if (!audioFileResource) //Okay, that file doesn't exist or something.
+		if(!audioFileResource) //Okay, that file doesn't exist or something.
 		{
 			AnnDebug() << "Error, cannot load file " << filename << " as a recognized audio file";
 			return 0;
@@ -194,7 +198,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	auto File = sf_open_virtual(audioFileResource->getSndFileVioStruct(), SFM_READ, &fileInfos, audioFileResource.getPointer());
 
 	//get the number of sample and the sample-rate (in samples by seconds)
-	auto nbSamples = static_cast<ALsizei>(fileInfos.channels * fileInfos.frames);
+	auto nbSamples  = static_cast<ALsizei>(fileInfos.channels * fileInfos.frames);
 	auto sampleRate = static_cast<ALsizei>(fileInfos.samplerate);
 
 	AnnDebug() << "Loading " << nbSamples << " samples. Playback sample-rate : " << sampleRate << "Hz";
@@ -204,14 +208,14 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	auto readSamples = sf_read_float(File, samplesBuffer.data(), nbSamples);
 
 	//This sometimes happen with OGG files, but it seems to run fine anyway. This is probably due to meta-data/tags present at the end of files
-	if (readSamples < nbSamples)
+	if(readSamples < nbSamples)
 	{
 		lastError = "Warning: It looks like the " + std::to_string(nbSamples - readSamples);
 		lastError += " last samples of the file have been omitted. Ignore if file has meta-data appended at the end. ";
 		logError();
 	}
 
-	if (sf_error(File) != SF_ERR_NO_ERROR)
+	if(sf_error(File) != SF_ERR_NO_ERROR)
 	{
 		lastError = "Error while reading the file " + filename + " through sndfile library: ";
 		lastError += sf_error_number(sf_error(File));
@@ -220,7 +224,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	}
 
 	std::vector<ALshort> alSamplesBuffer(nbSamples);
-	for (size_t i(0); i < alSamplesBuffer.size(); i++)
+	for(size_t i(0); i < alSamplesBuffer.size(); i++)
 		//This will step down a bit the amplitude (88% of max) of the signal to prevent saturation while using some formats (OGG)
 		alSamplesBuffer[i] = static_cast<ALshort>(0x7FFF * samplesBuffer[i] * 0.88f);
 
@@ -229,12 +233,21 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 
 	//Read the number of channels. sound effects should be mono and background music should be stereo
 	ALenum Format;
-	switch (fileInfos.channels)
+	switch(fileInfos.channels)
 	{
-	case 1: AnnEngine::log("Mono 16bits sound loaded");	Format = AL_FORMAT_MONO16; break;
-	case 2: AnnEngine::log("Stereo 16bits sound loaded");  Format = AL_FORMAT_STEREO16; break;
+		case 1:
+			AnnEngine::log("Mono 16bits sound loaded");
+			Format = AL_FORMAT_MONO16;
+			break;
+		case 2:
+			AnnEngine::log("Stereo 16bits sound loaded");
+			Format = AL_FORMAT_STEREO16;
+			break;
 
-	default: lastError = "Error : File has to have either one or two audio channel to be loaded"; logError(); return 0;
+		default:
+			lastError = "Error : File has to have either one or two audio channel to be loaded";
+			logError();
+			return 0;
 	}
 
 	//create OpenAL buffer
@@ -246,7 +259,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	alBufferData(buffer, Format, &alSamplesBuffer[0], nbSamples * sizeof(ALshort), sampleRate);
 
 	//check errors
-	if (alGetError() != AL_NO_ERROR)
+	if(alGetError() != AL_NO_ERROR)
 	{
 		lastError = "Error : cannot create an audio buffer for : " + filename;
 		logError();
@@ -260,12 +273,12 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 
 void AnnAudioEngine::unloadBuffer(const std::string& filename)
 {
-	if (locked) return;
+	if(locked) return;
 
 	//Search for the buffer
 	AnnDebug() << "Unloading sound file " << filename;
 	auto query = buffers.find(filename);
-	if (query == buffers.end())
+	if(query == buffers.end())
 	{
 		lastError = "Error: cannot unload buffer " + filename + " is unknown";
 		logError();
@@ -308,8 +321,8 @@ void AnnAudioEngine::updateListenerPos(AnnVect3 pos)
 {
 	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
 	//make sure that all positions are synced
-	for (auto source : audioSources)
-		if (source->posRelToPlayer)
+	for(auto source : audioSources)
+		if(source->posRelToPlayer)
 		{
 			AnnVect3 absolute = pos + source->pos;
 			alSource3f(source->source, AL_POSITION, absolute.x, absolute.y, absolute.z);
@@ -321,8 +334,7 @@ void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 	auto At = orient.getAtVector(); // Direction object facing
 	auto Up = orient.getUpVector(); // Up Vector
 
-	ALfloat Orientation[] = { At.x, At.y, At.z,
-							Up.x, Up.y, Up.z };
+	ALfloat Orientation[] = { At.x, At.y, At.z, Up.x, Up.y, Up.z };
 
 	alListenerfv(AL_ORIENTATION, Orientation);
 }
@@ -353,7 +365,7 @@ void AnnAudioEngine::removeSource(std::shared_ptr<AnnAudioSource> source)
 
 std::shared_ptr<AnnAudioSource> AnnAudioEngine::createSource()
 {
-	auto audioSource = std::make_shared<AnnAudioSource>();
+	auto audioSource		= std::make_shared<AnnAudioSource>();
 	audioSource->bufferName = "Nothing";
 	alGenSources(1, &audioSource->source);
 
@@ -365,9 +377,9 @@ std::shared_ptr<AnnAudioSource> AnnAudioEngine::createSource()
 }
 
 AnnAudioSource::AnnAudioSource() :
-	source(0),
-	pos(AnnVect3::ZERO),
-	posRelToPlayer(false)
+ source(0),
+ pos(AnnVect3::ZERO),
+ posRelToPlayer(false)
 {
 }
 
@@ -412,17 +424,19 @@ void AnnAudioSource::stop() const
 
 void AnnAudioSource::changeSound(std::string filename)
 {
-	if (filename.empty()) return;
+	if(filename.empty()) return;
 	bufferName = filename;
 
 	auto buffer = AnnGetAudioEngine()->loadBuffer(bufferName);
-	if (buffer) alSourcei(source, AL_BUFFER, buffer);
+	if(buffer) alSourcei(source, AL_BUFFER, buffer);
 }
 
 void AnnAudioSource::setLooping(bool looping) const
 {
-	if (looping) alSourcei(source, AL_LOOPING, AL_TRUE);
-	else alSourcei(source, AL_LOOPING, AL_FALSE);
+	if(looping)
+		alSourcei(source, AL_LOOPING, AL_TRUE);
+	else
+		alSourcei(source, AL_LOOPING, AL_FALSE);
 }
 
 void AnnAudioSource::setPositionRelToPlayer(bool rel)

@@ -7,50 +7,51 @@
 
 using namespace Annwvyn;
 
-AnnDefaultEventListener::AnnDefaultEventListener() : AnnEventListener(),
-turnMode{ WHEEL },
-forward{ KeyCode::w },
-backward{ KeyCode::s },
-straffleft{ KeyCode::a },
-straffright{ KeyCode::d },
-jump{ KeyCode::space },
-run{ KeyCode::lshift },
-recenter{ KeyCode::f12 },
-deadzone{ 1.0f / 5.0f },
-wheelStickSensitivity{ 6.0f / 8.0f },
-maxWheelAngle{ 45 },
-minWheelAngle{ 0.5f },
-stickCurrentAngleDegree{ 0 },
-computedWheelValue{ 0 },
-lastAngle{ 0 },
-OpenVRController{ AnnGetStringUtility()->hash("OpenVR Hand Controller") },
-OculusTouchController{ AnnGetStringUtility()->hash("Oculus Touch") }
+AnnDefaultEventListener::AnnDefaultEventListener() :
+ AnnEventListener(),
+ turnMode{ WHEEL },
+ forward{ KeyCode::w },
+ backward{ KeyCode::s },
+ straffleft{ KeyCode::a },
+ straffright{ KeyCode::d },
+ jump{ KeyCode::space },
+ run{ KeyCode::lshift },
+ recenter{ KeyCode::f12 },
+ deadzone{ 1.0f / 5.0f },
+ wheelStickSensitivity{ 6.0f / 8.0f },
+ maxWheelAngle{ 45 },
+ minWheelAngle{ 0.5f },
+ stickCurrentAngleDegree{ 0 },
+ computedWheelValue{ 0 },
+ lastAngle{ 0 },
+ OpenVRController{ AnnGetStringUtility()->hash("OpenVR Hand Controller") },
+ OculusTouchController{ AnnGetStringUtility()->hash("Oculus Touch") }
 {
 	//Use 1st analog stick for displacement
-	axes[ax_walk] = 0;
+	axes[ax_walk]   = 0;
 	axes[ax_straff] = 1;
 	//Use second analog stick for horizontal rotation
 	axes[ax_rotate] = 3;
 
-	buttons[b_run] = 2;
-	buttons[b_jump] = 0;
+	buttons[b_run]	 = 2;
+	buttons[b_jump]	= 0;
 	buttons[b_console] = 7;
-	buttons[b_debug] = 6;
+	buttons[b_debug]   = 6;
 }
 
 void AnnDefaultEventListener::setKeys(KeyCode::code fw,
-	KeyCode::code bw,
-	KeyCode::code sl,
-	KeyCode::code sr,
-	KeyCode::code jmp,
-	KeyCode::code rn)
+									  KeyCode::code bw,
+									  KeyCode::code sl,
+									  KeyCode::code sr,
+									  KeyCode::code jmp,
+									  KeyCode::code rn)
 {
-	forward = fw;
-	backward = bw;
-	straffleft = sl;
+	forward		= fw;
+	backward	= bw;
+	straffleft  = sl;
 	straffright = sr;
-	jump = jmp;
-	run = rn;
+	jump		= jmp;
+	run			= rn;
 }
 
 //Each key press an release are a separated event. in contain a state "pressed" or "released" and the Annwvyn keycode corresponding to the key.
@@ -61,47 +62,47 @@ void AnnDefaultEventListener::setKeys(KeyCode::code fw,
 void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 {
 	//If the corresponding key is pressed, set the direction to true.
-	if (!e.shouldIgnore())
+	if(!e.shouldIgnore())
 	{
-		if (AnnGetVRRenderer()->shouldPauseFlag()) return;
+		if(AnnGetVRRenderer()->shouldPauseFlag()) return;
 
 		//Z and Q are hacks for supporting french AZERTY keyboard easilly
-		if (e.getKey() == forward || e.getKey() == KeyCode::z)
+		if(e.getKey() == forward || e.getKey() == KeyCode::z)
 			player->walking[walkDirection::forward] = e.isPressed();
-		if (e.getKey() == backward)
+		if(e.getKey() == backward)
 			player->walking[walkDirection::backward] = e.isPressed();
-		if (e.getKey() == straffleft || e.getKey() == KeyCode::q)
+		if(e.getKey() == straffleft || e.getKey() == KeyCode::q)
 			player->walking[left] = e.isPressed();
-		if (e.getKey() == straffright)
+		if(e.getKey() == straffright)
 			player->walking[right] = e.isPressed();
-		if (e.getKey() == run)
+		if(e.getKey() == run)
 			player->run = e.isPressed();
 
 		//Jumping is a function call because it's an action and not a "state" the player has.
-		if (e.isPressed() && e.getKey() == recenter)
+		if(e.isPressed() && e.getKey() == recenter)
 			AnnGetVRRenderer()->recenter();
 	}
-	if (e.isPressed()) switch (e.getKey())
-	{
-	case KeyCode::grave:
-		AnnGetOnScreenConsole()->toggle();
-		break;
-	case KeyCode::tab:
-		AnnGetVRRenderer()->cycleDebugHud();
-		break;
-	case KeyCode::f1:
-		AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::RAW_BUFFER);
-		break;
-	case KeyCode::f2:
-		AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::HMD_MIRROR);
-		break;
-	case KeyCode::f3:
-		AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::MONOSCOPIC);
-		break;
-	case KeyCode::f5:
-		AnnGetPhysicsEngine()->toggleDebugPhysics();
-	default: break;
-	}
+	if(e.isPressed()) switch(e.getKey())
+		{
+			case KeyCode::grave:
+				AnnGetOnScreenConsole()->toggle();
+				break;
+			case KeyCode::tab:
+				AnnGetVRRenderer()->cycleDebugHud();
+				break;
+			case KeyCode::f1:
+				AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::RAW_BUFFER);
+				break;
+			case KeyCode::f2:
+				AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::HMD_MIRROR);
+				break;
+			case KeyCode::f3:
+				AnnGetVRRenderer()->showDebug(AnnOgreVRRenderer::MONOSCOPIC);
+				break;
+			case KeyCode::f5:
+				AnnGetPhysicsEngine()->toggleDebugPhysics();
+			default: break;
+		}
 }
 
 //The mouse event contain all information about the mouse. Mouse movement are integer and are represented by 3 axis
@@ -116,83 +117,81 @@ void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 //The stick event contain all the data for a specific joystick. In includes buttons current states, press and release events, stick relative and absolute values
 void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
 {
-	if (AnnGetVRRenderer()->shouldPauseFlag()) return;
-	if (!e.isXboxController()) return;
-	if (e.getNbAxis() >= 4) //If we have 2 analog stick (or equivalent) available
+	if(AnnGetVRRenderer()->shouldPauseFlag()) return;
+	if(!e.isXboxController()) return;
+	if(e.getNbAxis() >= 4) //If we have 2 analog stick (or equivalent) available
 	{
-		player->analogWalk = trim(e.getAxis(axes[ax_walk]).getAbsValue(), deadzone);
+		player->analogWalk   = trim(e.getAxis(axes[ax_walk]).getAbsValue(), deadzone);
 		player->analogStraff = trim(e.getAxis(axes[ax_straff]).getAbsValue(), deadzone);
 		player->analogRotate = trim(e.getAxis(axes[ax_rotate]).getAbsValue(), deadzone);
 	}
-	if (e.isPressed(buttons[b_run]))
+	if(e.isPressed(buttons[b_run]))
 		player->run = true;
-	if (e.isReleased(buttons[b_run]))
+	if(e.isReleased(buttons[b_run]))
 		player->run = false;
 
-	if (e.isPressed(buttons[b_console]))
+	if(e.isPressed(buttons[b_console]))
 		AnnGetOnScreenConsole()->toggle();
-	if (e.isPressed(buttons[b_debug]))
+	if(e.isPressed(buttons[b_debug]))
 		AnnGetVRRenderer()->cycleDebugHud();
 }
 
 void AnnDefaultEventListener::reclampDegreeToPositiveRange(float& degree)
 {
-	if (degree < 0)
+	if(degree < 0)
 		degree += 360.0f;
 }
 
 void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
-	if (AnnGetVRRenderer()->shouldPauseFlag()) return;
+	if(AnnGetVRRenderer()->shouldPauseFlag()) return;
 	auto rightStickThreashold{ 0.0225 };
-	if (e._getController()->getType() == OculusTouchController) rightStickThreashold = 0.8;
+	if(e._getController()->getType() == OculusTouchController) rightStickThreashold = 0.8;
 
 	auto controller = e._getController();
 	AnnVect2 analog{ controller->getAxis(0).getValue(), controller->getAxis(1).getValue() };
-	switch (controller->getSide())
+	switch(controller->getSide())
 	{
-	default:break;
-	case AnnHandController::leftHandController:
-	{
-		player->analogStraff = controller->getAxis(0).getValue();
-		player->analogWalk = -controller->getAxis(1).getValue();
-
-		if (controller->hasBeenPressed(2))
+		default: break;
+		case AnnHandController::leftHandController:
 		{
-			if (controller->getType() == OculusTouchController)
-				AnnGetOnScreenConsole()->toggle();
-		}
-		break;
-	}
-	case AnnHandController::rightHandController:
-	{
-		if (controller->hasBeenPressed(3))
-			AnnGetVRRenderer()->recenter();
-		switch (turnMode)
-		{
-		default: case WHEEL:
-			//If we take the stick values as coordinate in the trigonometric plan, this will give the angle
-			stickCurrentAngleDegree = AnnRadian(std::atan2(analog.y, analog.x)).valueDegrees();
-			//Change range from [-180; +180] to [0; 360]
-			reclampDegreeToPositiveRange(stickCurrentAngleDegree);
+			player->analogStraff = controller->getAxis(0).getValue();
+			player->analogWalk   = -controller->getAxis(1).getValue();
 
-			//Detect the relative angle between 2 frames
-			computedWheelValue = lastAngle - stickCurrentAngleDegree;
-			//If value is too high it's either that you completed a full turn or there's a glitch in the input data, ignore.
-			if (stickCurrentAngleDegree == 0 ||
-				std::abs(computedWheelValue) > maxWheelAngle ||
-				std::abs(computedWheelValue) < minWheelAngle ||
-				analog.squaredLength() < rightStickThreashold)
-				computedWheelValue = 0;
-
-			player->analogRotate = wheelStickSensitivity * computedWheelValue;
-			lastAngle = stickCurrentAngleDegree;
+			if(controller->hasBeenPressed(2))
+			{
+				if(controller->getType() == OculusTouchController)
+					AnnGetOnScreenConsole()->toggle();
+			}
 			break;
-
-		case NORMAL:
-			player->analogRotate = controller->getAxis(0).getValue();
 		}
-		break;
-	}
+		case AnnHandController::rightHandController:
+		{
+			if(controller->hasBeenPressed(3))
+				AnnGetVRRenderer()->recenter();
+			switch(turnMode)
+			{
+				default:
+				case WHEEL:
+					//If we take the stick values as coordinate in the trigonometric plan, this will give the angle
+					stickCurrentAngleDegree = AnnRadian(std::atan2(analog.y, analog.x)).valueDegrees();
+					//Change range from [-180; +180] to [0; 360]
+					reclampDegreeToPositiveRange(stickCurrentAngleDegree);
+
+					//Detect the relative angle between 2 frames
+					computedWheelValue = lastAngle - stickCurrentAngleDegree;
+					//If value is too high it's either that you completed a full turn or there's a glitch in the input data, ignore.
+					if(stickCurrentAngleDegree == 0 || std::abs(computedWheelValue) > maxWheelAngle || std::abs(computedWheelValue) < minWheelAngle || analog.squaredLength() < rightStickThreashold)
+						computedWheelValue = 0;
+
+					player->analogRotate = wheelStickSensitivity * computedWheelValue;
+					lastAngle			 = stickCurrentAngleDegree;
+					break;
+
+				case NORMAL:
+					player->analogRotate = controller->getAxis(0).getValue();
+			}
+			break;
+		}
 	}
 }

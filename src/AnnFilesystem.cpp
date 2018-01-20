@@ -27,13 +27,14 @@ void AnnFileWriter::write(shared_ptr<AnnSaveFileData> data)
 	fsmanager->createSaveDirectory();
 
 	//Open the file, abort if the file isn't openable
-	saveFile.open(path); if (!saveFile.is_open())return;
+	saveFile.open(path);
+	if(!saveFile.is_open()) return;
 	//push as plain text all key and data in a "key=data\n" format
-	for (auto storedData : data->storedTextData)
+	for(auto storedData : data->storedTextData)
 		saveFile << storedData.first
-		<< "="
-		<< storedData.second
-		<< endl;
+				 << "="
+				 << storedData.second
+				 << endl;
 	data->changed = false;
 }
 
@@ -54,26 +55,26 @@ AnnSaveFileDataPtr AnnFileReader::read(string fileName) const
 	auto fullPath = fsmanager->getPathForFileName(fileName);
 	ifile.open(fullPath);
 
-	if (!ifile)
+	if(!ifile)
 	{
 		AnnDebug() << "file " << fullPath << " doesn't exist or is not openable.";
 		return nullptr;
 	}
 
 	auto fileData(fsmanager->crateSaveFileDataObject(fileName));
-	if (!fileData) return nullptr;
+	if(!fileData) return nullptr;
 	string buffer, key, value;
 
 	//make sure the dataObject don't contain old content
 	fileData->storedTextData.clear();
 
 	//While we've not reach the end of the file
-	while (!ifile.eof())
+	while(!ifile.eof())
 	{
 		//Read a line
 		getline(ifile, buffer);
 		//Don't try to extract data from empty lines on the file
-		if (buffer.empty()) continue;
+		if(buffer.empty()) continue;
 
 		//Create a string stream on the buffer
 		stringstream readStream(buffer);
@@ -90,17 +91,18 @@ AnnSaveFileDataPtr AnnFileReader::read(string fileName) const
 	return fileData;
 }
 
-AnnFilesystemManager::AnnFilesystemManager(string title) : AnnSubSystem("FilesystemManager"),
-fileWriter(nullptr),
-fileReader(nullptr)
+AnnFilesystemManager::AnnFilesystemManager(string title) :
+ AnnSubSystem("FilesystemManager"),
+ fileWriter(nullptr),
+ fileReader(nullptr)
 {
-	//get from the OS the user's personal directory
+//get from the OS the user's personal directory
 #ifdef WIN32
-#pragma warning (disable : 4996) //Remove warning at usage of function "getenv"
+#pragma warning(disable : 4996) //Remove warning at usage of function "getenv"
 	// ReSharper disable CppDeprecatedEntity
 	pathToUserDir = getenv("USERPROFILE");
 	// ReSharper restore CppDeprecatedEntity
-#pragma warning (default : 4996) //TODO: V665 https://www.viva64.com/en/w/V665 Possibly, the usage of '#pragma warning(default: X)' is incorrect in this context. The '#pragma warning(push/pop)' should be used instead. Check lines: 99, 103.
+#pragma warning(default : 4996) //TODO: V665 https://www.viva64.com/en/w/V665 Possibly, the usage of '#pragma warning(default: X)' is incorrect in this context. The '#pragma warning(push/pop)' should be used instead. Check lines: 99, 103.
 #endif
 
 #ifdef __linux__
@@ -134,7 +136,7 @@ fileReader(nullptr)
 
 void AnnFilesystemManager::setSaveDirectoryName(string dirname)
 {
-	for (auto achar : charToEscape)
+	for(auto achar : charToEscape)
 		replace(begin(dirname), end(dirname), achar, '_');
 	saveDirectoryName = dirname;
 #ifdef __linux__
@@ -148,7 +150,7 @@ void AnnFilesystemManager::setSaveDirectoryName(string dirname)
 
 string AnnFilesystemManager::getPathForFileName(string filename) const
 {
-	if (!pathToUserDir.empty())
+	if(!pathToUserDir.empty())
 		return pathToUserDir + "/" + saveDirectoryName + "/" + filename;
 	return "";
 }
@@ -160,7 +162,7 @@ string AnnFilesystemManager::getSaveDirectoryFullPath() const
 
 void AnnFilesystemManager::createDirectory(string path)
 {
-	//TODO ISSUE clean that when upgrading to C++17
+//TODO ISSUE clean that when upgrading to C++17
 #ifdef WIN32
 	//Win32 call to create a directory
 	CreateDirectory(wstring{ begin(path), end(path) }.c_str(), nullptr);
@@ -168,7 +170,7 @@ void AnnFilesystemManager::createDirectory(string path)
 #ifdef __linux__
 	//POSIX call to create a directory
 	auto status = mkdir(path.c_str(), S_IRWXU);
-	if (status == 0 || status == EEXIST) return;
+	if(status == 0 || status == EEXIST) return;
 	AnnDebug() << "Warning: mkdir() did not return 0 or EEXIST.";
 #endif
 }
@@ -192,8 +194,8 @@ AnnSaveFileDataPtr AnnFilesystemManager::crateSaveFileDataObject(string filename
 
 AnnSaveFileDataPtr AnnFilesystemManager::getCachedSaveFileDataObject(string filename)
 {
-	for (auto dataObject : cachedData)
-		if (dataObject->getFilename() == filename)
+	for(auto dataObject : cachedData)
+		if(dataObject->getFilename() == filename)
 			return dataObject;
 	return nullptr;
 }
@@ -209,8 +211,8 @@ AnnFileWriterPtr AnnFilesystemManager::getFileWriter() const
 }
 
 AnnSaveFileData::AnnSaveFileData(string name) :
-	fileName(name),
-	changed(false)
+ fileName(name),
+ changed(false)
 {
 	AnnDebug() << "AnnSaveFileData object for file " << name << " created (not on disk!)";
 }
@@ -228,7 +230,7 @@ string AnnSaveFileData::getFilename() const
 string AnnSaveFileData::getValue(string key)
 {
 	//if key exist:
-	if (storedTextData.find(key) != end(storedTextData))
+	if(storedTextData.find(key) != end(storedTextData))
 		return storedTextData[key];
 	//else:
 	return "";
@@ -236,13 +238,13 @@ string AnnSaveFileData::getValue(string key)
 
 void AnnSaveFileData::setValue(string key, string value)
 {
-	for (auto achar : AnnFilesystemManager::charToStrip)
+	for(auto achar : AnnFilesystemManager::charToStrip)
 	{
 		replace(begin(key), end(key), achar, '_');
 		replace(begin(value), end(value), achar, '_');
 	}
 	storedTextData[key] = value;
-	changed = true;
+	changed				= true;
 }
 
 void AnnSaveFileData::setValue(string key, int value)
@@ -296,11 +298,12 @@ void AnnSaveFileData::clearVectorValue(string key)
 void AnnSaveFileData::clearQuaternionValue(string key)
 {
 	//like vectors, quaternion have x, y, and z, component. they just add a 'w' one
-	clearValue(key + ".w"); clearVectorValue(key);
+	clearValue(key + ".w");
+	clearVectorValue(key);
 }
 
 AnnSaveDataInterpretor::AnnSaveDataInterpretor(shared_ptr<AnnSaveFileData> data) :
-	dataObject(data)
+ dataObject(data)
 {
 }
 
@@ -328,9 +331,9 @@ AnnVect3 AnnSaveDataInterpretor::keyStringToVect3(string key) const
 {
 	//Get text data from the dataObject return an invalid vector if the keyvalue wanted is not found
 	string x, y, z;
-	if ((x = dataObject->getValue(key + ".x")).empty()) return AnnVect3(false);
-	if ((y = dataObject->getValue(key + ".y")).empty()) return AnnVect3(false);
-	if ((z = dataObject->getValue(key + ".z")).empty()) return AnnVect3(false);
+	if((x = dataObject->getValue(key + ".x")).empty()) return AnnVect3(false);
+	if((y = dataObject->getValue(key + ".y")).empty()) return AnnVect3(false);
+	if((z = dataObject->getValue(key + ".z")).empty()) return AnnVect3(false);
 
 	//Convert the text data to floats and send them to the AnnVect3 constructor and return the object
 	return AnnVect3(
@@ -343,10 +346,10 @@ AnnQuaternion AnnSaveDataInterpretor::keyStringToQuaternion(string key) const
 {
 	//Get text data from the dataObject return an invalid quaternion if the keyvalue wanted is not found
 	string x, y, z, w;
-	if ((x = dataObject->getValue(key + ".x")).empty()) return AnnQuaternion(false);
-	if ((y = dataObject->getValue(key + ".y")).empty()) return AnnQuaternion(false);
-	if ((z = dataObject->getValue(key + ".z")).empty()) return AnnQuaternion(false);
-	if ((w = dataObject->getValue(key + ".w")).empty()) return AnnQuaternion(false);
+	if((x = dataObject->getValue(key + ".x")).empty()) return AnnQuaternion(false);
+	if((y = dataObject->getValue(key + ".y")).empty()) return AnnQuaternion(false);
+	if((z = dataObject->getValue(key + ".z")).empty()) return AnnQuaternion(false);
+	if((w = dataObject->getValue(key + ".w")).empty()) return AnnQuaternion(false);
 
 	//Convert the text data to floats and send them to the AnnQuaternion constructor and return the object
 	return AnnQuaternion(

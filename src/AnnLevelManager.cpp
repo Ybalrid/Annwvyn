@@ -8,10 +8,11 @@
 
 using namespace Annwvyn;
 
-AnnLevelManager::AnnLevelManager() : AnnSubSystem("LevelManager"),
-current(nullptr),
-jumpRequested(false),
-jumpTo(0)
+AnnLevelManager::AnnLevelManager() :
+ AnnSubSystem("LevelManager"),
+ current(nullptr),
+ jumpRequested(false),
+ jumpTo(0)
 {
 }
 
@@ -23,19 +24,19 @@ AnnLevelManager::~AnnLevelManager()
 
 void AnnLevelManager::jump(level_id levelId)
 {
-	if (!(levelId < levelList.size())) return;
+	if(!(levelId < levelList.size())) return;
 
 	//Deferred level jump
-	if (!jumpRequested)
+	if(!jumpRequested)
 	{
 		jumpRequested = true;
-		jumpTo = levelId;
+		jumpTo		  = levelId;
 		return;
 	}
 
 	AnnDebug() << "LevelManager jumping to levelId : " << levelId;
 	jumpRequested = false;
-	jumpTo = 0;
+	jumpTo		  = 0;
 	unloadCurrentLevel();
 	current = levelList[levelId];
 	current->load();
@@ -43,8 +44,8 @@ void AnnLevelManager::jump(level_id levelId)
 
 void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
 {
-	for (level_id i(0); i < levelList.size(); i++)
-		if (levelList[i] == level)
+	for(level_id i(0); i < levelList.size(); i++)
+		if(levelList[i] == level)
 		{
 			jump(i);
 			break;
@@ -64,14 +65,14 @@ void AnnLevelManager::jumpToFirstLevel()
 
 void AnnLevelManager::update()
 {
-	if (jumpRequested)
+	if(jumpRequested)
 		return jump(jumpTo);
-	if (current) current->runLogic();
+	if(current) current->runLogic();
 }
 
 void AnnLevelManager::unloadCurrentLevel()
 {
-	if (current) current->unload();
+	if(current) current->unload();
 	current = nullptr;
 }
 
@@ -87,19 +88,19 @@ std::shared_ptr<AnnLevel> AnnLevelManager::getFirstLevelLoaded()
 
 std::shared_ptr<AnnLevel> AnnLevelManager::getLevelByIndex(level_id id)
 {
-	if (id >= levelList.size()) return nullptr;
+	if(id >= levelList.size()) return nullptr;
 	return levelList[id];
 }
 
 void AnnLevelManager::addToCurrentLevel(std::shared_ptr<AnnGameObject> obj) const
 {
-	if (!current || !obj) return;
+	if(!current || !obj) return;
 	current->levelContent.push_back(obj);
 }
 
 void AnnLevelManager::removeFromCurrentLevel(std::shared_ptr<AnnGameObject> obj) const
 {
-	if (!current || !obj) return;
+	if(!current || !obj) return;
 	current->levelContent.erase(
 		remove(begin(current->levelContent), end(current->levelContent), obj),
 		end(current->levelContent));

@@ -41,7 +41,6 @@ namespace Annwvyn
 		void setTimeoutMillisec(unsigned time);
 
 	private:
-
 		///Create the plane where the splash will go
 		void createSplashCurvedPlane();
 

@@ -11,8 +11,7 @@ namespace Annwvyn
 	class AnnTriggerObject;
 	class AnnPlayerBody;
 
-	enum AnnEventType
-	{
+	enum AnnEventType {
 		NO_TYPE,
 		USER_INPUT,
 		TIMER_TIMEOUT,
@@ -39,6 +38,7 @@ namespace Annwvyn
 	{
 		///Keyboard event constructor
 		AnnKeyEvent();
+
 	public:
 		///Get the key involved in that event
 		KeyCode::code getKey() const;
@@ -70,10 +70,23 @@ namespace Annwvyn
 	};
 
 	///Name and number of axes
-	enum MouseAxisId { X, Y, Z, nbAxes, invalidAxis };
+	enum MouseAxisId { X,
+					   Y,
+					   Z,
+					   nbAxes,
+					   invalidAxis };
 
 	///Name and number of mouse button
-	enum MouseButtonId { Left, Right, Middle, Button3, Button4, Button5, Button6, Button7, nbButtons, invalidButton };
+	enum MouseButtonId { Left,
+						 Right,
+						 Middle,
+						 Button3,
+						 Button4,
+						 Button5,
+						 Button6,
+						 Button7,
+						 nbButtons,
+						 invalidButton };
 
 	///A mouse axis information object
 	class AnnDllExport AnnMouseAxis
@@ -141,12 +154,12 @@ namespace Annwvyn
 	};
 
 	///A joystick event
-	using ButtonId = int;
+	using ButtonId	= int;
 	using StickAxisId = int;
-	using PovId = int;
+	using PovId		  = int;
 
 	static constexpr StickAxisId InvalidStickAxisId = -1;
-	static constexpr float INVALID = 42.0f;
+	static constexpr float INVALID					= 42.0f;
 
 	///A joystick axis
 	class AnnDllExport AnnStickAxis
@@ -162,7 +175,6 @@ namespace Annwvyn
 		float getAbsValue() const;
 
 	private:
-
 		///Raw values
 		int a, r;
 		StickAxisId id;
@@ -333,12 +345,13 @@ namespace Annwvyn
 
 		///advanced : get access to the hand controller this event is related to
 		AnnHandController* _getController() const;
+
 	private:
 		friend class AnnEventManager;
 		AnnHandController* controller;
 	};
 
-	using  timerID = int;
+	using timerID = int;
 
 	///A timer timeout event
 	class AnnDllExport AnnTimeEvent : public AnnEvent
@@ -350,6 +363,7 @@ namespace Annwvyn
 		AnnTimeEvent(const AnnTimer& timer);
 		///Get the ID of this timer
 		timerID getID() const;
+
 	private:
 		friend class AnnEventManager;
 		///Set the ID of the timer
@@ -390,9 +404,10 @@ namespace Annwvyn
 		///Return true if the collision occured with an horizontal plane above the object. See isGroundCollision, it's the same thing, but testing for a negative y on the normal
 		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
 		bool isCeilingCollision(const float scalarApprox = 0.125) const;
+
 	private:
 		///Some naked pointers
-		AnnGameObject * a, *b;
+		AnnGameObject *a, *b;
 		const AnnVect3 position, normal;
 	};
 
@@ -408,7 +423,7 @@ namespace Annwvyn
 
 	private:
 		///Naked pointer to the collider
-		AnnGameObject * col;
+		AnnGameObject* col;
 	};
 
 	///Trigger in/out event
@@ -423,6 +438,7 @@ namespace Annwvyn
 
 		///Pointer to the trigger that have sent this event
 		AnnTriggerObject* getSender() const;
+
 	private:
 		friend class AnnEventManager;
 		bool contact;
@@ -466,12 +482,13 @@ namespace Annwvyn
 		static float trim(float value, float deadzone);
 		///return a shared_ptr to this listener
 		std::shared_ptr<AnnEventListener> getSharedListener();
+
 	protected:
 		///Pointer to the player. Set by the constructor, provide easy access to the AnnPlayerBody
-		AnnPlayerBody * player;
+		AnnPlayerBody* player;
 	};
 
-	using AnnEventListenerPtr = std::shared_ptr<AnnEventListener>;
+	using AnnEventListenerPtr	 = std::shared_ptr<AnnEventListener>;
 	using AnnEventListenerWeakPtr = std::weak_ptr<AnnEventListener>;
 
 	///Internal utility class that represent a timer
@@ -479,6 +496,7 @@ namespace Annwvyn
 	{
 	public:
 		timerID getID() const;
+
 	private:
 		friend class AnnEventManager;
 		///Timer object for the EventMAnager
@@ -514,6 +532,7 @@ namespace Annwvyn
 		~JoystickBuffer();
 
 		void capture() const;
+
 	private:
 		///Joystick object from OIS. Deleted by constructor
 		OIS::JoyStick* oisJoystick;
@@ -537,9 +556,9 @@ namespace Annwvyn
 		///Object for text input
 		AnnTextInputer();
 		///Callback key press method
-		bool keyPressed(const OIS::KeyEvent &arg) override;
+		bool keyPressed(const OIS::KeyEvent& arg) override;
 		///Callback key released method
-		bool keyReleased(const OIS::KeyEvent &arg) override;
+		bool keyReleased(const OIS::KeyEvent& arg) override;
 		///Return the "input" string object
 		std::string getInput() const;
 		///Permit you to change the content of the input method
@@ -554,6 +573,7 @@ namespace Annwvyn
 		void setCursorOffset(int newPos);
 		///Get the current position of the internal cursor
 		int getCursorOffset() const;
+
 	private:
 		///String that holds typed text. Characters are push/popped at the back of this string
 		std::string input;

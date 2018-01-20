@@ -10,12 +10,12 @@
 
 #include <string>
 
- //Annwvyn
+//Annwvyn
 #include "AnnTypes.h"
 #include "AnnAbstractMovable.hpp"
 
 #include <BtOgrePG.h>
-#pragma warning(default:4996)
+#pragma warning(default : 4996)
 
 namespace Annwvyn
 {
@@ -27,7 +27,6 @@ namespace Annwvyn
 	class AnnDllExport AnnGameObject : public AnnAbstractMovable
 	{
 	public:
-
 		///Class constructor
 		AnnGameObject();
 
@@ -232,17 +231,17 @@ namespace Annwvyn
 		std::string name;
 
 		///RigidBodyState of this object
-		BtOgre::RigidBodyState *state;
+		BtOgre::RigidBodyState* state;
 
 		///list of script objects
 		std::vector<std::shared_ptr<AnnBehaviorScript>> scripts;
 
 	public:
 		///Executed after object initialization
-		virtual void postInit() { }
+		virtual void postInit() {}
 
 		///Executed at refresh time (each frames)
-		virtual void update() { }
+		virtual void update() {}
 
 		///Call the update methods of all the script present in the scripts container
 		void callUpdateOnScripts();

@@ -9,11 +9,11 @@
 using namespace Annwvyn;
 
 AnnLightObject::AnnLightObject(Ogre::Light* light, const std::string& name) :
-	light(light),
-	name(name)
+ light(light),
+ name(name)
 {
 	AnnDebug() << "Light constructor called";
-	if (light)
+	if(light)
 	{
 		node = AnnGetEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 		node->attachObject(light);
@@ -23,12 +23,12 @@ AnnLightObject::AnnLightObject(Ogre::Light* light, const std::string& name) :
 AnnLightObject::~AnnLightObject()
 {
 	AnnDebug() << "Light destructor called";
-	if (light)
+	if(light)
 	{
-		if (node)
+		if(node)
 		{
 			node->detachObject(light);
-			if (node->getParentSceneNode())
+			if(node->getParentSceneNode())
 				node->getParentSceneNode()->removeChild(node);
 			AnnGetEngine()->getSceneManager()->destroySceneNode(node);
 			node = nullptr;
@@ -39,9 +39,9 @@ AnnLightObject::~AnnLightObject()
 
 AnnLightObject::LightTypes AnnLightObject::getLightTypeFromString(const std::string& ltype)
 {
-	if (ltype == "Point") return ANN_LIGHT_POINT;
-	if (ltype == "Spotlight") return ANN_LIGHT_SPOTLIGHT;
-	if (ltype == "Directional") return ANN_LIGHT_DIRECTIONAL;
+	if(ltype == "Point") return ANN_LIGHT_POINT;
+	if(ltype == "Spotlight") return ANN_LIGHT_SPOTLIGHT;
+	if(ltype == "Directional") return ANN_LIGHT_DIRECTIONAL;
 	return ANN_LIGHT_POINT;
 }
 

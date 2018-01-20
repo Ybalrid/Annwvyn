@@ -27,12 +27,12 @@ namespace Annwvyn
 		{
 			auto object = manager->createGameObject("Sinbad.mesh", "Sinbad");
 
-			for (auto i = 0; i < 60; ++i) GameEngine->refresh();
+			for(auto i = 0; i < 60; ++i) GameEngine->refresh();
 
 			manager->removeGameObject(object);
 		}
 
-		for (auto i = 0; i < 60; ++i) GameEngine->refresh();
+		for(auto i = 0; i < 60; ++i) GameEngine->refresh();
 	}
 
 	TEST_CASE("Light Object name storage")

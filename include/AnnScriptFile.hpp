@@ -15,7 +15,7 @@ namespace Annwvyn
 		/// Code evaluated on the chaiscript global scope
 		bool loadedByChaiScript;
 
-		 protected:
+	protected:
 		/// Load the file
 		void loadImpl() override;
 
@@ -25,7 +25,7 @@ namespace Annwvyn
 		/// Get the size of the file
 		size_t calculateSize() const override;
 
-		 public:
+	public:
 		/// Resource constructor. Called by the ResourceManager not by you
 		AnnScriptFile(Ogre::ResourceManager* creator,
 					  const Ogre::String& name,
@@ -55,7 +55,7 @@ namespace Annwvyn
 	/// Chaiscript File Serializer
 	class AnnDllExport AnnScriptFileSerializer : public Ogre::Serializer
 	{
-		 public:
+	public:
 		/// Default construct a ChaiscriptResourceSerializer
 		AnnScriptFileSerializer() = default;
 
@@ -72,7 +72,7 @@ namespace Annwvyn
 	 : public Ogre::ResourceManager,
 	   public Ogre::Singleton<AnnScriptFileResourceManager>
 	{
-		 protected:
+	protected:
 		/// Create an AnnScriptFile
 		Ogre::Resource* createImpl(
 			const Ogre::String& name,
@@ -82,7 +82,7 @@ namespace Annwvyn
 			Ogre::ManualResourceLoader* loader,
 			const Ogre::NameValuePairList* createParams) override;
 
-		 public:
+	public:
 		/// construct and register an AnnScriptFileResourceManager
 		AnnScriptFileResourceManager();
 

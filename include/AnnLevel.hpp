@@ -13,7 +13,9 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 
 #include "AnnTypes.h"
 
-#define LEVEL public Annwvyn::AnnLevel
+#define LEVEL \
+public        \
+	Annwvyn::AnnLevel
 #define constructLevel() AnnLevel()
 
 #include "AnnAbstractMovable.hpp"
@@ -73,9 +75,10 @@ namespace Annwvyn
 		void addManualMovableObject(std::shared_ptr<AnnAbstractMovable> movable);
 
 		///Construct+add a manual movable object
-		template<class AbstractMovableType, class ... Args> decltype(auto) addManualMovableObject(Args&& ... args)
+		template <class AbstractMovableType, class... Args>
+		decltype(auto) addManualMovableObject(Args&&... args)
 		{
-			auto movable = std::make_shared<AbstractMovableType>(args ...);
+			auto movable = std::make_shared<AbstractMovableType>(args...);
 			addManualMovableObject(movable);
 			return movable;
 		}

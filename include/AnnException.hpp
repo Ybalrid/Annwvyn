@@ -34,8 +34,9 @@ namespace Annwvyn
 	public:
 		AnnPhysicsSetupChildError(AnnGameObject* origin);
 		const char* what() const throw() override;
+
 	private:
-		AnnGameObject * objectWithProblem;
+		AnnGameObject* objectWithProblem;
 	};
 
 	///Exception in hand controller "side" detection
@@ -68,6 +69,7 @@ namespace Annwvyn
 	public:
 		AnnInvalidPhysicalShapeError(const std::string& objectName);
 		const char* what() const throw() override;
+
 	private:
 		const std::string objectName;
 	};
@@ -77,6 +79,7 @@ namespace Annwvyn
 	public:
 		AnnLevelLoadingError(const std::string& levelName, const std::string& objectName);
 		const char* what() const throw() override;
+
 	private:
 		const std::string levelName;
 		const std::string objectName;

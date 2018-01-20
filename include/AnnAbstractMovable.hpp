@@ -12,9 +12,10 @@ namespace Annwvyn
 	{
 	public:
 		virtual ~AnnAbstractTranslatable() = default;
+
 	protected:
 		virtual void setPosition(AnnVect3 position) = 0;
-		virtual AnnVect3 getPosition() = 0;
+		virtual AnnVect3 getPosition()				= 0;
 	};
 
 	///Abstract Class that represent an bobject that you can set the orientation.
@@ -22,8 +23,9 @@ namespace Annwvyn
 	{
 	public:
 		virtual ~AnnAbstractMovable() = default;
+
 	protected:
 		virtual void setOrientation(AnnQuaternion quaternion) = 0;
-		virtual AnnQuaternion getOrientation() = 0;
+		virtual AnnQuaternion getOrientation()				  = 0;
 	};
 }

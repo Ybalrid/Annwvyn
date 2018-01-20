@@ -10,11 +10,12 @@ using namespace Annwvyn;
 
 AnnOgreNoVRRenderer* AnnOgreNoVRRenderer::noVRself(nullptr);
 
-AnnOgreNoVRRenderer::AnnOgreNoVRRenderer(std::string name) : AnnOgreVRRenderer(name),
-running(true)
+AnnOgreNoVRRenderer::AnnOgreNoVRRenderer(std::string name) :
+ AnnOgreVRRenderer(name),
+ running(true)
 {
 	rendererName = "OpenGL/NoVR";
-	noVRself = dynamic_cast<AnnOgreNoVRRenderer*>(self);
+	noVRself	 = dynamic_cast<AnnOgreNoVRRenderer*>(self);
 }
 
 void AnnOgreNoVRRenderer::initVrHmd()
@@ -49,14 +50,14 @@ void AnnOgreNoVRRenderer::getTrackingPoseAndVRTiming()
 {
 	calculateTimingFromOgre();
 
-	trackedHeadPose.position = feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation();
+	trackedHeadPose.position	= feetPosition + Annwvyn::AnnGetPlayer()->getEyeTranslation();
 	trackedHeadPose.orientation = bodyOrientation;
 }
 
 void AnnOgreNoVRRenderer::renderAndSubmitFrame()
 {
 	handleWindowMessages();
-	if (window->isClosed())
+	if(window->isClosed())
 	{
 		running = false;
 		return;
@@ -73,7 +74,7 @@ void AnnOgreNoVRRenderer::showDebug(DebugMode mode)
 
 void AnnOgreNoVRRenderer::updateProjectionMatrix()
 {
-	if (!monoCam) return;
+	if(!monoCam) return;
 
 	//Here we don't use a custom projection matrix. Just tell the Ogre Camera to use the current near/far clip planes
 	monoCam->setNearClipDistance(nearClippingDistance);

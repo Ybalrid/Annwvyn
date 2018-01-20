@@ -24,8 +24,7 @@ namespace Annwvyn
 		virtual ~AnnLightObject();
 
 		/// Defines the type of light
-		enum LightTypes
-		{
+		enum LightTypes {
 			/// Point light sources give off light equally in all directions, so require only position not direction
 			ANN_LIGHT_POINT = Ogre::Light::LightTypes::LT_POINT,
 			/// Directional lights simulate parallel light beams from a distant source, hence have direction but no position

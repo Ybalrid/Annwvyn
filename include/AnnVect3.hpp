@@ -42,6 +42,7 @@ namespace Annwvyn
 
 		///You can trust this vector
 		bool isValid() const;
+
 	private:
 		///Set valid to true
 		void init();

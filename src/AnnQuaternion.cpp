@@ -7,23 +7,36 @@ using namespace Annwvyn;
 
 AnnQuaternion::AnnQuaternion() { init(); }
 
-AnnQuaternion::AnnQuaternion(const Quaternion& q) : Quaternion(q) { init(); }
+AnnQuaternion::AnnQuaternion(const Quaternion& q) :
+ Quaternion(q) { init(); }
 
-AnnQuaternion::AnnQuaternion(float cw, float cx, float cy, float cz) : Quaternion(cw, cx, cy, cz) { init(); }
+AnnQuaternion::AnnQuaternion(float cw, float cx, float cy, float cz) :
+ Quaternion(cw, cx, cy, cz) { init(); }
 
-AnnQuaternion::AnnQuaternion(const Ogre::Matrix3& rot) : Quaternion(rot) { init(); }
+AnnQuaternion::AnnQuaternion(const Ogre::Matrix3& rot) :
+ Quaternion(rot) { init(); }
 
-AnnQuaternion::AnnQuaternion(const AnnRadian angle, AnnVect3 raxis) : Quaternion(angle, raxis) { init(); }
+AnnQuaternion::AnnQuaternion(const AnnRadian angle, AnnVect3 raxis) :
+ Quaternion(angle, raxis) { init(); }
 
-AnnQuaternion::AnnQuaternion(const AnnVect3& xAxis, const AnnVect3& yAxis, const AnnVect3& zAxis) : Quaternion(xAxis, yAxis, zAxis) { init(); }
+AnnQuaternion::AnnQuaternion(const AnnVect3& xAxis, const AnnVect3& yAxis, const AnnVect3& zAxis) :
+ Quaternion(xAxis, yAxis, zAxis) { init(); }
 
-AnnQuaternion::AnnQuaternion(const AnnVect3* vectorArray) : Quaternion(vectorArray) { init(); }
+AnnQuaternion::AnnQuaternion(const AnnVect3* vectorArray) :
+ Quaternion(vectorArray) { init(); }
 
-AnnQuaternion::AnnQuaternion(float* floatArray) : Quaternion(floatArray) { init(); }
+AnnQuaternion::AnnQuaternion(float* floatArray) :
+ Quaternion(floatArray) { init(); }
 
-AnnQuaternion::AnnQuaternion(const btQuaternion& q) : Quaternion(q.w(), q.x(), q.y(), q.z()) { init(); }
+AnnQuaternion::AnnQuaternion(const btQuaternion& q) :
+ Quaternion(q.w(), q.x(), q.y(), q.z()) { init(); }
 
-AnnQuaternion::AnnQuaternion(bool validState) : Quaternion() { init(); valid = validState; }
+AnnQuaternion::AnnQuaternion(bool validState) :
+ Quaternion()
+{
+	init();
+	valid = validState;
+}
 
 AnnVect3 AnnQuaternion::getAtVector() const
 {

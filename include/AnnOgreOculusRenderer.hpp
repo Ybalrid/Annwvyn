@@ -4,10 +4,10 @@
  * \author A. Brainville (Ybalrid)
  */
 
- ///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
- ///(even if now I'm not using code from him anymore)
- ///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
- ///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
+///huge thanks to Germanunkol (aka ueczz on Oculus Forums) https://github.com/Germanunkol/OgreOculusSample
+///(even if now I'm not using code from him anymore)
+///Shout out to Kojack too for his post of an OgreOculus class a short time after DK1 was out.
+///The website http://learnopengl.com/ for improving my (very little at the time) understanding of OpenGL
 
 #pragma once
 
@@ -62,8 +62,7 @@ namespace Annwvyn
 	class AnnDllExport AnnOgreOculusRenderer : public AnnOgreVRRenderer
 	{
 		///OgreOculusRenderEyeType : prefer to use "left" and "right" instead of 0 and 1
-		enum oorEyeType
-		{
+		enum oorEyeType {
 			left,
 			right
 		};
@@ -142,7 +141,6 @@ namespace Annwvyn
 		void logHeadsetGeometry();
 
 	private:
-
 		///Render textures sizes
 		ovrSizei texSizeL, texSizeR;
 
@@ -279,32 +277,27 @@ namespace Annwvyn
 		static constexpr const std::array<const float, 2> debugPlaneGeometry{ 16, 9 };
 
 		///Size of the debug plane, divided by 2
-		static constexpr const std::array<const float, 2> debugPlanHalfGeometry
-		{
+		static constexpr const std::array<const float, 2> debugPlanHalfGeometry{
 			debugPlaneGeometry[0] / 2.f,
 			debugPlaneGeometry[1] / 2.f
 		};
 
 		///List of the points that form the debug plane (a quad made of two triangles)
-		static constexpr const std::array<const std::array<const float, 3>, 4> debugPlaneVertexBuffer
-		{
+		static constexpr const std::array<const std::array<const float, 3>, 4> debugPlaneVertexBuffer{
 			{
-				{-debugPlanHalfGeometry[0], debugPlanHalfGeometry[1], 0},
-				{-debugPlanHalfGeometry[0], -debugPlanHalfGeometry[1], 0},
-				{debugPlanHalfGeometry[0], debugPlanHalfGeometry[1], 0},
-				{debugPlanHalfGeometry[0], -debugPlanHalfGeometry[1], 0},
+				{ -debugPlanHalfGeometry[0], debugPlanHalfGeometry[1], 0 },
+				{ -debugPlanHalfGeometry[0], -debugPlanHalfGeometry[1], 0 },
+				{ debugPlanHalfGeometry[0], debugPlanHalfGeometry[1], 0 },
+				{ debugPlanHalfGeometry[0], -debugPlanHalfGeometry[1], 0 },
 			}
 		};
 
 		///Texture coordinates to map a whole texture to the debug plane
-		static constexpr const std::array<const std::array<const float, 2>, 4> debugPlaneTextureCoord
-		{
-			{
-				{0, 0},
-				{0, 1},
-				{1, 0},
-				{1, 1}
-			}
+		static constexpr const std::array<const std::array<const float, 2>, 4> debugPlaneTextureCoord{
+			{ { 0, 0 },
+			  { 0, 1 },
+			  { 1, 0 },
+			  { 1, 1 } }
 		};
 
 		///Index buffer of the debug plane
@@ -314,7 +307,7 @@ namespace Annwvyn
 		static constexpr const std::array<const uint8_t, 4> quadIndexBuffer{ 0, 1, 2, 3 };
 
 		///Preferred order to update eyes
-		static constexpr const std::array<const oorEyeType, 2> eyeUpdateOrder{ {left, right} };
+		static constexpr const std::array<const oorEyeType, 2> eyeUpdateOrder{ { left, right } };
 
 		///Return true if the array sizes of each buffer are constants
 		static constexpr bool debugPlaneSanityCheck()

@@ -32,17 +32,17 @@ void AnnLevel::unload()
 	AnnGetPhysicsEngine()->resetGravity();
 
 	//Remove the level lights
-	for (auto obj : levelLighting)
+	for(auto obj : levelLighting)
 		AnnGetGameObjectManager()->removeLightObject(obj);
 	levelLighting.clear();
 
 	//Remove the level objects
-	for (auto obj : levelContent)
+	for(auto obj : levelContent)
 		AnnGetGameObjectManager()->removeGameObject(obj);
 	levelContent.clear();
 
 	//Remove volumetric event triggers
-	for (auto obj : levelTrigger)
+	for(auto obj : levelTrigger)
 		AnnGetGameObjectManager()->removeTriggerObject(obj);
 	levelTrigger.clear();
 

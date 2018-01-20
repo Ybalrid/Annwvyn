@@ -38,7 +38,7 @@ namespace Annwvyn
 		auto duration = 3;
 		double sec;
 		AnnGetVRRenderer()->_resetOgreTimer();
-		while ((sec = GameEngine->getTimeFromStartupSeconds()) < duration)
+		while((sec = GameEngine->getTimeFromStartupSeconds()) < duration)
 		{
 			GameEngine->refresh();
 			AnnDebug() << "Running for " << sec << "sec. out of " << duration;

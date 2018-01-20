@@ -23,17 +23,17 @@ namespace Annwvyn
 
 		///Callable script constructor
 		AnnBehaviorScript(const std::string& name,
-			std::function<void(chaiscript::Boxed_Value&)> updateHook,
-			std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
-			std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
-			std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
-			std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
-			std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerHook,
-			std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
-			std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
-			std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
+						  std::function<void(chaiscript::Boxed_Value&)> updateHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
 
-			chaiscript::Boxed_Value scriptObjectInstance);
+						  chaiscript::Boxed_Value scriptObjectInstance);
 
 		///Script destructor
 		virtual ~AnnBehaviorScript();
@@ -107,7 +107,6 @@ namespace Annwvyn
 	class AnnDllExport AnnScriptManager : public AnnSubSystem
 	{
 	public:
-
 		using AnnScriptID = uID;
 
 		///Construct the script manager, initialize ChaiScript and add global functions. Will initialize the AnnScriptFileManager
@@ -135,7 +134,6 @@ namespace Annwvyn
 		chaiscript::ChaiScript* _getEngine();
 
 	private:
-
 		///ChaiScript engine
 		chaiscript::ChaiScript chai;
 
@@ -161,9 +159,8 @@ namespace Annwvyn
 		static constexpr const char* const logFromScript{ "Script - " };
 
 		///String constant for script loading and class initialization. This is a bit of ChaiScript code to bootstrap a behavior script
-		static constexpr const char* const scriptTemplate
-		{
-R"(
+		static constexpr const char* const scriptTemplate{
+			R"(
 def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
 {
 	var ScriptInstance__OBJECT_SCRIPT_ID__ = __SCRIPT_NAME__(owner);

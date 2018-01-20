@@ -8,20 +8,20 @@
 
 using namespace Annwvyn;
 
-const AnnVect3 AnnPlayerBody::DEFAULT_STARTING_POS{ 0,1,10 };
+const AnnVect3 AnnPlayerBody::DEFAULT_STARTING_POS{ 0, 1, 10 };
 const Ogre::Euler AnnPlayerBody::DEFAULT_STARTING_ORIENT{ 0 };
 
 AnnPlayerBody::PhysicalParameters::PhysicalParameters() :
-	eyeHeight{ 1.59f },
-	walkSpeed{ 3 },
-	runFactor{ 3 },
-	turnSpeed{ 0.15f },
-	mass{ 80 },
-	FeetPosition{ 0, 0, 10 },
-	RoomBase{ FeetPosition },
-	HeadOrientation{ AnnQuaternion::IDENTITY },
-	Shape{ nullptr },
-	Body{ nullptr }
+ eyeHeight{ 1.59f },
+ walkSpeed{ 3 },
+ runFactor{ 3 },
+ turnSpeed{ 0.15f },
+ mass{ 80 },
+ FeetPosition{ 0, 0, 10 },
+ RoomBase{ FeetPosition },
+ HeadOrientation{ AnnQuaternion::IDENTITY },
+ Shape{ nullptr },
+ Body{ nullptr }
 
 {}
 
@@ -29,29 +29,29 @@ AnnPlayerBody::AnnPlayerBody()
 {
 	AnnDebug() << "Creating player object";
 	locked = false;
-	run = false;
+	run	= false;
 
-	walking[forward] = false;
+	walking[forward]  = false;
 	walking[backward] = false;
-	walking[left] = false;
-	walking[right] = false;
+	walking[left]	 = false;
+	walking[right]	= false;
 
-	analogWalk = 0;
+	analogWalk   = 0;
 	analogStraff = 0;
 	analogRotate = 0;
 
-	standing = true;
+	standing   = true;
 	updateTime = 0;
-	physics = false;
+	physics	= false;
 
 	actuator = nullptr;
 	setActuator(new AnnDefaultPlayerActuator);
 
 	ignorePhysics = false;
 
-	mouseSensitivity = 3;
-	contactWithGround = false;
-	RoomReferenceNode = nullptr;
+	mouseSensitivity			  = 3;
+	contactWithGround			  = false;
+	RoomReferenceNode			  = nullptr;
 	needNewRoomTranslateReference = false;
 
 	mode = UNKNOWN;
@@ -59,14 +59,14 @@ AnnPlayerBody::AnnPlayerBody()
 
 void AnnPlayerBody::setActuator(AnnPlayerActuator* act)
 {
-	if (actuator)
+	if(actuator)
 	{
 		delete actuator;
 		actuator = nullptr;
 	}
 
 	act->player = this;
-	actuator = act;
+	actuator	= act;
 }
 
 AnnPlayerBody::~AnnPlayerBody()
@@ -95,19 +95,19 @@ void AnnPlayerBody::setHeadOrientation(AnnQuaternion Orientation)
 
 void AnnPlayerBody::setEyesHeight(float eyeHeight)
 {
-	if (!isLocked())
+	if(!isLocked())
 		physicsParams.eyeHeight = eyeHeight;
 }
 
 void AnnPlayerBody::setWalkSpeed(float walk)
 {
-	if (!isLocked())
+	if(!isLocked())
 		physicsParams.walkSpeed = walk;
 }
 
 void AnnPlayerBody::setTurnSpeed(float ts)
 {
-	if (!isLocked())
+	if(!isLocked())
 		physicsParams.turnSpeed = ts;
 }
 
@@ -118,7 +118,7 @@ void AnnPlayerBody::setMass(float mass)
 
 void AnnPlayerBody::setShape(btCollisionShape* Shape)
 {
-	if (!isLocked())
+	if(!isLocked())
 		physicsParams.Shape = Shape;
 	physics = true;
 }
@@ -126,7 +126,7 @@ void AnnPlayerBody::setShape(btCollisionShape* Shape)
 void AnnPlayerBody::setBody(btRigidBody* Body)
 {
 	physicsParams.Body = Body;
-	physics = true;
+	physics			   = true;
 }
 
 void AnnPlayerBody::lockParameters()
@@ -186,13 +186,12 @@ Ogre::Euler AnnPlayerBody::getOrientation() const
 
 void AnnPlayerBody::applyRelativeBodyYaw(Ogre::Radian angle)
 {
-	if (mode == STANDING)
+	if(mode == STANDING)
 		physicsParams.Orientation.yaw(angle);
-	else if (mode == ROOMSCALE)
+	else if(mode == ROOMSCALE)
 	{
 		//Projection of the headset world position on the ground plane. we are turning around this point.
-		AnnVect3 basePoint
-		{
+		AnnVect3 basePoint{
 			AnnGetVRRenderer()->trackedHeadPose.position.x,
 			physicsParams.RoomBase.y,
 			AnnGetVRRenderer()->trackedHeadPose.position.z
@@ -219,13 +218,13 @@ void AnnPlayerBody::applyMouseRelativeRotation(int relValue)
 AnnVect3 AnnPlayerBody::getTranslation()
 {
 	AnnVect3 translation(AnnVect3::ZERO);
-	if (walking[forward])
+	if(walking[forward])
 		translation.z -= 1;
-	if (walking[backward])
+	if(walking[backward])
 		translation.z += 1;
-	if (walking[left])
+	if(walking[left])
 		translation.x -= 1;
-	if (walking[right])
+	if(walking[right])
 		translation.x += 1;
 
 	return translation.normalisedCopy();
@@ -255,7 +254,7 @@ float AnnPlayerBody::getRunFactor() const
 
 void AnnPlayerBody::resetPlayerPhysics()
 {
-	if (!hasPhysics()) return;
+	if(!hasPhysics()) return;
 	AnnDebug("Reset player's physics");
 
 	//Remove the player's rigid-body from the world
@@ -289,54 +288,51 @@ void AnnPlayerBody::engineUpdate(float deltaTime)
 {
 	static AnnVect3 roomTranslation;
 	updateTime = deltaTime;
-	switch (mode)
+	switch(mode)
 	{
-	case STANDING:
-		if (ignorePhysics) return;
+		case STANDING:
+			if(ignorePhysics) return;
 
-		if (getBody())
-		{
+			if(getBody())
+			{
+				applyAnalogYaw();
+				getBody()->activate();
+			}
+
+			//Tell the actuator to "act" on the player
+			actuator->actuate(deltaTime);
+
+			//get back position data from physics engine
+			if(getBody())
+			{
+				setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) - AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation()) * AnnVect3(0, getEyesHeight() / 2, 0));
+			}
+			break;
+
+		case ROOMSCALE:
+			if(ignorePhysics) return;
 			applyAnalogYaw();
-			getBody()->activate();
-		}
 
-		//Tell the actuator to "act" on the player
-		actuator->actuate(deltaTime);
+			if(needNewRoomTranslateReference)
+				roomTranslateQuatReference = AnnQuaternion{ AnnGetVRRenderer()->trackedHeadPose.orientation.getYaw(), AnnVect3::UNIT_Y };
 
-		//get back position data from physics engine
-		if (getBody())
-		{
-			setPosition(AnnVect3(getBody()->getCenterOfMassPosition()) -
-				AnnQuaternion(getBody()->getCenterOfMassTransform().getRotation()) *
-				AnnVect3(0, getEyesHeight() / 2, 0));
-		}
-		break;
+			roomTranslation = updateTime * getWalkSpeed() *
+				//(physicsParams.Orientation.toQuaternion() *
+				(roomTranslateQuatReference * (getTranslation() + getAnalogTranslation()));
 
-	case ROOMSCALE:
-		if (ignorePhysics) return;
-		applyAnalogYaw();
+			if(roomTranslation == AnnVect3::ZERO)
+				needNewRoomTranslateReference = true; //New base will be calculated at next frame
+			else
+			{
+				needNewRoomTranslateReference = false;
+				physicsParams.RoomBase += roomTranslation;
+			}
 
-		if (needNewRoomTranslateReference)
-			roomTranslateQuatReference = AnnQuaternion{ AnnGetVRRenderer()->trackedHeadPose.orientation.getYaw(), AnnVect3::UNIT_Y };
+			syncToTrackedPose();
 
-		roomTranslation = updateTime * getWalkSpeed() *
-			//(physicsParams.Orientation.toQuaternion() *
-			(roomTranslateQuatReference *
-			(getTranslation() + getAnalogTranslation()));
+			break;
 
-		if (roomTranslation == AnnVect3::ZERO)
-			needNewRoomTranslateReference = true; //New base will be calculated at next frame
-		else
-		{
-			needNewRoomTranslateReference = false;
-			physicsParams.RoomBase += roomTranslation;
-		}
-
-		syncToTrackedPose();
-
-		break;
-
-	default:break;
+		default: break;
 	}
 }
 
@@ -357,7 +353,7 @@ void AnnPlayerBody::setRoomRefNode(Ogre::SceneNode* node)
 
 void AnnPlayerBody::reground(float YvalueForGround)
 {
-	if (mode != ROOMSCALE) return;
+	if(mode != ROOMSCALE) return;
 	physicsParams.FeetPosition.y = YvalueForGround;
 
 	AnnDebug() << "Re-grounding to Y=" << YvalueForGround;
@@ -370,18 +366,18 @@ void AnnPlayerBody::reground(AnnVect3 pointOnGround)
 
 void AnnPlayerBody::regroundOnPhysicsBody(float length, AnnVect3 preoffset)
 {
-	if (mode != ROOMSCALE) return;
+	if(mode != ROOMSCALE) return;
 	AnnVect3 rayOrigin{ physicsParams.FeetPosition + preoffset };
 	AnnVect3 rayEndPoint{ rayOrigin + length * AnnVect3::NEGATIVE_UNIT_Y };
 
 	btCollisionWorld::ClosestRayResultCallback rayGroundingCallback(rayOrigin.getBtVector(),
-		rayEndPoint.getBtVector());
+																	rayEndPoint.getBtVector());
 
 	AnnGetPhysicsEngine()->getWorld()->rayTest(rayOrigin.getBtVector(),
-		rayEndPoint.getBtVector(),
-		rayGroundingCallback);
+											   rayEndPoint.getBtVector(),
+											   rayGroundingCallback);
 
-	if (rayGroundingCallback.hasHit())
+	if(rayGroundingCallback.hasHit())
 		reground(rayGroundingCallback.m_hitPointWorld);
 }
 
@@ -392,8 +388,8 @@ void AnnPlayerBody::_hintRoomscaleUpdateTranslationReference()
 
 void AnnPlayerBody::syncToTrackedPose() const
 {
-	if (mode != ROOMSCALE) return;
-	if (physicsParams.Body)
+	if(mode != ROOMSCALE) return;
+	if(physicsParams.Body)
 	{
 		btTransform transform;
 		auto pose = AnnGetVRRenderer()->trackedHeadPose;

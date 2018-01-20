@@ -39,9 +39,9 @@ namespace Annwvyn
 	class AnnDllExport AnnOgreOpenVRRenderer : public AnnOgreVRRenderer
 	{
 		///Marker for left and right : "Ogre Open VR Eye Type"
-		enum oovrEyeType
-		{
-			left, right
+		enum oovrEyeType {
+			left,
+			right
 		};
 
 	public:

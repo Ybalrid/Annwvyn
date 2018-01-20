@@ -20,13 +20,15 @@ namespace Annwvyn
 		{
 		public:
 			///Construct an AnnDebug buffer
-			AnnDebugBuff() {};
+			AnnDebugBuff(){};
 
 			///Will sync the buffer
-			~AnnDebugBuff();;
+			~AnnDebugBuff();
+			;
 
 			///Sync the buffer by performing an AnnEngine::log, clear it and return success.
-			int sync() override;;
+			int sync() override;
+			;
 		};
 
 	public:

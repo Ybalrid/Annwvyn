@@ -14,8 +14,9 @@ using namespace Annwvyn;
 constexpr const char* const AnnScriptManager::fileErrorPrefix;
 constexpr const char* const AnnScriptManager::logFromScript;
 
-AnnScriptManager::AnnScriptManager() : AnnSubSystem("ScriptManager"),
-scriptFileManager(nullptr)
+AnnScriptManager::AnnScriptManager() :
+ AnnSubSystem("ScriptManager"),
+ scriptFileManager(nullptr)
 //Initialize with compiled-in Std_Lib
 {
 	AnnDebug() << "Initialized ChaiScript Std_Lib";
@@ -46,40 +47,40 @@ void AnnScriptManager::registerApi()
 		chai.add(fun(&Vector3::x), "x");
 		chai.add(fun(&Vector3::y), "y");
 		chai.add(fun(&Vector3::z), "z");
-		chai.add(fun([](Vector3& u, const Vector3& v) {u = v; }), "=");
-		chai.add(fun([](Vector3& u, const Real s) {u = s; }), "=");
+		chai.add(fun([](Vector3& u, const Vector3& v) { u = v; }), "=");
+		chai.add(fun([](Vector3& u, const Real s) { u = s; }), "=");
 		chai.add(fun<Vector3>(&Vector3::operator+), "+");
-		chai.add(fun([](const Vector3& v) {return -v; }), "-");
-		chai.add(fun([](const Vector3& v, Vector3 w) {return v - w; }), "-");
-		chai.add(fun([](const Vector3& v, const Real w) {return v - w; }), "-");
-		chai.add(fun([](const Real& v, const Vector3& w) {return v - w; }), "-");
-		chai.add(fun([](const Vector3& vector, Real scalar) {return scalar * vector; }), "*");
-		chai.add(fun([](Real scalar, const Vector3& vector) {return scalar * vector; }), "*");
-		chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1 * v2; }), "*");
-		chai.add(fun([](const Vector3& vector, Real scalar) {return scalar / vector; }), "/");
-		chai.add(fun([](const Vector3& v1, const Vector3& v2) {return v1 / v2; }), "/");
-		chai.add(fun([](Vector3& u, Vector3 v) {u *= v; }), "*=");
-		chai.add(fun([](Vector3& u, Vector3 v) {u /= v; }), "/=");
-		chai.add(fun([](Vector3& u, Vector3 v) {u += v; }), "+=");
-		chai.add(fun([](Vector3& u, Vector3 v) {u -= v; }), "-=");
-		chai.add(fun([](Vector3& vector, Real scalar) {vector *= scalar; }), "*=");
-		chai.add(fun([](Vector3& vector, Real scalar) {vector /= scalar; }), "/=");
-		chai.add(fun([](Vector3& vector, Real scalar) {vector += scalar; }), "+=");
-		chai.add(fun([](Vector3& vector, Real scalar) {vector -= scalar; }), "-=");
+		chai.add(fun([](const Vector3& v) { return -v; }), "-");
+		chai.add(fun([](const Vector3& v, Vector3 w) { return v - w; }), "-");
+		chai.add(fun([](const Vector3& v, const Real w) { return v - w; }), "-");
+		chai.add(fun([](const Real& v, const Vector3& w) { return v - w; }), "-");
+		chai.add(fun([](const Vector3& vector, Real scalar) { return scalar * vector; }), "*");
+		chai.add(fun([](Real scalar, const Vector3& vector) { return scalar * vector; }), "*");
+		chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 * v2; }), "*");
+		chai.add(fun([](const Vector3& vector, Real scalar) { return scalar / vector; }), "/");
+		chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 / v2; }), "/");
+		chai.add(fun([](Vector3& u, Vector3 v) { u *= v; }), "*=");
+		chai.add(fun([](Vector3& u, Vector3 v) { u /= v; }), "/=");
+		chai.add(fun([](Vector3& u, Vector3 v) { u += v; }), "+=");
+		chai.add(fun([](Vector3& u, Vector3 v) { u -= v; }), "-=");
+		chai.add(fun([](Vector3& vector, Real scalar) { vector *= scalar; }), "*=");
+		chai.add(fun([](Vector3& vector, Real scalar) { vector /= scalar; }), "/=");
+		chai.add(fun([](Vector3& vector, Real scalar) { vector += scalar; }), "+=");
+		chai.add(fun([](Vector3& vector, Real scalar) { vector -= scalar; }), "-=");
 		chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 == v2; }), "==");
 		chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 != v2; }), "!=");
 		chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 < v2; }), "<");
 		chai.add(fun([](const Vector3& v1, const Vector3& v2) { return v1 > v2; }), ">");
-		chai.add(fun([](const Vector3& v, const size_t i) {return v[i]; }), "[]");
-		chai.add(fun([](Vector3& u, Vector3& v) {u.swap(v); }), "swap");
-		chai.add(fun([](const Vector3& v) {return v.length(); }), "length");
-		chai.add(fun([](const Vector3& v) {return v.normalisedCopy(); }), "normalisedCopy");
-		chai.add(fun([](const Vector3& v) {return v.squaredLength(); }), "squaredLength");
-		chai.add(fun([](const Vector3& v) {return v.perpendicular(); }), "perpendicular");
-		chai.add(fun([](const Vector3& v) {return v.primaryAxis(); }), "primaryAxis");
-		chai.add(fun([](const Vector3& v) {return v.isZeroLength(); }), "isZeroLength");
-		chai.add(fun([](const Vector3& v) {return v.isNaN(); }), "isNaN");
-		chai.add(fun([](Vector3& v) {return v.normalise(); }), "normalise");
+		chai.add(fun([](const Vector3& v, const size_t i) { return v[i]; }), "[]");
+		chai.add(fun([](Vector3& u, Vector3& v) { u.swap(v); }), "swap");
+		chai.add(fun([](const Vector3& v) { return v.length(); }), "length");
+		chai.add(fun([](const Vector3& v) { return v.normalisedCopy(); }), "normalisedCopy");
+		chai.add(fun([](const Vector3& v) { return v.squaredLength(); }), "squaredLength");
+		chai.add(fun([](const Vector3& v) { return v.perpendicular(); }), "perpendicular");
+		chai.add(fun([](const Vector3& v) { return v.primaryAxis(); }), "primaryAxis");
+		chai.add(fun([](const Vector3& v) { return v.isZeroLength(); }), "isZeroLength");
+		chai.add(fun([](const Vector3& v) { return v.isNaN(); }), "isNaN");
+		chai.add(fun([](Vector3& v) { return v.normalise(); }), "normalise");
 		chai.add(var(&Vector3::UNIT_X), "AnnVect3_UNIT_X");
 		chai.add(var(&Vector3::UNIT_Y), "AnnVect3_UNIT_Y");
 		chai.add(var(&Vector3::UNIT_Z), "AnnVect3_UNIT_Z");
@@ -95,44 +96,44 @@ void AnnScriptManager::registerApi()
 		chai.add(constructor<Degree(Real)>(), "AnnDegree");
 		chai.add(constructor<Radian(const Degree&)>(), "AnnRadian");
 		chai.add(constructor<Degree(const Radian&)>(), "AnnDegree");
-		chai.add(fun([](const Degree& d) {return +d; }), "+");
-		chai.add(fun([](const Degree& d1, const Degree& d2) {return d1 + d2; }), "+");
-		chai.add(fun([](const Degree& d1, const Radian& d2) {return d1 + d2; }), "+");
-		chai.add(fun([](Degree& d1, const Degree& d2) {d1 += d2; }), "+=");
-		chai.add(fun([](const Degree& d) {return -d; }), "-");
+		chai.add(fun([](const Degree& d) { return +d; }), "+");
+		chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 + d2; }), "+");
+		chai.add(fun([](const Degree& d1, const Radian& d2) { return d1 + d2; }), "+");
+		chai.add(fun([](Degree& d1, const Degree& d2) { d1 += d2; }), "+=");
+		chai.add(fun([](const Degree& d) { return -d; }), "-");
 		chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 - d2; }), "-");
 		chai.add(fun([](const Degree& d1, const Radian& d2) { return d1 - d2; }), "-");
-		chai.add(fun([](Degree& d1, const Degree& d2) {d1 -= d2; }), "-=");
-		chai.add(fun([](Degree& d1, const Radian& d2) {d1 -= d2; }), "-=");
-		chai.add(fun([](const Degree& d, Real f) {return d * f; }), "*");
-		chai.add(fun([](Degree& d, Real f) {d *= f; }), "*=");
-		chai.add(fun([](const Degree& d, Real f) {return d / f; }), "/");
-		chai.add(fun([](Degree& d, Real f) {d /= f; }), "/=");
+		chai.add(fun([](Degree& d1, const Degree& d2) { d1 -= d2; }), "-=");
+		chai.add(fun([](Degree& d1, const Radian& d2) { d1 -= d2; }), "-=");
+		chai.add(fun([](const Degree& d, Real f) { return d * f; }), "*");
+		chai.add(fun([](Degree& d, Real f) { d *= f; }), "*=");
+		chai.add(fun([](const Degree& d, Real f) { return d / f; }), "/");
+		chai.add(fun([](Degree& d, Real f) { d /= f; }), "/=");
 		chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 < d2; }), "<");
 		chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 > d2; }), ">");
 		chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 <= d2; }), "<=");
 		chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 >= d2; }), ">=");
 		chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 == d2; }), "==");
 		chai.add(fun([](const Degree& d1, const Degree& d2) { return d1 != d2; }), "!=");
-		chai.add(fun([](const Radian& d) {return +d; }), "+");
-		chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 + r2; }), "+");
-		chai.add(fun([](const Radian& r1, const Degree& r2) {return r1 + r2; }), "+");
-		chai.add(fun([](Radian& r1, const Radian& r2) {r1 += r2; }), "+=");
-		chai.add(fun([](const Radian& d) {return -d; }), "-");
+		chai.add(fun([](const Radian& d) { return +d; }), "+");
+		chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 + r2; }), "+");
+		chai.add(fun([](const Radian& r1, const Degree& r2) { return r1 + r2; }), "+");
+		chai.add(fun([](Radian& r1, const Radian& r2) { r1 += r2; }), "+=");
+		chai.add(fun([](const Radian& d) { return -d; }), "-");
 		chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 - r2; }), "-");
 		chai.add(fun([](const Radian& r1, const Degree& r2) { return r1 - r2; }), "-");
-		chai.add(fun([](Radian& r1, const Radian& r2) {r1 -= r2; }), "-=");
-		chai.add(fun([](Radian& r1, const Degree& r2) {r1 -= r2; }), "-=");
-		chai.add(fun([](const Radian& d, Real f) {return d * f; }), "*");
-		chai.add(fun([](Radian& d, Real f) {d *= f; }), "*=");
-		chai.add(fun([](const Radian& d, Real f) {return d / f; }), "/");
-		chai.add(fun([](Radian& d, Real f) {d /= f; }), "/=");
-		chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 < r2; }), "<");
-		chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 > r2; }), ">");
-		chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 <= r2; }), "<=");
-		chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 >= r2; }), ">=");
-		chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 == r2; }), "==");
-		chai.add(fun([](const Radian& r1, const Radian& r2) {return r1 != r2; }), "!=");
+		chai.add(fun([](Radian& r1, const Radian& r2) { r1 -= r2; }), "-=");
+		chai.add(fun([](Radian& r1, const Degree& r2) { r1 -= r2; }), "-=");
+		chai.add(fun([](const Radian& d, Real f) { return d * f; }), "*");
+		chai.add(fun([](Radian& d, Real f) { d *= f; }), "*=");
+		chai.add(fun([](const Radian& d, Real f) { return d / f; }), "/");
+		chai.add(fun([](Radian& d, Real f) { d /= f; }), "/=");
+		chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 < r2; }), "<");
+		chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 > r2; }), ">");
+		chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 <= r2; }), "<=");
+		chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 >= r2; }), ">=");
+		chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 == r2; }), "==");
+		chai.add(fun([](const Radian& r1, const Radian& r2) { return r1 != r2; }), "!=");
 
 		//Quaternions
 		chai.add(user_type<Quaternion>(), "AnnQuaternion");
@@ -144,69 +145,69 @@ void AnnScriptManager::registerApi()
 		chai.add(fun(&Quaternion::y), "y");
 		chai.add(fun(&Quaternion::z), "z");
 		chai.add(fun(&Quaternion::w), "w");
-		chai.add(fun([](const Quaternion& q, const Vector3 v) {return q * v; }), "*");
-		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 * q2; }), "*");
-		chai.add(fun([](const Quaternion& q, const Real& scalar) {return q * scalar; }), "*");
-		chai.add(fun([](const Quaternion& q, size_t i) {return q[i]; }), "[]");
+		chai.add(fun([](const Quaternion& q, const Vector3 v) { return q * v; }), "*");
+		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) { return q1 * q2; }), "*");
+		chai.add(fun([](const Quaternion& q, const Real& scalar) { return q * scalar; }), "*");
+		chai.add(fun([](const Quaternion& q, size_t i) { return q[i]; }), "[]");
 		chai.add(fun([](Quaternion& q1, const Quaternion& q2) { q1 = q2; }), "=");
-		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 + q2; }), "+");
-		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 - q2; }), "-");
-		chai.add(fun([](const Quaternion& q) {return -q; }), "-");
-		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 == q2; }), "==");
-		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) {return q1 != q2; }), "!=");
-		chai.add(fun([](const Quaternion& q) {return q.xAxis(); }), "xAxis");
-		chai.add(fun([](const Quaternion& q) {return q.yAxis(); }), "yAxis");
-		chai.add(fun([](const Quaternion& q) {return q.zAxis(); }), "zAxis");
+		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) { return q1 + q2; }), "+");
+		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) { return q1 - q2; }), "-");
+		chai.add(fun([](const Quaternion& q) { return -q; }), "-");
+		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) { return q1 == q2; }), "==");
+		chai.add(fun([](const Quaternion& q1, const Quaternion& q2) { return q1 != q2; }), "!=");
+		chai.add(fun([](const Quaternion& q) { return q.xAxis(); }), "xAxis");
+		chai.add(fun([](const Quaternion& q) { return q.yAxis(); }), "yAxis");
+		chai.add(fun([](const Quaternion& q) { return q.zAxis(); }), "zAxis");
 		chai.add(fun([](const Quaternion& q) { return q.getRoll(); }), "getRoll");
 		chai.add(fun([](const Quaternion& q) { return q.getPitch(); }), "getPitch");
 		chai.add(fun([](const Quaternion& q) { return q.getYaw(); }), "getYaw");
-		chai.add(fun([](const Quaternion& q) {return q.isNaN(); }), "isNaN");
+		chai.add(fun([](const Quaternion& q) { return q.isNaN(); }), "isNaN");
 		chai.add(var(&Quaternion::ZERO), "AnnQuaternion_ZERO");
 		chai.add(var(&Quaternion::IDENTITY), "AnnQuaternion_IDENTITY");
 
 		chai.add(user_type<AnnGameObject>(), "AnnGameObject");
-		chai.add(fun([](AnnGameObject* o, Vector3 v) {o->setPosition(v); }), "setPosition");
-		chai.add(fun([](AnnGameObject* o, Quaternion q) {o->setOrientation(q); }), "setOrientation");
-		chai.add(fun([](AnnGameObject* o, Vector3 v) {o->setScale(v); }), "setScale");
-		chai.add(fun([](AnnGameObject* o) -> Vector3 {return o->getPosition(); }), "getPosition");
-		chai.add(fun([](AnnGameObject* o) -> Quaternion {return o->getOrientation(); }), "getOrientation");
-		chai.add(fun([](AnnGameObject* o) -> Vector3 {return o->getScale(); }), "getScale");
-		chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s); }), "playSound");
-		chai.add(fun([](AnnGameObject* o, const string& s) {o->playSound(s, true); }), "playSoundLoop");
-		chai.add(fun([](AnnGameObject* o) {return o->getName(); }), "getName");
-		chai.add(fun([](AnnGameObject* o, const string& animName) {o->setAnimation(animName); }), "setAnimation");
-		chai.add(fun([](AnnGameObject* o) {o->playAnimation(); }), "playAnimation");
-		chai.add(fun([](AnnGameObject* o, bool play) {o->playAnimation(play); }), "playAnimation");
-		chai.add(fun([](AnnGameObject* o) {o->loopAnimation(); }), "loopAnimation");
-		chai.add(fun([](AnnGameObject* o, bool play) {o->loopAnimation(play); }), "loopAnimation");
-		chai.add(fun([](AnnGameObject* o) {return o->getName(); }), "getName");
+		chai.add(fun([](AnnGameObject* o, Vector3 v) { o->setPosition(v); }), "setPosition");
+		chai.add(fun([](AnnGameObject* o, Quaternion q) { o->setOrientation(q); }), "setOrientation");
+		chai.add(fun([](AnnGameObject* o, Vector3 v) { o->setScale(v); }), "setScale");
+		chai.add(fun([](AnnGameObject* o) -> Vector3 { return o->getPosition(); }), "getPosition");
+		chai.add(fun([](AnnGameObject* o) -> Quaternion { return o->getOrientation(); }), "getOrientation");
+		chai.add(fun([](AnnGameObject* o) -> Vector3 { return o->getScale(); }), "getScale");
+		chai.add(fun([](AnnGameObject* o, const string& s) { o->playSound(s); }), "playSound");
+		chai.add(fun([](AnnGameObject* o, const string& s) { o->playSound(s, true); }), "playSoundLoop");
+		chai.add(fun([](AnnGameObject* o) { return o->getName(); }), "getName");
+		chai.add(fun([](AnnGameObject* o, const string& animName) { o->setAnimation(animName); }), "setAnimation");
+		chai.add(fun([](AnnGameObject* o) { o->playAnimation(); }), "playAnimation");
+		chai.add(fun([](AnnGameObject* o, bool play) { o->playAnimation(play); }), "playAnimation");
+		chai.add(fun([](AnnGameObject* o) { o->loopAnimation(); }), "loopAnimation");
+		chai.add(fun([](AnnGameObject* o, bool play) { o->loopAnimation(play); }), "loopAnimation");
+		chai.add(fun([](AnnGameObject* o) { return o->getName(); }), "getName");
 
 		chai.add(user_type<AnnLightObject>(), "AnnLightObject");
-		chai.add(fun([](AnnLightObject* o, Vector3 v) {o->setPosition(v); }), "setPosition");
-		chai.add(fun([](AnnLightObject* o, Vector3 v) {o->setDirection(v); }), "setDirection");
-		chai.add(fun([](AnnLightObject* o, AnnColor c) {o->setDiffuseColor(c); }), "setDiffuseColor");
-		chai.add(fun([](AnnLightObject* o, AnnColor c) {o->setSpecularColor(c); }), "setSpecularColor");
-		chai.add(fun([](AnnLightObject* o, float lumens) {o->setPower(lumens); }), "setPower");
-		chai.add(fun([](AnnLightObject* o) -> Vector3 {return o->getPosition(); }), "getPosition");
-		chai.add(fun([](AnnLightObject* o) -> Vector3 {return o->getDirection(); }), "getDirection");
-		chai.add(fun([](AnnLightObject* o) -> AnnColor {return o->getSpecularColor(); }), "getSpecularColor");
-		chai.add(fun([](AnnLightObject* o) -> AnnColor {return o->getDiffuseColor(); }), "getDiffuseColor");
-		chai.add(fun([](AnnLightObject* o) {return o->getName(); }), "getName");
+		chai.add(fun([](AnnLightObject* o, Vector3 v) { o->setPosition(v); }), "setPosition");
+		chai.add(fun([](AnnLightObject* o, Vector3 v) { o->setDirection(v); }), "setDirection");
+		chai.add(fun([](AnnLightObject* o, AnnColor c) { o->setDiffuseColor(c); }), "setDiffuseColor");
+		chai.add(fun([](AnnLightObject* o, AnnColor c) { o->setSpecularColor(c); }), "setSpecularColor");
+		chai.add(fun([](AnnLightObject* o, float lumens) { o->setPower(lumens); }), "setPower");
+		chai.add(fun([](AnnLightObject* o) -> Vector3 { return o->getPosition(); }), "getPosition");
+		chai.add(fun([](AnnLightObject* o) -> Vector3 { return o->getDirection(); }), "getDirection");
+		chai.add(fun([](AnnLightObject* o) -> AnnColor { return o->getSpecularColor(); }), "getSpecularColor");
+		chai.add(fun([](AnnLightObject* o) -> AnnColor { return o->getDiffuseColor(); }), "getDiffuseColor");
+		chai.add(fun([](AnnLightObject* o) { return o->getName(); }), "getName");
 
 		//Color
 		chai.add(user_type<AnnColor>(), "AnnColor");
 		chai.add(constructor<AnnColor(float, float, float, float)>(), "AnnColor");
 		chai.add(constructor<AnnColor(const ColourValue&)>(), "AnnColor");
 		chai.add(constructor<AnnColor(const AnnColor&)>(), "AnnColor");
-		chai.add(fun([](AnnColor& c1, AnnColor& c2) { c1 = c2;	}), "=");
-		chai.add(fun([](AnnColor& color) {return color.getRed(); }), "getRed");
-		chai.add(fun([](AnnColor& color) {return color.getGreen(); }), "getGreen");
-		chai.add(fun([](AnnColor& color) {return color.getBlue(); }), "getBlue");
-		chai.add(fun([](AnnColor& color) {return color.getAlpha(); }), "getAlpha");
-		chai.add(fun([](AnnColor& color, float value) {return color.setRed(value); }), "setRed");
-		chai.add(fun([](AnnColor& color, float value) {return color.setGreen(value); }), "setGreen");
-		chai.add(fun([](AnnColor& color, float value) {return color.setBlue(value); }), "setBlue");
-		chai.add(fun([](AnnColor& color, float value) {return color.setAlpha(value); }), "setAlpha");
+		chai.add(fun([](AnnColor& c1, AnnColor& c2) { c1 = c2; }), "=");
+		chai.add(fun([](AnnColor& color) { return color.getRed(); }), "getRed");
+		chai.add(fun([](AnnColor& color) { return color.getGreen(); }), "getGreen");
+		chai.add(fun([](AnnColor& color) { return color.getBlue(); }), "getBlue");
+		chai.add(fun([](AnnColor& color) { return color.getAlpha(); }), "getAlpha");
+		chai.add(fun([](AnnColor& color, float value) { return color.setRed(value); }), "setRed");
+		chai.add(fun([](AnnColor& color, float value) { return color.setGreen(value); }), "setGreen");
+		chai.add(fun([](AnnColor& color, float value) { return color.setBlue(value); }), "setBlue");
+		chai.add(fun([](AnnColor& color, float value) { return color.setAlpha(value); }), "setAlpha");
 
 		//Object getter
 		chai.add(fun([](string id) { return AnnGetGameObjectManager()->getGameObject(id).get(); }), "AnnGetGameObject");
@@ -216,27 +217,24 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
 
 		//Create a GameObject form ChaiScript
-		chai.add(fun([](const string& mesh, const string& objectName)
-		{
-			AnnGetLevelManager()->addToCurrentLevel
-			(
-				AnnGetGameObjectManager()->createGameObject(mesh.c_str(), objectName)
-			);
-		}), "AnnCreateGameObject");
+		chai.add(fun([](const string& mesh, const string& objectName) {
+					 AnnGetLevelManager()->addToCurrentLevel(
+						 AnnGetGameObjectManager()->createGameObject(mesh.c_str(), objectName));
+				 }),
+				 "AnnCreateGameObject");
 		//Remove object
-		chai.add(fun([](const string& objectName)
-		{
-			auto obj = AnnGetGameObjectManager()->getGameObject(objectName);
-			if (!obj) return;
-			AnnGetGameObjectManager()->removeGameObject(obj);
-			AnnGetLevelManager()->removeFromCurrentLevel(obj);
-		}
-		), "AnnRemoveGameObject");
+		chai.add(fun([](const string& objectName) {
+					 auto obj = AnnGetGameObjectManager()->getGameObject(objectName);
+					 if(!obj) return;
+					 AnnGetGameObjectManager()->removeGameObject(obj);
+					 AnnGetLevelManager()->removeFromCurrentLevel(obj);
+				 }),
+				 "AnnRemoveGameObject");
 
 		//Change the gravity
-		chai.add(fun([](const Vector3& gravity) {AnnGetPhysicsEngine()->changeGravity(gravity); }), "AnnChangeGravity");
+		chai.add(fun([](const Vector3& gravity) { AnnGetPhysicsEngine()->changeGravity(gravity); }), "AnnChangeGravity");
 		//Restore the default gravity vector
-		chai.add(fun([]() {AnnGetPhysicsEngine()->resetGravity(); }), "AnnRestoreGravity");
+		chai.add(fun([]() { AnnGetPhysicsEngine()->resetGravity(); }), "AnnRestoreGravity");
 
 		//Add the types of the event representation object
 		chai.add(user_type<AnnKeyEvent>(), "AnnKeyEvent");
@@ -254,44 +252,44 @@ void AnnScriptManager::registerApi()
 		chai.add(user_type<AnnCollisionEvent>(), "AnnCollisionEvent");
 		chai.add(user_type<AnnPlayerCollisionEvent>(), "AnnPlayerCollisionEvent");
 
-		chai.add(fun([](AnnKeyEvent e) {return e.isPressed(); }), "isPressed");
-		chai.add(fun([](AnnKeyEvent e) {return e.isReleased(); }), "isReleased");
-		chai.add(fun([](AnnKeyEvent e) {return e.getKey(); }), "getKey");
+		chai.add(fun([](AnnKeyEvent e) { return e.isPressed(); }), "isPressed");
+		chai.add(fun([](AnnKeyEvent e) { return e.isReleased(); }), "isReleased");
+		chai.add(fun([](AnnKeyEvent e) { return e.getKey(); }), "getKey");
 
-		chai.add(fun([](AnnMouseEvent e, /*MouseAxisId*/const int a) {return e.getAxis(MouseAxisId(a)); }), "getAxis");
-		chai.add(fun([](AnnMouseEvent e, /*MouseButtonId*/const int b) {return e.getButtonState(MouseButtonId(b)); }), "getButtonState");
-		chai.add(fun([](AnnMouseAxis a) {return a.getRelValue(); }), "getRelValue");
-		chai.add(fun([](AnnMouseAxis a) {return a.getAbsValue(); }), "getAbsValue");
+		chai.add(fun([](AnnMouseEvent e, /*MouseAxisId*/ const int a) { return e.getAxis(MouseAxisId(a)); }), "getAxis");
+		chai.add(fun([](AnnMouseEvent e, /*MouseButtonId*/ const int b) { return e.getButtonState(MouseButtonId(b)); }), "getButtonState");
+		chai.add(fun([](AnnMouseAxis a) { return a.getRelValue(); }), "getRelValue");
+		chai.add(fun([](AnnMouseAxis a) { return a.getAbsValue(); }), "getAbsValue");
 
-		chai.add(fun([](AnnStickEvent e) {return e.getNbButtons(); }), "getNbButtons");
-		chai.add(fun([](AnnStickEvent e) {return e.getNbAxis(); }), "getNbAxis");
-		chai.add(fun([](AnnStickEvent e) {return e.getNbPov(); }), "getNbPov");
-		chai.add(fun([](AnnStickEvent e) {return e.getVendor(); }), "getVendor");
-		chai.add(fun([](AnnStickEvent e) {return e.getStickID(); }), "getStickID");
-		chai.add(fun([](AnnStickEvent e) {return e.isXboxController(); }), "isXboxController");
-		chai.add(fun([](AnnStickEvent e, const int i) {return e.isPressed(i); }), "isPressed");
-		chai.add(fun([](AnnStickEvent e, const int i) {return e.isReleased(i); }), "isReleased");
-		chai.add(fun([](AnnStickEvent e, const int i) {return e.isDown(i); }), "isDown");
-		chai.add(fun([](AnnStickEvent e, const int i) {return e.getAxis(i); }), "getAxis");
-		chai.add(fun([](AnnStickEvent e, const int i) {return e.getPov(i); }), "getPov");
+		chai.add(fun([](AnnStickEvent e) { return e.getNbButtons(); }), "getNbButtons");
+		chai.add(fun([](AnnStickEvent e) { return e.getNbAxis(); }), "getNbAxis");
+		chai.add(fun([](AnnStickEvent e) { return e.getNbPov(); }), "getNbPov");
+		chai.add(fun([](AnnStickEvent e) { return e.getVendor(); }), "getVendor");
+		chai.add(fun([](AnnStickEvent e) { return e.getStickID(); }), "getStickID");
+		chai.add(fun([](AnnStickEvent e) { return e.isXboxController(); }), "isXboxController");
+		chai.add(fun([](AnnStickEvent e, const int i) { return e.isPressed(i); }), "isPressed");
+		chai.add(fun([](AnnStickEvent e, const int i) { return e.isReleased(i); }), "isReleased");
+		chai.add(fun([](AnnStickEvent e, const int i) { return e.isDown(i); }), "isDown");
+		chai.add(fun([](AnnStickEvent e, const int i) { return e.getAxis(i); }), "getAxis");
+		chai.add(fun([](AnnStickEvent e, const int i) { return e.getPov(i); }), "getPov");
 
-		chai.add(fun([](AnnStickPov pov) {return pov.getNorth(); }), "getNorth");
-		chai.add(fun([](AnnStickPov pov) {return pov.getSouth(); }), "getSouth");
-		chai.add(fun([](AnnStickPov pov) {return pov.getEast(); }), "getEast");
-		chai.add(fun([](AnnStickPov pov) {return pov.getWest(); }), "getWest");
-		chai.add(fun([](AnnStickPov pov) {return pov.getNorthEast(); }), "getNorthEast");
-		chai.add(fun([](AnnStickPov pov) {return pov.getNorthWest(); }), "getNorthWest");
-		chai.add(fun([](AnnStickPov pov) {return pov.getSouthEast(); }), "getSouthEast");
-		chai.add(fun([](AnnStickPov pov) {return pov.getSouthWest(); }), "getSouthWest");
+		chai.add(fun([](AnnStickPov pov) { return pov.getNorth(); }), "getNorth");
+		chai.add(fun([](AnnStickPov pov) { return pov.getSouth(); }), "getSouth");
+		chai.add(fun([](AnnStickPov pov) { return pov.getEast(); }), "getEast");
+		chai.add(fun([](AnnStickPov pov) { return pov.getWest(); }), "getWest");
+		chai.add(fun([](AnnStickPov pov) { return pov.getNorthEast(); }), "getNorthEast");
+		chai.add(fun([](AnnStickPov pov) { return pov.getNorthWest(); }), "getNorthWest");
+		chai.add(fun([](AnnStickPov pov) { return pov.getSouthEast(); }), "getSouthEast");
+		chai.add(fun([](AnnStickPov pov) { return pov.getSouthWest(); }), "getSouthWest");
 
-		chai.add(fun([](AnnStickAxis a) {return a.getAxisId(); }), "getAxisId");
-		chai.add(fun([](AnnStickAxis a) {return a.getRelValue(); }), "getRelValue");
-		chai.add(fun([](AnnStickAxis a) {return a.getAbsValue(); }), "getAbsValue");
+		chai.add(fun([](AnnStickAxis a) { return a.getAxisId(); }), "getAxisId");
+		chai.add(fun([](AnnStickAxis a) { return a.getRelValue(); }), "getRelValue");
+		chai.add(fun([](AnnStickAxis a) { return a.getAbsValue(); }), "getAbsValue");
 
-		chai.add(fun([](AnnTimeEvent t) {return t.getID(); }), "getID");
+		chai.add(fun([](AnnTimeEvent t) { return t.getID(); }), "getID");
 
-		chai.add(fun([](AnnTriggerEvent e) {return e.getContactStatus(); }), "getContactStatus");
-		chai.add(fun([](AnnTriggerEvent e) {return e.getSender(); }), "getSender");
+		chai.add(fun([](AnnTriggerEvent e) { return e.getContactStatus(); }), "getContactStatus");
+		chai.add(fun([](AnnTriggerEvent e) { return e.getSender(); }), "getSender");
 
 		// TODO ISSUE the hand controller event interface is not finished
 		chai.add(user_type<AnnHandController>(), "AnnHandController");
@@ -317,51 +315,50 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](AnnHandControllerEvent e) { return e.getSide(); }), "getSide");
 		chai.add(fun([](AnnHandControllerEvent e) { return e.getType(); }), "getType");
 
-		chai.add(fun([](AnnPlayerCollisionEvent e) {return e.getObject(); }), "getObject");
-		chai.add(fun([](AnnPlayerCollisionEvent e) {return e.getObject()->getName(); }), "getObjectName");
+		chai.add(fun([](AnnPlayerCollisionEvent e) { return e.getObject(); }), "getObject");
+		chai.add(fun([](AnnPlayerCollisionEvent e) { return e.getObject()->getName(); }), "getObjectName");
 
-		chai.add(fun([](AnnCollisionEvent e) {return e.getA(); }), "getAObject");
-		chai.add(fun([](AnnCollisionEvent e) {return e.getB(); }), "getBObject");
-		chai.add(fun([](AnnCollisionEvent e) {return e.getA()->getName(); }), "getAObjectName");
-		chai.add(fun([](AnnCollisionEvent e) {return e.getB()->getName(); }), "getBObjectName");
-		chai.add(fun([](AnnCollisionEvent e) -> Vector3 {return e.getPosition(); }), "getPosition");
-		chai.add(fun([](AnnCollisionEvent e) -> Vector3 {return e.getNormal(); }), "getNormal");
-		chai.add(fun([](AnnCollisionEvent e) {return e.isCeilingCollision(); }), "isCeilingCollision");
-		chai.add(fun([](AnnCollisionEvent e) {return e.isGroundCollision(); }), "isGroundCollision");
-		chai.add(fun([](AnnCollisionEvent e) {return e.isWallCollision(); }), "isWallCollision");
+		chai.add(fun([](AnnCollisionEvent e) { return e.getA(); }), "getAObject");
+		chai.add(fun([](AnnCollisionEvent e) { return e.getB(); }), "getBObject");
+		chai.add(fun([](AnnCollisionEvent e) { return e.getA()->getName(); }), "getAObjectName");
+		chai.add(fun([](AnnCollisionEvent e) { return e.getB()->getName(); }), "getBObjectName");
+		chai.add(fun([](AnnCollisionEvent e) -> Vector3 { return e.getPosition(); }), "getPosition");
+		chai.add(fun([](AnnCollisionEvent e) -> Vector3 { return e.getNormal(); }), "getNormal");
+		chai.add(fun([](AnnCollisionEvent e) { return e.isCeilingCollision(); }), "isCeilingCollision");
+		chai.add(fun([](AnnCollisionEvent e) { return e.isGroundCollision(); }), "isGroundCollision");
+		chai.add(fun([](AnnCollisionEvent e) { return e.isWallCollision(); }), "isWallCollision");
 
 		//There's capacitive touch surfaces and haptic feedback that aren't available right now on the AnnHandController class
 
 		//Register an accessors to the engine's log
-		chai.add(fun([](const string& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Vector3& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Vector2& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Quaternion& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Radian& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Degree& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const AnnColor& s) {AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](KeyCode::code c) {AnnDebug() << logFromScript << "keycode:" << c; }), "AnnDebugLog");
-		chai.add(fun([](MouseAxisId c) {AnnDebug() << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
+		chai.add(fun([](const string& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Vector3& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Vector2& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Quaternion& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Radian& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Degree& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const AnnColor& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](KeyCode::code c) { AnnDebug() << logFromScript << "keycode:" << c; }), "AnnDebugLog");
+		chai.add(fun([](MouseAxisId c) { AnnDebug() << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
 		chai.add(fun([](bool b) {string s("true"); if (!b) { s = "false"; } AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
-		chai.add(fun([](int i) {AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
-		chai.add(fun([](float f) {AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
+		chai.add(fun([](int i) { AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
+		chai.add(fun([](float f) { AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
 
 		///Clear the console
-		chai.add(fun([]() {AnnGetOnScreenConsole()->bufferClear(); }), "AnnClearConsole");
-		chai.add(fun([]() {AnnEngine::setProcessPriorityHigh(); }), "AnnSetProcessPriorityHigh");
-		chai.add(fun([]() {AnnEngine::setProcessPriorityNormal(); }), "AnnSetProcessPriorityNormal");
+		chai.add(fun([]() { AnnGetOnScreenConsole()->bufferClear(); }), "AnnClearConsole");
+		chai.add(fun([]() { AnnEngine::setProcessPriorityHigh(); }), "AnnSetProcessPriorityHigh");
+		chai.add(fun([]() { AnnEngine::setProcessPriorityNormal(); }), "AnnSetProcessPriorityNormal");
 
-		chai.add(fun([]() {AnnGetEngine()->requestQuit(); }), "AnnQuit");
-		chai.add(fun([](const float& multiplier) {AnnGetPhysicsEngine()->setDebugDrawerColorMultiplier(multiplier); }), "AnnSetDebugDrawerColorMultiplier");
-		chai.add(fun([](const float& ev, const float& minEv, const float& maxEv) {AnnGetSceneryManager()->setExposure(ev, minEv, maxEv); }), "AnnSetExposure");
-		chai.add(fun([](const float& threshold) {AnnGetSceneryManager()->setBloomThreshold(threshold); }), "AnnSetBloomThreshold");
-		chai.add(fun([](AnnColor& color, float& multiplier) {AnnGetSceneryManager()->setSkyColor(color, multiplier); }), "AnnSetSkyColor");
-		chai.add(fun([](const AnnColor& ucolor, const float umul, const AnnColor& lcolor, const float lmul, const Vector3& dir, const float envMapScaling)
-		{AnnGetSceneryManager()->setAmbientLight(ucolor, umul, lcolor, lmul, dir, envMapScaling); }), "AnnSetAmbientLight");
+		chai.add(fun([]() { AnnGetEngine()->requestQuit(); }), "AnnQuit");
+		chai.add(fun([](const float& multiplier) { AnnGetPhysicsEngine()->setDebugDrawerColorMultiplier(multiplier); }), "AnnSetDebugDrawerColorMultiplier");
+		chai.add(fun([](const float& ev, const float& minEv, const float& maxEv) { AnnGetSceneryManager()->setExposure(ev, minEv, maxEv); }), "AnnSetExposure");
+		chai.add(fun([](const float& threshold) { AnnGetSceneryManager()->setBloomThreshold(threshold); }), "AnnSetBloomThreshold");
+		chai.add(fun([](AnnColor& color, float& multiplier) { AnnGetSceneryManager()->setSkyColor(color, multiplier); }), "AnnSetSkyColor");
+		chai.add(fun([](const AnnColor& ucolor, const float umul, const AnnColor& lcolor, const float lmul, const Vector3& dir, const float envMapScaling) { AnnGetSceneryManager()->setAmbientLight(ucolor, umul, lcolor, lmul, dir, envMapScaling); }), "AnnSetAmbientLight");
 
-		chai.add(fun([](int AA) {AnnOgreVRRenderer::setAntiAliasingLevel(uint8_t(AA)); }), "AnnSetAA");
+		chai.add(fun([](int AA) { AnnOgreVRRenderer::setAntiAliasingLevel(uint8_t(AA)); }), "AnnSetAA");
 	}
-	catch (const chaiscript::exception::name_conflict_error& e)
+	catch(const chaiscript::exception::name_conflict_error& e)
 	{
 		throw AnnInitializationError(ANN_ERR_NOTINIT, "Cannot initialize script manager. Trhowed exception when binding APIs:\n" + string(e.what()));
 	}
@@ -374,7 +371,7 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callKeyEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)>>("KeyEvent");
 	}
-	catch (const chaiscript::exception::eval_error&)
+	catch(const chaiscript::exception::eval_error&)
 	{
 		callKeyEventOnScriptInstance = nullptr;
 	}
@@ -384,7 +381,7 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callMouseEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)>>("MouseEvent");
 	}
-	catch (const chaiscript::exception::eval_error&)
+	catch(const chaiscript::exception::eval_error&)
 	{
 		callMouseEventOnScriptInstance = nullptr;
 	}
@@ -394,7 +391,7 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callStickEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)>>("StickEvent");
 	}
-	catch (const chaiscript::exception::eval_error&)
+	catch(const chaiscript::exception::eval_error&)
 	{
 		callStickEventOnScriptInstance = nullptr;
 	}
@@ -404,7 +401,7 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callTimeEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)>>("TimeEvent");
 	}
-	catch (const chaiscript::exception::eval_error&)
+	catch(const chaiscript::exception::eval_error&)
 	{
 		callTimeEventOnScriptInstance = nullptr;
 	}
@@ -414,7 +411,7 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callTriggerEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)>>("TriggerEvent");
 	}
-	catch (const chaiscript::exception::eval_error&)
+	catch(const chaiscript::exception::eval_error&)
 	{
 		callTriggerEventOnScriptInstance = nullptr;
 	}
@@ -424,7 +421,7 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callHandControllertOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)>>("HandControllerEvent");
 	}
-	catch (const chaiscript::exception::eval_error&)
+	catch(const chaiscript::exception::eval_error&)
 	{
 		callHandControllertOnScriptInstance = nullptr;
 	}
@@ -432,7 +429,7 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callCollisionEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)>>("CollisionEvent");
 	}
-	catch (const chaiscript::exception::eval_error&)
+	catch(const chaiscript::exception::eval_error&)
 	{
 		callCollisionEventOnScriptInstance = nullptr;
 	}
@@ -440,24 +437,24 @@ void AnnScriptManager::tryAndGetEventHooks()
 	{
 		callPlayerCollisionEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)>>("PlayerCollisionEvent");
 	}
-	catch (const chaiscript::exception::eval_error&)
+	catch(const chaiscript::exception::eval_error&)
 	{
 		callPlayerCollisionEventOnScriptInstance = nullptr;
 	}
 }
 
-bool AnnScriptManager::evalFile(const std::string & file)
+bool AnnScriptManager::evalFile(const std::string& file)
 {
 	try
 	{
 		chai.eval_file(file);
 	}
-	catch (const chaiscript::exception::file_not_found_error& fnfe)
+	catch(const chaiscript::exception::file_not_found_error& fnfe)
 	{
 		AnnDebug() << fileErrorPrefix << fnfe.what();
 		return false;
 	}
-	catch (const chaiscript::exception::eval_error& ee)
+	catch(const chaiscript::exception::eval_error& ee)
 	{
 		AnnDebug() << fileErrorPrefix << ee.pretty_print();
 		return false;
@@ -467,7 +464,7 @@ bool AnnScriptManager::evalFile(const std::string & file)
 
 AnnScriptManager::AnnScriptID AnnScriptManager::ID{ 0 };
 
-std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std::string & scriptName, AnnGameObject* owner)
+std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std::string& scriptName, AnnGameObject* owner)
 {
 	auto file{ scriptName + scriptExtension };
 
@@ -477,14 +474,14 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 		//chai.use(file);
 
 		auto rawScript = scriptFileManager->getResourceByName(file).staticCast<AnnScriptFile>();
-		if (!rawScript)
+		if(!rawScript)
 		{
 			rawScript = scriptFileManager->load(file, AnnResourceManager::getDefaultResourceGroupName());
-			if (!rawScript)
+			if(!rawScript)
 				throw chaiscript::exception::file_not_found_error(file);
 		}
 
-		if (!rawScript->loadedInChaiscriptInterpretor())
+		if(!rawScript->loadedInChaiscriptInterpretor())
 		{
 			AnnDebug() << "now loading " << file << " into the script manager";
 			rawScript->signalLoadedInChaiscript();
@@ -497,7 +494,7 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 		std::string ownerTag{ "" };
 
 		//Not giving an owner to a script that wants an owner, or calling an owner to a script that
-		if (owner)
+		if(owner)
 			ownerTag = owner->getName();
 
 		//This may looks odd but it's good enough for what we're doing:
@@ -535,16 +532,15 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 			callPlayerCollisionEventOnScriptInstance,
 			//This return the ScriptInstance, as a Boxed_Value. We're only interested at calling something on
 			//this object, so don't need to try to unbox it. It's literally a black box for us
-			creatorFunction(ownerTag)
-			);
+			creatorFunction(ownerTag));
 	}
 
-	catch (const chaiscript::exception::file_not_found_error& fnfe)
+	catch(const chaiscript::exception::file_not_found_error& fnfe)
 	{
 		AnnDebug() << "Cannot find behavior script " << file;
 		AnnDebug() << fileErrorPrefix << fnfe.what();
 	}
-	catch (const chaiscript::exception::eval_error& ee)
+	catch(const chaiscript::exception::eval_error& ee)
 	{
 		AnnDebug() << "Error during evaluation of behavior script " << file;
 		AnnDebug() << ee.pretty_print();
@@ -555,50 +551,51 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 }
 
 AnnBehaviorScript::AnnBehaviorScript() :
-	valid(false),
-	cannotKey(false),
-	cannotMouse(false),
-	cannotStick(false),
-	cannotTime(false),
-	cannotTrigger(false),
-	cannotHand(false),
-	cannotCollision{ false },
-	cannotPlayerCollision{ false }
+ valid(false),
+ cannotKey(false),
+ cannotMouse(false),
+ cannotStick(false),
+ cannotTime(false),
+ cannotTrigger(false),
+ cannotHand(false),
+ cannotCollision{ false },
+ cannotPlayerCollision{ false }
 {
 	AnnDebug() << "Invalid script object created";
 }
 
 AnnBehaviorScript::AnnBehaviorScript(const std::string& scriptName,
-	std::function<void(chaiscript::Boxed_Value&)> updateHook,
-	std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
-	std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
-	std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
-	std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
-	std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
-	std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
-	std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
-	std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
-	chaiscript::Boxed_Value scriptObjectInstance) : constructListener(),
-	valid{ true },
-	name{ scriptName },
-	ScriptObjectInstance{ scriptObjectInstance },
-	callUpdateOnScriptInstance{ updateHook },
-	callKeyEventOnScriptInstance{ KeyEventHook },
-	callMouseEventOnScriptInstance{ MouseEventHook },
-	callStickEventOnScriptInstance{ StickEventHook },
-	callTimeEventOnScriptInstance{ TimeEventHook },
-	callTriggerEventOnScriptInstance{ TriggerEventHook },
-	callHandControllertOnScriptInstance{ HandControllertHook },
-	callCollisionEventOnScriptInstance{ CollisionEventHook },
-	callPlayerCollisionEventOnScriptInstance{ PlayerCollisionEventHook },
-	cannotKey{ false },
-	cannotMouse{ false },
-	cannotStick{ false },
-	cannotTime{ false },
-	cannotTrigger{ false },
-	cannotHand{ false },
-	cannotCollision{ false },
-	cannotPlayerCollision{ false }
+									 std::function<void(chaiscript::Boxed_Value&)> updateHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
+									 chaiscript::Boxed_Value scriptObjectInstance) :
+ constructListener(),
+ valid{ true },
+ name{ scriptName },
+ ScriptObjectInstance{ scriptObjectInstance },
+ callUpdateOnScriptInstance{ updateHook },
+ callKeyEventOnScriptInstance{ KeyEventHook },
+ callMouseEventOnScriptInstance{ MouseEventHook },
+ callStickEventOnScriptInstance{ StickEventHook },
+ callTimeEventOnScriptInstance{ TimeEventHook },
+ callTriggerEventOnScriptInstance{ TriggerEventHook },
+ callHandControllertOnScriptInstance{ HandControllertHook },
+ callCollisionEventOnScriptInstance{ CollisionEventHook },
+ callPlayerCollisionEventOnScriptInstance{ PlayerCollisionEventHook },
+ cannotKey{ false },
+ cannotMouse{ false },
+ cannotStick{ false },
+ cannotTime{ false },
+ cannotTrigger{ false },
+ cannotHand{ false },
+ cannotCollision{ false },
+ cannotPlayerCollision{ false }
 {
 }
 
@@ -613,12 +610,12 @@ void AnnBehaviorScript::update()
 	{
 		callUpdateOnScript();
 	}
-	catch (const chaiscript::exception::eval_error& ee)
+	catch(const chaiscript::exception::eval_error& ee)
 	{
 		AnnDebug() << "Evaluation error while "
-			<< name
-			<< " script update - "
-			<< ee.pretty_print();
+				   << name
+				   << " script update - "
+				   << ee.pretty_print();
 		//will not crash here.
 	}
 }
@@ -643,88 +640,136 @@ void AnnBehaviorScript::KeyEvent(AnnKeyEvent e)
 {
 	try
 	{
-		if (callKeyEventOnScriptInstance && !cannotKey)
+		if(callKeyEventOnScriptInstance && !cannotKey)
 			callKeyEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) { cannotKey = true; }
-	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+	catch(const chaiscript::exception::dispatch_error&)
+	{
+		cannotKey = true;
+	}
+	catch(const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << "Event script error " << ee.pretty_print();
+	}
 }
 
 void AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
 {
 	try
 	{
-		if (callMouseEventOnScriptInstance && !cannotMouse)
+		if(callMouseEventOnScriptInstance && !cannotMouse)
 			callMouseEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) { cannotMouse = true; }
-	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+	catch(const chaiscript::exception::dispatch_error&)
+	{
+		cannotMouse = true;
+	}
+	catch(const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << "Event script error " << ee.pretty_print();
+	}
 }
 
 void AnnBehaviorScript::StickEvent(AnnStickEvent e)
 {
 	try
 	{
-		if (callStickEventOnScriptInstance && !cannotStick)
+		if(callStickEventOnScriptInstance && !cannotStick)
 			callStickEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) { cannotStick = true; }
-	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+	catch(const chaiscript::exception::dispatch_error&)
+	{
+		cannotStick = true;
+	}
+	catch(const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << "Event script error " << ee.pretty_print();
+	}
 }
 
 void AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
 {
 	try
 	{
-		if (callTimeEventOnScriptInstance && !cannotTime)
+		if(callTimeEventOnScriptInstance && !cannotTime)
 			callTimeEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) { cannotTime = true; }
-	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+	catch(const chaiscript::exception::dispatch_error&)
+	{
+		cannotTime = true;
+	}
+	catch(const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << "Event script error " << ee.pretty_print();
+	}
 }
 
 void AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
 {
 	try
 	{
-		if (callTriggerEventOnScriptInstance && !cannotTrigger)
+		if(callTriggerEventOnScriptInstance && !cannotTrigger)
 			callTriggerEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) { cannotTrigger = true; }
-	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+	catch(const chaiscript::exception::dispatch_error&)
+	{
+		cannotTrigger = true;
+	}
+	catch(const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << "Event script error " << ee.pretty_print();
+	}
 }
 
 void AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
 {
 	try
 	{
-		if (callHandControllertOnScriptInstance && !cannotHand)
+		if(callHandControllertOnScriptInstance && !cannotHand)
 			callHandControllertOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) { cannotHand = true; }
-	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+	catch(const chaiscript::exception::dispatch_error&)
+	{
+		cannotHand = true;
+	}
+	catch(const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << "Event script error " << ee.pretty_print();
+	}
 }
 
 void AnnBehaviorScript::CollisionEvent(AnnCollisionEvent e)
 {
 	try
 	{
-		if (callCollisionEventOnScriptInstance && !cannotCollision)
+		if(callCollisionEventOnScriptInstance && !cannotCollision)
 			callCollisionEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) { cannotCollision = true; }
-	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+	catch(const chaiscript::exception::dispatch_error&)
+	{
+		cannotCollision = true;
+	}
+	catch(const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << "Event script error " << ee.pretty_print();
+	}
 }
 void AnnBehaviorScript::PlayerCollisionEvent(AnnPlayerCollisionEvent e)
 {
 	//AnnDebug() << "player collision on script...";
 	try
 	{
-		if (callPlayerCollisionEventOnScriptInstance && !cannotPlayerCollision)
+		if(callPlayerCollisionEventOnScriptInstance && !cannotPlayerCollision)
 			callPlayerCollisionEventOnScriptInstance(ScriptObjectInstance, e);
 	}
-	catch (const chaiscript::exception::dispatch_error&) { cannotPlayerCollision = true; }
-	catch (const chaiscript::exception::eval_error& ee) { AnnDebug() << "Event script error " << ee.pretty_print(); }
+	catch(const chaiscript::exception::dispatch_error&)
+	{
+		cannotPlayerCollision = true;
+	}
+	catch(const chaiscript::exception::eval_error& ee)
+	{
+		AnnDebug() << "Event script error " << ee.pretty_print();
+	}
 }
 
 void AnnScriptManager::evalString(const std::string& chaiCode)

@@ -17,17 +17,21 @@
 
 namespace Annwvyn
 {
-	enum AnnPlayerMode { STANDING, ROOMSCALE, UNKNOWN };
+	enum AnnPlayerMode { STANDING,
+						 ROOMSCALE,
+						 UNKNOWN };
 	class AnnEngine; //pre-declaration of AnnEngine
 
 	///Correspondence between array position and walk direction for the "walking" array
-	enum walkDirection { forward, backward, left, right };
+	enum walkDirection { forward,
+						 backward,
+						 left,
+						 right };
 
 	///class that represent the player. This is the user's "Virtual body" in the world. It's the object that you have to move and turn to explore the space.
 	class AnnDllExport AnnPlayerBody
 	{
 	public:
-
 		static const AnnVect3 DEFAULT_STARTING_POS;
 		static const Ogre::Euler DEFAULT_STARTING_ORIENT;
 
@@ -231,7 +235,6 @@ namespace Annwvyn
 		AnnQuaternion roomTranslateQuatReference;
 
 	public:
-
 		///Turning that off bypass the physics code. Cool for menu scene or weird manipulation of the player object
 		bool ignorePhysics;
 

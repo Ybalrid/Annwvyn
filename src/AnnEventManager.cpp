@@ -8,23 +8,23 @@
 #include "AnnGetter.hpp"
 
 using namespace Annwvyn;
+using std::abs;
+using std::max;
+using std::min;
+using std::shared_ptr;
 using std::string;
 using std::to_string;
 using std::unique_ptr;
-using std::shared_ptr;
-using std::abs;
-using std::min;
-using std::max;
 
 AnnEventListener::AnnEventListener() :
-	player(AnnGetPlayer().get())
+ player(AnnGetPlayer().get())
 {
 }
 
 float AnnEventListener::trim(float v, float dz)
 {
 	//The test is done on the abs value. Return the actual value, or 0 if under the dead-zone
-	if (abs(v) >= dz) return v;
+	if(abs(v) >= dz) return v;
 	return 0.0f;
 }
 
@@ -34,45 +34,45 @@ shared_ptr<AnnEventListener> AnnEventListener::getSharedListener()
 }
 
 AnnTextInputer::AnnTextInputer() :
-	listen(false),
-	asciiOnly{ true },
-	cursorOffset{ 0 }
+ listen(false),
+ asciiOnly{ true },
+ cursorOffset{ 0 }
 {
 }
 
-bool AnnTextInputer::keyPressed(const OIS::KeyEvent &arg)
+bool AnnTextInputer::keyPressed(const OIS::KeyEvent& arg)
 {
-	if (!listen) return true;
+	if(!listen) return true;
 
 	//Handle backspace
-	if (arg.key == OIS::KC_BACK && !input.empty())
+	if(arg.key == OIS::KC_BACK && !input.empty())
 	{
-		if (cursorOffset > input.size()) cursorOffset = int(input.size());
+		if(cursorOffset > input.size()) cursorOffset = int(input.size());
 		input.erase(end(input) - min(int(input.size()), 1 + cursorOffset));
 	}
 
 	//Text
-	else if ((arg.text < 0x7F && arg.text > 0x1F) || !asciiOnly)
+	else if((arg.text < 0x7F && arg.text > 0x1F) || !asciiOnly)
 	{
 		//Put typed char into the application
 		input.insert(max(0, int(input.size()) - int(cursorOffset)), 1, char(arg.text));
 	}
 
 	//Return key
-	else if (arg.text == '\r')
+	else if(arg.text == '\r')
 	{
 		input.push_back('\r');
 	}
 
 	//Arrow Keys
-	else if (arg.key == OIS::KC_UP || arg.key == OIS::KC_DOWN || arg.key == OIS::KC_LEFT || arg.key == OIS::KC_RIGHT)
+	else if(arg.key == OIS::KC_UP || arg.key == OIS::KC_DOWN || arg.key == OIS::KC_LEFT || arg.key == OIS::KC_RIGHT)
 	{
 		AnnGetOnScreenConsole()->notifyNavigationKey(KeyCode::code(arg.key));
 	}
 	return true;
 }
 
-bool AnnTextInputer::keyReleased(const OIS::KeyEvent &arg)
+bool AnnTextInputer::keyReleased(const OIS::KeyEvent& arg)
 {
 	return true;
 }
@@ -101,13 +101,13 @@ void AnnTextInputer::stopListening()
 
 void AnnTextInputer::setInput(const string& content)
 {
-	input = content;
+	input		 = content;
 	cursorOffset = 0;
 }
 
 void AnnTextInputer::setCursorOffset(int newPos)
 {
-	if (newPos >= 0)
+	if(newPos >= 0)
 		cursorOffset = newPos;
 }
 
@@ -116,13 +116,14 @@ int AnnTextInputer::getCursorOffset() const
 	return cursorOffset;
 }
 
-AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) : AnnSubSystem("EventManager"),
-Keyboard(nullptr),
-Mouse(nullptr),
-lastTimerCreated(0),
-defaultEventListener(nullptr),
-knowXbox(false),
-keyboardIgnore{ false }
+AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
+ AnnSubSystem("EventManager"),
+ Keyboard(nullptr),
+ Mouse(nullptr),
+ lastTimerCreated(0),
+ defaultEventListener(nullptr),
+ knowXbox(false),
+ keyboardIgnore{ false }
 {
 	//Reserve some memory
 	keyEventBuffer.reserve(10);
@@ -131,8 +132,8 @@ keyboardIgnore{ false }
 	handControllerEventBuffer.reserve(10);
 
 	//Init all bool array to false
-	for (auto& keyState : previousKeyStates) keyState = false;
-	for (auto& mouseButtonState : previousMouseButtonStates) mouseButtonState = false;
+	for(auto& keyState : previousKeyStates) keyState = false;
+	for(auto& mouseButtonState : previousMouseButtonStates) mouseButtonState = false;
 
 	//Configure and create the input system
 	size_t windowHnd;
@@ -143,8 +144,8 @@ keyboardIgnore{ false }
 
 	//Get the keyboard, mouse and joysticks objects
 	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
-	Mouse = static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
-	for (auto nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
+	Mouse	= static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
+	for(auto nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
 	{
 		//Create joystick object
 		const auto oisJoystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
@@ -154,11 +155,10 @@ keyboardIgnore{ false }
 		AnnDebug() << "Detected joystick : " << vendor;
 
 		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)
-		if (vendor.find("Xbox") != string::npos ||
-			vendor.find("XBOX") != string::npos)
+		if(vendor.find("Xbox") != string::npos || vendor.find("XBOX") != string::npos)
 		{
 			knowXbox = true;
-			xboxID = StickAxisId(oisJoystick->getID());
+			xboxID   = StickAxisId(oisJoystick->getID());
 			AnnDebug() << "Detected Xbox controller at ID " << xboxID;
 		}
 	}
@@ -191,7 +191,7 @@ void AnnEventManager::useDefaultEventListener()
 	removeListener();
 
 	//If the event listener isn't already initialized, allocate one
-	if (!defaultEventListener)
+	if(!defaultEventListener)
 		defaultEventListener = std::make_shared<AnnDefaultEventListener>();
 
 	//Set the default event listener to the event manager
@@ -206,7 +206,7 @@ shared_ptr<AnnEventListener> AnnEventManager::getDefaultEventListener() const
 void AnnEventManager::addListener(AnnEventListenerPtr l)
 {
 	AnnDebug() << "Adding an event listener : " << l.get();
-	if (l != nullptr)
+	if(l != nullptr)
 		listeners.push_back(l);
 }
 
@@ -219,14 +219,16 @@ void AnnEventManager::clearListenerList()
 void AnnEventManager::removeListener(AnnEventListenerPtr l)
 {
 	AnnDebug() << "Removing an event listener : " << l.get();
-	if (l == nullptr) { clearListenerList(); return; }
+	if(l == nullptr) {
+		clearListenerList();
+		return;
+	}
 
-	listeners.erase(remove_if(begin(listeners), end(listeners),
-		[&](std::weak_ptr<AnnEventListener> weak_listener)
-	{
-		if (auto listener = weak_listener.lock()) return listener == l;
-		return false;
-	}), end(listeners));
+	listeners.erase(remove_if(begin(listeners), end(listeners), [&](std::weak_ptr<AnnEventListener> weak_listener) {
+						if(auto listener = weak_listener.lock()) return listener == l;
+						return false;
+					}),
+					end(listeners));
 }
 
 void AnnEventManager::update()
@@ -246,21 +248,21 @@ void AnnEventManager::captureEvents()
 	Keyboard->capture();
 	Mouse->capture();
 
-	for (auto& joystick : Joysticks)
+	for(auto& joystick : Joysticks)
 		joystick.oisJoystick->capture();
 }
 
 void AnnEventManager::processKeyboardEvents()
 {
 	//for each key of the keyboard
-	for (size_t c(0); c < KeyCode::SIZE; c++)
+	for(size_t c(0); c < KeyCode::SIZE; c++)
 	{
-		if (Keyboard->isKeyDown(OIS::KeyCode(c)) != previousKeyStates[c])
+		if(Keyboard->isKeyDown(OIS::KeyCode(c)) != previousKeyStates[c])
 		{
 			//create a corresponding key event
 			AnnKeyEvent e;
 			e.setCode(KeyCode::code(c));
-			e.ignored = keyboardIgnore;
+			e.ignored																	  = keyboardIgnore;
 			bool(previousKeyStates[c] = Keyboard->isKeyDown(OIS::KeyCode(c))) ? e.pressed = true : e.pressed = false;
 
 			keyEventBuffer.push_back(e);
@@ -274,7 +276,7 @@ void AnnEventManager::processMouseEvents()
 
 	AnnMouseEvent e;
 
-	for (size_t i(0); i < nbButtons; i++)
+	for(size_t i(0); i < nbButtons; i++)
 		e.setButtonStatus(MouseButtonId(i), state.buttonDown(OIS::MouseButtonID(i)));
 
 	e.setAxisInformation(X, AnnMouseAxis(X, state.X.rel, state.X.abs));
@@ -286,19 +288,19 @@ void AnnEventManager::processMouseEvents()
 
 void AnnEventManager::processJoystickEvents()
 {
-	for (auto& Joystick : Joysticks)
+	for(auto& Joystick : Joysticks)
 	{
 		const auto& state(Joystick.oisJoystick->getJoyStickState());
 		AnnStickEvent stickEvent;
-		stickEvent.vendor = Joystick.oisJoystick->vendor();
+		stickEvent.vendor  = Joystick.oisJoystick->vendor();
 		stickEvent.stickID = Joystick.getID();
 
 		//Get all buttons immediate data
 		const auto buttonSize = state.mButtons.size();
 		stickEvent.buttons.resize(buttonSize);
-		for (auto i = 0u; i < buttonSize; ++i)
+		for(auto i = 0u; i < buttonSize; ++i)
 		{
-			if (state.mButtons[i])
+			if(state.mButtons[i])
 				stickEvent.buttons[i] = 1;
 			else
 				stickEvent.buttons[i] = 0;
@@ -306,7 +308,7 @@ void AnnEventManager::processJoystickEvents()
 
 		//Get all axes immediate data
 		auto axisID = 0;
-		for (const auto& axis : state.mAxes)
+		for(const auto& axis : state.mAxes)
 		{
 			AnnStickAxis annAxis{ axisID++, axis.rel, axis.abs };
 			annAxis.noRel = axis.absOnly;
@@ -315,21 +317,22 @@ void AnnEventManager::processJoystickEvents()
 
 		//The joystick state object always have 4 Pov but the AnnStickEvent has the number of Pov the stick has
 		const auto nbPov = size_t(Joystick.oisJoystick->getNumberOfComponents(OIS::ComponentType::OIS_POV));
-		for (auto i(0u); i < nbPov; i++)
+		for(auto i(0u); i < nbPov; i++)
 			stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
 
 		//Get press and release event lists
 		const auto nbButton{ min(state.mButtons.size(), Joystick.previousStickButtonStates.size()) };
-		for (auto button(0u); button < nbButton; button++)
-			if (!Joystick.previousStickButtonStates[button] && state.mButtons[button])
+		for(auto button(0u); button < nbButton; button++)
+			if(!Joystick.previousStickButtonStates[button] && state.mButtons[button])
 				stickEvent.pressed.push_back(static_cast<unsigned short>(button));
-			else if (Joystick.previousStickButtonStates[button] && !state.mButtons[button])
+			else if(Joystick.previousStickButtonStates[button] && !state.mButtons[button])
 				stickEvent.released.push_back(static_cast<unsigned short>(button));
 
 		//Save current buttons state for next frame
 		Joystick.previousStickButtonStates = stickEvent.buttons;
-		if (knowXbox) if (stickEvent.stickID == xboxID)
-			stickEvent.xbox = true;
+		if(knowXbox)
+			if(stickEvent.stickID == xboxID)
+				stickEvent.xbox = true;
 
 		stickEventBuffer.push_back(stickEvent);
 	}
@@ -337,25 +340,26 @@ void AnnEventManager::processJoystickEvents()
 
 void AnnEventManager::processHandControllerEvents()
 {
-	if (AnnGetVRRenderer()->handControllersAvailable())
-		for (auto handController : AnnGetVRRenderer()->getHandControllerArray())
+	if(AnnGetVRRenderer()->handControllersAvailable())
+		for(auto handController : AnnGetVRRenderer()->getHandControllerArray())
 		{
-			if (!handController) continue;
+			if(!handController) continue;
 			handControllerEventBuffer.push_back({ handController.get() });
 		}
 }
 
 void AnnEventManager::pushEventsToListeners()
 {
-	for (auto& weak_listener : listeners) if (auto listener = weak_listener.lock())
-	{
-		for (auto& e : keyEventBuffer) listener->KeyEvent(e);
-		for (auto& e : mouseEventBuffer) listener->MouseEvent(e);
-		for (auto& e : stickEventBuffer) listener->StickEvent(e);
-		for (auto& e : handControllerEventBuffer) listener->HandControllerEvent(e);
+	for(auto& weak_listener : listeners)
+		if(auto listener = weak_listener.lock())
+		{
+			for(auto& e : keyEventBuffer) listener->KeyEvent(e);
+			for(auto& e : mouseEventBuffer) listener->MouseEvent(e);
+			for(auto& e : stickEventBuffer) listener->StickEvent(e);
+			for(auto& e : handControllerEventBuffer) listener->HandControllerEvent(e);
 
-		listener->tick();
-	}
+			listener->tick();
+		}
 
 	keyEventBuffer.clear();
 	mouseEventBuffer.clear();
@@ -388,49 +392,52 @@ timerID AnnEventManager::fireTimer(double delay)
 void AnnEventManager::processTimers()
 {
 	//Append timers
-	for (const auto& futureTimer : futureTimers)
+	for(const auto& futureTimer : futureTimers)
 		activeTimers.push_back(futureTimer);
 	futureTimers.clear();
 
 	//Send events
-	for (auto weak_listener : listeners) if (auto listener = weak_listener.lock())
-		for (const auto& timer : activeTimers)
-			if (timer.isTimeout()) listener->TimeEvent({ timer });
+	for(auto weak_listener : listeners)
+		if(auto listener = weak_listener.lock())
+			for(const auto& timer : activeTimers)
+				if(timer.isTimeout()) listener->TimeEvent({ timer });
 
 	//Cleanup
-	activeTimers.erase(remove_if(begin(activeTimers), end(activeTimers),
-		[&](const AnnTimer& timer) { return timer.isTimeout(); }), end(activeTimers));
+	activeTimers.erase(remove_if(begin(activeTimers), end(activeTimers), [&](const AnnTimer& timer) { return timer.isTimeout(); }), end(activeTimers));
 }
 
 void AnnEventManager::processTriggerEvents()
 {
-	for (const auto& triggerEvent : triggerEventBuffer)
-		for (auto weakListener : listeners) if (auto listener = weakListener.lock())
-			listener->TriggerEvent(triggerEvent);
+	for(const auto& triggerEvent : triggerEventBuffer)
+		for(auto weakListener : listeners)
+			if(auto listener = weakListener.lock())
+				listener->TriggerEvent(triggerEvent);
 
 	triggerEventBuffer.clear();
 }
 
 void AnnEventManager::processCollisionEvents()
 {
-	for (auto weakListener : listeners) if (auto listener = weakListener.lock())
-	{
-		for (const auto& collisionBuffer : collisionBuffers)
+	for(auto weakListener : listeners)
+		if(auto listener = weakListener.lock())
 		{
-			const auto aMov = static_cast<AnnAbstractMovable*>(std::get<0>(collisionBuffer));
-			const auto bMov = static_cast<AnnAbstractMovable*>(std::get<1>(collisionBuffer));
-			const auto position = std::get<2>(collisionBuffer);
-			const auto normal = std::get<3>(collisionBuffer);
-
-			if (auto a = dynamic_cast<AnnGameObject*>(aMov)) if (auto b = dynamic_cast<AnnGameObject*>(bMov))
+			for(const auto& collisionBuffer : collisionBuffers)
 			{
-				listener->CollisionEvent({ a, b, position, normal });
-			}
-		}
+				const auto aMov		= static_cast<AnnAbstractMovable*>(std::get<0>(collisionBuffer));
+				const auto bMov		= static_cast<AnnAbstractMovable*>(std::get<1>(collisionBuffer));
+				const auto position = std::get<2>(collisionBuffer);
+				const auto normal   = std::get<3>(collisionBuffer);
 
-		for (auto playerCollision : playerCollisionBuffer)
-			listener->PlayerCollisionEvent({ playerCollision });
-	}
+				if(auto a = dynamic_cast<AnnGameObject*>(aMov))
+					if(auto b = dynamic_cast<AnnGameObject*>(bMov))
+					{
+						listener->CollisionEvent({ a, b, position, normal });
+					}
+			}
+
+			for(auto playerCollision : playerCollisionBuffer)
+				listener->PlayerCollisionEvent({ playerCollision });
+		}
 
 	collisionBuffers.clear();
 	playerCollisionBuffer.clear();
@@ -450,8 +457,8 @@ void AnnEventManager::detectedCollision(void* a, void* b, AnnVect3 position, Ann
 	//The only body that doesn't have an "userPointer" set is the Player's rigidbody.
 	//If one of the pair is null, it's a player collision that has been detected on this manifold.
 	//Not an object-object collision
-	if (!a) return playerCollision(b);
-	if (!b) return playerCollision(a);
+	if(!a) return playerCollision(b);
+	if(!b) return playerCollision(a);
 
 	//push the object-object collision in the buffer
 	collisionBuffers.emplace_back(a, b, position, normal);
@@ -460,14 +467,14 @@ void AnnEventManager::detectedCollision(void* a, void* b, AnnVect3 position, Ann
 void AnnEventManager::playerCollision(void* object)
 {
 	auto movable = static_cast<AnnAbstractMovable*>(object);
-	if (auto gameObject = dynamic_cast<AnnGameObject*>(movable))
+	if(auto gameObject = dynamic_cast<AnnGameObject*>(movable))
 	{
 		playerCollisionBuffer.push_back(gameObject);
 	}
-	else if (auto triggerObject = dynamic_cast<AnnTriggerObject*>(movable))
+	else if(auto triggerObject = dynamic_cast<AnnTriggerObject*>(movable))
 	{
 		AnnTriggerEvent e;
-		e.sender = triggerObject;
+		e.sender  = triggerObject;
 		e.contact = true;
 		triggerEventBuffer.push_back(e);
 	}
@@ -485,8 +492,9 @@ void AnnEventManager::userSpaceDispatchEvent(AnnUserSpaceEventPtr e, AnnUserSpac
 
 void AnnEventManager::processUserSpaceEvents()
 {
-	for (auto userSpaceEvent : userSpaceEventBuffer)
-		for (auto weakListener : listeners) if (auto listener = weakListener.lock())
-			listener->EventFromUserSubsystem(*userSpaceEvent.first, userSpaceEvent.second);
+	for(auto userSpaceEvent : userSpaceEventBuffer)
+		for(auto weakListener : listeners)
+			if(auto listener = weakListener.lock())
+				listener->EventFromUserSubsystem(*userSpaceEvent.first, userSpaceEvent.second);
 	userSpaceEventBuffer.clear();
 }

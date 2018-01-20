@@ -19,7 +19,9 @@
 
 //the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
-#define LISTENER public Annwvyn::AnnEventListener
+#define LISTENER \
+public           \
+	Annwvyn::AnnEventListener
 ///Macro for declaring a listener constructor
 #define constructListener() AnnEventListener()
 
@@ -61,9 +63,10 @@ namespace Annwvyn
 		void addListener(AnnEventListenerPtr listener);
 
 		///Utility class to construct-add a listener to the event manager
-		template <class ListenerType, class ... Args> decltype(auto) addListener(Args&& ... args)
+		template <class ListenerType, class... Args>
+		decltype(auto) addListener(Args&&... args)
 		{
-			auto listener = std::make_shared<ListenerType>(args ...);
+			auto listener = std::make_shared<ListenerType>(args...);
 			addListener(listener);
 			return listener;
 		}
@@ -93,7 +96,6 @@ namespace Annwvyn
 		//---------------------------- other
 
 	private:
-
 		///List of pointer to the listeners.
 		///The use of weak pointers permit to keep access to the listeners without having to own them.
 		///This permit to use any classes of the engine (like levels) to be themselves event listener.
@@ -145,7 +147,7 @@ namespace Annwvyn
 
 		//----------------------- OIS and other library input objects
 		///OIS Event Manager
-		OIS::InputManager *InputManager;
+		OIS::InputManager* InputManager;
 		///Pointer that holds the keyboard
 		OIS::Keyboard* Keyboard;
 		///Pointer that holds the Mouse

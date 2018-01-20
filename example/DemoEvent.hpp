@@ -14,8 +14,9 @@ class TextMessageEvent : public Annwvyn::AnnUserSpaceEvent
 {
 public:
 	//Call the constructor of AnnUserSpaceEvent with the string "TextMessage" to identify this type of event.
-	TextMessageEvent(std::string message) : AnnUserSpaceEvent("TextMessage"),
-		enclosedMessage(message)
+	TextMessageEvent(std::string message) :
+	 AnnUserSpaceEvent("TextMessage"),
+	 enclosedMessage(message)
 	{}
 
 	//Getter for retrieving the message
@@ -30,18 +31,19 @@ class SomeEventListener : LISTENER
 {
 public:
 	//Since we're testing against that hash, we should store it to have it handy in a const member.
-	SomeEventListener() : constructListener(),
-		hashTypeCheckTextEvent(AnnGetStringUtility()->hash("TextMessage"))
+	SomeEventListener() :
+	 constructListener(),
+	 hashTypeCheckTextEvent(AnnGetStringUtility()->hash("TextMessage"))
 	{}
 
 	//The business part is here. Overriding this method permit you to catch user space events.
 	//You get a reference to the event, and you get a raw pointer to the event "sender".
 	void EventFromUserSubsystem(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* origin) override
 	{
-		if (e.getType() == hashTypeCheckTextEvent)
+		if(e.getType() == hashTypeCheckTextEvent)
 			Annwvyn::AnnDebug() << "SomeEventListener got the TextMessageEvent \""
-			<< dynamic_cast<TextMessageEvent&>(e).getMessage()
-			<< "\" from " << origin;
+								<< dynamic_cast<TextMessageEvent&>(e).getMessage()
+								<< "\" from " << origin;
 	}
 
 private:
@@ -57,10 +59,11 @@ private:
 class SomeSubSystem : public Annwvyn::AnnUserSubSystem
 {
 public:
-	SomeSubSystem(double updateRate = 3) : AnnUserSubSystem("Useless Subsystem"),
-		now(0),
-		last(0),
-		delay(updateRate)
+	SomeSubSystem(double updateRate = 3) :
+	 AnnUserSubSystem("Useless Subsystem"),
+	 now(0),
+	 last(0),
+	 delay(updateRate)
 	{}
 
 	//If the time since last "message sent" is higher than the delay, send a message
@@ -68,10 +71,10 @@ public:
 	{
 		now = Annwvyn::AnnGetEngine()->getTimeFromStartupSeconds();
 
-		if (now - last > delay)
+		if(now - last > delay)
 		{
 			static unsigned int count = 0;
-			last = now;
+			last					  = now;
 			dispatchEvent<TextMessageEvent>("Useless message! " + std::to_string(++count));
 		}
 	}
@@ -89,9 +92,10 @@ private:
 class DemoEvent : public TutorialLevel
 {
 public:
-	DemoEvent() : TutorialLevel(),
-		subsystem(nullptr),
-		listener(nullptr)
+	DemoEvent() :
+	 TutorialLevel(),
+	 subsystem(nullptr),
+	 listener(nullptr)
 	{
 	}
 
@@ -117,8 +121,7 @@ public:
 			"If you open the debug console, you should see a series of \"useless messages\" prints\n"
 			"These are sent from a custom subsystem, and use a custom event class that has been user defined\n"
 			"\n"
-			"To understand how it works, look at the file \"DemoEvent.hpp\" in the example directory\n"
-		);
+			"To understand how it works, look at the file \"DemoEvent.hpp\" in the example directory\n");
 	}
 
 	void unload() override

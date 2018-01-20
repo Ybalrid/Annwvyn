@@ -24,15 +24,15 @@ constexpr bool isRoomscale{ true };
 
 void loadHands()
 {
-	if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[0])
+	if(auto controller = AnnGetVRRenderer()->getHandControllerArray()[0])
 	{
-		if (controller->getHandModel() == nullptr)
+		if(controller->getHandModel() == nullptr)
 			controller->setHandModel("Hand_left.mesh");
 	}
 
-	if (auto controller = AnnGetVRRenderer()->getHandControllerArray()[1])
+	if(auto controller = AnnGetVRRenderer()->getHandControllerArray()[1])
 	{
-		if (controller->getHandModel() == nullptr)
+		if(controller->getHandModel() == nullptr)
 			controller->setHandModel("Hand_right.mesh");
 	}
 }
@@ -40,15 +40,16 @@ void loadHands()
 class QuitOnButtonListener : LISTENER
 {
 public:
-	QuitOnButtonListener() : constructListener()
+	QuitOnButtonListener() :
+	 constructListener()
 	{
 	}
 
 	///Quit app when button zero of left controller is pressed
 	void HandControllerEvent(AnnHandControllerEvent e) override
 	{
-		if (e.getSide() == AnnHandController::leftHandController)
-			if (e.buttonPressed(0))
+		if(e.getSide() == AnnHandController::leftHandController)
+			if(e.buttonPressed(0))
 				AnnGetEngine()->requestQuit();
 	}
 };
@@ -58,13 +59,13 @@ AnnMain()
 	AnnEngine::openConsole();
 
 	AnnOgreVRRenderer::setAntiAliasingLevel(8);
-	AnnEngine::logFileName = "Samples.log";
+	AnnEngine::logFileName	 = "Samples.log";
 	AnnEngine::defaultRenderer = "NoVRRender";
 
 	AnnInit("AnnTest");
 
 	//Init some player body parameters
-	if (isRoomscale)
+	if(isRoomscale)
 		AnnGetEngine()->initPlayerRoomscalePhysics();
 	else
 		AnnGetEngine()->initPlayerStandingPhysics();
@@ -90,15 +91,14 @@ AnnMain()
 
 	AnnGetEngine()->loadUserSubSystemFromPlugin("PluginTemplate");
 
-	auto debugHook = []()
-	{
+	auto debugHook = []() {
 		loadHands();
 	};
 
 	do
 	{
 		debugHook();
-	} while (AnnGetEngine()->refresh());
+	} while(AnnGetEngine()->refresh());
 
 	AnnQuit();
 
