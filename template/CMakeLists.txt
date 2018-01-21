@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6.3)
 
-set(ANNWVYN_PROJECT "NameOfProject")
+set(ANNWVYN_PROJECT "PleaseChangeNameInCMakeLists")
 
 #Name of the project
 project(${ANNWVYN_PROJECT})

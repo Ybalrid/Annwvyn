@@ -42,7 +42,8 @@ class QuitOnButtonListener : LISTENER
 public:
 	QuitOnButtonListener() :
 	 constructListener()
-	{}
+	{
+	}
 
 	///Quit app when button zero of left controller is pressed
 	void HandControllerEvent(AnnHandControllerEvent e) override
@@ -63,34 +64,39 @@ AnnMain()
 
 	AnnInit("AnnTest");
 
-	//Init some player body parameters
-	if(isRoomscale)
-		AnnGetEngine()->initPlayerRoomscalePhysics();
-	else
-		AnnGetEngine()->initPlayerStandingPhysics();
+	{
+		auto engine{ AnnGetEngine() };
+		auto eventManager{ AnnGetEventManager() };
+		auto levelManager{ AnnGetLevelManager() };
+		auto resourceManager{ AnnGetResourceManager() };
+		//Init some player body parameters
+		if(isRoomscale)
+			engine->initPlayerRoomscalePhysics();
+		else
+			engine->initPlayerStandingPhysics();
 
-	AnnGetEventManager()->useDefaultEventListener();
-	AnnGetResourceManager()->addFileLocation("media/environment");
-	AnnGetResourceManager()->addFileLocation("script");
-	AnnGetResourceManager()->initResources();
+		eventManager->useDefaultEventListener();
 
-	//create and load level objects
-	AnnGetLevelManager()->addLevel<DemoHub>();
-	AnnGetLevelManager()->addLevel<Demo0>();
-	AnnGetLevelManager()->addLevel<TestLevel>();
-	AnnGetLevelManager()->addLevel<DemoEvent>();
-	AnnGetLevelManager()->addLevel<TutorialTimer>();
+		resourceManager->addFileLocation("media/environment");
+		resourceManager->addFileLocation("script");
+		resourceManager->initResources();
 
-	AnnGetLevelManager()->addLevel<AnnSplashLevel>("splash.png", AnnGetLevelManager()->getFirstLevelLoaded(), 1.f);
+		//create and load level objects
+		auto hub = levelManager->addLevel<DemoHub>();
+		levelManager->addLevel<Demo0>();
+		levelManager->addLevel<TestLevel>();
+		levelManager->addLevel<DemoEvent>();
+		levelManager->addLevel<TutorialTimer>();
+		levelManager->addLevel<AnnSplashLevel>("splash.png", hub, 1.f);
 
-	//ask the level manager to perform a jump to the last level
-	AnnGetLevelManager()->jump(AnnGetLevelManager()->getLastLevelLoaded());
-
+		//ask the level manager to perform a jump to the last level
+		levelManager->jump(AnnGetLevelManager()->getLastLevelLoaded());
+	}
 	AnnDebug() << "Starting the render loop";
 
 	//AnnGetEngine()->loadUserSubSystemFromPlugin("PluginTemplate");
 
-	auto debugHook = []() {
+	auto debugHook = [] {
 		loadHands();
 	};
 

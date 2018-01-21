@@ -31,6 +31,7 @@ void MyLevel::load()
 	Sun->setDirection(AnnVect3{ -0.125, -1, -0.5 }.normalisedCopy());
 	Sun->setPower(97);
 
+	//Add an additional light
 	auto OtherLight(addLightObject("OtherLight"));
 	OtherLight->setPower(50);
 	OtherLight->setPosition({ 0, 1, 1 });
@@ -38,6 +39,7 @@ void MyLevel::load()
 	//zenith sunlight
 	Sun->setDirection(AnnVect3{ -1, -1.5f, -1 }.normalisedCopy());
 
+	//Set the player position at level loading
 	auto player{ AnnGetPlayer() };
 	player->setPosition({ 0, 1, 10 });
 	player->setOrientation(0);
