@@ -10,7 +10,7 @@ Freely distributed under the MIT license.
 For any questions, shout me a mail at developer@annwvyn.org, or at ybalrid@ybalrid.info
 
 Currently the engine supports :
- - Oculus Rift through the Oculus SDK
+ - Oculus Rift through the Oculus SDK (OVR)
  - OpenVR
      - HTC Vive
      - Oculus Rift (You can use the Oculus Rift with SteamVR, but the "native" way is recommended)

@@ -3,7 +3,7 @@
 * \brief test/demo program
 * \author Arthur Brainville
 *
-* Annwvyn test program http://annwvyn.org/
+* Annwvyn sample program http://annwvyn.org/
 *
 */
 
@@ -42,8 +42,7 @@ class QuitOnButtonListener : LISTENER
 public:
 	QuitOnButtonListener() :
 	 constructListener()
-	{
-	}
+	{}
 
 	///Quit app when button zero of left controller is pressed
 	void HandControllerEvent(AnnHandControllerEvent e) override
@@ -89,7 +88,7 @@ AnnMain()
 
 	AnnDebug() << "Starting the render loop";
 
-	AnnGetEngine()->loadUserSubSystemFromPlugin("PluginTemplate");
+	//AnnGetEngine()->loadUserSubSystemFromPlugin("PluginTemplate");
 
 	auto debugHook = []() {
 		loadHands();
