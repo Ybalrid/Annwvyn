@@ -4,10 +4,11 @@ Annwvyn
 ![Screnshot](AnnwvynScreenshot.png)
 
 
-Annwvyn Engine is a simple C++ game engine built upon free and open source technologies to easily create applications and games using Virtual Reality HMD.
-Freely distributed under the MIT license.
+Annwvyn is a simple C++ game engine built upon free and open source technologies to easily create applications and games tailored for Virtual Reality HMD.
 
-For any questions, shout me a mail at developer@annwvyn.org, or at ybalrid@ybalrid.info
+This project is licensed under the terms of the [MIT](LICENSE) licence agreement.
+
+For any questions, shout me a mail at developer@annwvyn.org.
 
 Currently the engine supports :
  - Oculus Rift through the Oculus SDK (OVR)
@@ -16,8 +17,7 @@ Currently the engine supports :
      - Oculus Rift (You can use the Oculus Rift with SteamVR, but the "native" way is recommended)
      - Any headset officially supported by SteamVR
 
-
-It uses Ogre for rendering to OpenGL buffers that are given to each VR libraries, Bullet for simulating physics and collisions and OpenAL for spatialized audio playback.
+Annwyn uses the [OGRE](https://www.ogre3d.org/) rendering engine (version 2.1) in OpenGL mode, and send the rendered frames to the native SDKs of multiple types of VR systems. The engine simulate physics via [Bullet](http://bulletphysics.org), and generate spatial 3D audio via [OpenAL](https://www.openal.org/)
 
 Please read the DEPENDENCIES file to know what you need to build it.
 
@@ -25,7 +25,7 @@ Please read the DEPENDENCIES file to know what you need to build it.
 System and Software requirement
 -------------------------------
 
- - A fairly recent GPU. Support for OpenGL **4.3** is **required**. This is also a requirement from VR hardware vendor
+ - A VR capable GPU. Support for OpenGL **4.3** is **required** for Annwvyn, and it needs to be compatible with your VR system
  - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive, or other hardware supported by OpenVR
  - Usable with hand controllers (touch, vive wands...) 
  - 64bit Operating system
@@ -34,7 +34,7 @@ System and Software requirement
     - SteamVR installed through Steam http://steampowered.com/
  - Microsoft Visual Studio 2017 Community (free to download and use from Microsoft)
  
- Specifically, the code needs a C++14 compliant compiler, and the dependency package is built with the lattest version of Visual Studio available (15.4.1)
+Specifically, the code needs a C++14 compliant compiler, and the dependency package is built with the lattest version of Visual Studio 2017 available
  
 Installation
 ------------
@@ -44,7 +44,7 @@ First, please install Visual Studio 2017 (the community version is free) from Mi
 Then, go get the SDK installer here https://www.annwvyn.org/download/ and run it. 
 If near the end of the installer, a CMD window open asking about setting up environment variables, say yes.
 
-This is due to the fact that the build configuration file need to locate the SDK installation directory.
+The installer needs to set the location of Annwvyn into an environement variable to easilly find everything with CMake.
 
 After that, if you need to update the engine to the current master branch, see the "Updating the engine" section below.
 
@@ -60,13 +60,13 @@ But, if you *really* want to build and setup the engine yourself, here's a simpl
 - Download the "dependency package" from here https://www.annwvyn.org/download/
 - Extract it in a folder
 - Clone this repo in the same folder
-- Run the "RUNME.BAT" script from this folder
-- Generate in a "build" directirory a VS2017 x64 solution from the root CMakeFiles.txt
-- Make sure the IDE is set to build in "release" "x64" mode
+- Run the `RUNME.BAT` script from this folder (found in the dependency package you extracted earlier)
+- Generate in a "build" directirory a VS2017 x64 solution via CMake
+- Make sure the IDE is set to build in "Release" "x64" mode
 - hit Ctrl+Shift+B to build the whole solution
-- In the solution explorer, build the install target
-- Do the same (without the install part) in the example subdirectory
-- You need to copy a bunch of .dll in the "example" (and template) build directories. You can do this automatically by launching the "getLibs.bat" script *(you really should)*. But here's the list if you want to check
+- In the solution explorer, right click on the `INSTALL` project, and build it.
+- Do the same (without the `INSTALL` part) in the example subdirectory
+- You need to copy a bunch of .dll in the "example" (and template) build directories. You can do this automatically by launching the `getLibs.bat` script *(you really should)*. But here's the list if you want to check
     - Ogre  
         - OgreMain.dll
         - OgreOverlay.dll 
@@ -89,11 +89,13 @@ If you have an Oculus Rift plugged in (or in Debug HMD mode), or a Vive with Ste
 Using the engine
 ----------------
 
-Make a copy of the "template" directory to a convenient location for you, and you are ready to go. It contains a CMakeLists.txt that will permit you to generate build files for it (VS2015 64bit) 
+Make a copy of the "template" directory to a convenient location for you, and you are ready to go. It contains a CMakeLists.txt that will permit you to generate build files.
 
-**Make sure to put Visual Studio build in release/x64 mode before building!** The debug mode target will work but you need ot copy over debug-compatible version of the libraries. They aren't packaged conviniently for that yet. (comming soon).
+**Make sure to put Visual Studio build in Release/x64 mode before building!** The debug mode target will work but you need ot copy over debug-compatible version of the libraries. They aren't packaged conviniently for that yet. (comming soon).
 
-On windows you need to have a environment variable "AnnwvynSDK64" set to the SDK location. This is done automatically by the SDK installer, but if you encounter problem, you should run again the RUNME.bat script on the SDK installation folder
+On windows you need to have a environment variable "AnnwvynSDK64" set to the SDK location. This is done automatically by the SDK installer, but if you encounter problem, you should run again the RUNME.bat script on the SDK installation folder.
+
+You should check out the [quickstart](https://wiki.annwvyn.org/doku.php?id=quickstart) page on the Wiki
 
 
 Updating the engine
@@ -122,5 +124,4 @@ ______
 Some words on the linux support
 ------------------------------
 
-The engine is buildable and runnable under linux, but there is **no support** for any HMD under linux at this time. So games using it will only start in **NoVR** mode. (This may change if we add OSVR support, or if Ogre starts rendering with Vulkan...)
-
+The engine is buildable and runnable under linux. The OpenVR rendering code *should* work on Linux but hasn't been tested by me yet.
