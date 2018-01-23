@@ -62,13 +62,6 @@ namespace Annwvyn
 	///Main engine class. Creating an instance of this class make the engine start.
 	class AnnDllExport AnnEngine
 	{
-		//It's more or less a singleton, and will be the only one in the engine
-		//architecture. You can instantiate it like a normal class and bypass the
-		//idea of a singleton completely. This is the base class of the whole
-		//engine, the idea is more or less the one described in the "solutions to
-		//use a singleton for everything" in this article
-		//http://gameprogrammingpatterns.com/singleton.html
-
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
 		friend class AnnEngineSingletonReseter;
@@ -104,7 +97,7 @@ namespace Annwvyn
 		static AnnEngine* Instance();
 
 		///Return a string describing the version of the engine
-		static std::string getAnnwvynVersion(long long int padding = -1);
+		static std::string getAnnwvynVersion(size_t padding = 0);
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
@@ -116,14 +109,14 @@ namespace Annwvyn
 		///Log something to the console. If flag = true (by default), will print "Annwvyn - " in front of the message
 		/// \param message Message to be logged
 		/// \param flag If true : Put the "Annwvyn -" flag before the message
-		static void log(std::string message, bool flag = true); //engine
+		static void writeToLog(std::string message, bool flag = true); //engine
 
 		///Get the player
 		AnnPlayerBodyPtr getPlayer() const;
 
 		///Is key 'key' pressed ? (see OIS headers for KeyCode, generally 'OIS::KC_X' where X is the key you want.
 		/// \param key an OIS key code
-		bool isKeyDown(OIS::KeyCode key) const; //event
+		DEPRECATED bool isKeyDown(OIS::KeyCode key) const; //event
 
 		///Get ogre camera scene node
 		Ogre::SceneNode* getPlayerPovNode() const;
@@ -185,7 +178,7 @@ namespace Annwvyn
 		bool refresh(); //engine main loop
 
 		///Set the POV node to the AnnPlayerBody gameplay defined position/orientation of the player's body
-		void syncPov() const;
+		void syncPalyerPov() const;
 
 		///This start the render loop. This also calls objects "update" and current level "runLogic" methods each frame
 		void startGameplayLoop();
@@ -284,6 +277,6 @@ namespace Annwvyn
 		double updateTime;
 
 		///Container for all the subsystem. Populated in the update/delete order
-		std::list<AnnSubSystemPtr> SubSystemList;
+		std::vector<AnnSubSystemPtr> subsystems;
 	};
 }

@@ -267,7 +267,7 @@ void AnnPlayerBody::resetPlayerPhysics()
 	setBody(nullptr);
 
 	//Put everything back in order
-	AnnGetEngine()->syncPov();
+	AnnGetEngine()->syncPalyerPov();
 	AnnGetPhysicsEngine()->createPlayerPhysicalVirtualBody(AnnGetEngine()->getPlayerPovNode());
 	AnnGetPhysicsEngine()->addPlayerPhysicalBodyToDynamicsWorld();
 }

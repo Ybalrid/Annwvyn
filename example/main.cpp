@@ -91,7 +91,8 @@ AnnMain()
 
 		//ask the level manager to perform a jump to the last level
 		levelManager->jump(AnnGetLevelManager()->getLastLevelLoaded());
-	}
+	} //this scope exist to release all shared pointer we got when doing auto X = Y
+
 	AnnDebug() << "Starting the render loop";
 
 	//AnnGetEngine()->loadUserSubSystemFromPlugin("PluginTemplate");

@@ -53,22 +53,37 @@ AnnEngine* AnnEngine::Instance()
 	return singleton;
 }
 
-std::string AnnEngine::getAnnwvynVersion(long long int padding)
+std::string AnnEngine::getAnnwvynVersion(size_t padding)
 {
-	std::stringstream version;
-	version << ANN_MAJOR << "." << ANN_MINOR << "." << ANN_PATCH;
-	if(ANN_EXPERIMENTAL)
-		version << "-experimental";
-	padding -= version.str().length();
-	for(long long int i(0); i < padding; i++)
-		version << " ";
-	return version.str();
+	static std::string versionString{ "" };
+	if(!versionString.empty() && !padding) return versionString;
+
+	if(versionString.empty())
+	{
+		std::stringstream version;
+		version << ANN_MAJOR << "." << ANN_MINOR << "." << ANN_PATCH;
+		if(ANN_EXPERIMENTAL)
+			version << "-experimental";
+		versionString = version.str();
+	}
+
+	if(padding)
+	{
+		auto padded = versionString;
+
+		padding -= padded.length();
+		for(auto i(0); i < padding; i++)
+			padded.push_back(' ');
+
+		return padded;
+	}
+
+	return versionString;
 }
 
 void AnnEngine::startGameplayLoop()
 {
-	while(refresh())
-		;
+	while(refresh()) {}
 }
 
 void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std::string& title)
@@ -170,7 +185,7 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 
 	if(singleton)
 	{
-		log("Can't create 2 instances of the engine!");
+		writeToLog("Can't create 2 instances of the engine!");
 		throw AnnInitializationError(ANN_ERR_MEMORY, "Can't create 2 instances of AnnEngine");
 	}
 	singleton = this;
@@ -188,65 +203,55 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 
 	renderer->showDebug(AnnOgreVRRenderer::DebugMode::MONOSCOPIC);
 
-	log("Setup Annwvyn's subsystems");
+	writeToLog("Setup Annwvyn's subsystems");
 
-	//Element on this list will be updated in order by the engine each frame
-	SubSystemList.push_back(levelManager = std::make_shared<AnnLevelManager>());
-	SubSystemList.push_back(gameObjectManager = std::make_shared<AnnGameObjectManager>());
+	// Subsystems are updated in their creation order :
+	// - level management is handeled
+	// - object management is handeled
+	// - physics is ticked (stuff move)
+	// - event happens (player input, timers...)
+	// - audio is synced (sounds comes form where they should)
+	// - other less important operation are done
+	// then the game can redraw
 
-	//Physics engine needs to be declared before the event manager. But we want the physics engine to be updated after the event manager.
-
-	/*The wanted order is
-	- physics is ticked (stuff move)
-	- event happens (player input, timers...)
-	- audio is synced (sounds comes form where they should)
-	- then the game can redraw*/
-
-	SubSystemList.push_back(physicsEngine = std::make_shared<AnnPhysicsEngine>(
-								getSceneManager()->getRootSceneNode(),
-								player));
-
-	SubSystemList.push_back(eventManager = std::make_shared<AnnEventManager>(renderer->getWindow()));
-
-	SubSystemList.push_back(audioEngine = std::make_shared<AnnAudioEngine>());
-
-	//These could be anywhere
-	SubSystemList.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
-
-	SubSystemList.push_back(resourceManager = std::make_shared<AnnResourceManager>());
-
-	SubSystemList.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
-
-	SubSystemList.push_back(scriptManager = std::make_shared<AnnScriptManager>());
-
+	subsystems.push_back(levelManager = std::make_shared<AnnLevelManager>());
+	subsystems.push_back(gameObjectManager = std::make_shared<AnnGameObjectManager>());
+	subsystems.push_back(physicsEngine = std::make_shared<AnnPhysicsEngine>(getSceneManager()->getRootSceneNode(), player));
+	subsystems.push_back(eventManager = std::make_shared<AnnEventManager>(renderer->getWindow()));
+	subsystems.push_back(audioEngine = std::make_shared<AnnAudioEngine>());
+	subsystems.push_back(filesystemManager = std::make_shared<AnnFilesystemManager>(title));
+	subsystems.push_back(resourceManager = std::make_shared<AnnResourceManager>());
+	subsystems.push_back(sceneryManager = std::make_shared<AnnSceneryManager>(renderer));
+	subsystems.push_back(scriptManager = std::make_shared<AnnScriptManager>());
 	renderer->initClientHmdRendering();
+
 	vrRendererPovGameplayPlacement = renderer->getCameraInformationNode();
 	vrRendererPovGameplayPlacement->setPosition(player->getPosition() + AnnVect3(0.0f, player->getEyesHeight(), 0.0f));
 
 	//This subsystem need the vrRendererPovGameplayPlacement object to be
 	//initialized. And the Resource manager because it wants a font file and an
 	//image background
-	SubSystemList.push_back(onScreenConsole = std::make_shared<AnnConsole>());
+	subsystems.push_back(onScreenConsole = std::make_shared<AnnConsole>());
 
 	consoleReady = true;
 	//Display start banner
-	log("============================================================", false);
-	log("| Annwvyn Game Engine - Step into the Other World          |", false);
-	log("| Free/Libre C++ Game Engine designed for Virtual Reality  |", false);
-	log("|                                                          |", false);
-	log("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2018   |", false);
-	log("| Distributed under the terms of the MIT license agreement |", false);
-	log("|                                                          |", false);
-	log("| Visit http://annwvyn.org/ for more informations!         |", false);
-	log("| Version : " + getAnnwvynVersion(61 - 13 - 1) + "|", false);
-	log("============================================================", false);
+	writeToLog("============================================================", false);
+	writeToLog("| Annwvyn Game Engine - Step into the Other World          |", false);
+	writeToLog("| Free/Libre C++ Game Engine designed for Virtual Reality  |", false);
+	writeToLog("|                                                          |", false);
+	writeToLog("| Copyright Arthur Brainville (a.k.a. Ybalrid) 2013-2018   |", false);
+	writeToLog("| Distributed under the terms of the MIT license agreement |", false);
+	writeToLog("|                                                          |", false);
+	writeToLog("| Visit https://wwwannwvyn.org/ for more informations!     |", false);
+	writeToLog("| Version : " + getAnnwvynVersion(61 - 13 - 1) + "|", false);
+	writeToLog("============================================================", false);
 }
 
 AnnEngine::~AnnEngine()
 {
 	//Some cute log messages
-	log("Game engine stopped. Subsystem are shutting down...");
-	log("Good luck with the real world now! :3");
+	writeToLog("Game engine stopped. Subsystem are shutting down...");
+	writeToLog("Good luck with the real world now! :3");
 	consoleReady = false;
 #ifdef _WIN32
 	if(manualConsole) FreeConsole();
@@ -256,60 +261,17 @@ AnnEngine::~AnnEngine()
 //All theses getter are for encapsulation purpose. Calling them directly would
 //make very long lines of code. You can, but you should use the functions in
 //AnnGetter.hpp
-AnnEventManagerPtr AnnEngine::getEventManager() const
-{
-	return eventManager;
-}
-
-AnnResourceManagerPtr AnnEngine::getResourceManager() const
-{
-	return resourceManager;
-}
-
-AnnGameObjectManagerPtr AnnEngine::getGameObjectManager() const
-{
-	return gameObjectManager;
-}
-
-std::shared_ptr<AnnSceneryManager> AnnEngine::getSceneryManager() const
-{
-	return sceneryManager;
-}
-
-AnnScriptManagerPtr AnnEngine::getScriptManager() const
-{
-	return scriptManager;
-}
-
-AnnOgreVRRendererPtr AnnEngine::getVRRenderer() const
-{
-	return renderer;
-}
-
-AnnLevelManagerPtr AnnEngine::getLevelManager() const
-{
-	return levelManager;
-}
-
-AnnPlayerBodyPtr AnnEngine::getPlayer() const
-{
-	return player;
-}
-
-AnnFilesystemManagerPtr AnnEngine::getFileSystemManager() const
-{
-	return filesystemManager;
-}
-
-AnnAudioEnginePtr AnnEngine::getAudioEngine() const
-{
-	return audioEngine;
-}
-
-AnnPhysicsEnginePtr AnnEngine::getPhysicsEngine() const
-{
-	return physicsEngine;
-}
+AnnEventManagerPtr AnnEngine::getEventManager() const { return eventManager; }
+AnnResourceManagerPtr AnnEngine::getResourceManager() const { return resourceManager; }
+AnnGameObjectManagerPtr AnnEngine::getGameObjectManager() const { return gameObjectManager; }
+AnnSceneryManagerPtr AnnEngine::getSceneryManager() const { return sceneryManager; }
+AnnScriptManagerPtr AnnEngine::getScriptManager() const { return scriptManager; }
+AnnOgreVRRendererPtr AnnEngine::getVRRenderer() const { return renderer; }
+AnnLevelManagerPtr AnnEngine::getLevelManager() const { return levelManager; }
+AnnPlayerBodyPtr AnnEngine::getPlayer() const { return player; }
+AnnFilesystemManagerPtr AnnEngine::getFileSystemManager() const { return filesystemManager; }
+AnnAudioEnginePtr AnnEngine::getAudioEngine() const { return audioEngine; }
+AnnPhysicsEnginePtr AnnEngine::getPhysicsEngine() const { return physicsEngine; }
 
 void AnnEngine::setConsoleGreen()
 {
@@ -328,7 +290,7 @@ void AnnEngine::setConsoleYellow()
 }
 
 //This is static, but actually needs Ogre to be running. So be careful
-void AnnEngine::log(std::string message, bool flag)
+void AnnEngine::writeToLog(std::string message, bool flag)
 {
 	if(consoleReady)
 		singleton->onScreenConsole->append(message);
@@ -353,7 +315,7 @@ void AnnEngine::log(std::string message, bool flag)
 bool AnnEngine::requestStop() const
 {
 	//pres ESC to quit. Stupid but efficient. I like that.
-	if(isKeyDown(OIS::KC_ESCAPE))
+	if(eventManager->Keyboard->isKeyDown(OIS::KeyCode(KeyCode::escape)))
 		return true;
 	//If the user quit the App from the Oculus Home
 	if(renderer->shouldQuit())
@@ -369,29 +331,24 @@ bool AnnEngine::requestStop() const
 // of the game or app using this engine.
 bool AnnEngine::refresh()
 {
-	// Get the rendering delta time (should be roughly equals to
-	// 1/desiredFramerate in seconds)
+	//Set player position from gameplay to the rendering code
+	syncPalyerPov();
 	//Update VR form real world
-	syncPov();
 	renderer->updateTracking();
 
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(float(getFrameTime()));
 
-	for(auto& SubSystem : SubSystemList)
-		if(SubSystem->needUpdate())
-			SubSystem->update();
+	for(auto& subsystem : subsystems)
+		if(subsystem->needUpdate())
+			subsystem->update();
 
 	//Update view
 	renderer->renderAndSubmitFrame();
-
-	//Don't laugh
 	return !requestStop();
 }
 
-// This just move a node where the other node is. Yes I know about parenting.
-// I had reasons to do it that way, but I forgot.
-void AnnEngine::syncPov() const
+void AnnEngine::syncPalyerPov() const
 {
 	vrRendererPovGameplayPlacement->setPosition(
 		player->getPosition());
@@ -444,7 +401,7 @@ AnnPose AnnEngine::getHmdPose() const
 
 AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSystem)
 {
-	for(const auto system : SubSystemList)
+	for(const auto system : subsystems)
 		if(userSystem->name == system->name)
 		{
 			AnnDebug() << "A subsystem with the name "
@@ -453,7 +410,7 @@ AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSys
 
 			return nullptr;
 		}
-	SubSystemList.push_back(userSystem);
+	subsystems.push_back(userSystem);
 	return userSystem;
 }
 
@@ -512,7 +469,7 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 
 AnnSubSystemPtr AnnEngine::getSubSystemByName(const std::string& name)
 {
-	for(auto subsystem : SubSystemList)
+	for(auto subsystem : subsystems)
 		if(subsystem->name == name)
 			return subsystem;
 	return nullptr;
@@ -527,7 +484,11 @@ bool AnnEngine::isUserSubSystem(AnnSubSystemPtr subsystem)
 
 void AnnEngine::removeUserSubSystem(AnnUserSubSystemPtr subsystem)
 {
-	SubSystemList.remove(subsystem);
+	subsystems.erase(std::remove(
+						 std::begin(subsystems),
+						 std::end(subsystems),
+						 subsystem),
+					 std::end(subsystems));
 }
 
 //Because Windows and the Win32 platform sucks.

@@ -30,7 +30,7 @@ AnnDebug::AnnDebugBuff::~AnnDebugBuff()
 
 int AnnDebug::AnnDebugBuff::sync()
 {
-	AnnEngine::log(str());
+	AnnEngine::writeToLog(str());
 	str("");
 	return 0;
 }
