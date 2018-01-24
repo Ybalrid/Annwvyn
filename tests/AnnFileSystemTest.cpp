@@ -10,7 +10,7 @@ namespace Annwvyn
 		auto fileSystemManager = AnnGetFileSystemManager();
 		REQUIRE(fileSystemManager);
 		REQUIRE(fileSystemManager->getFileReader());
-		REQUIRE(fileSystemManager->getFileReader());
+		REQUIRE(fileSystemManager->getFileWriter());
 	}
 
 	TEST_CASE("FileSystem attempting to read non-existing file")
