@@ -167,10 +167,16 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
  vrRendererPovGameplayPlacement(nullptr),
  updateTime(-1)
 {
-	consoleReady = false;
-#ifdef _WIN32
+	if(singleton)
+	{
+		writeToLog("Can't create 2 instances of the engine!");
+		throw AnnInitializationError(ANN_ERR_MEMORY, "Can't create 2 instances of AnnEngine");
+	}
 
-	//Windows specific setup
+	singleton	= this;
+	consoleReady = false;
+
+#ifdef _WIN32 //Windows specific setup
 
 	//Set current process to high priority.
 	//Looks like the scheduler of Windows sometimes don't give use the time we need to be consistent.
@@ -180,27 +186,17 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 
 	consoleGreen  = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
 	consoleYellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
-	consoleWhite  = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
-#endif
-
-	if(singleton)
-	{
-		writeToLog("Can't create 2 instances of the engine!");
-		throw AnnInitializationError(ANN_ERR_MEMORY, "Can't create 2 instances of AnnEngine");
-	}
-	singleton = this;
+	consoleWhite  = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+#endif //WIN31
 
 	stringUtility = std::make_shared<AnnStringUility>();
 
 	selectAndCreateRenderer(hmdCommand, title);
-
 	renderer->initOgreRoot(logFileName);
-
 	player = std::make_shared<AnnPlayerBody>();
 	renderer->initVrHmd();
 	renderer->initPipeline();
 	SceneManager = renderer->getSceneManager();
-
 	renderer->showDebug(AnnOgreVRRenderer::DebugMode::MONOSCOPIC);
 
 	writeToLog("Setup Annwvyn's subsystems");
@@ -272,6 +268,17 @@ AnnPlayerBodyPtr AnnEngine::getPlayer() const { return player; }
 AnnFilesystemManagerPtr AnnEngine::getFileSystemManager() const { return filesystemManager; }
 AnnAudioEnginePtr AnnEngine::getAudioEngine() const { return audioEngine; }
 AnnPhysicsEnginePtr AnnEngine::getPhysicsEngine() const { return physicsEngine; }
+
+Ogre::SceneNode* AnnEngine::getPlayerPovNode() const { return vrRendererPovGameplayPlacement; }
+Ogre::SceneManager* AnnEngine::getSceneManager() const { return SceneManager; }
+
+unsigned long AnnEngine::getTimeFromStartUp() const { return renderer->getTimer()->getMilliseconds(); }
+double AnnEngine::getTimeFromStartupSeconds() const { return double(getTimeFromStartUp()) / 1000.0; }
+
+void AnnEngine::initPlayerStandingPhysics() const { physicsEngine->initPlayerStandingPhysics(vrRendererPovGameplayPlacement); }
+void AnnEngine::initPlayerRoomscalePhysics() const { physicsEngine->initPlayerRoomscalePhysics(vrRendererPovGameplayPlacement); }
+AnnConsolePtr AnnEngine::getOnScreenConsole() const { return onScreenConsole; }
+AnnStringUtilityPtr AnnEngine::getStringUtility() const { return stringUtility; }
 
 void AnnEngine::setConsoleGreen()
 {
@@ -350,10 +357,8 @@ bool AnnEngine::refresh()
 
 void AnnEngine::syncPalyerPov() const
 {
-	vrRendererPovGameplayPlacement->setPosition(
-		player->getPosition());
-	vrRendererPovGameplayPlacement->setOrientation(
-		player->getOrientation().toQuaternion());
+	vrRendererPovGameplayPlacement->setPosition(player->getPosition());
+	vrRendererPovGameplayPlacement->setOrientation(player->getOrientation().toQuaternion());
 }
 
 //Bad. Don't use. Register an event listener and use the KeyEvent callback.
@@ -363,31 +368,8 @@ inline bool AnnEngine::isKeyDown(OIS::KeyCode key) const
 	return eventManager->Keyboard->isKeyDown(key);
 }
 
-Ogre::SceneNode* AnnEngine::getPlayerPovNode() const
-{
-	return vrRendererPovGameplayPlacement;
-}
-
-Ogre::SceneManager* AnnEngine::getSceneManager() const
-{
-	return SceneManager;
-}
-
-unsigned long AnnEngine::getTimeFromStartUp() const
-{
-	return renderer->getTimer()->getMilliseconds();
-}
-
-double AnnEngine::getTimeFromStartupSeconds() const
-{
-	return double(getTimeFromStartUp()) / 1000.0;
-}
-
 //the delta time of the last frame, not the current one
-double AnnEngine::getFrameTime() const
-{
-	return updateTime;
-}
+double AnnEngine::getFrameTime() const { return updateTime; }
 
 // Raw position and orientation of the head in world space. This is useful if
 // you want to mess around with weird stuff. This has been bodged when I
@@ -469,10 +451,14 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 
 AnnSubSystemPtr AnnEngine::getSubSystemByName(const std::string& name)
 {
-	for(auto subsystem : subsystems)
-		if(subsystem->name == name)
-			return subsystem;
-	return nullptr;
+	auto result = std::find_if(std::begin(subsystems),
+							   std::end(subsystems),
+							   [&](AnnSubSystemPtr s) {
+								   return s->name == name;
+							   });
+
+	if(result == std::end(subsystems)) return nullptr;
+	return *result;
 }
 
 bool AnnEngine::isUserSubSystem(AnnSubSystemPtr subsystem)
@@ -527,26 +513,6 @@ bool AnnEngine::appVisibleInHMD() const
 	return false;
 }
 
-void AnnEngine::initPlayerStandingPhysics() const
-{
-	physicsEngine->initPlayerStandingPhysics(vrRendererPovGameplayPlacement);
-}
-
-void AnnEngine::initPlayerRoomscalePhysics() const
-{
-	physicsEngine->initPlayerRoomscalePhysics(vrRendererPovGameplayPlacement);
-}
-
-AnnConsolePtr AnnEngine::getOnScreenConsole() const
-{
-	return onScreenConsole;
-}
-
-AnnStringUtilityPtr AnnEngine::getStringUtility() const
-{
-	return stringUtility;
-}
-
 void AnnEngine::setProcessPriorityNormal()
 {
 #ifdef _WIN32
@@ -561,7 +527,4 @@ void AnnEngine::setProcessPriorityHigh()
 #endif
 }
 
-void AnnEngine::requestQuit()
-{
-	applicationQuitRequested = true;
-}
+void AnnEngine::requestQuit() { applicationQuitRequested = true; }

@@ -173,5 +173,7 @@ namespace Annwvyn
 		float touchpadXNormalizedValue;
 		float touchpadYNormalizedValue;
 		float triggerNormalizedValue;
+
+		vr::VREvent_t event;
 	};
 }

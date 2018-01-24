@@ -146,7 +146,7 @@ bool AnnOgreOpenVRRenderer::shouldRecenter()
 
 bool AnnOgreOpenVRRenderer::isVisibleInHmd()
 {
-	return true; //Only useful with the oculus runtime
+	return !vrSystem->ShouldApplicationPause();
 }
 
 void AnnOgreOpenVRRenderer::getTrackingPoseAndVRTiming()
@@ -272,7 +272,6 @@ inline Ogre::Quaternion AnnOgreOpenVRRenderer::getTrackedHMDOrieation() const
 
 void AnnOgreOpenVRRenderer::processVREvents()
 {
-	vr::VREvent_t event;
 	//Pump the events, and for each event, switch on it type
 	while(vrSystem->PollNextEvent(&event, sizeof event)) switch(event.eventType)
 		{
@@ -281,13 +280,15 @@ void AnnOgreOpenVRRenderer::processVREvents()
 			case vr::VREvent_Quit:
 				shouldQuitState = true;
 				break;
-
 				//Handle user IPD adjustment
 			case vr::VREvent_IpdChanged:
 				handleIPDChange();
 				break;
 			default: break;
 		}
+
+	//do not draw hands when SteamVR is drawing hands
+	hideHands = vrSystem->IsSteamVRDrawingControllers();
 }
 
 void AnnOgreOpenVRRenderer::processController(vr::TrackedDeviceIndex_t controllerDeviceIndex, AnnHandController::AnnHandControllerSide side)
@@ -416,7 +417,7 @@ inline Ogre::Matrix4 AnnOgreOpenVRRenderer::getMatrix4FromSteamVRMatrix34(const 
 void AnnOpenVRMotionController::rumbleStart(float value)
 {
 	current = AnnGetVRRenderer()->getTimer()->getMilliseconds();
-	//Limit frequency to 1/50 hz
+	//wait at lest 50 milliesconds
 	if(current - last > 50)
 	{
 		last = current;
@@ -435,9 +436,20 @@ AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem,
 													 Ogre::SceneNode* handNode,
 													 AnnHandControllerID controllerID,
 													 AnnHandControllerSide controllerSide) :
- AnnHandController("OpenVR Hand Controller", handNode, controllerID, controllerSide),
+ AnnHandController("OpenVR Hand Controller",
+				   handNode,
+				   controllerID,
+				   controllerSide),
  deviceIndex(OpenVRDeviceIndex),
- vrSystem(vrsystem), last(0), current(0)
+ vrSystem(vrsystem),
+ last(0),
+ current(0)
 {
-	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking | LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback;
+	capabilites = RotationalTracking
+		| PositionalTracking
+		| AngularAccelerationTracking
+		| LinearAccelerationTracking
+		| ButtonInputs
+		| AnalogInputs
+		| HapticFeedback;
 }

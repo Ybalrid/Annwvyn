@@ -236,9 +236,13 @@ namespace Annwvyn
 		static WORD consoleYellow;
 		static WORD consoleWhite;
 #endif
+		///If true, there's a console to output log
 		static bool consoleReady;
+		///If true, don't use color in the output
 		static bool noConsoleColor;
+		///If true, a console was manually allocated
 		static bool manualConsole;
+		///If true, should quit the app ASAP
 		bool applicationQuitRequested;
 
 		///String Utility;
