@@ -23,7 +23,7 @@ inline phyShapeType AnnXmlLevel::getShapeTypeFromString(std::string str)
 		return capsuleShape;
 	if(str == "sphere")
 		return sphereShape;
-	return phyShapeType(0);
+	return error;
 }
 
 AnnXmlLevel::AnnXmlLevel(std::string path) :

@@ -41,6 +41,7 @@ namespace Annwvyn
 	///Name of the objects physical shapes
 	///Theses shapes are available to create objects's rigid body for the physics
 	enum phyShapeType {
+		error,
 		staticShape,
 		convexShape,
 		boxShape,
