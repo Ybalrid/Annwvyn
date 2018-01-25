@@ -15,22 +15,21 @@
 
 using namespace Annwvyn;
 
-AnnEngine* AnnEngine::singleton(nullptr);
+AnnEngine* AnnEngine::singleton{ nullptr };
 
-bool AnnEngine::autosetProcessPriorityHigh(true);
-bool AnnEngine::noConsoleColor(false);
-bool AnnEngine::manualConsole(false);
+bool AnnEngine::autosetProcessPriorityHigh{ true };
+bool AnnEngine::noConsoleColor{ false };
+bool AnnEngine::consoleReady{ false };
+bool AnnEngine::manualConsole{ false };
 std::string AnnEngine::logFileName{ "Annwvyn.log" };
-
 std::string AnnEngine::defaultRenderer{ "NoVRRender" };
 
 #ifdef _WIN32
-WORD AnnEngine::consoleGreen(0);
-WORD AnnEngine::consoleYellow(0);
-WORD AnnEngine::consoleWhite(0);
+WORD AnnEngine::consoleGreen{ 0 };
+WORD AnnEngine::consoleYellow{ 0 };
+WORD AnnEngine::consoleWhite{ 0 };
 #endif
 
-bool AnnEngine::consoleReady(false);
 AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
 {
 	engine = address;
@@ -187,7 +186,8 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 	consoleGreen  = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
 	consoleYellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
 	consoleWhite  = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
-#endif //WIN31
+
+#endif //WIN32
 
 	stringUtility = std::make_shared<AnnStringUility>();
 
