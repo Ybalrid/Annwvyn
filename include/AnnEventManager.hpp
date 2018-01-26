@@ -16,6 +16,8 @@
 #include "AnnSubsystem.hpp"
 #include "AnnEvents.hpp"
 #include "AnnUserSpaceSubSystem.hpp"
+#include "AnnTextInputer.hpp"
+#include "AnnEventListener.hpp"
 
 //the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener

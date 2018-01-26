@@ -42,13 +42,10 @@ namespace Annwvyn
 	public:
 		///Get the key involved in that event
 		KeyCode::code getKey() const;
-
 		///Return true if it's a key press. Key event are debounced.
 		bool isPressed() const;
-
 		///Return true if it's a key release. Key event are debounced.
 		bool isReleased() const;
-
 		///If this is true, it probably means that the keyboard is used for something else and that you should ignore this event.
 		bool shouldIgnore() const;
 
@@ -303,46 +300,32 @@ namespace Annwvyn
 	public:
 		AnnHandControllerEvent();
 		AnnHandControllerEvent(AnnHandController* controller);
-
 		///Get the world position of the tracked controller
 		AnnVect3 getPosition() const;
-
 		///Get the world orientaiton of the tracked controller
 		AnnQuaternion getOrientation() const;
-
 		///Get a vector that is pointing forward according to the orientation of the controller
 		AnnVect3 getPointingDirection() const;
-
 		///Get the current linear speed of the controller
 		AnnVect3 getLinearSpeed() const;
-
 		///Get the current angular speed of the controller
 		AnnVect3 getAngularSpeed() const;
-
 		///Get a reference to the axis object at specified ID
 		AnnHandControllerAxis& getAxis(const uint8_t id) const;
-
 		///Get the number of axes
 		size_t getNbAxes() const;
-
 		///Get the number of buttons
 		size_t getNbButton() const;
-
 		///Has the asked button just been pressed?
 		bool buttonPressed(const uint8_t id) const;
-
 		///Has the asked button just been released
 		bool buttonReleased(const uint8_t id) const;
-
 		///Get the current state of the button
 		bool buttonState(const uint8_t id) const;
-
 		///Get the handside of the controller
 		AnnHandController::AnnHandControllerSide getSide() const;
-
 		///Get the type of the controller
 		AnnHandController::AnnHandControllerTypeHash getType() const;
-
 		///advanced : get access to the hand controller this event is related to
 		AnnHandController* _getController() const;
 
@@ -359,7 +342,6 @@ namespace Annwvyn
 	public:
 		///Create a timer timeout event
 		AnnTimeEvent();
-
 		AnnTimeEvent(const AnnTimer& timer);
 		///Get the ID of this timer
 		timerID getID() const;
@@ -380,10 +362,8 @@ namespace Annwvyn
 	public:
 		///Event constructor
 		AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second, AnnVect3 position, AnnVect3 normal);
-
 		///Check if this event is about that object
 		bool hasObject(AnnGameObject* obj) const;
-
 		///Get first object
 		AnnGameObject* getA() const;
 		///Get second object
@@ -396,11 +376,9 @@ namespace Annwvyn
 		///Return true if the collision occurred with a vertical plane. Computed with testing the dot product of +Y and the normal.
 		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
 		bool isWallCollision(const float scalarApprox = 0.0125) const;
-
 		///Return true if the collision occurred with an horizontal plane below the object. This is computed by taking !isWallCollision(approx) && normal.y > 0
 		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
 		bool isGroundCollision(const float scalarApprox = 0.125) const;
-
 		///Return true if the collision occured with an horizontal plane above the object. See isGroundCollision, it's the same thing, but testing for a negative y on the normal
 		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
 		bool isCeilingCollision(const float scalarApprox = 0.125) const;
@@ -417,7 +395,6 @@ namespace Annwvyn
 	public:
 		///Constructor
 		AnnPlayerCollisionEvent(AnnGameObject* collided);
-
 		///Get the object this event is about
 		AnnGameObject* getObject() const;
 
@@ -432,10 +409,8 @@ namespace Annwvyn
 	public:
 		///Construct a trigger in/out event
 		AnnTriggerEvent();
-
 		///Return true if if there's collision
 		bool getContactStatus() const;
-
 		///Pointer to the trigger that have sent this event
 		AnnTriggerObject* getSender() const;
 
@@ -444,52 +419,6 @@ namespace Annwvyn
 		bool contact;
 		AnnTriggerObject* sender;
 	};
-
-	///Base class for all event listener
-	class AnnDllExport AnnEventListener : public std::enable_shared_from_this<AnnEventListener>
-	{
-		//Base Event listener class. Technically not abstract since it provides a default implementation for all
-		//virtual members. But theses definitions are pointless because they actually don't do anything.
-		//You need to subclass it to create an EventListener
-
-	public:
-		virtual ~AnnEventListener();
-
-		///Construct a listener
-		AnnEventListener();
-		///Event from the keyboard
-		virtual void KeyEvent(AnnKeyEvent e) { return; }
-		///Event from the mouse
-		virtual void MouseEvent(AnnMouseEvent e) { return; }
-		///Event for a Joystick
-		virtual void StickEvent(AnnStickEvent e) { return; }
-		///Event from a timer
-		virtual void TimeEvent(AnnTimeEvent e) { return; }
-		///Event from a trigger
-		virtual void TriggerEvent(AnnTriggerEvent e) { return; }
-		///Event from an HandController
-		virtual void HandControllerEvent(AnnHandControllerEvent e) { return; }
-		///Event from detected collisions
-		virtual void CollisionEvent(AnnCollisionEvent e) { return; }
-		///Event from detected player collisions
-		virtual void PlayerCollisionEvent(AnnPlayerCollisionEvent e) { return; }
-		///Events from code outside of Annwvyn itself
-		virtual void EventFromUserSubsystem(AnnUserSpaceEvent& e, AnnUserSpaceEventLauncher* origin) { return; }
-
-		///This method is called at each frame. Useful for updating player's movement command for example
-		virtual void tick() { return; }
-		///Utility function for applying a dead-zone on a joystick axis
-		static float trim(float value, float deadzone);
-		///return a shared_ptr to this listener
-		std::shared_ptr<AnnEventListener> getSharedListener();
-
-	protected:
-		///Pointer to the player. Set by the constructor, provide easy access to the AnnPlayerBody
-		AnnPlayerBody* player;
-	};
-
-	using AnnEventListenerPtr	 = std::shared_ptr<AnnEventListener>;
-	using AnnEventListenerWeakPtr = std::weak_ptr<AnnEventListener>;
 
 	///Internal utility class that represent a timer
 	class AnnDllExport AnnTimer
@@ -517,17 +446,14 @@ namespace Annwvyn
 		///Private constructor for AnnEventManager
 		///Create a Joystick buffer object, increments a static counter of IDs
 		JoystickBuffer(OIS::JoyStick* joystick);
-
 		///Make class explicitly non construct-copyable
 		JoystickBuffer(const JoystickBuffer&) = delete;
 		///Make class explicitly non copyable
 		JoystickBuffer& operator=(const JoystickBuffer&) = delete;
-
 		///Let compiler generate move constructor
 		JoystickBuffer(JoystickBuffer&& buffer) = default;
 		///Let compiler generate move operator
 		JoystickBuffer& operator=(JoystickBuffer&& buffer) = default;
-
 		///Delete the OIS stick at destruction time
 		~JoystickBuffer();
 
@@ -536,52 +462,13 @@ namespace Annwvyn
 	private:
 		///Joystick object from OIS. Deleted by constructor
 		OIS::JoyStick* oisJoystick;
-
 		///Array of "bool" for previous buttons
 		std::vector<byte> previousStickButtonStates;
-
 		///Get the ID if this stick
 		unsigned int getID() const { return id; }
-
 		///The ID
 		unsigned int id;
 		///The counter
 		static unsigned int idcounter;
-	};
-
-	///This class permit to get text input from the keyboard
-	class AnnDllExport AnnTextInputer : public OIS::KeyListener
-	{
-	public:
-		///Object for text input
-		AnnTextInputer();
-		///Callback key press method
-		bool keyPressed(const OIS::KeyEvent& arg) override;
-		///Callback key released method
-		bool keyReleased(const OIS::KeyEvent& arg) override;
-		///Return the "input" string object
-		std::string getInput() const;
-		///Permit you to change the content of the input method
-		void setInput(const std::string& content);
-		///Clear the input string : remove all characters hanging there
-		void clearInput();
-		///Clear input THEN record typed text
-		void startListening();
-		///Stop recording typed text
-		void stopListening();
-		///Set the cursor offset by hand
-		void setCursorOffset(int newPos);
-		///Get the current position of the internal cursor
-		int getCursorOffset() const;
-
-	private:
-		///String that holds typed text. Characters are push/popped at the back of this string
-		std::string input;
-		///If set false, this class does nothing.
-		bool listen;
-		///true if this text should be ascii only
-		bool asciiOnly;
-		///Offset from the end of the string where the operations has to be done
-		int cursorOffset;
 	};
 }
