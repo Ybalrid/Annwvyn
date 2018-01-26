@@ -19,11 +19,11 @@
 #include "AnnTextInputer.hpp"
 #include "AnnEventListener.hpp"
 
-//the following two macros exist only for my "please, look nicer" side
 ///Macro for declaring a listener
 #define LISTENER \
 public           \
 	Annwvyn::AnnEventListener
+
 ///Macro for declaring a listener constructor
 #define constructListener() AnnEventListener()
 
@@ -143,7 +143,7 @@ namespace Annwvyn
 		///Buffer of mouse events
 		std::vector<AnnMouseEvent> mouseEventBuffer;
 		///Buffer of stick events
-		std::vector<AnnStickEvent> stickEventBuffer;
+		std::vector<AnnControllerEvent> stickEventBuffer;
 		///Buffer of hand controller events
 		std::vector<AnnHandControllerEvent> handControllerEventBuffer;
 
@@ -155,7 +155,7 @@ namespace Annwvyn
 		///Pointer that holds the Mouse
 		OIS::Mouse* Mouse;
 		///Array of poiners to OIS Joystick
-		std::vector<JoystickBuffer> Joysticks;
+		std::vector<AnnJoystickBuffer> Joysticks;
 		//----------------------- OIS and other library input objects
 
 		//----------------------- PREVIOUS STATE FOR EVENT DETECTION FROM UNBUFFERED STATE

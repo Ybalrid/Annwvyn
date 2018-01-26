@@ -26,7 +26,7 @@ namespace Annwvyn
 						  std::function<void(chaiscript::Boxed_Value&)> updateHook,
 						  std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
 						  std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+						  std::function<void(chaiscript::Boxed_Value&, AnnControllerEvent)> StickEventHook,
 						  std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
 						  std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerHook,
 						  std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
@@ -55,7 +55,7 @@ namespace Annwvyn
 		///Event from the mouse
 		void MouseEvent(AnnMouseEvent e) override;
 		///Event for a Joystick
-		void StickEvent(AnnStickEvent e) override;
+		void ControllerEvent(AnnControllerEvent e) override;
 		///Event from a timer
 		void TimeEvent(AnnTimeEvent e) override;
 		///Event from a trigger
@@ -84,7 +84,7 @@ namespace Annwvyn
 		///Hook for Mouse event
 		std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> callMouseEventOnScriptInstance;
 		///Hook for Stick event
-		std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> callStickEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnControllerEvent)> callStickEventOnScriptInstance;
 		///Hook for Time event
 		std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> callTimeEventOnScriptInstance;
 		///Hook for Trigger event
@@ -192,7 +192,7 @@ def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
 		///To create the event hooks for the scripts :
 		std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> callKeyEventOnScriptInstance;
 		std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> callMouseEventOnScriptInstance;
-		std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> callStickEventOnScriptInstance;
+		std::function<void(chaiscript::Boxed_Value&, AnnControllerEvent)> callStickEventOnScriptInstance;
 		std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> callTimeEventOnScriptInstance;
 		std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> callTriggerEventOnScriptInstance;
 		std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> callHandControllertOnScriptInstance;

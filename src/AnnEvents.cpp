@@ -299,7 +299,7 @@ AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
 	}
 }
 
-AnnStickEvent::AnnStickEvent() :
+AnnControllerEvent::AnnControllerEvent() :
  AnnEvent(),
  xbox(false),
  stickID(-1)
@@ -307,45 +307,45 @@ AnnStickEvent::AnnStickEvent() :
 	type = USER_INPUT;
 }
 
-AnnStickEvent::~AnnStickEvent() {}
+AnnControllerEvent::~AnnControllerEvent() {}
 
-unsigned int AnnStickEvent::getStickID() const
+unsigned int AnnControllerEvent::getStickID() const
 {
 	return stickID;
 }
 
-bool AnnStickEvent::isDown(ButtonId id)
+bool AnnControllerEvent::isDown(ButtonId id)
 {
 	if(id >= buttons.size()) return false;
 	return buttons[id] != 0;
 }
 
-size_t AnnStickEvent::getNbButtons() const
+size_t AnnControllerEvent::getNbButtons() const
 {
 	return buttons.size();
 }
 
-std::vector<unsigned short> AnnStickEvent::getPressed() const
+std::vector<unsigned short> AnnControllerEvent::getPressed() const
 {
 	return pressed;
 }
 
-std::vector<unsigned short> AnnStickEvent::getReleased() const
+std::vector<unsigned short> AnnControllerEvent::getReleased() const
 {
 	return released;
 }
 
-AnnStickAxis AnnStickEvent::getAxis(StickAxisId ax)
+AnnStickAxis AnnControllerEvent::getAxis(StickAxisId ax)
 {
 	return axes[ax];
 }
 
-size_t AnnStickEvent::getNbAxis() const
+size_t AnnControllerEvent::getNbAxis() const
 {
 	return axes.size();
 }
 
-bool AnnStickEvent::isPressed(ButtonId id)
+bool AnnControllerEvent::isPressed(ButtonId id)
 {
 	//if id is not a valid button
 	if(id >= buttons.size()) return false;
@@ -355,7 +355,7 @@ bool AnnStickEvent::isPressed(ButtonId id)
 	return false;
 }
 
-bool AnnStickEvent::isReleased(ButtonId id)
+bool AnnControllerEvent::isReleased(ButtonId id)
 {
 	//if id is not a valid button
 	if(id >= buttons.size()) return false;
@@ -365,12 +365,12 @@ bool AnnStickEvent::isReleased(ButtonId id)
 	return false;
 }
 
-std::string AnnStickEvent::getVendor() const
+std::string AnnControllerEvent::getVendor() const
 {
 	return vendor;
 }
 
-AnnStickPov AnnStickEvent::getPov(PovId pov)
+AnnStickPov AnnControllerEvent::getPov(PovId pov)
 {
 	if(pov < getNbPov())
 		return povs[pov];
@@ -378,12 +378,12 @@ AnnStickPov AnnStickEvent::getPov(PovId pov)
 	return p;
 }
 
-bool AnnStickEvent::isXboxController() const
+bool AnnControllerEvent::isXboxController() const
 {
 	return xbox;
 }
 
-size_t AnnStickEvent::getNbPov() const
+size_t AnnControllerEvent::getNbPov() const
 {
 	return povs.size();
 }
@@ -481,19 +481,19 @@ bool AnnTimer::isTimeout() const
 	return false;
 }
 
-JoystickBuffer::JoystickBuffer(OIS::JoyStick* joystick) :
+AnnJoystickBuffer::AnnJoystickBuffer(OIS::JoyStick* joystick) :
  oisJoystick(joystick)
 {
 	id = idcounter++;
 }
 
-JoystickBuffer::~JoystickBuffer()
+AnnJoystickBuffer::~AnnJoystickBuffer()
 {
 	AnnDebug() << "Deleted iosJoystick";
 	delete oisJoystick;
 }
 
-void JoystickBuffer::capture() const
+void AnnJoystickBuffer::capture() const
 {
 	oisJoystick->capture();
 }

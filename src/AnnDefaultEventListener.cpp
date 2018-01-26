@@ -115,7 +115,7 @@ void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 }
 
 //The stick event contain all the data for a specific joystick. In includes buttons current states, press and release events, stick relative and absolute values
-void AnnDefaultEventListener::StickEvent(AnnStickEvent e)
+void AnnDefaultEventListener::ControllerEvent(AnnControllerEvent e)
 {
 	if(AnnGetVRRenderer()->shouldPauseFlag()) return;
 	if(!e.isXboxController()) return;

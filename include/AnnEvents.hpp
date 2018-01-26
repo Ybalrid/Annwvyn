@@ -172,11 +172,12 @@ namespace Annwvyn
 		float getAbsValue() const;
 
 	private:
+		friend class AnnEventManager;
+		friend class AnnControllerEvent;
+
 		///Raw values
 		int a, r;
 		StickAxisId id;
-		friend class AnnEventManager;
-		friend class AnnStickEvent;
 		///Set the ID of the axis
 		void setAxis(StickAxisId ax);
 		///Set a relative value
@@ -228,20 +229,20 @@ namespace Annwvyn
 		bool west;
 
 		friend class AnnEventManager;
-		friend class AnnStickEvent;
+		friend class AnnControllerEvent;
 
 		///Private constructor used by the event manager. Need a direction integer from OIS
 		AnnStickPov(unsigned int binaryDirection);
 	};
 
 	///A joystick event
-	class AnnDllExport AnnStickEvent : public AnnEvent
+	class AnnDllExport AnnControllerEvent : public AnnEvent
 	{
 	public:
 		///Construct a stick event object
-		AnnStickEvent();
+		AnnControllerEvent();
 		///Destroy a stick event object
-		~AnnStickEvent();
+		~AnnControllerEvent();
 
 		///Number of buttons this controller has
 		size_t getNbButtons() const;
@@ -439,23 +440,23 @@ namespace Annwvyn
 	};
 
 	///Internal utility class that store joystick information. RAII the oisJoystick object given to constructor
-	class AnnDllExport JoystickBuffer
+	class AnnDllExport AnnJoystickBuffer
 	{
 	public:
 		friend class AnnEventManager;
 		///Private constructor for AnnEventManager
 		///Create a Joystick buffer object, increments a static counter of IDs
-		JoystickBuffer(OIS::JoyStick* joystick);
+		AnnJoystickBuffer(OIS::JoyStick* joystick);
 		///Make class explicitly non construct-copyable
-		JoystickBuffer(const JoystickBuffer&) = delete;
+		AnnJoystickBuffer(const AnnJoystickBuffer&) = delete;
 		///Make class explicitly non copyable
-		JoystickBuffer& operator=(const JoystickBuffer&) = delete;
+		AnnJoystickBuffer& operator=(const AnnJoystickBuffer&) = delete;
 		///Let compiler generate move constructor
-		JoystickBuffer(JoystickBuffer&& buffer) = default;
+		AnnJoystickBuffer(AnnJoystickBuffer&& buffer) = default;
 		///Let compiler generate move operator
-		JoystickBuffer& operator=(JoystickBuffer&& buffer) = default;
+		AnnJoystickBuffer& operator=(AnnJoystickBuffer&& buffer) = default;
 		///Delete the OIS stick at destruction time
-		~JoystickBuffer();
+		~AnnJoystickBuffer();
 
 		void capture() const;
 

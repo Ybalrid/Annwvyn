@@ -239,7 +239,7 @@ void AnnScriptManager::registerApi()
 		//Add the types of the event representation object
 		chai.add(user_type<AnnKeyEvent>(), "AnnKeyEvent");
 		chai.add(user_type<AnnMouseEvent>(), "AnnMouseEvent");
-		chai.add(user_type<AnnStickEvent>(), "AnnStickEvent");
+		chai.add(user_type<AnnControllerEvent>(), "AnnControllerEvent");
 		chai.add(user_type<AnnTimeEvent>(), "AnnTimeEvent");
 		chai.add(user_type<AnnTriggerEvent>(), "AnnTriggerEvent");
 		chai.add(user_type<AnnHandControllerEvent>(), "AnnHandControllerEvent");
@@ -261,17 +261,17 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](AnnMouseAxis a) { return a.getRelValue(); }), "getRelValue");
 		chai.add(fun([](AnnMouseAxis a) { return a.getAbsValue(); }), "getAbsValue");
 
-		chai.add(fun([](AnnStickEvent e) { return e.getNbButtons(); }), "getNbButtons");
-		chai.add(fun([](AnnStickEvent e) { return e.getNbAxis(); }), "getNbAxis");
-		chai.add(fun([](AnnStickEvent e) { return e.getNbPov(); }), "getNbPov");
-		chai.add(fun([](AnnStickEvent e) { return e.getVendor(); }), "getVendor");
-		chai.add(fun([](AnnStickEvent e) { return e.getStickID(); }), "getStickID");
-		chai.add(fun([](AnnStickEvent e) { return e.isXboxController(); }), "isXboxController");
-		chai.add(fun([](AnnStickEvent e, const int i) { return e.isPressed(i); }), "isPressed");
-		chai.add(fun([](AnnStickEvent e, const int i) { return e.isReleased(i); }), "isReleased");
-		chai.add(fun([](AnnStickEvent e, const int i) { return e.isDown(i); }), "isDown");
-		chai.add(fun([](AnnStickEvent e, const int i) { return e.getAxis(i); }), "getAxis");
-		chai.add(fun([](AnnStickEvent e, const int i) { return e.getPov(i); }), "getPov");
+		chai.add(fun([](AnnControllerEvent e) { return e.getNbButtons(); }), "getNbButtons");
+		chai.add(fun([](AnnControllerEvent e) { return e.getNbAxis(); }), "getNbAxis");
+		chai.add(fun([](AnnControllerEvent e) { return e.getNbPov(); }), "getNbPov");
+		chai.add(fun([](AnnControllerEvent e) { return e.getVendor(); }), "getVendor");
+		chai.add(fun([](AnnControllerEvent e) { return e.getStickID(); }), "getStickID");
+		chai.add(fun([](AnnControllerEvent e) { return e.isXboxController(); }), "isXboxController");
+		chai.add(fun([](AnnControllerEvent e, const int i) { return e.isPressed(i); }), "isPressed");
+		chai.add(fun([](AnnControllerEvent e, const int i) { return e.isReleased(i); }), "isReleased");
+		chai.add(fun([](AnnControllerEvent e, const int i) { return e.isDown(i); }), "isDown");
+		chai.add(fun([](AnnControllerEvent e, const int i) { return e.getAxis(i); }), "getAxis");
+		chai.add(fun([](AnnControllerEvent e, const int i) { return e.getPov(i); }), "getPov");
 
 		chai.add(fun([](AnnStickPov pov) { return pov.getNorth(); }), "getNorth");
 		chai.add(fun([](AnnStickPov pov) { return pov.getSouth(); }), "getSouth");
@@ -389,7 +389,7 @@ void AnnScriptManager::tryAndGetEventHooks()
 	//Yes, there's 6 of them
 	try
 	{
-		callStickEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)>>("StickEvent");
+		callStickEventOnScriptInstance = chai.eval<std::function<void(chaiscript::Boxed_Value&, AnnControllerEvent)>>("ControllerEvent");
 	}
 	catch(const chaiscript::exception::eval_error&)
 	{
@@ -568,7 +568,7 @@ AnnBehaviorScript::AnnBehaviorScript(const std::string& scriptName,
 									 std::function<void(chaiscript::Boxed_Value&)> updateHook,
 									 std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
 									 std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
-									 std::function<void(chaiscript::Boxed_Value&, AnnStickEvent)> StickEventHook,
+									 std::function<void(chaiscript::Boxed_Value&, AnnControllerEvent)> StickEventHook,
 									 std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
 									 std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerEventHook,
 									 std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
@@ -670,7 +670,7 @@ void AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
 	}
 }
 
-void AnnBehaviorScript::StickEvent(AnnStickEvent e)
+void AnnBehaviorScript::ControllerEvent(AnnControllerEvent e)
 {
 	try
 	{

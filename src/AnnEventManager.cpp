@@ -141,7 +141,7 @@ void AnnEventManager::update()
 	processUserSpaceEvents();
 }
 
-unsigned int JoystickBuffer::idcounter = 0;
+unsigned int AnnJoystickBuffer::idcounter = 0;
 
 void AnnEventManager::captureEvents()
 {
@@ -191,7 +191,7 @@ void AnnEventManager::processJoystickEvents()
 	for(auto& Joystick : Joysticks)
 	{
 		const auto& state(Joystick.oisJoystick->getJoyStickState());
-		AnnStickEvent stickEvent;
+		AnnControllerEvent stickEvent;
 		stickEvent.vendor  = Joystick.oisJoystick->vendor();
 		stickEvent.stickID = Joystick.getID();
 
@@ -215,7 +215,7 @@ void AnnEventManager::processJoystickEvents()
 			stickEvent.axes.push_back(annAxis);
 		}
 
-		//The joystick state object always have 4 Pov but the AnnStickEvent has the number of Pov the stick has
+		//The joystick state object always have 4 Pov but the AnnControllerEvent has the number of Pov the stick has
 		const auto nbPov = size_t(Joystick.oisJoystick->getNumberOfComponents(OIS::ComponentType::OIS_POV));
 		for(auto i(0u); i < nbPov; i++)
 			stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
@@ -255,7 +255,7 @@ void AnnEventManager::pushEventsToListeners()
 		{
 			for(auto& e : keyEventBuffer) listener->KeyEvent(e);
 			for(auto& e : mouseEventBuffer) listener->MouseEvent(e);
-			for(auto& e : stickEventBuffer) listener->StickEvent(e);
+			for(auto& e : stickEventBuffer) listener->ControllerEvent(e);
 			for(auto& e : handControllerEventBuffer) listener->HandControllerEvent(e);
 
 			listener->tick();

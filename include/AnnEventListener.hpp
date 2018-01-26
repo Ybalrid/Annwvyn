@@ -24,7 +24,7 @@ namespace Annwvyn
 		///Event from the mouse
 		virtual void MouseEvent(AnnMouseEvent e) {}
 		///Event for a Joystick
-		virtual void StickEvent(AnnStickEvent e) {}
+		virtual void ControllerEvent(AnnControllerEvent e) {}
 		///Event from a timer
 		virtual void TimeEvent(AnnTimeEvent e) {}
 		///Event from a trigger
