@@ -114,28 +114,28 @@ public:
 	{
 		if(Demo0Trig == trigger)
 		{
-			AnnGetLevelManager()->jump(getDemo(0));
+			AnnGetLevelManager()->switchToLevel(getDemo(0));
 			return;
 		}
 		if(TestLevelTrig == trigger)
 		{
-			AnnGetLevelManager()->jump(getDemo(1));
+			AnnGetLevelManager()->switchToLevel(getDemo(1));
 			return;
 		}
 		if(EventTrig == trigger)
 		{
-			AnnGetLevelManager()->jump(getDemo(2));
+			AnnGetLevelManager()->switchToLevel(getDemo(2));
 			return;
 		}
 
 		if(TimerTrig == trigger)
 		{
-			AnnGetLevelManager()->jump(getDemo(3));
+			AnnGetLevelManager()->switchToLevel(getDemo(3));
 			return;
 		}
 	}
 
-	static level_id getDemo(level_id id)
+	static AnnLevelID getDemo(AnnLevelID id)
 	{
 		return 1 + id;
 	}

@@ -214,7 +214,7 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](string id) { return AnnGetGameObjectManager()->getLightObject(id).get(); }), "AnnGetLightObject");
 
 		//Level jumper
-		chai.add(fun([](level_id id) { AnnGetLevelManager()->jump(id); }), "AnnJumpLevel");
+		chai.add(fun([](AnnLevelID id) { AnnGetLevelManager()->switchToLevel(id); }), "AnnJumpLevel");
 
 		//Create a GameObject form ChaiScript
 		chai.add(fun([](const string& mesh, const string& objectName) {

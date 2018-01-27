@@ -69,8 +69,8 @@ namespace Annwvyn
 		LevelManager->addLevel(second);
 		LevelManager->addLevel(third);
 
-		REQUIRE(first == LevelManager->getFirstLevelLoaded());
-		REQUIRE(third == LevelManager->getLastLevelLoaded());
+		REQUIRE(first == LevelManager->getFirstLoadedLevel());
+		REQUIRE(third == LevelManager->getLastLoadedLevel());
 		REQUIRE(first == LevelManager->getLevelByIndex(0));
 		REQUIRE(second == LevelManager->getLevelByIndex(1));
 		REQUIRE(third == LevelManager->getLevelByIndex(2));
@@ -91,7 +91,7 @@ namespace Annwvyn
 			auto LevelManager = AnnGetLevelManager();
 
 			LevelManager->addLevel(std::make_shared<TestLevelLoad>(loadStatus, unloadStatus));
-			LevelManager->jumpToFirstLevel();
+			LevelManager->switchToFirstLoadedLevel();
 
 			AnnGetOnScreenConsole()->setVisible(true);
 
@@ -140,7 +140,7 @@ namespace Annwvyn
 			auto levelManager = AnnGetLevelManager();
 
 			levelManager->addLevel(std::make_shared<TestLevelLoadObjects>(ogreOk, floorOk));
-			levelManager->jumpToFirstLevel();
+			levelManager->switchToFirstLoadedLevel();
 
 			for(auto i = 0; i < 3; ++i)
 			{
@@ -160,7 +160,7 @@ namespace Annwvyn
 		auto ogre{ false }, floor{ false };
 		AnnLevelPtr level;
 		levelManager->addLevel(level = std::make_shared<TestLevel>());
-		levelManager->jumpToFirstLevel();
+		levelManager->switchToFirstLoadedLevel();
 
 		for(auto i{ 0 }; i < 3; i++)
 			GameEngine->refresh();

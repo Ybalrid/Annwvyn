@@ -90,7 +90,7 @@ AnnMain()
 		levelManager->addLevel<AnnSplashLevel>("splash.png", hub, 1.f);
 
 		//ask the level manager to perform a jump to the last level
-		levelManager->jump(AnnGetLevelManager()->getLastLevelLoaded());
+		levelManager->switchToLastLoadedLevel();
 	} //this scope exist to release all shared pointer we got when doing auto X = Y
 
 	AnnDebug() << "Starting the render loop";

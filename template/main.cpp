@@ -34,7 +34,7 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 
 	//Instantiate and register our basic level and "jump" to it:
 	AnnGetLevelManager()->addLevel<MyLevel>();
-	AnnGetLevelManager()->jumpToFirstLevel();
+	AnnGetLevelManager()->switchToFirstLoadedLevel();
 
 	//Use the default event listener. It's a commodity for development, you'll probably want to write your own.
 	AnnGetEventManager()->useDefaultEventListener();

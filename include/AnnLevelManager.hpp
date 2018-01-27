@@ -2,7 +2,7 @@
  * \file AnnLevelManager.hpp
  * \brief Main class of the level system
  *	      The Level Manager load and unload levels from the internal Ogre Scene.
- *		  It also permit to jump from a level to another one.
+ *		  It also permit to switchToLevel from a level to another one.
  * \author A. Brainville (Ybalrid)
  */
 #pragma once
@@ -15,7 +15,7 @@
 
 namespace Annwvyn
 {
-	using level_id = size_t;
+	using AnnLevelID = size_t;
 
 	///Class that take care of switching between different levels dynamically and clearing the memory afterwards
 	class AnnDllExport AnnLevelManager : public AnnSubSystem
@@ -29,11 +29,11 @@ namespace Annwvyn
 
 		///Jump to an index referenced level
 		///\param levelId Index of the level in the order they have been declared
-		void jump(level_id levelId);
+		void switchToLevel(AnnLevelID levelId);
 
 		///Jump to a pointer referenced level
 		///\param level address of a subclass instance of AnnLevel
-		void jump(AnnLevelPtr level);
+		void switchToLevel(AnnLevelPtr level);
 
 		///Add a level to the level manager
 		///\param level address of a subclass instance of AnnLevel
@@ -48,8 +48,11 @@ namespace Annwvyn
 			return level;
 		}
 
-		///Jump to the 1st level
-		void jumpToFirstLevel();
+		///Jump to the first level that was loaded into the engine
+		void switchToFirstLoadedLevel();
+
+		///Jump to the first level that was loaded into the engine
+		void switchToLastLoadedLevel();
 
 		///Run level logic
 		void update() override;
@@ -58,13 +61,13 @@ namespace Annwvyn
 		void unloadCurrentLevel();
 
 		///Retrieve the last loaded level pointer
-		AnnLevelPtr getLastLevelLoaded();
+		AnnLevelPtr getLastLoadedLevel();
 
 		///Retrieve the first loaded level pointer
-		AnnLevelPtr getFirstLevelLoaded();
+		AnnLevelPtr getFirstLoadedLevel();
 
 		///Retrieve the `id`th  loaded level pointer
-		AnnLevelPtr getLevelByIndex(level_id id);
+		AnnLevelPtr getLevelByIndex(AnnLevelID id);
 
 		///Get the current level
 		AnnLevelPtr getCurrentLevel() const;
@@ -77,7 +80,7 @@ namespace Annwvyn
 
 	private:
 		///List of levels
-		std::vector<AnnLevelPtr> levelList;
+		std::vector<AnnLevelPtr> loadedLevels;
 
 		///Address to the currently running level
 		AnnLevelPtr current;
@@ -85,8 +88,8 @@ namespace Annwvyn
 		///Will jumpt to a level at next update
 		bool jumpRequested;
 
-		///Level to jump to at next update
-		level_id jumpTo;
+		///Level to switchToLevel to at next update
+		AnnLevelID jumpTo;
 	};
 
 	using AnnLevelManagerPtr = std::shared_ptr<AnnLevelManager>;

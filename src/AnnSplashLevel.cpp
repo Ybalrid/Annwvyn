@@ -150,19 +150,23 @@ void AnnSplashLevel::runLogic()
 	//If start time not set yet
 	if(startTime == -1)
 	{
-		//The app is "not visible" before the Health and Safety warning is displayed, or when you're inside the Oculus Home menu
+		//The app is "not visible" if the user isn't wearing the HMD, or if a system menu is up
 		if(AnnGetEngine()->appVisibleInHMD())
 		{
-			AnnDebug() << "visible";
 			//This set the "startTime" variable, preventing this piece of code to be ran twice
 			AnnDebug() << "Starting time at : " << AnnGetEngine()->getTimeFromStartUp();
 			startTime = float(AnnGetEngine()->getTimeFromStartUp());
+
 			//If you put some background music or sound for the splash-screen, we start it
 			if(hasBGM)
+			{
 				AnnGetAudioEngine()->playBGM(bgmName);
+			}
 		}
 		else
+		{
 			return;
+		}
 	}
 
 	//Run the following only if you set a "next" level to jump to
@@ -170,7 +174,7 @@ void AnnSplashLevel::runLogic()
 	if(nextLevel && AnnGetEngine()->getTimeFromStartUp() - startTime > timeout)
 	{
 		startTime = -1;
-		AnnGetEngine()->getLevelManager()->jump(nextLevel);
+		AnnGetEngine()->getLevelManager()->switchToLevel(nextLevel);
 	}
 }
 
@@ -197,8 +201,7 @@ void AnnSplashLevel::setNextLevel(std::shared_ptr<AnnLevel> level)
 
 void AnnSplashLevel::setTimeout(float time)
 {
-	if(time > 0)
-		timeout = 1000 * time;
+	if(time > 0) timeout = 1000 * time;
 }
 
 void AnnSplashLevel::setTimeoutMillisec(unsigned time)

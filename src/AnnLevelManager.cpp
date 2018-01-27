@@ -22,9 +22,9 @@ AnnLevelManager::~AnnLevelManager()
 	unloadCurrentLevel();
 }
 
-void AnnLevelManager::jump(level_id levelId)
+void AnnLevelManager::switchToLevel(AnnLevelID levelId)
 {
-	if(!(levelId < levelList.size())) return;
+	if(!(levelId < loadedLevels.size())) return;
 
 	//Deferred level jump
 	if(!jumpRequested)
@@ -38,16 +38,16 @@ void AnnLevelManager::jump(level_id levelId)
 	jumpRequested = false;
 	jumpTo		  = 0;
 	unloadCurrentLevel();
-	current = levelList[levelId];
+	current = loadedLevels[levelId];
 	current->load();
 }
 
-void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
+void AnnLevelManager::switchToLevel(std::shared_ptr<AnnLevel> level)
 {
-	for(level_id i(0); i < levelList.size(); i++)
-		if(levelList[i] == level)
+	for(AnnLevelID i(0); i < loadedLevels.size(); i++)
+		if(loadedLevels[i] == level)
 		{
-			jump(i);
+			switchToLevel(i);
 			break;
 		}
 }
@@ -55,18 +55,23 @@ void AnnLevelManager::jump(std::shared_ptr<AnnLevel> level)
 void AnnLevelManager::addLevel(std::shared_ptr<AnnLevel> level)
 {
 	AnnDebug() << "Adding level " << level << " to LevelManager";
-	levelList.push_back(level);
+	loadedLevels.push_back(level);
 }
 
-void AnnLevelManager::jumpToFirstLevel()
+void AnnLevelManager::switchToFirstLoadedLevel()
 {
-	jump(level_id(0));
+	switchToLevel(AnnLevelID(0));
+}
+
+void AnnLevelManager::switchToLastLoadedLevel()
+{
+	switchToLevel(getLastLoadedLevel());
 }
 
 void AnnLevelManager::update()
 {
 	if(jumpRequested)
-		return jump(jumpTo);
+		return switchToLevel(jumpTo);
 	if(current) current->runLogic();
 }
 
@@ -76,20 +81,20 @@ void AnnLevelManager::unloadCurrentLevel()
 	current = nullptr;
 }
 
-std::shared_ptr<AnnLevel> AnnLevelManager::getLastLevelLoaded()
+std::shared_ptr<AnnLevel> AnnLevelManager::getLastLoadedLevel()
 {
-	return levelList.back();
+	return loadedLevels.back();
 }
 
-std::shared_ptr<AnnLevel> AnnLevelManager::getFirstLevelLoaded()
+std::shared_ptr<AnnLevel> AnnLevelManager::getFirstLoadedLevel()
 {
-	return levelList.front();
+	return loadedLevels.front();
 }
 
-std::shared_ptr<AnnLevel> AnnLevelManager::getLevelByIndex(level_id id)
+std::shared_ptr<AnnLevel> AnnLevelManager::getLevelByIndex(AnnLevelID id)
 {
-	if(id >= levelList.size()) return nullptr;
-	return levelList[id];
+	if(id >= loadedLevels.size()) return nullptr;
+	return loadedLevels[id];
 }
 
 void AnnLevelManager::addToCurrentLevel(std::shared_ptr<AnnGameObject> obj) const

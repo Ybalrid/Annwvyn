@@ -101,7 +101,7 @@ namespace Annwvyn
 
 		///Class constructor. take the name of the window
 		/// \param title The title of the windows that will be created by the operating system
-		AnnEngine(const char title[], const std::string& hmdCommand = "");
+		AnnEngine(const char title[], const std::string& hmdCommand = "DefaultRender");
 
 		///Class destructor. Do clean up stuff.
 		~AnnEngine();

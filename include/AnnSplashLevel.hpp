@@ -11,7 +11,7 @@
 
 namespace Annwvyn
 {
-	///"Level" that display an image on a giant plane, then jump to another level after a timeout
+	///"Level" that display an image on a giant plane, then switchToLevel to another level after a timeout
 	class AnnDllExport AnnSplashLevel : public AnnLevel
 	{
 	public:
@@ -22,7 +22,7 @@ namespace Annwvyn
 		///Load the level. This create a manual material and a manual object to present the splash image
 		void load() override;
 
-		///Run the logic of the splash screen. This will check for the time and jump to next level if timeout
+		///Run the logic of the splash screen. This will check for the time and switchToLevel to next level if timeout
 		void runLogic() override;
 
 		///Clean up the manually allocated object
@@ -31,7 +31,7 @@ namespace Annwvyn
 		///Set the background music
 		void setBGM(std::string name, bool preload = true);
 
-		///Set the level to jump to after timeout
+		///Set the level to switchToLevel to after timeout
 		void setNextLevel(std::shared_ptr<AnnLevel> level);
 
 		///Set timeout time in seconds
