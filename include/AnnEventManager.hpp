@@ -83,14 +83,14 @@ namespace Annwvyn
 
 		//---------------------------- timer management
 		///Create a timer that will timeout after "delay" seconds
-		timerID fireTimer(double delay);
+		AnnTimerID fireTimer(double delay);
 		///Create a timer that will timeout after "delay" milliseconds
-		timerID fireTimerMillisec(double millisecDelay);
+		AnnTimerID fireTimerMillisec(double millisecDelay);
 		//---------------------------- timer management
 
 		//---------------------------- other
 		///Get the number of available sticks
-		size_t getNbStick() const;
+		size_t getControllerCount() const;
 		///Get the text inputer object
 		AnnTextInputer* getTextInputer() const;
 		///set the "shouldIgnore" flag to keyboard event
@@ -155,19 +155,19 @@ namespace Annwvyn
 		///Pointer that holds the Mouse
 		OIS::Mouse* Mouse;
 		///Array of poiners to OIS Joystick
-		std::vector<AnnJoystickBuffer> Joysticks;
+		std::vector<AnnControllerBuffer> Joysticks;
 		//----------------------- OIS and other library input objects
 
 		//----------------------- PREVIOUS STATE FOR EVENT DETECTION FROM UNBUFFERED STATE
 		///Array for remembering the key states at last update.
 		std::array<bool, KeyCode::SIZE> previousKeyStates;
 		///Array for remembering the button states at last update
-		std::array<bool, nbButtons> previousMouseButtonStates;
+		std::array<bool, ButtonCount> previousMouseButtonStates;
 		//----------------------- PREVIOUS STATE FOR EVENT DETECTION FROM UNBUFFERED STATE
 
 		//----------------------- TIMER MANAGEMENT
 		///Dynamically sized array for remembering the joystick button state at last update
-		timerID lastTimerCreated;
+		AnnTimerID lastTimerCreated;
 		///List of timers
 		std::vector<AnnTimer> activeTimers;
 		///List of timer that will timeout in a future frame
@@ -190,7 +190,7 @@ namespace Annwvyn
 		///Using a shared ptr to keep ownership of the event object until the event is dealt with. Also, polymorphism.
 		std::vector<std::pair<AnnUserSpaceEventPtr, AnnUserSpaceEventLauncher*>> userSpaceEventBuffer;
 		///ID of an eventual Xbox controller
-		StickAxisId xboxID;
+		ControllerID xboxID;
 
 		///True if we detected an xbox controller
 		bool knowXbox;

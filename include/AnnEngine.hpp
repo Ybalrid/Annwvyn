@@ -172,7 +172,7 @@ namespace Annwvyn
 		void initPlayerRoomscalePhysics() const;
 
 		///Return true if the game want to terminate the program
-		bool requestStop() const; //engine
+		bool checkNeedToQuit() const; //engine
 
 		///Refresh all for you
 		bool refresh(); //engine main loop

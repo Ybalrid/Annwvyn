@@ -67,11 +67,11 @@ namespace Annwvyn
 	};
 
 	///Name and number of axes
-	enum MouseAxisId { X,
+	enum MouseAxisID { X,
 					   Y,
 					   Z,
-					   nbAxes,
-					   invalidAxis };
+					   AxisCount,
+					   InvalidAxis };
 
 	///Name and number of mouse button
 	enum MouseButtonId { Left,
@@ -82,8 +82,8 @@ namespace Annwvyn
 						 Button5,
 						 Button6,
 						 Button7,
-						 nbButtons,
-						 invalidButton };
+						 ButtonCount,
+						 InvalidButton };
 
 	///A mouse axis information object
 	class AnnDllExport AnnMouseAxis
@@ -92,7 +92,7 @@ namespace Annwvyn
 		///Construct a mouse axis information object
 		AnnMouseAxis();
 		///Return the id of the axis that object represent
-		MouseAxisId getMouseAxisId() const;
+		MouseAxisID getMouseAxisId() const;
 		///Relative value in arbitrary unit
 		int getRelValue() const;
 		///Absolute value in arbitrary unit
@@ -104,20 +104,20 @@ namespace Annwvyn
 		///Give access to  private fields to the MouseEvent class
 		friend class AnnMouseEvent;
 		///ID of the axis
-		MouseAxisId id;
+		MouseAxisID id;
 		///Relative value
 		int rel;
 		///Absolute value (if applicable)
 		int abs;
 
 		///Set the id of the axis
-		void setAxis(MouseAxisId ax);
+		void setAxis(MouseAxisID ax);
 		///Set the relative value of the axis
 		void setRelValue(int rel);
 		///Set the absolute value of the axis
 		void setAbsValue(int abs);
 		///Private magic one line constructor !!!! ;-)
-		AnnMouseAxis(MouseAxisId ax, int rel, int abs);
+		AnnMouseAxis(MouseAxisID ax, int rel, int abs);
 	};
 
 	///A mouse event information object
@@ -131,11 +131,11 @@ namespace Annwvyn
 
 		///Get given axis data
 		/// \param id Id of the axis
-		AnnMouseAxis getAxis(MouseAxisId id);
+		AnnMouseAxis getAxis(MouseAxisID id);
 
 	private:
-		AnnMouseAxis axes[nbAxes];
-		bool buttonsStatus[nbButtons];
+		AnnMouseAxis axes[AxisCount];
+		bool buttonsStatus[ButtonCount];
 
 		friend class AnnEventManager;
 
@@ -147,25 +147,26 @@ namespace Annwvyn
 		///Set the information about an axis
 		/// \param id Id of a specific axis
 		/// \param information The information object of the given axis
-		void setAxisInformation(MouseAxisId id, AnnMouseAxis information);
+		void setAxisInformation(MouseAxisID id, AnnMouseAxis information);
 	};
 
 	///A joystick event
-	using ButtonId	= int;
-	using StickAxisId = int;
-	using PovId		  = int;
+	using ButtonId		   = int;
+	using ControllerAxisID = int;
+	using PovId			   = int;
+	using ControllerID	 = int;
 
-	static constexpr StickAxisId InvalidStickAxisId = -1;
-	static constexpr float INVALID					= 42.0f;
+	static constexpr ControllerAxisID InvalidStickAxisId = -1;
+	static constexpr float INVALID						 = 42.0f;
 
 	///A joystick axis
-	class AnnDllExport AnnStickAxis
+	class AnnDllExport AnnControllerAxis
 	{
 	public:
 		///This constructor will produce an invalid stick axis object
-		AnnStickAxis();
+		AnnControllerAxis();
 		///Get the ID if this axis
-		StickAxisId getAxisId() const;
+		ControllerAxisID getAxisId() const;
 		///Compute a float number between -1 and 1. if relative value isn't supported by the input, will return INVALID (42)
 		float getRelValue() const;
 		///Compute a float number between -1 and 1
@@ -177,25 +178,25 @@ namespace Annwvyn
 
 		///Raw values
 		int a, r;
-		StickAxisId id;
+		ControllerAxisID id;
 		///Set the ID of the axis
-		void setAxis(StickAxisId ax);
+		void setAxis(ControllerAxisID ax);
 		///Set a relative value
 		void setRelValue(int rel);
 		///Set an absolute value
 		void setAbsValue(int abs);
 		///Real constructor
-		AnnStickAxis(StickAxisId ax, int rel, int abs);
+		AnnControllerAxis(ControllerAxisID ax, int rel, int abs);
 		///True if the there's no "relative" value
 		bool noRel;
 	};
 
 	///Represent a pad's POV controller
-	class AnnDllExport AnnStickPov
+	class AnnDllExport AnnControllerPov
 	{
 	public:
 		///Construct a Pov with no direction pressed
-		AnnStickPov();
+		AnnControllerPov();
 
 		///Get the up (north) state
 		bool getNorth() const;
@@ -232,7 +233,7 @@ namespace Annwvyn
 		friend class AnnControllerEvent;
 
 		///Private constructor used by the event manager. Need a direction integer from OIS
-		AnnStickPov(unsigned int binaryDirection);
+		AnnControllerPov(unsigned int binaryDirection);
 	};
 
 	///A joystick event
@@ -259,17 +260,17 @@ namespace Annwvyn
 		///Return true if this button is currently pressed
 		bool isDown(ButtonId id);
 		///Get the axis object for this ID
-		AnnStickAxis getAxis(StickAxisId ax);
+		AnnControllerAxis getAxis(ControllerAxisID ax);
 		///Get the number of axes the controller has
-		size_t getNbAxis() const;
+		size_t getAxisCount() const;
 		///Get the unique ID given by Annwvyn for this stick
-		unsigned int getStickID() const;
+		ControllerID getControllerID() const;
 		///Get the "vendor string" of this joystick (could be its name)
 		std::string getVendor() const;
 		///Get the number of PoV controller on this one
-		size_t getNbPov() const;
+		size_t getPovCount() const;
 		///Get the PoV corresponding to this ID
-		AnnStickPov getPov(PovId pov);
+		AnnControllerPov getPov(PovId pov);
 
 		///Return true if this event is from an Xbox controller
 		bool isXboxController() const;
@@ -281,9 +282,9 @@ namespace Annwvyn
 		///Button array
 		std::vector<byte> buttons;
 		///Axis array
-		std::vector<AnnStickAxis> axes;
+		std::vector<AnnControllerAxis> axes;
 		///Pov Array
-		std::vector<AnnStickPov> povs;
+		std::vector<AnnControllerPov> povs;
 		///Pressed event "queue"
 		std::vector<unsigned short> pressed;
 		///Released event "queue"
@@ -314,9 +315,9 @@ namespace Annwvyn
 		///Get a reference to the axis object at specified ID
 		AnnHandControllerAxis& getAxis(const uint8_t id) const;
 		///Get the number of axes
-		size_t getNbAxes() const;
+		size_t getAxisCount() const;
 		///Get the number of buttons
-		size_t getNbButton() const;
+		size_t getButtonCount() const;
 		///Has the asked button just been pressed?
 		bool buttonPressed(const uint8_t id) const;
 		///Has the asked button just been released
@@ -335,7 +336,7 @@ namespace Annwvyn
 		AnnHandController* controller;
 	};
 
-	using timerID = int;
+	using AnnTimerID = int;
 
 	///A timer timeout event
 	class AnnDllExport AnnTimeEvent : public AnnEvent
@@ -345,14 +346,14 @@ namespace Annwvyn
 		AnnTimeEvent();
 		AnnTimeEvent(const AnnTimer& timer);
 		///Get the ID of this timer
-		timerID getID() const;
+		AnnTimerID getID() const;
 
 	private:
 		friend class AnnEventManager;
 		///Set the ID of the timer
-		void setTimerID(timerID id);
+		void setTimerID(AnnTimerID id);
 		///Timer ID
-		timerID tID;
+		AnnTimerID tID;
 	};
 
 	class AnnGameObject;
@@ -425,38 +426,38 @@ namespace Annwvyn
 	class AnnDllExport AnnTimer
 	{
 	public:
-		timerID getID() const;
+		AnnTimerID getID() const;
 
 	private:
 		friend class AnnEventManager;
 		///Timer object for the EventMAnager
-		AnnTimer(timerID id, double delay);
+		AnnTimer(AnnTimerID id, double delay);
 		///If timeout
 		bool isTimeout() const;
 		///Timeout ID
-		timerID tID;
+		AnnTimerID tID;
 		///Time of timeout
 		double timeoutTime;
 	};
 
 	///Internal utility class that store joystick information. RAII the oisJoystick object given to constructor
-	class AnnDllExport AnnJoystickBuffer
+	class AnnDllExport AnnControllerBuffer
 	{
 	public:
 		friend class AnnEventManager;
 		///Private constructor for AnnEventManager
 		///Create a Joystick buffer object, increments a static counter of IDs
-		AnnJoystickBuffer(OIS::JoyStick* joystick);
+		AnnControllerBuffer(OIS::JoyStick* joystick);
 		///Make class explicitly non construct-copyable
-		AnnJoystickBuffer(const AnnJoystickBuffer&) = delete;
+		AnnControllerBuffer(const AnnControllerBuffer&) = delete;
 		///Make class explicitly non copyable
-		AnnJoystickBuffer& operator=(const AnnJoystickBuffer&) = delete;
+		AnnControllerBuffer& operator=(const AnnControllerBuffer&) = delete;
 		///Let compiler generate move constructor
-		AnnJoystickBuffer(AnnJoystickBuffer&& buffer) = default;
+		AnnControllerBuffer(AnnControllerBuffer&& buffer) = default;
 		///Let compiler generate move operator
-		AnnJoystickBuffer& operator=(AnnJoystickBuffer&& buffer) = default;
+		AnnControllerBuffer& operator=(AnnControllerBuffer&& buffer) = default;
 		///Delete the OIS stick at destruction time
-		~AnnJoystickBuffer();
+		~AnnControllerBuffer();
 
 		void capture() const;
 

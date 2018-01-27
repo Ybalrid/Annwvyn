@@ -58,7 +58,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 		if(vendor.find("Xbox") != string::npos || vendor.find("XBOX") != string::npos)
 		{
 			knowXbox = true;
-			xboxID   = StickAxisId(oisJoystick->getID());
+			xboxID   = ControllerAxisID(oisJoystick->getID());
 			AnnDebug() << "Detected Xbox controller at ID " << xboxID;
 		}
 	}
@@ -141,7 +141,7 @@ void AnnEventManager::update()
 	processUserSpaceEvents();
 }
 
-unsigned int AnnJoystickBuffer::idcounter = 0;
+unsigned int AnnControllerBuffer::idcounter = 0;
 
 void AnnEventManager::captureEvents()
 {
@@ -176,7 +176,7 @@ void AnnEventManager::processMouseEvents()
 
 	AnnMouseEvent e;
 
-	for(size_t i(0); i < nbButtons; i++)
+	for(size_t i(0); i < ButtonCount; i++)
 		e.setButtonStatus(MouseButtonId(i), state.buttonDown(OIS::MouseButtonID(i)));
 
 	e.setAxisInformation(X, AnnMouseAxis(X, state.X.rel, state.X.abs));
@@ -210,7 +210,7 @@ void AnnEventManager::processJoystickEvents()
 		auto axisID = 0;
 		for(const auto& axis : state.mAxes)
 		{
-			AnnStickAxis annAxis{ axisID++, axis.rel, axis.abs };
+			AnnControllerAxis annAxis{ axisID++, axis.rel, axis.abs };
 			annAxis.noRel = axis.absOnly;
 			stickEvent.axes.push_back(annAxis);
 		}
@@ -277,14 +277,14 @@ void AnnEventManager::processInput()
 	pushEventsToListeners();
 }
 
-timerID AnnEventManager::fireTimerMillisec(double delay)
+AnnTimerID AnnEventManager::fireTimerMillisec(double delay)
 {
 	auto newID = lastTimerCreated++;
 	futureTimers.push_back(AnnTimer(newID, delay));
 	return newID;
 }
 
-timerID AnnEventManager::fireTimer(double delay)
+AnnTimerID AnnEventManager::fireTimer(double delay)
 {
 	return fireTimerMillisec(1000 * delay);
 }
@@ -343,7 +343,7 @@ void AnnEventManager::processCollisionEvents()
 	playerCollisionBuffer.clear();
 }
 
-size_t AnnEventManager::getNbStick() const
+size_t AnnEventManager::getControllerCount() const
 {
 	return Joysticks.size();
 }

@@ -319,7 +319,7 @@ void AnnEngine::writeToLog(std::string message, bool flag)
 }
 
 //Need to be redone.
-bool AnnEngine::requestStop() const
+bool AnnEngine::checkNeedToQuit() const
 {
 	//If the user quit the App from the Oculus Home
 	if(renderer->shouldQuit())
@@ -348,7 +348,7 @@ bool AnnEngine::refresh()
 
 	//Update view
 	renderer->renderAndSubmitFrame();
-	return !requestStop();
+	return !checkNeedToQuit();
 }
 
 void AnnEngine::syncPalyerPov() const

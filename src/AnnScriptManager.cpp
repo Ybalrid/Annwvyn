@@ -244,11 +244,11 @@ void AnnScriptManager::registerApi()
 		chai.add(user_type<AnnTriggerEvent>(), "AnnTriggerEvent");
 		chai.add(user_type<AnnHandControllerEvent>(), "AnnHandControllerEvent");
 		chai.add(user_type<AnnMouseAxis>(), "AnnMouseAxis");
-		chai.add(user_type<MouseAxisId>(), "MouseAxisId");
+		chai.add(user_type<MouseAxisID>(), "MouseAxisID");
 		chai.add(user_type<MouseButtonId>(), "MouseButtonId");
-		chai.add(user_type<AnnStickAxis>(), "AnnStickAxis");
-		chai.add(user_type<AnnStickPov>(), "AnnStickPov");
-		chai.add(user_type<timerID>(), "timerID");
+		chai.add(user_type<AnnControllerAxis>(), "AnnControllerAxis");
+		chai.add(user_type<AnnControllerPov>(), "AnnControllerPov");
+		chai.add(user_type<AnnTimerID>(), "AnnTimerID");
 		chai.add(user_type<AnnCollisionEvent>(), "AnnCollisionEvent");
 		chai.add(user_type<AnnPlayerCollisionEvent>(), "AnnPlayerCollisionEvent");
 
@@ -256,16 +256,16 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](AnnKeyEvent e) { return e.isReleased(); }), "isReleased");
 		chai.add(fun([](AnnKeyEvent e) { return e.getKey(); }), "getKey");
 
-		chai.add(fun([](AnnMouseEvent e, /*MouseAxisId*/ const int a) { return e.getAxis(MouseAxisId(a)); }), "getAxis");
+		chai.add(fun([](AnnMouseEvent e, /*MouseAxisID*/ const int a) { return e.getAxis(MouseAxisID(a)); }), "getAxis");
 		chai.add(fun([](AnnMouseEvent e, /*MouseButtonId*/ const int b) { return e.getButtonState(MouseButtonId(b)); }), "getButtonState");
 		chai.add(fun([](AnnMouseAxis a) { return a.getRelValue(); }), "getRelValue");
 		chai.add(fun([](AnnMouseAxis a) { return a.getAbsValue(); }), "getAbsValue");
 
 		chai.add(fun([](AnnControllerEvent e) { return e.getNbButtons(); }), "getNbButtons");
-		chai.add(fun([](AnnControllerEvent e) { return e.getNbAxis(); }), "getNbAxis");
-		chai.add(fun([](AnnControllerEvent e) { return e.getNbPov(); }), "getNbPov");
+		chai.add(fun([](AnnControllerEvent e) { return e.getAxisCount(); }), "getAxisCount");
+		chai.add(fun([](AnnControllerEvent e) { return e.getPovCount(); }), "getPovCount");
 		chai.add(fun([](AnnControllerEvent e) { return e.getVendor(); }), "getVendor");
-		chai.add(fun([](AnnControllerEvent e) { return e.getStickID(); }), "getStickID");
+		chai.add(fun([](AnnControllerEvent e) { return e.getControllerID(); }), "getControllerID");
 		chai.add(fun([](AnnControllerEvent e) { return e.isXboxController(); }), "isXboxController");
 		chai.add(fun([](AnnControllerEvent e, const int i) { return e.isPressed(i); }), "isPressed");
 		chai.add(fun([](AnnControllerEvent e, const int i) { return e.isReleased(i); }), "isReleased");
@@ -273,18 +273,18 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](AnnControllerEvent e, const int i) { return e.getAxis(i); }), "getAxis");
 		chai.add(fun([](AnnControllerEvent e, const int i) { return e.getPov(i); }), "getPov");
 
-		chai.add(fun([](AnnStickPov pov) { return pov.getNorth(); }), "getNorth");
-		chai.add(fun([](AnnStickPov pov) { return pov.getSouth(); }), "getSouth");
-		chai.add(fun([](AnnStickPov pov) { return pov.getEast(); }), "getEast");
-		chai.add(fun([](AnnStickPov pov) { return pov.getWest(); }), "getWest");
-		chai.add(fun([](AnnStickPov pov) { return pov.getNorthEast(); }), "getNorthEast");
-		chai.add(fun([](AnnStickPov pov) { return pov.getNorthWest(); }), "getNorthWest");
-		chai.add(fun([](AnnStickPov pov) { return pov.getSouthEast(); }), "getSouthEast");
-		chai.add(fun([](AnnStickPov pov) { return pov.getSouthWest(); }), "getSouthWest");
+		chai.add(fun([](AnnControllerPov pov) { return pov.getNorth(); }), "getNorth");
+		chai.add(fun([](AnnControllerPov pov) { return pov.getSouth(); }), "getSouth");
+		chai.add(fun([](AnnControllerPov pov) { return pov.getEast(); }), "getEast");
+		chai.add(fun([](AnnControllerPov pov) { return pov.getWest(); }), "getWest");
+		chai.add(fun([](AnnControllerPov pov) { return pov.getNorthEast(); }), "getNorthEast");
+		chai.add(fun([](AnnControllerPov pov) { return pov.getNorthWest(); }), "getNorthWest");
+		chai.add(fun([](AnnControllerPov pov) { return pov.getSouthEast(); }), "getSouthEast");
+		chai.add(fun([](AnnControllerPov pov) { return pov.getSouthWest(); }), "getSouthWest");
 
-		chai.add(fun([](AnnStickAxis a) { return a.getAxisId(); }), "getAxisId");
-		chai.add(fun([](AnnStickAxis a) { return a.getRelValue(); }), "getRelValue");
-		chai.add(fun([](AnnStickAxis a) { return a.getAbsValue(); }), "getAbsValue");
+		chai.add(fun([](AnnControllerAxis a) { return a.getAxisId(); }), "getAxisId");
+		chai.add(fun([](AnnControllerAxis a) { return a.getRelValue(); }), "getRelValue");
+		chai.add(fun([](AnnControllerAxis a) { return a.getAbsValue(); }), "getAbsValue");
 
 		chai.add(fun([](AnnTimeEvent t) { return t.getID(); }), "getID");
 
@@ -307,8 +307,8 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](AnnHandControllerEvent e) -> Vector3 { return e.getLinearSpeed(); }), "getLinearSpeed");
 		chai.add(fun([](AnnHandControllerEvent e) -> Vector3 { return e.getAngularSpeed(); }), "getAngularSpeed");
 		chai.add(fun([](AnnHandControllerEvent e, const uint8_t id) { return e.getAxis(id); }), "getAxis");
-		chai.add(fun([](AnnHandControllerEvent e) { return e.getNbAxes(); }), "getNbAxes");
-		chai.add(fun([](AnnHandControllerEvent e) { return e.getNbButton(); }), "getNbButton");
+		chai.add(fun([](AnnHandControllerEvent e) { return e.getAxisCount(); }), "getAxisCount");
+		chai.add(fun([](AnnHandControllerEvent e) { return e.getButtonCount(); }), "getButtonCount");
 		chai.add(fun([](AnnHandControllerEvent e, const uint8_t id) { return e.buttonPressed(id); }), "buttonPressed");
 		chai.add(fun([](AnnHandControllerEvent e, const uint8_t id) { return e.buttonReleased(id); }), "buttonReleased");
 		chai.add(fun([](AnnHandControllerEvent e, const uint8_t id) { return e.buttonState(id); }), "buttonState");
@@ -339,7 +339,7 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](const Degree& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 		chai.add(fun([](const AnnColor& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
 		chai.add(fun([](KeyCode::code c) { AnnDebug() << logFromScript << "keycode:" << c; }), "AnnDebugLog");
-		chai.add(fun([](MouseAxisId c) { AnnDebug() << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
+		chai.add(fun([](MouseAxisID c) { AnnDebug() << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
 		chai.add(fun([](bool b) {string s("true"); if (!b) { s = "false"; } AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
 		chai.add(fun([](int i) { AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
 		chai.add(fun([](float f) { AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");

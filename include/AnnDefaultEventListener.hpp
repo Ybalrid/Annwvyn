@@ -68,7 +68,7 @@ namespace Annwvyn
 			   ax_straff,
 			   ax_rotate,
 			   ax_size };
-		StickAxisId axes[ax_size];
+		ControllerAxisID axes[ax_size];
 		///Buttons
 		enum { b_jump,
 			   b_run,

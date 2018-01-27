@@ -66,19 +66,19 @@ bool AnnKeyEvent::shouldIgnore() const
 //---------------------------------------MOUSE
 AnnMouseAxis::AnnMouseAxis()
 {
-	setAxis(invalidAxis);
+	setAxis(InvalidAxis);
 	setRelValue(0);
 	setAbsValue(0);
 }
 
-AnnMouseAxis::AnnMouseAxis(MouseAxisId ax, int rel, int abs)
+AnnMouseAxis::AnnMouseAxis(MouseAxisID ax, int rel, int abs)
 {
 	setAxis(ax);
 	setRelValue(rel);
 	setAbsValue(abs);
 }
 
-void AnnMouseAxis::setAxis(MouseAxisId ax)
+void AnnMouseAxis::setAxis(MouseAxisID ax)
 {
 	id = ax;
 }
@@ -93,7 +93,7 @@ void AnnMouseAxis::setAbsValue(int v)
 	abs = v;
 }
 
-MouseAxisId AnnMouseAxis::getMouseAxisId() const
+MouseAxisID AnnMouseAxis::getMouseAxisId() const
 {
 	return id;
 }
@@ -111,7 +111,7 @@ int AnnMouseAxis::getAbsValue() const
 AnnMouseEvent::AnnMouseEvent() :
  AnnEvent()
 {
-	for(size_t i(0); i < nbButtons; i++)
+	for(size_t i(0); i < ButtonCount; i++)
 		buttonsStatus[i] = false;
 
 	type = USER_INPUT;
@@ -119,37 +119,37 @@ AnnMouseEvent::AnnMouseEvent() :
 
 bool AnnMouseEvent::getButtonState(MouseButtonId id)
 {
-	if(id == invalidButton) return false;
+	if(id == InvalidButton) return false;
 
-	if(int(id) < int(nbButtons))
+	if(int(id) < int(ButtonCount))
 		return buttonsStatus[id];
 
 	return false;
 }
 
-AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisId id)
+AnnMouseAxis AnnMouseEvent::getAxis(MouseAxisID id)
 {
-	if(id == invalidAxis) return AnnMouseAxis(invalidAxis, 0, 0);
+	if(id == InvalidAxis) return AnnMouseAxis(InvalidAxis, 0, 0);
 
-	if(int(id) < int(nbAxes))
+	if(int(id) < int(AxisCount))
 		return axes[id];
 
-	return AnnMouseAxis(invalidAxis, 0, 0);
+	return AnnMouseAxis(InvalidAxis, 0, 0);
 }
 
 void AnnMouseEvent::setButtonStatus(MouseButtonId id, bool value)
 {
-	if(int(id) < int(nbButtons))
+	if(int(id) < int(ButtonCount))
 		buttonsStatus[id] = value;
 }
 
-void AnnMouseEvent::setAxisInformation(MouseAxisId id, AnnMouseAxis information)
+void AnnMouseEvent::setAxisInformation(MouseAxisID id, AnnMouseAxis information)
 {
-	if(int(id) < int(nbAxes))
+	if(int(id) < int(AxisCount))
 		axes[id] = information;
 }
 
-AnnStickAxis::AnnStickAxis()
+AnnControllerAxis::AnnControllerAxis()
 {
 	setAxis(InvalidStickAxisId);
 	setRelValue(0);
@@ -157,46 +157,46 @@ AnnStickAxis::AnnStickAxis()
 	noRel = true;
 }
 
-StickAxisId AnnStickAxis::getAxisId() const
+ControllerAxisID AnnControllerAxis::getAxisId() const
 {
 	return id;
 }
 
-AnnStickAxis::AnnStickAxis(StickAxisId ax, int rel, int abs)
+AnnControllerAxis::AnnControllerAxis(ControllerAxisID ax, int rel, int abs)
 {
 	setAxis(ax);
 	setRelValue(rel);
 	setAbsValue(abs);
 }
 
-void AnnStickAxis::setRelValue(int rel)
+void AnnControllerAxis::setRelValue(int rel)
 {
 	r	 = rel;
 	noRel = false;
 }
 
-void AnnStickAxis::setAbsValue(int abs)
+void AnnControllerAxis::setAbsValue(int abs)
 {
 	a = abs;
 }
 
-void AnnStickAxis::setAxis(StickAxisId ax)
+void AnnControllerAxis::setAxis(ControllerAxisID ax)
 {
 	id = ax;
 }
 
-float AnnStickAxis::getRelValue() const
+float AnnControllerAxis::getRelValue() const
 {
 	if(noRel) return INVALID;
 	return float(r) / float(OIS::JoyStick::MAX_AXIS);
 }
 
-float AnnStickAxis::getAbsValue() const
+float AnnControllerAxis::getAbsValue() const
 {
 	return float(a) / float(OIS::JoyStick::MAX_AXIS);
 }
 
-AnnStickPov::AnnStickPov() :
+AnnControllerPov::AnnControllerPov() :
  north(false),
  south(false),
  east(false),
@@ -204,52 +204,52 @@ AnnStickPov::AnnStickPov() :
 {
 }
 
-bool AnnStickPov::getNorth() const
+bool AnnControllerPov::getNorth() const
 {
 	return north;
 }
 
-bool AnnStickPov::getSouth() const
+bool AnnControllerPov::getSouth() const
 {
 	return south;
 }
 
-bool AnnStickPov::getEast() const
+bool AnnControllerPov::getEast() const
 {
 	return east;
 }
 
-bool AnnStickPov::getWest() const
+bool AnnControllerPov::getWest() const
 {
 	return west;
 }
 
-bool AnnStickPov::getNorthEast() const
+bool AnnControllerPov::getNorthEast() const
 {
 	return north && east;
 }
 
-bool AnnStickPov::getSouthEast() const
+bool AnnControllerPov::getSouthEast() const
 {
 	return south && east;
 }
 
-bool AnnStickPov::getNorthWest() const
+bool AnnControllerPov::getNorthWest() const
 {
 	return north && west;
 }
 
-bool AnnStickPov::getSouthWest() const
+bool AnnControllerPov::getSouthWest() const
 {
 	return south && west;
 }
 
-bool AnnStickPov::isCentred() const
+bool AnnControllerPov::isCentred() const
 {
 	return !(north || south || east || west);
 }
 
-AnnStickPov::AnnStickPov(unsigned int binaryDirection) :
+AnnControllerPov::AnnControllerPov(unsigned int binaryDirection) :
  north(false),
  south(false),
  east(false),
@@ -309,7 +309,7 @@ AnnControllerEvent::AnnControllerEvent() :
 
 AnnControllerEvent::~AnnControllerEvent() {}
 
-unsigned int AnnControllerEvent::getStickID() const
+ControllerID AnnControllerEvent::getControllerID() const
 {
 	return stickID;
 }
@@ -335,12 +335,12 @@ std::vector<unsigned short> AnnControllerEvent::getReleased() const
 	return released;
 }
 
-AnnStickAxis AnnControllerEvent::getAxis(StickAxisId ax)
+AnnControllerAxis AnnControllerEvent::getAxis(ControllerAxisID ax)
 {
 	return axes[ax];
 }
 
-size_t AnnControllerEvent::getNbAxis() const
+size_t AnnControllerEvent::getAxisCount() const
 {
 	return axes.size();
 }
@@ -370,11 +370,11 @@ std::string AnnControllerEvent::getVendor() const
 	return vendor;
 }
 
-AnnStickPov AnnControllerEvent::getPov(PovId pov)
+AnnControllerPov AnnControllerEvent::getPov(PovId pov)
 {
-	if(pov < getNbPov())
+	if(pov < getPovCount())
 		return povs[pov];
-	AnnStickPov p;
+	AnnControllerPov p;
 	return p;
 }
 
@@ -383,7 +383,7 @@ bool AnnControllerEvent::isXboxController() const
 	return xbox;
 }
 
-size_t AnnControllerEvent::getNbPov() const
+size_t AnnControllerEvent::getPovCount() const
 {
 	return povs.size();
 }
@@ -395,7 +395,7 @@ AnnTimeEvent::AnnTimeEvent() :
 	tID  = -1;
 }
 
-void AnnTimeEvent::setTimerID(timerID id)
+void AnnTimeEvent::setTimerID(AnnTimerID id)
 {
 	tID = id;
 }
@@ -463,12 +463,12 @@ AnnGameObject* AnnPlayerCollisionEvent::getObject() const
 	return col;
 }
 
-timerID AnnTimeEvent::getID() const
+AnnTimerID AnnTimeEvent::getID() const
 {
 	return tID;
 }
 
-AnnTimer::AnnTimer(timerID id, double delay)
+AnnTimer::AnnTimer(AnnTimerID id, double delay)
 {
 	tID			= id;
 	timeoutTime = delay + AnnGetEngine()->getTimeFromStartUp();
@@ -481,19 +481,19 @@ bool AnnTimer::isTimeout() const
 	return false;
 }
 
-AnnJoystickBuffer::AnnJoystickBuffer(OIS::JoyStick* joystick) :
+AnnControllerBuffer::AnnControllerBuffer(OIS::JoyStick* joystick) :
  oisJoystick(joystick)
 {
 	id = idcounter++;
 }
 
-AnnJoystickBuffer::~AnnJoystickBuffer()
+AnnControllerBuffer::~AnnControllerBuffer()
 {
 	AnnDebug() << "Deleted iosJoystick";
 	delete oisJoystick;
 }
 
-void AnnJoystickBuffer::capture() const
+void AnnControllerBuffer::capture() const
 {
 	oisJoystick->capture();
 }
@@ -541,7 +541,7 @@ AnnTimeEvent::AnnTimeEvent(const AnnTimer& timer) :
 	type = TIMER_TIMEOUT;
 }
 
-timerID AnnTimer::getID() const
+AnnTimerID AnnTimer::getID() const
 {
 	return tID;
 }
@@ -576,12 +576,12 @@ AnnHandControllerAxis& AnnHandControllerEvent::getAxis(const uint8_t id) const
 	return controller->getAxis(id);
 }
 
-size_t AnnHandControllerEvent::getNbAxes() const
+size_t AnnHandControllerEvent::getAxisCount() const
 {
 	return controller->getNbAxes();
 }
 
-size_t AnnHandControllerEvent::getNbButton() const
+size_t AnnHandControllerEvent::getButtonCount() const
 {
 	return controller->getNbButton();
 }

@@ -54,7 +54,7 @@ namespace Annwvyn
 
 		///ScriptFunction: Log a mouse axis
 		/// \param a Axis
-		void AnnDebugLog(MouseAxisId a);
+		void AnnDebugLog(MouseAxisID a);
 
 		///ScriptFunction: log a boolean
 		/// \param b bool to log
@@ -129,7 +129,7 @@ namespace Annwvyn
 		{
 		public:
 			///Axis of the mouse 0 is horizontal, 1 is vertical and 2 is scrolling
-			AnnStickAxis getAxis(const int id);
+			AnnControllerAxis getAxis(const int id);
 
 			///State of a button, left, right, middle, and others, maybe...
 			bool getButtonState(const int id);
@@ -178,10 +178,10 @@ namespace Annwvyn
 			bool isDown(const int i);
 
 			///Get the wanted axis
-			AnnStickAxis getAxis(const int i);
+			AnnControllerAxis getAxis(const int i);
 
 			///Get the wanted pov
-			AnnStickPov getPov(const int i);
+			AnnControllerPov getPov(const int i);
 		};
 
 		///state of a PoV from a controller
@@ -211,7 +211,7 @@ namespace Annwvyn
 		{
 		public:
 			///Get the ID of the timer that timeouted
-			timerID getID();
+			AnnTimerID getID();
 		};
 
 		///A color

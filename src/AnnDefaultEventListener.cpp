@@ -81,6 +81,9 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 		//Jumping is a function call because it's an action and not a "state" the player has.
 		if(e.isPressed() && e.getKey() == recenter)
 			AnnGetVRRenderer()->recenter();
+
+		if(e.isPressed() && e.getKey() == KeyCode::escape)
+			AnnGetEngine()->requestQuit();
 	}
 	if(e.isPressed()) switch(e.getKey())
 		{
@@ -111,7 +114,7 @@ void AnnDefaultEventListener::KeyEvent(AnnKeyEvent e)
 // Z : Scroll wheel movement, scroll up is positive, in "line" increments
 void AnnDefaultEventListener::MouseEvent(AnnMouseEvent e)
 {
-	player->applyMouseRelativeRotation(e.getAxis(MouseAxisId(X)).getRelValue());
+	player->applyMouseRelativeRotation(e.getAxis(MouseAxisID(X)).getRelValue());
 }
 
 //The stick event contain all the data for a specific joystick. In includes buttons current states, press and release events, stick relative and absolute values
@@ -119,7 +122,7 @@ void AnnDefaultEventListener::ControllerEvent(AnnControllerEvent e)
 {
 	if(AnnGetVRRenderer()->shouldPauseFlag()) return;
 	if(!e.isXboxController()) return;
-	if(e.getNbAxis() >= 4) //If we have 2 analog stick (or equivalent) available
+	if(e.getAxisCount() >= 4) //If we have 2 analog stick (or equivalent) available
 	{
 		player->analogWalk   = trim(e.getAxis(axes[ax_walk]).getAbsValue(), deadzone);
 		player->analogStraff = trim(e.getAxis(axes[ax_straff]).getAbsValue(), deadzone);

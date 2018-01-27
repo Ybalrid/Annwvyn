@@ -74,7 +74,7 @@ public:
 	}
 
 private:
-	timerID waitFor;
+	AnnTimerID waitFor;
 	AnnGameObject* rotator;
 	const std::array<float, 4> angles{ 0, 90, 180, -90 };
 };
