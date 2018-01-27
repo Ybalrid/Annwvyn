@@ -16,106 +16,6 @@ using std::string;
 using std::to_string;
 using std::unique_ptr;
 
-AnnEventListener::AnnEventListener() :
- player(AnnGetPlayer().get())
-{
-}
-
-float AnnEventListener::trim(float v, float dz)
-{
-	//The test is done on the abs value. Return the actual value, or 0 if under the dead-zone
-	if(abs(v) >= dz) return v;
-	return 0.0f;
-}
-
-shared_ptr<AnnEventListener> AnnEventListener::getSharedListener()
-{
-	return shared_from_this();
-}
-
-AnnTextInputer::AnnTextInputer() :
- listen(false),
- asciiOnly{ true },
- cursorOffset{ 0 }
-{
-}
-
-bool AnnTextInputer::keyPressed(const OIS::KeyEvent& arg)
-{
-	if(!listen) return true;
-
-	//Handle backspace
-	if(arg.key == OIS::KC_BACK && !input.empty())
-	{
-		if(cursorOffset > input.size()) cursorOffset = int(input.size());
-		input.erase(end(input) - min(int(input.size()), 1 + cursorOffset));
-	}
-
-	//Text
-	else if((arg.text < 0x7F && arg.text > 0x1F) || !asciiOnly)
-	{
-		//Put typed char into the application
-		input.insert(max(0, int(input.size()) - int(cursorOffset)), 1, char(arg.text));
-	}
-
-	//Return key
-	else if(arg.text == '\r')
-	{
-		input.push_back('\r');
-	}
-
-	//Arrow Keys
-	else if(arg.key == OIS::KC_UP || arg.key == OIS::KC_DOWN || arg.key == OIS::KC_LEFT || arg.key == OIS::KC_RIGHT)
-	{
-		AnnGetOnScreenConsole()->notifyNavigationKey(KeyCode::code(arg.key));
-	}
-	return true;
-}
-
-bool AnnTextInputer::keyReleased(const OIS::KeyEvent& arg)
-{
-	return true;
-}
-
-string AnnTextInputer::getInput() const
-{
-	return input;
-}
-
-void AnnTextInputer::clearInput()
-{
-	input.clear();
-	cursorOffset = 0;
-}
-
-void AnnTextInputer::startListening()
-{
-	clearInput();
-	listen = true;
-}
-
-void AnnTextInputer::stopListening()
-{
-	listen = false;
-}
-
-void AnnTextInputer::setInput(const string& content)
-{
-	input		 = content;
-	cursorOffset = 0;
-}
-
-void AnnTextInputer::setCursorOffset(int newPos)
-{
-	if(newPos >= 0)
-		cursorOffset = newPos;
-}
-
-int AnnTextInputer::getCursorOffset() const
-{
-	return cursorOffset;
-}
-
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
  AnnSubSystem("EventManager"),
  Keyboard(nullptr),
@@ -158,7 +58,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 		if(vendor.find("Xbox") != string::npos || vendor.find("XBOX") != string::npos)
 		{
 			knowXbox = true;
-			xboxID   = StickAxisId(oisJoystick->getID());
+			xboxID   = ControllerAxisID(oisJoystick->getID());
 			AnnDebug() << "Detected Xbox controller at ID " << xboxID;
 		}
 	}
@@ -219,7 +119,8 @@ void AnnEventManager::clearListenerList()
 void AnnEventManager::removeListener(AnnEventListenerPtr l)
 {
 	AnnDebug() << "Removing an event listener : " << l.get();
-	if(l == nullptr) {
+	if(l == nullptr)
+	{
 		clearListenerList();
 		return;
 	}
@@ -240,7 +141,7 @@ void AnnEventManager::update()
 	processUserSpaceEvents();
 }
 
-unsigned int JoystickBuffer::idcounter = 0;
+unsigned int AnnControllerBuffer::idcounter = 0;
 
 void AnnEventManager::captureEvents()
 {
@@ -254,9 +155,8 @@ void AnnEventManager::captureEvents()
 
 void AnnEventManager::processKeyboardEvents()
 {
-	//for each key of the keyboard
+	//for each key of the keyboard, if state changed:
 	for(size_t c(0); c < KeyCode::SIZE; c++)
-	{
 		if(Keyboard->isKeyDown(OIS::KeyCode(c)) != previousKeyStates[c])
 		{
 			//create a corresponding key event
@@ -265,9 +165,9 @@ void AnnEventManager::processKeyboardEvents()
 			e.ignored																	  = keyboardIgnore;
 			bool(previousKeyStates[c] = Keyboard->isKeyDown(OIS::KeyCode(c))) ? e.pressed = true : e.pressed = false;
 
+			//Add to buffer
 			keyEventBuffer.push_back(e);
 		}
-	}
 }
 
 void AnnEventManager::processMouseEvents()
@@ -276,7 +176,7 @@ void AnnEventManager::processMouseEvents()
 
 	AnnMouseEvent e;
 
-	for(size_t i(0); i < nbButtons; i++)
+	for(size_t i(0); i < ButtonCount; i++)
 		e.setButtonStatus(MouseButtonId(i), state.buttonDown(OIS::MouseButtonID(i)));
 
 	e.setAxisInformation(X, AnnMouseAxis(X, state.X.rel, state.X.abs));
@@ -291,7 +191,7 @@ void AnnEventManager::processJoystickEvents()
 	for(auto& Joystick : Joysticks)
 	{
 		const auto& state(Joystick.oisJoystick->getJoyStickState());
-		AnnStickEvent stickEvent;
+		AnnControllerEvent stickEvent;
 		stickEvent.vendor  = Joystick.oisJoystick->vendor();
 		stickEvent.stickID = Joystick.getID();
 
@@ -310,12 +210,12 @@ void AnnEventManager::processJoystickEvents()
 		auto axisID = 0;
 		for(const auto& axis : state.mAxes)
 		{
-			AnnStickAxis annAxis{ axisID++, axis.rel, axis.abs };
+			AnnControllerAxis annAxis{ axisID++, axis.rel, axis.abs };
 			annAxis.noRel = axis.absOnly;
 			stickEvent.axes.push_back(annAxis);
 		}
 
-		//The joystick state object always have 4 Pov but the AnnStickEvent has the number of Pov the stick has
+		//The joystick state object always have 4 Pov but the AnnControllerEvent has the number of Pov the stick has
 		const auto nbPov = size_t(Joystick.oisJoystick->getNumberOfComponents(OIS::ComponentType::OIS_POV));
 		for(auto i(0u); i < nbPov; i++)
 			stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
@@ -355,7 +255,7 @@ void AnnEventManager::pushEventsToListeners()
 		{
 			for(auto& e : keyEventBuffer) listener->KeyEvent(e);
 			for(auto& e : mouseEventBuffer) listener->MouseEvent(e);
-			for(auto& e : stickEventBuffer) listener->StickEvent(e);
+			for(auto& e : stickEventBuffer) listener->ControllerEvent(e);
 			for(auto& e : handControllerEventBuffer) listener->HandControllerEvent(e);
 
 			listener->tick();
@@ -377,14 +277,14 @@ void AnnEventManager::processInput()
 	pushEventsToListeners();
 }
 
-timerID AnnEventManager::fireTimerMillisec(double delay)
+AnnTimerID AnnEventManager::fireTimerMillisec(double delay)
 {
 	auto newID = lastTimerCreated++;
 	futureTimers.push_back(AnnTimer(newID, delay));
 	return newID;
 }
 
-timerID AnnEventManager::fireTimer(double delay)
+AnnTimerID AnnEventManager::fireTimer(double delay)
 {
 	return fireTimerMillisec(1000 * delay);
 }
@@ -443,13 +343,9 @@ void AnnEventManager::processCollisionEvents()
 	playerCollisionBuffer.clear();
 }
 
-size_t AnnEventManager::getNbStick() const
+size_t AnnEventManager::getControllerCount() const
 {
 	return Joysticks.size();
-}
-
-AnnEventListener::~AnnEventListener()
-{
 }
 
 void AnnEventManager::detectedCollision(void* a, void* b, AnnVect3 position, AnnVect3 normal)

@@ -17,7 +17,7 @@ namespace Annwvyn
 			 id(-1), state(state) {}
 
 			//Save the ID we will await for
-			void setID(timerID newID) { id = newID; }
+			void setID(AnnTimerID newID) { id = newID; }
 
 			//If we ever get a time event that correspond to the timer we want, set to true
 			void TimeEvent(AnnTimeEvent e) override
@@ -27,7 +27,7 @@ namespace Annwvyn
 
 		private:
 			//timer we check
-			timerID id;
+			AnnTimerID id;
 			//outside owned boolean
 			bool& state;
 		};

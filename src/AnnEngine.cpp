@@ -319,15 +319,11 @@ void AnnEngine::writeToLog(std::string message, bool flag)
 }
 
 //Need to be redone.
-bool AnnEngine::requestStop() const
+bool AnnEngine::checkNeedToQuit() const
 {
-	//pres ESC to quit. Stupid but efficient. I like that.
-	if(eventManager->Keyboard->isKeyDown(OIS::KeyCode(KeyCode::escape)))
-		return true;
 	//If the user quit the App from the Oculus Home
 	if(renderer->shouldQuit())
 		return true;
-
 	if(applicationQuitRequested)
 		return true;
 
@@ -352,7 +348,7 @@ bool AnnEngine::refresh()
 
 	//Update view
 	renderer->renderAndSubmitFrame();
-	return !requestStop();
+	return !checkNeedToQuit();
 }
 
 void AnnEngine::syncPalyerPov() const

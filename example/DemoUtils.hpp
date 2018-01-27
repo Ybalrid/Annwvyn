@@ -20,7 +20,7 @@ public:
 			jumpToHub();
 	}
 
-	void StickEvent(AnnStickEvent e) override
+	void ControllerEvent(AnnControllerEvent e) override
 	{
 		if(e.isXboxController() && e.isPressed(8))
 			jumpToHub();

@@ -25,7 +25,7 @@ namespace Annwvyn
 		///Get events from the mouse
 		void MouseEvent(AnnMouseEvent e) override;
 		///Get events from the joystick
-		void StickEvent(AnnStickEvent e) override;
+		void ControllerEvent(AnnControllerEvent e) override;
 		static void reclampDegreeToPositiveRange(float& degree);
 		///Get events from an hand controller
 		void HandControllerEvent(AnnHandControllerEvent e) override;
@@ -68,7 +68,7 @@ namespace Annwvyn
 			   ax_straff,
 			   ax_rotate,
 			   ax_size };
-		StickAxisId axes[ax_size];
+		ControllerAxisID axes[ax_size];
 		///Buttons
 		enum { b_jump,
 			   b_run,
