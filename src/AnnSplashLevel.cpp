@@ -94,7 +94,11 @@ Ogre::HlmsUnlitDatablock* AnnSplashLevel::createSplashDatablock(Ogre::HlmsUnlit*
 	macroblock.mDepthCheck		   = false;
 	macroblock.mDepthWrite		   = false;
 	macroblock.mScissorTestEnabled = false;
-	return static_cast<Ogre::HlmsUnlitDatablock*>(unlit->createDatablock("Splash", "Splash", macroblock, blendblock, Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->getDefaultResourceGroupName()));
+
+	auto block = static_cast<Ogre::HlmsUnlitDatablock*>(unlit->createDatablock("Splash", "Splash", macroblock, blendblock, Ogre::HlmsParamVec(), true, Ogre::BLANKSTRING, AnnGetResourceManager()->getDefaultResourceGroupName()));
+	block->setUseColour(true);
+
+	return block;
 }
 
 void AnnSplashLevel::load()
@@ -126,7 +130,7 @@ void AnnSplashLevel::load()
 	if(!texture) throw AnnInitializationError(ANN_ERR_NOTINIT, "Texture not found for splash " + splashImageName);
 
 	//Set datablock parameters
-	splashDatablock->setColour(Ogre::ColourValue::White * 97);
+	splashDatablock->setColour(Ogre::ColourValue::White * 1);
 	splashDatablock->setTexture(Ogre::HlmsTextureManager::TEXTURE_TYPE_DIFFUSE, 0, texture);
 
 	createSplashCurvedPlane();
