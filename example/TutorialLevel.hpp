@@ -15,7 +15,7 @@ protected:
 	{
 		goBackListener = AnnGetEventManager()->addListener<GoBackToDemoHub>();
 		auto floor	 = addGameObject("floorplane.mesh");
-		floor->setUpPhysics();
+		floor->setupPhysics();
 
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);

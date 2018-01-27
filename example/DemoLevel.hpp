@@ -32,7 +32,7 @@ public:
 		auto stone = addGameObject("DemoStone.mesh");
 		stone->setPosition(position);
 		stone->setOrientation(orientation);
-		stone->setUpPhysics();
+		stone->setupPhysics();
 
 		auto textpane = std::make_shared<Ann3DTextPlane>(2.f, 1.f, text, 512, panelDpi, "PannelFont");
 		textpane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
@@ -66,7 +66,7 @@ public:
 		rotating = pbrTest.get();
 
 		auto Ground = addGameObject("floorplane.mesh");
-		Ground->setUpPhysics();
+		Ground->setupPhysics();
 
 		AnnGetPlayer()->regroundOnPhysicsBody();
 
@@ -163,11 +163,11 @@ public:
 	{
 		goBackListener = AnnGetEventManager()->addListener<GoBackToDemoHub>();
 		auto Ground	= addGameObject("floorplane.mesh");
-		Ground->setUpPhysics();
+		Ground->setupPhysics();
 
 		auto MyObject = addGameObject("MyObject.mesh", "MyObject");
 		MyObject->setPosition({ 0, 1, -5 });
-		MyObject->setUpPhysics(200, convexShape);
+		MyObject->setupPhysics(200, convexShape);
 
 		auto objectQueryFromNode = AnnGetGameObjectManager()->getFromNode(MyObject->getNode());
 

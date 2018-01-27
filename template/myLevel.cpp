@@ -17,12 +17,12 @@ void MyLevel::load()
 
 	//Setting a non-null mass and a non static geometric primitive make this object
 	//a dynamic physics object (it can move if forces are applied upon him)
-	Sinbad->setUpPhysics(250, boxShape);
+	Sinbad->setupPhysics(250, boxShape);
 
 	//Load Ground:
 	auto Ground(addGameObject("floorplane.mesh"));
 	Ground->setPosition({ 0, 0, 0 });
-	Ground->setUpPhysics();
+	Ground->setupPhysics();
 	AnnGetPlayer()->regroundOnPhysicsBody();
 
 	//Create a light source

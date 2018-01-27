@@ -9,7 +9,9 @@
 using namespace Annwvyn;
 
 AnnGameObject::AnnGameObject() :
- sceneNode(nullptr), model3D(nullptr), currentAnimation(nullptr),
+ sceneNode(nullptr),
+ model3D(nullptr),
+ currentAnimation(nullptr),
  collisionShape(nullptr),
  rigidBody(nullptr),
  bodyMass(0),
@@ -201,7 +203,7 @@ void AnnGameObject::setNode(Ogre::SceneNode* newNode)
 	sceneNode = newNode;
 }
 
-void AnnGameObject::setUpPhysics(float mass, phyShapeType type, bool colideWithPlayer)
+void AnnGameObject::setupPhysics(float mass, phyShapeType type, bool colideWithPlayer)
 {
 	//Some sanity checks
 	if(checkForBodyInParent()) throw AnnPhysicsSetupParentError(this);

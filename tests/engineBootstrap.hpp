@@ -23,7 +23,7 @@ namespace Annwvyn
 
 		//Fixed object in space : the floor
 		auto floor = AnnGetGameObjectManager()->createGameObject("floorplane.mesh", "_internal_test_floor");
-		floor->setUpPhysics();
+		floor->setupPhysics();
 		REQUIRE(floor);
 		REQUIRE(floor->getBody());
 

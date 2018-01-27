@@ -41,7 +41,7 @@ public:
 		auto MyObject = addGameObject("MyObject.mesh");
 		MyObject->setPosition(5, 1, 0); //We put it 5 meters to the right, and 1 meter up...
 		//MyObject->setUpPhysics();					// <---- This activate the physics for the object as static geometry
-		MyObject->setUpPhysics(100, convexShape); // <---- This activate the physics as a dynamic object. We need to tell the shape approximation to use. and a mass in Kg
+		MyObject->setupPhysics(100, convexShape); // <---- This activate the physics as a dynamic object. We need to tell the shape approximation to use. and a mass in Kg
 		MyObject->attachScript("DummyBehavior2");
 		//The shape approximation is put at the Object CENTER POINT. The CENTER POINT should be at the object's bounding box CENTER before exporting from blender.
 		MyObject->setFrictionCoef(0.84f);
@@ -67,7 +67,7 @@ public:
 		levelContent.push_back(S);
 		S->playSound("monster.wav", true, 1);
 		S->attachScript("DummyBehavior");
-		S->setUpPhysics(10, boxShape);
+		S->setupPhysics(10, boxShape);
 		S->setFrictionCoef(0.75f);
 
 		//Add water
@@ -75,13 +75,13 @@ public:
 
 		//Add the island
 		auto Island = addGameObject("environment/Island.mesh");
-		Island->setUpPhysics();
+		Island->setupPhysics();
 		Island->setFrictionCoef(0.75);
 
 		//Add the sign
 		auto Sign(addGameObject("environment/Sign.mesh"));
 		Sign->setPosition(1, -0.15, -2);
-		Sign->setUpPhysics(0, staticShape);
+		Sign->setupPhysics(0, staticShape);
 		Sign->setOrientation(Ogre::Quaternion(Ogre::Degree(-45), Ogre::Vector3::UNIT_Y));
 
 		//Put some music here

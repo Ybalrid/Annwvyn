@@ -118,9 +118,8 @@ void AnnXmlLevel::load()
 
 			std::shared_ptr<AnnGameObject> constructedGameObject;
 			if(!ID.empty() && !entityName.empty()) constructedGameObject = addGameObject(entityName, ID);
-			if(!constructedGameObject) throw AnnLevelLoadingError(xmlFilePath, entityName + " game object"),
-
-									   gameObjectData = gameObject->FirstChildElement("Position");
+			if(!constructedGameObject) throw AnnLevelLoadingError(xmlFilePath, entityName + " game object");
+			gameObjectData = gameObject->FirstChildElement("Position");
 			if(gameObjectData)
 			{
 				gameObjectData->QueryFloatAttribute("X", &x);
@@ -168,7 +167,7 @@ void AnnXmlLevel::load()
 			if(!phyInfo) continue;
 			std::string shape = phyInfo->GetText();
 			if(shape == "static") mass = 0; //this case is weird. Static stuff have always been static, even with mass. Need to see if bullet has changed stuff
-			constructedGameObject->setUpPhysics(mass, getShapeTypeFromString(shape));
+			constructedGameObject->setupPhysics(mass, getShapeTypeFromString(shape));
 
 			levelContent.push_back(constructedGameObject);
 		} while((gameObject = gameObject->NextSiblingElement()) != nullptr);

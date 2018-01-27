@@ -101,7 +101,7 @@ namespace Annwvyn
 		auto sinbad = AnnGetGameObjectManager()->createGameObject("Sinbad.mesh", "Sinbad");
 		sinbad->setScale(AnnVect3::UNIT_SCALE / 2.0f);
 		sinbad->setPosition(-8, 5, 1);
-		sinbad->setUpPhysics(100, boxShape);
+		sinbad->setupPhysics(100, boxShape);
 		REQUIRE(sinbad);
 		REQUIRE(sinbad->getBody());
 		REQUIRE(sinbad->getPosition().y > 0);

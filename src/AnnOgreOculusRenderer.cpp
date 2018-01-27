@@ -4,9 +4,7 @@
 #ifdef _WIN32
 
 #include <string>
-
 #include "AnnOgreOculusRenderer.hpp"
-
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
 #include "AnnException.hpp"
@@ -20,28 +18,35 @@ AnnOgreOculusRenderer* AnnOgreOculusRenderer::oculusSelf{ nullptr };
 
 AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) :
  AnnOgreVRRenderer(winName),
+ texSizeL{ 0, 0 },
+ texSizeR{ 0, 0 },
  currentFrameDisplayTime{ 0 },
+ eyeRenderDescArray{},
+ hmdSize{ 0, 0 },
  mirrorTexture{ nullptr },
  oculusMirrorTextureGLID{ 0 },
  ogreMirrorTextureGLID{ 0 },
  oculusRenderTextureCombinedGLID{ 0 },
  ogreRenderTextureCombinedGLID{ 0 },
+ oculusRenderTexturesSeparatedGLID{ 0 },
+ ogreRenderTexturesSeparatedGLID{ 0 },
+ layer{},
  textureCombinedSwapChain{ nullptr },
+ eyeToHmdPoseOffset{ { { 0, 0 }, { 0, 0 } } },
+ pose{},
+ handPoses{},
+ inputState{},
+ ts{},
  layers{ nullptr },
+ sessionStatus{},
  perfHudMode{ ovrPerfHud_Off },
  currentCombinedIndex{ 0 },
+ currentSeparatedIndex{ { 0, 0 } },
  currentSessionStatusFrameIndex{ 0 },
  debugSmgr{ nullptr },
  debugCam{ nullptr },
  debugCamNode{ nullptr },
- debugPlaneNode{ nullptr },
- texSizeL{},
- texSizeR{},
- eyeRenderDescArray{},
- hmdSize{},
- oculusRenderTexturesSeparatedGLID{ 0 },
- ogreRenderTexturesSeparatedGLID{ 0 }
-
+ debugPlaneNode{ nullptr }
 {
 	rendererName = "OpenGL/Oculus";
 	oculusSelf   = static_cast<AnnOgreOculusRenderer*>(self);
@@ -329,12 +334,9 @@ void AnnOgreOculusRenderer::showDebug(DebugMode mode)
 {
 	switch(mode)
 	{
-		case RAW_BUFFER:
-			return showRawView();
-		case HMD_MIRROR:
-			return showMirrorView();
-		case MONOSCOPIC:
-			return showMonscopicView();
+		case RAW_BUFFER: return showRawView();
+		case HMD_MIRROR: return showMirrorView();
+		case MONOSCOPIC: return showMonscopicView();
 		default: break;
 	}
 }
@@ -388,17 +390,13 @@ void AnnOgreOculusRenderer::getTrackingPoseAndVRTiming()
 void AnnOgreOculusRenderer::renderAndSubmitFrame()
 {
 	handleWindowMessages();
-
 	hideHands = !getSessionStatus().HasInputFocus;
 
 	if(!getSessionStatus().IsVisible)
 	{
 		pauseFlag = true;
-		//Still render to the normal window
-		//root->renderOneFrame();
 		return;
 	}
-
 	pauseFlag = false;
 
 	ovr_WaitToBeginFrame(oculusInterface->getSession(), frameCounter);

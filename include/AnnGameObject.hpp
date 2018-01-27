@@ -7,14 +7,12 @@
 #pragma once
 
 #include "systemMacro.h"
-
 #include <string>
+#include <BtOgrePG.h>
 
 //Annwvyn
 #include "AnnTypes.h"
 #include "AnnAbstractMovable.hpp"
-
-#include <BtOgrePG.h>
 #pragma warning(default : 4996)
 
 namespace Annwvyn
@@ -47,9 +45,13 @@ namespace Annwvyn
 		void setPosition(AnnVect3 pos) override;
 
 		///Set the world position from a vector
+		/// \param pos 3D position vector. Relative to scene root position
 		void setWorldPosition(AnnVect3 pos) const;
 
 		///Set the world position from a few floats
+		/// \param x X component of the position vector
+		/// \param y Y component of the position vector
+		/// \param z Z component of the position vector
 		void setWorldPosition(float x, float y, float z) const;
 
 		///Translate
@@ -59,10 +61,10 @@ namespace Annwvyn
 		void translate(float x, float y, float z) const;
 
 		///Set orientation from Quaternion components
-		/// \param w W component of a quaternion
-		/// \param x X component of a quaternion
-		/// \param y Y component of a quaternion
-		/// \param z Z component of a quaternion
+		/// \param w W component of the quaternion
+		/// \param x X component of the quaternion
+		/// \param y Y component of the quaternion
+		/// \param z Z component of the quaternion
 		void setOrientation(float w, float x, float y, float z);
 
 		///Set Orientation from Quaternion
@@ -70,9 +72,14 @@ namespace Annwvyn
 		void setOrientation(AnnQuaternion orient) override;
 
 		///Set the world orientation as a quaternion
+		/// \param orient Quaternion for absolute orientation
 		void setWorldOrientation(AnnQuaternion orient) const;
 
 		///Set the world orientation as some floats
+		/// \param w W component of the quaternion
+		/// \param x X component of the quaternion
+		/// \param y Y component of the quaternion
+		/// \param z Z component of the quaternion
 		void setWorldOrientation(float w, float x, float y, float z) const;
 
 		///Set scale
@@ -83,6 +90,7 @@ namespace Annwvyn
 
 		///Set scale from Vector 3D
 		/// \param scale Relative scaling factor
+		/// \param scaleMass will adjust the mass accoring to the scaling vector. true by default
 		void setScale(AnnVect3 scale, bool scaleMass = true) const;
 
 		///Get Position
@@ -132,6 +140,7 @@ namespace Annwvyn
 		void loopAnimation(bool loop = true) const;
 
 		///Apply a physical force
+		/// \param force Force vector that will be applied to the center of mass of the object
 		void applyForce(AnnVect3 force) const;
 
 		///Apply a physical impulsion
@@ -144,12 +153,13 @@ namespace Annwvyn
 
 		///Set the friction coefficient
 		///See the "Results" table from this page : https://www.thoughtspike.com/friction-coefficients-for-bullet-physics/
+		/// \param coef friction coef applied to this object's body
 		void setFrictionCoef(float coef) const;
 
 		///Set up Physics
 		/// \param mass The mass of the object
 		/// \param type The type of shape you want to define for the object
-		void setUpPhysics(float mass = 0, phyShapeType type = staticShape, bool colide = true);
+		void setupPhysics(float mass = 0, phyShapeType type = staticShape, bool hasPlayerCollision = true);
 
 		///Make the object visible
 		void setVisible() const;
@@ -161,6 +171,7 @@ namespace Annwvyn
 		std::string getName() const;
 
 		///Attach a script to this object
+		/// \param scriptName name of a script
 		void attachScript(const std::string& scriptName);
 
 		///Return true if node is attached to the node owned by another AnnGameObject
@@ -170,6 +181,7 @@ namespace Annwvyn
 		std::shared_ptr<AnnGameObject> getParent() const;
 
 		///Attach an object to this object.
+		/// \param child The object you want to attach
 		void attachChildObject(std::shared_ptr<AnnGameObject> child) const;
 
 		///Make the node independent to any GameObject
@@ -188,19 +200,24 @@ namespace Annwvyn
 
 		//------------------ local utility
 		///Do the actual recursion of checkForBodyInParent
+		/// \param obj object to check (for recursion)
 		bool parentsHaveBody(AnnGameObject* obj) const;
 
 		///Do the actual recursion of checkForBodyInChild
+		/// \param obj object to check (for recursion)
 		static bool childrenHaveBody(AnnGameObject* obj);
 
 		//----------------- engine utility
 		///For engine : set node
+		/// \param node ogre SceneNode
 		void setNode(Ogre::SceneNode* node);
 
-		///For engine : set Entity
+		///For engine : set item
+		/// \param item Ogre::Item
 		void setItem(Ogre::Item* item);
 
 		///For engine : get elapsed time
+		/// \param offsetTime time to add to the animation
 		void addAnimationTime(double offsetTime) const;
 
 		///For engine : update OpenAL source position
