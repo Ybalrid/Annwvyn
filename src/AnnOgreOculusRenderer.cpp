@@ -32,7 +32,7 @@ AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) :
  ogreRenderTexturesSeparatedGLID{ 0 },
  layer{},
  textureCombinedSwapChain{ nullptr },
- eyeToHmdPoseOffset{ { { 0, 0 }, { 0, 0 } } },
+ eyeToHmdPoseOffset{ { {}, {} } },
  pose{},
  handPoses{},
  inputState{},
