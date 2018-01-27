@@ -346,9 +346,9 @@ bool AnnEngine::refresh()
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(float(getFrameTime()));
 
-	for(auto& subsystem : subsystems)
-		if(subsystem->needUpdate())
-			subsystem->update();
+	for(size_t i{ 0 }; i < subsystems.size(); ++i)
+		if(subsystems[i]->needUpdate())
+			subsystems[i]->update();
 
 	//Update view
 	renderer->renderAndSubmitFrame();
