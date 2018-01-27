@@ -157,8 +157,7 @@ set (LIBS
     ${OGRE_HlmsUnlit_LIBRARIES}
     ${OGRE_Overlay_LIBRARIES}
     ${BULLET_LIBRARIES}
-    optimized ${BtOgre21_LIBRARIES}
-    debug ${BtOgre21_LIBRARIES_DEBUG}
+    ${BtOgre21_LIBRARIES}
     ${OIS_LIBRARIES}
     ${GLEW_LIBRARIES}
     ${GLFW_LIBRARIES}
