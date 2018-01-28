@@ -1,3 +1,12 @@
+/*
+ * Annwvyn template project.
+ * 
+ * This template is made to get you started using Annwvyn. It contains the strict minimum code taht amount to something
+ * that permit you to move around and see object, but that's about it.
+ * 
+ * This project is filled with comments explainings how the concept used here goes together.
+ */
+
 //Pre-compiled header are used in this project
 #include "stdafx.h"
 

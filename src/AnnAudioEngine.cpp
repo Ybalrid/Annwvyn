@@ -28,10 +28,7 @@ AnnAudioEngine::AnnAudioEngine() :
 	const AnnQuaternion orientation = player->getOrientation().toQuaternion();
 	const auto at					= orientation.getAtVector();
 	const auto up					= orientation.getUpVector();
-	ALfloat alOrientation[]			= { at.x, at.y, at.z, //LookAt vector
-								up.x,
-								up.y,
-								up.z }; //Up vector
+	ALfloat alOrientation[]			= { at.x, at.y, at.z, up.x, up.y, up.z };
 
 	//Apply the orientation
 	alListenerfv(AL_ORIENTATION, alOrientation);
@@ -60,8 +57,11 @@ void AnnAudioEngine::detectPlaybackDevices(const char* list)
 {
 	//If list not null or fist character end of string
 	if(!list || *list == '\0')
+	{
 		AnnDebug("    !!! none !!!\n");
+	}
 	else
+	{
 		do
 		{
 			//Get the first string from the list
@@ -72,6 +72,7 @@ void AnnAudioEngine::detectPlaybackDevices(const char* list)
 
 			list += strlen(list) + 1; //This advance the start of the string after the end of the current one, because sizeof(char) = 1
 		} while(*list != '\0');		  //End of the list is marked by \0\0 instead of \0
+	}
 }
 
 bool AnnAudioEngine::initOpenAL()
@@ -129,8 +130,12 @@ bool AnnAudioEngine::initOpenAL()
 
 	if(alVendor != "OpenAL Community")
 	{
-		displayWin32ErrorMessage("Wrong version of OpenAL loaded", "The audio engine loaded an OpenAL DLL that isn't the implementation from the OpenAL soft project");
-		throw AnnInitializationError(ANN_ERR_NOTINIT, "Loaded OpenAL library shipped by " + alVendor + " Instead of openal-soft");
+		displayWin32ErrorMessage("Wrong version of OpenAL loaded",
+								 "The audio engine loaded an OpenAL DLL that isn't the implementation from the OpenAL soft project.\n"
+								 "This probably means the game has an installation or configuration problem. OpenAL32.dll should be loaded from the Annwvyn SDK");
+
+		throw AnnInitializationError(ANN_ERR_NOTINIT,
+									 "Loaded OpenAL library shipped by " + alVendor + " Instead of openal-soft");
 	}
 
 	return true;
@@ -433,10 +438,7 @@ void AnnAudioSource::changeSound(std::string filename)
 
 void AnnAudioSource::setLooping(bool looping) const
 {
-	if(looping)
-		alSourcei(source, AL_LOOPING, AL_TRUE);
-	else
-		alSourcei(source, AL_LOOPING, AL_FALSE);
+	alSourcei(source, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
 }
 
 void AnnAudioSource::setPositionRelToPlayer(bool rel)
