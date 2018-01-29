@@ -196,7 +196,7 @@ namespace Annwvyn
 		double getFrameTime() const;
 
 		///Get the pose of the HMD in VR world space
-		AnnPose getHmdPose() const;
+		DEPRECATED AnnPose getHmdPose() const;
 
 		///Register your own subsystem to be updated by the engine
 		AnnUserSubSystemPtr registerUserSubSystem(AnnUserSubSystemPtr userSystem);

@@ -166,13 +166,12 @@ void AnnGameObjectManager::removeTriggerObject(std::shared_ptr<AnnTriggerObject>
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned short limit)
 {
 	//Origin vector of the ray is the HMD pose position
-	auto hmdPosition{ AnnVect3(AnnGetEngine()->getHmdPose().position) };
-
-	//Calculate direction Vector of the ray to be the midpoint camera optical axis
-	auto rayDirection{ AnnQuaternion(AnnGetEngine()->getHmdPose().orientation).getAtVector() };
+	const auto pose = AnnGetVRRenderer()->trackedHeadPose;
+	const auto hmdPosition{ AnnVect3(pose.position) };
+	const auto rayDirection{ AnnQuaternion(pose.orientation).getAtVector() };
 
 	//create ray
-	Ogre::Ray ray(hmdPosition, rayDirection);
+	const Ogre::Ray ray(hmdPosition, rayDirection);
 
 	//create query
 	auto raySceneQuery(AnnGetEngine()->getSceneManager()->createRayQuery(ray));

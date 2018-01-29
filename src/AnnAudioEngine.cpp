@@ -336,17 +336,17 @@ void AnnAudioEngine::updateListenerPos(AnnVect3 pos)
 
 void AnnAudioEngine::updateListenerOrient(AnnQuaternion orient)
 {
-	auto At = orient.getAtVector(); // Direction object facing
-	auto Up = orient.getUpVector(); // Up Vector
+	const auto at = orient.getAtVector(); // Direction object facing
+	const auto up = orient.getUpVector(); // Up Vector
 
-	ALfloat Orientation[] = { At.x, At.y, At.z, Up.x, Up.y, Up.z };
+	const ALfloat orientation[] = { at.x, at.y, at.z, up.x, up.y, up.z };
 
-	alListenerfv(AL_ORIENTATION, Orientation);
+	alListenerfv(AL_ORIENTATION, orientation);
 }
 
 void AnnAudioEngine::update()
 {
-	auto pose = AnnGetEngine()->getHmdPose();
+	const auto pose = AnnGetVRRenderer()->trackedHeadPose;
 	updateListenerPos(pose.position);
 	updateListenerOrient(pose.orientation);
 }
