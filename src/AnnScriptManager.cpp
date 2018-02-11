@@ -17,11 +17,8 @@ constexpr const char* const AnnScriptManager::logFromScript;
 AnnScriptManager::AnnScriptManager() :
  AnnSubSystem("ScriptManager"),
  scriptFileManager(nullptr)
-//Initialize with compiled-in Std_Lib
 {
-	AnnDebug() << "Initialized ChaiScript Std_Lib";
 	registerApi();
-
 	AnnDebug() << "Using ChaiScript version 6.0";
 	registerResourceManager();
 }
@@ -37,6 +34,8 @@ void AnnScriptManager::registerApi()
 	{
 		chai.add(var(&Math::PI), "PI");
 		chai.add(var(&Math::HALF_PI), "HALF_PI");
+		chai.add(var(&Math::LOG2), "LOG2");
+		chai.add(var(&Math::TWO_PI), "TWO_PI");
 
 		// 3D vector
 		chai.add(user_type<Vector3>(), "AnnVect3");
