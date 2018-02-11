@@ -14,6 +14,27 @@ namespace Annwvyn
 {
 	class AnnGameObject;
 
+	using AnnBehaviorScriptHooks = std::tuple<
+		std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)>,
+		std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)>,
+		std::function<void(chaiscript::Boxed_Value&, AnnControllerEvent)>,
+		std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)>,
+		std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)>,
+		std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)>,
+		std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)>,
+		std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)>>;
+
+	enum {
+		KeyHook,
+		MouseHook,
+		ControllerHook,
+		TimeHook,
+		TriggerHook,
+		HandHook,
+		CollisionHook,
+		PlayerCollisionHook
+	};
+
 	///Object that reprenset a script defining an object "behavior"
 	class AnnDllExport AnnBehaviorScript : LISTENER
 	{
@@ -24,15 +45,7 @@ namespace Annwvyn
 		///Callable script constructor
 		AnnBehaviorScript(const std::string& name,
 						  std::function<void(chaiscript::Boxed_Value&)> updateHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnKeyEvent)> KeyEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnMouseEvent)> MouseEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnControllerEvent)> StickEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnTimeEvent)> TimeEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnTriggerEvent)> TriggerHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnHandControllerEvent)> HandControllertHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnCollisionEvent)> CollisionEventHook,
-						  std::function<void(chaiscript::Boxed_Value&, AnnPlayerCollisionEvent)> PlayerCollisionEventHook,
-
+						  AnnBehaviorScriptHooks hooks,
 						  chaiscript::Boxed_Value scriptObjectInstance);
 
 		///Script destructor
@@ -160,14 +173,13 @@ namespace Annwvyn
 
 		///String constant for script loading and class initialization. This is a bit of ChaiScript code to bootstrap a behavior script
 		static constexpr const char* const scriptTemplate{
-			R"(
-def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
-{
-	var ScriptInstance__OBJECT_SCRIPT_ID__ = __SCRIPT_NAME__(owner);
-	return ScriptInstance__OBJECT_SCRIPT_ID__;
-}
-)"
+			R"chaiscript(def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
+						{
+							var ScriptInstance__OBJECT_SCRIPT_ID__ = __SCRIPT_NAME__(owner);
+							return ScriptInstance__OBJECT_SCRIPT_ID__;
+						})chaiscript"
 		};
+
 		///Marker for the name of the script
 		static constexpr const char* const scriptNameMarker{ "__SCRIPT_NAME__" };
 		///Marker for the ID of the script
