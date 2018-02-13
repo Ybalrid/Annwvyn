@@ -82,7 +82,8 @@ std::string AnnEngine::getAnnwvynVersion(size_t padding)
 
 void AnnEngine::startGameplayLoop()
 {
-	while(refresh()) {}
+	while(refresh()) {
+	}
 }
 
 void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std::string& title)

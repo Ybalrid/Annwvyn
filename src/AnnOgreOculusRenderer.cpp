@@ -28,8 +28,8 @@ AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) :
  ogreMirrorTextureGLID{ 0 },
  oculusRenderTextureCombinedGLID{ 0 },
  ogreRenderTextureCombinedGLID{ 0 },
- oculusRenderTexturesSeparatedGLID{ 0 },
- ogreRenderTexturesSeparatedGLID{ 0 },
+ oculusRenderTexturesSeparatedGLID{ { 0 } },
+ ogreRenderTexturesSeparatedGLID{ { 0 } },
  layer{},
  textureCombinedSwapChain{ nullptr },
  eyeToHmdPoseOffset{ { {}, {} } },
@@ -194,7 +194,7 @@ void AnnOgreOculusRenderer::initRttRendering()
 	}
 
 	//Create the equivalent textures in Ogre side
-	const combinedTextureSizeArray textureDimentions{ { { size_t(texSizeL.w), size_t(texSizeL.h) }, { size_t(texSizeR.w), size_t(texSizeR.h) } } };
+	const combinedTextureSizeArray textureDimentions{ { { { size_t(texSizeL.w), size_t(texSizeL.h) } }, { { size_t(texSizeR.w), size_t(texSizeR.h) } } } };
 	ogreRenderTexturesSeparatedGLID = createSeparatedRenderTextures(textureDimentions);
 
 	//Setup Ogre compositor
@@ -275,8 +275,8 @@ void AnnOgreOculusRenderer::updateProjectionMatrix()
 {
 	//Get the matrices from the Oculus library
 	const std::array<ovrMatrix4f, ovrEye_Count> oculusProjectionMatrix{
-		ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Left].Fov, nearClippingDistance, farClippingDistance, 0),
-		ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Right].Fov, nearClippingDistance, farClippingDistance, 0)
+		{ ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Left].Fov, nearClippingDistance, farClippingDistance, 0),
+		  ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Right].Fov, nearClippingDistance, farClippingDistance, 0) }
 	};
 
 	//Put them in Ogre's Matrix4 format

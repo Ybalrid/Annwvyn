@@ -21,7 +21,7 @@
 
 ///Macro for declaring a listener
 #define LISTENER \
-public           \
+public \
 	Annwvyn::AnnEventListener
 
 ///Macro for declaring a listener constructor

@@ -12,6 +12,7 @@ using namespace Annwvyn;
 AnnOgreOpenVRRenderer* AnnOgreOpenVRRenderer::OpenVRSelf(nullptr);
 
 AnnOgreOpenVRRenderer::AnnOgreOpenVRRenderer(std::string winName) :
+ //TODO: V730https://www.viva64.com/en/w/v730/Not all members of a class are initialized inside the constructor. Consider inspecting: event.
  AnnOgreVRRenderer(winName),
  vrSystem{ nullptr },
  hmdError{ vr::EVRInitError::VRInitError_None },
@@ -22,7 +23,7 @@ AnnOgreOpenVRRenderer::AnnOgreOpenVRRenderer(std::string winName) :
  rttRightTextureGLID{ 0 },
  gamma{ false },
  TextureType{ vr::TextureType_OpenGL },
- vrTextures{ nullptr },
+ vrTextures{ { nullptr } },
  hmdAbsoluteTransform{ Ogre::Matrix4::IDENTITY },
  shouldQuitState{ false },
  numberOfAxes{ 3 },
@@ -219,7 +220,7 @@ void AnnOgreOpenVRRenderer::initRttRendering()
 
 	//Create the render texture
 	//rttTextureGLID = createCombinedRenderTexture(w, h);
-	auto glids			= createSeparatedRenderTextures({ { { w, h }, { w, h } } });
+	auto glids			= createSeparatedRenderTextures({ { { { w, h } }, { { w, h } } } });
 	rttLeftTextureGLID  = glids[0];
 	rttRightTextureGLID = glids[1];
 
@@ -233,8 +234,8 @@ void AnnOgreOpenVRRenderer::updateProjectionMatrix()
 {
 	//Get the couple of matrices
 	std::array<vr::HmdMatrix44_t, 2> openVRProjectionMatrix{
-		vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance),
-		vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance)
+		{ vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance),
+		  vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance) }
 	};
 
 	std::array<Ogre::Matrix4, 2> ogreProjectionMatrix{};

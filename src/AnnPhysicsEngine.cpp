@@ -61,8 +61,8 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 
 	//Get inertia vector
 	btVector3 inertia;
-	const auto playerShape	  = playerObject->getShape();
-	const auto playerMass = playerObject->getMass();
+	const auto playerShape = playerObject->getShape();
+	const auto playerMass  = playerObject->getMass();
 	playerShape->calculateLocalInertia(playerMass, inertia);
 
 	//Set the body to the player
