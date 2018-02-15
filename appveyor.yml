@@ -10,15 +10,23 @@ environment:
 before_build:
 - cmd: >-
     echo Getting dependencies
+
     set goback=%cd%
+
     cd C:\
+
     mkdir YbalridSoftware\AnnwvynSDK64
+
     cd YbalridSoftware\AnnwvynSDK64
+
     curl -fsSL -o deps.zip https://www.annwvyn.org/dl/AnnwvynSDK64.zip
+
     7z x -y deps.zip
+
     cd %goback%
 
     echo Will run cmake now...
+
     cmake -G "Visual Studio 15 2017 Win64"
 build:
   project: Annwvyn.sln
