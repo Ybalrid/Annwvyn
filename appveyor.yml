@@ -1,0 +1,28 @@
+version: 0.4.0.{build}
+pull_requests:
+  do_not_increment_build_number: true
+image: Visual Studio 2017
+configuration: Release
+platform: x64
+shallow_clone: true
+environment:
+  AnnwvynSDK64: C:\YbalridSoftware\AnnwvynSDK64\
+before_build:
+- cmd: >-
+    echo Getting dependencies
+    set goback=%cd%
+    cd C:\
+    mkdir YbalridSoftware\AnnwvynSDK64
+    cd YbalridSoftware\AnnwvynSDK64
+    curl -fsSL -o deps.zip https://www.annwvyn.org/dl/AnnwvynSDK64.zip
+    7z x -y deps.zip
+    cd %goback%
+
+    echo Will run cmake now...
+    cmake -G "Visual Studio 15 2017 Win64"
+build:
+  project: Annwvyn.sln
+  parallel: true
+  verbosity: normal
+test_script:
+- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"
