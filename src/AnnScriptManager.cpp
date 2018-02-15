@@ -32,10 +32,14 @@ void AnnScriptManager::registerApi()
 	// TODO ISSUE Add to chai all the useful types (angles, vectors, quaternions...)
 	try
 	{
+		//Random maths
 		chai.add(var(&Math::PI), "PI");
 		chai.add(var(&Math::HALF_PI), "HALF_PI");
 		chai.add(var(&Math::LOG2), "LOG2");
 		chai.add(var(&Math::TWO_PI), "TWO_PI");
+		chai.add(fun([](const Vector3& a, const Vector3& b, float w) { return Math::lerp(a, b, w); }), "lerp");
+		chai.add(fun([](float a, float b, float w) { return Math::lerp(a, b, w); }), "lerp");
+		chai.add(fun([](float fT, const Quaternion& rkP, const Quaternion& rkQ) { return Quaternion::Slerp(fT, rkP, rkQ); }), "slerp");
 
 		// 3D vector
 		chai.add(user_type<Vector3>(), "AnnVect3");
@@ -470,7 +474,6 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 	try
 	{
 		//Evaluate the file containing the script class if unknown to ChaiScript yet
-		//chai.use(file);
 
 		auto rawScript = scriptFileManager->getResourceByName(file).staticCast<AnnScriptFile>();
 		if(!rawScript)
@@ -490,23 +493,24 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 		//Increment ID
 		ID++;
 
-		std::string ownerTag{ "" };
-
-		//Not giving an owner to a script that wants an owner, or calling an owner to a script that
-		if(owner)
-			ownerTag = owner->getName();
+		//Get the name of the owner of this script, if relevant;
+		std::string ownerTag = owner ? owner->getName() : "";
 
 		//This may looks odd but it's good enough for what we're doing:
 		//Copy the template of the init code to a string
 		std::string ChaiCode{ scriptTemplate };
-		//Replace the tags with the actual values, one by one
+
+		//To "boot" the script, there's a little sniped of ChaiScript that is run from the C++ side. This code is generated from a string,
+		//And contains a few fixed tags to be replaced with the script name and an unique ID
 		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
 		ChaiCode.replace(ChaiCode.find(std::string(scriptNameMarker)), nameMarkerLen, scriptName);
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 		ChaiCode.replace(ChaiCode.find(std::string(scriptObjectID)), scriptIDMarkerLen, std::to_string(ID));
 
-		//This is the ugly bit.
+		//This is the ugly bit, this will try to see if the methods functions have been declared somewhere. Note that this doesn't tell if a script has a specific method implemented.
+		//It just permit to know if "a function" with that name exist. Script themselve will deal with knowing if they own theses functions, by attempting to call them, and setting flags
+		//if exception occurs.
 		tryAndGetEventHooks();
 
 		//This will add a global function in ChaiScript, that will create and return the script instance
@@ -517,11 +521,11 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 		//Now we need to get some hook to call the update on the file
 		return std::make_shared<AnnBehaviorScript>(
 			scriptName,
-			//Function to call to update the script
+			//Function to call to update the script. Update is mandatory
 			chai.eval<std::function<void(chaiscript::Boxed_Value&)>>("update"),
 
 			//Eventual event hooks
-			std::tie(
+			tie(
 				callKeyEventOnScriptInstance,
 				callMouseEventOnScriptInstance,
 				callStickEventOnScriptInstance,

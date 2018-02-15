@@ -64,6 +64,8 @@ namespace Annwvyn
 
 	TEST_CASE("Test scripting API")
 	{
+		using Ogre::Degree;
+		using Ogre::Quaternion;
 		using Ogre::Vector3;
 		using std::function;
 
@@ -127,6 +129,39 @@ namespace Annwvyn
 			REQUIRE((a + b) == addVect3(a, b));
 			REQUIRE((b - a) == subVect3(b, a));
 			REQUIRE(scalar * a == scalarVect3(scalar, a));
+		}
+
+		SECTION("Test floating point lerping in chaiscript")
+		{
+			const float a{ 0 }, b{ 1 };
+			auto chaiLerp = chai->eval<function<float(float, float, float)>>("lerp");
+
+			REQUIRE(chaiLerp(a, b, 0) == a);
+			REQUIRE(chaiLerp(a, b, b) == 1);
+			REQUIRE(chaiLerp(a, b, 0.5f) == 0.5);
+		}
+
+		SECTION("Test vector lerping in chaiscript")
+		{
+			const Vector3 a{ 0, 0, 0 }, b{ 1, 1, 1 };
+			const Vector3 half{ 0.5, 0.5, 0.5 };
+			auto chaiLerp = chai->eval<function<Vector3(Vector3, Vector3, float)>>("lerp");
+
+			REQUIRE(chaiLerp(a, b, 0) == a);
+			REQUIRE(chaiLerp(a, b, 1) == b);
+			REQUIRE(chaiLerp(a, b, 0.5f) == half);
+		}
+
+		SECTION("Test quaternion slerping in chaiscript")
+		{
+			const Quaternion a(Degree(90), Vector3::UNIT_X);
+			const Quaternion b(Degree(90), Vector3::UNIT_Z);
+			const float factor(0.5);
+			const auto slerped(Quaternion::Slerp(factor, a, b));
+
+			auto chaiSlerp = chai->eval<function<Quaternion(float, Quaternion, Quaternion)>>("slerp");
+
+			REQUIRE(chaiSlerp(factor, a, b) == slerped);
 		}
 	}
 }
