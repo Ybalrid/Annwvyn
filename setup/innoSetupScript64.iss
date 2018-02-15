@@ -41,6 +41,6 @@ Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Run]
-Filename: "{app}\RUNME-64.BAT"
+Filename: "{app}\RUNME-64.BAT";Parameters: "/SILENT"; StatusMsg: "Running configuration script for environement...";
 Filename: "{app}\Annwvyn\utils\VC_redist.x64.2017.exe";Parameters: "/q"; StatusMsg: "Installing Visual C++ 2017 x64 redistribuable"; Check: IsWin64();
 
