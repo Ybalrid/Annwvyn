@@ -1,4 +1,4 @@
-Annwvyn
+Annwvyn [![Build status](https://ci.appveyor.com/api/projects/status/dxbjamqjeuivkgkf?svg=true)](https://ci.appveyor.com/project/Ybalrid/annwvyn)
 =======
 
 ![Screnshot](AnnwvynScreenshot.png)
