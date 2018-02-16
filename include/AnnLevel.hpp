@@ -47,6 +47,9 @@ namespace Annwvyn
 		///Get the list of lights
 		AnnLightList& getLights();
 
+		///Get the list of triggers
+		AnnTriggerObjectList& getTriggers();
+
 	protected:
 		friend class AnnLevelManager;
 

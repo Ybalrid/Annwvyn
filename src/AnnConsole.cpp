@@ -213,7 +213,7 @@ void AnnConsole::update()
 
 	//Append blinking cursor
 	//if (static_cast<int>(4 * AnnGetEngine()->getTimeFromStartupSeconds()) % 2) content << "_";
-	auto textToDisplay = content.str();
+	const auto textToDisplay = content.str();
 
 	//Erase plane (draw background)
 	glCopyImageSubData(backgroundID, GL_TEXTURE_2D, 0, 0, 0, 0, textureID, GL_TEXTURE_2D, 0, 0, 0, 0, texture->getSrcWidth(), texture->getSrcHeight(), 1);
@@ -267,20 +267,20 @@ void AnnConsole::WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTe
 	auto fontBuffer = fontTexture->getBuffer();
 	auto destBuffer = destTexture->getBuffer();
 
-	auto destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
+	const auto destPb = destBuffer->lock(destRectangle, v1::HardwareBuffer::HBL_NORMAL);
 
 	// The font texture textureBuffer was created write only...so we cannot read it back :o). One solution is to copy the textureBuffer  instead of locking it. (Maybe there is a way to create a font texture which is not write_only ?)
 
 	// create a textureBuffer
-	auto nBuffSize	 = fontBuffer->getSizeInBytes();
-	auto textureBuffer = static_cast<uint8*>(calloc(nBuffSize, sizeof(uint8)));
+	const auto nBuffSize	 = fontBuffer->getSizeInBytes();
+	const auto textureBuffer = static_cast<uint8*>(calloc(nBuffSize, sizeof(uint8)));
 
 	// create pixel box using the copy of the textureBuffer
-	PixelBox fontPb(fontBuffer->getWidth(), fontBuffer->getHeight(), fontBuffer->getDepth(), fontBuffer->getFormat(), textureBuffer);
+	const PixelBox fontPb(fontBuffer->getWidth(), fontBuffer->getHeight(), fontBuffer->getDepth(), fontBuffer->getFormat(), textureBuffer);
 	fontBuffer->blitToMemory(fontPb);
 
-	auto fontData = static_cast<uint8*>(fontPb.data);
-	auto destData = static_cast<uint8*>(destPb.data);
+	const auto fontData = static_cast<uint8*>(fontPb.data);
+	const auto destData = static_cast<uint8*>(destPb.data);
 
 	const auto fontPixelSize = PixelUtil::getNumElemBytes(fontPb.format);
 	const auto destPixelSize = PixelUtil::getNumElemBytes(destPb.format);
@@ -311,7 +311,7 @@ void AnnConsole::WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTe
 	}
 
 	//get the size of the glyph '0'
-	auto glypheTexRect = font->getGlyphTexCoords('0');
+	const auto glypheTexRect = font->getGlyphTexCoords('0');
 	Box spaceBox;
 	spaceBox.left   = uint32_t(glypheTexRect.left * fontTexture->getSrcWidth());
 	spaceBox.right  = uint32_t(glypheTexRect.right * fontTexture->getSrcWidth());
@@ -418,9 +418,9 @@ void AnnConsole::WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTe
 				for(size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
 					for(size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
 					{
-						auto alpha		= float(color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0));
-						auto invalpha   = 1.0f - alpha;
-						auto charOffset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
+						const auto alpha		= float(color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0));
+						const auto invalpha   = 1.0f - alpha;
+						const auto charOffset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
 						ColourValue pix;
 						PixelUtil::unpackColour(&pix, destPb.format, &destData[charOffset]);
 						pix = (pix * invalpha) + (color * alpha);
@@ -429,7 +429,7 @@ void AnnConsole::WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTe
 
 				cursorX += GlyphTexCoords[strindex].getWidth();
 			} //default
-		}	 //switch
+		}	  //switch
 	}		  //for
 
 stop:
@@ -488,8 +488,8 @@ void AnnConsole::notifyNavigationKey(KeyCode::code code)
 
 void AnnConsole::syncConsolePosition() const
 {
-	auto targetPosition	= AnnGetVRRenderer()->trackedHeadPose.position + AnnGetVRRenderer()->trackedHeadPose.orientation * offset;
-	auto targetOrientaiton = AnnGetVRRenderer()->trackedHeadPose.orientation;
+	const auto targetPosition	= AnnGetVRRenderer()->trackedHeadPose.position + AnnGetVRRenderer()->trackedHeadPose.orientation * offset;
+	const auto targetOrientaiton = AnnGetVRRenderer()->trackedHeadPose.orientation;
 
 	consoleNode->setPosition(targetPosition);
 	consoleNode->setOrientation(static_cast<Ogre::Quaternion>(targetOrientaiton));
@@ -568,12 +568,15 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 	else if(input == "status")
 	{
 		bufferClear();
-		append("Running VR system: " + AnnGetVRRenderer()->getName());
-		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getContent().size()) + " active objects");
-		append("LevelManager : " + std::to_string(AnnGetLevelManager()->getCurrentLevel()->getLights().size()) + " active light sources");
+		auto currentLevel = AnnGetLevelManager()->getCurrentLevel();
 		size_t nbControllers;
+		
+		append("Running VR system: " + AnnGetVRRenderer()->getName());
+		append("LevelManager: " + std::to_string(currentLevel->getContent().size()) + " active objects");
+		append("LevelManager: " + std::to_string(currentLevel->getLights().size()) + " active light sources");
+		append("LevelManager: " + std::to_string(currentLevel->getTriggers().size()) + " physics trigger object");
 		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " max tracked controllers");
-
+		
 		if(nbControllers > 0)
 		{
 			if(AnnGetVRRenderer()->getHandControllerArray()[0])

@@ -51,6 +51,11 @@ void AnnLevel::unload()
 	AnnGetPlayer()->_hintRoomscaleUpdateTranslationReference();
 }
 
+AnnTriggerObjectList& AnnLevel::getTriggers()
+{
+	return levelTrigger;
+}
+
 std::shared_ptr<AnnLightObject> AnnLevel::addLightObject(std::string id)
 {
 	auto light(AnnGetGameObjectManager()->createLightObject(id));
