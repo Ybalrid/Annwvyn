@@ -1,5 +1,5 @@
 /**
- * \file AnnAnnOculusInterfaceHelper.hpp
+ * \file AnnOculusInterfaceHelper.hpp
  * \brief Simple class for accessing Oculus Rift data
  * \author A. Brainville (Ybalrid)
  */
@@ -14,53 +14,57 @@
 #include <Ogre.h>
 #include <AnnException.hpp>
 
-///Communicate with the Rift runtime (initialize OVR and get the info)
-class AnnDllExport AnnOculusInterfaceHelper
+namespace Annwvyn
 {
-public:
-	///Construct an AnnOculusInterfaceHelper object. This create an Oculus Session for communication with the Oculus Runtime
-	AnnOculusInterfaceHelper();
 
-	///Destructor of Oculus Interface
-	~AnnOculusInterfaceHelper();
+	///Communicate with the Rift runtime (initialize OVR and get the info)
+	class AnnDllExport AnnOculusInterfaceHelper
+	{
+	public:
+		///Construct an AnnOculusInterfaceHelper object. This create an Oculus Session for communication with the Oculus Runtime
+		AnnOculusInterfaceHelper();
 
-	///Return the active HmdDesc object
-	ovrHmdDesc getHmdDesc() const;
+		///Destructor of Oculus Interface
+		~AnnOculusInterfaceHelper();
 
-	///Return the current oculus session
-	ovrSession getSession() const;
+		///Return the active HmdDesc object
+		ovrHmdDesc getHmdDesc() const;
 
-	///Return the eye's height of the current user
-	float getUserEyeHeight() const;
+		///Return the current oculus session
+		ovrSession getSession() const;
 
-	///Recenter the tracking origin
-	void recenterTrackingOrigin() const;
+		///Return the eye's height of the current user
+		float getUserEyeHeight() const;
 
-	///Set the performance HUD mode
-	void setPerfHudMode(ovrPerfHudMode mode) const;
+		///Recenter the tracking origin
+		void recenterTrackingOrigin() const;
 
-	///get HMD resolution in the Oculus format
-	ovrSizei getHmdResolution() const;
+		///Set the performance HUD mode
+		void setPerfHudMode(ovrPerfHudMode mode) const;
 
-	///get HMD Refresh rate. e.g. 90 (or 89.99) for an Oculus Rift CV1
-	float getHmdDisplayRefreshRate() const;
+		///get HMD resolution in the Oculus format
+		ovrSizei getHmdResolution() const;
 
-	///Set the reference point to be a point on the ground, not the "zero" position of the headset
-	void setTrackingOriginToFloorLevel() const;
+		///get HMD Refresh rate. e.g. 90 (or 89.99) for an Oculus Rift CV1
+		float getHmdDisplayRefreshRate() const;
 
-private:
-	///Print every known characteristics about the hardware to the log output
-	void logHardwareReport() const;
+		///Set the reference point to be a point on the ground, not the "zero" position of the headset
+		void setTrackingOriginToFloorLevel() const;
 
-	///Abort, display error, log it and crash the game
-	void abortOnFailure();
+	private:
+		///Print every known characteristics about the hardware to the log output
+		void logHardwareReport() const;
 
-	///Oculus session for the application
-	ovrSession session;
+		///Abort, display error, log it and crash the game
+		void abortOnFailure();
 
-	///Description of the HMD
-	ovrHmdDesc hmdDesc;
+		///Oculus session for the application
+		ovrSession session;
 
-	///Graphics device identifier (internal for the Rift SDK)
-	ovrGraphicsLuid luid;
-};
+		///Description of the HMD
+		ovrHmdDesc hmdDesc;
+
+		///Graphics device identifier (internal for the Rift SDK)
+		ovrGraphicsLuid luid;
+	};
+}
