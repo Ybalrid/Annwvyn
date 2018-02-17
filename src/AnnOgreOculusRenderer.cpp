@@ -128,7 +128,7 @@ void AnnOgreOculusRenderer::recenter()
 void AnnOgreOculusRenderer::initVrHmd()
 {
 	//Class to get basic information from the Rift. Initialize the RiftSDK
-	oculusInterface = std::make_unique<OculusInterfaceHelper>();
+	oculusInterface = std::make_unique<AnnOculusInterfaceHelper>();
 	hmdSize			= oculusInterface->getHmdResolution();
 	updateTime		= 1.0 / double(oculusInterface->getHmdDisplayRefreshRate());
 

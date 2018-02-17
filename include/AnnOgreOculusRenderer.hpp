@@ -25,7 +25,7 @@
 #include <array>
 
 //Accessing Oculus Rift through a class :
-#include "OculusInterfaceHelper.hpp"
+#include "AnnOculusInterfaceHelper.hpp"
 
 //OS Specific build macro
 #include "systemMacro.h"
@@ -163,7 +163,7 @@ namespace Annwvyn
 		void setMonoFov(float degreeFov) const;
 
 		///Object for getting informations from the Oculus Rift
-		std::unique_ptr<OculusInterfaceHelper> oculusInterface;
+		std::unique_ptr<AnnOculusInterfaceHelper> oculusInterface;
 
 		///Timing in seconds
 		double currentFrameDisplayTime;

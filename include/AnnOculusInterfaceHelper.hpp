@@ -1,5 +1,5 @@
 /**
- * \file OculusInterfaceHelper.hpp
+ * \file AnnAnnOculusInterfaceHelper.hpp
  * \brief Simple class for accessing Oculus Rift data
  * \author A. Brainville (Ybalrid)
  */
@@ -15,14 +15,14 @@
 #include <AnnException.hpp>
 
 ///Communicate with the Rift runtime (initialize OVR and get the info)
-class AnnDllExport OculusInterfaceHelper
+class AnnDllExport AnnOculusInterfaceHelper
 {
 public:
-	///Construct an OculusInterfaceHelper object. This create an Oculus Session for communication with the Oculus Runtime
-	OculusInterfaceHelper();
+	///Construct an AnnOculusInterfaceHelper object. This create an Oculus Session for communication with the Oculus Runtime
+	AnnOculusInterfaceHelper();
 
 	///Destructor of Oculus Interface
-	~OculusInterfaceHelper();
+	~AnnOculusInterfaceHelper();
 
 	///Return the active HmdDesc object
 	ovrHmdDesc getHmdDesc() const;

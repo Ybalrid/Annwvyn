@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "stdafx.h"
 #ifdef _WIN32
-#include "OculusInterfaceHelper.hpp"
+#include "AnnOculusInterfaceHelper.hpp"
 #include "AnnLogger.hpp"
 #include "AnnException.hpp"
 #include "AnnEngine.hpp"
@@ -11,7 +11,7 @@ using namespace std;
 using namespace OVR;
 using namespace Annwvyn;
 
-void OculusInterfaceHelper::abortOnFailure()
+void AnnOculusInterfaceHelper::abortOnFailure()
 {
 	session = {};
 	luid	= {};
@@ -35,7 +35,7 @@ void OculusInterfaceHelper::abortOnFailure()
 	throw AnnInitializationError(ANN_ERR_CRITIC, "Unable to create an Oculus session");
 }
 
-OculusInterfaceHelper::OculusInterfaceHelper()
+AnnOculusInterfaceHelper::AnnOculusInterfaceHelper()
 {
 	AnnDebug() << "Init Oculus Interface object";
 
@@ -65,12 +65,12 @@ OculusInterfaceHelper::OculusInterfaceHelper()
 	logHardwareReport();
 }
 
-OculusInterfaceHelper::~OculusInterfaceHelper()
+AnnOculusInterfaceHelper::~AnnOculusInterfaceHelper()
 {
 	//Set the performance HUD to Off
 	ovr_SetInt(getSession(), "PerfHudMode", ovrPerfHud_Off);
 
-	AnnDebug() << "Shutdown OculusInterfaceHelper object";
+	AnnDebug() << "Shutdown AnnOculusInterfaceHelper object";
 	ovr_Destroy(getSession());
 	ovr_Shutdown();
 	AnnDebug() << "LibOVR Shutdown... No longer can communicate with OculusService";
@@ -79,7 +79,7 @@ OculusInterfaceHelper::~OculusInterfaceHelper()
 inline Ogre::Vector3 oculusToOgreVect3(const ovrVector3f& v) { return { v.x, v.y, v.z }; }
 inline Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q) { return { q.w, q.x, q.y, q.z }; }
 
-void OculusInterfaceHelper::logHardwareReport() const
+void AnnOculusInterfaceHelper::logHardwareReport() const
 {
 	//Print to the logger a bunch of information
 	AnnDebug() << " - Detected Oculus hardware :";
@@ -111,42 +111,42 @@ void OculusInterfaceHelper::logHardwareReport() const
 	}
 }
 
-ovrHmdDesc OculusInterfaceHelper::getHmdDesc() const
+ovrHmdDesc AnnOculusInterfaceHelper::getHmdDesc() const
 {
 	return hmdDesc;
 }
 
-ovrSession OculusInterfaceHelper::getSession() const
+ovrSession AnnOculusInterfaceHelper::getSession() const
 {
 	return session;
 }
 
-float OculusInterfaceHelper::getUserEyeHeight() const
+float AnnOculusInterfaceHelper::getUserEyeHeight() const
 {
 	return ovr_GetFloat(session, "EyeHeight", -1.f);
 }
 
-void OculusInterfaceHelper::recenterTrackingOrigin() const
+void AnnOculusInterfaceHelper::recenterTrackingOrigin() const
 {
 	ovr_RecenterTrackingOrigin(session);
 }
 
-void OculusInterfaceHelper::setPerfHudMode(ovrPerfHudMode mode) const
+void AnnOculusInterfaceHelper::setPerfHudMode(ovrPerfHudMode mode) const
 {
 	ovr_SetInt(session, "PerfHudMode", int(mode));
 }
 
-ovrSizei OculusInterfaceHelper::getHmdResolution() const
+ovrSizei AnnOculusInterfaceHelper::getHmdResolution() const
 {
 	return hmdDesc.Resolution;
 }
 
-float OculusInterfaceHelper::getHmdDisplayRefreshRate() const
+float AnnOculusInterfaceHelper::getHmdDisplayRefreshRate() const
 {
 	return hmdDesc.DisplayRefreshRate;
 }
 
-void OculusInterfaceHelper::setTrackingOriginToFloorLevel() const
+void AnnOculusInterfaceHelper::setTrackingOriginToFloorLevel() const
 {
 	ovr_SetTrackingOriginType(session, ovrTrackingOrigin_FloorLevel);
 }
