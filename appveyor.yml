@@ -32,5 +32,5 @@ build:
   project: Annwvyn.sln
   parallel: true
   verbosity: normal
-test_script:
+after_build:
 - cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"
