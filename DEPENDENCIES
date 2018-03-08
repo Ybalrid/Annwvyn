@@ -4,7 +4,7 @@ Ogre 2.1
 Bullet >= 2.85
 OpenAL-soft lattest available should work
 libsndfile lattest available should work
-libOVR 1.20 from the Oculus developer center
+libOVR 1.23 from the Oculus developer center
 OpenVR 1.0.10 from https://github.com/ValveSoftware/openvr
 ChaiScript 6 headers
 
