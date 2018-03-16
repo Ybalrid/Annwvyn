@@ -11,8 +11,8 @@ This project is licensed under the terms of the [MIT](LICENSE) licence agreement
 For any questions, shout me a mail at developer@annwvyn.org.
 
 Currently the engine supports :
- - Oculus Rift through the Oculus SDK (OVR)
- - OpenVR
+ - Oculus Rift through the Oculus SDK (OVR) *Windows Only*
+ - OpenVR *Windows and Linux*
      - HTC Vive
      - Oculus Rift (You can use the Oculus Rift with SteamVR, but the "native" way is recommended)
      - Any headset officially supported by SteamVR
@@ -30,9 +30,11 @@ System and Software requirement
  - Usable with hand controllers (touch, vive wands...) 
  - 64bit Operating system
  - Up to date runtime software: 
-    - Oculus Home app installed from http://oculus.com/setup 
-    - SteamVR installed through Steam http://steampowered.com/
- - Microsoft Visual Studio 2017 Community (free to download and use from Microsoft)
+    - Oculus Home app installed from http://oculus.com/setup *Windows only*
+    - SteamVR installed through Steam http://steampowered.com/ 
+    - For Linux users, you will need to have Steam installed, the games will need to run within the Steam runtime, and you need to install Vulkan libraries for it to actually work.
+ - Windows build : Microsoft Visual Studio 2017 Community (free to download and use from Microsoft)
+ - Linux build : GCC or Clang, Steam and Steam VR installed, Vulkan developement package. 
  
 Specifically, the code needs a C++14 compliant compiler, and the dependency package is built with the lattest version of Visual Studio 2017 available
  
@@ -85,11 +87,21 @@ But, if you *really* want to build and setup the engine yourself, here's a simpl
 
 If you have an Oculus Rift plugged in (or in Debug HMD mode), or a Vive with SteamVR open you can launch the example program via the HMD_launcher.bat scripts in the example directory. (using the one that correspond to your hardware)
 
+Building on Linux
+-----------------
+
+You need to have the libraries described in the DEPENDENCIES file, and every libraries needed to build Ogre 2.1 with json, zip, and OpenGL support.
+
+You will need to build Ogre yourself. Once you have Ogre 2.1 and Bullet Physics installed on your system, you can build and install [BtOgre21](https://github.com/Ybalrid/BtOgre21).
+
+Currently, some of the libraries that are either distributed in binary for only, and the CMakeScripts are available in this repository that needs to be clonned inside your home directory : https://github.com/Ybalrid/AnnwvynDeps
 
 Using the engine
 ----------------
 
 Make a copy of the "template" directory to a convenient location for you, and you are ready to go. It contains a CMakeLists.txt that will permit you to generate build files.
+
+Inside your build directory, you need to copy over some libraries, there are `getLibs.bat` for windows and `linuxGetLibs.sh` for linux scripts that will do that for you if everything was installed correctly.
 
 **Make sure to put Visual Studio build in Release/x64 mode before building!** The debug mode target will work but you need ot copy over debug-compatible version of the libraries. They aren't packaged conviniently for that yet. (comming soon).
 
@@ -124,4 +136,4 @@ ______
 Some words on the linux support
 ------------------------------
 
-The engine is buildable and runnable under linux. The OpenVR rendering code *should* work on Linux but hasn't been tested by me yet.
+Annwvyn works (has been tested) with the OpenVR 1.0.13 renderer and an HTC vive if everything is installed [correctly](https://github.com/ValveSoftware/SteamVR-for-Linux), if the gam is ran through the steam runtime, and if the vulkan runtime is correctly installed.
