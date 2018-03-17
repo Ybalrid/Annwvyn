@@ -1,8 +1,6 @@
-Annwvyn [![Build status](https://ci.appveyor.com/api/projects/status/dxbjamqjeuivkgkf?svg=true)](https://ci.appveyor.com/project/Ybalrid/annwvyn)
-=======
+# Annwvyn [![Build status](https://ci.appveyor.com/api/projects/status/dxbjamqjeuivkgkf?svg=true)](https://ci.appveyor.com/project/Ybalrid/annwvyn)
 
 ![Screnshot](AnnwvynScreenshot.png)
-
 
 Annwvyn is a simple C++ game engine built upon free and open source technologies to easily create applications and games tailored for Virtual Reality HMD.
 
@@ -21,9 +19,7 @@ Annwyn uses the [OGRE](https://www.ogre3d.org/) rendering engine (version 2.1) i
 
 Please read the DEPENDENCIES file to know what you need to build it.
 
-
-System and Software requirement
--------------------------------
+## System and Software requirement
 
  - A VR capable GPU. Support for OpenGL **4.3** is **required** for Annwvyn, and it needs to be compatible with your VR system
  - Oculus VR Headset (Rift) CV1 or Dev Kit 2 OR HTC Vive, or other hardware supported by OpenVR
@@ -38,8 +34,7 @@ System and Software requirement
  
 Specifically, the code needs a C++14 compliant compiler, and the dependency package is built with the lattest version of Visual Studio 2017 available
  
-Installation
-------------
+## Installation
 
 First, please install Visual Studio 2017 (the community version is free) from Microsoft.
 
@@ -50,8 +45,8 @@ The installer needs to set the location of Annwvyn into an environement variable
 
 After that, if you need to update the engine to the current master branch, see the "Updating the engine" section below.
 
-Building on Windows
--------------------
+### Building on Windows
+
 **Please install Oculus Home, or SteamVR and the lattest drivers from your graphics card manufacturer.**
 
 As stated in the DEPEDENCIES file, you should download the SDK from https://annwvyn.org/
@@ -87,19 +82,40 @@ But, if you *really* want to build and setup the engine yourself, here's a simpl
 
 If you have an Oculus Rift plugged in (or in Debug HMD mode), or a Vive with SteamVR open you can launch the example program via the HMD_launcher.bat scripts in the example directory. (using the one that correspond to your hardware)
 
-Building on Linux
------------------
+### Building on Linux
+
+The only supported renderer on Linux is the OpenVR one. You should install Steam, and SteamVR on your box before doing anything.
 
 You need to have the libraries described in the DEPENDENCIES file, and every libraries needed to build Ogre 2.1 with json, zip, and OpenGL support.
 
-You will need to build Ogre yourself. Once you have Ogre 2.1 and Bullet Physics installed on your system, you can build and install [BtOgre21](https://github.com/Ybalrid/BtOgre21).
+Everything regarding building Ogre, BtOgre21, Annwvyn, and Annwvyn powered projects is done via CMake.*
+
+If you are with CMake, in a terminal, just navigate to a source directory that contains an `CMakeLists.txt` file and do the following:
+
+```bash
+#if a "build" directory doesn't exist, create one 
+mkdir build
+cd build
+cmake ..
+make 
+#if you need to "install" the software
+sudo make install
+```
+
+You will need to build Ogre yourself. Once you have Ogre 2.1 and Bullet Physics installed on your system, you need to build and install [BtOgre21](https://github.com/Ybalrid/BtOgre21).
 
 Currently, some of the libraries that are either distributed in binary for only, and the CMakeScripts are available in this repository that needs to be clonned inside your home directory : https://github.com/Ybalrid/AnnwvynDeps
 
-Using the engine
-----------------
+#### Some words on the linux support
 
-Make a copy of the "template" directory to a convenient location for you, and you are ready to go. It contains a CMakeLists.txt that will permit you to generate build files.
+Annwvyn works (has been tested) with the following configuration:
+ - OpenVR renderer, linked to OpenVR 1.0.13 and an HTC vive, installed and configurerd [correctly](https://github.com/ValveSoftware/SteamVR-for-Linux)
+ - Game ran throug the Steam VR [runtime](https://github.com/ValveSoftware/SteamVR-for-Linux#runtime-requirements)
+ - With Vulkan libraries installed (On ArchLinux, you need the `vulkan-devel` metapackage. 
+
+## Using the engine
+
+Make a copy of the "template" directory to a convenient location for you, and you are basically ready to go. It contains a CMakeLists.txt that will permit you to generate build files.
 
 Inside your build directory, you need to copy over some libraries, there are `getLibs.bat` for windows and `linuxGetLibs.sh` for linux scripts that will do that for you if everything was installed correctly.
 
@@ -110,8 +126,7 @@ On windows you need to have a environment variable "AnnwvynSDK64" set to the SDK
 You should check out the [quickstart](https://wiki.annwvyn.org/doku.php?id=quickstart) page on the Wiki
 
 
-Updating the engine
--------------------
+## Updating the engine
 
 Run "git pull" on the Annwvyn sub-directory. then open the VS solution in msvc/Annwvyn/Annwyvn.sln
 (You may also need to re-build Ogre v2-1 from sources and put it inside your dependency package...)
@@ -133,7 +148,3 @@ License MIT.
 
 ______
 
-Some words on the linux support
-------------------------------
-
-Annwvyn works (has been tested) with the OpenVR 1.0.13 renderer and an HTC vive if everything is installed [correctly](https://github.com/ValveSoftware/SteamVR-for-Linux), if the gam is ran through the steam runtime, and if the vulkan runtime is correctly installed.
