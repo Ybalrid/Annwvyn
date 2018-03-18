@@ -22,9 +22,10 @@ std::string AnnEngine::defaultRenderer{ "NoVRRender" };
 AnnOgreVRRenderBootstrapMap AnnEngine::registeredRenderers;
 
 #ifdef _WIN32
-WORD AnnEngine::consoleGreen{ 0 };
-WORD AnnEngine::consoleYellow{ 0 };
-WORD AnnEngine::consoleWhite{ 0 };
+WORD AnnEngine::consoleGreen{ FOREGROUND_GREEN | FOREGROUND_INTENSITY };
+WORD AnnEngine::consoleYellow{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY };
+WORD AnnEngine::consoleWhite{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY };
+
 #endif
 
 AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
@@ -100,45 +101,31 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 	}
 
 	auto set{ false };
-	//#ifdef _WIN32
-	//	if(hmdCommand == "OculusRender")
-	//	{
-	//		std::cerr << "Using Oculus...\n";
-	//		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
-	//		set		 = true;
-	//	}
-	//#endif
-	//	if(hmdCommand == "OpenVRRender")
-	//	{
-	//		std::cerr << "Using OpenVR...\n";
-	//		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
-	//		set		 = true;
-	//	}
 
-	if(hmdCommand == "NoVRRender")
+	std::cerr << "Attempting to find a registred VR renderer for... " << hmdCommand << '\n';
+
+	if(registeredRenderers.size() == 0)
+		std::cerr << "No renderer has been registered!\n";
+
+	if(registeredRenderers.find(hmdCommand) != std::end(registeredRenderers))
 	{
-		std::cerr << "Not rendering in VR...\n";
+		std::cerr << "found registered render!\n";
+		renderer = std::shared_ptr<AnnOgreVRRenderer>(registeredRenderers[hmdCommand](title));
+		set		 = true;
+	}
+	else if(hmdCommand == "NoVRRender")
+	{
+		std::cerr << "User requested NOT to render in VR...\n";
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
 		set		 = true;
 	}
+
 	if(!set)
 	{
 #ifdef _WIN32
 		displayWin32ErrorMessage(
 			"Error: Cannot understand VR System you want to use!",
-			"This program can be used with multiple VR solution.\n"
-			"The executable should be launched via a dedicated launcher.\n"
-			"If you're trying to launch it by hand, please check if your"
-			"command line parameter is correct!\n\n"
-			"Available command line parameter : \n"
-			"\t-rift\n"
-			"\t-vive\n"
-			"\nIf you don't specify anything, the default system will be used"
-			"(here it's the Oculus Rift)\n"
-			"If you don't have (or can't use) VR Hardware, you can launch with"
-			"-noVR.\n"
-			"This will display the image on a simple window without attempting"
-			"to talk to VR hardware");
+			"//TODO write error message");
 #endif
 		std::cerr << "It looks like we can't start the VR renderer. The engine is going to crash\n."
 				  << "Dumping in standard error the current configuration : \n"
@@ -151,15 +138,18 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 bool AnnEngine::registerVRRenderer(const std::string& name)
 {
+	AnnDebug() << "Registering VR renderer for " << name << '\n';
 	//Check if we don't have this already registered
 	auto findResult = registeredRenderers.find(name);
 	if(findResult != registeredRenderers.end()) return true;
 
 	const std::string pluginName = "AnnOgre" + name + "Renderer";
+	AnnDebug() << "Looking for dynamic library " << pluginName << '\n';
 #ifdef _WIN32
 	auto dll = LoadLibraryA(pluginName.c_str());
 	if(dll)
 	{
+		AnnDebug() << "Loaded DLL sucessfully!\n";
 		const std::string boostrapFunctionName = "AnnRendererBootstrap_" + name;
 		auto functionPointer				   = GetProcAddress(dll, boostrapFunctionName.c_str());
 		if(functionPointer)
@@ -167,6 +157,17 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(functionPointer);
 			return true;
 		}
+		else
+		{
+			AnnDebug() << "Loaded " << pluginName << ".dll, but couldn't find symbol " << boostrapFunctionName << '\n';
+			return false;
+		}
+	}
+	else
+	{
+		AnnDebug() << "Could not find DLL for " << name << " renderer!\n";
+		AnnDebug() << "Your executable should be able to find " << pluginName << ".dll somewhere!\n";
+		return false;
 	}
 #elif __linux__
 	//TODO implement for Linux
@@ -339,6 +340,8 @@ void AnnEngine::writeToLog(std::string message, bool flag)
 
 	if(Ogre::LogManager::getSingletonPtr())
 		Ogre::LogManager::getSingleton().logMessage(message);
+	else
+		std::cout << message;
 
 	setConsoleGreen();
 }

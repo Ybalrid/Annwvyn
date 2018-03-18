@@ -322,6 +322,6 @@ namespace Annwvyn
 	};
 }
 
-extern "C" Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_Oculus(const std::string& appName);
+extern "C" AnnDllExport Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_Oculus(const std::string& appName);
 
 #endif //_WIN32

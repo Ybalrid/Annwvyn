@@ -62,6 +62,8 @@ AnnMain()
 	AnnEngine::logFileName	 = "Samples.log";
 	AnnEngine::defaultRenderer = "NoVRRender";
 
+	AnnEngine::registerVRRenderer("Oculus");
+
 	AnnInit("AnnTest");
 
 	{
