@@ -49,7 +49,7 @@ AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) :
  debugPlaneNode{ nullptr }
 {
 	rendererName = "OpenGL/Oculus";
-	oculusSelf   = static_cast<AnnOgreOculusRenderer*>(self);
+	oculusSelf   = this;
 
 	//List of bitmask for each buttons as we will test them
 	touchControllersButtons[left][0]  = ovrButton_X;

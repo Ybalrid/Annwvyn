@@ -146,8 +146,40 @@ if(MSVC)
     file(GLOB TestPCH tests/pch/*)
 endif()
 
+file(GLOB OculusRenderer renderer/Oculus/*)
+file(GLOB OpenVRRenderer renderer/OpenVR/*)
+
+if(WIN32)
+	add_library(AnnOgreOculusRenderer SHARED ${OculusRenderer})
+endif(WIN32)
+add_library(AnnOgreOpenVRRenderer SHARED ${OpenVRRenderer})
+
 #Set target for project
 add_library(Annwvyn SHARED ${AnnwvynCode} )
+
+if(WIN32)
+target_link_libraries(AnnOgreOculusRenderer
+		Annwvyn
+        optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib
+        debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/LibOVR.lib
+        ws2_32.lib      #TODO WIN32 specific
+        Setupapi.lib    #TODO WIN32 specific
+		)
+endif(WIN32)
+
+target_link_libraries(AnnOgreOpenVRRenderer
+	Annwvyn
+	        openvr_api.lib      #TODO WIN32 specific
+
+)
+
+if(unix)
+target_link_libraries(AnnOgreOpenVRRenderer
+        libopenvr_api.so
+)
+endif(unix)
+
+
 add_executable(AnnwvynUnitTest ${TestCode} ${TestPCH})
 
 set (LIBS 
@@ -192,14 +224,8 @@ set_tests_properties(ListTags PROPERTIES PASS_REGULAR_EXPRESSION "[0-9]+ tags")
 if(WIN32)
 
     set(WIN_ADDITIONAL_LIBS
-        ##VR SDKS (manually added)
-        optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib
-        debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/LibOVR.lib
-        openvr_api.lib      #TODO WIN32 specific
 
         ##Windows own libraries
-        ws2_32.lib      #TODO WIN32 specific
-        Setupapi.lib    #TODO WIN32 specific
         Winmm.lib       #TODO WIN32 specific
         dsound.lib
         )
@@ -210,14 +236,6 @@ if(WIN32)
 
 endif()
     
-if(UNIX)
-    set(LINUX_ADDITIONAL_LIBS
-        libopenvr_api.so
-        )
-    target_link_libraries(Annwvyn
-        ${LINUX_ADDITIONAL_LIBS}
-        )
-endif()
 
 #MSVC specific configuration
 if(MSVC)
@@ -232,7 +250,13 @@ endif()
 #Installation
 if(WIN32)
     set(Annwvyn_INSTALLABLE ${CMAKE_BINARY_DIR}/Release)
-    set(Annwvyn_ARTIFACTS ${Annwvyn_INSTALLABLE}/Annwvyn.lib ${Annwvyn_INSTALLABLE}/Annwvyn.dll ${Annwvyn_INSTALLABLE}/Annwvyn.exp)
+    set(Annwvyn_ARTIFACTS 
+	${Annwvyn_INSTALLABLE}/Annwvyn.lib
+	${Annwvyn_INSTALLABLE}/Annwvyn.dll
+	${Annwvyn_INSTALLABLE}/Annwvyn.exp
+	${Annwvyn_INSTALLABLE}/AnnOgreOculusRenderer.dll 
+	${Annwvyn_INSTALLABLE}/AnnOgreOpenVRRenderer.dll)
+
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 elseif(UNIX)
     install(TARGETS Annwvyn LIBRARY DESTINATION lib)

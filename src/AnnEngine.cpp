@@ -5,11 +5,6 @@
 #include "AnnLogger.hpp"
 #include "AnnException.hpp"
 
-#include "AnnOgreOculusRenderer.hpp"
-
-//Graphic rendering system for the vive
-#include "AnnOgreOpenVRRenderer.hpp"
-
 //Graphic rendering system for NO FREAKING VR SYSTEM
 #include "AnnOgreNoVRRenderer.hpp"
 
@@ -105,20 +100,21 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 	}
 
 	auto set{ false };
-#ifdef _WIN32
-	if(hmdCommand == "OculusRender")
-	{
-		std::cerr << "Using Oculus...\n";
-		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
-		set		 = true;
-	}
-#endif
-	if(hmdCommand == "OpenVRRender")
-	{
-		std::cerr << "Using OpenVR...\n";
-		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
-		set		 = true;
-	}
+	//#ifdef _WIN32
+	//	if(hmdCommand == "OculusRender")
+	//	{
+	//		std::cerr << "Using Oculus...\n";
+	//		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
+	//		set		 = true;
+	//	}
+	//#endif
+	//	if(hmdCommand == "OpenVRRender")
+	//	{
+	//		std::cerr << "Using OpenVR...\n";
+	//		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
+	//		set		 = true;
+	//	}
+
 	if(hmdCommand == "NoVRRender")
 	{
 		std::cerr << "Not rendering in VR...\n";
@@ -159,7 +155,7 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 	auto findResult = registeredRenderers.find(name);
 	if(findResult != registeredRenderers.end()) return true;
 
-	const std::string pluginName = "AnnOgreVR" + name + "Renderer";
+	const std::string pluginName = "AnnOgre" + name + "Renderer";
 #ifdef _WIN32
 	auto dll = LoadLibraryA(pluginName.c_str());
 	if(dll)

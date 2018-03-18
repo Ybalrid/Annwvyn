@@ -36,7 +36,7 @@ AnnOgreOpenVRRenderer::AnnOgreOpenVRRenderer(std::string winName) :
 {
 	rendererName = "OpengGL/OpenVR";
 	//Get the singleton pointer
-	OpenVRSelf = static_cast<AnnOgreOpenVRRenderer*>(self);
+	OpenVRSelf = this;
 
 	buttonsToHandle.reserve(5);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
@@ -205,16 +205,6 @@ void AnnOgreOpenVRRenderer::initRttRendering()
 	unsigned int w, h;
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
 	//w *= 2;
-
-	if(UseSSAA)
-	{
-		if(AALevel / 2 > 0)
-		{
-			w *= AALevel / 2;
-			h *= AALevel / 2;
-			AALevel = 0;
-		}
-	}
 
 	AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
