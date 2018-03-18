@@ -2,10 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "stdafx.h"
 #include "AnnOgreOpenVRRenderer.hpp"
-#include "AnnLogger.hpp"
-#include "AnnEngine.hpp"
-#include "AnnGetter.hpp"
-#include "Annwvyn.h"
+#include "AnnOpenVRMotionController.hpp"
+
+#include <AnnLogger.hpp>
+#include <AnnEngine.hpp>
+#include <AnnGetter.hpp>
+#include <Annwvyn.h>
 
 using namespace Annwvyn;
 
@@ -403,46 +405,6 @@ inline Ogre::Matrix4 AnnOgreOpenVRRenderer::getMatrix4FromSteamVRMatrix34(const 
 	return Ogre::Matrix4{
 		mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[0][3], mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[1][3], mat.m[2][0], mat.m[2][1], mat.m[2][2], mat.m[2][3], 0.0f, 0.0f, 0.0f, 1.0f
 	};
-}
-
-void AnnOpenVRMotionController::rumbleStart(float value)
-{
-	current = AnnGetVRRenderer()->getTimer()->getMilliseconds();
-	//wait at lest 50 milliesconds
-	if(current - last > 50)
-	{
-		last = current;
-		//Max value of one pulse will be 3500µs
-		vrSystem->TriggerHapticPulse(deviceIndex, vr::EVRButtonId::k_EButton_SteamVR_Touchpad - vr::k_EButton_Axis0, static_cast<unsigned short>(value * 3500));
-	}
-}
-
-void AnnOpenVRMotionController::rumbleStop()
-{
-	//NB : The "rumbeling" of OpenVR controllers is pulse based. Meaning that telling it to "not move" doesn't make much sense.
-}
-
-AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem,
-													 vr::TrackedDeviceIndex_t OpenVRDeviceIndex,
-													 Ogre::SceneNode* handNode,
-													 AnnHandControllerID controllerID,
-													 AnnHandControllerSide controllerSide) :
- AnnHandController("OpenVR Hand Controller",
-				   handNode,
-				   controllerID,
-				   controllerSide),
- deviceIndex(OpenVRDeviceIndex),
- vrSystem(vrsystem),
- last(0),
- current(0)
-{
-	capabilites = RotationalTracking
-		| PositionalTracking
-		| AngularAccelerationTracking
-		| LinearAccelerationTracking
-		| ButtonInputs
-		| AnalogInputs
-		| HapticFeedback;
 }
 
 Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_OpenVR(const std::string& appName)

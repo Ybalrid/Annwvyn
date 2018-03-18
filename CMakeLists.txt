@@ -75,8 +75,8 @@ find_package(SNDFILE REQUIRED)
 
 #finding GLEW on windows require the prefix and library path to be modified
 if(WIN32)
-    set(CMAKE_PREFIX_PATH $ENV{AnnwvynSDK64}/glew)
-    set(CMAKE_LIBRARY_PATH $ENV{AnnwvynSDK64}/glew/lib/Release/x64)
+    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} $ENV{AnnwvynSDK64}/glew)
+    set(CMAKE_LIBRARY_PATH ${CMAKE_PREFIX_PATH} $ENV{AnnwvynSDK64}/glew/lib/Release/x64)
 endif(WIN32)
 
 find_package(GLEW REQUIRED)
@@ -118,14 +118,6 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/tests
     )
 
-if(UNIX)    
-    get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-    message("here's the list of the include flag to put in your .clang_complete")
-    foreach(dir ${dirs})
-        message("-I${dir}")
-    endforeach()
-endif(UNIX)
-
 
 link_directories(
     #VR SDKs
@@ -140,50 +132,13 @@ if(MSVC)
     file(GLOB AnnwvynPCH pch/*)
 endif()
 set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} ${AnnwvynPCH})
-
-file(GLOB TestCode tests/*.cpp tests/*.hpp)
-if(MSVC)
-    file(GLOB TestPCH tests/pch/*)
-endif()
-
-file(GLOB OculusRenderer renderer/Oculus/*)
-file(GLOB OpenVRRenderer renderer/OpenVR/*)
-
-if(WIN32)
-	add_library(AnnOgreOculusRenderer SHARED ${OculusRenderer})
-endif(WIN32)
-add_library(AnnOgreOpenVRRenderer SHARED ${OpenVRRenderer})
-
-#Set target for project
 add_library(Annwvyn SHARED ${AnnwvynCode} )
 
-if(WIN32)
-target_link_libraries(AnnOgreOculusRenderer
-		Annwvyn
-        optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib
-        debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/LibOVR.lib
-        ws2_32.lib      #TODO WIN32 specific
-        Setupapi.lib    #TODO WIN32 specific
-		)
-endif(WIN32)
-
-target_link_libraries(AnnOgreOpenVRRenderer
-	Annwvyn
-	        openvr_api.lib      #TODO WIN32 specific
-
-)
-
-if(unix)
-target_link_libraries(AnnOgreOpenVRRenderer
-        libopenvr_api.so
-)
-endif(unix)
+add_subdirectory(tests)
+add_subdirectory(renderer)
 
 
-add_executable(AnnwvynUnitTest ${TestCode} ${TestPCH})
-
-set (LIBS 
-    ##Engine dependencies
+target_link_libraries( Annwvyn
     ${OGRE_LIBRARIES}
     ${OGRE_HlmsPbs_LIBRARIES}
     ${OGRE_HlmsUnlit_LIBRARIES}
@@ -199,43 +154,12 @@ set (LIBS
     ${SNDFILE_LIBRARIES}
     )
 
-#linker input from old VS solution
-target_link_libraries( Annwvyn
-    ${LIBS}
-    )
-
-target_link_libraries(AnnwvynUnitTest
-    Annwvyn
-    ${OGRE_LIBRARIES}
-    ${OGRE_HlmsPbs_LIBRARIES}
-    ${OGRE_HlmsUnlit_LIBRARIES}
-    ${OGRE_Overlay_LIBRARIES}
-    )
-
-enable_testing()
-add_test(NAME Run COMMAND AnnwvynUnitTest)
-add_test(NAME ListTests COMMAND AnnwvynUnitTest --list-tests)
-set_tests_properties(ListTests PROPERTIES PASS_REGULAR_EXPRESSION "[0-9]+ test cases")
-add_test(NAME ListTags COMMAND AnnwvynUnitTest --list-tags)
-set_tests_properties(ListTags PROPERTIES PASS_REGULAR_EXPRESSION "[0-9]+ tags")
-
-
-
 if(WIN32)
-
-    set(WIN_ADDITIONAL_LIBS
-
-        ##Windows own libraries
-        Winmm.lib       #TODO WIN32 specific
+    target_link_libraries(Annwvyn
+        Winmm.lib 
         dsound.lib
         )
-
-    target_link_libraries(Annwvyn
-        ${WIN_ADDITIONAL_LIBS}
-        )
-
 endif()
-    
 
 #MSVC specific configuration
 if(MSVC)
@@ -243,8 +167,6 @@ if(MSVC)
     set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
     set_target_properties(Annwvyn PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
     set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
-    set_target_properties(AnnwvynUnitTest PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
-    set_source_files_properties(tests/pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
 endif()
 
 #Installation
@@ -256,10 +178,19 @@ if(WIN32)
 	${Annwvyn_INSTALLABLE}/Annwvyn.exp
 	${Annwvyn_INSTALLABLE}/AnnOgreOculusRenderer.dll 
 	${Annwvyn_INSTALLABLE}/AnnOgreOpenVRRenderer.dll)
-
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+
 elseif(UNIX)
     install(TARGETS Annwvyn LIBRARY DESTINATION lib)
     install(FILES ${AnnwvynHeaders} DESTINATION include/Annwvyn/)
 endif()
+
+if(UNIX)    
+    get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+    message("here's the list of the include flag to put in your .clang_complete")
+    foreach(dir ${dirs})
+        message("-I${dir}")
+    endforeach()
+endif(UNIX)
+
 
