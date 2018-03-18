@@ -1,7 +1,7 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-#include "AnnOculusTouchController.hpp"
+#include "AnnOculusTouchController.hpp":
 using namespace Annwvyn;
 
 void AnnOculusTouchController::rumbleStart(float factor)
@@ -26,6 +26,12 @@ AnnOculusTouchController::AnnOculusTouchController(ovrSession session,
 	else if(side == rightHandController)
 		myControllerType = ovrControllerType_RTouch;
 
-	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking
-		| LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback | DiscreteHandGestures;
+	capabilites = RotationalTracking
+		| PositionalTracking
+		| AngularAccelerationTracking
+		| LinearAccelerationTracking
+		| ButtonInputs
+		| AnalogInputs
+		| HapticFeedback
+		| DiscreteHandGestures;
 }

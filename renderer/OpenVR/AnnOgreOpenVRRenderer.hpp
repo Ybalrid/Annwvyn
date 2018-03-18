@@ -15,7 +15,7 @@ namespace Annwvyn
 	class AnnDllExport AnnOgreOpenVRRenderer : public AnnOgreVRRenderer
 	{
 		///Marker for left and right : "Ogre Open VR Eye Type"
-		enum oovrEyeType {
+		enum OpenVREyeType {
 			left,
 			right
 		};
@@ -69,8 +69,8 @@ namespace Annwvyn
 		///Get the projection matrix from the OpenVR API and apply it to the cameras using the near/far clip planes distances
 		void updateProjectionMatrix() override;
 
-		///Get a "vr::EVREye" from an "oovrEyeType"
-		static vr::EVREye getEye(oovrEyeType eye);
+		///Get a "vr::EVREye" from an "OpenVREyeType"
+		static vr::EVREye getEye(OpenVREyeType eye);
 
 	private:
 		///Get the HMD position in the OpenVR tracking space
@@ -145,11 +145,14 @@ namespace Annwvyn
 		///Constant values needed for extracting axis informations
 		const size_t numberOfAxes, axoffset;
 
-		///To hold axis values
+		///X axis of the touchpad
 		float touchpadXNormalizedValue;
+		///Y axis of the touchpad
 		float touchpadYNormalizedValue;
+		///Value of the main trigger
 		float triggerNormalizedValue;
 
+		///To store the type of an event
 		vr::VREvent_t event;
 	};
 }

@@ -1,14 +1,14 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "stdafx.h"
+#include "AnnOgreOculusRenderer.hpp"
 #include "AnnOculusTouchController.hpp"
 #ifdef _WIN32
 
 #include <string>
-#include "AnnOgreOculusRenderer.hpp"
-#include "AnnLogger.hpp"
-#include "AnnGetter.hpp"
-#include "AnnException.hpp"
+#include <AnnLogger.hpp>
+#include <AnnGetter.hpp>
+#include <AnnException.hpp>
 
 using namespace Annwvyn;
 
@@ -432,7 +432,7 @@ void AnnOgreOculusRenderer::renderAndSubmitFrame()
 	}
 }
 
-void AnnOgreOculusRenderer::initializeHandObjects(const oorEyeType side)
+void AnnOgreOculusRenderer::initializeHandObjects(const OgreOculusEyeType side)
 {
 	//If it's the first time we have access data on this hand controller, instantiate the object
 	if(!handControllers[side])
@@ -441,7 +441,7 @@ void AnnOgreOculusRenderer::initializeHandObjects(const oorEyeType side)
 	}
 }
 
-void AnnOgreOculusRenderer::initializeControllerAxes(const oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector)
+void AnnOgreOculusRenderer::initializeControllerAxes(const OgreOculusEyeType side, std::vector<AnnHandControllerAxis>& axesVector)
 {
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
@@ -449,7 +449,7 @@ void AnnOgreOculusRenderer::initializeControllerAxes(const oorEyeType side, std:
 	axesVector.push_back(AnnHandControllerAxis{ "GripTrigger X", inputState.HandTrigger[side] });
 }
 
-void AnnOgreOculusRenderer::processButtonStates(const oorEyeType side)
+void AnnOgreOculusRenderer::processButtonStates(const OgreOculusEyeType side)
 {
 	//Extract button states and deduce press/released events
 	pressed.clear();

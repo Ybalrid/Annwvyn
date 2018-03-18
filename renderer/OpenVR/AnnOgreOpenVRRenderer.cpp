@@ -14,7 +14,6 @@ using namespace Annwvyn;
 AnnOgreOpenVRRenderer* AnnOgreOpenVRRenderer::OpenVRSelf(nullptr);
 
 AnnOgreOpenVRRenderer::AnnOgreOpenVRRenderer(std::string winName) :
- //TODO: V730https://www.viva64.com/en/w/v730/Not all members of a class are initialized inside the constructor. Consider inspecting: event.
  AnnOgreVRRenderer(winName),
  vrSystem{ nullptr },
  hmdError{ vr::EVRInitError::VRInitError_None },
@@ -34,7 +33,8 @@ AnnOgreOpenVRRenderer::AnnOgreOpenVRRenderer(std::string winName) :
  touchpadYNormalizedValue{ 0 },
  triggerNormalizedValue{ 0 },
  trackedPoses{},
- controllerState{}
+ controllerState{},
+ event{}
 {
 	rendererName = "OpengGL/OpenVR";
 	//Get the singleton pointer
@@ -67,14 +67,21 @@ AnnOgreOpenVRRenderer::~AnnOgreOpenVRRenderer()
 //This function is taken straight from VALVe's example.
 std::string GetTrackedDeviceString(vr::IVRSystem* pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError* peError = nullptr)
 {
+	//Get size of the string
 	auto unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, nullptr, 0, peError);
 	if(unRequiredBufferLen == 0)
 		return "";
 
+	//Get the characters as an array of char
 	std::vector<char> pchBuffer(unRequiredBufferLen);
-	pHmd->GetStringTrackedDeviceProperty(unDevice, prop, pchBuffer.data(), unRequiredBufferLen, peError);
-	std::string sResult = pchBuffer.data();
-	return sResult;
+	pHmd->GetStringTrackedDeviceProperty(unDevice,
+										 prop,
+										 pchBuffer.data(),
+										 unRequiredBufferLen,
+										 peError);
+
+	//construct and return a string
+	return pchBuffer.data();
 }
 
 void AnnOgreOpenVRRenderer::initVrHmd()
@@ -245,7 +252,7 @@ void AnnOgreOpenVRRenderer::updateProjectionMatrix()
 	}
 }
 
-inline vr::EVREye AnnOgreOpenVRRenderer::getEye(oovrEyeType eye)
+inline vr::EVREye AnnOgreOpenVRRenderer::getEye(OpenVREyeType eye)
 {
 	if(eye == left) return vr::Eye_Left;
 	return vr::Eye_Right;
@@ -396,7 +403,7 @@ void AnnOgreOpenVRRenderer::handleIPDChange()
 	//Get the eyeToHeadTransform (they contain the IPD translation)
 	for(char i(0); i < 2; i++)
 		eyeCameras[i]->setPosition(getMatrix4FromSteamVRMatrix34(
-									   vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i))))
+									   vrSystem->GetEyeToHeadTransform(getEye(OpenVREyeType(i))))
 									   .getTrans());
 }
 

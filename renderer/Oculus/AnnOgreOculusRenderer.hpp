@@ -42,7 +42,7 @@ namespace Annwvyn
 	class AnnDllExport AnnOgreOculusRenderer : public AnnOgreVRRenderer
 	{
 		///OgreOculusRenderEyeType : prefer to use "left" and "right" instead of 0 and 1
-		enum oorEyeType {
+		enum OgreOculusEyeType {
 			left,
 			right
 		};
@@ -125,13 +125,13 @@ namespace Annwvyn
 		ovrSizei texSizeL, texSizeR;
 
 		///Create the AnnHandControllerObject for this side
-		void initializeHandObjects(const oorEyeType side);
+		void initializeHandObjects(const OgreOculusEyeType side);
 
 		///Initialize the axisVector for given controller
-		void initializeControllerAxes(const oorEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
+		void initializeControllerAxes(const OgreOculusEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
 
 		///Extract usefull data from the button state, including buffered pressed/released events
-		void processButtonStates(const oorEyeType side);
+		void processButtonStates(const OgreOculusEyeType side);
 
 		///Get the state of the touch controller and update the handController objects accordingly
 		void updateTouchControllers();
@@ -287,7 +287,7 @@ namespace Annwvyn
 		static constexpr const std::array<const uint8_t, 4> quadIndexBuffer{ 0, 1, 2, 3 };
 
 		///Preferred order to update eyes
-		static constexpr const std::array<const oorEyeType, 2> eyeUpdateOrder{ { left, right } };
+		static constexpr const std::array<const OgreOculusEyeType, 2> eyeUpdateOrder{ { left, right } };
 
 		///Return true if the array sizes of each buffer are constants
 		static constexpr bool debugPlaneSanityCheck()
