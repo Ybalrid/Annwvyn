@@ -173,11 +173,11 @@ endif()
 if(WIN32)
     set(Annwvyn_INSTALLABLE ${CMAKE_BINARY_DIR}/Release)
     set(Annwvyn_ARTIFACTS 
-	${Annwvyn_INSTALLABLE}/Annwvyn.lib
-	${Annwvyn_INSTALLABLE}/Annwvyn.dll
-	${Annwvyn_INSTALLABLE}/Annwvyn.exp
-	${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOculusRenderer.dll 
-	${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOpenVRRenderer.dll)
+    ${Annwvyn_INSTALLABLE}/Annwvyn.lib
+    ${Annwvyn_INSTALLABLE}/Annwvyn.dll
+    ${Annwvyn_INSTALLABLE}/Annwvyn.exp
+    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOculusRenderer.dll 
+    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOpenVRRenderer.dll)
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 
 elseif(UNIX)
@@ -185,7 +185,7 @@ elseif(UNIX)
     install(FILES ${AnnwvynHeaders} DESTINATION include/Annwvyn/)
 endif()
 
-if(UNIX)    
+if(UNIX)
     get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
     message("here's the list of the include flag to put in your .clang_complete")
     foreach(dir ${dirs})
