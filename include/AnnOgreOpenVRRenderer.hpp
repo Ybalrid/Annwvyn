@@ -177,3 +177,6 @@ namespace Annwvyn
 		vr::VREvent_t event;
 	};
 }
+
+///Initialize the OpenVR renderer and return a naked pointer. Call it from the
+extern "C" AnnDllExport Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_OpenVR(const std::string& name);

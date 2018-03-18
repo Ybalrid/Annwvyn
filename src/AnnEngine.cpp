@@ -24,6 +24,8 @@ bool AnnEngine::manualConsole{ false };
 std::string AnnEngine::logFileName{ "Annwvyn.log" };
 std::string AnnEngine::defaultRenderer{ "NoVRRender" };
 
+AnnOgreVRRenderBootstrapMap AnnEngine::registeredRenderers;
+
 #ifdef _WIN32
 WORD AnnEngine::consoleGreen{ 0 };
 WORD AnnEngine::consoleYellow{ 0 };
@@ -82,7 +84,8 @@ std::string AnnEngine::getAnnwvynVersion(size_t padding)
 
 void AnnEngine::startGameplayLoop()
 {
-	while(refresh()) {
+	while(refresh())
+	{
 	}
 }
 
@@ -148,6 +151,31 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 		if(renderer == nullptr) std::cerr << "The renderer is currently nullptr\n";
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
+}
+
+bool AnnEngine::registerVRRenderer(const std::string& name)
+{
+	//Check if we don't have this already registered
+	auto findResult = registeredRenderers.find(name);
+	if(findResult != registeredRenderers.end()) return true;
+
+	const std::string pluginName = "AnnOgreVR" + name + "Renderer";
+#ifdef _WIN32
+	auto dll = LoadLibraryA(pluginName.c_str());
+	if(dll)
+	{
+		const std::string boostrapFunctionName = "AnnRendererBootstrap_" + name;
+		auto functionPointer				   = GetProcAddress(dll, boostrapFunctionName.c_str());
+		if(functionPointer)
+		{
+			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(functionPointer);
+			return true;
+		}
+	}
+#elif __linux__
+	//TODO implement for Linux
+#endif
+	return false;
 }
 
 AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :

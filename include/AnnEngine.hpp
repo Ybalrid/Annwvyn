@@ -19,6 +19,8 @@
 #include <cassert>
 #include <list>
 #include <memory>
+#include <unordered_map>
+#include <string>
 
 //Annwvyn
 #include "AnnTypes.h"
@@ -50,6 +52,10 @@ namespace Annwvyn
 	class AnnEngine;
 	class AnnPhysicsEngine;
 
+	class AnnOgreVRRenderer;
+	using AnnOgreVRRendererBootstrapFunction = AnnOgreVRRenderer* (*)(const std::string& appName);
+	using AnnOgreVRRenderBootstrapMap		 = std::unordered_map<std::string, AnnOgreVRRendererBootstrapFunction>;
+
 	///Utility class for AnnEngine
 	class AnnDllExport AnnEngineSingletonReseter
 	{
@@ -62,6 +68,8 @@ namespace Annwvyn
 	///Main engine class. Creating an instance of this class make the engine start.
 	class AnnDllExport AnnEngine
 	{
+		static AnnOgreVRRenderBootstrapMap registeredRenderers;
+
 		///the singleton address itself is stored here
 		static AnnEngine* singleton;
 		friend class AnnEngineSingletonReseter;
@@ -78,6 +86,8 @@ namespace Annwvyn
 		void selectAndCreateRenderer(const std::string& hmd, const std::string& title);
 
 	public:
+		///Register a renderer "plugin". Calls it before AnnInit
+		static bool registerVRRenderer(const std::string& name);
 		///Public flag, true by default : will ask Windows to give us high priority
 		static bool autosetProcessPriorityHigh;
 		///Public static parameter : name of the logfile. Please set it before AnnInit or creating an AnnEngine object

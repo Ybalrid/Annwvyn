@@ -537,4 +537,9 @@ AnnOculusTouchController::AnnOculusTouchController(ovrSession session,
 		| LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback | DiscreteHandGestures;
 }
 
+Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_Oculus(const std::string& appName)
+{
+	return static_cast<AnnOgreVRRenderer*>(new AnnOgreOculusRenderer(appName));
+}
+
 #endif

@@ -454,3 +454,8 @@ AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem,
 		| AnalogInputs
 		| HapticFeedback;
 }
+
+Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_OpenVR(const std::string& appName)
+{
+	return static_cast<AnnOgreVRRenderer*>(new AnnOgreOpenVRRenderer(appName));
+}
