@@ -85,14 +85,14 @@ void AnnEngine::startGameplayLoop()
 	}
 }
 
-void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std::string& title)
+void AnnEngine::selectAndCreateRenderer(const std::string& selectedRenderer, const std::string& title)
 {
 	std::cerr << "HMD selection from command line routine returned : "
-			  << hmdCommand << std::endl;
+			  << selectedRenderer << std::endl;
 
 	//Select the correct AnnOgreVRRenderer class to use :
 
-	if(hmdCommand == "DefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "DefaultRender")))
+	if(selectedRenderer == "DefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "DefaultRender")))
 	{
 		std::cerr << "Using the default renderer " << defaultRenderer << " as HMD selector\n";
 		std::cerr << "Re-running the renderer selection test..\n";
@@ -102,18 +102,18 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 	auto set{ false };
 
-	std::cerr << "Attempting to find a registred VR renderer for... " << hmdCommand << '\n';
+	std::cerr << "Attempting to find a registred VR renderer for... " << selectedRenderer << '\n';
 
 	if(registeredRenderers.size() == 0)
 		std::cerr << "No renderer has been registered!\n";
 
-	if(registeredRenderers.find(hmdCommand) != std::end(registeredRenderers))
+	if(registeredRenderers.find(selectedRenderer) != std::end(registeredRenderers))
 	{
 		std::cerr << "found registered render!\n";
-		renderer = std::shared_ptr<AnnOgreVRRenderer>(registeredRenderers[hmdCommand](title));
+		renderer = std::shared_ptr<AnnOgreVRRenderer>(registeredRenderers[selectedRenderer](title));
 		set		 = true;
 	}
-	else if(hmdCommand == "NoVRRender")
+	else if(selectedRenderer == "NoVRRender")
 	{
 		std::cerr << "User requested NOT to render in VR...\n";
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
@@ -130,7 +130,7 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 		std::cerr << "It looks like we can't start the VR renderer. The engine is going to crash\n."
 				  << "Dumping in standard error the current configuration : \n"
 				  << "The default renderer is:" << defaultRenderer << '\n'
-				  << "The hmdCommand is: " << hmdCommand << '\n';
+				  << "The selectedRenderer is: " << selectedRenderer << '\n';
 		if(renderer == nullptr) std::cerr << "The renderer is currently nullptr\n";
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
@@ -138,63 +138,54 @@ void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std
 
 bool AnnEngine::registerVRRenderer(const std::string& name)
 {
-	AnnDebug() << "Registering VR renderer for " << name << '\n';
+	AnnDebug() << "Registering VR renderer for " << name;
 	//Check if we don't have this already registered
 	auto findResult = registeredRenderers.find(name);
 	if(findResult != registeredRenderers.end()) return true;
 
-	const std::string pluginName = "AnnOgre" + name + "Renderer";
+	const std::string pluginName		   = "AnnOgre" + name + "Renderer";
 	const std::string boostrapFunctionName = "AnnRendererBootstrap_" + name;
-	AnnDebug() << "Looking for dynamic library " << pluginName << '\n';
+	AnnDebug() << "Looking for dynamic library " << pluginName;
+
 #ifdef _WIN32
+
 	auto dll = LoadLibraryA(pluginName.c_str());
 	if(dll)
 	{
-		AnnDebug() << "Loaded DLL sucessfully!\n";
-		auto functionPointer				   = GetProcAddress(dll, boostrapFunctionName.c_str());
+		AnnDebug() << "Loaded DLL sucessfully!";
+		auto functionPointer = GetProcAddress(dll, boostrapFunctionName.c_str());
 		if(functionPointer)
 		{
 			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(functionPointer);
+			AnnDebug() << "Sucessfully registered " << name << " renderer!";
 			return true;
 		}
-		else
-		{
-			AnnDebug() << "Loaded " << pluginName << ".dll, but couldn't find symbol " << boostrapFunctionName << '\n';
-			return false;
-		}
-	}
-	else
-	{
-		AnnDebug() << "Could not find DLL for " << name << " renderer!\n";
-		AnnDebug() << "Your executable should be able to find " << pluginName << ".dll somewhere!\n";
+		AnnDebug() << "Loaded " << pluginName << ".dll, but couldn't find symbol " << boostrapFunctionName;
 		return false;
 	}
+	AnnDebug() << "Could not find DLL for " << name << " renderer";
+	AnnDebug() << "Your executable should be able to find " << pluginName << ".dll somewhere!";
+
 #elif __linux__
-    auto pluginNameSo = "lib" + pluginName + ".so";
-    auto library = dlopen(pluginNameSo.c_str(), RTLD_NOW);
-    if(library)
-    {
-        auto fptr = dlsym(library, boostrapFunctionName.c_str());
-        if(fptr)
-        {
+
+	auto pluginNameSo = "lib" + pluginName + ".so";
+	auto library	  = dlopen(pluginNameSo.c_str(), RTLD_NOW);
+	if(library)
+	{
+		auto fptr = dlsym(library, boostrapFunctionName.c_str());
+		if(fptr)
+		{
 			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(fptr);
 			return true;
-        }
-        else
-        {
-			AnnDebug() << "Loaded " << pluginName << ", but couldn't find symbol " << boostrapFunctionName << '\n';
-			return false;
-        }
-    }
-    else
-    {
-
-		AnnDebug() << "Could not find lbrary file for " << name << " renderer!\n";
-		AnnDebug() << "Your executable should be able to find " << pluginName << " in your LD library path (hint, run ldconfig...)!\n";
+		}
+		AnnDebug() << "Loaded " << pluginName << ", but couldn't find symbol " << boostrapFunctionName << '\n';
 		return false;
-    }
-	//TODO implement for Linux
+	}
+	AnnDebug() << "Could not find lbrary file for " << name << " renderer!";
+	AnnDebug() << "Your executable should be able to find " << pluginName << " in your LD library path (hint, run ldconfig...)!";
+
 #endif
+
 	return false;
 }
 
@@ -364,7 +355,7 @@ void AnnEngine::writeToLog(std::string message, bool flag)
 	if(Ogre::LogManager::getSingletonPtr())
 		Ogre::LogManager::getSingleton().logMessage(message);
 	else
-		std::cout << message;
+		std::cout << message << '\n';
 
 	setConsoleGreen();
 }

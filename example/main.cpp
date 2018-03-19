@@ -65,7 +65,8 @@ AnnMain()
 #ifdef _WIN32
 	AnnEngine::registerVRRenderer("Oculus");
 #endif
-    AnnEngine::registerVRRenderer("OpenVR");
+
+	AnnEngine::registerVRRenderer("OpenVR");
 	AnnInit("AnnTest");
 
 	{
