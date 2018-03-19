@@ -5,16 +5,20 @@ file(GLOB OpenVRRenderer OpenVR/*)
 
 add_library(AnnOgreOpenVRRenderer SHARED ${OpenVRRenderer})
 
+if(WIN32)
 target_link_libraries(AnnOgreOpenVRRenderer
 	Annwvyn
 	openvr_api.lib
 )
+endif()
 
-if(unix)
-	target_link_libraries(AnnOgreOpenVRRenderer 
-	libopenvr_api.so
-)
-endif(unix)
+if(UNIX)
+	target_link_libraries(AnnOgreOpenVRRenderer
+	libopenvr_api.so)
+
+    install(TARGETS AnnOgreOpenVRRenderer LIBRARY DESTINATION lib)
+
+endif(UNIX)
 
 if(WIN32)
 	add_library(AnnOgreOculusRenderer SHARED ${OculusRenderer})

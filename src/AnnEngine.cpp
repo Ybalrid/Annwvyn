@@ -144,13 +144,13 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 	if(findResult != registeredRenderers.end()) return true;
 
 	const std::string pluginName = "AnnOgre" + name + "Renderer";
+	const std::string boostrapFunctionName = "AnnRendererBootstrap_" + name;
 	AnnDebug() << "Looking for dynamic library " << pluginName << '\n';
 #ifdef _WIN32
 	auto dll = LoadLibraryA(pluginName.c_str());
 	if(dll)
 	{
 		AnnDebug() << "Loaded DLL sucessfully!\n";
-		const std::string boostrapFunctionName = "AnnRendererBootstrap_" + name;
 		auto functionPointer				   = GetProcAddress(dll, boostrapFunctionName.c_str());
 		if(functionPointer)
 		{
@@ -170,6 +170,29 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 		return false;
 	}
 #elif __linux__
+    auto pluginNameSo = "lib" + pluginName + ".so";
+    auto library = dlopen(pluginNameSo.c_str(), RTLD_NOW);
+    if(library)
+    {
+        auto fptr = dlsym(library, boostrapFunctionName.c_str());
+        if(fptr)
+        {
+			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(fptr);
+			return true;
+        }
+        else
+        {
+			AnnDebug() << "Loaded " << pluginName << ", but couldn't find symbol " << boostrapFunctionName << '\n';
+			return false;
+        }
+    }
+    else
+    {
+
+		AnnDebug() << "Could not find lbrary file for " << name << " renderer!\n";
+		AnnDebug() << "Your executable should be able to find " << pluginName << " in your LD library path (hint, run ldconfig...)!\n";
+		return false;
+    }
 	//TODO implement for Linux
 #endif
 	return false;
