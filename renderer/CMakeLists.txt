@@ -5,13 +5,15 @@ file(GLOB OpenVRRenderer OpenVR/*)
 
 add_library(AnnOgreOpenVRRenderer SHARED ${OpenVRRenderer})
 
+if(WIN32)
 target_link_libraries(AnnOgreOpenVRRenderer
 	Annwvyn
 	openvr_api.lib
 )
+endif()
 
 if(unix)
-	target_link_libraries(AnnOgreOpenVRRenderer 
+	target_link_libraries(AnnOgreOpenVRRenderer
 	libopenvr_api.so
 )
 endif(unix)
