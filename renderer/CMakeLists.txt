@@ -12,11 +12,13 @@ target_link_libraries(AnnOgreOpenVRRenderer
 )
 endif()
 
-if(unix)
+if(UNIX)
 	target_link_libraries(AnnOgreOpenVRRenderer
-	libopenvr_api.so
-)
-endif(unix)
+	libopenvr_api.so)
+
+    install(TARGETS AnnOgreOpenVRRenderer LIBRARY DESTINATION lib)
+
+endif(UNIX)
 
 if(WIN32)
 	add_library(AnnOgreOculusRenderer SHARED ${OculusRenderer})

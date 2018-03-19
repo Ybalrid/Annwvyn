@@ -62,8 +62,10 @@ AnnMain()
 	AnnEngine::logFileName	 = "Samples.log";
 	AnnEngine::defaultRenderer = "NoVRRender";
 
+#ifdef _WIN32
 	AnnEngine::registerVRRenderer("Oculus");
-
+#endif
+    AnnEngine::registerVRRenderer("OpenVR");
 	AnnInit("AnnTest");
 
 	{
