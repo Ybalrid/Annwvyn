@@ -10,7 +10,7 @@
 //Keep track of engine version here
 #define ANN_MAJOR 0
 #define ANN_MINOR 4
-#define ANN_PATCH 0
+#define ANN_PATCH 1
 #define ANN_EXPERIMENTAL true
 
 #include "systemMacro.h"
@@ -52,9 +52,15 @@ namespace Annwvyn
 	class AnnEngine;
 	class AnnPhysicsEngine;
 
+	//Pre-declare renderer abstract class
 	class AnnOgreVRRenderer;
+	///Type of a function pointer used to "bootstrap" a renderer.
+	/// \param appName Name of the application
+	/// \returns pointer to an object that inherit from AnnOgreVRRender
 	using AnnOgreVRRendererBootstrapFunction = AnnOgreVRRenderer* (*)(const std::string& appName);
-	using AnnOgreVRRenderBootstrapMap		 = std::unordered_map<std::string, AnnOgreVRRendererBootstrapFunction>;
+
+	///Type of a map that links renderer's name, and a function to boostrap one
+	using AnnOgreVRRenderBootstrapMap = std::unordered_map<std::string, AnnOgreVRRendererBootstrapFunction>;
 
 	///Utility class for AnnEngine
 	class AnnDllExport AnnEngineSingletonReseter
@@ -88,10 +94,16 @@ namespace Annwvyn
 	public:
 		///Register a renderer "plugin". Calls it before AnnInit
 		static bool registerVRRenderer(const std::string& name);
+
+		///Regsiter a renderer manually (to use your own loading code, or to use statically linked code)
+		static void manualRegisterVRRender(const std::string& name, AnnOgreVRRendererBootstrapFunction boostrapFunctionPointer);
+
 		///Public flag, true by default : will ask Windows to give us high priority
 		static bool autosetProcessPriorityHigh;
+
 		///Public static parameter : name of the logfile. Please set it before AnnInit or creating an AnnEngine object
 		static std::string logFileName;
+
 		///Public static parameter : name of the "default" renderer to use. Please set it before AnnInit or creating an AnnEngine object
 		static std::string defaultRenderer;
 
@@ -100,6 +112,7 @@ namespace Annwvyn
 
 		///Set the process priority to "normal"
 		static void setProcessPriorityNormal();
+
 		///Set the process priority to "high"
 		static void setProcessPriorityHigh();
 

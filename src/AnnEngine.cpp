@@ -17,7 +17,7 @@ bool AnnEngine::noConsoleColor{ false };
 bool AnnEngine::consoleReady{ false };
 bool AnnEngine::manualConsole{ false };
 std::string AnnEngine::logFileName{ "Annwvyn.log" };
-std::string AnnEngine::defaultRenderer{ "NoVRRender" };
+std::string AnnEngine::defaultRenderer{ "NoVR" };
 
 AnnOgreVRRenderBootstrapMap AnnEngine::registeredRenderers;
 
@@ -113,7 +113,9 @@ void AnnEngine::selectAndCreateRenderer(const std::string& selectedRenderer, con
 		renderer = std::shared_ptr<AnnOgreVRRenderer>(registeredRenderers[selectedRenderer](title));
 		set		 = true;
 	}
-	else if(selectedRenderer == "NoVRRender")
+
+	//Attempt to see if the application requested the built-in one (that doesn't do VR)
+	else if(selectedRenderer == "NoVR")
 	{
 		std::cerr << "User requested NOT to render in VR...\n";
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
@@ -187,6 +189,11 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 #endif
 
 	return false;
+}
+
+void AnnEngine::manualRegisterVRRender(const std::string& name, AnnOgreVRRendererBootstrapFunction boostrapFunctionPointer)
+{
+	registeredRenderers[name] = boostrapFunctionPointer;
 }
 
 AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
