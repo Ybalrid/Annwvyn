@@ -60,7 +60,7 @@ AnnMain()
 
 	AnnOgreVRRenderer::setAntiAliasingLevel(8);
 	AnnEngine::logFileName	 = "Samples.log";
-	AnnEngine::defaultRenderer = "NoVRRender";
+	AnnEngine::defaultRenderer = "NoVR";
 
 #ifdef _WIN32
 	AnnEngine::registerVRRenderer("Oculus");
