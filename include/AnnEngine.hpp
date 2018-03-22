@@ -96,7 +96,7 @@ namespace Annwvyn
 		static bool registerVRRenderer(const std::string& name);
 
 		///Regsiter a renderer manually (to use your own loading code, or to use statically linked code)
-		static void manualRegisterVRRender(const std::string& name, AnnOgreVRRendererBootstrapFunction boostrapFunctionPointer);
+		static void manuallyRegisterVRRender(const std::string& name, AnnOgreVRRendererBootstrapFunction boostrapFunctionPointer);
 
 		///Public flag, true by default : will ask Windows to give us high priority
 		static bool autosetProcessPriorityHigh;

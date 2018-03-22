@@ -140,21 +140,20 @@ void AnnEngine::selectAndCreateRenderer(const std::string& selectedRenderer, con
 
 bool AnnEngine::registerVRRenderer(const std::string& name)
 {
-	AnnDebug() << "Registering VR renderer for " << name;
 	//Check if we don't have this already registered
 	auto findResult = registeredRenderers.find(name);
 	if(findResult != registeredRenderers.end()) return true;
 
+	AnnDebug() << "Looking for renderer : " << name;
 	const std::string pluginName		   = "AnnOgre" + name + "Renderer";
 	const std::string boostrapFunctionName = "AnnRendererBootstrap_" + name;
-	AnnDebug() << "Looking for dynamic library " << pluginName;
 
 #ifdef _WIN32
 
 	auto dll = LoadLibraryA(pluginName.c_str());
 	if(dll)
 	{
-		AnnDebug() << "Loaded DLL sucessfully!";
+		AnnDebug() << "Found plugin library";
 		auto functionPointer = GetProcAddress(dll, boostrapFunctionName.c_str());
 		if(functionPointer)
 		{
@@ -174,10 +173,12 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 	auto library	  = dlopen(pluginNameSo.c_str(), RTLD_NOW);
 	if(library)
 	{
+		AnnDebug() << "Found plugin library";
 		auto fptr = dlsym(library, boostrapFunctionName.c_str());
 		if(fptr)
 		{
 			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(fptr);
+			AnnDebug() << "Sucessfully registered " << name << " renderer!";
 			return true;
 		}
 		AnnDebug() << "Loaded " << pluginName << ", but couldn't find symbol " << boostrapFunctionName << '\n';
@@ -191,7 +192,7 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 	return false;
 }
 
-void AnnEngine::manualRegisterVRRender(const std::string& name, AnnOgreVRRendererBootstrapFunction boostrapFunctionPointer)
+void AnnEngine::manuallyRegisterVRRender(const std::string& name, AnnOgreVRRendererBootstrapFunction boostrapFunctionPointer)
 {
 	registeredRenderers[name] = boostrapFunctionPointer;
 }
