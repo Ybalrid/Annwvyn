@@ -25,7 +25,6 @@ AnnOgreVRRenderBootstrapMap AnnEngine::registeredRenderers;
 WORD AnnEngine::consoleGreen{ FOREGROUND_GREEN | FOREGROUND_INTENSITY };
 WORD AnnEngine::consoleYellow{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY };
 WORD AnnEngine::consoleWhite{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY };
-
 #endif
 
 AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
@@ -40,15 +39,8 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 	engine->consoleReady = false;
 }
 
-void AnnEngine::setNoConsoleColor()
-{
-	noConsoleColor = true;
-}
-
-AnnEngine* AnnEngine::Instance()
-{
-	return singleton;
-}
+void AnnEngine::setNoConsoleColor() { noConsoleColor = true; }
+AnnEngine* AnnEngine::Instance() { return singleton; }
 
 std::string AnnEngine::getAnnwvynVersion(size_t padding)
 {
@@ -145,8 +137,8 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 	if(findResult != registeredRenderers.end()) return true;
 
 	AnnDebug() << "Looking for renderer : " << name;
-	const std::string pluginName		   = "AnnOgre" + name + "Renderer";
-	const std::string boostrapFunctionName = "AnnRendererBootstrap_" + name;
+	const auto pluginName			= "AnnOgre" + name + "Renderer";
+	const auto boostrapFunctionName = "AnnRendererBootstrap_" + name;
 
 #ifdef _WIN32
 
@@ -231,10 +223,6 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 	if(autosetProcessPriorityHigh)
 		setProcessPriorityHigh();
 
-	consoleGreen  = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-	consoleYellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
-	consoleWhite  = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
-
 #endif //WIN32
 
 	stringUtility = std::make_shared<AnnStringUility>();
@@ -316,13 +304,10 @@ AnnPlayerBodyPtr AnnEngine::getPlayer() const { return player; }
 AnnFilesystemManagerPtr AnnEngine::getFileSystemManager() const { return filesystemManager; }
 AnnAudioEnginePtr AnnEngine::getAudioEngine() const { return audioEngine; }
 AnnPhysicsEnginePtr AnnEngine::getPhysicsEngine() const { return physicsEngine; }
-
 Ogre::SceneNode* AnnEngine::getPlayerPovNode() const { return vrRendererPovGameplayPlacement; }
 Ogre::SceneManager* AnnEngine::getSceneManager() const { return SceneManager; }
-
 unsigned long AnnEngine::getTimeFromStartUp() const { return renderer->getTimer()->getMilliseconds(); }
 double AnnEngine::getTimeFromStartupSeconds() const { return double(getTimeFromStartUp()) / 1000.0; }
-
 void AnnEngine::initPlayerStandingPhysics() const { physicsEngine->initPlayerStandingPhysics(vrRendererPovGameplayPlacement); }
 void AnnEngine::initPlayerRoomscalePhysics() const { physicsEngine->initPlayerRoomscalePhysics(vrRendererPovGameplayPlacement); }
 AnnConsolePtr AnnEngine::getOnScreenConsole() const { return onScreenConsole; }
