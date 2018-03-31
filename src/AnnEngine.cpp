@@ -5,7 +5,7 @@
 #include "AnnLogger.hpp"
 #include "AnnException.hpp"
 
-//Graphic rendering system for NO FREAKING VR SYSTEM
+//Include the built-in renderer that doesn't do VR
 #include "AnnOgreNoVRRenderer.hpp"
 
 using namespace Annwvyn;
@@ -79,22 +79,20 @@ void AnnEngine::startGameplayLoop()
 
 void AnnEngine::selectAndCreateRenderer(const std::string& selectedRenderer, const std::string& title)
 {
-	std::cerr << "HMD selection from command line routine returned : "
+	std::cerr << "Rendering VR target selection string : "
 			  << selectedRenderer << std::endl;
-
-	//Select the correct AnnOgreVRRenderer class to use :
 
 	if(selectedRenderer == "DefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "DefaultRender")))
 	{
-		std::cerr << "Using the default renderer " << defaultRenderer << " as HMD selector\n";
-		std::cerr << "Re-running the renderer selection test..\n";
+		std::cerr << "Using the default renderer " << defaultRenderer << " as target\n";
+		std::cerr << "Re-running the renderer selection test...\n";
 		selectAndCreateRenderer(defaultRenderer, title);
 		return;
 	}
 
 	auto set{ false };
 
-	std::cerr << "Attempting to find a registred VR renderer for... " << selectedRenderer << '\n';
+	std::cerr << "Looking for " << selectedRenderer << " in registered renderers\n";
 
 	if(registeredRenderers.size() == 0)
 		std::cerr << "No renderer has been registered!\n";
@@ -109,7 +107,7 @@ void AnnEngine::selectAndCreateRenderer(const std::string& selectedRenderer, con
 	//Attempt to see if the application requested the built-in one (that doesn't do VR)
 	else if(selectedRenderer == "NoVR")
 	{
-		std::cerr << "User requested NOT to render in VR...\n";
+		std::cerr << "User requested NOT to render in VR. Instantiating the built-in NoVR\n";
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
 		set		 = true;
 	}
@@ -121,11 +119,13 @@ void AnnEngine::selectAndCreateRenderer(const std::string& selectedRenderer, con
 			"Error: Cannot understand VR System you want to use!",
 			"//TODO write error message");
 #endif
+
 		std::cerr << "It looks like we can't start the VR renderer. The engine is going to crash\n."
 				  << "Dumping in standard error the current configuration : \n"
 				  << "The default renderer is:" << defaultRenderer << '\n'
 				  << "The selectedRenderer is: " << selectedRenderer << '\n';
 		if(renderer == nullptr) std::cerr << "The renderer is currently nullptr\n";
+
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
 }
