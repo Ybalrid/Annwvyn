@@ -5,12 +5,7 @@
 #include "AnnLogger.hpp"
 #include "AnnException.hpp"
 
-#include "AnnOgreOculusRenderer.hpp"
-
-//Graphic rendering system for the vive
-#include "AnnOgreOpenVRRenderer.hpp"
-
-//Graphic rendering system for NO FREAKING VR SYSTEM
+//Include the built-in renderer that doesn't do VR
 #include "AnnOgreNoVRRenderer.hpp"
 
 using namespace Annwvyn;
@@ -22,12 +17,14 @@ bool AnnEngine::noConsoleColor{ false };
 bool AnnEngine::consoleReady{ false };
 bool AnnEngine::manualConsole{ false };
 std::string AnnEngine::logFileName{ "Annwvyn.log" };
-std::string AnnEngine::defaultRenderer{ "NoVRRender" };
+std::string AnnEngine::defaultRenderer{ "NoVR" };
+
+AnnOgreVRRenderBootstrapMap AnnEngine::registeredRenderers;
 
 #ifdef _WIN32
-WORD AnnEngine::consoleGreen{ 0 };
-WORD AnnEngine::consoleYellow{ 0 };
-WORD AnnEngine::consoleWhite{ 0 };
+WORD AnnEngine::consoleGreen{ FOREGROUND_GREEN | FOREGROUND_INTENSITY };
+WORD AnnEngine::consoleYellow{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY };
+WORD AnnEngine::consoleWhite{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY };
 #endif
 
 AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
@@ -42,15 +39,8 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 	engine->consoleReady = false;
 }
 
-void AnnEngine::setNoConsoleColor()
-{
-	noConsoleColor = true;
-}
-
-AnnEngine* AnnEngine::Instance()
-{
-	return singleton;
-}
+void AnnEngine::setNoConsoleColor() { noConsoleColor = true; }
+AnnEngine* AnnEngine::Instance() { return singleton; }
 
 std::string AnnEngine::getAnnwvynVersion(size_t padding)
 {
@@ -82,72 +72,121 @@ std::string AnnEngine::getAnnwvynVersion(size_t padding)
 
 void AnnEngine::startGameplayLoop()
 {
-	while(refresh()) {
+	while(refresh())
+	{
 	}
 }
 
-void AnnEngine::selectAndCreateRenderer(const std::string& hmdCommand, const std::string& title)
+void AnnEngine::selectAndCreateRenderer(const std::string& selectedRenderer, const std::string& title)
 {
-	std::cerr << "HMD selection from command line routine returned : "
-			  << hmdCommand << std::endl;
+	std::cerr << "Rendering VR target selection string : "
+			  << selectedRenderer << std::endl;
 
-	//Select the correct AnnOgreVRRenderer class to use :
-
-	if(hmdCommand == "DefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "DefaultRender")))
+	if(selectedRenderer == "DefaultRender" && (!defaultRenderer.empty() && (defaultRenderer != "DefaultRender")))
 	{
-		std::cerr << "Using the default renderer " << defaultRenderer << " as HMD selector\n";
-		std::cerr << "Re-running the renderer selection test..\n";
+		std::cerr << "Using the default renderer " << defaultRenderer << " as target\n";
+		std::cerr << "Re-running the renderer selection test...\n";
 		selectAndCreateRenderer(defaultRenderer, title);
 		return;
 	}
 
 	auto set{ false };
-#ifdef _WIN32
-	if(hmdCommand == "OculusRender")
+
+	std::cerr << "Looking for " << selectedRenderer << " in registered renderers\n";
+
+	if(registeredRenderers.size() == 0)
+		std::cerr << "No renderer has been registered!\n";
+
+	if(registeredRenderers.find(selectedRenderer) != std::end(registeredRenderers))
 	{
-		std::cerr << "Using Oculus...\n";
-		renderer = std::make_shared<AnnOgreOculusRenderer>(title);
+		std::cerr << "found registered render!\n";
+		renderer = std::shared_ptr<AnnOgreVRRenderer>(registeredRenderers[selectedRenderer](title));
 		set		 = true;
 	}
-#endif
-	if(hmdCommand == "OpenVRRender")
+
+	//Attempt to see if the application requested the built-in one (that doesn't do VR)
+	else if(selectedRenderer == "NoVR")
 	{
-		std::cerr << "Using OpenVR...\n";
-		renderer = std::make_shared<AnnOgreOpenVRRenderer>(title);
-		set		 = true;
-	}
-	if(hmdCommand == "NoVRRender")
-	{
-		std::cerr << "Not rendering in VR...\n";
+		std::cerr << "User requested NOT to render in VR. Instantiating the built-in NoVR\n";
 		renderer = std::make_shared<AnnOgreNoVRRenderer>(title);
 		set		 = true;
 	}
+
 	if(!set)
 	{
 #ifdef _WIN32
 		displayWin32ErrorMessage(
 			"Error: Cannot understand VR System you want to use!",
-			"This program can be used with multiple VR solution.\n"
-			"The executable should be launched via a dedicated launcher.\n"
-			"If you're trying to launch it by hand, please check if your"
-			"command line parameter is correct!\n\n"
-			"Available command line parameter : \n"
-			"\t-rift\n"
-			"\t-vive\n"
-			"\nIf you don't specify anything, the default system will be used"
-			"(here it's the Oculus Rift)\n"
-			"If you don't have (or can't use) VR Hardware, you can launch with"
-			"-noVR.\n"
-			"This will display the image on a simple window without attempting"
-			"to talk to VR hardware");
+			"//TODO write error message");
 #endif
+
 		std::cerr << "It looks like we can't start the VR renderer. The engine is going to crash\n."
 				  << "Dumping in standard error the current configuration : \n"
 				  << "The default renderer is:" << defaultRenderer << '\n'
-				  << "The hmdCommand is: " << hmdCommand << '\n';
+				  << "The selectedRenderer is: " << selectedRenderer << '\n';
 		if(renderer == nullptr) std::cerr << "The renderer is currently nullptr\n";
+
 		throw AnnInitializationError(ANN_ERR_CANTHMD, "Can't find an HMD to use");
 	}
+}
+
+bool AnnEngine::registerVRRenderer(const std::string& name)
+{
+	//Check if we don't have this already registered
+	auto findResult = registeredRenderers.find(name);
+	if(findResult != registeredRenderers.end()) return true;
+
+	AnnDebug() << "Looking for renderer : " << name;
+	const auto pluginName			= "AnnOgre" + name + "Renderer";
+	const auto boostrapFunctionName = "AnnRendererBootstrap_" + name;
+
+#ifdef _WIN32
+
+	auto dll = LoadLibraryA(pluginName.c_str());
+	if(dll)
+	{
+		AnnDebug() << "Found plugin library";
+		auto functionPointer = GetProcAddress(dll, boostrapFunctionName.c_str());
+		if(functionPointer)
+		{
+			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(functionPointer);
+			AnnDebug() << "Sucessfully registered " << name << " renderer!";
+			return true;
+		}
+		AnnDebug() << "Loaded " << pluginName << ".dll, but couldn't find symbol " << boostrapFunctionName;
+		return false;
+	}
+	AnnDebug() << "Could not find DLL for " << name << " renderer";
+	AnnDebug() << "Your executable should be able to find " << pluginName << ".dll somewhere!";
+
+#elif __linux__
+
+	auto pluginNameSo = "lib" + pluginName + ".so";
+	auto library	  = dlopen(pluginNameSo.c_str(), RTLD_NOW);
+	if(library)
+	{
+		AnnDebug() << "Found plugin library";
+		auto fptr = dlsym(library, boostrapFunctionName.c_str());
+		if(fptr)
+		{
+			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(fptr);
+			AnnDebug() << "Sucessfully registered " << name << " renderer!";
+			return true;
+		}
+		AnnDebug() << "Loaded " << pluginName << ", but couldn't find symbol " << boostrapFunctionName << '\n';
+		return false;
+	}
+	AnnDebug() << "Could not find lbrary file for " << name << " renderer!";
+	AnnDebug() << "Your executable should be able to find " << pluginName << " in your LD library path (hint, run ldconfig...)!";
+
+#endif
+
+	return false;
+}
+
+void AnnEngine::manuallyRegisterVRRender(const std::string& name, AnnOgreVRRendererBootstrapFunction boostrapFunctionPointer)
+{
+	registeredRenderers[name] = boostrapFunctionPointer;
 }
 
 AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
@@ -183,10 +222,6 @@ AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
 	//This seems to fixes the problem.
 	if(autosetProcessPriorityHigh)
 		setProcessPriorityHigh();
-
-	consoleGreen  = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-	consoleYellow = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
-	consoleWhite  = FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 
 #endif //WIN32
 
@@ -269,13 +304,10 @@ AnnPlayerBodyPtr AnnEngine::getPlayer() const { return player; }
 AnnFilesystemManagerPtr AnnEngine::getFileSystemManager() const { return filesystemManager; }
 AnnAudioEnginePtr AnnEngine::getAudioEngine() const { return audioEngine; }
 AnnPhysicsEnginePtr AnnEngine::getPhysicsEngine() const { return physicsEngine; }
-
 Ogre::SceneNode* AnnEngine::getPlayerPovNode() const { return vrRendererPovGameplayPlacement; }
 Ogre::SceneManager* AnnEngine::getSceneManager() const { return SceneManager; }
-
 unsigned long AnnEngine::getTimeFromStartUp() const { return renderer->getTimer()->getMilliseconds(); }
 double AnnEngine::getTimeFromStartupSeconds() const { return double(getTimeFromStartUp()) / 1000.0; }
-
 void AnnEngine::initPlayerStandingPhysics() const { physicsEngine->initPlayerStandingPhysics(vrRendererPovGameplayPlacement); }
 void AnnEngine::initPlayerRoomscalePhysics() const { physicsEngine->initPlayerRoomscalePhysics(vrRendererPovGameplayPlacement); }
 AnnConsolePtr AnnEngine::getOnScreenConsole() const { return onScreenConsole; }
@@ -315,6 +347,8 @@ void AnnEngine::writeToLog(std::string message, bool flag)
 
 	if(Ogre::LogManager::getSingletonPtr())
 		Ogre::LogManager::getSingleton().logMessage(message);
+	else
+		std::cout << message << '\n';
 
 	setConsoleGreen();
 }

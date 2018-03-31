@@ -37,32 +37,12 @@
 
 namespace Annwvyn
 {
-	///Specialization fo the HandController class for Oculus Touch
-	class AnnDllExport AnnOculusTouchController : public AnnHandController
-	{
-	public:
-		///Need to get the oculus session of the controller
-		AnnOculusTouchController(ovrSession session, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
-
-		///This will call ovr_SetControllerVibration
-		void rumbleStart(float factor) override;
-
-		///This will call ovr_SetControllerVibration
-		void rumbleStop() override;
-
-	private:
-		///Current Oculus session
-		ovrSession currentSession;
-
-		///ovrControllerType (left or right touch controller)
-		ovrControllerType myControllerType;
-	};
 
 	///Do the initialization and graphical rendering for the Oculus Rift using Ogre
 	class AnnDllExport AnnOgreOculusRenderer : public AnnOgreVRRenderer
 	{
 		///OgreOculusRenderEyeType : prefer to use "left" and "right" instead of 0 and 1
-		enum oorEyeType {
+		enum OgreOculusEyeType {
 			left,
 			right
 		};
@@ -145,13 +125,13 @@ namespace Annwvyn
 		ovrSizei texSizeL, texSizeR;
 
 		///Create the AnnHandControllerObject for this side
-		void initializeHandObjects(const oorEyeType side);
+		void initializeHandObjects(const OgreOculusEyeType side);
 
 		///Initialize the axisVector for given controller
-		void initializeControllerAxes(const oorEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
+		void initializeControllerAxes(const OgreOculusEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
 
 		///Extract usefull data from the button state, including buffered pressed/released events
-		void processButtonStates(const oorEyeType side);
+		void processButtonStates(const OgreOculusEyeType side);
 
 		///Get the state of the touch controller and update the handController objects accordingly
 		void updateTouchControllers();
@@ -307,7 +287,7 @@ namespace Annwvyn
 		static constexpr const std::array<const uint8_t, 4> quadIndexBuffer{ 0, 1, 2, 3 };
 
 		///Preferred order to update eyes
-		static constexpr const std::array<const oorEyeType, 2> eyeUpdateOrder{ { left, right } };
+		static constexpr const std::array<const OgreOculusEyeType, 2> eyeUpdateOrder{ { left, right } };
 
 		///Return true if the array sizes of each buffer are constants
 		static constexpr bool debugPlaneSanityCheck()
@@ -321,5 +301,7 @@ namespace Annwvyn
 		static Ogre::TextureUnitState* debugTexturePlane;
 	};
 }
+
+extern "C" AnnDllExport Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_Oculus(const std::string& appName);
 
 #endif //_WIN32

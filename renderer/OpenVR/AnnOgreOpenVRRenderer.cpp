@@ -2,17 +2,18 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "stdafx.h"
 #include "AnnOgreOpenVRRenderer.hpp"
-#include "AnnLogger.hpp"
-#include "AnnEngine.hpp"
-#include "AnnGetter.hpp"
-#include "Annwvyn.h"
+#include "AnnOpenVRMotionController.hpp"
+
+#include <AnnLogger.hpp>
+#include <AnnEngine.hpp>
+#include <AnnGetter.hpp>
+#include <Annwvyn.h>
 
 using namespace Annwvyn;
 
 AnnOgreOpenVRRenderer* AnnOgreOpenVRRenderer::OpenVRSelf(nullptr);
 
 AnnOgreOpenVRRenderer::AnnOgreOpenVRRenderer(std::string winName) :
- //TODO: V730https://www.viva64.com/en/w/v730/Not all members of a class are initialized inside the constructor. Consider inspecting: event.
  AnnOgreVRRenderer(winName),
  vrSystem{ nullptr },
  hmdError{ vr::EVRInitError::VRInitError_None },
@@ -32,11 +33,12 @@ AnnOgreOpenVRRenderer::AnnOgreOpenVRRenderer(std::string winName) :
  touchpadYNormalizedValue{ 0 },
  triggerNormalizedValue{ 0 },
  trackedPoses{},
- controllerState{}
+ controllerState{},
+ event{}
 {
 	rendererName = "OpengGL/OpenVR";
 	//Get the singleton pointer
-	OpenVRSelf = static_cast<AnnOgreOpenVRRenderer*>(self);
+	OpenVRSelf = this;
 
 	buttonsToHandle.reserve(5);
 	buttonsToHandle.push_back(vr::k_EButton_ApplicationMenu);
@@ -65,14 +67,21 @@ AnnOgreOpenVRRenderer::~AnnOgreOpenVRRenderer()
 //This function is taken straight from VALVe's example.
 std::string GetTrackedDeviceString(vr::IVRSystem* pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError* peError = nullptr)
 {
+	//Get size of the string
 	auto unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, nullptr, 0, peError);
 	if(unRequiredBufferLen == 0)
 		return "";
 
+	//Get the characters as an array of char
 	std::vector<char> pchBuffer(unRequiredBufferLen);
-	pHmd->GetStringTrackedDeviceProperty(unDevice, prop, pchBuffer.data(), unRequiredBufferLen, peError);
-	std::string sResult = pchBuffer.data();
-	return sResult;
+	pHmd->GetStringTrackedDeviceProperty(unDevice,
+										 prop,
+										 pchBuffer.data(),
+										 unRequiredBufferLen,
+										 peError);
+
+	//construct and return a string
+	return pchBuffer.data();
 }
 
 void AnnOgreOpenVRRenderer::initVrHmd()
@@ -206,16 +215,6 @@ void AnnOgreOpenVRRenderer::initRttRendering()
 	vrSystem->GetRecommendedRenderTargetSize(&w, &h);
 	//w *= 2;
 
-	if(UseSSAA)
-	{
-		if(AALevel / 2 > 0)
-		{
-			w *= AALevel / 2;
-			h *= AALevel / 2;
-			AALevel = 0;
-		}
-	}
-
 	AnnDebug() << "Recommended Render Target Size : " << w << "x" << h;
 
 	//Create the render texture
@@ -253,7 +252,7 @@ void AnnOgreOpenVRRenderer::updateProjectionMatrix()
 	}
 }
 
-inline vr::EVREye AnnOgreOpenVRRenderer::getEye(oovrEyeType eye)
+inline vr::EVREye AnnOgreOpenVRRenderer::getEye(OpenVREyeType eye)
 {
 	if(eye == left) return vr::Eye_Left;
 	return vr::Eye_Right;
@@ -404,7 +403,7 @@ void AnnOgreOpenVRRenderer::handleIPDChange()
 	//Get the eyeToHeadTransform (they contain the IPD translation)
 	for(char i(0); i < 2; i++)
 		eyeCameras[i]->setPosition(getMatrix4FromSteamVRMatrix34(
-									   vrSystem->GetEyeToHeadTransform(getEye(oovrEyeType(i))))
+									   vrSystem->GetEyeToHeadTransform(getEye(OpenVREyeType(i))))
 									   .getTrans());
 }
 
@@ -415,42 +414,7 @@ inline Ogre::Matrix4 AnnOgreOpenVRRenderer::getMatrix4FromSteamVRMatrix34(const 
 	};
 }
 
-void AnnOpenVRMotionController::rumbleStart(float value)
+Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_OpenVR(const std::string& appName)
 {
-	current = AnnGetVRRenderer()->getTimer()->getMilliseconds();
-	//wait at lest 50 milliesconds
-	if(current - last > 50)
-	{
-		last = current;
-		//Max value of one pulse will be 3500µs
-		vrSystem->TriggerHapticPulse(deviceIndex, vr::EVRButtonId::k_EButton_SteamVR_Touchpad - vr::k_EButton_Axis0, static_cast<unsigned short>(value * 3500));
-	}
-}
-
-void AnnOpenVRMotionController::rumbleStop()
-{
-	//NB : The "rumbeling" of OpenVR controllers is pulse based. Meaning that telling it to "not move" doesn't make much sense.
-}
-
-AnnOpenVRMotionController::AnnOpenVRMotionController(vr::IVRSystem* vrsystem,
-													 vr::TrackedDeviceIndex_t OpenVRDeviceIndex,
-													 Ogre::SceneNode* handNode,
-													 AnnHandControllerID controllerID,
-													 AnnHandControllerSide controllerSide) :
- AnnHandController("OpenVR Hand Controller",
-				   handNode,
-				   controllerID,
-				   controllerSide),
- deviceIndex(OpenVRDeviceIndex),
- vrSystem(vrsystem),
- last(0),
- current(0)
-{
-	capabilites = RotationalTracking
-		| PositionalTracking
-		| AngularAccelerationTracking
-		| LinearAccelerationTracking
-		| ButtonInputs
-		| AnalogInputs
-		| HapticFeedback;
+	return static_cast<AnnOgreVRRenderer*>(new AnnOgreOpenVRRenderer(appName));
 }

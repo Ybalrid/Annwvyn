@@ -1,45 +1,21 @@
 #pragma once
 
-#include "systemMacro.h"
-#include "AnnOgreVRRenderer.hpp"
+#include <systemMacro.h>
+#include <AnnOgreVRRenderer.hpp>
+#include <AnnHandController.hpp>
 
 //OpenVR (HTC Vive; SteamVR) SDK
 #include <openvr.h>
 #include <openvr_capi.h>
 
-#include <AnnHandController.hpp>
-
 namespace Annwvyn
 {
-	///Specialization of AnnHandController for an OpenVR Motion Controller
-	class AnnDllExport AnnOpenVRMotionController : public AnnHandController
-	{
-	public:
-		///Needs a pointer to the currently initialized IVRSystem, and the raw TrackedDeviceIndex of the controller
-		AnnOpenVRMotionController(vr::IVRSystem* vrsystem, vr::TrackedDeviceIndex_t OpenVRDeviceIndex, Ogre::SceneNode* handNode, AnnHandControllerID controllerID, AnnHandControllerSide controllerSide);
-
-		///This will trigger one impulse of the hap tics actuator by calling VrSystem->TriggerHapticPulse
-		void rumbleStart(float value) override;
-
-		///This will trigger one impulse of duration 0 (as in : asking not to move)
-		void rumbleStop() override;
-
-	private:
-		///OpenVR device index of this controller
-		const vr::TrackedDeviceIndex_t deviceIndex;
-
-		///Pointer to the vrSystem
-		vr::IVRSystem* vrSystem;
-
-		///To measure some time
-		long last, current;
-	};
 
 	///Renderer for OpenVR
 	class AnnDllExport AnnOgreOpenVRRenderer : public AnnOgreVRRenderer
 	{
 		///Marker for left and right : "Ogre Open VR Eye Type"
-		enum oovrEyeType {
+		enum OpenVREyeType {
 			left,
 			right
 		};
@@ -93,8 +69,8 @@ namespace Annwvyn
 		///Get the projection matrix from the OpenVR API and apply it to the cameras using the near/far clip planes distances
 		void updateProjectionMatrix() override;
 
-		///Get a "vr::EVREye" from an "oovrEyeType"
-		static vr::EVREye getEye(oovrEyeType eye);
+		///Get a "vr::EVREye" from an "OpenVREyeType"
+		static vr::EVREye getEye(OpenVREyeType eye);
 
 	private:
 		///Get the HMD position in the OpenVR tracking space
@@ -169,11 +145,17 @@ namespace Annwvyn
 		///Constant values needed for extracting axis informations
 		const size_t numberOfAxes, axoffset;
 
-		///To hold axis values
+		///X axis of the touchpad
 		float touchpadXNormalizedValue;
+		///Y axis of the touchpad
 		float touchpadYNormalizedValue;
+		///Value of the main trigger
 		float triggerNormalizedValue;
 
+		///To store the type of an event
 		vr::VREvent_t event;
 	};
 }
+
+///Initialize the OpenVR renderer and return a naked pointer. Call it from the
+extern "C" AnnDllExport Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_OpenVR(const std::string& name);

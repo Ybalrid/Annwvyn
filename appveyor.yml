@@ -33,4 +33,4 @@ build:
   parallel: true
   verbosity: normal
 after_build:
-- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"
+- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp tests\\Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"

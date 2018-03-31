@@ -122,15 +122,11 @@ namespace Annwvyn
 
 		//User want to use a rift
 		if(strCmd == "-rift" || strCmd == "-ovr")
-			return "OculusRender";
+			return "Oculus";
 
 		//User want to use a Vive or another OpenVR headset
 		if(strCmd == "-vive" || strCmd == "-openVR")
-			return "OpenVRRender";
-
-		//Not implemented. I don't have OSVR hardware to try it out.
-		if(strCmd == "-osvr")
-			return "OSVRRender";
+			return "OpenVR";
 
 		//Bodge to run game on a flat screen on hardware that is not compatible
 		//with
@@ -184,8 +180,8 @@ namespace Annwvyn
 	GameEngine.reset(nullptr); \
 	Annwvyn::postQuit();
 
-	//===================Application Entry-point definition=================//
-	/*Main definition :
+//===================Application Entry-point definition=================//
+/*Main definition :
  *
  *	For more simplicity, Program start by a "AnnMain" function at the library
  *	user side. This allow to select proper entry point for the application, and
@@ -195,7 +191,7 @@ namespace Annwvyn
 #ifdef _WIN32
 #include "windows.h"
 
-	///Application entry point
+///Application entry point
 #define AnnMain()                                                                       \
 	int AnnwvynStart();                                                                 \
 	std::string detectedHMD;                                                            \
@@ -209,7 +205,7 @@ namespace Annwvyn
 
 #else
 
-	///Application entry point
+///Application entry point
 #define AnnMain()                                              \
 	int AnnwvynStart();                                        \
 	std::string detectedHMD;                                   \

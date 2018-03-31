@@ -45,7 +45,6 @@ using namespace Annwvyn;
 
 uint8_t AnnOgreVRRenderer::AALevel{ 4 };
 AnnOgreVRRenderer* AnnOgreVRRenderer::self{ nullptr };
-bool AnnOgreVRRenderer::UseSSAA{ false };
 
 void AnnOgreVRRenderer::setAntiAliasingLevel(const uint8_t AA)
 {

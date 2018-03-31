@@ -1,13 +1,14 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "stdafx.h"
+#include "AnnOgreOculusRenderer.hpp"
+#include "AnnOculusTouchController.hpp"
 #ifdef _WIN32
 
 #include <string>
-#include "AnnOgreOculusRenderer.hpp"
-#include "AnnLogger.hpp"
-#include "AnnGetter.hpp"
-#include "AnnException.hpp"
+#include <AnnLogger.hpp>
+#include <AnnGetter.hpp>
+#include <AnnException.hpp>
 
 using namespace Annwvyn;
 
@@ -49,7 +50,7 @@ AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) :
  debugPlaneNode{ nullptr }
 {
 	rendererName = "OpenGL/Oculus";
-	oculusSelf   = static_cast<AnnOgreOculusRenderer*>(self);
+	oculusSelf   = this;
 
 	//List of bitmask for each buttons as we will test them
 	touchControllersButtons[left][0]  = ovrButton_X;
@@ -431,7 +432,7 @@ void AnnOgreOculusRenderer::renderAndSubmitFrame()
 	}
 }
 
-void AnnOgreOculusRenderer::initializeHandObjects(const oorEyeType side)
+void AnnOgreOculusRenderer::initializeHandObjects(const OgreOculusEyeType side)
 {
 	//If it's the first time we have access data on this hand controller, instantiate the object
 	if(!handControllers[side])
@@ -440,7 +441,7 @@ void AnnOgreOculusRenderer::initializeHandObjects(const oorEyeType side)
 	}
 }
 
-void AnnOgreOculusRenderer::initializeControllerAxes(const oorEyeType side, std::vector<AnnHandControllerAxis>& axesVector)
+void AnnOgreOculusRenderer::initializeControllerAxes(const OgreOculusEyeType side, std::vector<AnnHandControllerAxis>& axesVector)
 {
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick X", inputState.Thumbstick[side].x });
 	axesVector.push_back(AnnHandControllerAxis{ "Thumbstick Y", inputState.Thumbstick[side].y });
@@ -448,7 +449,7 @@ void AnnOgreOculusRenderer::initializeControllerAxes(const oorEyeType side, std:
 	axesVector.push_back(AnnHandControllerAxis{ "GripTrigger X", inputState.HandTrigger[side] });
 }
 
-void AnnOgreOculusRenderer::processButtonStates(const oorEyeType side)
+void AnnOgreOculusRenderer::processButtonStates(const OgreOculusEyeType side)
 {
 	//Extract button states and deduce press/released events
 	pressed.clear();
@@ -511,30 +512,9 @@ void AnnOgreOculusRenderer::updateTouchControllers()
 	}
 }
 
-void AnnOculusTouchController::rumbleStart(float factor)
+Annwvyn::AnnOgreVRRenderer* AnnRendererBootstrap_Oculus(const std::string& appName)
 {
-	ovr_SetControllerVibration(currentSession, myControllerType, 0, factor);
-}
-
-void AnnOculusTouchController::rumbleStop()
-{
-	ovr_SetControllerVibration(currentSession, myControllerType, 0, 0);
-}
-
-AnnOculusTouchController::AnnOculusTouchController(ovrSession session,
-												   Ogre::SceneNode* handNode,
-												   AnnHandControllerID controllerID,
-												   AnnHandControllerSide controllerSide) :
- AnnHandController("Oculus Touch", handNode, controllerID, controllerSide),
- currentSession(session)
-{
-	if(side == leftHandController)
-		myControllerType = ovrControllerType_LTouch;
-	else if(side == rightHandController)
-		myControllerType = ovrControllerType_RTouch;
-
-	capabilites = RotationalTracking | PositionalTracking | AngularAccelerationTracking
-		| LinearAccelerationTracking | ButtonInputs | AnalogInputs | HapticFeedback | DiscreteHandGestures;
+	return static_cast<AnnOgreVRRenderer*>(new AnnOgreOculusRenderer(appName));
 }
 
 #endif

@@ -75,9 +75,6 @@ namespace Annwvyn
 		///Set the shadow filtering level (quality)
 		void setShadowFiltering(ShadowFiltering level) const;
 
-		///Put this to true to use a bigger intermediate buffer instead of a *normal* Anti Aliasing method
-		static bool UseSSAA;
-
 		///Set the anti-aliasing level to AA if AA is part of the available values
 		/// \param AA the AA level to use.
 		static void setAntiAliasingLevel(const uint8_t AA);
