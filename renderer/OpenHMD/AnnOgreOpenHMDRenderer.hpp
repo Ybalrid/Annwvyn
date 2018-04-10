@@ -1,11 +1,26 @@
 #pragma once
 #include <systemMacro.h>
 #include <AnnOgreVRRenderer.hpp>
+#include <openhmd.h>
 
 namespace Annwvyn
 {
 	class AnnDllExport AnnOgreOpenHMDRenderer : public AnnOgreVRRenderer
 	{
+		ohmd_context* ctx;
+		ohmd_device_settings* settings;
+		ohmd_device* hmd;
+
+		int hmd_w, hmd_h;
+		float ipd;
+		float viewport_scale[2];
+		float distortion_coeffs[4];
+		float aberr_scale[3];
+		float sep;
+		float left_lens_center[2];
+		float right_lens_center[2];
+		float warp_scale, warp_adj;
+
 	public:
 		explicit AnnOgreOpenHMDRenderer(const std::string& windowName);
 		~AnnOgreOpenHMDRenderer() override;

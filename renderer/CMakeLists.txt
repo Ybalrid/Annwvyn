@@ -46,4 +46,14 @@ target_link_libraries(AnnOgreOpenHMDRenderer
     Annwvyn
     )
 
+if(WIN32)
+target_link_libraries(AnnOgreOpenHMDRenderer
+	$ENV{AnnwvynSDK64}/OpenHMD/build/install/lib/openhmd.lib
+	)
+
+target_include_directories(AnnOgreOpenHMDRenderer PUBLIC
+	$ENV{AnnwvynSDK64}/OpenHMD/build/install/include/
+)
+endif(WIN32)
+
 #End OpenHMD
