@@ -1,8 +1,8 @@
 project(Annwvyn)
 
-file(GLOB OculusRenderer Oculus/*)
-file(GLOB OpenVRRenderer OpenVR/*)
+#OpenVR
 
+file(GLOB OpenVRRenderer OpenVR/*)
 add_library(AnnOgreOpenVRRenderer SHARED ${OpenVRRenderer})
 
 if(WIN32)
@@ -20,7 +20,11 @@ if(UNIX)
 
 endif(UNIX)
 
+#End OpenVR
+
+#Oculus (Windows only)
 if(WIN32)
+    file(GLOB OculusRenderer Oculus/*)
 	add_library(AnnOgreOculusRenderer SHARED ${OculusRenderer})
 
 	target_link_libraries(AnnOgreOculusRenderer
@@ -32,3 +36,14 @@ if(WIN32)
 		Setupapi.lib
 )
 endif(WIN32)
+#End Oculus
+
+#OpenHMD
+file(GLOB OpenHMDRenderer OpenHMD/*)
+add_library(AnnOgreOpenHMDRenderer SHARED ${OpenHMDRenderer})
+
+target_link_libraries(AnnOgreOpenHMDRenderer
+    Annwvyn
+    )
+
+#End OpenHMD
