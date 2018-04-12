@@ -154,6 +154,8 @@ target_link_libraries( Annwvyn
     ${SNDFILE_LIBRARIES}
     )
 
+message(${TinyXML2_LIBRARIES})
+
 if(WIN32)
     target_link_libraries(Annwvyn
         Winmm.lib
@@ -177,7 +179,9 @@ if(WIN32)
     ${Annwvyn_INSTALLABLE}/Annwvyn.dll
     ${Annwvyn_INSTALLABLE}/Annwvyn.exp
     ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOculusRenderer.dll 
-    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOpenVRRenderer.dll)
+    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOpenVRRenderer.dll
+    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOpenHMDRenderer.dll
+	)
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 
 elseif(UNIX)

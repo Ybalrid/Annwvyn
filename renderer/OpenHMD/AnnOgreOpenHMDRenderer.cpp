@@ -1,9 +1,14 @@
+#include "stdafx.h"
 #include "AnnOgreOpenHMDRenderer.hpp"
 #include "Annwvyn.h"
+
+Annwvyn::AnnOgreOpenHMDRenderer* Annwvyn::AnnOgreOpenHMDRenderer::ohmdSelf = nullptr;
 
 Annwvyn::AnnOgreOpenHMDRenderer::AnnOgreOpenHMDRenderer(const std::string& windowName) :
  AnnOgreVRRenderer(windowName), ctx(nullptr), settings(nullptr), hmd(nullptr), hmd_w(0), hmd_h(0), ipd(0), sep(0), warp_scale(0), warp_adj(0)
 {
+	rendererName = "OpenGL/OpenHMD";
+	ohmdSelf	 = this;
 }
 
 Annwvyn::AnnOgreOpenHMDRenderer::~AnnOgreOpenHMDRenderer()
@@ -20,9 +25,9 @@ void Annwvyn::AnnOgreOpenHMDRenderer::initVrHmd()
 	AnnDebug() << "Found " << num_devices << " OpenHMD recognised devices";
 	for(auto i{ 0 }; i < num_devices; ++i)
 	{
-		AnnDebug() << ohmd_list_gets(ctx, i, OHMD_VENDOR);
-		AnnDebug() << ohmd_list_gets(ctx, i, OHMD_PRODUCT);
-		AnnDebug() << ohmd_list_gets(ctx, i, OHMD_PATH);
+		AnnDebug() << ohmd_list_gets(ctx, i, OHMD_VENDOR) << ' '
+				   << ohmd_list_gets(ctx, i, OHMD_PRODUCT) << ' '
+				   << ohmd_list_gets(ctx, i, OHMD_PATH);
 	}
 
 	settings = ohmd_device_settings_create(ctx);
@@ -53,15 +58,37 @@ void Annwvyn::AnnOgreOpenHMDRenderer::initVrHmd()
 
 	ohmd_device_settings_destroy(settings);
 
+	AnnDebug() << "HMD Raw Parameters:";
+	AnnDebug() << " - HMD size: " << hmd_w << 'x' << hmd_h;
+	AnnDebug() << " - Viewport Scale: " << viewport_scale[0] << 'x' << viewport_scale[1];
+	AnnDebug() << " - IPD: " << ipd;
+	AnnDebug() << " - Distortion coeff: " << distortion_coeffs[0] << ' ' << distortion_coeffs[1] << ' ' << distortion_coeffs[2] << ' ' << distortion_coeffs[3];
+	AnnDebug() << " - Aberation Scale: " << aberr_scale[0] << ' ' << aberr_scale[1] << ' ' << aberr_scale[2];
+	AnnDebug() << " - Lens center: left=" << left_lens_center[0] << 'x' << left_lens_center[1] << " right=" << right_lens_center[0] << 'x' << right_lens_center[1];
+	AnnDebug() << " - Warp scale: " << warp_scale;
+
 	if(!hmd) throw AnnInitializationError(ANN_ERR_CANTHMD, "Failed to open device: " + std::string(ohmd_ctx_get_error(ctx)));
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::initScene()
 {
+	createMainSmgr();
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::initRttRendering()
 {
+	loadOpenGLFunctions();
+
+	const combinedTextureSizeArray textureDimentions{ { { { size_t(hmd_w / 2), size_t(hmd_h) } }, { { size_t(hmd_w / 2), size_t(hmd_h) } } } };
+	ogreTextures = createSeparatedRenderTextures(textureDimentions);
+
+	{
+		auto compositor = root->getCompositorManager2();
+
+		compositorWorkspaces[leftEyeCompositor]  = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);
+		compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", true);
+		compositorWorkspaces[monoCompositor]	 = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
+	}
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::initClientHmdRendering()
@@ -80,15 +107,21 @@ bool Annwvyn::AnnOgreOpenHMDRenderer::shouldRecenter()
 
 bool Annwvyn::AnnOgreOpenHMDRenderer::isVisibleInHmd()
 {
-	return false;
+	return true;
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::getTrackingPoseAndVRTiming()
 {
+	calculateTimingFromOgre();
+
+	trackedHeadPose.orientation = bodyOrientation;
+	trackedHeadPose.position	= feetPosition + Ogre::Vector3(0, 1.70f, 0);
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::renderAndSubmitFrame()
 {
+	handleWindowMessages();
+	root->renderOneFrame();
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::recenter()
@@ -105,10 +138,14 @@ void Annwvyn::AnnOgreOpenHMDRenderer::showDebug(DebugMode mode)
 
 void Annwvyn::AnnOgreOpenHMDRenderer::handleIPDChange()
 {
+	ohmd_device_getf(hmd, OHMD_EYE_IPD, &ipd);
+	eyeCameras[left]->setPosition(-ipd / 2, 0, 0);
+	eyeCameras[right]->setPosition(+ipd / 2, 0, 0);
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::initCameras()
 {
+	AnnOgreVRRenderer::initCameras();
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::cycleDebugHud()

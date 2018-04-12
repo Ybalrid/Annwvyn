@@ -57,37 +57,9 @@ public:
 AnnMain()
 {
 	AnnEngine::openConsole();
-
-	auto dll = LoadLibraryA("AnnOgreOpenHMDRenderer");
-	if(dll)
-	{
-		std::cout << "OpenHMD lib found!";
-	}
-	else
-	{
-		auto error = GetLastError();
-
-		LPVOID lpMsgBuf;
-		FormatMessage(
-			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL,
-			error,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPTSTR)&lpMsgBuf,
-			0,
-			NULL);
-
-		MessageBox(NULL, (LPCWSTR)lpMsgBuf, L"load library error", MB_ICONERROR);
-
-		LocalFree(lpMsgBuf);
-
-		std::cout << "NOPE";
-	}
-	std::cin.get();
-
 	AnnOgreVRRenderer::setAntiAliasingLevel(8);
-	AnnEngine::logFileName	 = "Samples.log";
-	AnnEngine::defaultRenderer = "NoVR";
+	AnnEngine::setLogFileName("Samples.log");
+	AnnEngine::setDefaultRenderer("NoVR");
 
 #ifdef _WIN32
 	AnnEngine::registerVRRenderer("Oculus");
@@ -95,10 +67,9 @@ AnnMain()
 
 	AnnEngine::registerVRRenderer("OpenVR");
 
-	/*AnnEngine::registerVRRenderer("OpenHMD");
-	AnnEngine::defaultRenderer = "OpenHMD";*/
+	AnnEngine::registerVRRenderer("OpenHMD");
+	AnnEngine::setDefaultRenderer("OpenHMD");
 
-	return 1;
 	AnnInit("AnnTest");
 
 	{

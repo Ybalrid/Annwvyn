@@ -10,11 +10,14 @@ SET Annwvyn=%ANNWVYNSDK64%\Annwvyn\
 
 ECHO ANNWYVN main DLL
 COPY %Annwvyn%\lib\Annwvyn.dll .
+COPY %Annwvyn%\lib\Annwvyn.pdb .
 
 ECHO ANNWYVN Oculus Renderer DLL
 COPY %Annwvyn%\lib\AnnOgreOculusRenderer.dll .
 ECHO ANNWYVN OpenVR Renderer DLL
 COPY %Annwvyn%\lib\AnnOgreOpenVRRenderer.dll .
+ECHO ANNWVYN OpenHMD Renderer DLL
+COPY %Annwvyn%\lib\AnnOgreOpenHMDRenderer.dll .
 
 ECHO OGRE main DLL
 COPY %ANNWVYNSDK64%\Ogre21SDK\bin\release\OgreMain.dll .

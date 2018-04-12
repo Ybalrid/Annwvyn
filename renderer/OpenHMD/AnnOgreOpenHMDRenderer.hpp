@@ -7,6 +7,7 @@ namespace Annwvyn
 {
 	class AnnDllExport AnnOgreOpenHMDRenderer : public AnnOgreVRRenderer
 	{
+		static AnnOgreOpenHMDRenderer* ohmdSelf;
 		ohmd_context* ctx;
 		ohmd_device_settings* settings;
 		ohmd_device* hmd;
@@ -21,8 +22,13 @@ namespace Annwvyn
 		float right_lens_center[2];
 		float warp_scale, warp_adj;
 
+		std::array<GLuint, 2> ogreTextures;
+
+		enum ohmdSide : uint8_t { left  = 0x0,
+								  right = 0x1 };
+
 	public:
-		explicit AnnOgreOpenHMDRenderer(const std::string& windowName);
+		AnnOgreOpenHMDRenderer(const std::string& windowName);
 		~AnnOgreOpenHMDRenderer() override;
 		void initVrHmd() override;
 		void initScene() override;

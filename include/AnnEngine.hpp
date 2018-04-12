@@ -91,6 +91,9 @@ namespace Annwvyn
 		///Private method that configure the rendering from the two given strings. It may call itself again with modified strings in circumstances.
 		void selectAndCreateRenderer(const std::string& hmd, const std::string& title);
 
+		static std::string logFileName;
+		static std::string defaultRenderer;
+
 	public:
 		///Register a renderer "plugin". Calls it before AnnInit
 		static bool registerVRRenderer(const std::string& name);
@@ -102,10 +105,10 @@ namespace Annwvyn
 		static bool autosetProcessPriorityHigh;
 
 		///Public static parameter : name of the logfile. Please set it before AnnInit or creating an AnnEngine object
-		static std::string logFileName;
+		static void setLogFileName(const char* logName);
 
 		///Public static parameter : name of the "default" renderer to use. Please set it before AnnInit or creating an AnnEngine object
-		static std::string defaultRenderer;
+		static void setDefaultRenderer(const char* renderer);
 
 		///Set a flag that prevent Annwvyn to attempt to put colors on the console window
 		static void setNoConsoleColor();
