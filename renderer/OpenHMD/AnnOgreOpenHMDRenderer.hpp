@@ -21,11 +21,19 @@ namespace Annwvyn
 		float left_lens_center[2];
 		float right_lens_center[2];
 		float warp_scale, warp_adj;
+		int device_class;
+
+		float vectorBuffer[3];
+		float quaternionBuffer[4];
 
 		std::array<GLuint, 2> ogreTextures;
 
 		enum ohmdSide : uint8_t { left  = 0x0,
 								  right = 0x1 };
+
+		Ogre::Vector3 toOgreVector3(const float* v) const;
+
+		Ogre::Quaternion toOgreQuat(const float* v) const;
 
 	public:
 		AnnOgreOpenHMDRenderer(const std::string& windowName);

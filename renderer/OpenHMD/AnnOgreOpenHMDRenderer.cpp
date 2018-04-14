@@ -4,8 +4,28 @@
 
 Annwvyn::AnnOgreOpenHMDRenderer* Annwvyn::AnnOgreOpenHMDRenderer::ohmdSelf = nullptr;
 
+Ogre::Vector3 Annwvyn::AnnOgreOpenHMDRenderer::toOgreVector3(const float* v) const
+{
+	return Ogre::Vector3{ v };
+}
+
+Ogre::Quaternion Annwvyn::AnnOgreOpenHMDRenderer::toOgreQuat(const float* v) const
+{
+	return { v[3], v[0], v[1], v[2] };
+}
+
 Annwvyn::AnnOgreOpenHMDRenderer::AnnOgreOpenHMDRenderer(const std::string& windowName) :
- AnnOgreVRRenderer(windowName), ctx(nullptr), settings(nullptr), hmd(nullptr), hmd_w(0), hmd_h(0), ipd(0), sep(0), warp_scale(0), warp_adj(0)
+ AnnOgreVRRenderer(windowName),
+ ctx(nullptr),
+ settings(nullptr),
+ hmd(nullptr),
+ hmd_w(0),
+ hmd_h(0),
+ ipd(0),
+ sep(0),
+ warp_scale(0),
+ warp_adj(0),
+ device_class(0)
 {
 	rendererName = "OpenGL/OpenHMD";
 	ohmdSelf	 = this;
@@ -55,6 +75,8 @@ void Annwvyn::AnnOgreOpenHMDRenderer::initVrHmd()
 	//assume calibration was for lens view to which ever edge of screen is further away from lens center
 	warp_scale = (left_lens_center[0] > right_lens_center[0]) ? left_lens_center[0] : right_lens_center[0];
 	warp_adj   = 1.0f;
+
+	ohmd_device_geti(hmd, OHMD_DEVICE_CLASS, &device_class);
 
 	ohmd_device_settings_destroy(settings);
 
@@ -114,8 +136,12 @@ void Annwvyn::AnnOgreOpenHMDRenderer::getTrackingPoseAndVRTiming()
 {
 	calculateTimingFromOgre();
 
-	trackedHeadPose.orientation = bodyOrientation;
-	trackedHeadPose.position	= feetPosition + Ogre::Vector3(0, 1.70f, 0);
+	ohmd_ctx_update(ctx);
+	ohmd_device_getf(hmd, OHMD_POSITION_VECTOR, vectorBuffer);
+	ohmd_device_getf(hmd, OHMD_ROTATION_QUAT, quaternionBuffer);
+
+	trackedHeadPose.orientation = bodyOrientation * toOgreQuat(quaternionBuffer);
+	trackedHeadPose.position	= feetPosition + bodyOrientation * (toOgreVector3(vectorBuffer) + Ogre::Vector3{ 0, 1.65f, 0 });
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::renderAndSubmitFrame()
