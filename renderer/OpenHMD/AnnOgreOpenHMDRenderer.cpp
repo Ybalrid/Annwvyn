@@ -76,8 +76,6 @@ void Annwvyn::AnnOgreOpenHMDRenderer::initVrHmd()
 	warp_scale = (left_lens_center[0] > right_lens_center[0]) ? left_lens_center[0] : right_lens_center[0];
 	warp_adj   = 1.0f;
 
-	ohmd_device_geti(hmd, OHMD_DEVICE_CLASS, &device_class);
-
 	ohmd_device_settings_destroy(settings);
 
 	AnnDebug() << "HMD Raw Parameters:";
@@ -90,6 +88,8 @@ void Annwvyn::AnnOgreOpenHMDRenderer::initVrHmd()
 	AnnDebug() << " - Warp scale: " << warp_scale;
 
 	if(!hmd) throw AnnInitializationError(ANN_ERR_CANTHMD, "Failed to open device: " + std::string(ohmd_ctx_get_error(ctx)));
+
+	ohmd_device_geti(hmd, OHMD_DEVICE_CLASS, &device_class);
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::initScene()
@@ -110,6 +110,20 @@ void Annwvyn::AnnOgreOpenHMDRenderer::initRttRendering()
 		compositorWorkspaces[leftEyeCompositor]  = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);
 		compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", true);
 		compositorWorkspaces[monoCompositor]	 = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
+	}
+
+	{
+		const char *vertex, *fragment;
+		ohmd_gets(OHMD_GLSL_330_DISTORTION_VERT_SRC, &vertex);
+		ohmd_gets(OHMD_GLSL_330_DISTORTION_FRAG_SRC, &fragment);
+		vertexShaderSource   = vertex;
+		fragmentShaderSource = fragment;
+
+		AnnDebug() << "Vertex shader";
+		AnnDebug() << '\n'
+				   << vertexShaderSource;
+		AnnDebug() << '\n'
+				   << fragmentShaderSource;
 	}
 }
 
@@ -156,6 +170,10 @@ void Annwvyn::AnnOgreOpenHMDRenderer::recenter()
 
 void Annwvyn::AnnOgreOpenHMDRenderer::updateProjectionMatrix()
 {
+	ohmd_device_getf(hmd, OHMD_LEFT_EYE_FOV, matrixBuffer);
+	eyeCameras[left]->setCustomProjectionMatrix(true, Ogre::Matrix4(matrixBuffer));
+	ohmd_device_getf(hmd, OHMD_RIGHT_EYE_FOV, matrixBuffer);
+	eyeCameras[right]->setCustomProjectionMatrix(true, Ogre::Matrix4(matrixBuffer));
 }
 
 void Annwvyn::AnnOgreOpenHMDRenderer::showDebug(DebugMode mode)

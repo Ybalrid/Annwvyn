@@ -25,6 +25,7 @@ namespace Annwvyn
 
 		float vectorBuffer[3];
 		float quaternionBuffer[4];
+		float matrixBuffer[16];
 
 		std::array<GLuint, 2> ogreTextures;
 
@@ -34,6 +35,8 @@ namespace Annwvyn
 		Ogre::Vector3 toOgreVector3(const float* v) const;
 
 		Ogre::Quaternion toOgreQuat(const float* v) const;
+
+		std::string vertexShaderSource, fragmentShaderSource;
 
 	public:
 		AnnOgreOpenHMDRenderer(const std::string& windowName);
