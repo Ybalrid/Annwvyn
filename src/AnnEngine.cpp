@@ -39,6 +39,11 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 	engine->consoleReady = false;
 }
 
+void AnnEngine::setDefaultRenderer(const char* renderer)
+{
+	defaultRenderer = renderer;
+}
+
 void AnnEngine::setNoConsoleColor() { noConsoleColor = true; }
 AnnEngine* AnnEngine::Instance() { return singleton; }
 
@@ -187,6 +192,11 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 void AnnEngine::manuallyRegisterVRRender(const std::string& name, AnnOgreVRRendererBootstrapFunction boostrapFunctionPointer)
 {
 	registeredRenderers[name] = boostrapFunctionPointer;
+}
+
+void AnnEngine::setLogFileName(const char* logName)
+{
+	logFileName = logName;
 }
 
 AnnEngine::AnnEngine(const char title[], const std::string& hmdCommand) :
