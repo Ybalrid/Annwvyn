@@ -30,7 +30,9 @@ namespace Annwvyn
 			/// Directional lights simulate parallel light beams from a distant source, hence have direction but no position
 			ANN_LIGHT_DIRECTIONAL = Ogre::Light::LightTypes::LT_DIRECTIONAL,
 			/// Spotlights simulate a cone of light from a source so require position and direction, plus extra values for falloff
-			ANN_LIGHT_SPOTLIGHT = Ogre::Light::LightTypes::LT_SPOTLIGHT
+			ANN_LIGHT_SPOTLIGHT = Ogre::Light::LightTypes::LT_SPOTLIGHT,
+
+			ANN_LIGHT_ERROR = -1
 		};
 
 		static LightTypes getLightTypeFromString(const std::string& ltype);
@@ -76,4 +78,6 @@ namespace Annwvyn
 		Ogre::SceneNode* node;
 		const std::string name;
 	};
+
+	using AnnLightObjectPtr = std::shared_ptr<AnnLightObject>;
 }

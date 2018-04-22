@@ -90,6 +90,7 @@ include_directories(
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVRKernel/Src
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Include
     $ENV{AnnwvynSDK64}/openvr/headers
+	$ENV{AnnwvynSDK64}/json/single_include/nlohmann
 
     ##Engine dependencies
     #Graphics
