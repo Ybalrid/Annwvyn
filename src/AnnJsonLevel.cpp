@@ -165,13 +165,12 @@ void AnnJsonLevel::load()
 	for(auto& jsonLight : json["lighting"])
 		levelLighting.push_back(jsonLight);
 
-	{
-		auto player = AnnGetPlayer();
-		player->setPosition(json["player"]["startPosition"]);
-		player->setOrientation(json["player"]["startOrientation"].get<AnnQuaternion>());
-		AnnDebug() << player->getPosition();
-		AnnDebug() << player->getOrientation();
-	}
+	auto player = AnnGetPlayer();
+	player->setPosition(json["player"]["startPosition"]);
+	player->setOrientation(json["player"]["startOrientation"].get<AnnQuaternion>());
+	AnnDebug() << "Player position reset";
+	AnnDebug() << player->getPosition();
+	AnnDebug() << player->getOrientation();
 }
 
 void AnnJsonLevel::runLogic()
@@ -181,11 +180,11 @@ void AnnJsonLevel::runLogic()
 void AnnJsonLevel::processJson()
 {
 	auto& json = jsonFile->j;
-
 	AnnDebug() << "got json:\n"
 			   << json;
-
-	name = json.at("name").get<std::string>();
-
+	name = json["name"].get<std::string>();
 	AnnDebug() << "name is " << name;
+
+	if(!json["resources"].is_null())
+		AnnDebug() << "Defined " << json["resources"].size() << " resources";
 }
