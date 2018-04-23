@@ -37,7 +37,7 @@ namespace Annwvyn
 			"mass":120.0,
 			"playerColide":true
 		},
-		"script":null
+		"scripts":null
 	},
 	{
 		"name":"Floor",
@@ -51,7 +51,7 @@ namespace Annwvyn
 			"mass":0,
 			"playerColide":true
 		},
-		"script":null
+		"scripts":null
 	}],
 
 	"lighting":[{

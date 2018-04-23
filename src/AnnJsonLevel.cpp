@@ -5,15 +5,19 @@
 #include <fstream>
 #include "Annwvyn.h"
 
+//Chaiscript also exposes a json class took from "simple json".
+//But the interface of "JSON for modern C++" is nicer to use
 using json_t = nlohmann::json;
 
 namespace Annwvyn
 {
+	//Our little pimpl
 	struct AnnJsonLevel::AnnJson
 	{
 		json_t j;
 	};
 
+	//Type conversion are defined by overloading from_json and to_json
 	void from_json(const json_t& j, AnnVect3& v)
 	{
 		v.x = j[0];
@@ -75,6 +79,12 @@ namespace Annwvyn
 			phyParam param = j["physics"];
 			if(param.type == error) throw AnnInvalidPhysicalShapeError(obj->getName());
 			obj->setupPhysics(param.mass, param.type, param.colideWithPlayer);
+		}
+
+		if(!j["scripts"].is_null())
+		{
+			for(auto& jsonScript : j["scripts"])
+				obj->attachScript(jsonScript);
 		}
 	}
 
