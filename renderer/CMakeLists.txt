@@ -55,5 +55,13 @@ target_include_directories(AnnOgreOpenHMDRenderer PUBLIC
 	$ENV{AnnwvynSDK64}/OpenHMD/build/install/include/
 )
 endif(WIN32)
+if(UNIX)
+target_link_libraries(AnnOgreOpenHMDRenderer
+	/usr/local/lib/libopenhmd.so
+	)
 
+target_include_directories(AnnOgreOpenHMDRenderer PUBLIC
+	/usr/local/include/
+	)
+endif(UNIX)
 #End OpenHMD
