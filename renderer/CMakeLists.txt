@@ -25,8 +25,8 @@ if(WIN32)
 
 	target_link_libraries(AnnOgreOculusRenderer
 		Annwvyn
-		optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib
-		debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2015/LibOVR.lib
+		optimized $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2017/LibOVR.lib
+		debug  $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Lib/Windows/x64/Debug/VS2017/LibOVR.lib
 
 		ws2_32.lib
 		Setupapi.lib
