@@ -172,11 +172,11 @@ endif()
 #Installation
 if(WIN32)
     set(Annwvyn_INSTALLABLE ${CMAKE_BINARY_DIR}/Release)
-    set(Annwvyn_ARTIFACTS 
+    set(Annwvyn_ARTIFACTS
     ${Annwvyn_INSTALLABLE}/Annwvyn.lib
     ${Annwvyn_INSTALLABLE}/Annwvyn.dll
     ${Annwvyn_INSTALLABLE}/Annwvyn.exp
-    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOculusRenderer.dll 
+    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOculusRenderer.dll
     ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOpenVRRenderer.dll)
     install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 
