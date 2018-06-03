@@ -91,7 +91,7 @@ namespace Annwvyn
 		void recenter() override;
 
 		///Compute from OVR the correct projection matrix for the given clipping distance
-		void updateProjectionMatrix() override;
+		void updateEyeCameraFrustrum() override;
 
 		///Show in debug window what the camera are seeing
 		static void showRawView();

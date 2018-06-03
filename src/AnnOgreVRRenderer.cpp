@@ -209,13 +209,13 @@ void AnnOgreVRRenderer::changedAA() const
 void AnnOgreVRRenderer::setNearClippingDistance(float distance)
 {
 	nearClippingDistance = distance;
-	updateProjectionMatrix();
+	updateEyeCameraFrustrum();
 }
 
 void AnnOgreVRRenderer::setFarClippingDistance(float distance)
 {
 	farClippingDistance = distance;
-	updateProjectionMatrix();
+	updateEyeCameraFrustrum();
 }
 
 void AnnOgreVRRenderer::detachCameraFromParent(Ogre::Camera* camera)
@@ -311,7 +311,7 @@ void AnnOgreVRRenderer::initPipeline()
 	initCameras();
 	loadCompositor();
 	initRttRendering();
-	updateProjectionMatrix();
+	updateEyeCameraFrustrum();
 	loadHLMSLibrary();
 }
 

@@ -170,7 +170,7 @@ namespace Annwvyn
 
 		///The projection matrix is generally given by the underlying VR api, generally, using the near/far clipping distances set in this class
 		/// \note this method is called by the set{Near/Far}ClippingDistance() automatically.
-		virtual void updateProjectionMatrix() = 0;
+		virtual void updateEyeCameraFrustrum() = 0;
 
 		///(Optional) return true if audio has to come out from a specific audio device
 		virtual bool usesCustomAudioDevice() { return false; }

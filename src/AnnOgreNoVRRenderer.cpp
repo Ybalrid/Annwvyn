@@ -72,7 +72,7 @@ void AnnOgreNoVRRenderer::recenter()
 void AnnOgreNoVRRenderer::showDebug(DebugMode mode)
 {}
 
-void AnnOgreNoVRRenderer::updateProjectionMatrix()
+void AnnOgreNoVRRenderer::updateEyeCameraFrustrum()
 {
 	if(!monoCam) return;
 

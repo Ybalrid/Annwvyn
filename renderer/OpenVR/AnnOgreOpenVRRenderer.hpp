@@ -67,7 +67,7 @@ namespace Annwvyn
 		void initRttRendering() override;
 
 		///Get the projection matrix from the OpenVR API and apply it to the cameras using the near/far clip planes distances
-		void updateProjectionMatrix() override;
+		void updateEyeCameraFrustrum() override;
 
 		///Get a "vr::EVREye" from an "OpenVREyeType"
 		static vr::EVREye getEye(OpenVREyeType eye);

@@ -50,7 +50,7 @@ namespace Annwvyn
 		void showDebug(DebugMode mode) override;
 
 		///This just apply the near/far clip distances to the mono camera
-		void updateProjectionMatrix() override;
+		void updateEyeCameraFrustrum() override;
 
 		///No stereo 3D so inter-pupilarry distance is useless.
 		void handleIPDChange() override;

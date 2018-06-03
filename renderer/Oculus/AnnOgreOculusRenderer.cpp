@@ -240,6 +240,7 @@ void AnnOgreOculusRenderer::initClientHmdRendering()
 	eyeRenderDescArray[right] = ovr_GetRenderDesc(oculusInterface->getSession(), ovrEye_Right, oculusInterface->getHmdDesc().DefaultEyeFov[right]);
 	eyeToHmdPoseOffset[left]  = eyeRenderDescArray[left].HmdToEyePose;
 	eyeToHmdPoseOffset[right] = eyeRenderDescArray[right].HmdToEyePose;
+
 	//Report on the values given by the SDK
 	logHeadsetGeometry();
 
@@ -265,36 +266,37 @@ void AnnOgreOculusRenderer::initClientHmdRendering()
 	layer.Viewport[right] = rightRect;
 
 	//Get the projection matrix for the desired near/far clipping from Oculus and apply them to the eyeCameras
-	updateProjectionMatrix();
+	updateEyeCameraFrustrum();
 
 	//Make sure that the perf hud will not show up by itself...
 	perfHudMode = ovrPerfHud_Off;
 	oculusInterface->setPerfHudMode(ovrPerfHud_Off);
 }
 
-void AnnOgreOculusRenderer::updateProjectionMatrix()
+void AnnOgreOculusRenderer::updateEyeCameraFrustrum()
 {
-	//Get the matrices from the Oculus library
-	const std::array<ovrMatrix4f, ovrEye_Count> oculusProjectionMatrix{
-		{ ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Left].Fov, nearClippingDistance, farClippingDistance, 0),
-		  ovrMatrix4f_Projection(eyeRenderDescArray[ovrEye_Right].Fov, nearClippingDistance, farClippingDistance, 0) }
-	};
-
-	//Put them in Ogre's Matrix4 format
-	std::array<Ogre::Matrix4, 2> ogreProjectionMatrix{};
-
-	//For each eye
-	for(const auto& eye : eyeUpdateOrder)
+	for(size_t i{0}; i < 2; ++i)
 	{
-		//Traverse the 4x4 matrix
-		for(const auto x : quadIndexBuffer)
-			for(const auto y : quadIndexBuffer)
-				//put the number where it should
-				ogreProjectionMatrix[eye][x][y] = oculusProjectionMatrix[eye].M[x][y];
+		eyeCameras[i]->setNearClipDistance(nearClippingDistance);
+		eyeCameras[i]->setFarClipDistance(farClippingDistance);
 
-		eyeCameras[eye]->setCustomProjectionMatrix(true, ogreProjectionMatrix[eye]);
-		eyeCameras[eye]->setNearClipDistance(nearClippingDistance);
-		eyeCameras[eye]->setFarClipDistance(farClippingDistance);
+		//instead of loading the raw projection matrix, actually update the frustrum and let Ogre deal with it
+		const auto& currentEyeFov = oculusInterface->getHmdDesc().DefaultEyeFov[i];
+
+		AnnDebug() << "Frustrum left  : " << currentEyeFov.LeftTan;
+		AnnDebug() << "Frustrum right : " << currentEyeFov.RightTan;
+		AnnDebug() << "Frustrum top   : " << currentEyeFov.UpTan;
+		AnnDebug() << "Frustrum bottom: " << currentEyeFov.DownTan;
+
+
+		//The Oculus SDK give theses angles as starting from the "view vector". It's like giving use the absolute value of the angle, and not the angle itself
+		//We need to negate the one looking ot the left and down to get the correct angles of the frustrum edges.
+
+		eyeCameras[i]->setFrustumExtents(-currentEyeFov.LeftTan, //This one is flipped
+										 currentEyeFov.RightTan,
+										 currentEyeFov.UpTan,
+										 -currentEyeFov.DownTan, //This one is flipped
+										 Ogre::FrustrumExtentsType::FET_TAN_HALF_ANGLES);
 	}
 }
 

@@ -229,26 +229,29 @@ void AnnOgreOpenVRRenderer::initRttRendering()
 	compositorWorkspaces[monoCompositor]	 = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
 }
 
-void AnnOgreOpenVRRenderer::updateProjectionMatrix()
+//TODO this can be refactored in the parent class, as all VR renderers will probably give us 4 half-tan of the angles that describe the frustrum
+void AnnOgreOpenVRRenderer::updateEyeCameraFrustrum()
 {
-	//Get the couple of matrices
-	std::array<vr::HmdMatrix44_t, 2> openVRProjectionMatrix{
-		{ vrSystem->GetProjectionMatrix(getEye(left), nearClippingDistance, farClippingDistance),
-		  vrSystem->GetProjectionMatrix(getEye(right), nearClippingDistance, farClippingDistance) }
-	};
-
-	std::array<Ogre::Matrix4, 2> ogreProjectionMatrix{};
-
-	//Apply them to the camera
-	for(auto eye : { left, right })
+	std::array<float, 4> frustrumExtents{0};
+	for(size_t i{ 0 }; i < 2; ++i)
 	{
-		//Need to convert them to Ogre's object
-		for(auto x : { 0, 1, 2, 3 })
-			for(auto y : { 0, 1, 2, 3 })
-				ogreProjectionMatrix[eye][x][y] = openVRProjectionMatrix[eye].m[x][y];
+		//Apply near/far plannes
+		eyeCameras[i]->setNearClipDistance(nearClippingDistance);
+		eyeCameras[i]->setFarClipDistance(farClippingDistance);
 
-		//Apply projection matrix
-		eyeCameras[eye]->setCustomProjectionMatrix(true, ogreProjectionMatrix[eye]);
+		//Apply frustrum geometry
+		vrSystem->GetProjectionRaw(vr::Hmd_Eye(i), &frustrumExtents[0], &frustrumExtents[1], &frustrumExtents[2], &frustrumExtents[3]);
+
+		AnnDebug() << "Frustrum left  : " << frustrumExtents[0];
+		AnnDebug() << "Frustrum right : " << frustrumExtents[1];
+		AnnDebug() << "Frustrum top   : " << frustrumExtents[3];
+		AnnDebug() << "Frustrum bottom: " << frustrumExtents[2];
+
+		eyeCameras[i]->setFrustumExtents(frustrumExtents[0],
+			frustrumExtents[1],
+			frustrumExtents[3],
+			frustrumExtents[2],
+			Ogre::FrustrumExtentsType::FET_TAN_HALF_ANGLES);
 	}
 }
 
