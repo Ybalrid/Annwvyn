@@ -586,10 +586,11 @@ bool AnnOgreVRRenderer::isHlmsLibLoaded() const
 	return hlmsLoaded;
 }
 
-//Container to associate audio device names with their GUID
 std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 {
 #ifdef _WIN32
+
+	//Container to associate audio device names with their GUID
 	struct AudioOutputDescriptor
 	{
 		AudioOutputDescriptor(LPCSTR str, LPGUID pguid) :
