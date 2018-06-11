@@ -91,7 +91,6 @@ include_directories(
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVRKernel/Src
     $ENV{AnnwvynSDK64}/OculusSDK/LibOVR/Include
     $ENV{AnnwvynSDK64}/openvr/headers
-	$ENV{AnnwvynSDK64}/json/single_include/nlohmann
 
     ##Engine dependencies
     #Graphics
@@ -114,6 +113,8 @@ include_directories(
     $ENV{HOME}/AnnwvynDeps/chaiscript #UNIX
     $ENV{HOME}/AnnwvynDeps/openvr/headers
     ${TinyXML2_INCLUDE_DIRS}
+	$ENV{AnnwvynSDK64}/json/single_include/nlohmann
+	$ENV{HOME}/AnnwvynDeps/json/single_include/nlohmann
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
