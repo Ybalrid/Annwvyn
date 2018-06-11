@@ -58,14 +58,14 @@ Ogre::MeshPtr AnnGameObjectManager::getAndConvertFromV1Mesh(const char* meshName
 	return v2Mesh;
 }
 
-std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const char meshName[], std::string identifier, std::shared_ptr<AnnGameObject> obj)
+std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const std::string& meshName, std::string identifier, std::shared_ptr<AnnGameObject> obj)
 {
 	AnnDebug("Creating a game object from the mesh file: " + std::string(meshName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
 
 	Ogre::v1::MeshPtr v1Mesh;
 	Ogre::MeshPtr v2Mesh;
-	getAndConvertFromV1Mesh(meshName, v1Mesh, v2Mesh);
+	getAndConvertFromV1Mesh(meshName.c_str(), v1Mesh, v2Mesh);
 	v1Mesh.setNull();
 
 	//Create an item

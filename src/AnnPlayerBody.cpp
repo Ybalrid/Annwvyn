@@ -88,6 +88,13 @@ void AnnPlayerBody::setOrientation(Ogre::Euler Orientation)
 	physicsParams.Orientation = Orientation;
 }
 
+void AnnPlayerBody::setOrientation(AnnQuaternion Orientation)
+{
+	Ogre::Euler e;
+	e.fromQuaternion(static_cast<Ogre::Quaternion>(Orientation));
+	setOrientation(e);
+}
+
 void AnnPlayerBody::setHeadOrientation(AnnQuaternion Orientation)
 {
 	physicsParams.HeadOrientation = Orientation;

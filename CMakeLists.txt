@@ -6,7 +6,7 @@ project(Annwvyn)
 
 #Basic build configuration
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
+#set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
 
 if(WIN32)
     #Check Annwvyn SDK configuration (This env var should exist)
@@ -17,8 +17,9 @@ if(WIN32)
         message("Detected Annwvyn SDK. Will fetch libraries from: " $ENV{AnnwvynSDK64})
     endif()
 
-	#We only support MSVC
+	#We only support MSVC on windows
     if(MSVC)
+        set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
         message("Configuring build option in visual studio...")
         #This configure the Annwvyn's header to EXPORT symbols to DLL
         add_definitions(-DDLLDIR_EX)
@@ -112,6 +113,8 @@ include_directories(
     $ENV{HOME}/AnnwvynDeps/chaiscript #UNIX
     $ENV{HOME}/AnnwvynDeps/openvr/headers
     ${TinyXML2_INCLUDE_DIRS}
+	$ENV{AnnwvynSDK64}/json/single_include/nlohmann
+	$ENV{HOME}/AnnwvynDeps/json/single_include/nlohmann
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
