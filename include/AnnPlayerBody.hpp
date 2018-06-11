@@ -54,6 +54,7 @@ namespace Annwvyn
 		///Set body orientation
 		/// \param Orientation Euler angle that represent the orientation of the player's BODY. That orientation is used as a "zero point" for the head orientation.
 		void setOrientation(Ogre::Euler Orientation);
+		void setOrientation(AnnQuaternion Orientation);
 
 		///Set the head orientation
 		/// \param HeadOrientation A quaternion representing the orientation of the head

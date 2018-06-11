@@ -67,6 +67,7 @@ AnnMain()
 #endif
 
 	AnnEngine::registerVRRenderer("OpenVR");
+
 	AnnInit("AnnTest");
 
 	{

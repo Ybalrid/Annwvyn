@@ -27,9 +27,9 @@ namespace Annwvyn
 		Ogre::MeshPtr getAndConvertFromV1Mesh(const char* meshName, Ogre::v1::MeshPtr& v1Mesh, Ogre::MeshPtr& v2Mesh) const;
 
 		///Create a game object form the name of an entity.
-		/// \param entityName Name of an entity loaded to the Ogre ResourceGroupManager
+		/// \param mesh Name of an mesh loaded to the Ogre ResourceGroupManager
 		/// \param object An instance of an empty AnnGameObject. Useful for creating object of inherited class
-		std::shared_ptr<AnnGameObject> createGameObject(const char entityName[], std::string identifier = "",
+		std::shared_ptr<AnnGameObject> createGameObject(const std::string& mesh, std::string identifier = "",
 														std::shared_ptr<AnnGameObject> object = std::make_shared<AnnGameObject>()); //object factory
 
 		///Remove object from the manager. Object will be destroyed when no more references are in scope
