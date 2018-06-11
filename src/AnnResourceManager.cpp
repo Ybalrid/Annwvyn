@@ -74,7 +74,8 @@ void AnnResourceManager::initResources() const
 
 void AnnResourceManager::loadGroup(const std::string& groupName) const
 {
-	ResourceGroupManager->loadResourceGroup(groupName);
+	if(!ResourceGroupManager->isResourceGroupLoaded(groupName))
+		ResourceGroupManager->loadResourceGroup(groupName);
 }
 
 const char* AnnResourceManager::getDefaultResourceGroupName()

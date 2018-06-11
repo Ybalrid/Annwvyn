@@ -12,8 +12,8 @@ namespace Annwvyn
 		using AnnJsonOpaquePtr = std::unique_ptr<AnnJson>;
 
 	public:
-		AnnJsonLevel(std::string path);
-		AnnJsonLevel(bool, std::string json);
+		AnnJsonLevel(std::string path, const bool preload = true);
+		AnnJsonLevel(bool, std::string json, const bool preload = true);
 		virtual ~AnnJsonLevel();
 		void load() override;
 		void runLogic() override;
@@ -22,5 +22,8 @@ namespace Annwvyn
 		AnnJsonOpaquePtr jsonFile;
 
 		void processJson();
+
+
+		const bool preloadResources;
 	};
 }

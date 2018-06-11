@@ -40,6 +40,16 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](const Vector3& a, const Vector3& b, float w) { return Math::lerp(a, b, w); }), "lerp");
 		chai.add(fun([](float a, float b, float w) { return Math::lerp(a, b, w); }), "lerp");
 		chai.add(fun([](float fT, const Quaternion& rkP, const Quaternion& rkQ) { return Quaternion::Slerp(fT, rkP, rkQ); }), "slerp");
+		chai.add(fun([](float f) { return sin(f); }), "sin");
+		chai.add(fun([](float f) { return cos(f); }), "cos");
+		chai.add(fun([](float f) { return tan(f); }), "tan");
+		chai.add(fun([](float f) { return asin(f); }), "asin");
+		chai.add(fun([](float f) { return acos(f); }), "acos");
+		chai.add(fun([](float f) { return atan(f); }), "atan");
+		chai.add(fun([](float y, float x) { return atan2(y,x); }), "atan2");
+
+		chai.add(fun([] { return AnnGetEngine()->getTimeFromStartUp(); }), "getTimeFromStartUp");
+
 
 		// 3D vector
 		chai.add(user_type<Vector3>(), "AnnVect3");

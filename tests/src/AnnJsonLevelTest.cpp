@@ -15,9 +15,9 @@ namespace Annwvyn
 {
 	"name":"JsonTestLevel",
 	"resources": [{
-		"group":null,
-		"path":null,
-		"type":null
+		"group":"TestLevel",
+		"path":"./TestLevel.zip",
+		"type":"Zip"
 	}],
 
 	"player":{
@@ -38,6 +38,15 @@ namespace Annwvyn
 			"playerColide":true
 		},
 		"scripts":null
+	},
+	{
+		"name":"Penguin",
+		"mesh":"penguin.mesh",
+		"position":[3,1.5,0],
+		"orientation":[0,0,0,1],
+		"scale":[0.1,0.1,0.1],
+		"hasPhysics":false,
+		"scripts":["penguinMove"]
 	},
 	{
 		"name":"Floor",
@@ -65,7 +74,7 @@ namespace Annwvyn
 		"type":"point",
 		"position":[0,1,1],
 		"power":50
-		
+
 	}]
 
 }
@@ -73,6 +82,7 @@ namespace Annwvyn
 
 			LevelManager->switchToFirstLoadedLevel();
 		};
+
 		for(auto i{ 0 }; i < 3 * 60; ++i)
 			if(!GameEngine->refresh())
 				break;

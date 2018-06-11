@@ -107,16 +107,43 @@ namespace Annwvyn
 			l->setType(type);
 
 		l->setPower(j["power"]);
-		if(!j["position"].is_null())
+		if(j.find("position") != std::end(j))
 			l->setPosition(j["position"]);
-		if(!j["direction"].is_null())
+		if(j.find("direction") != std::end(j))
 			l->setDirection(j["direction"]);
+	}
+
+	struct resLocParam
+	{
+		std::string group;
+		std::string path;
+		std::string type;
+	};
+
+	void declareResource(const resLocParam& res)
+	{
+		auto resourceManager = AnnGetResourceManager();
+		if(res.type == "Zip")
+			resourceManager->addZipLocation(res.path, res.group);
+
+	}
+
+	void from_json(const json_t& j, resLocParam& p)
+	{
+		if(!j["group"].is_null())
+			p.group = j["group"];
+		else
+			p.group = AnnResourceManager::getDefaultResourceGroupName();
+
+		p.path = j["path"];
+		p.type = j["type"];
 	}
 }
 using namespace Annwvyn;
 
-AnnJsonLevel::AnnJsonLevel(std::string path) :
- constructLevel()
+AnnJsonLevel::AnnJsonLevel(std::string path, const bool preload) :
+ constructLevel(),
+preloadResources(preload)
 {
 	jsonFile   = std::make_unique<AnnJson>();
 	auto& json = jsonFile->j;
@@ -142,8 +169,9 @@ AnnJsonLevel::AnnJsonLevel(std::string path) :
 	processJson();
 }
 
-AnnJsonLevel::AnnJsonLevel(bool, std::string jsonCode) :
- constructLevel()
+AnnJsonLevel::AnnJsonLevel(bool, std::string jsonCode, const bool preload) :
+ constructLevel(),
+preloadResources(preload)
 {
 	jsonFile   = std::make_unique<AnnJson>();
 	auto& json = jsonFile->j;
@@ -187,4 +215,13 @@ void AnnJsonLevel::processJson()
 
 	if(!json["resources"].is_null())
 		AnnDebug() << "Defined " << json["resources"].size() << " resources";
+	for(const resLocParam resource : json["resources"])
+	{
+		declareResource(resource);
+		auto resourceManager = AnnGetResourceManager();
+		if(preloadResources && resource.group != resourceManager->getDefaultResourceGroupName())
+		{
+			resourceManager->loadGroup(resource.group);
+		}
+	}
 }
