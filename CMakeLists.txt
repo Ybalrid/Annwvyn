@@ -46,7 +46,6 @@ if(WIN32)
     set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS CACHE PATH "OIS install")
     set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install CACHE PATH "OpenAL install")
     set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw/build/install CACHE PATH "GLFW install")
-    set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2/build/install CACHE PATH "TinyXML2 install")
     set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "libsndfile install")
 
 #This is a bit hackish to make the engine technically work on Linux. Even when there's no targetable hardware for the engine that is Linux compatible
@@ -70,7 +69,6 @@ find_package(BtOgre21 REQUIRED)
 find_package(OIS REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(GLFW REQUIRED)
-find_package(TinyXML2 REQUIRED)
 find_package(SNDFILE REQUIRED)
 
 #finding GLEW on windows require the prefix and library path to be modified
@@ -111,7 +109,6 @@ include_directories(
     $ENV{AnnwvynSDK64}/chaiscript #!This is an header only library!
     $ENV{HOME}/AnnwvynDeps/chaiscript #UNIX
     $ENV{HOME}/AnnwvynDeps/openvr/headers
-    ${TinyXML2_INCLUDE_DIRS}
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
@@ -150,7 +147,6 @@ target_link_libraries( Annwvyn
     ${GLFW_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${OPENAL_LIBRARY}
-    ${TinyXML2_LIBRARIES}
     ${SNDFILE_LIBRARIES}
     )
 

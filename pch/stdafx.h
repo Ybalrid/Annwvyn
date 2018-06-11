@@ -85,9 +85,6 @@
 //libsndfile
 #include <sndfile.h>
 
-//TinyXML2
-#include <tinyxml2.h>
-
 //OpenVR (Valve/HTC Vive) API
 #include <openvr.h>
 #include <openvr_capi.h>
