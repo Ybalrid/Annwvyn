@@ -38,9 +38,6 @@ namespace Annwvyn
 		///Construct the player object
 		AnnPlayerBody();
 
-		///Destroy the player object
-		~AnnPlayerBody();
-
 		///Prevent modification of physical parameter
 		void lockParameters();
 
@@ -129,7 +126,14 @@ namespace Annwvyn
 		AnnVect3 getAnalogTranslation() const;
 
 		///Set the player actuator object
-		void setActuator(AnnPlayerActuator* act);
+		void setActuator(std::unique_ptr<AnnPlayerActuator>&& actuator);
+
+		template <class ActuatorType, typename ... Args>
+		void setActuator(Args&&... args)
+		{
+			auto act = std::make_unique<ActuatorType>(args...);
+			setActuator(std::move(act));
+		}
 
 		///Boolean false if the player can get orientation transformation from
 		bool standing;
@@ -224,7 +228,7 @@ namespace Annwvyn
 		bool physics;
 
 		///PlayerActuator to use
-		AnnPlayerActuator* actuator;
+		std::unique_ptr<AnnPlayerActuator> actuator;
 
 		///Room reference node
 		Ogre::SceneNode* RoomReferenceNode;
@@ -240,7 +244,7 @@ namespace Annwvyn
 		bool ignorePhysics;
 
 		///Waling state. Forward Backward Left Right
-		bool walking[4];
+		bool walking[4]{};
 
 		///Running state
 		bool run;

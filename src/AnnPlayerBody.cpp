@@ -44,8 +44,7 @@ AnnPlayerBody::AnnPlayerBody()
 	updateTime = 0;
 	physics	= false;
 
-	actuator = nullptr;
-	setActuator(new AnnDefaultPlayerActuator);
+	setActuator<AnnDefaultPlayerActuator>();
 
 	ignorePhysics = false;
 
@@ -57,20 +56,9 @@ AnnPlayerBody::AnnPlayerBody()
 	mode = UNKNOWN;
 }
 
-void AnnPlayerBody::setActuator(AnnPlayerActuator* act)
+void AnnPlayerBody::setActuator(std::unique_ptr<AnnPlayerActuator>&& act)
 {
-	if(actuator)
-	{
-		delete actuator;
-		actuator = nullptr;
-	}
-
-	act->player = this;
-	actuator	= act;
-}
-
-AnnPlayerBody::~AnnPlayerBody()
-{
+	actuator = std::move(act);
 }
 
 bool AnnPlayerBody::isLocked() const
