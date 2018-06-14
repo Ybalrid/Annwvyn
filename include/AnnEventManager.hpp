@@ -97,6 +97,8 @@ namespace Annwvyn
 		void keyboardUsedForText(bool state = true);
 		//---------------------------- other
 
+        OIS::InputManager* _getOISInputManager();
+
 	private:
 		///List of pointer to the listeners.
 		///The use of weak pointers permit to keep access to the listeners without having to own them.

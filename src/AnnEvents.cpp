@@ -490,7 +490,7 @@ AnnControllerBuffer::AnnControllerBuffer(OIS::JoyStick* joystick) :
 AnnControllerBuffer::~AnnControllerBuffer()
 {
 	AnnDebug() << "Deleted iosJoystick";
-	delete oisJoystick;
+    AnnGetEventManager()->_getOISInputManager()->destroyInputObject(oisJoystick);
 }
 
 void AnnControllerBuffer::capture() const
