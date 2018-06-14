@@ -78,11 +78,11 @@ AnnEventManager::~AnnEventManager()
 	defaultEventListener = nullptr;
 	Keyboard->setEventCallback(nullptr);
 
-    InputManager->destroyInputObject(Keyboard);
-    InputManager->destroyInputObject(Mouse);
-    Joysticks.clear();
+	InputManager->destroyInputObject(Keyboard);
+	InputManager->destroyInputObject(Mouse);
+	Joysticks.clear();
 
-    OIS::InputManager::destroyInputSystem(InputManager);
+	OIS::InputManager::destroyInputSystem(InputManager);
 }
 
 void AnnEventManager::useDefaultEventListener()
@@ -400,5 +400,5 @@ void AnnEventManager::processUserSpaceEvents()
 
 OIS::InputManager* AnnEventManager::_getOISInputManager()
 {
-    return InputManager;
+	return InputManager;
 }

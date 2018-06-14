@@ -43,8 +43,8 @@ namespace Annwvyn
 		///You can trust this vector
 		bool isValid() const;
 
-        ///Implict convertion to btVector3
-        operator btVector3() const;
+		///Implict convertion to btVector3
+		operator btVector3() const;
 
 	private:
 		///Set valid to true

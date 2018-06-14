@@ -53,5 +53,5 @@ bool AnnVect3::isValid() const
 
 AnnVect3::operator btVector3() const
 {
-    return getBtVector();
+	return getBtVector();
 }

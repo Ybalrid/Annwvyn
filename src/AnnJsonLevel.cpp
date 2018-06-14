@@ -125,7 +125,6 @@ namespace Annwvyn
 		auto resourceManager = AnnGetResourceManager();
 		if(res.type == "Zip")
 			resourceManager->addZipLocation(res.path, res.group);
-
 	}
 
 	void from_json(const json_t& j, resLocParam& p)
@@ -143,7 +142,7 @@ using namespace Annwvyn;
 
 AnnJsonLevel::AnnJsonLevel(std::string path, const bool preload) :
  constructLevel(),
-preloadResources(preload)
+ preloadResources(preload)
 {
 	jsonFile   = std::make_unique<AnnJson>();
 	auto& json = jsonFile->j;
@@ -171,7 +170,7 @@ preloadResources(preload)
 
 AnnJsonLevel::AnnJsonLevel(bool, std::string jsonCode, const bool preload) :
  constructLevel(),
-preloadResources(preload)
+ preloadResources(preload)
 {
 	jsonFile   = std::make_unique<AnnJson>();
 	auto& json = jsonFile->j;

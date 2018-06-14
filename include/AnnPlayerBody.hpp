@@ -128,7 +128,7 @@ namespace Annwvyn
 		///Set the player actuator object
 		void setActuator(std::unique_ptr<AnnPlayerActuator>&& actuator);
 
-		template <class ActuatorType, typename ... Args>
+		template <class ActuatorType, typename... Args>
 		void setActuator(Args&&... args)
 		{
 			auto act = std::make_unique<ActuatorType>(args...);

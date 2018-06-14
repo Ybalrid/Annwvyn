@@ -36,9 +36,9 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	//AnnEngine::openConsole(); //optional : open console in terminal window;
 
 #ifdef _WIN32
-    AnnEngine::registerVRRenderer("Oculus");
+	AnnEngine::registerVRRenderer("Oculus");
 #endif
-    AnnEngine::registerVRRenderer("OpenVR");
+	AnnEngine::registerVRRenderer("OpenVR");
 
 	//Initialize the engine
 	AnnInit("MyVRGame");

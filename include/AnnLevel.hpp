@@ -14,7 +14,7 @@ This class also provide a 'simple, stupid' random string generator to set IDs to
 #include "AnnTypes.h"
 
 #define LEVEL \
-public \
+public        \
 	Annwvyn::AnnLevel
 #define constructLevel() AnnLevel()
 

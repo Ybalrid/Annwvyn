@@ -46,10 +46,9 @@ void AnnScriptManager::registerApi()
 		chai.add(fun([](float f) { return asin(f); }), "asin");
 		chai.add(fun([](float f) { return acos(f); }), "acos");
 		chai.add(fun([](float f) { return atan(f); }), "atan");
-		chai.add(fun([](float y, float x) { return atan2(y,x); }), "atan2");
+		chai.add(fun([](float y, float x) { return atan2(y, x); }), "atan2");
 
 		chai.add(fun([] { return AnnGetEngine()->getTimeFromStartUp(); }), "getTimeFromStartUp");
-
 
 		// 3D vector
 		chai.add(user_type<Vector3>(), "AnnVect3");

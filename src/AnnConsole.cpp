@@ -418,7 +418,7 @@ void AnnConsole::WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTe
 				for(size_t i = 0; i < GlyphTexCoords[strindex].getHeight(); i++)
 					for(size_t j = 0; j < GlyphTexCoords[strindex].getWidth(); j++)
 					{
-						const auto alpha		= float(color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0));
+						const auto alpha	  = float(color.a * (fontData[(i + GlyphTexCoords[strindex].top) * fontRowPitchBytes + (j + GlyphTexCoords[strindex].left) * fontPixelSize + 1] / 255.0));
 						const auto invalpha   = 1.0f - alpha;
 						const auto charOffset = (i + cursorY) * destRowPitchBytes + (j + cursorX) * destPixelSize;
 						ColourValue pix;
@@ -429,7 +429,7 @@ void AnnConsole::WriteToTexture(const Ogre::String& str, Ogre::TexturePtr destTe
 
 				cursorX += GlyphTexCoords[strindex].getWidth();
 			} //default
-		}	  //switch
+		}	 //switch
 	}		  //for
 
 stop:
@@ -570,13 +570,13 @@ bool AnnConsole::runSpecialInput(const std::string& input)
 		bufferClear();
 		auto currentLevel = AnnGetLevelManager()->getCurrentLevel();
 		size_t nbControllers;
-		
+
 		append("Running VR system: " + AnnGetVRRenderer()->getName());
 		append("LevelManager: " + std::to_string(currentLevel->getContent().size()) + " active objects");
 		append("LevelManager: " + std::to_string(currentLevel->getLights().size()) + " active light sources");
 		append("LevelManager: " + std::to_string(currentLevel->getTriggers().size()) + " physics trigger object");
 		append("HandController : " + std::to_string(nbControllers = AnnGetVRRenderer()->getHanControllerArraySize()) + " max tracked controllers");
-		
+
 		if(nbControllers > 0)
 		{
 			if(AnnGetVRRenderer()->getHandControllerArray()[0])
