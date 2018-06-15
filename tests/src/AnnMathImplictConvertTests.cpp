@@ -4,7 +4,7 @@
 namespace Annwvyn
 {
 
-    TEST_CASE("Vector convert")
+    TEST_CASE("Vector BT convert")
     {
         AnnVect3 vect(1,2,3);
 
@@ -22,6 +22,19 @@ namespace Annwvyn
         REQUIRE(vect.y == sumPhyVect.y());
         REQUIRE(vect.z == sumPhyVect.z());
 
+    }
+
+
+    TEST_CASE("Quaternion BT convert")
+    {
+        AnnQuaternion q(0,0,0,1);
+
+        btQuaternion btq(q);
+
+        REQUIRE(q.x == btq.x());
+        REQUIRE(q.y == btq.y());
+        REQUIRE(q.z == btq.z());
+        REQUIRE(q.w == btq.w());
     }
 
 }

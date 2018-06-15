@@ -55,6 +55,8 @@ namespace Annwvyn
 		///Used to say that the quaternion hasn't been retrieved
 		AnnQuaternion(bool validState);
 
+		operator btQuaternion() const;
+
 	private:
 		///Set valid to true
 		inline void init();

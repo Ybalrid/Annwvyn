@@ -62,3 +62,8 @@ bool AnnQuaternion::isValid() const
 {
 	return valid;
 }
+
+AnnQuaternion::operator btQuaternion() const
+{
+	return getBtQuaternion();
+}
