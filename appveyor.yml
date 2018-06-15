@@ -33,4 +33,4 @@ build:
   parallel: true
   verbosity: normal
 after_build:
-- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\tests\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp tests\\Release\\AnnwvynUnitTest.exe .\ncp utils\\opengl32_mingw_64_soft.dll OpenAL32.dll\nREM theses tests aren't runnable on appveyor \nAnnwvynUnitTest.exe -s"
+- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\tests\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp tests\\Release\\AnnwvynUnitTest.exe .\ncp utils\\opengl32.dll OpenAL32.dll\nREM theses tests aren't runnable on appveyor \nsetx MESA_GL_VERSION_OVERRIDE=4.3\nAnnwvynUnitTest.exe -s"
