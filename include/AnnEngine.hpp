@@ -38,6 +38,7 @@
 #include "AnnScriptManager.hpp"
 #include "AnnStringUtility.hpp"
 #include "AnnPlayerBody.hpp"
+#include "AnnDynamicLibraryHolder.hpp"
 
 #ifdef _WIN32
 #include <io.h>
@@ -270,6 +271,9 @@ namespace Annwvyn
 		static bool manualConsole;
 		///If true, should quit the app ASAP
 		bool applicationQuitRequested;
+
+		///loaded libraries
+		static std::vector<AnnUniqueDynamicLibraryHolder> dynamicLibraries;
 
 		///String Utility;
 		AnnStringUtilityPtr stringUtility;

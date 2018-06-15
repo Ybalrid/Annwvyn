@@ -27,6 +27,8 @@ WORD AnnEngine::consoleYellow{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_IN
 WORD AnnEngine::consoleWhite{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY };
 #endif
 
+std::vector<AnnUniqueDynamicLibraryHolder> AnnEngine::dynamicLibraries{};
+
 AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
 {
 	engine = address;
@@ -37,6 +39,7 @@ AnnEngineSingletonReseter::~AnnEngineSingletonReseter()
 	//Reset static members of friend class AnnEnigine that will outlive the object itself.
 	engine->singleton	= nullptr;
 	engine->consoleReady = false;
+	engine->dynamicLibraries.clear();
 }
 
 void AnnEngine::setDefaultRenderer(const char* renderer)
@@ -146,11 +149,11 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 	const auto boostrapFunctionName = "AnnRendererBootstrap_" + name;
 
 #ifdef _WIN32
-
 	auto dll = LoadLibraryA(pluginName.c_str());
 	if(dll)
 	{
 		AnnDebug() << "Found plugin library";
+		dynamicLibraries.push_back(std::move(std::make_unique<AnnDynamicLibraryHolder>(dll)));
 		auto functionPointer = GetProcAddress(dll, boostrapFunctionName.c_str());
 		if(functionPointer)
 		{
@@ -171,6 +174,7 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 	if(library)
 	{
 		AnnDebug() << "Found plugin library";
+		dynamicLibraries.push_back(std::move(std::make_unique<AnnDynamicLibraryHolder>(library)));
 		auto fptr = dlsym(library, boostrapFunctionName.c_str());
 		if(fptr)
 		{
@@ -446,6 +450,7 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 	if(const auto handle = LoadLibraryA(pluginName.c_str()))
 	{
 		AnnDebug() << "Sucessully loadded dynamic libray";
+		dynamicLibraries.push_back(std::move(std::make_unique<AnnDynamicLibraryHolder>(handle)));
 		if(const auto bootstrapPlugin = GetProcAddress(handle, bootstrapName.c_str()))
 		{
 			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
@@ -471,6 +476,7 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 	if(auto handle = dlopen(pluginSoFile.c_str(), RTLD_NOW))
 	{
 		AnnDebug() << "Sucessully loadded dynamic libray";
+		dynamicLibraries.push_back(std::move(std::make_unique<AnnDynamicLibraryHolder>(handle)));
 		if(auto bootstrapPlugin = (void* (*)())dlsym(handle, bootstrapName.c_str())) //We need to cast the pointer to a functor of the "void* boostrap(void)" format
 		{
 			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
