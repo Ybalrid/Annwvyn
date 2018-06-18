@@ -10,10 +10,14 @@
 
 int main(int argc, char* argv[])
 {
+	const char* ci = getenv("ANNWVYN_CONTINUOUS_INTEGRATION");
+
+	if(ci && std::string(ci) == "true")
+		Annwvyn::AnnOgreVRRenderer::useNULLRenderSystem();
+
 	Annwvyn::AnnEngine::setNoConsoleColor();
 
-	auto result = Catch::Session().run(argc, argv);
-
+	const auto result = Catch::Session().run(argc, argv);
 	return (result < 0xff ? result : 0xff);
 }
 

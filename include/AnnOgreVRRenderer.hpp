@@ -45,14 +45,22 @@ namespace Annwvyn
 		///Name of the rendersystem plugin to load on Ogre
 #ifndef _DEBUG
 		static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus" };
+		static constexpr const char* const PluginRenderSystemNULL{ "./RenderSystem_NULL" };
 #else
 		static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus_d" };
+		static constexpr const char* const PluginRenderSystemNULL{ "./RenderSystem_NULL_d" };
 #endif
 
 		///Name of the rendersystem to initialize
 		static constexpr const char* const GLRenderSystem3Plus{ "OpenGL 3+ Rendering Subsystem" };
+		static constexpr const char* const NULLRenderSystem{ "NULL Rendering Subsystem" };
+		static constexpr const char* const NULLRenderSystemMarker{ "USE_NULL_RENDER_SYSTEM" };
 		///Resource group to load the shaders, material and compositor script for rendering.
 		static constexpr const char* const RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
+
+		static bool isUsingNULL;
+
+		static void useNULLRenderSystem();
 
 		///number of hardware threads
 		const size_t numberOfThreads;
@@ -210,7 +218,7 @@ namespace Annwvyn
 		void calculateTimingFromOgre();
 
 		///Load "modern" OpenGL functions for the current OpenGL context.
-		static void loadOpenGLFunctions();
+		void loadOpenGLFunctions();
 
 		///This method create a texture with the wanted Anti Aliasing level. It will set the rttTextureCombined and rttEyesCombined member of this class to the correct value, and return the GLID of the texture.
 		unsigned int createCombinedRenderTexture(unsigned int w, unsigned int h);

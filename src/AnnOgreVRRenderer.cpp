@@ -115,8 +115,11 @@ AnnOgreVRRenderer::~AnnOgreVRRenderer()
 	root.reset();
 
 	//Clean GLFW
-	glfwDestroyWindow(glfwWindow);
-	glfwTerminate();
+	if(!isUsingNULL)
+	{
+		glfwDestroyWindow(glfwWindow);
+		glfwTerminate();
+	}
 
 	//Reset the singleton
 	self = nullptr;
@@ -167,10 +170,17 @@ void AnnOgreVRRenderer::getOgreConfig() const
 	if(!root) throw AnnInitializationError(ANN_ERR_NOTINIT, "Need to initialize Ogre::Root before loading system configuration");
 
 	//Load OgrePlugins
-	root->loadPlugin(PluginRenderSystemGL3Plus);
+	if(!isUsingNULL)
+		root->loadPlugin(PluginRenderSystemGL3Plus);
+	else
+		root->loadPlugin(PluginRenderSystemNULL);
 
 	//Set the classic OpenGL render system
-	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem3Plus));
+	if(!isUsingNULL)
+		root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem3Plus));
+	else
+		root->setRenderSystem(root->getRenderSystemByName(NULLRenderSystem));
+
 	//	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
 	root->getRenderSystem()->setConfigOption("sRGB Gamma Conversion", "Yes");
 	root->initialise(false);
@@ -275,6 +285,9 @@ void AnnOgreVRRenderer::calculateTimingFromOgre()
 
 void AnnOgreVRRenderer::loadOpenGLFunctions()
 {
+	//Stub function if running null rendersystem
+	if(isUsingNULL) return;
+
 	AnnDebug() << "Init GL Extension Wrangler";
 	//The version of OpenGL feature set that will be "wrangled" by GLEW depend of the current OpenGL context.
 	//The context version depend on who created the context. Here we used GLFW and hinted for OpenGL 4.3
@@ -319,8 +332,10 @@ GLuint AnnOgreVRRenderer::createCombinedRenderTexture(unsigned int w, unsigned i
 {
 	GLuint glid;
 	auto rttTextureCombined = Ogre::TextureManager::getSingleton().createManual(rttTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, w, h, 0, Ogre::PF_R8G8B8A8, Ogre::TU_RENDERTARGET, nullptr, true, AALevel);
+	rttEyesCombined			= rttTextureCombined->getBuffer()->getRenderTarget();
+
+	if(isUsingNULL) return 42;
 	rttTextureCombined->getCustomAttribute("GLID", &glid);
-	rttEyesCombined = rttTextureCombined->getBuffer()->getRenderTarget();
 	return glid;
 }
 
@@ -342,8 +357,16 @@ GLuintPair AnnOgreVRRenderer::createSeparatedRenderTextures(const combinedTextur
 																					nullptr,
 																					true,
 																					AALevel);
-		rttTexturesSeparated[i]->getCustomAttribute("GLID", &glid[i]);
-		rttEyeSeparated[i] = rttTexturesSeparated[i]->getBuffer(0)->getRenderTarget(0);
+		rttEyeSeparated[i]		= rttTexturesSeparated[i]->getBuffer(0)->getRenderTarget(0);
+
+		if(!isUsingNULL)
+		{
+			rttTexturesSeparated[i]->getCustomAttribute("GLID", &glid[i]);
+		}
+		else
+		{
+			glid[i] = 1337;
+		}
 	}
 	return glid;
 }
@@ -362,8 +385,9 @@ std::tuple<Ogre::TexturePtr, unsigned int> AnnOgreVRRenderer::createAdditionalRe
 																	9,
 																	Ogre::PF_R8G8B8A8) };
 
-	unsigned int glid;
-	texture->getCustomAttribute("GLID", &glid);
+	unsigned int glid = 69;
+	if(!isUsingNULL)
+		texture->getCustomAttribute("GLID", &glid);
 	return std::tie(texture, glid);
 }
 
@@ -371,46 +395,50 @@ void AnnOgreVRRenderer::createWindow(unsigned int w, unsigned int h, bool vsync)
 {
 	windowW = w, windowH = h;
 	auto winName = rendererName + " : " + name + " - monitor output";
-
-	AnnDebug() << "Initializing GLFW";
-	AnnDebug() << "GLFW version: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION;
-	glfwInit();
-
-	//Specify OpenGL version
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, AALevel);
-
-	AnnDebug() << "Set OpenGL context version " << glMajor << "." << glMinor;
-
-	//Create a window (and an opengl context with it)
-	glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
-
-	//Make the created context current
-	glfwMakeContextCurrent(glfwWindow);
 	Ogre::NameValuePairList options;
 
+	if(!isUsingNULL)
+	{
+		AnnDebug() << "Initializing GLFW";
+		AnnDebug() << "GLFW version: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION;
+		glfwInit();
+
+		//Specify OpenGL version
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_SAMPLES, AALevel);
+
+		AnnDebug() << "Set OpenGL context version " << glMajor << "." << glMinor;
+
+		//Create a window (and an opengl context with it)
+		glfwWindow = glfwCreateWindow(w, h, winName.c_str(), nullptr, nullptr);
+
+		//Make the created context current
+		glfwMakeContextCurrent(glfwWindow);
+
 #ifdef _WIN32
-	//Get the hwnd and the context :
-	auto context					= wglGetCurrentContext();
-	auto handle						= glfwGetWin32Window(glfwWindow);
-	options["externalWindowHandle"] = std::to_string(size_t(handle));
+		//Get the hwnd and the context :
+		auto context					= wglGetCurrentContext();
+		auto handle						= glfwGetWin32Window(glfwWindow);
+		options["externalWindowHandle"] = std::to_string(size_t(handle));
 #elif __linux__
-	Window handle				  = {};
-	void* context				  = nullptr;
-	handle						  = glfwGetX11Window(glfwWindow);
-	options["parentWindowHandle"] = std::to_string(size_t(handle));
+		Window handle				  = {};
+		void* context				  = nullptr;
+		handle						  = glfwGetX11Window(glfwWindow);
+		options["parentWindowHandle"] = std::to_string(size_t(handle));
 #endif
 
-	options["externalGLContext"] = std::to_string(size_t(context));
-	options["FSAA"]				 = std::to_string(AALevel);
-	options["top"]				 = "0";
-	options["left"]				 = "0";
-	options["gamma"]			 = "true";
-	options["vsync"]			 = vsync ? "true" : "false";
+		options["externalGLContext"] = std::to_string(size_t(context));
+		options["FSAA"]				 = std::to_string(AALevel);
 
-	window = root->createRenderWindow(winName, w, h, false, &options);
+		options["gamma"] = "true";
+		options["vsync"] = vsync ? "true" : "false";
+
+		options["top"]  = "0";
+		options["left"] = "0";
+		window			= root->createRenderWindow(winName, w, h, false, &options);
+	}
 }
 
 std::string AnnOgreVRRenderer::getName() const
@@ -486,18 +514,22 @@ void AnnOgreVRRenderer::loadHLMSLibrary(std::string hlmsFolder)
 
 void AnnOgreVRRenderer::loadCompositor(const std::string& path, const std::string& type)
 {
+	if(!isUsingNULL)
+	{
+
 	auto compositorFolder = path;
 	makeValidPath(compositorFolder);
 	auto resourceGroupManager = Ogre::ResourceGroupManager::getSingletonPtr();
 	//TODO ISSUE maybe package the compositor differently
 	resourceGroupManager->addResourceLocation(compositorFolder, type, RESOURCE_GROUP_COMPOSITOR);
 	resourceGroupManager->initialiseResourceGroup(RESOURCE_GROUP_COMPOSITOR, false);
-
-	compositorLoaded = true;
+	}
+		compositorLoaded = true;
 }
 
 void AnnOgreVRRenderer::setSkyColor(Ogre::ColourValue skyColor, float multiplier, const char* renderingNodeName) const
 {
+	if(isUsingNULL) return;
 	auto compositor		  = root->getCompositorManager2();
 	auto renderingNodeDef = compositor->getNodeDefinitionNonConst(renderingNodeName);
 	auto targetDef		  = renderingNodeDef->getTargetPass(0);
@@ -515,6 +547,7 @@ void AnnOgreVRRenderer::setSkyColor(Ogre::ColourValue skyColor, float multiplier
 
 void AnnOgreVRRenderer::setExposure(float exposure, float minAuto, float maxAuto, const char* postProcessMaterial) const
 {
+	if(isUsingNULL) return;
 	auto materialManager = Ogre::MaterialManager::getSingletonPtr();
 	auto material		 = materialManager->load(postProcessMaterial, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME).staticCast<Ogre::Material>();
 
@@ -554,21 +587,22 @@ bool AnnOgreVRRenderer::shouldHideHands() const
 ///Wrap annoying OpenGL call to something humanly acceptable
 void AnnOgreVRRenderer::glEasyCopy(GLuint source, GLuint dest, GLuint width, GLuint height)
 {
-	glCopyImageSubData(source,
-					   GL_TEXTURE_2D,
-					   0,
-					   0,
-					   0,
-					   0,
-					   dest,
-					   GL_TEXTURE_2D,
-					   0,
-					   0,
-					   0,
-					   0,
-					   width,
-					   height,
-					   1);
+	if(!isUsingNULL)
+		glCopyImageSubData(source,
+						   GL_TEXTURE_2D,
+						   0,
+						   0,
+						   0,
+						   0,
+						   dest,
+						   GL_TEXTURE_2D,
+						   0,
+						   0,
+						   0,
+						   0,
+						   width,
+						   height,
+						   1);
 }
 
 void AnnOgreVRRenderer::_resetOgreTimer() const
@@ -606,7 +640,6 @@ std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 	AudioOutputDescriptorVect descriptors;
 
 	//Fill the "descriptors" vector :
-
 	DirectSoundEnumerateA([](LPGUID pguid, LPCSTR descr, LPCSTR modname, LPVOID ctx) //using a non capturing lambda function as a callback
 						  {
 							  auto outputDescriptors = static_cast<AudioOutputDescriptorVect*>(ctx); //get an usable pointer
@@ -653,23 +686,33 @@ void AnnOgreVRRenderer::handleWindowMessages()
 {
 	//Do the message pumping from the OS
 	Ogre::WindowEventUtilities::messagePump();
-	glfwPollEvents();
-
-	//handle resizable window
-	static int w, h;
-	glfwGetWindowSize(glfwWindow, &w, &h);
-
-	if(windowW != w || windowH != h)
+	if(!isUsingNULL)
 	{
-		windowW = w;
-		windowH = h;
-		//For some reason, windowMovedOrResized() is bugging on linux and doesn't do anything
+		glfwPollEvents();
+
+		//handle resizable window
+		static int w, h;
+		glfwGetWindowSize(glfwWindow, &w, &h);
+
+		if(windowW != w || windowH != h)
+		{
+			windowW = w;
+			windowH = h;
+			//For some reason, windowMovedOrResized() is bugging on linux and doesn't do anything
 #ifndef __linux__
-		window->windowMovedOrResized();
+			window->windowMovedOrResized();
 #else
-		window->resize(w, h);
+			window->resize(w, h);
 #endif
+		}
 	}
+}
+
+bool AnnOgreVRRenderer::isUsingNULL = false;
+
+void AnnOgreVRRenderer::useNULLRenderSystem()
+{
+	if(!self) isUsingNULL = true;
 }
 
 void AnnOgreVRRenderer::setShadowFiltering(ShadowFiltering level) const
