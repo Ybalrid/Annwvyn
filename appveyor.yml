@@ -7,6 +7,7 @@ platform: x64
 shallow_clone: true
 environment:
   AnnwvynSDK64: C:\YbalridSoftware\AnnwvynSDK64\
+  ANNWVYN_CONTINUOUS_INTEGRATION: true
 before_build:
 - cmd: >-
     echo Getting dependencies
