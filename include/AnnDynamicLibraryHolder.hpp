@@ -25,15 +25,15 @@ namespace Annwvyn
 		///Move constructor
 		AnnDynamicLibraryHolder(AnnDynamicLibraryHolder&& other)
 		{
-			holdedLibrary		= other.holdedLibrary;
-			other.holdedLibrary = NULL;
+			heldLibrary		= other.heldLibrary;
+			other.heldLibrary = NULL;
 		}
 
 		///Move-assign operator
 		AnnDynamicLibraryHolder& operator=(AnnDynamicLibraryHolder&& other)
 		{
-			holdedLibrary		= other.holdedLibrary;
-			other.holdedLibrary = NULL;
+			heldLibrary		= other.heldLibrary;
+			other.heldLibrary = NULL;
 			return *this;
 		}
 
@@ -47,17 +47,17 @@ namespace Annwvyn
 		///Construct the holder
 		AnnDynamicLibraryHolder(AnnDynLib lib)
 		{
-			holdedLibrary = lib;
+			heldLibrary = lib;
 		}
 
 		///Destruct the holder, will FreeLibrary/dlclose the library handle/pointer
 		~AnnDynamicLibraryHolder()
 		{
-			if(holdedLibrary)
+			if(heldLibrary)
 #ifdef _WIN32
-				if(!FreeLibrary(holdedLibrary))
+				if(!FreeLibrary(heldLibrary))
 #else
-				if(dlclose(holdedLibrary) != 0)
+				if(dlclose(heldLibrary) != 0)
 #endif
 				{
 					//TODO report about error now
@@ -66,7 +66,7 @@ namespace Annwvyn
 
 	private:
 		///handle to dll/so that has been loaded in memory
-		AnnDynLib holdedLibrary = 0;
+		AnnDynLib heldLibrary = 0;
 	};
 
 	///handy typename for an unique_ptr using the above class
