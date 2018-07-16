@@ -9,6 +9,8 @@
 #include "systemMacro.h"
 #include <AnnTypes.h>
 #include "AnnAbstractMovable.hpp"
+#include <BulletCollision/CollisionShapes/btCollisionShape.h>
+#include <BulletDynamics/Dynamics/btRigidBody.h>
 
 namespace Annwvyn
 {

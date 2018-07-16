@@ -1,6 +1,6 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include "stdafx.h"
+
 #include "AnnLogger.hpp"
 //The debug output is opened by the AnnEngine class
 #include "AnnEngine.hpp"

@@ -1,5 +1,5 @@
 //To speed up things a bit, we precompile headers
-#include "stdafx.h"
+
 #include "configs.hpp"
 
 //Include the engine itself

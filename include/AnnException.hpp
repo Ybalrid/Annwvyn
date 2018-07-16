@@ -84,4 +84,5 @@ namespace Annwvyn
 		const std::string levelName;
 		const std::string objectName;
 	};
+
 }

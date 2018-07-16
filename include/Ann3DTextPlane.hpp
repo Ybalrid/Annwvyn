@@ -6,6 +6,7 @@
 #include <Overlay/OgreFontManager.h>
 #include <Overlay/OgreFont.h>
 #include <string>
+#include <array>
 
 #include "AnnTypes.h"
 
