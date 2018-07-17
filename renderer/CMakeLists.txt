@@ -11,15 +11,16 @@ if(WIN32)
 		openvr_api.lib
 		)
 
+		install(TARGETS AnnOgreOpenVRRenderer  DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 endif()
 
 if(UNIX)
 	target_link_libraries(AnnOgreOpenVRRenderer
-		libopenvr_api.so)
+	libopenvr_api.so
+	)
 
 	install(TARGETS AnnOgreOpenVRRenderer LIBRARY DESTINATION lib)
-
-endif(UNIX)
+endif()
 cotire(AnnOgreOpenVRRenderer)
 
 if(WIN32)
@@ -34,6 +35,7 @@ if(WIN32)
 		Setupapi.lib
 		)
 
+		install(TARGETS AnnOgreOculusRenderer  DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 
 	cotire(AnnOgreOculusRenderer)
-endif(WIN32)
+endif()

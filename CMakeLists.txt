@@ -4,6 +4,10 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(Annwvyn)
 
+if(NOT CMAKE_DEBUG_POSTFIX)
+    set(CMAKE_DEBUG_POSTFIX "_d")
+endif()
+
 #Basic build configuration
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
@@ -17,7 +21,7 @@ if(WIN32)
         message("Detected Annwvyn SDK. Will fetch libraries from: " $ENV{AnnwvynSDK64})
     endif()
 
-	#We only support MSVC on windows
+    #We only support MSVC on windows
     if(MSVC)
         set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
         message("Configuring build option in visual studio...")
@@ -29,8 +33,8 @@ if(WIN32)
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 
-		#Sadly, Ogre uses some old stuff in their headers:
-		add_compile_options(/wd5033)
+        #Sadly, Ogre uses some old stuff in their headers:
+        add_compile_options(/wd5033)
 
     else()
         message(FATAL_ERROR "You should only try to generate a Visual Studio solution on Windows")
@@ -175,15 +179,7 @@ endif()
 
 #Installation
 if(WIN32)
-    set(Annwvyn_INSTALLABLE ${CMAKE_BINARY_DIR}/Release)
-    set(Annwvyn_ARTIFACTS
-    ${Annwvyn_INSTALLABLE}/Annwvyn.lib
-    ${Annwvyn_INSTALLABLE}/Annwvyn.dll
-    ${Annwvyn_INSTALLABLE}/Annwvyn.exp
-    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOculusRenderer.dll
-    ${Annwvyn_INSTALLABLE}/../renderer/Release/AnnOgreOpenVRRenderer.dll)
-    install(FILES ${Annwvyn_ARTIFACTS} DESTINATION ${CMAKE_SOURCE_DIR}/lib)
-
+    install(TARGETS Annwvyn DESTINATION ${CMAKE_SOURCE_DIR}/lib)
 elseif(UNIX)
     install(TARGETS Annwvyn LIBRARY DESTINATION lib)
     install(FILES ${AnnwvynHeaders} DESTINATION include/Annwvyn/)
