@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.6.3)
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 project(Annwvyn)
 
@@ -24,10 +24,14 @@ if(WIN32)
         #This configure the Annwvyn's header to EXPORT symbols to DLL
         add_definitions(-DDLLDIR_EX)
         #compiler configuration
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4 /fp:fast /bigobj /Gy /D \"_UNICODE\" /D \"UNICODE\" /D \"NOMINMAX\"")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4 /fp:fast /bigobj /D \"_UNICODE\" /D \"UNICODE\" /D \"NOMINMAX\"")
         string(REPLACE "/O2" "/Ox" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /Ot /Oi")
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+
+		#Sadly, Ogre uses some old stuff in their headers:
+		add_compile_options(/wd5033)
+
     else()
         message(FATAL_ERROR "You should only try to generate a Visual Studio solution on Windows")
     endif()
@@ -61,6 +65,8 @@ else(UNIX)
         ~/AnnwvynDeps/CMakeModules
         )
 endif()
+
+include(cotire)
 
 #Find findable packages
 find_package(OpenGL REQUIRED)
@@ -128,11 +134,12 @@ link_directories(
 #List the complete source code
 file(GLOB AnnwvynSources src/*.cpp)
 file(GLOB AnnwvynHeaders include/*.hpp include/*.h)
-if(MSVC)
-    file(GLOB AnnwvynPCH pch/*)
-endif()
-set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders} ${AnnwvynPCH})
+
+set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders})
+
 add_library(Annwvyn SHARED ${AnnwvynCode} )
+
+cotire(Annwvyn)
 
 add_subdirectory(tests)
 add_subdirectory(renderer)
@@ -164,8 +171,6 @@ endif()
 if(MSVC)
     set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
     set_target_properties(Annwvyn PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
-    set_target_properties(Annwvyn PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
-    set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
 endif()
 
 #Installation

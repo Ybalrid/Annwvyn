@@ -1,11 +1,12 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include "stdafx.h"
+
 #include "AnnSplashLevel.hpp"
 #include "AnnEngine.hpp"
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
 #include "AnnException.hpp"
+#include "OgreHlmsUnlitDatablock.h"
 
 using namespace Annwvyn;
 

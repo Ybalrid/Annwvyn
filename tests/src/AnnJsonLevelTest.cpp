@@ -1,4 +1,3 @@
-#include <stdafx.h>
 #include <engineBootstrap.hpp>
 #include "AnnJsonLevel.hpp"
 

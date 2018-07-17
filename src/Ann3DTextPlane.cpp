@@ -1,6 +1,5 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include "stdafx.h"
 
 #include <OgreVector2.h>
 
@@ -9,6 +8,9 @@
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
 #include "AnnException.hpp"
+#include <OgreHlms.h>
+#include <OgreHlmsPbs.h>
+#include <OgreHlmsPbsDatablock.h>
 
 using namespace Annwvyn;
 using namespace std;
@@ -162,8 +164,14 @@ void Ann3DTextPlane::createMaterial()
 	generateMaterialName();
 
 	//We want theses objects to react to the light and be present in the scene. We will create some kind of dielectric material (aka paint)
-	auto hlms = static_cast<Ogre::HlmsPbs*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_PBS));
+	auto hlms = dynamic_cast<Ogre::HlmsPbs*>(AnnGetVRRenderer()->getRoot()->getHlmsManager()->getHlms(Ogre::HLMS_PBS));
 
+	if(!hlms)
+	{
+		throw AnnInitializationError(ANN_ERR_NOTINIT, "3D text plane cannot be created: cannot get HLMS_PBS");
+	}
+
+	//We do know that hlms is an hlmsPbs
 	auto datablock = static_cast<Ogre::HlmsPbsDatablock*>(hlms->createDatablock(materialName, materialName, {}, {}, {}));
 
 	//Note : if we want to make this run in "unlit" we will need to :

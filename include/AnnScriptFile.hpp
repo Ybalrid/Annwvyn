@@ -4,6 +4,8 @@
 #include <OgreSharedPtr.h>
 
 #include "systemMacro.h"
+#include <OgreSerializer.h>
+
 namespace Annwvyn
 {
 	/// Ogre resource that contains the source code of a loaded .chai file

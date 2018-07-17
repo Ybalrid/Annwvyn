@@ -13,6 +13,8 @@
 
 #include <AnnTypes.h>
 
+#include <Compositor/OgreCompositorManager2.h>
+
 #ifndef _WIN32
 using GUID = void*;
 #endif

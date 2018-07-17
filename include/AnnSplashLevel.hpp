@@ -8,6 +8,7 @@
 
 #include "systemMacro.h"
 #include "AnnLevel.hpp"
+#include <OgreHlmsUnlitDatablock.h>
 
 namespace Annwvyn
 {
