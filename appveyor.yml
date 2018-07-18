@@ -36,8 +36,8 @@ build:
   project: Annwvyn.sln
   parallel: true
   verbosity: normal
-after_build:
-- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\tests\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp tests\\Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"
+#after_build:
+#- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\tests\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp tests\\Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"
 artifacts:
 - path: Release\Annwvyn.dll
   name: Annwvyn.dll
