@@ -7,8 +7,6 @@ configuration:
 - Debug
 platform: x64
 shallow_clone: true
-init:
-- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 environment:
   AnnwvynSDK64: C:\YbalridSoftware\AnnwvynSDK64\
 before_build:
