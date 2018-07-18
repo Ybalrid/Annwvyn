@@ -9,6 +9,8 @@
 
 #include <memory>
 
+#include <Ogre_glTF.hpp>
+
 namespace Annwvyn
 {
 	class AnnEngine;
@@ -90,6 +92,8 @@ namespace Annwvyn
 		uID nextID();
 
 		bool halfPos, halfTexCoord, qTan;
+
+		Ogre_glTF::glTFLoaderInterface* glTFLoader = nullptr;
 	};
 
 	using AnnGameObjectManagerPtr = std::shared_ptr<AnnGameObjectManager>;

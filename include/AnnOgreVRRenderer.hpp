@@ -47,8 +47,18 @@ namespace Annwvyn
 		///Name of the rendersystem plugin to load on Ogre
 #ifndef _DEBUG
 		static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus" };
+#ifdef _WIN32
+		static constexpr const char* const Ogre_glTF_Plugin{ "./Ogre_glTF" };
+#else
+		static constexpr const char* const Ogre_glTF_Plugin{ "./libOgre_glTF.so" };
+#endif
 #else
 		static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus_d" };
+#ifdef _WIN32
+		static constexpr const char* const Ogre_glTF_Plugin{ "./Ogre_glTF_d" };
+#else
+		static constexpr const char* const Ogre_glTF_Plugin{ "./libOgre_glTF_d.so" };
+#endif
 #endif
 
 		///Name of the rendersystem to initialize

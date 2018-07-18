@@ -18,6 +18,12 @@ AnnGameObjectManager::AnnGameObjectManager() :
 {
 	//There will only be one manager, set the id to 0
 	autoID = 0;
+
+	if(const auto plugin = Ogre_glTF::gltfPluginAccessor::findPlugin(); plugin)
+		glTFLoader = plugin->getLoader();
+	else
+		AnnDebug() << "Could not get glTFLoader!, please check if the plugin is located next to the executable!";
+
 }
 
 void AnnGameObjectManager::update()
@@ -63,13 +69,26 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const std:
 	AnnDebug("Creating a game object from the mesh file: " + std::string(meshName));
 	auto smgr{ AnnGetEngine()->getSceneManager() };
 
-	Ogre::v1::MeshPtr v1Mesh;
-	Ogre::MeshPtr v2Mesh;
-	getAndConvertFromV1Mesh(meshName.c_str(), v1Mesh, v2Mesh);
-	v1Mesh.setNull();
+	Ogre::Item* item = nullptr;
 
-	//Create an item
-	auto item = smgr->createItem(v2Mesh);
+	//Check filename extension:
+	auto ext = meshName.substr(meshName.find_last_of('.')+1);
+	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+	if(ext == "mesh")
+	{
+		Ogre::v1::MeshPtr v1Mesh;
+		Ogre::MeshPtr v2Mesh;
+		getAndConvertFromV1Mesh(meshName.c_str(), v1Mesh, v2Mesh);
+		v1Mesh.setNull();
+
+		//Create an item
+		item = smgr->createItem(v2Mesh);
+	}
+	else if(ext == "glb")
+	{
+		item = glTFLoader->getItemFromResource(meshName, smgr);
+	}
 
 	//Create a node
 	auto node = smgr->getRootSceneNode()->createChildSceneNode();
