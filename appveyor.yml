@@ -2,9 +2,13 @@ version: 0.4.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 image: Visual Studio 2017
-configuration: Release
+configuration:
+- Release
+- Debug
 platform: x64
 shallow_clone: true
+init:
+- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 environment:
   AnnwvynSDK64: C:\YbalridSoftware\AnnwvynSDK64\
 before_build:
@@ -25,12 +29,17 @@ before_build:
 
     cd %goback%
 
-    echo Will run cmake now...
+
+
+    echo will run cmake now...
 
     cmake -G "Visual Studio 15 2017 Win64"
 build:
   project: Annwvyn.sln
   parallel: true
   verbosity: normal
-after_build:
-- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\tests\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp tests\\Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"
+test_script:
+- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"
+artifacts:
+- path: Release\Annwvyn.dll
+  name: Annwvyn.dll
