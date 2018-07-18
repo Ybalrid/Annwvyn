@@ -12,6 +12,8 @@ if(WIN32)
 		)
 
 		install(TARGETS AnnOgreOpenVRRenderer  DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+		install(FILES $<TARGET_PDB_FILE:AnnOgreOpenVRRenderer> DESTINATION ${CMAKE_SOURCE_DIR}/lib OPTIONAL)
+
 endif()
 
 if(UNIX)
@@ -36,6 +38,8 @@ if(WIN32)
 		)
 
 		install(TARGETS AnnOgreOculusRenderer  DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+		install(FILES $<TARGET_PDB_FILE:AnnOgreOculusRenderer> DESTINATION ${CMAKE_SOURCE_DIR}/lib OPTIONAL)
+
 
 	cotire(AnnOgreOculusRenderer)
 endif()

@@ -180,6 +180,7 @@ endif()
 #Installation
 if(WIN32)
     install(TARGETS Annwvyn DESTINATION ${CMAKE_SOURCE_DIR}/lib)
+	install(FILES $<TARGET_PDB_FILE:Annwvyn> DESTINATION ${CMAKE_SOURCE_DIR}/lib OPTIONAL)
 elseif(UNIX)
     install(TARGETS Annwvyn LIBRARY DESTINATION lib)
     install(FILES ${AnnwvynHeaders} DESTINATION include/Annwvyn/)
