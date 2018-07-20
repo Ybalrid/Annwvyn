@@ -9,7 +9,6 @@ project(${ANNWVYN_PROJECT})
 #Get all the sources and headers (+ PCH files)
 file(GLOB ProjSources *.cpp)
 file(GLOB ProjHeaders *.hpp)
-file(GLOB ProjPCH pch/*)
 
 #copy the necessary files from the sources to the runtime directory
 file(GLOB batch *.bat *.sh)
@@ -40,8 +39,8 @@ set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/ CACHE PATH "BtOgre21 in
 set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS CACHE PATH "OIS install")
 set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install CACHE PATH "OpenAL install")
 set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw/build/install CACHE PATH "GLFW install") 
-set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2/build/install CACHE PATH "TinyXML install")
 set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "TinyXml2 install")
+
 #Where to find additional modules
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
@@ -61,6 +60,8 @@ if(UNIX)
         )
 endif()
 
+include(cotire)
+
 #Find packages
 find_package(OpenGL REQUIRED)
 find_package(OGRE COMPONENTS Overlay HlmsPbs HlmsUnlit REQUIRED)
@@ -69,7 +70,6 @@ find_package(BtOgre21 REQUIRED)
 find_package(OIS REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(GLFW REQUIRED)
-find_package(TinyXML2 REQUIRED)
 find_package(SNDFILE REQUIRED)
 
 #finding GLEW on windows require the prefix and library path to be modified
@@ -107,12 +107,18 @@ include_directories(
     ${OPENAL_INCLUDE_DIR}
     ${SNDFILE_INCLUDE_DIRS}
     #Scripting
+    $ENV{AnnwvynSDK64}/json/single_include/nlohmann
+    $ENV{HOME}/AnnwvynDeps/json/single_include/nlohmann
     $ENV{AnnwvynSDK64}/chaiscript #!This is an header only library!
     $ENV{HOME}/AnnwvynDeps/chaiscript
-    ${TinyXML2_INCLUDE_DIRS}
+
+
     #Project own include
-    ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
+
+    #Ogre_glTF plugin
+    $ENV{AnnwvynSDK64}/Ogre_glTF/build/output/include
+    $ENV{HOME}/AnnwvynDeps/Ogre_glTF/build/output/include
 
     #Annwvyn Engine
     $ENV{AnnwvynSDK64}/Annwvyn/include
@@ -130,10 +136,11 @@ file(GLOB ProjScripts  ${PROJECT_BINARY_DIR}/*.chai)
 
 message(STATUS "Beware! The files ${ProjScripts} are resources copied inside the binary directory. The COPIED FILES are added to the project. Sale goes the media, compositor and hlms directories.")
 message("If you want them to be updated you should re-run cmake")
-add_executable(${ANNWVYN_PROJECT} ${ProjSources} ${ProjHeaders} ${ProjPCH} ${ProjScripts})
+add_executable(${ANNWVYN_PROJECT} ${ProjSources} ${ProjHeaders} ${ProjScripts})
 
 target_link_libraries(${ANNWVYN_PROJECT}
-    Annwvyn
+    optimized Annwvyn
+    debug Annwvyn_d
     ${OGRE_LIBRARIES}
     ${OGRE_HlmsPbs_LIBRARIES}
     ${OGRE_HlmsUnlit_LIBRARIES}
@@ -155,7 +162,7 @@ if(MSVC)
     set_target_properties(${ANNWVYN_PROJECT} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
     set_target_properties(${ANNWVYN_PROJECT} PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
     set_target_properties(${ANNWVYN_PROJECT} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:WINDOWS")
-    set_target_properties(${ANNWVYN_PROJECT} PROPERTIES COMPILE_FLAGS "/Yustdafx.h")
-    set_source_files_properties(pch/stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
 endif()
+
+cotire(${ANNWVYN_PROJECT})
 

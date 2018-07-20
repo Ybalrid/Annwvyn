@@ -18,7 +18,7 @@ namespace Annwvyn
 		auto sun = AnnGetGameObjectManager()->createLightObject("_internal_test_sun"); //physics based shading crash shaders if no light
 		sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
 		sun->setPower(97);
-		sun->setDirection(AnnVect3{ 0, -1, -2 }.normalisedCopy());
+		sun->setDirection(AnnVect3{ 0.5f, -3, -2 }.normalisedCopy());
 		REQUIRE(sun);
 
 		//Fixed object in space : the floor

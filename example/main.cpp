@@ -7,8 +7,6 @@
 *
 */
 
-#include "stdafx.h"
-
 //Annwvyn
 #include <Annwvyn.h>
 #include <Ann3DTextPlane.hpp>
