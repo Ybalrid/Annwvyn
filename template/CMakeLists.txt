@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6.3)
 
-set(ANNWVYN_PROJECT "PleaseChangeNameInCMakeLists")
+set(ANNWVYN_PROJECT "template_test")
 
 #Name of the project
 project(${ANNWVYN_PROJECT})
@@ -9,7 +9,6 @@ project(${ANNWVYN_PROJECT})
 file(GLOB ProjSources *.cpp)
 file(GLOB ProjHeaders *.hpp)
 file(GLOB ProjPCH pch/*)
-
 
 #copy the necessary files from the sources to the runtime directory
 file(GLOB batch *.bat *.sh)
@@ -29,25 +28,23 @@ file(COPY ${scripts} DESTINATION ${PROJECT_BINARY_DIR})
 
 if(MSVC)
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4 /fp:fast /bigobj /Gy /D \"_UNICODE\" /D \"UNICODE\" /D \"NOMINMAX\"")
-	string(REPLACE "/O2" "/Ox" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /Ot /Oi")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /W4 /fp:fast /bigobj /Gy /D \"_UNICODE\" /D \"UNICODE\" /D \"NOMINMAX\"")
+    string(REPLACE "/O2" "/Ox" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /Ot /Oi")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 
-
-	#Set path required for CMake modules
-	set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK CACHE PATH "Ogre install")
-	set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3 CACHE PATH "Bullet install")
-	set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/ CACHE PATH "BtOgre21 install")
-	set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS CACHE PATH "OIS install")
-	set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install CACHE PATH "OpenAL install")
-	set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw/build/install CACHE PATH "GLFW install") 
-	set(TinyXML2_ROOT $ENV{AnnwvynSDK64}/tinyxml2/build/install CACHE PATH "TinyXML install")
-	set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "TinyXml2 install")
+    #Set path required for CMake modules
+    set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK CACHE PATH "Ogre install")
+    set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3 CACHE PATH "Bullet install")
+    set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/ CACHE PATH "BtOgre21 install")
+    set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS CACHE PATH "OIS install")
+    set(ENV{OPENALDIR} $ENV{AnnwvynSDK64}/AL/openal-soft/build/install CACHE PATH "OpenAL install")
+    set(ENV{GLFW_LOCATION} $ENV{AnnwvynSDK64}/glfw/build/install CACHE PATH "GLFW install")
+    set(SNDFILE_WINDOWS_INSTALL $ENV{AnnwvynSDK64}/libsndfile CACHE PATH "Sndfile install")
 endif(MSVC)
 
 #Where to find additional modules
-set(CMAKE_MODULE_PATH 
+set(CMAKE_MODULE_PATH
     $ENV{AnnwvynSDK64}/CMakeModules
     $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
     $ENV{AnnwvynSDK64}/BtOgre21/CMake
@@ -65,7 +62,6 @@ find_package(BtOgre21 REQUIRED)
 find_package(OIS REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(GLFW REQUIRED)
-find_package(TinyXML2 REQUIRED)
 find_package(SNDFILE REQUIRED)
 
 #finding GLEW on windows require the prefix and library path to be modified
@@ -93,12 +89,12 @@ include_directories(
     #Physics
     ${BULLET_INCLUDE_DIRS}
     ${BtOgre21_INCLUDE_DIRS}
-    #Input 
+    #Input
     ${OIS_INCLUDE_DIRS}
     #OpengL Support
     ${GLEW_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIR}
-    #Audio 
+    #Audio
     ${OPENAL_INCLUDE_DIR}
     ${SNDFILE_INCLUDE_DIRS}
     #Scripting
@@ -108,6 +104,11 @@ include_directories(
     #Project own include
     ${PROJECT_SOURCE_DIR}/pch
     ${PROJECT_SOURCE_DIR}/include
+    $ENV{AnnwvynSDK64}/json/single_include/nlohmann
+    $ENV{HOME}/AnnwvynDeps/json/single_include/nlohmann
+
+    $ENV{AnnwvynSDK64}/Ogre_glTF/build/output/include
+    $ENV{HOME}/AnnwvynDeps/Ogre_glTF/build/output/include
 
     #Annwvyn Engine
     $ENV{AnnwvynSDK64}/Annwvyn/include
@@ -115,10 +116,10 @@ include_directories(
     )
 
 link_directories(
-	$ENV{AnnwvynSDK64}/Annwvyn/lib/
-	/usr/local/lib/Annwvyn/
-	$ENV{HOME}/AnnwvynDeps/openvr/lib/linux64
-	)
+    $ENV{AnnwvynSDK64}/Annwvyn/lib/
+    /usr/local/lib/Annwvyn/
+    $ENV{HOME}/AnnwvynDeps/openvr/lib/linux64
+    )
 
 file(GLOB ProjScripts  ${PROJECT_BINARY_DIR}/*.chai)
 
@@ -134,17 +135,18 @@ target_link_libraries(${ANNWVYN_PROJECT}
     )
 
 if(MSVC)
-	target_link_libraries(${ANNWVYN_PROJECT}
-    	Annwvyn.lib
-    	)
+    target_link_libraries(${ANNWVYN_PROJECT}
+        optimized Annwvyn.lib
+        debug Annwvyn_d.lib
+        )
 endif()
 
 if(UNIX)
-	target_link_libraries(${ANNWVYN_PROJECT}
-		${BULLET_LIBRARIES}
-    	Annwvyn
-    	libopenvr_api.so
-    	)
+    target_link_libraries(${ANNWVYN_PROJECT}
+        ${BULLET_LIBRARIES}
+        Annwvyn
+        libopenvr_api.so
+        )
 endif()
 
 
