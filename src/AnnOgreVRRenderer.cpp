@@ -169,6 +169,8 @@ void AnnOgreVRRenderer::getOgreConfig() const
 	//Load OgrePlugins
 	root->loadPlugin(PluginRenderSystemGL3Plus);
 
+	root->loadPlugin(Ogre_glTF_Plugin);
+
 	//Set the classic OpenGL render system
 	root->setRenderSystem(root->getRenderSystemByName(GLRenderSystem3Plus));
 	//	root->getRenderSystem()->setConfigOption("FSAA", std::to_string(AALevel));
