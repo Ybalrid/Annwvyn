@@ -145,7 +145,11 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 	if(findResult != registeredRenderers.end()) return true;
 
 	AnnDebug() << "Looking for renderer : " << name;
-	const auto pluginName			= "AnnOgre" + name + "Renderer";
+#ifdef _DEBUG
+	const auto pluginName = "AnnOgre" + name + "Renderer_d";
+#else
+	const auto pluginName = "AnnOgre" + name + "Renderer";
+#endif
 	const auto boostrapFunctionName = "AnnRendererBootstrap_" + name;
 
 #ifdef _WIN32
