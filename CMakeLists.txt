@@ -107,7 +107,7 @@ include_directories(
     ${OGRE_HlmsUnlit_INCLUDE_DIRS}
     #glTF loader pluign
     $ENV{AnnwvynSDK64}/Ogre_glTF/build/output/include
-
+    $ENV{HOME}/AnnwvynDeps/Ogre_glTF/build/output/include
     #Physics
     ${BULLET_INCLUDE_DIRS}
     ${BtOgre21_INCLUDE_DIRS}
