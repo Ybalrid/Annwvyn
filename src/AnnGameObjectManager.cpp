@@ -49,7 +49,7 @@ Ogre::MeshPtr AnnGameObjectManager::getAndConvertFromV1Mesh(const char* meshName
 														Ogre::v1::HardwareBuffer::HBU_STATIC);
 
 	//Generate the name of the v2 mesh
-	auto v2meshName = meshName + sufix;
+	const auto v2meshName = meshName + sufix;
 	AnnDebug() << "Mesh v2 name : " << v2meshName;
 
 	//v2Mesh
@@ -73,13 +73,13 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const std:
 
 	//Check filename extension:
 	auto ext = meshName.substr(meshName.find_last_of('.')+1);
-	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+	std::transform(ext.begin(), ext.end(), ext.begin(), [](char c) { return char(::tolower(int(c))); });
 
 	if(ext == "mesh")
 	{
 		Ogre::v1::MeshPtr v1Mesh;
 		Ogre::MeshPtr v2Mesh;
-		getAndConvertFromV1Mesh(meshName.c_str(), v1Mesh, v2Mesh);
+		(void)getAndConvertFromV1Mesh(meshName.c_str(), v1Mesh, v2Mesh);
 		v1Mesh.setNull();
 
 		//Create an item
@@ -201,9 +201,8 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 	auto& results(raySceneQuery->execute());
 
 	//read the result list
-	auto result = std::find_if(begin(results), end(results), [](const Ogre::RaySceneQueryResultEntry& entry) {
-		if(entry.movable && entry.movable->getMovableType() == "Item") return true;
-		return false;
+	const auto result = std::find_if(begin(results), end(results), [](const Ogre::RaySceneQueryResultEntry& entry) {
+		return entry.movable && entry.movable->getMovableType() == "Item";
 	});
 
 	//If can't find it? return nullptr

@@ -16,9 +16,9 @@ namespace Annwvyn
 
 	public:
 		///Construct a JSON level from a file
-		AnnJsonLevel(std::string path, const bool preload = true);
+		AnnJsonLevel(std::string path, bool preload = true);
 		///Construct a json level from code. First boolean is thrown away
-		AnnJsonLevel(bool, std::string jsonCode, const bool preload = true);
+		AnnJsonLevel(bool, std::string jsonCode, bool preload = true);
 		///Dtor
 		virtual ~AnnJsonLevel();
 		///Load method. This goes through the loaded JSON and create the object for you

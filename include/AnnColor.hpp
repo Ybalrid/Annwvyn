@@ -20,7 +20,7 @@ namespace Annwvyn
 		///Create a color object. Each channel take a float between 0 and 1
 		AnnColor(float red, float green, float blue, float alpha = 1.0f);
 		///Create a color object from a Ogre::ColourValue
-		AnnColor(const Ogre::ColourValue color);
+		AnnColor(Ogre::ColourValue color);
 		///Create a color object form a reference to another color object
 		AnnColor(const AnnColor& color);
 

@@ -29,7 +29,7 @@ namespace Annwvyn
 		///Construct from a rotation matrix 3x3
 		AnnQuaternion(const Ogre::Matrix3& rot);
 		///Construct from an angle around an arbitrary axis
-		AnnQuaternion(const AnnRadian angle, AnnVect3 raxis);
+		AnnQuaternion(AnnRadian angle, AnnVect3 raxis);
 		///Construct from a 3 axis base
 		AnnQuaternion(const AnnVect3& xAxis, const AnnVect3& yAxis, const AnnVect3& zAxis);
 		///Construct from a vector array

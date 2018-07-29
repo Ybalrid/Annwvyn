@@ -10,9 +10,6 @@
 
 //Oculus VR API
 #include <OVR_CAPI.h>
-#include <Extras/OVR_Math.h>
-#include <Ogre.h>
-#include <AnnException.hpp>
 
 namespace Annwvyn
 {

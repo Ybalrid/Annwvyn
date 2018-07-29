@@ -8,7 +8,7 @@ namespace Annwvyn
     {
         AnnVect3 vect(1,2,3);
 
-        btVector3 physicsVector(vect);
+	    const btVector3 physicsVector(vect);
 
         REQUIRE(vect.x == physicsVector.x());
         REQUIRE(vect.y == physicsVector.y());
@@ -29,7 +29,7 @@ namespace Annwvyn
     {
         AnnQuaternion q(0,0,0,1);
 
-        btQuaternion btq(q);
+	    const btQuaternion btq(q);
 
         REQUIRE(q.x == btq.x());
         REQUIRE(q.y == btq.y());

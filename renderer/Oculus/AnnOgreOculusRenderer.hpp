@@ -17,11 +17,8 @@
 
 //Oculus Rift Lib
 #include <OVR_CAPI_GL.h>
-#include <OVR_CAPI_Audio.h>
 
-//C++ SDL Includes
-#include <iostream>
-#include <sstream>
+//C++ STL Includes
 #include <array>
 
 //Accessing Oculus Rift through a class :
@@ -125,13 +122,13 @@ namespace Annwvyn
 		ovrSizei texSizeL, texSizeR;
 
 		///Create the AnnHandControllerObject for this side
-		void initializeHandObjects(const OgreOculusEyeType side);
+		void initializeHandObjects(OgreOculusEyeType side);
 
 		///Initialize the axisVector for given controller
-		void initializeControllerAxes(const OgreOculusEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
+		void initializeControllerAxes(OgreOculusEyeType side, std::vector<Annwvyn::AnnHandControllerAxis>& axesVector);
 
 		///Extract usefull data from the button state, including buffered pressed/released events
-		void processButtonStates(const OgreOculusEyeType side);
+		void processButtonStates(OgreOculusEyeType side);
 
 		///Get the state of the touch controller and update the handController objects accordingly
 		void updateTouchControllers();

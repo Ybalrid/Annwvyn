@@ -3,12 +3,18 @@
 
 #include "AnnOgreOculusRenderer.hpp"
 #include "AnnOculusTouchController.hpp"
+
 #ifdef _WIN32
 
 #include <string>
 #include <AnnLogger.hpp>
 #include <AnnGetter.hpp>
 #include <AnnException.hpp>
+
+#include <OVR_CAPI_Audio.h>
+
+#include <iostream>
+#include <sstream>
 
 using namespace Annwvyn;
 

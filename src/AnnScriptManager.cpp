@@ -53,7 +53,7 @@ void AnnScriptManager::registerApi()
 		// 3D vector
 		chai.add(user_type<Vector3>(), "AnnVect3");
 		chai.add(constructor<Vector3()>(), "AnnVect3");
-		chai.add(constructor<Vector3(const float, const float, const float)>(), "AnnVect3");
+		chai.add(constructor<Vector3(float, float, float)>(), "AnnVect3");
 		chai.add(constructor<Vector3(const float[3])>(), "AnnVect3");
 		chai.add(constructor<Vector3(const Vector3&)>(), "AnnVect3");
 		chai.add(fun(&Vector3::x), "x");
@@ -150,7 +150,7 @@ void AnnScriptManager::registerApi()
 		//Quaternions
 		chai.add(user_type<Quaternion>(), "AnnQuaternion");
 		chai.add(constructor<Quaternion()>(), "AnnQuaternion");
-		chai.add(constructor<Quaternion(const float, const float, const float, const float)>(), "AnnQuaternion");
+		chai.add(constructor<Quaternion(float, float, float, float)>(), "AnnQuaternion");
 		chai.add(constructor<Quaternion(Radian, Vector3)>(), "AnnQuaternion");
 		chai.add(constructor<Quaternion(Vector3, Vector3, Vector3)>(), "AnnQuaternion");
 		chai.add(fun(&Quaternion::x), "x");

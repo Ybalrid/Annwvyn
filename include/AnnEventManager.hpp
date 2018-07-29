@@ -97,7 +97,7 @@ namespace Annwvyn
 		void keyboardUsedForText(bool state = true);
 		//---------------------------- other
 
-		OIS::InputManager* _getOISInputManager();
+		OIS::InputManager* _getOISInputManager() const;
 
 	private:
 		///List of pointer to the listeners.

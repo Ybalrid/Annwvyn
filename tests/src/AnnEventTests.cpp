@@ -44,7 +44,7 @@ namespace Annwvyn
 		double sec;
 
 		//Start a timer, and give it's ID to the listener
-		auto timer = AnnGetEventManager()->fireTimer(2);
+		const auto timer = AnnGetEventManager()->fireTimer(2);
 		timerListener->setID(timer);
 
 		//Run 10 seconds of simulation with debug console visible
@@ -152,7 +152,7 @@ namespace Annwvyn
 		auto GameEngine = bootstrapTestEngine("TestTick");
 		auto counter	= 0;
 
-		auto tickListener = std::make_shared<TickTest>(counter);
+		const auto tickListener = std::make_shared<TickTest>(counter);
 		AnnGetEventManager()->addListener(tickListener);
 
 		AnnGetOnScreenConsole()->setVisible(true);

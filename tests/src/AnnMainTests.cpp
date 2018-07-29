@@ -8,11 +8,13 @@
 #define CATCH_CONFIG_RUNNER
 #include <catch/catch.hpp>
 
+//Define our own main function
 int main(int argc, char* argv[])
 {
+	//Need to preset some parameters
 	Annwvyn::AnnEngine::setNoConsoleColor();
 
-	auto result = Catch::Session().run(argc, argv);
+	const auto result = Catch::Session().run(argc, argv);
 
 	return (result < 0xff ? result : 0xff);
 }
@@ -35,7 +37,7 @@ namespace Annwvyn
 		auto renderer = AnnGetVRRenderer();
 		REQUIRE_FALSE(renderer->getName().empty());
 
-		auto duration = 3;
+		const auto duration = 3;
 		double sec;
 		AnnGetVRRenderer()->_resetOgreTimer();
 		while((sec = GameEngine->getTimeFromStartupSeconds()) < duration)

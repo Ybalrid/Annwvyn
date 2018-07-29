@@ -119,7 +119,7 @@ namespace Annwvyn
 		///play background music. you can specify the volume of the music (0.0f to 1.0f)
 		/// \param filename name of the audio file to use as background music
 		/// \param volume Float number between 0 and 1, Loudness of the sound. At 0.5f by default
-		void playBGM(const std::string& filename, const float volume = 0.5f);
+		void playBGM(const std::string& filename, float volume = 0.5f);
 
 		///stop the current background music from playing
 		void stopBGM() const;

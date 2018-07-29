@@ -313,17 +313,17 @@ namespace Annwvyn
 		///Get the current angular speed of the controller
 		AnnVect3 getAngularSpeed() const;
 		///Get a reference to the axis object at specified ID
-		AnnHandControllerAxis& getAxis(const uint8_t id) const;
+		AnnHandControllerAxis& getAxis(uint8_t id) const;
 		///Get the number of axes
 		size_t getAxisCount() const;
 		///Get the number of buttons
 		size_t getButtonCount() const;
 		///Has the asked button just been pressed?
-		bool buttonPressed(const uint8_t id) const;
+		bool buttonPressed(uint8_t id) const;
 		///Has the asked button just been released
-		bool buttonReleased(const uint8_t id) const;
+		bool buttonReleased(uint8_t id) const;
 		///Get the current state of the button
-		bool buttonState(const uint8_t id) const;
+		bool buttonState(uint8_t id) const;
 		///Get the handside of the controller
 		AnnHandController::AnnHandControllerSide getSide() const;
 		///Get the type of the controller
@@ -377,13 +377,13 @@ namespace Annwvyn
 
 		///Return true if the collision occurred with a vertical plane. Computed with testing the dot product of +Y and the normal.
 		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
-		bool isWallCollision(const float scalarApprox = 0.0125) const;
+		bool isWallCollision(float scalarApprox = 0.0125) const;
 		///Return true if the collision occurred with an horizontal plane below the object. This is computed by taking !isWallCollision(approx) && normal.y > 0
 		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
-		bool isGroundCollision(const float scalarApprox = 0.125) const;
+		bool isGroundCollision(float scalarApprox = 0.125) const;
 		///Return true if the collision occured with an horizontal plane above the object. See isGroundCollision, it's the same thing, but testing for a negative y on the normal
 		///\param scalarApprox Approximation threshold to consider when testing the equality of the dotProuct and 0.0f
-		bool isCeilingCollision(const float scalarApprox = 0.125) const;
+		bool isCeilingCollision(float scalarApprox = 0.125) const;
 
 	private:
 		///Some naked pointers

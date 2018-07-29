@@ -86,6 +86,7 @@ namespace Annwvyn
 		/// \param x X component of the scale vector
 		/// \param y Y component of the scale vector
 		/// \param z Z component of the scale vector
+		/// \param scaleMass If set to true (by default) will update the mass of the rigid body to reflect the change in size (constant density)
 		void setScale(float x, float y, float z, bool scaleMass = true) const;
 
 		///Set scale from Vector 3D
@@ -159,6 +160,7 @@ namespace Annwvyn
 		///Set up Physics
 		/// \param mass The mass of the object
 		/// \param type The type of shape you want to define for the object
+		/// \praam hasPlayerCollision if set to true (by default) object can colide with the player body representation
 		void setupPhysics(float mass = 0, phyShapeType type = staticShape, bool hasPlayerCollision = true);
 
 		///Make the object visible

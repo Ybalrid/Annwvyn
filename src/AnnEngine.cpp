@@ -559,9 +559,7 @@ bool AnnEngine::openConsole()
 
 bool AnnEngine::appVisibleInHMD() const
 {
-	if(renderer->isVisibleInHmd())
-		return true;
-	return false;
+	return renderer->isVisibleInHmd();
 }
 
 void AnnEngine::setProcessPriorityNormal()

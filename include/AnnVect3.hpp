@@ -21,15 +21,15 @@ namespace Annwvyn
 		///Construct from a Ogre::Vector3
 		AnnVect3(const Vector3& v);
 		///Construct form 3 floats
-		AnnVect3(const float cx, const float cy, const float cz);
+		AnnVect3(float cx, float cy, float cz);
 		///Construct from an array of three inits
 		AnnVect3(const int coord[3]);
 		///Construct from an array of 3 float
 		AnnVect3(const float coord[3]);
 		///Construct form a float array of unspecified length
-		AnnVect3(float* const r);
+		AnnVect3(float* r);
 		///Construct from a float value
-		AnnVect3(const float s);
+		AnnVect3(float s);
 
 		///Only used to signify that this object contains corrupt data
 		AnnVect3(bool validState);

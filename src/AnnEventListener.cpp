@@ -6,8 +6,15 @@
 
 using namespace Annwvyn;
 
-AnnEventListener::~AnnEventListener()
+AnnEventListener::AnnEventListener(const AnnEventListener&& o) noexcept
 {
+	player = o.player;
+}
+
+AnnEventListener& AnnEventListener::operator=(AnnEventListener&& o) noexcept
+{
+	player = o.player;
+	return *this;
 }
 
 AnnEventListener::AnnEventListener() :
@@ -18,7 +25,7 @@ AnnEventListener::AnnEventListener() :
 float AnnEventListener::trim(float v, float dz)
 {
 	//The test is done on the abs value. Return the actual value, or 0 if under the dead-zone
-	if(abs(v) >= dz) return v;
+	if(std::abs(v) >= dz) return v;
 	return 0.0f;
 }
 

@@ -6,7 +6,6 @@
 
 //OpenVR (HTC Vive; SteamVR) SDK
 #include <openvr.h>
-#include <openvr_capi.h>
 
 namespace Annwvyn
 {

@@ -2,9 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #ifdef _WIN32
+
+#include <Extras/OVR_Math.h>
+#include <Ogre.h>
+#include <AnnException.hpp>
+
 #include "AnnOculusInterfaceHelper.hpp"
 #include "AnnLogger.hpp"
-#include "AnnException.hpp"
 #include "AnnEngine.hpp"
 
 using namespace std;

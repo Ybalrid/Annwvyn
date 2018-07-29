@@ -23,17 +23,17 @@ namespace Annwvyn
 		void operator=(AnnDynamicLibraryHolder&) = delete;
 
 		///Move constructor
-		AnnDynamicLibraryHolder(AnnDynamicLibraryHolder&& other)
+		AnnDynamicLibraryHolder(AnnDynamicLibraryHolder&& other) noexcept
 		{
 			heldLibrary		= other.heldLibrary;
-			other.heldLibrary = NULL;
+			other.heldLibrary = nullptr;
 		}
 
 		///Move-assign operator
-		AnnDynamicLibraryHolder& operator=(AnnDynamicLibraryHolder&& other)
+		AnnDynamicLibraryHolder& operator=(AnnDynamicLibraryHolder&& other) noexcept
 		{
 			heldLibrary		= other.heldLibrary;
-			other.heldLibrary = NULL;
+			other.heldLibrary = nullptr;
 			return *this;
 		}
 
@@ -66,7 +66,7 @@ namespace Annwvyn
 
 	private:
 		///handle to dll/so that has been loaded in memory
-		AnnDynLib heldLibrary = 0;
+		AnnDynLib heldLibrary = nullptr;
 	};
 
 	///handy typename for an unique_ptr using the above class

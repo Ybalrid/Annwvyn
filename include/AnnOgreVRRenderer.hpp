@@ -89,7 +89,7 @@ namespace Annwvyn
 
 		///Set the anti-aliasing level to AA if AA is part of the available values
 		/// \param AA the AA level to use.
-		static void setAntiAliasingLevel(const uint8_t AA);
+		static void setAntiAliasingLevel(uint8_t AA);
 
 		///Type of Debug render you can do
 		enum DebugMode {

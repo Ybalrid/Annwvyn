@@ -8,22 +8,21 @@
 #include "AnnGetter.hpp"
 
 using namespace Annwvyn;
-using std::abs;
-using std::max;
 using std::min;
 using std::shared_ptr;
 using std::string;
 using std::to_string;
-using std::unique_ptr;
 
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
- AnnSubSystem("EventManager"),
- Keyboard(nullptr),
- Mouse(nullptr),
- lastTimerCreated(0),
- defaultEventListener(nullptr),
- knowXbox(false),
- keyboardIgnore{ false }
+	AnnSubSystem("EventManager"),
+	Keyboard(nullptr),
+	Mouse(nullptr),
+	previousKeyStates(),
+	previousMouseButtonStates(),
+	lastTimerCreated(0),
+	defaultEventListener(nullptr),
+	knowXbox(false),
+	keyboardIgnore {false}
 {
 	//Reserve some memory
 	keyEventBuffer.reserve(10);
@@ -32,30 +31,33 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	handControllerEventBuffer.reserve(10);
 
 	//Init all bool array to false
-	for(auto& keyState : previousKeyStates) keyState = false;
+	for(auto& keyState : previousKeyStates) keyState                         = false;
 	for(auto& mouseButtonState : previousMouseButtonStates) mouseButtonState = false;
 
 	//Configure and create the input system
 	size_t windowHnd;
 	w->getCustomAttribute("WINDOW", &windowHnd);
+
 	OIS::ParamList pl;
 	pl.insert(make_pair(string("WINDOW"), to_string(windowHnd)));
 	InputManager = OIS::InputManager::createInputSystem(pl);
 
 	//Get the keyboard, mouse and joysticks objects
-	Keyboard = static_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
-	Mouse	= static_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
+	Keyboard = dynamic_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
+	Mouse    = dynamic_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
+
 	for(auto nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
 	{
 		//Create joystick object
-		const auto oisJoystick = static_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
+		const auto oisJoystick = dynamic_cast<OIS::JoyStick*>(InputManager->createInputObject(OIS::OISJoyStick, true));
 		Joysticks.emplace_back(oisJoystick);
 
-		const auto& vendor = oisJoystick->vendor();
+		auto vendor = oisJoystick->vendor();
 		AnnDebug() << "Detected joystick : " << vendor;
+		std::transform(vendor.begin(), vendor.end(), vendor.begin(), [](char c) { return char(::tolower(int(c))); });
 
 		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)
-		if(vendor.find("Xbox") != string::npos || vendor.find("XBOX") != string::npos)
+		if(vendor.find("xbox") != string::npos)
 		{
 			knowXbox = true;
 			xboxID   = ControllerAxisID(oisJoystick->getID());
@@ -129,7 +131,7 @@ void AnnEventManager::removeListener(AnnEventListenerPtr l)
 	}
 
 	listeners.erase(remove_if(begin(listeners), end(listeners), [&](std::weak_ptr<AnnEventListener> weak_listener) {
-						if(auto listener = weak_listener.lock()) return listener == l;
+						if(const auto listener = weak_listener.lock()) return listener == l;
 						return false;
 					}),
 					end(listeners));
@@ -213,7 +215,7 @@ void AnnEventManager::processJoystickEvents()
 		auto axisID = 0;
 		for(const auto& axis : state.mAxes)
 		{
-			AnnControllerAxis annAxis{ axisID++, axis.rel, axis.abs };
+			AnnControllerAxis annAxis { axisID++, axis.rel, axis.abs };
 			annAxis.noRel = axis.absOnly;
 			stickEvent.axes.push_back(annAxis);
 		}
@@ -224,7 +226,7 @@ void AnnEventManager::processJoystickEvents()
 			stickEvent.povs.push_back({ unsigned(state.mPOV[i].direction) });
 
 		//Get press and release event lists
-		const auto nbButton{ min(state.mButtons.size(), Joystick.previousStickButtonStates.size()) };
+		const auto nbButton { min(state.mButtons.size(), Joystick.previousStickButtonStates.size()) };
 		for(auto button(0u); button < nbButton; button++)
 			if(!Joystick.previousStickButtonStates[button] && state.mButtons[button])
 				stickEvent.pressed.push_back(static_cast<unsigned short>(button));
@@ -244,10 +246,10 @@ void AnnEventManager::processJoystickEvents()
 void AnnEventManager::processHandControllerEvents()
 {
 	if(AnnGetVRRenderer()->handControllersAvailable())
-		for(auto handController : AnnGetVRRenderer()->getHandControllerArray())
+		for(const auto& handController : AnnGetVRRenderer()->getHandControllerArray())
 		{
 			if(!handController) continue;
-			handControllerEventBuffer.push_back({ handController.get() });
+			handControllerEventBuffer.emplace_back(handController.get());
 		}
 }
 
@@ -300,7 +302,7 @@ void AnnEventManager::processTimers()
 	futureTimers.clear();
 
 	//Send events
-	for(auto weak_listener : listeners)
+	for(const auto& weak_listener : listeners)
 		if(auto listener = weak_listener.lock())
 			for(const auto& timer : activeTimers)
 				if(timer.isTimeout()) listener->TimeEvent({ timer });
@@ -312,7 +314,7 @@ void AnnEventManager::processTimers()
 void AnnEventManager::processTriggerEvents()
 {
 	for(const auto& triggerEvent : triggerEventBuffer)
-		for(auto weakListener : listeners)
+		for(const auto& weakListener : listeners)
 			if(auto listener = weakListener.lock())
 				listener->TriggerEvent(triggerEvent);
 
@@ -321,7 +323,7 @@ void AnnEventManager::processTriggerEvents()
 
 void AnnEventManager::processCollisionEvents()
 {
-	for(auto weakListener : listeners)
+	for(const auto& weakListener : listeners)
 		if(auto listener = weakListener.lock())
 		{
 			for(const auto& collisionBuffer : collisionBuffers)
@@ -365,12 +367,12 @@ void AnnEventManager::detectedCollision(void* a, void* b, AnnVect3 position, Ann
 
 void AnnEventManager::playerCollision(void* object)
 {
-	auto movable = static_cast<AnnAbstractMovable*>(object);
-	if(auto gameObject = dynamic_cast<AnnGameObject*>(movable))
+	const auto movable = static_cast<AnnAbstractMovable*>(object);
+	if(const auto gameObject = dynamic_cast<AnnGameObject*>(movable))
 	{
 		playerCollisionBuffer.push_back(gameObject);
 	}
-	else if(auto triggerObject = dynamic_cast<AnnTriggerObject*>(movable))
+	else if(const auto triggerObject = dynamic_cast<AnnTriggerObject*>(movable))
 	{
 		AnnTriggerEvent e;
 		e.sender  = triggerObject;
@@ -386,19 +388,19 @@ void AnnEventManager::keyboardUsedForText(bool state)
 
 void AnnEventManager::userSpaceDispatchEvent(AnnUserSpaceEventPtr e, AnnUserSpaceEventLauncher* l)
 {
-	userSpaceEventBuffer.push_back(make_pair(e, l));
+	userSpaceEventBuffer.emplace_back(e, l);
 }
 
 void AnnEventManager::processUserSpaceEvents()
 {
-	for(auto userSpaceEvent : userSpaceEventBuffer)
-		for(auto weakListener : listeners)
+	for(const auto& userSpaceEvent : userSpaceEventBuffer)
+		for(const auto& weakListener : listeners)
 			if(auto listener = weakListener.lock())
 				listener->EventFromUserSubsystem(*userSpaceEvent.first, userSpaceEvent.second);
 	userSpaceEventBuffer.clear();
 }
 
-OIS::InputManager* AnnEventManager::_getOISInputManager()
+OIS::InputManager* AnnEventManager::_getOISInputManager() const
 {
 	return InputManager;
 }

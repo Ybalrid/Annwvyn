@@ -10,6 +10,8 @@
 #include <Annwvyn.h>
 #include <Compositor/OgreCompositorManager2.h>
 
+#include <openvr_capi.h>
+
 using namespace Annwvyn;
 
 AnnOgreOpenVRRenderer* AnnOgreOpenVRRenderer::OpenVRSelf(nullptr);
