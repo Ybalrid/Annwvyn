@@ -1,7 +1,6 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-
 #include <OgreMeshManager.h>
 #include <OgreMeshManager2.h>
 
@@ -24,6 +23,7 @@ AnnGameObjectManager::AnnGameObjectManager() :
 	else
 		AnnDebug() << "Could not get glTFLoader!, please check if the plugin is located next to the executable!";
 
+	proceduralGenerator = std::make_unique<AnnProceduralGameObjectGenerator>();
 }
 
 void AnnGameObjectManager::update()
@@ -72,7 +72,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const std:
 	Ogre::Item* item = nullptr;
 
 	//Check filename extension:
-	auto ext = meshName.substr(meshName.find_last_of('.')+1);
+	auto ext = meshName.substr(meshName.find_last_of('.') + 1);
 	std::transform(ext.begin(), ext.end(), ext.begin(), [](char c) { return char(::tolower(int(c))); });
 
 	if(ext == "mesh")
@@ -242,6 +242,11 @@ void AnnGameObjectManager::setImportParameter(bool halfPosition, bool halfTextur
 	halfPos		 = halfPosition;
 	halfTexCoord = halfTextureCoord;
 	qTan		 = qTangents;
+}
+
+AnnProceduralGameObjectGenerator* AnnGameObjectManager::getProceduralGenerator()
+{
+	return proceduralGenerator.get();
 }
 
 uID AnnGameObjectManager::nextID()

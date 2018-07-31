@@ -46,10 +46,12 @@ if(WIN32)
         $ENV{AnnwvynSDK64}/CMakeModules
         $ENV{AnnwvynSDK64}/Ogre21SDK/CMake
         $ENV{AnnwvynSDK64}/BtOgre21/CMake
+		$ENV{AnnwvynSDK64}/ogre-procedural/CMake
         )
 
     #Set path required for CMake modules
     set(OGRE_HOME $ENV{AnnwvynSDK64}/Ogre21SDK CACHE PATH "Ogre install")
+    set(OgreProcedural_HOME  $ENV{AnnwvynSDK64}/ogre-procedural CACHE PATH "Ogre Procedural SDK")
     set(BULLET_ROOT $ENV{AnnwvynSDK64}/bullet3 CACHE PATH "Bullet install")
     set(BtOgre21_ROOT $ENV{AnnwvynSDK64}/BtOgre21/build/bin/ CACHE PATH "BtOgre21 install")
     set(OIS_ROOT $ENV{AnnwvynSDK64}/OIS CACHE PATH "OIS install")
@@ -75,6 +77,7 @@ include(cotire)
 #Find findable packages
 find_package(OpenGL REQUIRED)
 find_package(OGRE COMPONENTS Overlay HlmsPbs HlmsUnlit REQUIRED)
+find_package(OgreProcedural REQUIRED)
 find_package(Bullet REQUIRED)
 find_package(BtOgre21 REQUIRED)
 find_package(OIS REQUIRED)
@@ -105,6 +108,7 @@ include_directories(
     ${OGRE_INCLUDE_DIRS}
     ${OGRE_HlmsPbs_INCLUDE_DIRS}
     ${OGRE_HlmsUnlit_INCLUDE_DIRS}
+	${OgreProcedural_INCLUDE_DIRS}
     #glTF loader pluign
     $ENV{AnnwvynSDK64}/Ogre_glTF/build/output/include
     $ENV{HOME}/AnnwvynDeps/Ogre_glTF/build/output/include
@@ -157,6 +161,7 @@ target_link_libraries( Annwvyn
     ${OGRE_HlmsPbs_LIBRARIES}
     ${OGRE_HlmsUnlit_LIBRARIES}
     ${OGRE_Overlay_LIBRARIES}
+	${OgreProcedural_LIBRARIES}
     ${BULLET_LIBRARIES}
     ${BtOgre21_LIBRARIES}
     ${OIS_LIBRARIES}

@@ -2,6 +2,7 @@
 
 #include "systemMacro.h"
 #include "AnnSubsystem.hpp"
+#include "AnnProceduralGameObjectGenerator.hpp"
 #include "AnnTypes.h"
 
 #include <OgreMesh.h>
@@ -69,6 +70,9 @@ namespace Annwvyn
 		///Set the options to pass while converting Ogre V1 meshes to Ogre V2 meshes
 		void setImportParameter(bool halfPosition, bool halfTextureCoord, bool qTangents);
 
+		///Get the procedural game object generator
+		AnnProceduralGameObjectGenerator* getProceduralGenerator();
+
 	private:
 		friend class AnnEngine;
 
@@ -94,6 +98,9 @@ namespace Annwvyn
 		bool halfPos, halfTexCoord, qTan;
 
 		Ogre_glTF::glTFLoaderInterface* glTFLoader = nullptr;
+
+
+		std::unique_ptr<AnnProceduralGameObjectGenerator> proceduralGenerator;
 	};
 
 	using AnnGameObjectManagerPtr = std::shared_ptr<AnnGameObjectManager>;
