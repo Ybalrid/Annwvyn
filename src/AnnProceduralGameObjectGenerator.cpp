@@ -26,7 +26,7 @@ AnnGameObjectPtr AnnProceduralGameObjectGenerator::getBox(std::string name, AnnV
 	auto boxGenerator = Procedural::BoxGenerator(size.x, size.y, size.z);
 	auto mesh = boxGenerator.realizeMesh(name);
 
-	static const auto manager = AnnGetGameObjectManager();
+	static const auto manager = AnnGetGameObjectManager().get();
 	manager->setImportParameter(true, true, false);
 	auto object = manager->createGameObject(name, identifier);
 	manager->setImportParameter(true, true, true);

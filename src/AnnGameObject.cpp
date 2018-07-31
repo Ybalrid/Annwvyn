@@ -37,7 +37,7 @@ AnnGameObject::~AnnGameObject()
 	if(collisionShape)
 	{
 		if(collisionShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
-			delete dynamic_cast<btBvhTriangleMeshShape*>(collisionShape)->getMeshInterface();
+			delete static_cast<btBvhTriangleMeshShape*>(collisionShape)->getMeshInterface();
 		delete collisionShape;
 	}
 	delete state;
