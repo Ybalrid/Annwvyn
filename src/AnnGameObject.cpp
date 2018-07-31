@@ -22,38 +22,42 @@ AnnGameObject::AnnGameObject() :
 
 AnnGameObject::~AnnGameObject()
 {
-	for(auto script : scripts) script->unregisterAsListener();
+	for(const auto& script : scripts)
+		script->unregisterAsListener();
 
 	AnnDebug() << "Destructing game object " << getName() << " !";
 	//Clean OpenAL de-aloc
-	//if(AnnGetAudioEngine())
-	//	AnnGetAudioEngine()->removeSource(audioSource);
+	if(const auto audioEngine = AnnGetAudioEngine(); audioEngine)
+		audioEngine->removeSource(audioSource);
 
-	if(AnnGetPhysicsEngine())
-		AnnGetPhysicsEngine()->removeRigidBody(rigidBody);
+	if(const auto physicsEngine = AnnGetPhysicsEngine(); physicsEngine)
+		physicsEngine->removeRigidBody(rigidBody);
 
-	if(rigidBody) delete rigidBody;
+	delete rigidBody;
 	if(collisionShape)
 	{
 		if(collisionShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
-			delete static_cast<btBvhTriangleMeshShape*>(collisionShape)->getMeshInterface();
+			delete dynamic_cast<btBvhTriangleMeshShape*>(collisionShape)->getMeshInterface();
 		delete collisionShape;
 	}
-	if(state) delete state;
+	delete state;
 
 	//Prevent dereferencing null pointer here. Parent can be something other than root scene node now.
 	if(sceneNode)
 	{
-		if(sceneNode->getParent())
-			sceneNode->getParent()->removeChild(sceneNode);
+		if(auto parentNode = sceneNode->getParent(); parentNode)
+			parentNode->removeChild(sceneNode);
 		std::vector<Ogre::MovableObject*> attachedObject;
 		for(unsigned short i(0); i < sceneNode->numAttachedObjects(); ++i)
 			attachedObject.push_back(sceneNode->getAttachedObject(i));
+
 		sceneNode->detachAllObjects();
+
+		const auto smgr = AnnGetEngine()->getSceneManager();
 		for(auto object : attachedObject)
-			AnnGetEngine()->getSceneManager()->destroyMovableObject(object);
-		AnnGetEngine()->getSceneManager()->destroySceneNode(sceneNode);
-		sceneNode = nullptr;
+			smgr->destroyMovableObject(object);
+
+		smgr->destroySceneNode(sceneNode);
 	}
 }
 
@@ -73,7 +77,8 @@ void AnnGameObject::updateOpenAlPos() const
 
 void AnnGameObject::callUpdateOnScripts()
 {
-	for(auto script : scripts) script->update();
+	for(const auto& script : scripts)
+		script->update();
 }
 
 void AnnGameObject::setPosition(float x, float y, float z)
@@ -127,15 +132,15 @@ void AnnGameObject::setOrientation(float w, float x, float y, float z)
 
 void AnnGameObject::setOrientation(AnnQuaternion orient)
 {
-	//Ogre3D
+	//Ogre3D (note: the slicing of AnnQuaternion to Ogre::Quaternion is okay here)
 	sceneNode->setOrientation(static_cast<Ogre::Quaternion>(orient));
 
 	//bullet
 	if(rigidBody)
 	{
-		auto t = rigidBody->getCenterOfMassTransform();
-		t.setRotation(orient.getBtQuaternion());
-		rigidBody->setCenterOfMassTransform(t);
+		auto xform = rigidBody->getCenterOfMassTransform();
+		xform.setRotation(orient.getBtQuaternion());
+		rigidBody->setCenterOfMassTransform(xform);
 
 		//activate the body
 		rigidBody->activate();
@@ -351,10 +356,7 @@ bool AnnGameObject::hasParent() const
 		return false;
 	}
 
-	if(parentSceneNode != nullptr)
-		return true;
-
-	return false;
+	return parentSceneNode != nullptr;
 }
 
 std::shared_ptr<AnnGameObject> AnnGameObject::getParent() const
