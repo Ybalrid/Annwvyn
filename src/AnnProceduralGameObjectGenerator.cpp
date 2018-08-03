@@ -1,38 +1,52 @@
 #include "AnnProceduralGameObjectGenerator.hpp"
+
 #include "Procedural.h"
-#include "Annwvyn.h"
+
+#include "OgreMeshManager.h"
+#include "OgreMeshManager2.h"
 
 using namespace Annwvyn;
 
-AnnProceduralGameObjectGenerator::AnnProceduralGameObjectGenerator()
+std::string AnnProceduralGameObjectGenerator::makeDotMeshName(const std::string& string) const
 {
+	static std::string const ext = ".mesh";
+
+	if(const auto position = string.find_last_of('.'); position != std::string::npos)
+	{
+		assert(string.substr(position + 1) == "mesh");
+		return string;
+	}
+
+	return string + ext;
 }
 
-AnnGameObjectPtr AnnProceduralGameObjectGenerator::getBox(std::string name, AnnVect3 size, std::string identifier)
+void AnnProceduralGameObjectGenerator::clearMeshCache()
 {
-	std::string ext = "";
+	cachedMeshes.clear();
+}
 
-	if(auto position = name.find_last_of('.'); position != std::string::npos)
-	{
-		assert(name.substr(position + 1) == "mesh");
-	}
-	else
-	{
-		ext = ".mesh";
-	}
+bool AnnProceduralGameObjectGenerator::meshExists(const std::string& meshName) const
+{
+	if(!Ogre::v1::MeshManager::getSingleton().getByName(meshName).isNull())
+		return true;
 
-	name += ext;
+	if(!Ogre::MeshManager::getSingleton().getByName(meshName).isNull())
+		return true;
 
-	auto boxGenerator = Procedural::BoxGenerator(size.x, size.y, size.z);
-	auto mesh = boxGenerator.realizeMesh(name);
+	return false;
+}
 
-	static const auto manager = AnnGetGameObjectManager().get();
-	manager->setImportParameter(true, true, false);
-	auto object = manager->createGameObject(name, identifier);
-	manager->setImportParameter(true, true, true);
+AnnProceduralGameObjectGenerator::AnnProceduralGameObjectGenerator(AnnGameObjectManager* ptr)
+{
+	GameObjectManager = ptr;
+}
 
-	mesh.setNull();
+AnnGameObjectPtr AnnProceduralGameObjectGenerator::getBox(const std::string& name, const std::string& identifier, AnnVect3 size) const
+{
+	return getGeneratedObject<Procedural::BoxGenerator>(name, identifier, size.x, size.y, size.z);
+}
 
-	assert(object != nullptr);
-	return object;
+AnnGameObjectPtr AnnProceduralGameObjectGenerator::getSphere(const std::string& name, const std::string& identifier, float radius, float rings, float segment) const
+{
+	return getGeneratedObject<Procedural::SphereGenerator>(name, identifier, radius, rings, segment);
 }

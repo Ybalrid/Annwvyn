@@ -23,7 +23,7 @@ AnnGameObjectManager::AnnGameObjectManager() :
 	else
 		AnnDebug() << "Could not get glTFLoader!, please check if the plugin is located next to the executable!";
 
-	proceduralGenerator = std::make_unique<AnnProceduralGameObjectGenerator>();
+	proceduralGenerator = std::make_unique<AnnProceduralGameObjectGenerator>(this);
 }
 
 void AnnGameObjectManager::update()

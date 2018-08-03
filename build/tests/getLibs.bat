@@ -47,6 +47,10 @@ ECHO Ogre_glTF plugin
 COPY %ANNWVYNSDK64%\Ogre_glTF\build\output\bin\Ogre_glTF.dll .
 COPY %ANNWVYNSDK64%\Ogre_glTF\build\output\bin\Ogre_glTF_d.dll .
 
+ECHO ogre-procedural runtime DLL
+copy %ANNWVYNSDK64%\ogre-procedural\bin\Release\OgreProcedural.dll .
+copy %ANNWVYNSDK64%\ogre-procedural\bin\Debug\OgreProcedural_d.dll .
+
 ECHO GL Extension Wrangler DLL
 COPY %ANNWVYNSDK64%\glew\bin\Release\x64\glew32.dll .
 
