@@ -1,7 +1,7 @@
 project(Annwvyn)
 
-file(GLOB OculusRenderer Oculus/*)
-file(GLOB OpenVRRenderer OpenVR/*)
+file(GLOB OculusRenderer CONFIGURE_DEPENDS Oculus/*)
+file(GLOB OpenVRRenderer CONFIGURE_DEPENDS OpenVR/*)
 
 set(Annwvyn_Build_OpenVR_Pluign true CACHE BOOL "If you want to build the OpenVR renderer, use that")
 

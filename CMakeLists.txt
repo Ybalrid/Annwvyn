@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -139,8 +139,8 @@ link_directories(
     )
 
 #List the complete source code
-file(GLOB AnnwvynSources src/*.cpp)
-file(GLOB AnnwvynHeaders include/*.hpp include/*.h)
+file(GLOB AnnwvynSources CONFIGURE_DEPENDS src/*.cpp)
+file(GLOB AnnwvynHeaders CONFIGURE_DEPENDS include/*.hpp include/*.h)
 
 set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders})
 
