@@ -62,7 +62,7 @@ public:
 		//Add static geometry
 		auto pbrTest = addGameObject("SubstanceSphereDecimated.mesh");
 		pbrTest->setPosition({ -1, 1.5f, -2 });
-		pbrTest->playSound("beep.wav", true, 0.5);
+		pbrTest->playSound("beep.wav", true, 0.125);
 		rotating = pbrTest.get();
 
 		auto Ground = addGameObject("floorplane.mesh");

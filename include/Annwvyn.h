@@ -16,8 +16,8 @@
  * <em>Return to the <a href="https://www.annwvyn.org/">main website</a></em>
  *
  * This site document the whole API of the engine, both internal and external. As
- * it is intended to serve as a resource for the engien developement, and the engine use.
- * Anything marqued as "public" is available for games using Annwvyn, and for plugins
+ * it is intended to serve as a resource for the engine development, and the engine use.
+ * Anything marked as "public" is available for games using Annwvyn, and for plugin
  * implementing a subsystem.
  *
  * A partial documentation of the scripting API is available. It's generated from
@@ -40,7 +40,7 @@
  * generated).
  *
  * I strongly recommend you to go to <a href="http://wiki.annwvyn.org/">the
- * wiki</a> to get a more comprehensible help to start using the engine,
+ * kiwi</a> to get a more comprehensible help to start using the engine,
  * there is a quick-start tutorial you can check-out and more contend will be
  * added regularly
  *
@@ -63,6 +63,10 @@
  * of the master branch code.
  *
  */
+
+///Namespace containing the totality of Annwvyn components
+namespace Annwvyn
+{}
 
 //Some C++ misc utils
 #include <iostream>
@@ -103,83 +107,6 @@
 #include <AnnGetter.hpp>
 #include <AnnOgreVRRenderer.hpp>
 
-///Namespace containing the totality of Annwvyn components
-namespace Annwvyn
-{
-	inline std::string getHMDFromCmdLine(const char* cmd)
-	{
-		//If no args, default
-		if(strlen(cmd) == 0)
-			return "DefaultRender";
-
-		//Args should start by a '-'
-		if(cmd[0] != '-')
-			return "arg_error";
-
-		//Convert to C++ string object
-		const std::string strCmd{ cmd };
-
-		//User want to use a rift
-		if(strCmd == "-rift" || strCmd == "-ovr")
-			return "Oculus";
-
-		//User want to use a Vive or another OpenVR headset
-		if(strCmd == "-vive" || strCmd == "-openVR")
-			return "OpenVR";
-
-		//Bodge to run game on a flat screen on hardware that is not compatible
-		//with
-		if(strCmd == "-noVR")
-			return "NoVRRender";
-
-		return "arg_error";
-	}
-
-	inline void preStart()
-	{
-#ifdef ANNWVYN_DEVEL
-		AnnEngine::openConsole();
-		std::cout << "ANNWVYN DEVEL\n";
-		std::cout << "Console output enabled\n";
-#endif
-	}
-
-	inline void postQuit()
-	{
-#ifdef ANNWVYN_DEVEL
-		std::stringstream filename;
-		filename << "AnnwvynDevel-";
-		auto t = time(nullptr);
-		struct tm now;
-		localtime_s(&now, &t);
-		filename
-			<< now.tm_year + 1900 << '-'
-			<< now.tm_mon + 1 << '-'
-			<< now.tm_mday << '-'
-			<< now.tm_hour << '-'
-			<< now.tm_min << '-'
-			<< now.tm_sec << ".log";
-
-		auto src{ std::ifstream(AnnEngine::logFileName, std::ios::binary) };
-		auto dst{ std::ofstream(filename.str(), std::ios::binary) };
-
-		dst << "Annwvyn DEVEL LOG\n"
-			<< std::endl;
-
-		dst << src.rdbuf();
-
-#endif
-	}
-}
-
-///Annwvyn initialization macro
-#define AnnInit(AppName) auto GameEngine = std::make_unique<AnnEngine>(AppName, detectedHMD)
-
-#define AnnQuit()              \
-	GameEngine.reset(nullptr); \
-	Annwvyn::postQuit();
-
-//===================Application Entry-point definition=================//
 /*Main definition :
  *
  *	For more simplicity, Program start by a "AnnMain" function at the library
@@ -188,36 +115,27 @@ namespace Annwvyn
  */
 
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
 #include "windows.h"
-
 ///Application entry point
-#define AnnMain()                                                                       \
-	int AnnwvynStart();                                                                 \
-	std::string detectedHMD;                                                            \
-	INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)               \
-	{                                                                                   \
-		detectedHMD = Annwvyn::getHMDFromCmdLine(static_cast<const char*>(strCmdLine)); \
-		Annwvyn::preStart();                                                            \
-		return AnnwvynStart();                                                          \
-	}                                                                                   \
+#define AnnMain()                                                         \
+	int AnnwvynStart();                                                   \
+	INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT) \
+	{                                                                     \
+		return AnnwvynStart();                                            \
+	}                                                                     \
 	int AnnwvynStart()
 
 #else
 
 ///Application entry point
-#define AnnMain()                                              \
-	int AnnwvynStart();                                        \
-	std::string detectedHMD;                                   \
-	int main(int argc, char** argv)                            \
-	{                                                          \
-		if(argc < 2)                                           \
-			detectedHMD = Annwvyn::getHMDFromCmdLine("");      \
-		else                                                   \
-			detectedHMD = Annwvyn::getHMDFromCmdLine(argv[1]); \
-		Annwvyn::preStart();                                   \
-		return AnnwvynStart();                                 \
-	}                                                          \
+#define AnnMain()                   \
+	int AnnwvynStart();             \
+	int main(int argc, char** argv) \
+	{                               \
+		Annwvyn::preStart();        \
+		return AnnwvynStart();      \
+	}                               \
 	int AnnwvynStart()
 
 #endif
-//=======================================================================//

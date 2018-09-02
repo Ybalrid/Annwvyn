@@ -1,10 +1,10 @@
 /*
  * Annwvyn template project.
  *
- * This template is made to get you started using Annwvyn. It contains the strict minimum code taht amount to something
+ * This template is made to get you started using Annwvyn. It contains the strict minimum code that amount to something
  * that permit you to move around and see object, but that's about it.
  *
- * This project is filled with comments explainings how the concept used here goes together.
+ * This project is filled with comments explaining how the concept used here goes together.
  */
 
 //Pre-compiled header are used in this project
@@ -20,11 +20,11 @@ using namespace Annwvyn;
 #include "myLevel.hpp"
 
 /*
- * This main funciton will do the following :
+ * This main function will do the following :
  *		- Initialize the engine
  *		- Initialize the physics model that will be applied for the user's body (seated or roomscale VR)
- *		- Add a Level object (that describe a virtual environement and everything doable in it)
- *		- Jump the level manager to that level (this place the user in said level, you can have how many of them you want in an applictaion)
+ *		- Add a Level object (that describe a virtual environment and everything doable in it)
+ *		- Jump the level manager to that level (this place the user in said level, you can have how many of them you want in an application)
  *		- Use the default event listener. This handler some basic user inputs, you can create and use your own, and you can use multiple ones in parallel
  *		- Start the main loop of the game
  *
@@ -41,10 +41,10 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 	AnnEngine::registerVRRenderer("OpenVR");
 
 	//Initialize the engine
-	AnnInit("MyVRGame");
+	AnnEngine GameEngine("MyVRGame");
 
 	//Call physics initialization for the player body:
-	AnnGetEngine()->initPlayerRoomscalePhysics(); //There's an optional "room scale" physics mode too, but it's pretty beta right now.
+	GameEngine.initPlayerRoomscalePhysics(); //There's an optional "room scale" physics mode too, but it's pretty beta right now.
 
 	//Instantiate and register our basic level and "jump" to it:
 	AnnGetLevelManager()->addLevel<MyLevel>();
@@ -55,9 +55,6 @@ AnnMain() //The application entry point is "AnnMain()". return type int.
 
 	//The game runs here
 	AnnGetEngine()->startGameplayLoop();
-
-	//Destroy the engine now. Engine is RAII managed, but you can manually release it with this command
-	AnnQuit();
 
 	return EXIT_SUCCESS;
 }
