@@ -66,7 +66,7 @@ AnnMain()
 
 	AnnEngine::registerVRRenderer("OpenVR");
 
-	AnnInit("AnnTest");
+	AnnEngine Game("AnnTest");
 
 	{
 		auto engine{ AnnGetEngine() };
@@ -110,7 +110,6 @@ AnnMain()
 		debugHook();
 	} while(AnnGetEngine()->refresh());
 
-	AnnQuit();
 
 	return EXIT_SUCCESS;
 }
