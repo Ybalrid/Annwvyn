@@ -4,6 +4,7 @@
 #include "AnnLogger.hpp"
 #include "AnnGetter.hpp"
 #include "Annwvyn.h"
+#include <string>
 
 using namespace Annwvyn;
 
@@ -124,8 +125,8 @@ bool AnnAudioEngine::initOpenAL()
 
 	//Display information
 	const std::string alVendor{ alGetString(AL_VENDOR) };
-	AnnDebug() << "OpenAL version : " << alGetString(AL_VERSION);
-	AnnDebug() << "OpenAL vendor  : " << alVendor;
+	AnnDebug(Log::Important) << "OpenAL version : " << alGetString(AL_VERSION);
+	AnnDebug(Log::Important) << "OpenAL vendor  : " << alVendor;
 
 	if(alVendor != "OpenAL Community")
 	{
@@ -205,7 +206,7 @@ ALuint AnnAudioEngine::loadBuffer(const std::string& filename)
 	auto nbSamples  = static_cast<ALsizei>(fileInfos.channels * fileInfos.frames);
 	auto sampleRate = static_cast<ALsizei>(fileInfos.samplerate);
 
-	AnnDebug() << "Loading " << nbSamples << " samples. Playback sample-rate : " << sampleRate << "Hz";
+	AnnDebug(Log::Important) << "Loading " << nbSamples << " samples. Playback sample-rate : " << sampleRate << "Hz";
 
 	//Read samples in 16bits signed
 	std::vector<float> samplesBuffer(nbSamples);

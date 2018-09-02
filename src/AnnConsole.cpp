@@ -515,7 +515,7 @@ void AnnConsole::runInput(std::string& input)
 	historyStatus = -1;
 
 	//Echo the command to the console
-	AnnDebug() << "% - " << input;
+	AnnDebug(Log::Important) << "% - " << input;
 
 	//Prevent to start with some chaiscript symbols in global space.
 	std::string firstWord;
@@ -524,7 +524,7 @@ void AnnConsole::runInput(std::string& input)
 
 	if(isForbdiden(firstWord))
 	{
-		AnnDebug() << "Console input error : " << firstWord << " is a forbidden keyword";
+		AnnDebug(Log::Important) << "Console input error : " << firstWord << " is a forbidden keyword";
 		return;
 	}
 
@@ -536,16 +536,16 @@ void AnnConsole::runInput(std::string& input)
 	}
 	catch(const chaiscript::exception::eval_error& eval_error)
 	{
-		AnnDebug() << "Console script error : " << input;
-		AnnDebug() << eval_error.what();
-		AnnDebug() << eval_error.pretty_print();
+		AnnDebug(Log::Important) << "Console script error : " << input;
+		AnnDebug(Log::Important) << eval_error.what();
+		AnnDebug(Log::Important) << eval_error.pretty_print();
 	}
 }
 
 void AnnConsole::addToHistory(const std::string& input)
 {
 	if(input.empty()) return;
-	rotate(rbegin(commandHistory), rbegin(commandHistory) + 1, rend(commandHistory));
+	std::rotate(std::rbegin(commandHistory), std::rbegin(commandHistory) + 1, std::rend(commandHistory));
 	commandHistory[0] = input;
 }
 

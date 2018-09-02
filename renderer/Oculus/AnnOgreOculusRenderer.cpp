@@ -196,7 +196,7 @@ void AnnOgreOculusRenderer::initRttRendering()
 	if(OVR_FAILURE(ovr_CreateTextureSwapChainGL(oculusInterface->getSession(), &textureSwapChainDesc, &texturesSeparatedSwapChain[right])))
 	{
 		//If we can't get the textures, there is no point trying more.
-		AnnDebug() << "Cannot create Oculus OpenGL SwapChain";
+		AnnDebug(Log::Important) << "Cannot create Oculus OpenGL SwapChain";
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus OpenGL swapchain");
 	}
 
@@ -218,7 +218,7 @@ void AnnOgreOculusRenderer::initRttRendering()
 	if(OVR_FAILURE(ovr_CreateMirrorTextureGL(oculusInterface->getSession(), &mirrorTextureDesc, &mirrorTexture)))
 	{
 		//If for some weird reason (stars alignment, dragons, northern gods, reaper invasion) we can't create the mirror texture
-		AnnDebug() << "Cannot create Oculus mirror texture";
+		AnnDebug(Log::Important) << "Cannot create Oculus mirror texture";
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot create Oculus mirror texture");
 	}
 	auto mirror			  = createAdditionalRenderBuffer(hmdSize.w, hmdSize.h, "MirrorTex");

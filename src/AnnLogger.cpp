@@ -7,15 +7,22 @@
 
 using namespace Annwvyn;
 
-AnnDebug::AnnDebug() :
- std::ostream(new AnnDebugBuff())
+AnnDebug::LogLevel AnnDebug::verbosity = LogLevel::Default;
+
+void AnnDebug::setVerbosity(LogLevel level)
+{
+	verbosity = level;
+}
+
+AnnDebug::AnnDebug(Log importance) :
+ std::ostream(new AnnDebugBuff(importance))
 {
 }
 
-AnnDebug::AnnDebug(const std::string& message) :
- std::ostream(new AnnDebugBuff())
+AnnDebug::AnnDebug(const std::string& message, Log importance) :
+ std::ostream(new AnnDebugBuff(importance))
 {
-	*this << message;
+		(void)(*this << message);
 }
 
 AnnDebug::~AnnDebug()
@@ -30,6 +37,12 @@ AnnDebug::AnnDebugBuff::~AnnDebugBuff()
 
 int AnnDebug::AnnDebugBuff::sync()
 {
+	if(currentImportance == Log::Important || verbosity == LogLevel::Verbose) goto logNoMatterWhat;
+
+	if(currentImportance == Log::Trivial && verbosity == LogLevel::Minimal)
+		return 0;
+
+logNoMatterWhat:
 	AnnEngine::writeToLog(str());
 	str("");
 	return 0;

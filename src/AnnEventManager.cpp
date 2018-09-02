@@ -53,7 +53,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 		Joysticks.emplace_back(oisJoystick);
 
 		auto vendor = oisJoystick->vendor();
-		AnnDebug() << "Detected joystick : " << vendor;
+		AnnDebug(Log::Important) << "Detected joystick : " << vendor;
 		std::transform(vendor.begin(), vendor.end(), vendor.begin(), [](char c) { return char(::tolower(int(c))); });
 
 		//Test for the stick being an Xbox controller (Oculus, and PC in general uses Xbox as *standard* controller)

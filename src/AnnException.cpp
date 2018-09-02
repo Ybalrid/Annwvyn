@@ -13,7 +13,7 @@ AnnPhysicsSetupParentError::AnnPhysicsSetupParentError(AnnGameObject* origin) :
  runtime_error{ "Cannot setup physics for object " },
  objectWithProblem{ origin }
 {
-	AnnDebug() << AnnPhysicsSetupParentError::what();
+	AnnDebug(Log::Important) << AnnPhysicsSetupParentError::what();
 }
 
 const char* AnnPhysicsSetupParentError::what() const throw()
@@ -51,7 +51,7 @@ AnnPhysicsSetupChildError::AnnPhysicsSetupChildError(AnnGameObject* origin) :
  runtime_error{ "Cannot setup physics for Object " },
  objectWithProblem{ origin }
 {
-	AnnDebug() << AnnPhysicsSetupChildError::what();
+	AnnDebug(Log::Important) << AnnPhysicsSetupChildError::what();
 }
 
 const char* AnnPhysicsSetupChildError::what() const throw()
@@ -66,7 +66,7 @@ const char* AnnPhysicsSetupChildError::what() const throw()
 AnnInvalidControllerSide::AnnInvalidControllerSide() :
  runtime_error("Invalid hand controller side")
 {
-	AnnDebug() << AnnInvalidControllerSide::what();
+	AnnDebug(Log::Important) << AnnInvalidControllerSide::what();
 }
 
 const char* AnnInvalidControllerSide::what() const throw()
@@ -80,7 +80,7 @@ const char* AnnInvalidControllerSide::what() const throw()
 AnnNullGameObjectError::AnnNullGameObjectError() :
  runtime_error("Error : Trying to do an operation on a null GameObject")
 {
-	AnnDebug() << AnnNullGameObjectError::what();
+	AnnDebug(Log::Important) << AnnNullGameObjectError::what();
 }
 
 const char* AnnNullGameObjectError::what() const throw()
@@ -94,7 +94,7 @@ const char* AnnNullGameObjectError::what() const throw()
 AnnInitializationError::AnnInitializationError(int errorCode, const string& message) :
  runtime_error("Error : " + to_string(errorCode) + " " + message)
 {
-	AnnDebug() << AnnInitializationError::what();
+	AnnDebug(Log::Important) << AnnInitializationError::what();
 }
 
 const char* AnnInitializationError::what() const throw()
@@ -109,7 +109,7 @@ AnnInvalidPhysicalShapeError::AnnInvalidPhysicalShapeError(const std::string& ob
  std::runtime_error("Error : Cannot create a physics shape from arguments"),
  objectName{ objName }
 {
-	AnnDebug() << AnnInvalidPhysicalShapeError::what();
+	AnnDebug(Log::Important) << AnnInvalidPhysicalShapeError::what();
 }
 
 const char* AnnInvalidPhysicalShapeError::what() const throw()
@@ -126,7 +126,7 @@ AnnLevelLoadingError::AnnLevelLoadingError(const std::string& level, const std::
  levelName{ level },
  objectName{ obj }
 {
-	AnnDebug() << AnnLevelLoadingError::what();
+	AnnDebug(Log::Important) << AnnLevelLoadingError::what();
 }
 
 const char* AnnLevelLoadingError::what() const throw()

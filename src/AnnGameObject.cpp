@@ -267,7 +267,7 @@ void AnnGameObject::setAnimation(const std::string& animationName)
 	const auto selectedAnimation = getItem()->getSkeletonInstance()->getAnimation(animationName);
 	if(!selectedAnimation)
 	{
-		AnnDebug() << "Looks like " << getName() << " doesn't have an animation called " << animationName;
+		AnnDebug(Log::Important) << "Looks like " << getName() << " doesn't have an animation called " << animationName;
 		return;
 	}
 

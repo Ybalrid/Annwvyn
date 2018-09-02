@@ -13,6 +13,7 @@ int main(int argc, char* argv[])
 {
 	//Need to preset some parameters
 	Annwvyn::AnnEngine::setNoConsoleColor();
+	Annwvyn::AnnDebug::setVerbosity(Annwvyn::AnnDebug::LogLevel::Verbose);
 
 	const auto result = Catch::Session().run(argc, argv);
 

@@ -9,12 +9,12 @@ using namespace Annwvyn;
 AnnSubSystem::AnnSubSystem(const std::string& systemName) :
  name(systemName)
 {
-	AnnDebug() << "*-*-*-* Starting " << name << " SubSystem";
+	AnnDebug(Log::Important) << "*-*-*-* Starting " << name << " SubSystem";
 }
 
 AnnSubSystem::~AnnSubSystem()
 {
-	AnnDebug() << "*-*-*-* Stopping " << name << " SubSystem";
+	AnnDebug(Log::Important) << "*-*-*-* Stopping " << name << " SubSystem";
 }
 
 bool AnnSubSystem::needUpdate()

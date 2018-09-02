@@ -19,7 +19,7 @@ AnnScriptManager::AnnScriptManager() :
  scriptFileManager(nullptr)
 {
 	registerApi();
-	AnnDebug() << "Using ChaiScript version 6.0";
+	AnnDebug(Log::Important) << "Using ChaiScript version 6.0";
 	registerResourceManager();
 }
 
@@ -343,18 +343,18 @@ void AnnScriptManager::registerApi()
 		//There's capacitive touch surfaces and haptic feedback that aren't available right now on the AnnHandController class
 
 		//Register an accessors to the engine's log
-		chai.add(fun([](const string& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Vector3& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Vector2& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Quaternion& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Radian& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const Degree& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](const AnnColor& s) { AnnDebug() << logFromScript << s; }), "AnnDebugLog");
-		chai.add(fun([](KeyCode::code c) { AnnDebug() << logFromScript << "keycode:" << c; }), "AnnDebugLog");
-		chai.add(fun([](MouseAxisID c) { AnnDebug() << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
-		chai.add(fun([](bool b) {string s("true"); if (!b) { s = "false"; } AnnDebug() << logFromScript << "bool:" << s; }), "AnnDebugLog");
-		chai.add(fun([](int i) { AnnDebug() << logFromScript << "int:" << i; }), "AnnDebugLog");
-		chai.add(fun([](float f) { AnnDebug() << logFromScript << "float:" << f; }), "AnnDebugLog");
+		chai.add(fun([](const string& s) { AnnDebug(Log::Important) << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Vector3& s) { AnnDebug(Log::Important) << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Vector2& s) { AnnDebug(Log::Important) << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Quaternion& s) { AnnDebug(Log::Important) << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Radian& s) { AnnDebug(Log::Important) << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const Degree& s) { AnnDebug(Log::Important) << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](const AnnColor& s) { AnnDebug(Log::Important) << logFromScript << s; }), "AnnDebugLog");
+		chai.add(fun([](KeyCode::code c) { AnnDebug(Log::Important) << logFromScript << "keycode:" << c; }), "AnnDebugLog");
+		chai.add(fun([](MouseAxisID c) { AnnDebug(Log::Important) << logFromScript << "mouseAxis:" << c; }), "AnnDebugLog");
+		chai.add(fun([](bool b) {string s("true"); if (!b) { s = "false"; } AnnDebug(Log::Important) << logFromScript << "bool:" << s; }), "AnnDebugLog");
+		chai.add(fun([](int i) { AnnDebug(Log::Important) << logFromScript << "int:" << i; }), "AnnDebugLog");
+		chai.add(fun([](float f) { AnnDebug(Log::Important) << logFromScript << "float:" << f; }), "AnnDebugLog");
 
 		///Clear the console
 		chai.add(fun([]() { AnnGetOnScreenConsole()->bufferClear(); }), "AnnClearConsole");
@@ -550,13 +550,13 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 
 	catch(const chaiscript::exception::file_not_found_error& fnfe)
 	{
-		AnnDebug() << "Cannot find behavior script " << file;
-		AnnDebug() << fileErrorPrefix << fnfe.what();
+		AnnDebug(Log::Important) << "Cannot find behavior script " << file;
+		AnnDebug(Log::Important) << fileErrorPrefix << fnfe.what();
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Error during evaluation of behavior script " << file;
-		AnnDebug() << ee.pretty_print();
+		AnnDebug(Log::Important) << "Error during evaluation of behavior script " << file;
+		AnnDebug(Log::Important) << ee.pretty_print();
 	}
 
 	//The user should test if this script is "valid" or not. And should not do it in a loop, obviously
@@ -655,7 +655,7 @@ void AnnBehaviorScript::KeyEvent(AnnKeyEvent e)
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Event script error " << ee.pretty_print();
+		AnnDebug(Log::Important) << "Event script error " << ee.pretty_print();
 	}
 }
 
@@ -672,7 +672,7 @@ void AnnBehaviorScript::MouseEvent(AnnMouseEvent e)
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Event script error " << ee.pretty_print();
+		AnnDebug(Log::Important) << "Event script error " << ee.pretty_print();
 	}
 }
 
@@ -689,7 +689,7 @@ void AnnBehaviorScript::ControllerEvent(AnnControllerEvent e)
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Event script error " << ee.pretty_print();
+		AnnDebug(Log::Important) << "Event script error " << ee.pretty_print();
 	}
 }
 
@@ -706,7 +706,7 @@ void AnnBehaviorScript::TimeEvent(AnnTimeEvent e)
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Event script error " << ee.pretty_print();
+		AnnDebug(Log::Important) << "Event script error " << ee.pretty_print();
 	}
 }
 
@@ -723,7 +723,7 @@ void AnnBehaviorScript::TriggerEvent(AnnTriggerEvent e)
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Event script error " << ee.pretty_print();
+		AnnDebug(Log::Important) << "Event script error " << ee.pretty_print();
 	}
 }
 
@@ -740,7 +740,7 @@ void AnnBehaviorScript::HandControllerEvent(AnnHandControllerEvent e)
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Event script error " << ee.pretty_print();
+		AnnDebug(Log::Important) << "Event script error " << ee.pretty_print();
 	}
 }
 
@@ -757,7 +757,7 @@ void AnnBehaviorScript::CollisionEvent(AnnCollisionEvent e)
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Event script error " << ee.pretty_print();
+		AnnDebug(Log::Important) << "Event script error " << ee.pretty_print();
 	}
 }
 void AnnBehaviorScript::PlayerCollisionEvent(AnnPlayerCollisionEvent e)
@@ -774,7 +774,7 @@ void AnnBehaviorScript::PlayerCollisionEvent(AnnPlayerCollisionEvent e)
 	}
 	catch(const chaiscript::exception::eval_error& ee)
 	{
-		AnnDebug() << "Event script error " << ee.pretty_print();
+		AnnDebug(Log::Important) << "Event script error " << ee.pretty_print();
 	}
 }
 
