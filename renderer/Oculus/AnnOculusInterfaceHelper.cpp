@@ -15,6 +15,7 @@ using namespace std;
 using namespace OVR;
 using namespace Annwvyn;
 
+
 void AnnOculusInterfaceHelper::abortOnFailure()
 {
 	session = {};
@@ -22,9 +23,10 @@ void AnnOculusInterfaceHelper::abortOnFailure()
 	hmdDesc = {};
 
 	//Notify user
-	AnnDebug() << "Error: Cannot create Oculus Session";
+	AnnDebug(Log::Important) << "Error: Cannot create Oculus Session";
 	//Debug HMD is now handled by the configuration utility and the runtime.
-	AnnDebug() << "Please make sure Oculus Home is installed on your system and "
+	AnnDebug(Log::Important)
+	<< "Please make sure Oculus Home is installed on your system and "
 				  "please check if you have correctly plugged HDMI and USB on the Rift and Tracker";
 
 	displayWin32ErrorMessage("Error: Cannot create Oculus Session!",
@@ -34,7 +36,7 @@ void AnnOculusInterfaceHelper::abortOnFailure()
 	//Cleanup
 	ovr_Shutdown();
 	//Return an error
-	AnnDebug() << "Unable to Initialize client library or get a session valid from the Oculus Runtime. Closing program and returning 0xDEAD60D error";
+	AnnDebug(Log::Important) << "Unable to Initialize client library or get a session valid from the Oculus Runtime. Closing program and returning 0xDEAD60D error";
 	//Stop program
 	throw AnnInitializationError(ANN_ERR_CRITIC, "Unable to create an Oculus session");
 }
@@ -86,7 +88,7 @@ inline Ogre::Quaternion oculusToOgreQuat(const ovrQuatf& q) { return { q.w, q.x,
 void AnnOculusInterfaceHelper::logHardwareReport() const
 {
 	//Print to the logger a bunch of information
-	AnnDebug() << " - Detected Oculus hardware :";
+	AnnDebug(Log::Important) << " - Detected Oculus hardware";
 	AnnDebug() << "OVR version " << ovr_GetVersionString();
 	AnnDebug() << "Detected the following Oculus Rift VR Headset :";
 	AnnDebug() << "Product name : " << hmdDesc.ProductName;

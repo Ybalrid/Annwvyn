@@ -22,7 +22,7 @@ AnnPhysicsEngine::AnnPhysicsEngine(Ogre::SceneNode* rootNode,
  playerObject(player),
  defaultGravity(0, -9.81f, 0)
 {
-	AnnDebug() << "Initializing bullet version " << getBulletVersion();
+	AnnDebug(Log::Important) << "Initializing bullet version " << getBulletVersion();
 
 	//Initialize the Bullet world
 	Broadphase			   = make_unique<btDbvtBroadphase>();
@@ -216,7 +216,7 @@ btCollisionShape* AnnPhysicsEngine::_getGameObjectShape(AnnGameObject* obj, phyS
 			break;
 		default:
 			//non valid;
-			AnnDebug() << "Error: Requested shape is invalid";
+			AnnDebug(Log::Important) << "Error: Requested shape is invalid";
 			throw AnnInvalidPhysicalShapeError(obj->getName());
 	}
 	return Shape;

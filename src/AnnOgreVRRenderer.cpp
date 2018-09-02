@@ -283,7 +283,7 @@ void AnnOgreVRRenderer::loadOpenGLFunctions()
 	const auto err = glewInit();
 	if(err != GLEW_OK)
 	{
-		AnnDebug() << "Failed to glewTnit(), error : " << glewGetString(err);
+		AnnDebug(Log::Important) << "Failed to glewTnit(), error : " << glewGetString(err);
 		throw AnnInitializationError(ANN_ERR_RENDER, "Cannot load OpenGL functions");
 	}
 

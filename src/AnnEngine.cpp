@@ -162,14 +162,14 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 		if(functionPointer)
 		{
 			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(functionPointer);
-			AnnDebug() << "Sucessfully registered " << name << " renderer!";
+			AnnDebug(Log::Important) << "Sucessfully registered " << name << " renderer!";
 			return true;
 		}
 		AnnDebug() << "Loaded " << pluginName << ".dll, but couldn't find symbol " << boostrapFunctionName;
 		return false;
 	}
-	AnnDebug() << "Could not find DLL for " << name << " renderer";
-	AnnDebug() << "Your executable should be able to find " << pluginName << ".dll somewhere!";
+	AnnDebug(Log::Important) << "Could not find DLL for " << name << " renderer";
+	AnnDebug(Log::Important) << "Your executable should be able to find " << pluginName << ".dll somewhere!";
 
 #elif __linux__
 
@@ -183,14 +183,14 @@ bool AnnEngine::registerVRRenderer(const std::string& name)
 		if(fptr)
 		{
 			registeredRenderers[name] = AnnOgreVRRendererBootstrapFunction(fptr);
-			AnnDebug() << "Sucessfully registered " << name << " renderer!";
+			AnnDebug(Log::Important) << "Sucessfully registered " << name << " renderer!";
 			return true;
 		}
 		AnnDebug() << "Loaded " << pluginName << ", but couldn't find symbol " << boostrapFunctionName << '\n';
 		return false;
 	}
-	AnnDebug() << "Could not find lbrary file for " << name << " renderer!";
-	AnnDebug() << "Your executable should be able to find " << pluginName << " in your LD library path (hint, run ldconfig...)!";
+	AnnDebug(Log::Important) << "Could not find lbrary file for " << name << " renderer!";
+	AnnDebug(Log::Important) << "Your executable should be able to find " << pluginName << " in your LD library path (hint, run ldconfig...)!";
 
 #endif
 
@@ -447,13 +447,13 @@ AnnUserSubSystemPtr AnnEngine::registerUserSubSystem(AnnUserSubSystemPtr userSys
 
 void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool local)
 {
-	AnnDebug() << "Attempting to load an user subsystem from" << pluginName;
+	AnnDebug(Log::Important) << "Attempting to load an user subsystem from" << pluginName;
 	std::string bootstrapName = "AnnBootPlugin_";
 	bootstrapName += pluginName;
 #ifdef _WIN32
 	if(const auto handle = LoadLibraryA(pluginName.c_str()))
 	{
-		AnnDebug() << "Sucessully loadded dynamic libray";
+		AnnDebug(Log::Important) << "Sucessully loadded dynamic libray";
 		dynamicLibraries.push_back(std::move(std::make_unique<AnnDynamicLibraryHolder>(handle)));
 		if(const auto bootstrapPlugin = GetProcAddress(handle, bootstrapName.c_str()))
 		{
@@ -463,12 +463,12 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 		}
 		else
 		{
-			AnnDebug() << "Wasn't able to get boostrap function for " << pluginName;
+			AnnDebug(Log::Important) << "Wasn't able to get boostrap function for " << pluginName;
 		}
 	}
 	else
 	{
-		AnnDebug() << "Wasn't able to load dynamic library " << pluginName;
+		AnnDebug(Log::Important) << "Wasn't able to load dynamic library " << pluginName;
 	}
 
 #else
@@ -479,7 +479,7 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 
 	if(auto handle = dlopen(pluginSoFile.c_str(), RTLD_NOW))
 	{
-		AnnDebug() << "Sucessully loadded dynamic libray";
+		AnnDebug(Log::Important) << "Sucessully loadded dynamic libray";
 		dynamicLibraries.push_back(std::move(std::make_unique<AnnDynamicLibraryHolder>(handle)));
 		if(auto bootstrapPlugin = (void* (*)())dlsym(handle, bootstrapName.c_str())) //We need to cast the pointer to a functor of the "void* boostrap(void)" format
 		{
@@ -489,12 +489,12 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 		}
 		else
 		{
-			AnnDebug() << "Wasn't able to get bootsrap function for " << pluginSoFile;
+			AnnDebug(Log::Important) << "Wasn't able to get bootsrap function for " << pluginSoFile;
 		}
 	}
 	else
 	{
-		AnnDebug() << "Wasn't able to load dynamic library " << pluginName;
+		AnnDebug(Log::Important) << "Wasn't able to load dynamic library " << pluginName;
 	}
 
 #endif

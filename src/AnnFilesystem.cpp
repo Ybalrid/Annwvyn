@@ -171,7 +171,7 @@ void AnnFilesystemManager::createDirectory(string path)
 	//POSIX call to create a directory
 	auto status = mkdir(path.c_str(), S_IRWXU);
 	if(status == 0 || status == EEXIST) return;
-	AnnDebug() << "Warning: mkdir() did not return 0 or EEXIST.";
+	AnnDebug(Log::Important) << "Warning: mkdir() did not return 0 or EEXIST.";
 #endif
 }
 

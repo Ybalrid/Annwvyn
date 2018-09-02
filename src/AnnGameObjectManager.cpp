@@ -22,7 +22,7 @@ AnnGameObjectManager::AnnGameObjectManager() :
 	if(const auto plugin = Ogre_glTF::gltfPluginAccessor::findPlugin(); plugin)
 		glTFLoader = plugin->getLoader();
 	else
-		AnnDebug() << "Could not get glTFLoader!, please check if the plugin is located next to the executable!";
+		AnnDebug(Log::Important) << "Could not get glTFLoader!, please check if the plugin is located next to the executable!";
 
 }
 
