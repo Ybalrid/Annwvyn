@@ -64,7 +64,6 @@
  *
  */
 
-
 ///Namespace containing the totality of Annwvyn components
 namespace Annwvyn
 {}
@@ -107,8 +106,6 @@ namespace Annwvyn
 #include <AnnQuaternion.hpp>
 #include <AnnGetter.hpp>
 #include <AnnOgreVRRenderer.hpp>
-
-
 
 /*Main definition :
  *

@@ -52,32 +52,33 @@ public:
 	}
 };
 
-AnnMain()
+void staticSetup()
 {
 	AnnEngine::openConsole();
-
 	AnnOgreVRRenderer::setAntiAliasingLevel(8);
 	AnnEngine::setLogFileName("Samples.log");
 	AnnEngine::setDefaultRenderer("NoVR");
-
 #ifdef _WIN32
 	AnnEngine::registerVRRenderer("Oculus");
 #endif
-
 	AnnEngine::registerVRRenderer("OpenVR");
+}
 
-	AnnEngine Game("AnnTest");
+AnnMain()
+{
+	staticSetup();
+	AnnEngine GameEngine("AnnTest");
 
 	{
-		auto engine{ AnnGetEngine() };
 		auto eventManager{ AnnGetEventManager() };
 		auto levelManager{ AnnGetLevelManager() };
 		auto resourceManager{ AnnGetResourceManager() };
+
 		//Init some player body parameters
 		if(isRoomscale)
-			engine->initPlayerRoomscalePhysics();
+			GameEngine.initPlayerRoomscalePhysics();
 		else
-			engine->initPlayerStandingPhysics();
+			GameEngine.initPlayerStandingPhysics();
 
 		eventManager->useDefaultEventListener();
 
