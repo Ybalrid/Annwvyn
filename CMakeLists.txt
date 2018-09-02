@@ -15,7 +15,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 if(WIN32)
     #Check Annwvyn SDK configuration (This env var should exist)
     if(NOT DEFINED ENV{AnnwvynSDK64})
-        message(FATAL_ERROR "The AnnwvynSDK64 environement variable is currently not set. You need to install the Annwvyn SDK,
+        message(FATAL_ERROR "The AnnwvynSDK64 environment variable is currently not set. You need to install the Annwvyn SDK,
         or, in case you are attempting to manually build the engine, you need to navigate to your dependencies folder and execute \"RUNME.BAT\"")
     else()
         message("Detected Annwvyn SDK. Will fetch libraries from: " $ENV{AnnwvynSDK64})
