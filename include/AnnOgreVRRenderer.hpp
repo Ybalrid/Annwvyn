@@ -292,6 +292,9 @@ namespace Annwvyn
 		int windowW, windowH;
 
 	protected:
+		
+		void doStereoRender();
+
 		///Handle the window messages and resize event
 		void handleWindowMessages();
 

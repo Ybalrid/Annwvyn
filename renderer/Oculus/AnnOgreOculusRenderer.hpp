@@ -175,9 +175,6 @@ namespace Annwvyn
 		///Compositing layer for the rendered scene
 		ovrLayerEyeFov layer;
 
-		///GL texture set for the rendering
-		ovrTextureSwapChain textureCombinedSwapChain;
-
 		///Array of 2 ovrTextureSwapChain
 		std::array<ovrTextureSwapChain, 2> texturesSeparatedSwapChain;
 
@@ -207,9 +204,6 @@ namespace Annwvyn
 
 		///State of the performance HUD
 		int perfHudMode;
-
-		///Index of the current texture in the textureCombinedSwapChain
-		int currentCombinedIndex;
 
 		///Array of 2 current texture swapchain index
 		std::array<int, 2> currentSeparatedIndex;

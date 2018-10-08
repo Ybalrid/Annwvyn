@@ -651,6 +651,18 @@ void AnnOgreVRRenderer::setBloomThreshold(float minThreshold, float fullColorThr
 								   0));
 }
 
+void AnnOgreVRRenderer::doStereoRender()
+{
+	static auto deactivateWorkspaces = [&] { for(auto& w : compositorWorkspaces) w->setEnabled(false); };
+
+	for(size_t i = 0; i < 3; ++i)
+	{
+		deactivateWorkspaces();
+		compositorWorkspaces[i]->setEnabled(true);
+		root->renderOneFrame();
+	}
+}
+
 void AnnOgreVRRenderer::handleWindowMessages()
 {
 	//Do the message pumping from the OS

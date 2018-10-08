@@ -8,6 +8,11 @@
 //Include the built-in renderer that doesn't do VR
 #include "AnnOgreNoVRRenderer.hpp"
 
+#ifdef _WIN32
+#include <io.h>
+#include <fcntl.h>
+#endif
+
 using namespace Annwvyn;
 
 AnnEngine* AnnEngine::singleton{ nullptr };

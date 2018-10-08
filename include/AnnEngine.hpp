@@ -17,7 +17,6 @@
 
 //C++ STD & STL
 #include <cassert>
-#include <list>
 #include <memory>
 #include <unordered_map>
 #include <string>
@@ -40,11 +39,6 @@
 #include "AnnPlayerBody.hpp"
 #include "AnnDynamicLibraryHolder.hpp"
 
-#ifdef _WIN32
-#include <io.h>
-#include <fcntl.h>
-#endif
-
 //Get the deprecated warnings
 #pragma warning(default : 4996)
 
@@ -60,7 +54,7 @@ namespace Annwvyn
 	/// \returns pointer to an object that inherit from AnnOgreVRRender
 	using AnnOgreVRRendererBootstrapFunction = AnnOgreVRRenderer* (*)(const std::string& appName);
 
-	///Type of a map that links renderer's name, and a function to boostrap one
+	///Type of a map that links renderer's name, and a function to bootstrap one
 	using AnnOgreVRRenderBootstrapMap = std::unordered_map<std::string, AnnOgreVRRendererBootstrapFunction>;
 
 	///Utility class for AnnEngine

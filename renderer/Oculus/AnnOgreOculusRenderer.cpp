@@ -16,6 +16,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <Compositor/OgreCompositorWorkspace.h>
+
 using namespace Annwvyn;
 
 //Static class members
@@ -38,7 +40,6 @@ AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) :
  oculusRenderTexturesSeparatedGLID{ { 0 } },
  ogreRenderTexturesSeparatedGLID{ { 0 } },
  layer{},
- textureCombinedSwapChain{ nullptr },
  eyeToHmdPoseOffset{ { {}, {} } },
  pose{},
  handPoses{},
@@ -47,7 +48,6 @@ AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) :
  layers{ nullptr },
  sessionStatus{},
  perfHudMode{ ovrPerfHud_Off },
- currentCombinedIndex{ 0 },
  currentSeparatedIndex{ { 0, 0 } },
  currentSessionStatusFrameIndex{ 0 },
  debugSmgr{ nullptr },
@@ -79,7 +79,8 @@ AnnOgreOculusRenderer::AnnOgreOculusRenderer(std::string winName) :
 AnnOgreOculusRenderer::~AnnOgreOculusRenderer()
 {
 	//Destroy any Oculus SDK related objects
-	ovr_DestroyTextureSwapChain(oculusInterface->getSession(), textureCombinedSwapChain);
+	ovr_DestroyTextureSwapChain(oculusInterface->getSession(), texturesSeparatedSwapChain[left]);
+	ovr_DestroyTextureSwapChain(oculusInterface->getSession(), texturesSeparatedSwapChain[right]);
 	ovr_DestroyMirrorTexture(oculusInterface->getSession(), mirrorTexture);
 }
 
@@ -206,9 +207,9 @@ void AnnOgreOculusRenderer::initRttRendering()
 
 	//Setup Ogre compositor
 	auto compositor							 = root->getCompositorManager2();
-	compositorWorkspaces[leftEyeCompositor]  = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", true);
-	compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", true);
-	compositorWorkspaces[monoCompositor]	 = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", true);
+	compositorWorkspaces[leftEyeCompositor]  = compositor->addWorkspace(smgr, rttEyeSeparated[left], eyeCameras[left], "HdrWorkspace", false, 0);
+	compositorWorkspaces[rightEyeCompositor] = compositor->addWorkspace(smgr, rttEyeSeparated[right], eyeCameras[right], "HdrWorkspace", false, 1);
+	compositorWorkspaces[monoCompositor]	 = compositor->addWorkspace(smgr, window, monoCam, "HdrWorkspace", false, 2);
 
 	//Same deal but for the mirror (debuging) texture
 	ovrMirrorTextureDesc mirrorTextureDesc = {};
@@ -224,7 +225,7 @@ void AnnOgreOculusRenderer::initRttRendering()
 	auto mirror			  = createAdditionalRenderBuffer(hmdSize.w, hmdSize.h, "MirrorTex");
 	ogreMirrorTextureGLID = std::get<1>(mirror);
 
-	ovr_GetTextureSwapChainBufferGL(oculusInterface->getSession(), textureCombinedSwapChain, 0, &oculusRenderTextureCombinedGLID);
+//	ovr_GetTextureSwapChainBufferGL(oculusInterface->getSession(), texturesSeparatedSwapChain.data(), 0, &oculusRenderTextureCombinedGLID);
 }
 
 void AnnOgreOculusRenderer::showRawView()
@@ -281,7 +282,7 @@ void AnnOgreOculusRenderer::initClientHmdRendering()
 
 void AnnOgreOculusRenderer::updateEyeCameraFrustrum()
 {
-	for(size_t i{0}; i < 2; ++i)
+	for(size_t i{ 0 }; i < 2; ++i)
 	{
 		eyeCameras[i]->setNearClipDistance(nearClippingDistance);
 		eyeCameras[i]->setFarClipDistance(farClippingDistance);
@@ -293,7 +294,6 @@ void AnnOgreOculusRenderer::updateEyeCameraFrustrum()
 		AnnDebug() << "Frustrum right : " << currentEyeFov.RightTan;
 		AnnDebug() << "Frustrum top   : " << currentEyeFov.UpTan;
 		AnnDebug() << "Frustrum bottom: " << currentEyeFov.DownTan;
-
 
 		//The Oculus SDK give theses angles as starting from the "view vector". It's like giving use the absolute value of the angle, and not the angle itself
 		//We need to negate the one looking ot the left and down to get the correct angles of the frustrum edges.
@@ -399,8 +399,11 @@ void AnnOgreOculusRenderer::getTrackingPoseAndVRTiming()
 void AnnOgreOculusRenderer::renderAndSubmitFrame()
 {
 	handleWindowMessages();
+
+	//Required by the Oculus platfrom : hide hand models if applicaiton doesn't have input focus
 	hideHands = !getSessionStatus().HasInputFocus;
 
+	//Required by Oculus : Do not render if app is not visible, consider game "paused"
 	if(!getSessionStatus().IsVisible)
 	{
 		pauseFlag = true;
@@ -408,23 +411,33 @@ void AnnOgreOculusRenderer::renderAndSubmitFrame()
 	}
 	pauseFlag = false;
 
+	//Wait to sync with next frame
 	ovr_WaitToBeginFrame(oculusInterface->getSession(), frameCounter);
-	ovr_BeginFrame(oculusInterface->getSession(), frameCounter);
-	root->renderOneFrame();
 
+	//Start rendering
+	ovr_BeginFrame(oculusInterface->getSession(), frameCounter);
+
+	//Render to the eye buffers
+	doStereoRender();
+
+	//Submit eye buffers to Oculus swapchain
 	for(auto i{ 0U }; i < 2; ++i)
 	{
+		//Get the index of the texture in the swapchain
 		ovr_GetTextureSwapChainCurrentIndex(oculusInterface->getSession(), texturesSeparatedSwapChain[i], &currentSeparatedIndex[i]);
+		//Get the OpenGL texture to be used
 		ovr_GetTextureSwapChainBufferGL(oculusInterface->getSession(), texturesSeparatedSwapChain[i], currentSeparatedIndex[i], &oculusRenderTexturesSeparatedGLID[i]);
 		//Copy the rendered image to the Oculus Swap Texture
 		glEasyCopy(ogreRenderTexturesSeparatedGLID[i],
 				   oculusRenderTexturesSeparatedGLID[i],
 				   texSizeL.w,
 				   texSizeL.h);
+
+		//Tell Oculus that new images are available in swapchain
 		ovr_CommitTextureSwapChain(oculusInterface->getSession(), texturesSeparatedSwapChain[i]);
 	}
 
-	//Submit the frame
+	//Submit the frame to the compositor
 	layers = &layer.Header;
 	ovr_EndFrame(oculusInterface->getSession(), frameCounter, nullptr, &layers, 1);
 

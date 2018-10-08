@@ -187,7 +187,7 @@ void AnnOgreOpenVRRenderer::renderAndSubmitFrame()
 {
 	handleWindowMessages();
 
-	root->renderOneFrame();
+	doStereoRender();
 
 	//Submit the textures to the SteamVR compositor
 	vr::VRCompositor()->Submit(vr::Eye_Left, &vrTextures[0], &GLBounds[0]);
