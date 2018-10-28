@@ -611,14 +611,19 @@ std::string AnnOgreVRRenderer::getAudioDeviceNameFromGUID(GUID guid)
 
 	DirectSoundEnumerateA([](LPGUID pguid, LPCSTR descr, LPCSTR modname, LPVOID ctx) //using a non capturing lambda function as a callback
 						  {
+							  (void)modname;
 							  auto outputDescriptors = static_cast<AudioOutputDescriptorVect*>(ctx); //get an usable pointer
-							  outputDescriptors->push_back({ descr, pguid });						 //create a usable descriptor and add it to the list
+							  outputDescriptors->emplace_back(descr, pguid);						 //create a usable descriptor and add it to the list
 							  return TRUE;
 						  },
 						  &descriptors); //Pointer to the vector as "context" given to the callback
 
 	//Try to find the one we need
-	const auto result = std::find_if(begin(descriptors), end(descriptors), [&](const AudioOutputDescriptor& descriptor) { return descriptor.guid == guid; });
+	const auto result = std::find_if(begin(descriptors),
+									 end(descriptors),
+									 [&](const AudioOutputDescriptor& descriptor) {
+										 return descriptor.guid == guid;
+									 });
 
 	//Set the return string
 	if(result != descriptors.end())
