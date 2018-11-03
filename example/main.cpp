@@ -57,7 +57,7 @@ void staticSetup()
 	AnnEngine::openConsole();
 	AnnOgreVRRenderer::setAntiAliasingLevel(8);
 	AnnEngine::setLogFileName("Samples.log");
-	AnnEngine::setDefaultRenderer("NoVR");
+	AnnEngine::setDefaultRenderer("Oculus"); //Change this to Oculus or OpenVR to change the renderer to use
 #ifdef _WIN32
 	AnnEngine::registerVRRenderer("Oculus");
 #endif

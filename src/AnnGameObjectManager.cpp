@@ -87,7 +87,7 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const std:
 	}
 	else if(ext == "glb")
 	{
-		item = glTFLoader->getItemFromResource(meshName, smgr);
+		item = glTFLoader->getModelData(meshName, Ogre_glTF::glTFLoader::LoadFrom::ResourceManager).makeItem(smgr);
 	}
 
 	//Create a node
