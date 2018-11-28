@@ -40,6 +40,10 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 
 	OIS::ParamList pl;
 	pl.insert(make_pair(string("WINDOW"), to_string(windowHnd)));
+	pl.insert(make_pair(string("x11_mouse_grab"), string("false")));
+	pl.insert(make_pair(string("x11_mouse_hide"), string("false")));
+	pl.insert(make_pair(string("x11_keyboard_grab"), string("false")));
+
 	InputManager = OIS::InputManager::createInputSystem(pl);
 
 	//Get the keyboard, mouse and joysticks objects
