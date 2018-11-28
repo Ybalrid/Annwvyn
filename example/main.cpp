@@ -18,7 +18,7 @@
 using namespace std;
 using namespace Annwvyn;
 
-constexpr bool isRoomscale{ true };
+constexpr bool isRoomscale { true };
 
 void loadHands()
 {
@@ -70,9 +70,9 @@ AnnMain()
 	AnnEngine GameEngine("AnnTest");
 
 	{
-		auto eventManager{ AnnGetEventManager() };
-		auto levelManager{ AnnGetLevelManager() };
-		auto resourceManager{ AnnGetResourceManager() };
+		auto eventManager { AnnGetEventManager() };
+		auto levelManager { AnnGetLevelManager() };
+		auto resourceManager { AnnGetResourceManager() };
 
 		//Init some player body parameters
 		if(isRoomscale)
@@ -110,7 +110,6 @@ AnnMain()
 	{
 		debugHook();
 	} while(AnnGetEngine()->refresh());
-
 
 	return EXIT_SUCCESS;
 }

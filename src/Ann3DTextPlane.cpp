@@ -279,7 +279,7 @@ void Ann3DTextPlane::renderText()
 	AnnConsole::WriteToTexture(caption,
 							   texture,
 
-							   Ogre::Image::Box{ pixelMargin, pixelMargin, uint32_t(width * resolutionFactor - pixelMargin), uint32_t(height * resolutionFactor - pixelMargin) },
+							   Ogre::Image::Box { pixelMargin, pixelMargin, uint32_t(width * resolutionFactor - pixelMargin), uint32_t(height * resolutionFactor - pixelMargin) },
 
 							   font.getPointer(),
 							   textColor.getOgreColor(),

@@ -36,7 +36,7 @@ void MyLevel::load()
 
 	//You can choose three types of light sources, point, directional or spot
 	Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-	Sun->setDirection(AnnVect3{ -1, -1.5f, -1 }.normalisedCopy());
+	Sun->setDirection(AnnVect3 { -1, -1.5f, -1 }.normalisedCopy());
 	Sun->setPower(97);
 
 	//Add an additional light. By default, lighs are point lights
@@ -45,7 +45,7 @@ void MyLevel::load()
 	OtherLight->setPosition({ 0, 1, 1 });
 
 	//Set the player position at level loading
-	auto player{ AnnGetPlayer() };
+	auto player { AnnGetPlayer() };
 	player->setPosition({ 0, 1, 10 });
 	player->setOrientation(0);
 	player->resetPlayerPhysics();

@@ -10,8 +10,8 @@ using namespace Annwvyn;
 ostringstream AnnPhysicsSetupParentError::outputFormater;
 
 AnnPhysicsSetupParentError::AnnPhysicsSetupParentError(AnnGameObject* origin) :
- runtime_error{ "Cannot setup physics for object " },
- objectWithProblem{ origin }
+ runtime_error { "Cannot setup physics for object " },
+ objectWithProblem { origin }
 {
 	AnnDebug(Log::Important) << AnnPhysicsSetupParentError::what();
 }
@@ -48,8 +48,8 @@ AnnGameObject* AnnPhysicsSetupParentError::recurToBody(AnnGameObject* start)
 }
 
 AnnPhysicsSetupChildError::AnnPhysicsSetupChildError(AnnGameObject* origin) :
- runtime_error{ "Cannot setup physics for Object " },
- objectWithProblem{ origin }
+ runtime_error { "Cannot setup physics for Object " },
+ objectWithProblem { origin }
 {
 	AnnDebug(Log::Important) << AnnPhysicsSetupChildError::what();
 }
@@ -107,7 +107,7 @@ const char* AnnInitializationError::what() const throw()
 
 AnnInvalidPhysicalShapeError::AnnInvalidPhysicalShapeError(const std::string& objName) :
  std::runtime_error("Error : Cannot create a physics shape from arguments"),
- objectName{ objName }
+ objectName { objName }
 {
 	AnnDebug(Log::Important) << AnnInvalidPhysicalShapeError::what();
 }
@@ -123,8 +123,8 @@ const char* AnnInvalidPhysicalShapeError::what() const throw()
 
 AnnLevelLoadingError::AnnLevelLoadingError(const std::string& level, const std::string& obj) :
  std::runtime_error("Error : Cannot load level object"),
- levelName{ level },
- objectName{ obj }
+ levelName { level },
+ objectName { obj }
 {
 	AnnDebug(Log::Important) << AnnLevelLoadingError::what();
 }

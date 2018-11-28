@@ -14,7 +14,6 @@ namespace Annwvyn
 		//virtual members. But theses definitions are pointless because they actually don't do anything.
 		//You need to subclass it to create an EventListener
 
-
 	public:
 		AnnEventListener(const AnnEventListener&) = delete;
 		AnnEventListener& operator=(AnnEventListener&) = delete;

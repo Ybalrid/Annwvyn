@@ -36,8 +36,8 @@ public:
 
 		auto textpane = std::make_shared<Ann3DTextPlane>(2.f, 1.f, text, 512, panelDpi, "PannelFont");
 		textpane->setTextAlign(Ann3DTextPlane::ALIGN_CENTER);
-		textpane->setTextColor(AnnColor{ 0, 0, 0 });
-		textpane->setPosition(position + orientation * AnnVect3{ 0, 2.f, -0.35f });
+		textpane->setTextColor(AnnColor { 0, 0, 0 });
+		textpane->setPosition(position + orientation * AnnVect3 { 0, 2.f, -0.35f });
 		textpane->setOrientation(stone->getOrientation());
 		textpane->update();
 		addManualMovableObject(textpane);

@@ -21,10 +21,10 @@ AnnConsole::AnnConsole() :
  consoleNode(nullptr),
  offset(0, 0.125f, -0.75f),
  visibility(false),
- lastUpdate{ 0 },
- refreshRate{ 1.0 / 15.0 },
- historyStatus{ -1 },
- cursorPos{ 0 }
+ lastUpdate { 0 },
+ refreshRate { 1.0 / 15.0 },
+ historyStatus { -1 },
+ cursorPos { 0 }
 {
 	/*
 	* The displaySurface is a perfect rectangle drawn by 2 polygons (triangles). The position in object-space are defined as following
@@ -169,13 +169,13 @@ void AnnConsole::update()
 	std::stringstream content;
 
 	//For each line
-	for(auto i{ 0 }; i < CONSOLE_BUFFER; i++)
+	for(auto i { 0 }; i < CONSOLE_BUFFER; i++)
 	{
 		//Make the len fit the screen
 		auto logLine = buffer[i].substr(0, MAX_CONSOLE_LOG_WIDTH);
 
 		//No newline char
-		for(auto j{ 0 }; j < logLine.size(); j++)
+		for(auto j { 0 }; j < logLine.size(); j++)
 			if(logLine[j] == '\n') logLine[j] = '|';
 
 		//Append to display content
@@ -183,7 +183,7 @@ void AnnConsole::update()
 	}
 
 	//horizontal separator
-	for(auto i{ 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "-";
+	for(auto i { 0 }; i < MAX_CONSOLE_LOG_WIDTH; ++i) content << "-";
 
 	//Command Invite
 	content << "\n%> ";

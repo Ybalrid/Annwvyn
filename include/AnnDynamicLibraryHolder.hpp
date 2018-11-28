@@ -25,14 +25,14 @@ namespace Annwvyn
 		///Move constructor
 		AnnDynamicLibraryHolder(AnnDynamicLibraryHolder&& other) noexcept
 		{
-			heldLibrary		= other.heldLibrary;
+			heldLibrary		  = other.heldLibrary;
 			other.heldLibrary = nullptr;
 		}
 
 		///Move-assign operator
 		AnnDynamicLibraryHolder& operator=(AnnDynamicLibraryHolder&& other) noexcept
 		{
-			heldLibrary		= other.heldLibrary;
+			heldLibrary		  = other.heldLibrary;
 			other.heldLibrary = nullptr;
 			return *this;
 		}

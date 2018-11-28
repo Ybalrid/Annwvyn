@@ -9,23 +9,23 @@ using namespace Annwvyn;
 
 AnnDefaultEventListener::AnnDefaultEventListener() :
  AnnEventListener(),
- turnMode{ WHEEL },
- forward{ KeyCode::w },
- backward{ KeyCode::s },
- straffleft{ KeyCode::a },
- straffright{ KeyCode::d },
- jump{ KeyCode::space },
- run{ KeyCode::lshift },
- recenter{ KeyCode::f12 },
- deadzone{ 1.0f / 5.0f },
- wheelStickSensitivity{ 6.0f / 8.0f },
- maxWheelAngle{ 45 },
- minWheelAngle{ 0.5f },
- stickCurrentAngleDegree{ 0 },
- computedWheelValue{ 0 },
- lastAngle{ 0 },
- OpenVRController{ AnnGetStringUtility()->hash("OpenVR Hand Controller") },
- OculusTouchController{ AnnGetStringUtility()->hash("Oculus Touch") }
+ turnMode { WHEEL },
+ forward { KeyCode::w },
+ backward { KeyCode::s },
+ straffleft { KeyCode::a },
+ straffright { KeyCode::d },
+ jump { KeyCode::space },
+ run { KeyCode::lshift },
+ recenter { KeyCode::f12 },
+ deadzone { 1.0f / 5.0f },
+ wheelStickSensitivity { 6.0f / 8.0f },
+ maxWheelAngle { 45 },
+ minWheelAngle { 0.5f },
+ stickCurrentAngleDegree { 0 },
+ computedWheelValue { 0 },
+ lastAngle { 0 },
+ OpenVRController { AnnGetStringUtility()->hash("OpenVR Hand Controller") },
+ OculusTouchController { AnnGetStringUtility()->hash("Oculus Touch") }
 {
 	//Use 1st analog stick for displacement
 	axes[ax_walk]   = 0;
@@ -148,11 +148,11 @@ void AnnDefaultEventListener::reclampDegreeToPositiveRange(float& degree)
 void AnnDefaultEventListener::HandControllerEvent(AnnHandControllerEvent e)
 {
 	if(AnnGetVRRenderer()->shouldPauseFlag()) return;
-	auto rightStickThreashold{ 0.0225 };
+	auto rightStickThreashold { 0.0225 };
 	if(e._getController()->getType() == OculusTouchController) rightStickThreashold = 0.8;
 
 	auto controller = e._getController();
-	AnnVect2 analog{ controller->getAxis(0).getValue(), controller->getAxis(1).getValue() };
+	AnnVect2 analog { controller->getAxis(0).getValue(), controller->getAxis(1).getValue() };
 	switch(controller->getSide())
 	{
 		default: break;

@@ -165,7 +165,7 @@ void AnnFilesystemManager::createDirectory(string path)
 //TODO ISSUE clean that when upgrading to C++17
 #ifdef WIN32
 	//Win32 call to create a directory
-	CreateDirectory(wstring{ begin(path), end(path) }.c_str(), nullptr);
+	CreateDirectory(wstring { begin(path), end(path) }.c_str(), nullptr);
 #endif
 #ifdef __linux__
 	//POSIX call to create a directory

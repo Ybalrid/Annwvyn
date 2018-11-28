@@ -474,11 +474,11 @@ bool AnnScriptManager::evalFile(const std::string& file)
 	return true;
 }
 
-AnnScriptManager::AnnScriptID AnnScriptManager::ID{ 0 };
+AnnScriptManager::AnnScriptID AnnScriptManager::ID { 0 };
 
 std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std::string& scriptName, AnnGameObject* owner)
 {
-	auto file{ scriptName + scriptExtension };
+	auto file { scriptName + scriptExtension };
 
 	try
 	{
@@ -507,7 +507,7 @@ std::shared_ptr<AnnBehaviorScript> AnnScriptManager::getBehaviorScript(const std
 
 		//This may looks odd but it's good enough for what we're doing:
 		//Copy the template of the init code to a string
-		std::string ChaiCode{ scriptTemplate };
+		std::string ChaiCode { scriptTemplate };
 
 		//To "boot" the script, there's a little sniped of ChaiScript that is run from the C++ side. This code is generated from a string,
 		//And contains a few fixed tags to be replaced with the script name and an unique ID
@@ -571,8 +571,8 @@ AnnBehaviorScript::AnnBehaviorScript() :
  cannotTime(false),
  cannotTrigger(false),
  cannotHand(false),
- cannotCollision{ false },
- cannotPlayerCollision{ false }
+ cannotCollision { false },
+ cannotPlayerCollision { false }
 {
 	AnnDebug() << "Invalid script object created";
 }
@@ -582,26 +582,26 @@ AnnBehaviorScript::AnnBehaviorScript(const std::string& scriptName,
 									 AnnBehaviorScriptHooks hooks,
 									 chaiscript::Boxed_Value scriptObjectInstance) :
  constructListener(),
- valid{ true },
- name{ scriptName },
- ScriptObjectInstance{ scriptObjectInstance },
- callUpdateOnScriptInstance{ updateHook },
- callKeyEventOnScriptInstance{ std::get<KeyHook>(hooks) },
- callMouseEventOnScriptInstance{ std::get<MouseHook>(hooks) },
- callStickEventOnScriptInstance{ std::get<ControllerHook>(hooks) },
- callTimeEventOnScriptInstance{ std::get<TimeHook>(hooks) },
- callTriggerEventOnScriptInstance{ std::get<TriggerHook>(hooks) },
- callHandControllertOnScriptInstance{ std::get<HandHook>(hooks) },
- callCollisionEventOnScriptInstance{ std::get<CollisionHook>(hooks) },
- callPlayerCollisionEventOnScriptInstance{ std::get<PlayerCollisionHook>(hooks) },
- cannotKey{ false },
- cannotMouse{ false },
- cannotStick{ false },
- cannotTime{ false },
- cannotTrigger{ false },
- cannotHand{ false },
- cannotCollision{ false },
- cannotPlayerCollision{ false }
+ valid { true },
+ name { scriptName },
+ ScriptObjectInstance { scriptObjectInstance },
+ callUpdateOnScriptInstance { updateHook },
+ callKeyEventOnScriptInstance { std::get<KeyHook>(hooks) },
+ callMouseEventOnScriptInstance { std::get<MouseHook>(hooks) },
+ callStickEventOnScriptInstance { std::get<ControllerHook>(hooks) },
+ callTimeEventOnScriptInstance { std::get<TimeHook>(hooks) },
+ callTriggerEventOnScriptInstance { std::get<TriggerHook>(hooks) },
+ callHandControllertOnScriptInstance { std::get<HandHook>(hooks) },
+ callCollisionEventOnScriptInstance { std::get<CollisionHook>(hooks) },
+ callPlayerCollisionEventOnScriptInstance { std::get<PlayerCollisionHook>(hooks) },
+ cannotKey { false },
+ cannotMouse { false },
+ cannotStick { false },
+ cannotTime { false },
+ cannotTrigger { false },
+ cannotHand { false },
+ cannotCollision { false },
+ cannotPlayerCollision { false }
 {
 }
 

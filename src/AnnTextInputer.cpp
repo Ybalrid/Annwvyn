@@ -9,8 +9,8 @@ using namespace Annwvyn;
 
 AnnTextInputer::AnnTextInputer() :
  listen(false),
- asciiOnly{ true },
- cursorOffset{ 0 }
+ asciiOnly { true },
+ cursorOffset { 0 }
 {
 }
 

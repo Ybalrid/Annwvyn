@@ -244,7 +244,7 @@ namespace Annwvyn
 		bool ignorePhysics;
 
 		///Waling state. Forward Backward Left Right
-		bool walking[4]{};
+		bool walking[4] {};
 
 		///Running state
 		bool run;

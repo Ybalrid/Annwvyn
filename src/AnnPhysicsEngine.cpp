@@ -66,7 +66,7 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 	playerShape->calculateLocalInertia(playerMass, inertia);
 
 	//Set the body to the player
-	const auto body = new btRigidBody{
+	const auto body = new btRigidBody {
 		playerMass,
 		playerRigidBodyState,
 		playerShape,
@@ -79,7 +79,7 @@ void AnnPhysicsEngine::createPlayerPhysicalVirtualBody(Ogre::SceneNode* node)
 void AnnPhysicsEngine::createVirtualBodyShape(float radius) const
 {
 	//remove the diameter of the two half sphere on top and bottom of the capsule
-	playerObject->setShape(new btCapsuleShape{ radius, playerObject->getEyesHeight() - 2 * radius });
+	playerObject->setShape(new btCapsuleShape { radius, playerObject->getEyesHeight() - 2 * radius });
 }
 
 btDiscreteDynamicsWorld* AnnPhysicsEngine::getWorld() const
@@ -101,7 +101,7 @@ void AnnPhysicsEngine::stepDebugDrawer() const
 void AnnPhysicsEngine::processCollisionTesting() const
 {
 	const auto nbManifold = DynamicsWorld->getDispatcher()->getNumManifolds();
-	for(auto i{ 0 }; i < nbManifold; ++i)
+	for(auto i { 0 }; i < nbManifold; ++i)
 	{
 		const auto contactManifold = DynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		if(contactManifold->getNumContacts() > 0)

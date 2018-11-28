@@ -156,7 +156,7 @@ AnnAudioFile* AnnAudioFile::cast(void* audioFileRawPtr)
 	return static_cast<AnnAudioFile*>(audioFileRawPtr);
 }
 
-std::unique_ptr<SF_VIRTUAL_IO> AnnAudioFile::sfVioStruct{ nullptr };
+std::unique_ptr<SF_VIRTUAL_IO> AnnAudioFile::sfVioStruct { nullptr };
 
 SF_VIRTUAL_IO* AnnAudioFile::getSndFileVioStruct()
 {

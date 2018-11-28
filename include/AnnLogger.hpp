@@ -11,7 +11,6 @@
 #include <sstream>
 #include <iostream>
 
-
 namespace Annwvyn
 {
 	enum class AnnDllExport Log {
@@ -30,16 +29,15 @@ namespace Annwvyn
 			Verbose
 		};
 
-
 	private:
-
 		static LogLevel verbosity;
 		///Nested buffer class. Write the stings to the engine log.
 		class AnnDebugBuff : public std::stringbuf
 		{
 		public:
 			///Construct an AnnDebug buffer
-			AnnDebugBuff(Log importance) : currentImportance(importance) {}
+			AnnDebugBuff(Log importance) :
+			 currentImportance(importance) {}
 
 			///Will sync the buffer
 			~AnnDebugBuff();
@@ -51,7 +49,6 @@ namespace Annwvyn
 		};
 
 	public:
-
 		static void setVerbosity(LogLevel level);
 
 		///Create an AnnDebug object that offer you a output stream to the AnnEngine logger

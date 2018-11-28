@@ -14,15 +14,15 @@ using std::string;
 using std::to_string;
 
 AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
-	AnnSubSystem("EventManager"),
-	Keyboard(nullptr),
-	Mouse(nullptr),
-	previousKeyStates(),
-	previousMouseButtonStates(),
-	lastTimerCreated(0),
-	defaultEventListener(nullptr),
-	knowXbox(false),
-	keyboardIgnore {false}
+ AnnSubSystem("EventManager"),
+ Keyboard(nullptr),
+ Mouse(nullptr),
+ previousKeyStates(),
+ previousMouseButtonStates(),
+ lastTimerCreated(0),
+ defaultEventListener(nullptr),
+ knowXbox(false),
+ keyboardIgnore { false }
 {
 	//Reserve some memory
 	keyEventBuffer.reserve(10);
@@ -31,7 +31,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 	handControllerEventBuffer.reserve(10);
 
 	//Init all bool array to false
-	for(auto& keyState : previousKeyStates) keyState                         = false;
+	for(auto& keyState : previousKeyStates) keyState = false;
 	for(auto& mouseButtonState : previousMouseButtonStates) mouseButtonState = false;
 
 	//Configure and create the input system
@@ -44,7 +44,7 @@ AnnEventManager::AnnEventManager(Ogre::RenderWindow* w) :
 
 	//Get the keyboard, mouse and joysticks objects
 	Keyboard = dynamic_cast<OIS::Keyboard*>(InputManager->createInputObject(OIS::OISKeyboard, true));
-	Mouse    = dynamic_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
+	Mouse	= dynamic_cast<OIS::Mouse*>(InputManager->createInputObject(OIS::OISMouse, true));
 
 	for(auto nbStick(0); nbStick < InputManager->getNumberOfDevices(OIS::OISJoyStick); nbStick++)
 	{

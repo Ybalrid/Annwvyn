@@ -78,7 +78,7 @@ void AnnGameObject::callUpdateOnScripts()
 
 void AnnGameObject::setPosition(float x, float y, float z)
 {
-	setPosition(AnnVect3{ x, y, z });
+	setPosition(AnnVect3 { x, y, z });
 }
 
 void AnnGameObject::translate(float x, float y, float z) const
@@ -175,7 +175,7 @@ void AnnGameObject::setScale(AnnVect3 scale, bool scaleMass) const
 
 void AnnGameObject::setWorldOrientation(float w, float x, float y, float z) const
 {
-	setWorldOrientation(AnnQuaternion{ w, x, y, z });
+	setWorldOrientation(AnnQuaternion { w, x, y, z });
 }
 
 void AnnGameObject::setScale(float x, float y, float z, bool mass) const
@@ -224,7 +224,7 @@ void AnnGameObject::setupPhysics(float mass, phyShapeType type, bool colideWithP
 	bodyMass = mass;
 
 	//Calculate inertia
-	btVector3 inertia{ 0, 0, 0 };
+	btVector3 inertia { 0, 0, 0 };
 	if(bodyMass > 0.0f)
 		collisionShape->calculateLocalInertia(bodyMass, inertia);
 
@@ -448,7 +448,7 @@ bool AnnGameObject::childrenHaveBody(AnnGameObject* parentObj)
 
 void AnnGameObject::setWorldPosition(float x, float y, float z) const
 {
-	setWorldPosition(AnnVect3{ x, y, z });
+	setWorldPosition(AnnVect3 { x, y, z });
 }
 
 void AnnGameObject::setItem(Ogre::Item* item)

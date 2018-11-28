@@ -255,7 +255,7 @@ namespace Annwvyn
 		const AnnHandControllerGestureHash gestureNotAvailableHash;
 
 		///Permanently set to "N/A"
-		static constexpr const char* const gestureNotAvailableString{ "N/A" };
+		static constexpr const char* const gestureNotAvailableString { "N/A" };
 	};
 
 	using AnnHandControllerPtr = std::shared_ptr<AnnHandController>;

@@ -8,20 +8,20 @@
 
 using namespace Annwvyn;
 
-const AnnVect3 AnnPlayerBody::DEFAULT_STARTING_POS{ 0, 1, 10 };
-const Ogre::Euler AnnPlayerBody::DEFAULT_STARTING_ORIENT{ 0 };
+const AnnVect3 AnnPlayerBody::DEFAULT_STARTING_POS { 0, 1, 10 };
+const Ogre::Euler AnnPlayerBody::DEFAULT_STARTING_ORIENT { 0 };
 
 AnnPlayerBody::PhysicalParameters::PhysicalParameters() :
- eyeHeight{ 1.59f },
- walkSpeed{ 3 },
- runFactor{ 3 },
- turnSpeed{ 0.15f },
- mass{ 80 },
- FeetPosition{ 0, 0, 10 },
- RoomBase{ FeetPosition },
- HeadOrientation{ AnnQuaternion::IDENTITY },
- Shape{ nullptr },
- Body{ nullptr }
+ eyeHeight { 1.59f },
+ walkSpeed { 3 },
+ runFactor { 3 },
+ turnSpeed { 0.15f },
+ mass { 80 },
+ FeetPosition { 0, 0, 10 },
+ RoomBase { FeetPosition },
+ HeadOrientation { AnnQuaternion::IDENTITY },
+ Shape { nullptr },
+ Body { nullptr }
 
 {}
 
@@ -186,7 +186,7 @@ void AnnPlayerBody::applyRelativeBodyYaw(Ogre::Radian angle)
 	else if(mode == ROOMSCALE)
 	{
 		//Projection of the headset world position on the ground plane. we are turning around this point.
-		AnnVect3 basePoint{
+		AnnVect3 basePoint {
 			AnnGetVRRenderer()->trackedHeadPose.position.x,
 			physicsParams.RoomBase.y,
 			AnnGetVRRenderer()->trackedHeadPose.position.z
@@ -309,7 +309,7 @@ void AnnPlayerBody::engineUpdate(float deltaTime)
 			applyAnalogYaw();
 
 			if(needNewRoomTranslateReference)
-				roomTranslateQuatReference = AnnQuaternion{ AnnGetVRRenderer()->trackedHeadPose.orientation.getYaw(), AnnVect3::UNIT_Y };
+				roomTranslateQuatReference = AnnQuaternion { AnnGetVRRenderer()->trackedHeadPose.orientation.getYaw(), AnnVect3::UNIT_Y };
 
 			roomTranslation = updateTime * getWalkSpeed() *
 				//(physicsParams.Orientation.toQuaternion() *
@@ -362,8 +362,8 @@ void AnnPlayerBody::reground(AnnVect3 pointOnGround)
 void AnnPlayerBody::regroundOnPhysicsBody(float length, AnnVect3 preoffset)
 {
 	if(mode != ROOMSCALE) return;
-	AnnVect3 rayOrigin{ physicsParams.FeetPosition + preoffset };
-	AnnVect3 rayEndPoint{ rayOrigin + length * AnnVect3::NEGATIVE_UNIT_Y };
+	AnnVect3 rayOrigin { physicsParams.FeetPosition + preoffset };
+	AnnVect3 rayEndPoint { rayOrigin + length * AnnVect3::NEGATIVE_UNIT_Y };
 
 	btCollisionWorld::ClosestRayResultCallback rayGroundingCallback(rayOrigin.getBtVector(),
 																	rayEndPoint.getBtVector());

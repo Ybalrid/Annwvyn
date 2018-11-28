@@ -16,8 +16,8 @@ AnnSplashLevel::AnnSplashLevel(Ogre::String resourceName, std::shared_ptr<AnnLev
  currentTime(0),
  startTime(-1),
  next(nextLevel),
- CurvedPlane{ nullptr },
- Splash{ nullptr },
+ CurvedPlane { nullptr },
+ Splash { nullptr },
  splashImageName(resourceName),
  hasBGM(false) {}
 
@@ -146,7 +146,7 @@ void AnnSplashLevel::setBGM(std::string soundfileName, bool preload)
 
 void AnnSplashLevel::runLogic()
 {
-	Splash->setPosition(AnnGetPlayer()->getPosition() + AnnVect3{ 0, 0, -10 });
+	Splash->setPosition(AnnGetPlayer()->getPosition() + AnnVect3 { 0, 0, -10 });
 
 	//If start time not set yet
 	if(startTime == -1)

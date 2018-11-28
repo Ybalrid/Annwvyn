@@ -59,7 +59,7 @@ public:
 		//Add other source of light
 		auto Sun = addLightObject();
 		Sun->setType(AnnLightObject::ANN_LIGHT_DIRECTIONAL);
-		Sun->setDirection(AnnVect3{ 0.5f, -1.5f, -2.25f }.normalisedCopy());
+		Sun->setDirection(AnnVect3 { 0.5f, -1.5f, -2.25f }.normalisedCopy());
 		Sun->setPower(97.f);
 
 		//Create objects and register them as content of the level, using a custom AnnGameObject clas (to put your own postInit and update code)

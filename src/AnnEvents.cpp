@@ -401,10 +401,10 @@ void AnnTimeEvent::setTimerID(AnnTimerID id)
 }
 
 AnnCollisionEvent::AnnCollisionEvent(AnnGameObject* first, AnnGameObject* second, AnnVect3 position, AnnVect3 normal) :
- a{ first },
- b{ second },
- position{ position },
- normal{ normal }
+ a { first },
+ b { second },
+ position { position },
+ normal { normal }
 {
 	type = COLLISION;
 }
@@ -453,7 +453,7 @@ bool AnnCollisionEvent::isWallCollision(const float scalarApprox) const
 
 AnnPlayerCollisionEvent::AnnPlayerCollisionEvent(AnnGameObject* collided) :
  AnnEvent(),
- col{ collided }
+ col { collided }
 {
 	type = PLAYER_COLLISION;
 }
@@ -500,7 +500,7 @@ void AnnControllerBuffer::capture() const
 
 AnnTriggerEvent::AnnTriggerEvent() :
  AnnEvent(),
- sender{ nullptr }
+ sender { nullptr }
 {
 	type	= TRIGGER_CONTACT;
 	contact = false;
@@ -524,7 +524,7 @@ AnnHandControllerEvent::AnnHandControllerEvent() :
 
 AnnHandControllerEvent::AnnHandControllerEvent(AnnHandController* controller) :
  AnnEvent(),
- controller{ controller }
+ controller { controller }
 {
 	type = HAND_CONTROLLER;
 }
@@ -536,7 +536,7 @@ AnnHandController* AnnHandControllerEvent::_getController() const
 
 AnnTimeEvent::AnnTimeEvent(const AnnTimer& timer) :
  AnnEvent(),
- tID{ timer.getID() }
+ tID { timer.getID() }
 {
 	type = TIMER_TIMEOUT;
 }

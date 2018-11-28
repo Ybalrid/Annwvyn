@@ -46,23 +46,23 @@ namespace Annwvyn
 
 		///Name of the rendersystem plugin to load on Ogre
 #ifndef _DEBUG
-		static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus" };
+		static constexpr const char* const PluginRenderSystemGL3Plus { "./RenderSystem_GL3Plus" };
 #ifdef _WIN32
-		static constexpr const char* const Ogre_glTF_Plugin{ "./Ogre_glTF" };
+		static constexpr const char* const Ogre_glTF_Plugin { "./Ogre_glTF" };
 #else
-		static constexpr const char* const Ogre_glTF_Plugin{ "./libOgre_glTF.so" };
+		static constexpr const char* const Ogre_glTF_Plugin { "./libOgre_glTF.so" };
 #endif
 #else
-		static constexpr const char* const PluginRenderSystemGL3Plus{ "./RenderSystem_GL3Plus_d" };
+		static constexpr const char* const PluginRenderSystemGL3Plus { "./RenderSystem_GL3Plus_d" };
 #ifdef _WIN32
-		static constexpr const char* const Ogre_glTF_Plugin{ "./Ogre_glTF_d" };
+		static constexpr const char* const Ogre_glTF_Plugin { "./Ogre_glTF_d" };
 #else
-		static constexpr const char* const Ogre_glTF_Plugin{ "./libOgre_glTF_d.so" };
+		static constexpr const char* const Ogre_glTF_Plugin { "./libOgre_glTF_d.so" };
 #endif
 #endif
 
 		///Name of the rendersystem to initialize
-		static constexpr const char* const GLRenderSystem3Plus{ "OpenGL 3+ Rendering Subsystem" };
+		static constexpr const char* const GLRenderSystem3Plus { "OpenGL 3+ Rendering Subsystem" };
 		///Resource group to load the shaders, material and compositor script for rendering.
 		static constexpr const char* const RESOURCE_GROUP_COMPOSITOR = "RG_ANN_COMPOSITOR";
 
@@ -169,7 +169,7 @@ namespace Annwvyn
 		virtual void recenter() = 0;
 
 		///(Optional) Cycle through the client debug display if available.
-		virtual void cycleDebugHud(){};
+		virtual void cycleDebugHud() {};
 
 		///Set the distance from the viewpoint to the near clipping distance plane
 		void setNearClippingDistance(float distance);
@@ -286,13 +286,12 @@ namespace Annwvyn
 		GLFWwindow* glfwWindow;
 
 		///Shading language to use
-		static constexpr const char* const SL{ "GLSL" };
+		static constexpr const char* const SL { "GLSL" };
 
 		///Window size
 		int windowW, windowH;
 
 	protected:
-		
 		void doStereoRender();
 
 		///Handle the window messages and resize event

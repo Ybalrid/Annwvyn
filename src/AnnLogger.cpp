@@ -22,7 +22,7 @@ AnnDebug::AnnDebug(Log importance) :
 AnnDebug::AnnDebug(const std::string& message, Log importance) :
  std::ostream(new AnnDebugBuff(importance))
 {
-		(void)(*this << message);
+	(void)(*this << message);
 }
 
 AnnDebug::~AnnDebug()

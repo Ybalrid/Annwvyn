@@ -124,7 +124,7 @@ bool AnnAudioEngine::initOpenAL()
 	}
 
 	//Display information
-	const std::string alVendor{ alGetString(AL_VENDOR) };
+	const std::string alVendor { alGetString(AL_VENDOR) };
 	AnnDebug(Log::Important) << "OpenAL version : " << alGetString(AL_VERSION);
 	AnnDebug(Log::Important) << "OpenAL vendor  : " << alVendor;
 

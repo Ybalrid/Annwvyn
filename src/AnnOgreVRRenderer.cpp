@@ -1,7 +1,6 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-
 #include <OgreSceneNode.h>
 #include <OgreCamera.h>
 #include <Compositor/OgreCompositorManager2.h>
@@ -43,8 +42,8 @@
 #endif
 using namespace Annwvyn;
 
-uint8_t AnnOgreVRRenderer::AALevel{ 4 };
-AnnOgreVRRenderer* AnnOgreVRRenderer::self{ nullptr };
+uint8_t AnnOgreVRRenderer::AALevel { 4 };
+AnnOgreVRRenderer* AnnOgreVRRenderer::self { nullptr };
 
 void AnnOgreVRRenderer::setAntiAliasingLevel(const uint8_t AA)
 {
@@ -55,31 +54,31 @@ void AnnOgreVRRenderer::setAntiAliasingLevel(const uint8_t AA)
 
 AnnOgreVRRenderer::AnnOgreVRRenderer(const std::string& windowName) :
  numberOfThreads(std::thread::hardware_concurrency()),
- glMajor{ 4 },
- glMinor{ 3 },
- glfwWindow{ nullptr },
- windowW{ 0 },
- windowH{ 0 },
- smgr{ nullptr },
- root{ nullptr },
- window{ nullptr },
- updateTime{ 0 },
- then{ 0 },
- now{ 0 },
- nearClippingDistance{ 0.01f },
- farClippingDistance{ 500.0f },
- feetPosition{ 0, 0, 10 },
- bodyOrientation{ Ogre::Quaternion::IDENTITY },
- name{ windowName },
- gameplayCharacterRoot{ nullptr },
+ glMajor { 4 },
+ glMinor { 3 },
+ glfwWindow { nullptr },
+ windowW { 0 },
+ windowH { 0 },
+ smgr { nullptr },
+ root { nullptr },
+ window { nullptr },
+ updateTime { 0 },
+ then { 0 },
+ now { 0 },
+ nearClippingDistance { 0.01f },
+ farClippingDistance { 500.0f },
+ feetPosition { 0, 0, 10 },
+ bodyOrientation { Ogre::Quaternion::IDENTITY },
+ name { windowName },
+ gameplayCharacterRoot { nullptr },
  monoCam(nullptr),
- cameraRig{ nullptr },
- frameCounter{ 0 },
- rttEyesCombined{ nullptr },
- pauseFlag{ false },
- hideHands{ false },
- compositorLoaded{ false },
- hlmsLoaded{ false }
+ cameraRig { nullptr },
+ frameCounter { 0 },
+ rttEyesCombined { nullptr },
+ pauseFlag { false },
+ hideHands { false },
+ compositorLoaded { false },
+ hlmsLoaded { false }
 {
 	if(self)
 	{
@@ -200,7 +199,7 @@ void AnnOgreVRRenderer::changedAA() const
 	}
 	else
 	{
-		for(auto i{ 0 }; i < 2; i++)
+		for(auto i { 0 }; i < 2; i++)
 		{
 			texture = textureManager->getByName(rttTextureName + std::to_string(i));
 			if(texture) texture->setFSAA(AALevel, "", false);
@@ -356,13 +355,13 @@ std::tuple<Ogre::TexturePtr, unsigned int> AnnOgreVRRenderer::createAdditionalRe
 	if(additionalTextureName.empty())
 		additionalTextureName = "additionalTexture" + std::to_string(counter++);
 
-	auto texture{ Ogre::TextureManager::getSingleton().createManual(additionalTextureName,
-																	Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-																	Ogre::TEX_TYPE_2D,
-																	w,
-																	h,
-																	9,
-																	Ogre::PF_R8G8B8A8) };
+	auto texture { Ogre::TextureManager::getSingleton().createManual(additionalTextureName,
+																	 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+																	 Ogre::TEX_TYPE_2D,
+																	 w,
+																	 h,
+																	 9,
+																	 Ogre::PF_R8G8B8A8) };
 
 	unsigned int glid;
 	texture->getCustomAttribute("GLID", &glid);
@@ -523,7 +522,7 @@ void AnnOgreVRRenderer::setExposure(float exposure, float minAuto, float maxAuto
 	auto pass	 = material->getTechnique(0)->getPass(0);
 	auto psParams = pass->getFragmentProgramParameters();
 
-	const Ogre::Vector3 exposureParams{
+	const Ogre::Vector3 exposureParams {
 		1024.0f * expf(exposure - 2.0f),
 		7.5f - maxAuto,
 		7.5f - minAuto

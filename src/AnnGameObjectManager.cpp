@@ -1,7 +1,6 @@
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-
 #include <OgreMeshManager.h>
 #include <OgreMeshManager2.h>
 
@@ -23,7 +22,6 @@ AnnGameObjectManager::AnnGameObjectManager() :
 		glTFLoader = plugin->getLoader();
 	else
 		AnnDebug(Log::Important) << "Could not get glTFLoader!, please check if the plugin is located next to the executable!";
-
 }
 
 void AnnGameObjectManager::update()
@@ -67,12 +65,12 @@ Ogre::MeshPtr AnnGameObjectManager::getAndConvertFromV1Mesh(const char* meshName
 std::shared_ptr<AnnGameObject> AnnGameObjectManager::createGameObject(const std::string& meshName, std::string identifier, std::shared_ptr<AnnGameObject> obj)
 {
 	AnnDebug("Creating a game object from the mesh file: " + std::string(meshName));
-	auto smgr{ AnnGetEngine()->getSceneManager() };
+	auto smgr { AnnGetEngine()->getSceneManager() };
 
 	Ogre::Item* item = nullptr;
 
 	//Check filename extension:
-	auto ext = meshName.substr(meshName.find_last_of('.')+1);
+	auto ext = meshName.substr(meshName.find_last_of('.') + 1);
 	std::transform(ext.begin(), ext.end(), ext.begin(), [](char c) { return char(::tolower(int(c))); });
 
 	if(ext == "mesh")
@@ -186,8 +184,8 @@ std::shared_ptr<AnnGameObject> AnnGameObjectManager::playerLookingAt(unsigned sh
 {
 	//Origin vector of the ray is the HMD pose position
 	const auto pose = AnnGetVRRenderer()->trackedHeadPose;
-	const auto hmdPosition{ AnnVect3(pose.position) };
-	const auto rayDirection{ AnnQuaternion(pose.orientation).getAtVector() };
+	const auto hmdPosition { AnnVect3(pose.position) };
+	const auto rayDirection { AnnQuaternion(pose.orientation).getAtVector() };
 
 	//create ray
 	const Ogre::Ray ray(hmdPosition, rayDirection);

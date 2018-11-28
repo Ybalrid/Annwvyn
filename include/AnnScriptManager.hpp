@@ -163,16 +163,16 @@ namespace Annwvyn
 		void unregisterResourceManager();
 
 		///The extension of script files
-		static constexpr const char* const scriptExtension{ ".chai" };
+		static constexpr const char* const scriptExtension { ".chai" };
 
 		///Prefix for error regarding loading script files
-		static constexpr const char* const fileErrorPrefix{ "Script File ERROR - " };
+		static constexpr const char* const fileErrorPrefix { "Script File ERROR - " };
 
 		///Prefix for debug print called from a script
-		static constexpr const char* const logFromScript{ "Script - " };
+		static constexpr const char* const logFromScript { "Script - " };
 
 		///String constant for script loading and class initialization. This is a bit of ChaiScript code to bootstrap a behavior script
-		static constexpr const char* const scriptTemplate{
+		static constexpr const char* const scriptTemplate {
 			R"chaiscript(def create__SCRIPT_NAME____OBJECT_SCRIPT_ID__(owner)
 						{
 							var ScriptInstance__OBJECT_SCRIPT_ID__ = __SCRIPT_NAME__(owner);
@@ -181,22 +181,22 @@ namespace Annwvyn
 		};
 
 		///Marker for the name of the script
-		static constexpr const char* const scriptNameMarker{ "__SCRIPT_NAME__" };
+		static constexpr const char* const scriptNameMarker { "__SCRIPT_NAME__" };
 		///Marker for the ID of the script
-		static constexpr const char* const scriptObjectID{ "__OBJECT_SCRIPT_ID__" };
+		static constexpr const char* const scriptObjectID { "__OBJECT_SCRIPT_ID__" };
 		///Marker for the owner of the script
-		static constexpr const char* const scriptOwnerMarker{ "__SCRIPT_OWNER__" };
+		static constexpr const char* const scriptOwnerMarker { "__SCRIPT_OWNER__" };
 		///Prefix of the name of an instance
-		static constexpr const char* const scriptInstanceMarker{ "ScriptInstance" };
+		static constexpr const char* const scriptInstanceMarker { "ScriptInstance" };
 		///Prefix for the owner of a script
-		static constexpr const char* const scriptOwnerPrefix{ "ScriptOwner" };
+		static constexpr const char* const scriptOwnerPrefix { "ScriptOwner" };
 
 		///Static lengths of constant string of the same name
-		static constexpr const size_t nameMarkerLen{ 15 };
+		static constexpr const size_t nameMarkerLen { 15 };
 		///Static lengths of constant string of the same name
-		static constexpr const size_t scriptIDMarkerLen{ 20 };
+		static constexpr const size_t scriptIDMarkerLen { 20 };
 		///Static lengths of constant string of the same name
-		static constexpr const size_t scriptOwnerMarkerLen{ 16 };
+		static constexpr const size_t scriptOwnerMarkerLen { 16 };
 
 		///Static counter that will be incremented at each script creation
 		static AnnScriptID ID;

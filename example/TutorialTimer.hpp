@@ -11,7 +11,7 @@ class TutorialTimer : public TutorialLevel, LISTENER //This level class is also 
 public:
 	TutorialTimer() :
 	 TutorialLevel(), constructListener(),
-	 waitFor{ -1 },
+	 waitFor { -1 },
 	 rotator(nullptr)
 	{
 	}
@@ -76,5 +76,5 @@ public:
 private:
 	AnnTimerID waitFor;
 	AnnGameObject* rotator;
-	const std::array<float, 4> angles{ 0, 90, 180, -90 };
+	const std::array<float, 4> angles { 0, 90, 180, -90 };
 };

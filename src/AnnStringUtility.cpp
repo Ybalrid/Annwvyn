@@ -26,14 +26,14 @@ size_t AnnStringUility::hash(const std::string& string) const
 
 std::string AnnStringUility::getRandomString(size_t length)
 {
-	static const std::string charset{ "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_" };
-	static const auto maxNbChar{ charset.size() };
+	static const std::string charset { "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_" };
+	static const auto maxNbChar { charset.size() };
 	static std::uniform_int_distribution<size_t> distribution(0, maxNbChar - 1);
 
 	std::string output;
 	//No need to push_back X times if we already know the length;
 	output.resize(length);
-	for(size_t i{ 0 }; i < length; i++)
+	for(size_t i { 0 }; i < length; i++)
 		output[i] = charset[distribution(mt)];
 
 	return output;

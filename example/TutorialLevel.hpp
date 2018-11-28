@@ -32,7 +32,7 @@ protected:
 		explaination->setTextAlign(Ann3DTextPlane::TextAlign::ALIGN_LEFT);
 		explaination->setMargin(0.05);
 		explaination->setBackgroundColor(AnnColor(0.9, 0.9, 0.9));
-		explaination->setTextColor(AnnColor{ 0, 0, 0 });
+		explaination->setTextColor(AnnColor { 0, 0, 0 });
 		explaination->setPosition({ 0, 1.5f, 9 });
 		explaination->update();
 		addManualMovableObject(explaination);

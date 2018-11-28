@@ -15,24 +15,24 @@
 
 using namespace Annwvyn;
 
-AnnEngine* AnnEngine::singleton{ nullptr };
+AnnEngine* AnnEngine::singleton { nullptr };
 
-bool AnnEngine::autosetProcessPriorityHigh{ true };
-bool AnnEngine::noConsoleColor{ false };
-bool AnnEngine::consoleReady{ false };
-bool AnnEngine::manualConsole{ false };
-std::string AnnEngine::logFileName{ "Annwvyn.log" };
-std::string AnnEngine::defaultRenderer{ "NoVR" };
+bool AnnEngine::autosetProcessPriorityHigh { true };
+bool AnnEngine::noConsoleColor { false };
+bool AnnEngine::consoleReady { false };
+bool AnnEngine::manualConsole { false };
+std::string AnnEngine::logFileName { "Annwvyn.log" };
+std::string AnnEngine::defaultRenderer { "NoVR" };
 
 AnnOgreVRRenderBootstrapMap AnnEngine::registeredRenderers;
 
 #ifdef _WIN32
-WORD AnnEngine::consoleGreen{ FOREGROUND_GREEN | FOREGROUND_INTENSITY };
-WORD AnnEngine::consoleYellow{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY };
-WORD AnnEngine::consoleWhite{ FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY };
+WORD AnnEngine::consoleGreen { FOREGROUND_GREEN | FOREGROUND_INTENSITY };
+WORD AnnEngine::consoleYellow { FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY };
+WORD AnnEngine::consoleWhite { FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY };
 #endif
 
-std::vector<AnnUniqueDynamicLibraryHolder> AnnEngine::dynamicLibraries{};
+std::vector<AnnUniqueDynamicLibraryHolder> AnnEngine::dynamicLibraries {};
 
 AnnEngineSingletonReseter::AnnEngineSingletonReseter(AnnEngine* address)
 {
@@ -57,7 +57,7 @@ AnnEngine* AnnEngine::Instance() { return singleton; }
 
 std::string AnnEngine::getAnnwvynVersion(size_t padding)
 {
-	static std::string versionString{ "" };
+	static std::string versionString { "" };
 	if(!versionString.empty() && !padding) return versionString;
 
 	if(versionString.empty())
@@ -103,7 +103,7 @@ void AnnEngine::selectAndCreateRenderer(const std::string& selectedRenderer, con
 		return;
 	}
 
-	auto set{ false };
+	auto set { false };
 
 	std::cerr << "Looking for " << selectedRenderer << " in registered renderers\n";
 
@@ -400,7 +400,7 @@ bool AnnEngine::refresh()
 	updateTime = renderer->getUpdateTime();
 	player->engineUpdate(float(getFrameTime()));
 
-	for(size_t i{ 0 }; i < subsystems.size(); ++i)
+	for(size_t i { 0 }; i < subsystems.size(); ++i)
 		if(subsystems[i]->needUpdate())
 			subsystems[i]->update();
 
@@ -464,7 +464,7 @@ void AnnEngine::loadUserSubSystemFromPlugin(const std::string& pluginName, bool 
 		{
 			AnnDebug() << "Found address of bootstrap funciton for " << pluginName;
 			AnnDebug() << "Create and register subsystem...";
-			registerUserSubSystem(AnnUserSubSystemPtr{ reinterpret_cast<AnnUserSubSystem*>(bootstrapPlugin()) });
+			registerUserSubSystem(AnnUserSubSystemPtr { reinterpret_cast<AnnUserSubSystem*>(bootstrapPlugin()) });
 		}
 		else
 		{
@@ -536,7 +536,7 @@ void AnnEngine::removeUserSubSystem(AnnUserSubSystemPtr subsystem)
 //Because Windows and the Win32 platform sucks.
 bool AnnEngine::openConsole()
 {
-	auto state{ true };
+	auto state { true };
 #ifdef _WIN32
 
 	//Allocate a console for this app

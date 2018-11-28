@@ -148,13 +148,13 @@ AnnJsonLevel::AnnJsonLevel(std::string path, const bool preload) :
 	auto& json = jsonFile->j;
 
 	//Read full content of the pointed file
-	const std::string file{
+	const std::string file {
 		[&] {
 			std::ifstream fileStream(path);
 			if(fileStream)
 				return std::string(std::istreambuf_iterator<char>(fileStream),
 								   std::istreambuf_iterator<char>());
-			return std::string{};
+			return std::string {};
 		}()
 	};
 
