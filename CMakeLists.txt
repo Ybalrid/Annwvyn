@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(Annwvyn)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG=1 -D_DEBUG=1")
+
 if(NOT CMAKE_DEBUG_POSTFIX)
     set(CMAKE_DEBUG_POSTFIX "_d")
 endif()
@@ -146,7 +148,7 @@ set(AnnwvynCode ${AnnwvynSources} ${AnnwvynHeaders})
 
 add_library(Annwvyn SHARED ${AnnwvynCode} )
 
-cotire(Annwvyn)
+#cotire(Annwvyn)
 
 add_subdirectory(tests)
 add_subdirectory(renderer)
