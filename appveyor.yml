@@ -31,7 +31,7 @@ before_build:
 
     echo will run cmake now...
 
-    cmake -G "Visual Studio 15 2017 Win64"
+    cmake -G "Visual Studio 15 2017 Win64" .
 build:
   project: Annwvyn.sln
   parallel: true
