@@ -128,8 +128,8 @@ You should check out the [quickstart](https://wiki.annwvyn.org/doku.php?id=quick
 
 ## Updating the engine
 
-Run "git pull" on the Annwvyn sub-directory. then open the VS solution in msvc/Annwvyn/Annwyvn.sln
-(You may also need to re-build Ogre v2-1 from sources and put it inside your dependency package...)
+Run "git pull" on the Annwvyn sub-directory, and re-run CMake, then rebuild from the build repository.
+You may need to manually update the dependencies
 
 Clean and build the solution.
 
