@@ -1,0 +1,49 @@
+version: 0.4.0.{build}
+pull_requests:
+  do_not_increment_build_number: true
+image: Windows
+configuration:
+- Release
+- Debug
+platform: x64
+shallow_clone: true
+environment:
+  AnnwvynSDK64: C:\YbalridSoftware\AnnwvynSDK64\
+before_build:
+- cmd: >-
+    git submodule init
+
+    git submodule update
+
+    echo Getting dependencies
+
+    set goback=%cd%
+
+    cd C:\
+
+    mkdir YbalridSoftware\AnnwvynSDK64
+
+    cd YbalridSoftware\AnnwvynSDK64
+
+    curl -fsSL -o deps.zip https://www.annwvyn.org/dl/AnnwvynSDK64.zip
+
+    7z x -y deps.zip
+
+    cd %goback%
+
+    echo will run cmake now...
+
+    
+    cd build
+
+    cmake -G"Visual Studio 16 2019 Win64" ..
+
+build:
+  project: build/Annwvyn.sln
+  parallel: true
+  verbosity: normal
+#after_build:
+#- cmd: "example\\getlibs.bat\nmkdir unitTestScripts\ncd unitTestScripts\nxcopy ..\\build\\tests\\unitTestScripts\ncd ..\ncp Release\\Annwvyn.dll .\ncp tests\\Release\\AnnwvynUnitTest.exe .\nREM theses tests aren't runnable on appveyor \nREM AnnwvynUnitTest.exe -s"
+#artifacts:
+#- path: Release\Annwvyn.dll
+#  name: Annwvyn.dll
